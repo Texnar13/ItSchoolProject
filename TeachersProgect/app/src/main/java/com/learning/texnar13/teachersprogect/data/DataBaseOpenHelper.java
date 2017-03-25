@@ -17,6 +17,13 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+//        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + ";");
+//        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableDesks.NAME_TABLE_DESKS + ";");
+//        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + ";");
+//        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + ";");
+//        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + ";");
+//        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + ";");
+//        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
         updateDatabase(db, 0, 1);
     }
 
@@ -142,16 +149,16 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         String[] columns = {SchoolContract.TableDesks.KEY_DESK_ID, SchoolContract.TableDesks.COLUMN_X, SchoolContract.TableDesks.COLUMN_Y};
         String[] selectionArgs = {classId + ""};
         Cursor cursor = db.query(SchoolContract.TableDesks.NAME_TABLE_DESKS, columns, SchoolContract.TableCabinets.KEY_CABINET_ID + "=?", selectionArgs, null, null, null);
-        db.close();
+
         return cursor;
     }
 
-    public Cursor getPlasesIdByDeskId(long deskId) {
+    public Cursor getPlacesIdByDeskId(long deskId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns = {SchoolContract.TablePlaces.KEY_PLACE_ID};
         String[] selectionArgs = {deskId + ""};
         Cursor cursor = db.query(SchoolContract.TablePlaces.NAME_TABLE_PLACES, columns, SchoolContract.TablePlaces.KEY_DESK_ID + "=?", selectionArgs, null, null, null);
-        db.close();
+
         return cursor;
     }
 

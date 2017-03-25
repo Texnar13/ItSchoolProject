@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RelativeLayout;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -79,6 +80,10 @@ public class Main extends AppCompatActivity {
             db.setLearnerOnPlace(lerner3Id, places.get(3));
             db.setLearnerOnPlace(lerner4Id, places.get(8));
             db.setLearnerOnPlace(lerner5Id, places.get(4));
+
+            for (int i = 0; i < desks.size(); i++) {
+                Log.w("MyLog",""+desks.get(i));
+            }
         }
 
         //заполнили базу данных дальше только можем доставать данные
@@ -101,27 +106,28 @@ public class Main extends AppCompatActivity {
             tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
 
-            //создание места
-            Cursor cursorPlace = db.getPlasesIdByDeskId(cursor.getLong(cursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
-            cursor.moveToFirst();
-            do {
-                RelativeLayout tempRelativeLayoutPlace = new RelativeLayout(this);
-                tempRelativeLayoutDesk.setBackgroundColor(Color.parseColor("#bc8e6d02"));
-
-                RelativeLayout.LayoutParams tempPlaceLayoutParams = new RelativeLayout.LayoutParams((int) dpFromPx(30), (int) dpFromPx(30));
-                tempLayoutParams.leftMargin = (int) dpFromPx(5);
-                tempLayoutParams.topMargin = (int) dpFromPx(5);
-                tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-
-                tempRelativeLayoutDesk.addView(tempRelativeLayoutPlace, tempPlaceLayoutParams);
-            } while (cursorPlace.moveToNext());
+//            //создание места
+//            Cursor cursorPlace = db.getPlacesIdByDeskId(cursor.getLong(cursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
+//            cursor.moveToFirst();
+//            do {
+//                RelativeLayout tempRelativeLayoutPlace = new RelativeLayout(this);
+//                tempRelativeLayoutDesk.setBackgroundColor(Color.parseColor("#bc8e6d02"));
+//
+//                RelativeLayout.LayoutParams tempPlaceLayoutParams = new RelativeLayout.LayoutParams((int) dpFromPx(30), (int) dpFromPx(30));
+//                tempLayoutParams.leftMargin = (int) dpFromPx(5);
+//                tempLayoutParams.topMargin = (int) dpFromPx(5);
+//                tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//                tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//                tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+//
+//                tempRelativeLayoutDesk.addView(tempRelativeLayoutPlace, tempPlaceLayoutParams);
+//            } while (cursorPlace.moveToNext());
 
             //добавление парты уже с местами
             room.addView(tempRelativeLayoutDesk, tempLayoutParams);
         } while (cursor.moveToNext());
 
+        db.close();
     }
 
     private float dpFromPx(float px) {
