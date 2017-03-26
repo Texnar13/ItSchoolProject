@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.learning.texnar13.teachersprogect.StartScreenActivity">
+
+    <Button
+        android:id="@+id/start_menu_button_now"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="текущий урок" />
+
+    <Button
+        android:id="@+id/start_menu_button_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="моё расписание" />
+
+    <Button
+        android:id="@+id/start_menu_button_my_cabinets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="мои кабинеты" />
+
+    <Button
+        android:id="@+id/start_menu_button_my_classes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="мои классы" />
+
+
+</LinearLayout>

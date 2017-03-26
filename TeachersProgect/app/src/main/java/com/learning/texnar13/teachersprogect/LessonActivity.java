@@ -12,7 +12,7 @@ import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
 import java.util.ArrayList;
 
-public class Main extends AppCompatActivity {
+public class LessonActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
