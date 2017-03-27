@@ -19,82 +19,30 @@ public class LessonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        {
-            long classId = db.createClass("a1");
+        DataBaseOpenHelper dbOpenHelper = new DataBaseOpenHelper(this);
+//        {//чистим таблицу
+//            SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+//            db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + ";");
+//            db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableDesks.NAME_TABLE_DESKS + ";");
+//            db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + ";");
+//            db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + ";");
+//            db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + ";");
+//            db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + ";");
+//            db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
+//            dbOpenHelper.onCreate(db);
+//        }
 
-            long lerner1Id = db.createLearner("Зинченко", "Сократ", classId);
-            long lerner2Id = db.createLearner("Шумякин", "Феофан", classId);
-            long lerner3Id = db.createLearner("Рябец", "Валентин", classId);
-            long lerner4Id = db.createLearner("Гроша", "Любава", classId);
-            long lerner5Id = db.createLearner("Авдонина", "Алиса", classId);
 
-            long cabinetId = db.createCabinet("кабинет 406");
-
-
-            ArrayList<Long> desks = new ArrayList<Long>();
-            ArrayList<Long> places = new ArrayList<Long>();
-            {
-                long desk1Id = db.createDesk(2, 160, 200, cabinetId);//1
-                places.add(db.createPlace(desk1Id));
-                places.add(db.createPlace(desk1Id));
-                desks.add(desk1Id);
-            }
-            {
-                long desk2Id = db.createDesk(2, 40, 200, cabinetId);//2
-                places.add(db.createPlace(desk2Id));
-                places.add(db.createPlace(desk2Id));
-                desks.add(desk2Id);
-            }
-            {
-                long desk3Id = db.createDesk(2, 160, 120, cabinetId);//3
-                places.add(db.createPlace(desk3Id));
-                places.add(db.createPlace(desk3Id));
-                desks.add(desk3Id);
-            }
-            {
-                long desk4Id = db.createDesk(2, 40, 120, cabinetId);//4
-                places.add(db.createPlace(desk4Id));
-                places.add(db.createPlace(desk4Id));
-                desks.add(desk4Id);
-            }
-            {
-                long desk5Id = db.createDesk(2, 160, 40, cabinetId);//5
-                places.add(db.createPlace(desk5Id));
-                places.add(db.createPlace(desk5Id));
-                desks.add(desk5Id);
-            }
-            {
-                long desk6Id = db.createDesk(2, 40, 40, cabinetId);//6
-                places.add(db.createPlace(desk6Id));
-                places.add(db.createPlace(desk6Id));
-                desks.add(desk6Id);
-            }
-            //   |6|  |5|   |    |  |  |  |
-            //   |4|  |3|   |    | 4|  |  |
-            //   |2|  |1|   |    |35|  |21|
-            //       [-]
-
-            db.setLearnerOnPlace(lerner1Id, places.get(2));
-            db.setLearnerOnPlace(lerner2Id, places.get(1));
-            db.setLearnerOnPlace(lerner3Id, places.get(3));
-            db.setLearnerOnPlace(lerner4Id, places.get(8));
-            db.setLearnerOnPlace(lerner5Id, places.get(4));
-
-            for (int i = 0; i < desks.size(); i++) {
-                Log.w("MyLog",""+desks.get(i));
-            }
-        }
-
-        //заполнили базу данных дальше только можем доставать данные
+        //generate(dbOpenHelper);
+        //заполнили базу данных, дальше можем только доставать данные
+//TODO чтобы в таблице были начальные данные (для отладки) я при первой установке запускал метод generate затем коментировал его
 
 
         ArrayList<Long> learnersId = new ArrayList<Long>();
 
         RelativeLayout room = (RelativeLayout) findViewById(R.id.room_layout);
-        Cursor cursor = db.getDesksXYByClassId(1);
-        cursor.moveToFirst();
-        do {
+        Cursor cursor = dbOpenHelper.getDesksByCabinetId(2);
+        while (cursor.moveToNext()) {
             //создание парты
             RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);
             tempRelativeLayoutDesk.setBackgroundColor(Color.parseColor("#bce4af00"));
@@ -105,11 +53,14 @@ public class LessonActivity extends AppCompatActivity {
             tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+            Log.i("LessonActivity", "view desk:" + cursor.getLong(cursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
 
-//            //создание места
-//            Cursor cursorPlace = db.getPlacesIdByDeskId(cursor.getLong(cursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
-//            cursor.moveToFirst();
-//            do {
+
+            //создание места
+            Cursor cursorPlace = dbOpenHelper.getPlacesByDeskId(cursor.getLong(cursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
+
+            while (cursorPlace.moveToNext()) {
+                Log.i("LessonActivity", "view place:" + cursorPlace.getLong(cursorPlace.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID)));
 //                RelativeLayout tempRelativeLayoutPlace = new RelativeLayout(this);
 //                tempRelativeLayoutDesk.setBackgroundColor(Color.parseColor("#bc8e6d02"));
 //
@@ -121,17 +72,81 @@ public class LessonActivity extends AppCompatActivity {
 //                tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
 //
 //                tempRelativeLayoutDesk.addView(tempRelativeLayoutPlace, tempPlaceLayoutParams);
-//            } while (cursorPlace.moveToNext());
+            }
 
             //добавление парты уже с местами
             room.addView(tempRelativeLayoutDesk, tempLayoutParams);
-        } while (cursor.moveToNext());
+        }
 
-        db.close();
+        dbOpenHelper.close();
     }
 
     private float dpFromPx(float px) {
         return px * getApplicationContext().getResources().getDisplayMetrics().density;
+    }
+
+    private void generate(DataBaseOpenHelper dbOpenHelper) {
+        dbOpenHelper.createClass("a1");
+        long classId = dbOpenHelper.createClass("a2");
+
+        long lerner1Id = dbOpenHelper.createLearner("Зинченко", "Сократ", classId);
+        long lerner2Id = dbOpenHelper.createLearner("Шумякин", "Феофан", classId);
+        long lerner3Id = dbOpenHelper.createLearner("Рябец", "Валентин", classId);
+        long lerner4Id = dbOpenHelper.createLearner("Гроша", "Любава", classId);
+        long lerner5Id = dbOpenHelper.createLearner("Авдонина", "Алиса", classId);
+
+        long cabinetId = dbOpenHelper.createCabinet("кабинет 406");
+
+
+        ArrayList<Long> desks = new ArrayList<Long>();
+        ArrayList<Long> places = new ArrayList<Long>();
+        {
+            long desk1Id = dbOpenHelper.createDesk(2, 160, 200, cabinetId);//1
+            places.add(dbOpenHelper.createPlace(desk1Id));
+            places.add(dbOpenHelper.createPlace(desk1Id));
+            desks.add(desk1Id);
+        }
+        {
+            long desk2Id = dbOpenHelper.createDesk(2, 40, 200, cabinetId);//2
+            places.add(dbOpenHelper.createPlace(desk2Id));
+            places.add(dbOpenHelper.createPlace(desk2Id));
+            desks.add(desk2Id);
+        }
+        {
+            long desk3Id = dbOpenHelper.createDesk(2, 160, 120, cabinetId);//3
+            places.add(dbOpenHelper.createPlace(desk3Id));
+            places.add(dbOpenHelper.createPlace(desk3Id));
+            desks.add(desk3Id);
+        }
+        {
+            long desk4Id = dbOpenHelper.createDesk(2, 40, 120, cabinetId);//4
+            places.add(dbOpenHelper.createPlace(desk4Id));
+            places.add(dbOpenHelper.createPlace(desk4Id));
+            desks.add(desk4Id);
+        }
+        {
+            long desk5Id = dbOpenHelper.createDesk(2, 160, 40, cabinetId);//5
+            places.add(dbOpenHelper.createPlace(desk5Id));
+            places.add(dbOpenHelper.createPlace(desk5Id));
+            desks.add(desk5Id);
+        }
+        {
+            long desk6Id = dbOpenHelper.createDesk(2, 40, 40, cabinetId);//6
+            places.add(dbOpenHelper.createPlace(desk6Id));
+            places.add(dbOpenHelper.createPlace(desk6Id));
+            desks.add(desk6Id);
+        }
+        //   |6|  |5|   |    |  |  |  |
+        //   |4|  |3|   |    | 4|  |  |
+        //   |2|  |1|   |    |35|  |21|
+        //       [-]
+
+        dbOpenHelper.setLearnerOnPlace(lerner1Id, places.get(2));
+        dbOpenHelper.setLearnerOnPlace(lerner2Id, places.get(1));
+        dbOpenHelper.setLearnerOnPlace(lerner3Id, places.get(3));
+        dbOpenHelper.setLearnerOnPlace(lerner4Id, places.get(8));
+        dbOpenHelper.setLearnerOnPlace(lerner5Id, places.get(4));
+
     }
 }
 

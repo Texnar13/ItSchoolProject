@@ -47,7 +47,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
                 break;
             case R.id.start_menu_button_my_classes: {
-                Intent intent = new Intent(this, ListOfActivity.class);
+                Intent intent = new Intent(this, ListOfClassesActivity.class);
                 startActivity(intent);
             }
             break;
