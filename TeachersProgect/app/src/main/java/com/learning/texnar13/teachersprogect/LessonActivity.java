@@ -55,10 +55,8 @@ public class LessonActivity extends AppCompatActivity {
             tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             Log.i("LessonActivity", "view desk:" + cursor.getLong(cursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
 
-
             //создание места
             Cursor cursorPlace = dbOpenHelper.getPlacesByDeskId(cursor.getLong(cursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
-
             while (cursorPlace.moveToNext()) {
                 Log.i("LessonActivity", "view place:" + cursorPlace.getLong(cursorPlace.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID)));
 //                RelativeLayout tempRelativeLayoutPlace = new RelativeLayout(this);
@@ -73,11 +71,12 @@ public class LessonActivity extends AppCompatActivity {
 //
 //                tempRelativeLayoutDesk.addView(tempRelativeLayoutPlace, tempPlaceLayoutParams);
             }
+            cursorPlace.close();
 
             //добавление парты уже с местами
             room.addView(tempRelativeLayoutDesk, tempLayoutParams);
         }
-
+        cursor.close();
         dbOpenHelper.close();
     }
 

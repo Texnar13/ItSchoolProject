@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.learning.texnar13.teachersprogect.data.SchoolContract;
+
 
 public class StartScreenActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -48,6 +50,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.start_menu_button_my_classes: {
                 Intent intent = new Intent(this, ListOfClassesActivity.class);
+                intent.putExtra("listParameter", SchoolContract.TableClasses.NAME_TABLE_CLASSES);
                 startActivity(intent);
             }
             break;
