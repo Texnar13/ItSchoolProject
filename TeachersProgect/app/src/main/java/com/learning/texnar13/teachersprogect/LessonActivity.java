@@ -33,7 +33,7 @@ public class LessonActivity extends AppCompatActivity {
 //        }
 
 
-        //generate(dbOpenHelper);
+        generate(dbOpenHelper);
         //заполнили базу данных, дальше можем только доставать данные
 //TODO чтобы в таблице были начальные данные (для отладки) я при первой установке запускал метод generate затем коментировал его
 

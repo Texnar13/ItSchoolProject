@@ -19,6 +19,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_screen);
         buttonNow = (Button) findViewById(R.id.start_menu_button_now);
@@ -35,10 +36,10 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View view) {
-
+        Intent intent;
         switch (view.getId()) {
             case R.id.start_menu_button_now: {
-                Intent intent = new Intent(this, LessonActivity.class);
+                intent = new Intent(this, LessonActivity.class);
                 startActivity(intent);
             }
             break;
@@ -46,14 +47,17 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
                 break;
             case R.id.start_menu_button_my_cabinets:
-
+                intent = new Intent(this, ListOfActivity.class);
+                intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableCabinets.NAME_TABLE_CABINETS);
+                startActivity(intent);
                 break;
             case R.id.start_menu_button_my_classes: {
-                Intent intent = new Intent(this, ListOfClassesActivity.class);
-                intent.putExtra("listParameter", SchoolContract.TableClasses.NAME_TABLE_CLASSES);
+                intent = new Intent(this, ListOfActivity.class);
+                intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableClasses.NAME_TABLE_CLASSES);
                 startActivity(intent);
+                break;
             }
-            break;
+
         }
 
     }

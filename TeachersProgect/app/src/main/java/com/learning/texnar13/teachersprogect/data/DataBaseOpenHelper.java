@@ -20,6 +20,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        int i = 1/0;//та самая строка
 //        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + ";");
 //        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableDesks.NAME_TABLE_DESKS + ";");
 //        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + ";");
@@ -37,11 +38,12 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     private void updateDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 1) {//если база версии 1 и выше, то она не запустит этот код
-            String sql = "CREATE TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "( " + SchoolContract.TableCabinets.KEY_CABINET_ID + " INTEGER AUTO_INCREMENT, " +//INTEGER PRIMARY KEY AUTOINCREMENT
-                    SchoolContract.TableCabinets.COLUMN_NAME + " TEXT ); ";
+
+            String sql = "CREATE TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "( " + SchoolContract.TableCabinets.KEY_CABINET_ID + " INTEGER AUTO_INCREMENT, " +//<--- работает только так а это--> не даёт сохранить INTEGER PRIMARY KEY AUTOINCREMENT
+                    SchoolContract.TableCabinets.COLUMN_NAME + " VARCHAR ); ";
             db.execSQL(sql);
 
-            sql = "CREATE TABLE " + SchoolContract.TableDesks.NAME_TABLE_DESKS + "( " + SchoolContract.TableDesks.KEY_DESK_ID + " INTEGER PRIMARYKEY AUTO_INCREMENT, " +
+            sql = "CREATE TABLE " + SchoolContract.TableDesks.NAME_TABLE_DESKS + "( " + SchoolContract.TableDesks.KEY_DESK_ID + " INTEGER AUTO_INCREMENT, " +
                     SchoolContract.TableDesks.COLUMN_X + " INTEGER, " +
                     SchoolContract.TableDesks.COLUMN_Y + " INTEGER, " +
                     SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES + " INTEGER, " +
@@ -55,12 +57,12 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             db.execSQL(sql);
 
             sql = "CREATE TABLE " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + " ( " + SchoolContract.TableClasses.KEY_CLASS_ID + " INTEGER AUTO_INCREMENT, " +
-                    SchoolContract.TableClasses.COLUMN_CLASS_NAME + " TEXT ); ";
+                    SchoolContract.TableClasses.COLUMN_CLASS_NAME + " VARCHAR ); ";
             db.execSQL(sql);
 
             sql = "CREATE TABLE " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " ( " + SchoolContract.TableLearners.KEY_LEARNER_ID + " INTEGER AUTO_INCREMENT, " +
-                    SchoolContract.TableLearners.COLUMN_FIRST_NAME + " TEXT, " +
-                    SchoolContract.TableLearners.COLUMN_SECOND_NAME + " TEXT, " +
+                    SchoolContract.TableLearners.COLUMN_FIRST_NAME + " VARCHAR, " +
+                    SchoolContract.TableLearners.COLUMN_SECOND_NAME + " VARCHAR, " +
                     SchoolContract.TableLearners.KEY_CLASS_ID + " INTEGER, " +
                     "FOREIGN KEY(" + SchoolContract.TableLearners.KEY_CLASS_ID + ") REFERENCES " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + " (" + SchoolContract.TableClasses.KEY_CLASS_ID + ") ); ";
             db.execSQL(sql);
@@ -75,7 +77,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             sql = "CREATE TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ( " + SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " INTEGER AUTO_INCREMENT, " +
                     SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER, " +
                     SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
-                    SchoolContract.TableLearnersGrades.COLUMN_DATE + " TEXT, " +
+                    SchoolContract.TableLearnersGrades.COLUMN_DATE + " VARCHAR, " +
                     "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ); ";
             db.execSQL(sql);
         }
