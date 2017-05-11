@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 4;
 
 
     public DataBaseOpenHelper(Context context) {
@@ -20,14 +20,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        int i = 1/0;//та самая строка
-//        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + ";");
-//        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableDesks.NAME_TABLE_DESKS + ";");
-//        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + ";");
-//        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + ";");
-//        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + ";");
-//        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + ";");
-//        db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
+        //int i = 1 / 0;//та самая строка
+//        db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + ";");
+//        db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableDesks.NAME_TABLE_DESKS + ";");
+//        db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + ";");
+//        db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + ";");
+//        db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + ";");
+//        db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + ";");
+//        db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
         updateDatabase(db, 0, 1);
     }
 
@@ -37,13 +37,21 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     }
 
     private void updateDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 1) {//если база версии 1 и выше, то она не запустит этот код
+        Log.i("DataBaseOpenHelper", "updateDatabase old=" + oldVersion + " new=" + newVersion);
+        if (oldVersion < 5) {//если база версии 4 и выше, то она не запустит этот код
+            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + ";");
+            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableDesks.NAME_TABLE_DESKS + ";");
+            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + ";");
+            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + ";");
+            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + ";");
+            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + ";");
+            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
 
-            String sql = "CREATE TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "( " + SchoolContract.TableCabinets.KEY_CABINET_ID + " INTEGER AUTO_INCREMENT, " +//<--- работает только так а это--> не даёт сохранить INTEGER PRIMARY KEY AUTOINCREMENT
+            String sql = "CREATE TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "( " + SchoolContract.TableCabinets.KEY_CABINET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableCabinets.COLUMN_NAME + " VARCHAR ); ";
             db.execSQL(sql);
 
-            sql = "CREATE TABLE " + SchoolContract.TableDesks.NAME_TABLE_DESKS + "( " + SchoolContract.TableDesks.KEY_DESK_ID + " INTEGER AUTO_INCREMENT, " +
+            sql = "CREATE TABLE " + SchoolContract.TableDesks.NAME_TABLE_DESKS + "( " + SchoolContract.TableDesks.KEY_DESK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableDesks.COLUMN_X + " INTEGER, " +
                     SchoolContract.TableDesks.COLUMN_Y + " INTEGER, " +
                     SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES + " INTEGER, " +
@@ -51,30 +59,30 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY(" + SchoolContract.TableDesks.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "(" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ); ";
             db.execSQL(sql);
 
-            sql = "CREATE TABLE " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + " ( " + SchoolContract.TablePlaces.KEY_PLACE_ID + " INTEGER AUTO_INCREMENT, " +
+            sql = "CREATE TABLE " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + " ( " + SchoolContract.TablePlaces.KEY_PLACE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TablePlaces.KEY_DESK_ID + " INTEGER, " +
                     "FOREIGN KEY(" + SchoolContract.TablePlaces.KEY_DESK_ID + ") REFERENCES " + SchoolContract.TableDesks.NAME_TABLE_DESKS + " (" + SchoolContract.TableDesks.KEY_DESK_ID + ") ); ";
             db.execSQL(sql);
 
-            sql = "CREATE TABLE " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + " ( " + SchoolContract.TableClasses.KEY_CLASS_ID + " INTEGER AUTO_INCREMENT, " +
+            sql = "CREATE TABLE " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + " ( " + SchoolContract.TableClasses.KEY_CLASS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableClasses.COLUMN_CLASS_NAME + " VARCHAR ); ";
             db.execSQL(sql);
 
-            sql = "CREATE TABLE " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " ( " + SchoolContract.TableLearners.KEY_LEARNER_ID + " INTEGER AUTO_INCREMENT, " +
+            sql = "CREATE TABLE " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " ( " + SchoolContract.TableLearners.KEY_LEARNER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableLearners.COLUMN_FIRST_NAME + " VARCHAR, " +
                     SchoolContract.TableLearners.COLUMN_SECOND_NAME + " VARCHAR, " +
                     SchoolContract.TableLearners.KEY_CLASS_ID + " INTEGER, " +
                     "FOREIGN KEY(" + SchoolContract.TableLearners.KEY_CLASS_ID + ") REFERENCES " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + " (" + SchoolContract.TableClasses.KEY_CLASS_ID + ") ); ";
             db.execSQL(sql);
 
-            sql = "CREATE TABLE " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + " ( " + SchoolContract.TableLearnersOnPlaces.KEY_ATTITUDES_ID + " INTEGER AUTO_INCREMENT, " +
+            sql = "CREATE TABLE " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + " ( " + SchoolContract.TableLearnersOnPlaces.KEY_ATTITUDES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID + " INTEGER, " +
                     SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID + " INTEGER, " +
                     "FOREIGN KEY(" + SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + "), " +
                     "FOREIGN KEY(" + SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID + ") REFERENCES " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + " (" + SchoolContract.TablePlaces.KEY_PLACE_ID + ") ); ";
             db.execSQL(sql);
 
-            sql = "CREATE TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ( " + SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " INTEGER AUTO_INCREMENT, " +
+            sql = "CREATE TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ( " + SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER, " +
                     SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
                     SchoolContract.TableLearnersGrades.COLUMN_DATE + " VARCHAR, " +
@@ -103,7 +111,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableLearners.COLUMN_SECOND_NAME, secondName);
         values.put(SchoolContract.TableLearners.COLUMN_FIRST_NAME, name);
-        values.put(SchoolContract.TableClasses.KEY_CLASS_ID, class_id);
+        values.put(SchoolContract.TableLearners.KEY_CLASS_ID, class_id);
         long temp = db.insert(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, null, values);//-1 = ошибка ввода
 
         db.close();
@@ -127,7 +135,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         values.put(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES, numberOfPlaces);
         values.put(SchoolContract.TableDesks.COLUMN_X, x);
         values.put(SchoolContract.TableDesks.COLUMN_Y, y);
-        values.put(SchoolContract.TableCabinets.KEY_CABINET_ID, cabinet_id);
+        values.put(SchoolContract.TableDesks.KEY_CABINET_ID, cabinet_id);
         long temp = db.insert(SchoolContract.TableDesks.NAME_TABLE_DESKS, null, values);//-1 = ошибка ввода
         db.close();
         Log.i("DBOpenHelper", "createDesk returnId = " + temp + " numberOfPlaces= " + numberOfPlaces + " x= " + x + " y= " + y + " cabinet_id= " + cabinet_id);
@@ -137,7 +145,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public long createPlace(long deskId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(SchoolContract.TableDesks.KEY_DESK_ID, deskId);
+        values.put(SchoolContract.TablePlaces.KEY_DESK_ID, deskId);
         long temp = db.insert(SchoolContract.TablePlaces.NAME_TABLE_PLACES, null, values);//-1 = ошибка ввода
         db.close();
         Log.i("DBOpenHelper", "createPlace returnId = " + temp + " desk_id= " + deskId);
@@ -147,8 +155,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public long setLearnerOnPlace(long learner_id, long place_id) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(SchoolContract.TableLearners.KEY_LEARNER_ID, learner_id);
-        values.put(SchoolContract.TablePlaces.KEY_PLACE_ID, place_id);
+        values.put(SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID, learner_id);
+        values.put(SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID, place_id);
         long temp = db.insert(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES, null, values);//-1 = ошибка ввода
         db.close();
         Log.i("DBOpenHelper", "setLearnerOnPlace returnId = " + temp + " learner_id= " + learner_id + " place_id= " + place_id);
@@ -164,15 +172,10 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    /*todo если поменять SchoolContract.TableDesks.KEY_CABINET_ID на SchoolContract.TableCabinets.KEY_CABINET_ID почему-то выдаёт нужный запрос
-    * по идее метод выше должен извлекать из таблицы парты все ряды в которых id кабинета равен искомому, следовательно нужно использовать имя столбца из таблицы парты, но ничего невыходит
-    * пробовал удалять foreign key тот же результат
-    * */
-
 
     public Cursor getPlacesByDeskId(long deskId) {//todo также
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(SchoolContract.TablePlaces.NAME_TABLE_PLACES, null, SchoolContract.TablePlaces.KEY_DESK_ID + " =?", new String[] {deskId + ""}, null, null, null);
+        Cursor cursor = db.query(SchoolContract.TablePlaces.NAME_TABLE_PLACES, null, SchoolContract.TablePlaces.KEY_DESK_ID + " =?", new String[]{deskId + ""}, null, null, null);
         Log.i("DBOpenHelper", "getPlacesByDeskId deskId=" + deskId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
@@ -181,6 +184,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(SchoolContract.TableClasses.NAME_TABLE_CLASSES, null, null, null, null, null, null);
         Log.i("DBOpenHelper", "getClasses " + cursor + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        return cursor;
+    }
+
+    public Cursor getClasses(long classId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] selectionArgs = {classId + ""};
+        Cursor cursor = db.query(SchoolContract.TableClasses.NAME_TABLE_CLASSES, null, SchoolContract.TableClasses.KEY_CLASS_ID + " = ?", selectionArgs, null, null, null);
+        Log.i("DBOpenHelper", "getClasses " + cursor + "id="+ classId +"number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -194,9 +205,40 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public Cursor getLearnersByClassId(long classId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {classId + ""};
+        //Cursor cursor = db.query(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, null, null, null, null, null, null);
         Cursor cursor = db.query(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, null, SchoolContract.TableLearners.KEY_CLASS_ID + " = ?", selectionArgs, null, null, null);
         Log.i("DBOpenHelper", "getLearnersByClassId classId=" + classId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
+    }
+
+    public Cursor getLearner(long learnerId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] selectionArgs = {learnerId + ""};
+        //Cursor cursor = db.query(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, null, null, null, null, null, null);
+        Cursor cursor = db.query(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, null, SchoolContract.TableLearners.KEY_LEARNER_ID + " = ?", selectionArgs, null, null, null);
+        //Log.i("DBOpenHelper", "getLearnersByClassId classId=" + classId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        return cursor;
+    }
+
+    public int setClassName(long classId, String name) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues contentName = new ContentValues();
+        contentName.put(SchoolContract.TableClasses.COLUMN_CLASS_NAME, name);
+        String[] whereArgs = {"" + classId};
+        return db.update(SchoolContract.TableClasses.NAME_TABLE_CLASSES, contentName, SchoolContract.TableClasses.KEY_CLASS_ID + " = ?", whereArgs);
+    }
+
+    public int setLearnerNameAndLastName(long learnerId, String name,String lastName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues contentName = new ContentValues();
+        contentName.put(SchoolContract.TableLearners.COLUMN_FIRST_NAME, name);
+        contentName.put(SchoolContract.TableLearners.COLUMN_SECOND_NAME, lastName);
+        String[] whereArgs = {"" + learnerId};
+        return db.update(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, contentName, SchoolContract.TableLearners.KEY_LEARNER_ID + " = ?", whereArgs);
+    }
+
+    public void restartTable() {
+        onUpgrade(this.getReadableDatabase(), 1, 100);
     }
 
 

@@ -24,7 +24,7 @@ public class RedactorActivity extends AppCompatActivity {
                 if(getIntent().getStringExtra(EDITED_OBJECT_ID).equals(OBJECT_NEW)){//если условие истинно, то мы хотим создать новый класс иначе достаём его по id
 
 
-                    out.addView();
+                   // out.addView();
                 }else{
 
                 }

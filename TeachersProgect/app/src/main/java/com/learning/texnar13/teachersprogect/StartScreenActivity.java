@@ -3,6 +3,7 @@ package com.learning.texnar13.teachersprogect;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -60,5 +61,11 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {//todo реализовать корректное назад во всех activity, без бекстек
+        //finish();
+        Log.i("StartScreenActivity", "back");
     }
 }

@@ -41,31 +41,45 @@ public class ListOfActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent;
                 intent = new Intent(ListOfActivity.this, RedactorActivity.class); //переход на редактор
+
+                ListOfDialog dialog = new ListOfDialog();
+
                 switch (listParameterValue) {
                     case SchoolContract.TableClasses.NAME_TABLE_CLASSES://создание классов
-                        intent.putExtra(RedactorActivity.EDITED_OBJECT, SchoolContract.TableClasses.NAME_TABLE_CLASSES);//говорим редактору тип обьекта
-                        intent.putExtra(RedactorActivity.EDITED_OBJECT_ID, RedactorActivity.OBJECT_NEW);//говорим редактору что обьект новый
+
+                        dialog.objectParameter = listParameterValue;
+                        dialog.show(getFragmentManager(), "dialogNewClass");
+
+                        //todo диалоговое окно с выбором имени
+
                         break;
                     case SchoolContract.TableLearners.NAME_TABLE_LEARNERS://создание учеников
-                        intent.putExtra(RedactorActivity.EDITED_OBJECT, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//говорим редактору тип обьекта
-                        intent.putExtra(RedactorActivity.EDITED_OBJECT_ID, RedactorActivity.OBJECT_NEW);//говорим редактору что обьект новый
 
+                        dialog.objectParameter = listParameterValue;
+                        dialog.dopParameter = "" + getIntent().getLongExtra(DOP_LIST_PARAMETER, -1);
+                        getIntent().getStringExtra(DOP_LIST_PARAMETER);
+                        dialog.show(getFragmentManager(), "dialogNewClass");
+
+//                        intent.putExtra(RedactorActivity.EDITED_OBJECT, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//говорим редактору тип обьекта
+//                        intent.putExtra(RedactorActivity.EDITED_OBJECT_ID, RedactorActivity.OBJECT_NEW);//говорим редактору что обьект новый
+//                        startActivity(intent);
                         break;
                     case SchoolContract.TableCabinets.NAME_TABLE_CABINETS:
                         intent.putExtra(RedactorActivity.EDITED_OBJECT, SchoolContract.TableCabinets.NAME_TABLE_CABINETS);//говорим редактору тип обьекта
                         intent.putExtra(RedactorActivity.EDITED_OBJECT_ID, RedactorActivity.OBJECT_NEW);//говорим редактору что обьект новый
-
+                        startActivity(intent);
                     default:
                         Log.wtf("ListOfActivity", "in fab, listParameterValue is default!");
                 }
-                startActivity(intent);
+
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();
             }
         });
 
         Button tempButtonForList;
-        ViewGroup.LayoutParams tempParamsForButtonForList = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);//параметры кнопки
+        ViewGroup.LayoutParams tempParamsForListButton = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);//параметры кнопки
+
         final Cursor cursor;//будущий курсор с обьектами вывод;
         switch (listParameterValue) {//вибираем содержимое списка
             case SchoolContract.TableClasses.NAME_TABLE_CLASSES:
@@ -76,19 +90,34 @@ public class ListOfActivity extends AppCompatActivity {
                     tempButtonForList = new Button(this);//кнопка которая будет вставляться в список
                     final long classId = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID));// мы не можем использовать эту переменную в onClick, та как курсор закрывается а на кнопку мы нажимаем уже потом
 
+                    //tempButtonForList.setBackgroundResource(R.style.Widget_AppCompat_Button_Borderless);  style="?android:attr/borderlessButtonStyle"
                     tempButtonForList.setText(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));//устанавливаем на кнопку имя класса
                     tempButtonForList.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+
                             Intent intent;
                             intent = new Intent(ListOfActivity.this, ListOfActivity.class);//запуск этого активити заново
                             intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//но с учениками
-                            intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER,classId);//передаём id выбранного класса
+                            intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, classId);//передаём id выбранного класса
                             startActivity(intent);
+
                         }
                     });
-                    out.addView(tempButtonForList, tempParamsForButtonForList);//добавляем эту кнопку
-                    Log.i("ListOfActivity", "Classes: add button "+classId);
+                    tempButtonForList.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+
+                            ListOfDialog dialog = new ListOfDialog();
+                            dialog.objectParameter = listParameterValue;
+                            dialog.objectId = classId;
+                            dialog.show(getFragmentManager(), "dialogEditClass");
+                            return false;
+                        }
+                    });
+
+                    out.addView(tempButtonForList, tempParamsForListButton);//добавляем эту кнопку
+                    Log.i("ListOfActivity", "Classes: add button " + classId);
                 }
                 cursor.close();
                 break;
@@ -104,13 +133,13 @@ public class ListOfActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             Intent intent;
-                            intent = new Intent(ListOfActivity.this, RedactorActivity.class);//запуск этого активити заново
+                            intent = new Intent(ListOfActivity.this, RedactorActivity.class);//запуск редактора
                             intent.putExtra(RedactorActivity.EDITED_OBJECT, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//редактируем ученика
                             intent.putExtra(RedactorActivity.EDITED_OBJECT_ID, learnerId);//передаём id выбранного ученика
                             startActivity(intent);
                         }
                     });
-                    out.addView(tempButtonForList, tempParamsForButtonForList);//добавляем эту кнопку
+                    out.addView(tempButtonForList, tempParamsForListButton);//добавляем эту кнопку
                     Log.i("ListOfActivity", "Learners: add button");
                 }
                 cursor.close();
@@ -127,13 +156,13 @@ public class ListOfActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             Intent intent;
-                            intent = new Intent(ListOfActivity.this, RedactorActivity.class);//запуск этого активити заново
+                            intent = new Intent(ListOfActivity.this, RedactorActivity.class);//редактируем класс
                             intent.putExtra(RedactorActivity.EDITED_OBJECT, SchoolContract.TableCabinets.NAME_TABLE_CABINETS);//редактируем кабинет
                             intent.putExtra(RedactorActivity.EDITED_OBJECT_ID, cabinetId);//передаём id выбранного ученика
                             startActivity(intent);
                         }
                     });
-                    out.addView(tempButtonForList, tempParamsForButtonForList);//добавляем эту кнопку
+                    out.addView(tempButtonForList, tempParamsForListButton);//добавляем эту кнопку
                     Log.i("ListOfActivity", "cabinets: add button");
                 }
                 cursor.close();
@@ -145,27 +174,26 @@ public class ListOfActivity extends AppCompatActivity {
         db.close();//закрыли базу данных
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent;
+        switch (listParameterValue) {
+            case SchoolContract.TableClasses.NAME_TABLE_CLASSES:
+                intent = new Intent(ListOfActivity.this, StartScreenActivity.class);//домой
+                startActivity(intent);
+                Log.i("ListOfActivity", "back on classes");
+                break;
+            case SchoolContract.TableLearners.NAME_TABLE_LEARNERS:
+                intent = new Intent(ListOfActivity.this, ListOfActivity.class);
+                intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableClasses.NAME_TABLE_CLASSES);
+                startActivity(intent);
+                Log.i("ListOfActivity", "back on learners");
+                break;
+            case SchoolContract.TableCabinets.NAME_TABLE_CABINETS:
+                intent = new Intent(ListOfActivity.this, StartScreenActivity.class);//домой
+                startActivity(intent);
+                Log.i("ListOfActivity", "back on cabinets");
+                break;
+        }
+    }
 }
-
-/*
-* Log.i("ListOfActivity", "out learners, classId: " + cursor.getLong(cursor.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID)));
-                    out.removeAllViews();
-                    final Cursor learnersCursor = db.getLearnersByClassId(cursor.getLong(cursor.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID)));
-                    while (learnersCursor.moveToNext()) {
-                        Button tempLearnerButton = new Button(ListOfActivity.this);
-                        temp.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Log.i("ListOfActivity", "chose learner: " + learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)));
-                            }
-                        });
-                        ViewGroup.LayoutParams tempParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        out.addView(tempLearnerButton, tempParams);
-                    }
-                    learnersCursor.close();
-*
- *
-  *
-  *
-  */
-
