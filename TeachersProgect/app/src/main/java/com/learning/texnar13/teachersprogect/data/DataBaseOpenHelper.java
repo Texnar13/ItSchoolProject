@@ -191,7 +191,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {classId + ""};
         Cursor cursor = db.query(SchoolContract.TableClasses.NAME_TABLE_CLASSES, null, SchoolContract.TableClasses.KEY_CLASS_ID + " = ?", selectionArgs, null, null, null);
-        Log.i("DBOpenHelper", "getClasses " + cursor + "id="+ classId +"number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        Log.i("DBOpenHelper", "getClasses " + cursor + "id=" + classId + "number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -199,6 +199,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(SchoolContract.TableCabinets.NAME_TABLE_CABINETS, null, null, null, null, null, null);
         Log.i("DBOpenHelper", "getCabinets " + cursor + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        return cursor;
+    }
+
+    public Cursor getCabinets(long cabinetId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] selectionArgs = {cabinetId + ""};
+        Cursor cursor = db.query(SchoolContract.TableCabinets.NAME_TABLE_CABINETS, null, SchoolContract.TableCabinets.KEY_CABINET_ID + " = ?", selectionArgs, null, null, null);
+        Log.i("DBOpenHelper", "getCabinets " + cursor + "id=" + cabinetId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -228,13 +236,21 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return db.update(SchoolContract.TableClasses.NAME_TABLE_CLASSES, contentName, SchoolContract.TableClasses.KEY_CLASS_ID + " = ?", whereArgs);
     }
 
-    public int setLearnerNameAndLastName(long learnerId, String name,String lastName) {
+    public int setLearnerNameAndLastName(long learnerId, String name, String lastName) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentName = new ContentValues();
         contentName.put(SchoolContract.TableLearners.COLUMN_FIRST_NAME, name);
         contentName.put(SchoolContract.TableLearners.COLUMN_SECOND_NAME, lastName);
         String[] whereArgs = {"" + learnerId};
         return db.update(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, contentName, SchoolContract.TableLearners.KEY_LEARNER_ID + " = ?", whereArgs);
+    }
+
+    public int setCabinetName(long cabinetId,String name){
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues contentName = new ContentValues();
+        contentName.put(SchoolContract.TableCabinets.COLUMN_NAME, name);
+        String[] whereArgs = {"" + cabinetId};
+        return db.update(SchoolContract.TableCabinets.NAME_TABLE_CABINETS, contentName, SchoolContract.TableCabinets.KEY_CABINET_ID + " = ?", whereArgs);
     }
 
     public void restartTable() {

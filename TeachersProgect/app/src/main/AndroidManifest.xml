@@ -22,7 +22,7 @@
 
         </activity>
         <activity
-            android:name=".ListOfActivity"
+            android:name=".listOf.ListOfActivity"
             android:label="@string/title_activity_list_of"
             android:theme="@style/AppTheme.NoActionBar">
 

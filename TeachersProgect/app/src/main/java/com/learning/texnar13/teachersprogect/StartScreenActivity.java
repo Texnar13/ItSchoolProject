@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.listOf.ListOfActivity;
 
 
 public class StartScreenActivity extends AppCompatActivity implements View.OnClickListener {

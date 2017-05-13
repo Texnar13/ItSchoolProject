@@ -7,12 +7,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.learning.texnar13.teachersprogect.ListOfActivity"
+    tools:context="com.learning.texnar13.teachersprogect.listOf.ListOfActivity"
     tools:showIn="@layout/activity_list_of">
 
+    <ListView
+        android:id="@+id/content_list_of_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+    </ListView>
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <LinearLayout
             android:id="@+id/content_list_of_classes_out"
