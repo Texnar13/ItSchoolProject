@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,7 +20,11 @@ import com.learning.texnar13.teachersprogect.RedactorActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
-public class ListOfActivity extends AppCompatActivity {
+interface AbleToChangeTheEditMenu {
+    void editIsEditMenuVisible(boolean isEditMenuVisible);
+}
+
+public class ListOfActivity extends AppCompatActivity implements AbleToChangeTheEditMenu {
 
     public static final String LIST_PARAMETER = "listParameter";
     public static final String DOP_LIST_PARAMETER = "dopListParameter";
@@ -27,10 +32,49 @@ public class ListOfActivity extends AppCompatActivity {
     FloatingActionButton fab;
     String listParameterValue;
 
+    boolean isEditMenuVisible = false;
+    ListOfAdapter adapter;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.list_of_menu,menu);
+        getMenuInflater().inflate(R.menu.list_of_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Log.i("ListOfActivity", "onPrepareOptionsMenu");
+        menu.setGroupVisible(R.id.list_of_menu_group, isEditMenuVisible);
+        menu.findItem(R.id.list_of_menu_delete).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                //реализовываем в адаптере получение списка чёкнутых и скармливаем базе данных
+                return true;
+            }
+        });
+        menu.findItem(R.id.list_of_menu_rename).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Log.i("ListOfActivity", "onPrepareOptionsMenu renameId =" + adapter.getIdCheckedListOfAdapterObjects());
+                ListOfDialog dialog = new ListOfDialog();
+                dialog.objectParameter = SchoolContract.TableClasses.NAME_TABLE_CLASSES;
+                dialog.objectsId = adapter.getIdCheckedListOfAdapterObjects();
+                dialog.show(getFragmentManager(), "dialogEditClass");
+
+//                new DataBaseOpenHelper(getApplicationContext()).setClassesNames(adapter.getIdCheckedListOfAdapterObjects(), "2z");
+
+
+                //вызываем диалог, ставим имя и обновляем из диалога
+                //добавить обновление списка скорее всего через общий метод, хотя не факт возможно это мне пришло в голову лишь для удобства
+                return true;
+            }
+        });
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void editIsEditMenuVisible(boolean isEditMenuVisible) {
+        this.isEditMenuVisible = isEditMenuVisible;
     }
 
     @Override
@@ -60,7 +104,7 @@ public class ListOfActivity extends AppCompatActivity {
                     case SchoolContract.TableLearners.NAME_TABLE_LEARNERS://создание учеников
                         dialog.objectParameter = listParameterValue;
                         dialog.parentId = getIntent().getLongExtra(DOP_LIST_PARAMETER, -1);
-                        dialog.show(getFragmentManager(), "dialogNewClass");
+                        dialog.show(getFragmentManager(), "dialogNewLearner");
                         break;
                     case SchoolContract.TableCabinets.NAME_TABLE_CABINETS:
 
@@ -81,13 +125,12 @@ public class ListOfActivity extends AppCompatActivity {
         switch (listParameterValue) {//вибираем содержимое списка
             case SchoolContract.TableClasses.NAME_TABLE_CLASSES:
                 getSupportActionBar().setTitle("мои классы");
-
-                cursor = db.getClasses();//получаем классы
+                cursor = db.getClasses();
                 ListView listView = (ListView) findViewById(R.id.content_list_of_list_view);
-                listView.setAdapter(new ListOfAdapter(this, cursor, false));//todo вызвать ещё раз setAdapter в кнопке как добавить view++++++++
+                this.adapter = new ListOfAdapter(this, cursor, false);
+                listView.setAdapter(this.adapter);
 
                 Log.i("ListOfActivity", "out classes");
-
 
 
 //                while (cursor.moveToNext()) {//проходимся по классам
@@ -114,7 +157,7 @@ public class ListOfActivity extends AppCompatActivity {
 //
 //                            ListOfDialog dialog = new ListOfDialog();
 //                            dialog.objectParameter = listParameterValue;
-//                            dialog.objectId = classId;
+//                            dialog.objectsId = classId;
 //                            dialog.show(getFragmentManager(), "dialogEditClass");
 //                            return true;
 //                        }
@@ -123,7 +166,7 @@ public class ListOfActivity extends AppCompatActivity {
 //                    out.addView(tempButtonForList, tempParamsForListButton);//добавляем эту кнопку
 //                    Log.i("ListOfActivity", "Classes: add button " + classId);
 //                }
-//                cursor.close();
+                cursor.close();
                 break;
             case SchoolContract.TableLearners.NAME_TABLE_LEARNERS:
                 cursor = db.getLearnersByClassId(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));//получаем учеников по умолчанию по первому классу
@@ -178,7 +221,22 @@ public class ListOfActivity extends AppCompatActivity {
         db.close();//закрыли базу данных
     }
 
-//    @Override
+    @Override
+    public void onBackPressed() {
+        if (isEditMenuVisible) {
+            switch (listParameterValue) {//исходя из содержимого списка
+                case SchoolContract.TableClasses.NAME_TABLE_CLASSES:
+                    ListView listView = (ListView) findViewById(R.id.content_list_of_list_view);
+                    this.adapter = new ListOfAdapter(this, new DataBaseOpenHelper(this).getClasses(), false);
+                    listView.setAdapter(this.adapter);
+                    break;
+            }
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    //    @Override
 //    public void onBackPressed() {
 //        Intent intent;
 //        switch (listParameterValue) {

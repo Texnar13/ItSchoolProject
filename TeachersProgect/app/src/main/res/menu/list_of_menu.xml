@@ -6,10 +6,18 @@
         android:enabled="true"
         android:visible="true">
         <item
-            android:title="1"
-            app:showAsAction="always"
+            android:title="удалить"
+            app:showAsAction="ifRoom"
             android:id="@+id/list_of_menu_delete"
             android:icon="@android:drawable/ic_menu_delete"
+            >
+
+        </item>
+        <item
+            android:title="переименовать"
+            app:showAsAction="ifRoom"
+            android:id="@+id/list_of_menu_rename"
+            android:icon="@android:drawable/ic_menu_edit"
             >
 
         </item>

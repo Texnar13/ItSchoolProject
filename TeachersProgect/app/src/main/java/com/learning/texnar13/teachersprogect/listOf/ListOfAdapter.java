@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -31,10 +32,6 @@ public class ListOfAdapter extends BaseAdapter {
     private ArrayList<ListOfAdapterObject> content;
     private boolean showCheckBoxes;
     private long idPressedCheckBox = -1;
-
-    /*Создаете в onCreate обработчик onClickListener с onClick в нем switch с определением ид элемента на который нажали и вызовом методов clickChkVisibleGroup и  clickChkVisibleItem. Далее цепляете в этом методе этот onClickListener к элементам чекбоксам.
-Создаете глобальную переменную Menu myMenu; в событии onCreateOptionsMenu загоняете в эту переменную ссылку на меню myMenu = menu.
-    */
 
     ListOfAdapter(Activity activity, ArrayList<ListOfAdapterObject> content, boolean showCheckBoxes, long idPressedCheckBox) {
         this.activity = activity;
@@ -77,28 +74,28 @@ public class ListOfAdapter extends BaseAdapter {
     //пункт списка
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        Log.i("ListOfAdapter", "getView position = " + position);
         // используем созданные, но не используемые view
         View view = convertView;
         //if (view == null) {
         //    view = inflater.inflate(R.layout.list_of_adapter_element, parent, false);
         //}
         view = inflater.inflate(R.layout.list_of_adapter_element, parent, false);
-
-
         final ListOfAdapterObject listOfAdapterObject = getListOfAdapterObject(position);
 
-        LinearLayout flat = (LinearLayout) view.findViewById(R.id.list_of_adapter_element_out);
 
+        LinearLayout flat = (LinearLayout) view.findViewById(R.id.list_of_adapter_element_out);
         Button title = new Button(context);
         title.setText(listOfAdapterObject.getobjName());
         //выводим чекбоксы
+        Log.i("ListOfAdapter", "getView showCheckBoxes = " + showCheckBoxes);
         if (showCheckBoxes) {
 
+            ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(true);
 
             final CheckBox checkBox = new CheckBox(context);
-            if(position == idPressedCheckBox){
+            if (position == idPressedCheckBox) {
                 checkBox.setChecked(true);
-
             }
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -108,13 +105,12 @@ public class ListOfAdapter extends BaseAdapter {
             });
             flat.addView(checkBox);
         } else {
-
+            ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(false);
             Log.i("ListOfAdapter", "add new element");
             final long classId = listOfAdapterObject.getobjId();
             flat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //ошибка в getLong
                     Log.i("ListOfAdapter", "classes onClick, id = " + classId);
                     Intent intent;
                     intent = new Intent(context, ListOfActivity.class);//запуск этого активити заново
@@ -126,19 +122,15 @@ public class ListOfAdapter extends BaseAdapter {
             flat.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-
+                    Log.i("ListOfAdapter", "classes onLongClick, id = " + classId);
+                    listOfAdapterObject.setChecked(true);
                     ListView listView = (ListView) activity.findViewById(R.id.content_list_of_list_view);
-                    listView.setAdapter(new ListOfAdapter(activity, content, true, (long) position));//todo cursor пустой
-                    Log.i("ListOfActivity", "out classes wis checkboxes");
-//                    ListOfDialog dialog = new ListOfDialog();
-//                            dialog.objectParameter = listParameterValue;
-//                            dialog.objectId = classId;
-//                            dialog.show(getFragmentManager(), "dialogEditClass");
-//                            return true;
+                    listView.setAdapter(new ListOfAdapter(activity, content, true, (long) position));
                     return true;
                 }
             });
         }
+        activity.invalidateOptionsMenu();//обновляем меню
         flat.addView(title, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return view;
     }
@@ -147,4 +139,64 @@ public class ListOfAdapter extends BaseAdapter {
         return (ListOfAdapterObject) getItem(position);
     }
 
+    ArrayList<Long> getIdCheckedListOfAdapterObjects() {//когда создаю новый при помощи fab их на 1 меньше
+        Log.i("ListOfAdapter", "getIdCheckedListOfAdapterObjects number = " + content.size() + " content = " + content);
+        ArrayList<Long> idCheckedListOfAdapterObjects = new ArrayList<>();
+        for (int i = 0; i < content.size(); i++) {
+            if (content.get(i).isChecked()) {
+                idCheckedListOfAdapterObjects.add(content.get(i).getobjId());
+            }
+        }
+        return idCheckedListOfAdapterObjects;
+    }
+
 }
+
+class ListOfAdapterObject {
+    private String objName;
+    private String objType;
+    private long objId;
+    private boolean isChecked;
+
+
+    ListOfAdapterObject(String name, String type, long id) {
+        this.objName = name;
+        this.objType = type;
+        this.objId = id;
+        isChecked = false;
+
+    }
+
+    boolean isChecked() {
+        return isChecked;
+    }
+
+    void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
+    String getobjName() {
+        return objName;
+    }
+
+    public void setobjName(String name) {
+        this.objName = name;
+    }
+
+    String getobjType() {
+        return objType;
+    }
+
+    void setobjType(String type) {
+        this.objType = type;
+    }
+
+    long getobjId() {
+        return objId;
+    }
+
+    void setobjId(long id) {
+        this.objId = id;
+    }
+}
+

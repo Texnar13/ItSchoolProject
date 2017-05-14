@@ -13,8 +13,7 @@
     <ListView
         android:id="@+id/content_list_of_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
     </ListView>
     <ScrollView
         android:layout_width="match_parent"

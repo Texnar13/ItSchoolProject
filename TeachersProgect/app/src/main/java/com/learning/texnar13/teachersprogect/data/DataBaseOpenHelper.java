@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
@@ -20,14 +21,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //int i = 1 / 0;//та самая строка
-//        db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + ";");
-//        db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableDesks.NAME_TABLE_DESKS + ";");
-//        db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + ";");
-//        db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + ";");
-//        db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + ";");
-//        db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + ";");
-//        db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
         updateDatabase(db, 0, 1);
     }
 
@@ -38,7 +31,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     private void updateDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.i("DataBaseOpenHelper", "updateDatabase old=" + oldVersion + " new=" + newVersion);
-        if (oldVersion < 5) {//если база версии 4 и выше, то она не запустит этот код
+        if (oldVersion < 5) {//если база версии 5 и выше, то она не запустит этот код
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableDesks.NAME_TABLE_DESKS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + ";");
@@ -173,7 +166,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     }
 
 
-    public Cursor getPlacesByDeskId(long deskId) {//todo также
+    public Cursor getPlacesByDeskId(long deskId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(SchoolContract.TablePlaces.NAME_TABLE_PLACES, null, SchoolContract.TablePlaces.KEY_DESK_ID + " =?", new String[]{deskId + ""}, null, null, null);
         Log.i("DBOpenHelper", "getPlacesByDeskId deskId=" + deskId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
@@ -224,32 +217,53 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         String[] selectionArgs = {learnerId + ""};
         //Cursor cursor = db.query(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, null, null, null, null, null, null);
         Cursor cursor = db.query(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, null, SchoolContract.TableLearners.KEY_LEARNER_ID + " = ?", selectionArgs, null, null, null);
-        //Log.i("DBOpenHelper", "getLearnersByClassId classId=" + classId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        Log.i("DBOpenHelper", "getLearner learnerId=" + learnerId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
-    public int setClassName(long classId, String name) {
+    public int setClassesNames(ArrayList<Long> classId, String name) {
+        /* todo что если в schoolContract добавить классы в которые можно поместь (сконвертировав) обьект таблицы бд
+         * со всеми прилагающимися а потом создать метод на подобие
+         * createClass(SchoolContract.TableClasses.ClassObject classObject); и генерировать обьект rename и
+         * изменять его, затем отправлять на поыторное создание. И сделай накеонец сортировку курсора кстати
+         * тоже со скрываемыми методами и лучше для двух разных параметров сортировки использовать одну
+         * булеановскую переменную отображения в меню
+         * todo так стоп, а как я их до этого переименовывал через диалог!?
+         * */
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentName = new ContentValues();
         contentName.put(SchoolContract.TableClasses.COLUMN_CLASS_NAME, name);
-        String[] whereArgs = {"" + classId};
-        return db.update(SchoolContract.TableClasses.NAME_TABLE_CLASSES, contentName, SchoolContract.TableClasses.KEY_CLASS_ID + " = ?", whereArgs);
+        int answer = 0;
+        String stringClassId = "";
+        for (int i = 0; i < classId.size(); i++) {
+            stringClassId = stringClassId + classId.get(i) + " | ";
+            if (db.update(SchoolContract.TableClasses.NAME_TABLE_CLASSES, contentName, SchoolContract.TableClasses.KEY_CLASS_ID + " = ?", new String[]{"" + classId.get(i)}) == 1)
+                answer++;
+        }
+        Log.i("DBOpenHelper", "setClassesNames name = " + name + " id= " + stringClassId + " return = " + answer);
+        return answer;
     }
 
-    public int setLearnerNameAndLastName(long learnerId, String name, String lastName) {
+    public int setLearnerNameAndLastName(long[] learnerId, String name, String lastName) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentName = new ContentValues();
         contentName.put(SchoolContract.TableLearners.COLUMN_FIRST_NAME, name);
         contentName.put(SchoolContract.TableLearners.COLUMN_SECOND_NAME, lastName);
-        String[] whereArgs = {"" + learnerId};
+        String[] whereArgs = new String[learnerId.length];
+        for (int i = 0; i < learnerId.length; i++) {
+            whereArgs[i] = Long.toString(learnerId[i]);
+        }
         return db.update(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, contentName, SchoolContract.TableLearners.KEY_LEARNER_ID + " = ?", whereArgs);
     }
 
-    public int setCabinetName(long cabinetId,String name){
+    public int setCabinetName(long[] cabinetId, String name) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentName = new ContentValues();
         contentName.put(SchoolContract.TableCabinets.COLUMN_NAME, name);
-        String[] whereArgs = {"" + cabinetId};
+        String[] whereArgs = new String[cabinetId.length];
+        for (int i = 0; i < cabinetId.length; i++) {
+            whereArgs[i] = Long.toString(cabinetId[i]);
+        }
         return db.update(SchoolContract.TableCabinets.NAME_TABLE_CABINETS, contentName, SchoolContract.TableCabinets.KEY_CABINET_ID + " = ?", whereArgs);
     }
 
