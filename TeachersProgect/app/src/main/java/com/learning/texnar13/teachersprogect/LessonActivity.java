@@ -16,29 +16,87 @@ public class LessonActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //TODO 3 это класс урока
+        /*
+        * вывод учеников, парт и мест, по нажатию наученика открывается доп.меню*
+        где можно выбрать оценку, нет оценки/1/2/3/4/5
+        после окончания урока учитель нажимает закончить урок
+        выводим стастику за весь урок(2)
+        *
+        *
+        *
+        *    _________________________________
+        *   |название урока     закончить урок|
+        *   |_________________________________|
+        *   |                                 |
+        *   |                                 |
+        *   |    _______         _______      |
+        *   |   |имя|имя|       |имя|имя|     |
+        *   |   |фам|фам|       |фам|фам|     |
+        *   |    _______         _______      |
+        *   |   |имя|имя|       |имя|имя|     |
+        *   |   |фам|фам|       |фам|фам|     |
+        *   |    _______         _______      |
+        *   |   |имя|имя|       |имя|имя|     |
+        *   |   |фам|фам|       |фам|фам|     |
+        *   |    _______         _______      |
+        *   |   |имя|имя|       |имя|имя|     |
+        *   |   |фам|фам|       |фам|фам|     |
+        *   |                                 |
+        *   |                                 |
+        *   |                                 |
+        *   |                                 |
+        *   |_________________________________|
+        *
+        *
+        *
+        * (2)
+        *    _________________________________
+        *   |  имя урока            сохранить |
+        *   |_________________________________|
+        *   |                                 |
+        *   |   имя фамилия            оценка |
+        *   |_________________________________|
+        *   |                                 |
+        *   |   имя фамилия            оценка |
+        *   |_________________________________|
+        *   |                                 |
+        *   |   имя фамилия            оценка |
+        *   |_________________________________|
+        *   |                                 |
+        *   |   имя фамилия            оценка |
+        *   |_________________________________|
+        *   |                                 |
+        *   |   имя фамилия            оценка |
+        *   |_________________________________|
+        *   |                                 |
+        *   |   имя фамилия            оценка |
+        *   |_________________________________|
+        *   |                                 |
+        *   |   имя фамилия            оценка |
+        *   |_________________________________|
+        *   |                                 |
+        *   |   имя фамилия            оценка |
+        *   |_________________________________|
+        *   |                                 |
+        *   |_________________________________|
+        *
+        *
+        * нажимаем сохранить и сохраняем в таблицу ученик-оценка
+        *
+        *
+        *
+        *
+        *
+        *
+        * */
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         DataBaseOpenHelper dbOpenHelper = new DataBaseOpenHelper(this);
-//        {//чистим таблицу
-//            SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
-//            db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + ";");
-//            db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableDesks.NAME_TABLE_DESKS + ";");
-//            db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + ";");
-//            db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + ";");
-//            db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + ";");
-//            db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + ";");
-//            db.execSQL("DROP TABLE IF EXIST " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
-//            dbOpenHelper.onCreate(db);
-//        }
 
-
-        generate(dbOpenHelper);
-        //заполнили базу данных, дальше можем только доставать данные
-//TODO чтобы в таблице были начальные данные (для отладки) я при первой установке запускал метод generate затем коментировал его
-
-
-        ArrayList<Long> learnersId = new ArrayList<Long>();
+        generate(dbOpenHelper);//начальные данные (для отладки)
 
         RelativeLayout room = (RelativeLayout) findViewById(R.id.room_layout);
         Cursor cursor = dbOpenHelper.getDesksByCabinetId(2);

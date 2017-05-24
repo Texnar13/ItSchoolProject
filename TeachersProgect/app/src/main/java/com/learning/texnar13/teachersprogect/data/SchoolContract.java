@@ -53,6 +53,7 @@ public final class SchoolContract {
 
         public static final String NAME_TABLE_LEARNERS_ON_PLACES = "learnersOnPlaces";
         public static final String KEY_ATTITUDES_ID = BaseColumns._ID;
+        public static final String KEY_LESSON_ID = "lessonId";//-----------------------------------
         public static final String KEY_LEARNER_ID = "learnerId";
         public static final String KEY_PLACE_ID = "placeId";
     }
@@ -66,4 +67,25 @@ public final class SchoolContract {
         public static final String KEY_LEARNER_ID = "learnerId";
     }
 
+
+    //-----------------
+
+    public final class TableSchedules{
+        public static final String NAME_TABLE_SCHEDUELSE = "schedules";
+        public static final String KEY_SCHEDULE_ID = BaseColumns._ID;
+        public static final String COLUMN_NAME = "name";
+    }
+
+    public final class TableLessons{
+        public static final String NAME_TABLE_LESSONS = "lessons";
+        public static final String KEY_LESSON_ID = BaseColumns._ID;
+        public static final String KEY_SCHEDULE_ID = "scheduleId";
+        public static final String COLUMN_DATE_BEGIN = "lessonDateBegin";
+        public static final String COLUMN_DATE_END = "lessonDateEnd";
+        public static final String KEY_CLASS_ID = "classId";
+        public static final String KEY_CABINET_ID = "cabinetId";
+
+
+
+    }
 }

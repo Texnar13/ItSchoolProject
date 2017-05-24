@@ -27,7 +27,7 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
-        <activity android:name=".RedactorActivity">
+        <activity android:name=".CabinetRedactorActivity">
 
         </activity>
     </application>

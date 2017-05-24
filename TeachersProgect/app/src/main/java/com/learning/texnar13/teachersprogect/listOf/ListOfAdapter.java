@@ -3,10 +3,8 @@ package com.learning.texnar13.teachersprogect.listOf;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -16,45 +14,49 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
 import com.learning.texnar13.teachersprogect.R;
-import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
 import java.util.ArrayList;
 
 
 public class ListOfAdapter extends BaseAdapter {
-
+    //может нужна переменная был ли этот вызов чекбоксов первым  после отработки метода сделать её false
+    //сохраняется массив, который создавался ври первых изменениях значения в следующем меняются, но используется первый
+    //он должен обновляться при закрытии диалога возможно при закрытии мы передаём ему старый массив
     private Activity activity;
     private Context context;
     //private Cursor cursor;
     private LayoutInflater inflater;
     private ArrayList<ListOfAdapterObject> content;
     private boolean showCheckBoxes;
-    private long idPressedCheckBox = -1;
+    private String type;
 
-    ListOfAdapter(Activity activity, ArrayList<ListOfAdapterObject> content, boolean showCheckBoxes, long idPressedCheckBox) {
+    ListOfAdapter(Activity activity, ArrayList<ListOfAdapterObject> content, boolean showCheckBoxes, String type) {
         this.activity = activity;
         this.context = activity.getApplicationContext();
-        this.content = content;
-        this.showCheckBoxes = showCheckBoxes;
-        this.idPressedCheckBox = idPressedCheckBox;
+        this.content = content;//отображаемые обьекты
+        this.showCheckBoxes = showCheckBoxes;//есть ли чекбоксы
+        this.type = type;//тип отображаемых обьектов
+        //this.idPressedCheckBox = idPressedCheckBox;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    ListOfAdapter(Activity activity, Cursor cursor, boolean showCheckBoxes) {
-        ArrayList<ListOfAdapterObject> listOfClasses = new ArrayList<ListOfAdapterObject>();
-        while (cursor.moveToNext()) {
-            listOfClasses.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)), SchoolContract.TableClasses.NAME_TABLE_CLASSES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID))));
-        }
-        //this.cursor = cursor;
-
-        this.activity = activity;
-        this.context = activity.getApplicationContext();
-        this.content = listOfClasses;
-        this.showCheckBoxes = showCheckBoxes;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
+//    ListOfAdapter(Activity activity, Cursor cursor, boolean showCheckBoxes) {
+//        ArrayList<ListOfAdapterObject> listOfClasses = new ArrayList<ListOfAdapterObject>();
+//        while (cursor.moveToNext()) {
+//            listOfClasses.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)), SchoolContract.TableClasses.NAME_TABLE_CLASSES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID))));
+//        }
+//        cursor.close();
+//        //this.cursor = cursor;
+//
+//        this.activity = activity;
+//        this.context = activity.getApplicationContext();
+//        this.content = listOfClasses;
+//        this.showCheckBoxes = showCheckBoxes;
+//        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//    }
 
     @Override
     public int getCount() {
@@ -74,7 +76,7 @@ public class ListOfAdapter extends BaseAdapter {
     //пункт списка
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        Log.i("ListOfAdapter", "getView position = " + position);
+        Log.i("TeachersApp", "ListOfAdapter - getView position = " + position);
         // используем созданные, но не используемые view
         View view = convertView;
         //if (view == null) {
@@ -88,44 +90,63 @@ public class ListOfAdapter extends BaseAdapter {
         Button title = new Button(context);
         title.setText(listOfAdapterObject.getobjName());
         //выводим чекбоксы
-        Log.i("ListOfAdapter", "getView showCheckBoxes = " + showCheckBoxes);
+        Log.i("TeachersApp", "ListOfAdapter - getView showCheckBoxes = " + showCheckBoxes);
         if (showCheckBoxes) {
 
             ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(true);
 
             final CheckBox checkBox = new CheckBox(context);
-            if (position == idPressedCheckBox) {
-                checkBox.setChecked(true);
-            }
+            checkBox.setChecked(listOfAdapterObject.isChecked());
+//            if (position == idPressedCheckBox) {
+//                checkBox.setChecked(true);
+//            }
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    Log.i("TeachersApp", "ListOfAdapter - getVieW - onCheckedChanged position =" + position);
                     checkBox.setChecked(isChecked);
-                    listOfAdapterObject.setChecked(isChecked);
+                    getListOfAdapterObject(position).setChecked(isChecked);
                 }
             });
             flat.addView(checkBox);
         } else {
             ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(false);
-            Log.i("ListOfAdapter", "add new element");
-            final long classId = listOfAdapterObject.getobjId();
+            Log.i("TeachersApp", "ListOfAdapter - add new element");
+            final long objId = listOfAdapterObject.getobjId();//получаем id обьекта
             flat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.i("ListOfAdapter", "classes onClick, id = " + classId);
-                    Intent intent;
-                    intent = new Intent(context, ListOfActivity.class);//запуск этого активити заново
-                    intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//но с учениками
-                    intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, classId);//передаём id выбранного класса
-                    activity.startActivity(intent);
+                    Log.i("TeachersApp", "ListOfAdapter - classes onClick, id = " + objId);
+                    Intent intent;//намерение для запуска ледующего активити
+                    switch (type) {//тип вызывающего обьекта
+                        case SchoolContract.TableClasses.NAME_TABLE_CLASSES://запуск этого активити заново
+                            intent = new Intent(context, ListOfActivity.class);
+                            intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//с параметром ученики
+                            intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного класса
+                            activity.startActivity(intent);
+                            break;
+//                        case SchoolContract.TableLearners.NAME_TABLE_LEARNERS://todo0 будем переходить к статистике оценок ученика
+//                            intent = new Intent(context, ListOfActivity.class);
+//                            intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//с параметром
+//                            intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного ученика
+//                            activity.startActivity(intent);
+//                            break;
+                        case SchoolContract.TableCabinets.NAME_TABLE_CABINETS://запуск редактора
+                            intent = new Intent(context, CabinetRedactorActivity.class);
+                            intent.putExtra(CabinetRedactorActivity.EDITED_OBJECT_TYPE, SchoolContract.TableCabinets.NAME_TABLE_CABINETS);//с параметром кабинет
+                            intent.putExtra(CabinetRedactorActivity.EDITED_OBJECT_ID, objId);//передаём id выбранного бьекта
+                            activity.startActivity(intent);
+                            break;
+                        default:
+                    }
                 }
             });
             flat.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    Log.i("ListOfAdapter", "classes onLongClick, id = " + classId);
+                    Log.i("TeachersApp", "ListOfAdapter - classes onLongClick, id = " + objId);
                     listOfAdapterObject.setChecked(true);
                     ListView listView = (ListView) activity.findViewById(R.id.content_list_of_list_view);
-                    listView.setAdapter(new ListOfAdapter(activity, content, true, (long) position));
+                    listView.setAdapter(new ListOfAdapter(activity, content, true, type));
                     return true;
                 }
             });
@@ -140,7 +161,7 @@ public class ListOfAdapter extends BaseAdapter {
     }
 
     ArrayList<Long> getIdCheckedListOfAdapterObjects() {//когда создаю новый при помощи fab их на 1 меньше
-        Log.i("ListOfAdapter", "getIdCheckedListOfAdapterObjects number = " + content.size() + " content = " + content);
+        Log.i("TeachersApp", "ListOfAdapter - getIdCheckedListOfAdapterObjects number = " + content.size() + " content = " + content);
         ArrayList<Long> idCheckedListOfAdapterObjects = new ArrayList<>();
         for (int i = 0; i < content.size(); i++) {
             if (content.get(i).isChecked()) {
@@ -159,6 +180,11 @@ class ListOfAdapterObject {
     private boolean isChecked;
 
 
+    @Override
+    public String toString() {
+        return "objId =" + objId + " isChecked =" + isChecked();
+    }
+
     ListOfAdapterObject(String name, String type, long id) {
         this.objName = name;
         this.objType = type;
@@ -172,6 +198,7 @@ class ListOfAdapterObject {
     }
 
     void setChecked(boolean checked) {
+        Log.i("TeachersApp", "setChecked - objId =" + objId + " checked =" + checked);
         isChecked = checked;
     }
 
