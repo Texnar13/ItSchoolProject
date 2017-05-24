@@ -31,6 +31,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     private void updateDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.i("DataBaseOpenHelper", "updateDatabase old=" + oldVersion + " new=" + newVersion);
+
         if (oldVersion < 5) {//если база версии 5 и выше, то она не запустит этот код
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableDesks.NAME_TABLE_DESKS + ";");
@@ -40,8 +41,9 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
             //--------
-            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSchedules.NAME_TABLE_SCHEDUELSE + ";");
+            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLessons.NAME_TABLE_LESSONS + ";");
+
 
             String sql = "CREATE TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "( " + SchoolContract.TableCabinets.KEY_CABINET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableCabinets.COLUMN_NAME + " VARCHAR ); ";
@@ -87,17 +89,18 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
             //------------------------------------------
 
-            sql = "CREATE TABLE " + SchoolContract.TableSchedules.NAME_TABLE_SCHEDUELSE + " ( " + SchoolContract.TableSchedules.KEY_SCHEDULE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            sql = "CREATE TABLE " + SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES + " ( " + SchoolContract.TableSchedules.KEY_SCHEDULE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableSchedules.COLUMN_NAME + " VARCHAR ); ";
             db.execSQL(sql);
 
             sql = "CREATE TABLE " + SchoolContract.TableLessons.NAME_TABLE_LESSONS + " ( " + SchoolContract.TableLessons.KEY_LESSON_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    SchoolContract.TableLessons.COLUMN_NAME + " VARCHAR, " +
                     SchoolContract.TableLessons.KEY_SCHEDULE_ID + " INTEGER, " +
                     SchoolContract.TableLessons.COLUMN_DATE_BEGIN + " INTEGER, " +
                     SchoolContract.TableLessons.COLUMN_DATE_END + " INTEGER, " +
                     SchoolContract.TableLessons.KEY_CLASS_ID + " INTEGER, " +
                     SchoolContract.TableLessons.KEY_CABINET_ID + " INTEGER, " +
-                    "FOREIGN KEY(" + SchoolContract.TableLessons.KEY_SCHEDULE_ID + ") REFERENCES " + SchoolContract.TableSchedules.NAME_TABLE_SCHEDUELSE + " (" + SchoolContract.TableSchedules.KEY_SCHEDULE_ID + ") ON DELETE CASCADE, " +
+                    "FOREIGN KEY(" + SchoolContract.TableLessons.KEY_SCHEDULE_ID + ") REFERENCES " + SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES + " (" + SchoolContract.TableSchedules.KEY_SCHEDULE_ID + ") ON DELETE CASCADE, " +
                     "FOREIGN KEY(" + SchoolContract.TableLessons.KEY_CLASS_ID + ") REFERENCES " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + " (" + SchoolContract.TableClasses.KEY_CLASS_ID + ") ON DELETE CASCADE, " +
                     "FOREIGN KEY(" + SchoolContract.TableLessons.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + " (" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ON DELETE CASCADE ); ";
             db.execSQL(sql);
@@ -344,9 +347,57 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    //расписание
+    public long createSchedule(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableSchedules.COLUMN_NAME, name);
+        long temp = db.insert(SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, null, values);//-1 = ошибка ввода
+        db.close();
+        Log.i("DBOpenHelper", "createSchedule returnId = " + temp + " name= " + name);
+        return temp;
+    }
+
+    public Cursor getSchedules() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, null, null, null, null, null, null);
+        Log.i("DBOpenHelper", "getSchedules " + cursor + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        return cursor;
+    }
+
+    public int setSchedulesName(ArrayList<Long> schedulesId, String name) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues contentName = new ContentValues();
+        contentName.put(SchoolContract.TableSchedules.COLUMN_NAME, name);
+        String[] whereArgs = new String[schedulesId.size()];
+        for (int i = 0; i < schedulesId.size(); i++) {
+            whereArgs[i] = Long.toString(schedulesId.get(i));
+        }
+        int answer = db.update(SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, contentName, SchoolContract.TableSchedules.KEY_SCHEDULE_ID + " = ?", whereArgs);
+        db.close();
+        return answer;
+    }
+
+    public int deleteSchedules(ArrayList<Long> schedulesId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int answer = 0;
+        String stringSchedulesId = "";
+        for (int i = 0; i < schedulesId.size(); i++) {
+            stringSchedulesId = stringSchedulesId + schedulesId.get(i) + " | ";
+            if (db.delete(SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, SchoolContract.TableSchedules.KEY_SCHEDULE_ID + " = ?", new String[]{"" + schedulesId.get(i)}) == 1)
+                answer++;
+        }
+        Log.i("DBOpenHelper", "deleteSchedules id= " + stringSchedulesId + " return = " + answer);
+        db.close();
+        return answer;
+    }
+
+
+    //уроки
+
     //работа с бд
-    public void restartTable() {
-        onUpgrade(this.getReadableDatabase(), 1, 100);
+    public void restartTable() {//создание бд заново
+        onUpgrade(this.getReadableDatabase(), 0, 100);
     }
 
 

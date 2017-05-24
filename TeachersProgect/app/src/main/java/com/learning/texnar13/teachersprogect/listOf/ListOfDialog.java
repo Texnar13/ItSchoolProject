@@ -4,20 +4,16 @@ package com.learning.texnar13.teachersprogect.listOf;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -32,10 +28,9 @@ public class ListOfDialog extends DialogFragment {
     long parentId;
     ArrayList<Long> objectsId = new ArrayList<>();
 
-
-    LinearLayout content;
-    TextView title;
-    //Context activityContext = getActivity().getApplicationContext();
+//    LinearLayout content;
+//    TextView title;
+//    Context activityContext = getActivity().getApplicationContext();
 
     @Override//конструктор диалога
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -145,7 +140,7 @@ public class ListOfDialog extends DialogFragment {
                     builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
-                            db.setLearnerNameAndLastName(objectsId,lastName.getText().toString(), firstName.getText().toString());
+                            db.setLearnerNameAndLastName(objectsId, lastName.getText().toString(), firstName.getText().toString());
                             {//ставим адаптер
                                 Cursor cursor = db.getLearnersByClassId(parentId);//получаем учеников
                                 ArrayList<ListOfAdapterObject> listOfClasses = new ArrayList<ListOfAdapterObject>();//создаём лист с учениками
@@ -218,6 +213,62 @@ public class ListOfDialog extends DialogFragment {
                         }
                     });
                     builder.setNegativeButton("отменить", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dismiss();
+                        }
+                    });
+                }
+                break;
+            case SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES:
+
+                final EditText SchedulesName = new EditText(getActivity().getApplicationContext());
+                SchedulesName.setTextColor(Color.BLACK);
+                SchedulesName.setHint("название расписания");
+                linearLayout.addView(SchedulesName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                if (objectsId.size() == 0) {
+                    builder.setTitle("создание расписания");
+                    builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
+                            db.createSchedule(SchedulesName.getText().toString());
+                            {//ставим адаптер
+                                Cursor cursor = db.getSchedules();//получаем расписания
+                                ArrayList<ListOfAdapterObject> listOfSchedules = new ArrayList<ListOfAdapterObject>();//создаём лист с расписаниями
+                                while (cursor.moveToNext()) {//курсор в лист
+                                    listOfSchedules.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableSchedules.COLUMN_NAME)), SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSchedules.KEY_SCHEDULE_ID))));
+                                }
+                                cursor.close();
+                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(new ListOfAdapter(getActivity(), listOfSchedules, false, SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES));
+                            }
+                            db.close();
+                            dismiss();
+                        }
+                    });
+                    builder.setNegativeButton("отмена", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dismiss();
+                        }
+                    });
+                } else {
+                    builder.setTitle("редактирование расписания");
+                    builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
+                            db.setSchedulesName(objectsId, SchedulesName.getText().toString());
+                            {//ставим адаптер
+                                Cursor cursor = db.getSchedules();//получаем расписания
+                                ArrayList<ListOfAdapterObject> listOfSchedules = new ArrayList<ListOfAdapterObject>();//создаём лист с расписаниями
+                                while (cursor.moveToNext()) {//курсор в лист
+                                    listOfSchedules.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableSchedules.COLUMN_NAME)), SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSchedules.KEY_SCHEDULE_ID))));
+                                }
+                                cursor.close();
+                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(new ListOfAdapter(getActivity(), listOfSchedules, false, SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES));
+                            }
+                            db.close();
+                            dismiss();
+                        }
+                    });
+                    builder.setNegativeButton("отмена", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dismiss();
                         }

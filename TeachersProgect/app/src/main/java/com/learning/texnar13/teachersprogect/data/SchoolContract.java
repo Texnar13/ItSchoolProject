@@ -71,7 +71,7 @@ public final class SchoolContract {
     //-----------------
 
     public final class TableSchedules{
-        public static final String NAME_TABLE_SCHEDUELSE = "schedules";
+        public static final String NAME_TABLE_SCHEDULES = "schedules";
         public static final String KEY_SCHEDULE_ID = BaseColumns._ID;
         public static final String COLUMN_NAME = "name";
     }
@@ -79,6 +79,7 @@ public final class SchoolContract {
     public final class TableLessons{
         public static final String NAME_TABLE_LESSONS = "lessons";
         public static final String KEY_LESSON_ID = BaseColumns._ID;
+        public static final String COLUMN_NAME = "name";
         public static final String KEY_SCHEDULE_ID = "scheduleId";
         public static final String COLUMN_DATE_BEGIN = "lessonDateBegin";
         public static final String COLUMN_DATE_END = "lessonDateEnd";

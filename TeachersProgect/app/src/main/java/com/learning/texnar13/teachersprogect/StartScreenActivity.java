@@ -46,6 +46,16 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
             }
             break;
             case R.id.start_menu_button_schedule://переход в список расписаний
+                intent = new Intent(this, ListOfActivity.class);
+                intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES);
+                startActivity(intent);
+
+
+
+
+
+
+
                 //TODO 1 надо адаптировать список под вывод расписаний(пример: расписание на понедельник, вторник, итд) в каждый из которых входят уроки
                 /* таблицы в бд уже реализованы
                 переименование также по диалогу

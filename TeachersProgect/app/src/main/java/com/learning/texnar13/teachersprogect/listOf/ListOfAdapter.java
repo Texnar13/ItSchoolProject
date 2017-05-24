@@ -136,15 +136,22 @@ public class ListOfAdapter extends BaseAdapter {
                             intent.putExtra(CabinetRedactorActivity.EDITED_OBJECT_ID, objId);//передаём id выбранного бьекта
                             activity.startActivity(intent);
                             break;
+                        case SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES://запуск этого активити заново
+                            intent = new Intent(context, ListOfActivity.class);
+                            intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLessons.NAME_TABLE_LESSONS);//с параметром уроки
+                            intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного расписания
+                            activity.startActivity(intent);
+                            break;
                         default:
                     }
                 }
             });
             flat.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public boolean onLongClick(View view) {
+                public boolean onLongClick(View view) {//todo0 я в setOnLongClickListener не делаю что-то что есть в onBackPressed может content просрочен
                     Log.i("TeachersApp", "ListOfAdapter - classes onLongClick, id = " + objId);
                     listOfAdapterObject.setChecked(true);
+                    Log.i("TeachersApp", "ListOfAdapter - ");
                     ListView listView = (ListView) activity.findViewById(R.id.content_list_of_list_view);
                     listView.setAdapter(new ListOfAdapter(activity, content, true, type));
                     return true;
