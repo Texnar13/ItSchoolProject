@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
+import com.learning.texnar13.teachersprogect.LessonActivity;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
@@ -109,7 +110,7 @@ public class ListOfAdapter extends BaseAdapter {
             });
             flat.addView(checkBox);
         } else {
-            ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(false);
+            ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(false);//похоже не работает
             Log.i("TeachersApp", "ListOfAdapter - add new element");
             final long objId = listOfAdapterObject.getobjId();//получаем id обьекта
             flat.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +143,12 @@ public class ListOfAdapter extends BaseAdapter {
                             intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного расписания
                             activity.startActivity(intent);
                             break;
+//                        case SchoolContract.TableLessons.NAME_TABLE_LESSONS://todo запуск урока
+//                            intent = new Intent(context, LessonActivity.class);
+//                            intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLessons.NAME_TABLE_LESSONS);//с параметром уроки
+//                            intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного расписания
+//                            activity.startActivity(intent);
+//                            break;
                         default:
                     }
                 }

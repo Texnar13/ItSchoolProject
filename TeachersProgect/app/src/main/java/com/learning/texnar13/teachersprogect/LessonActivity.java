@@ -205,6 +205,14 @@ public class LessonActivity extends AppCompatActivity {
         dbOpenHelper.setLearnerOnPlace(lerner4Id, places.get(8));
         dbOpenHelper.setLearnerOnPlace(lerner5Id, places.get(4));
 
+        dbOpenHelper.createSchedule("понедельник");
+        dbOpenHelper.createSchedule("вторник");
+        dbOpenHelper.createSchedule("среда");
+        dbOpenHelper.createSchedule("четверг");
+        dbOpenHelper.createSchedule("пятница");
+
+        dbOpenHelper.close();
+
     }
 }
 

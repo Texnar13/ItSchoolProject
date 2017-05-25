@@ -225,11 +225,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         ContentValues contentName = new ContentValues();
         contentName.put(SchoolContract.TableLearners.COLUMN_FIRST_NAME, name);
         contentName.put(SchoolContract.TableLearners.COLUMN_SECOND_NAME, lastName);
-        String[] whereArgs = new String[learnersId.size()];
+        int answer = 0;
+        String stringLearnersId = "";
         for (int i = 0; i < learnersId.size(); i++) {
-            whereArgs[i] = Long.toString(learnersId.get(i));
+            stringLearnersId = stringLearnersId + learnersId.get(i) + " | ";
+            if (db.update(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, contentName, SchoolContract.TableLearners.KEY_LEARNER_ID + " = ?", new String[]{"" + learnersId.get(i)}) == 1)
+                answer++;
         }
-        int answer = db.update(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, contentName, SchoolContract.TableLearners.KEY_LEARNER_ID + " = ?", whereArgs);
+        Log.i("DBOpenHelper", "setLearnerNameAndLastName name= " + name + " lastName= " + lastName + " id= " + stringLearnersId + " return = " + answer);
         db.close();
         return answer;
     }
@@ -280,11 +283,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentName = new ContentValues();
         contentName.put(SchoolContract.TableCabinets.COLUMN_NAME, name);
-        String[] whereArgs = new String[cabinetId.size()];
+        int answer = 0;
+        String stringCabinetsId = "";
         for (int i = 0; i < cabinetId.size(); i++) {
-            whereArgs[i] = Long.toString(cabinetId.get(i));
+            stringCabinetsId = stringCabinetsId + cabinetId.get(i) + " | ";
+            if (db.update(SchoolContract.TableCabinets.NAME_TABLE_CABINETS, contentName, SchoolContract.TableCabinets.KEY_CABINET_ID + " = ?", new String[]{"" + cabinetId.get(i)}) == 1)
+                answer++;
         }
-        int answer = db.update(SchoolContract.TableCabinets.NAME_TABLE_CABINETS, contentName, SchoolContract.TableCabinets.KEY_CABINET_ID + " = ?", whereArgs);
+        Log.i("DBOpenHelper", "setCabinetName name= " + name + " id= " + stringCabinetsId + " return = " + answer);
         db.close();
         return answer;
     }
@@ -365,15 +371,26 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public Cursor getSchedules(long scheduleId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] selectionArgs = {scheduleId + ""};
+        Cursor cursor = db.query(SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, null, SchoolContract.TableSchedules.KEY_SCHEDULE_ID + " = ?", selectionArgs, null, null, null);
+        Log.i("DBOpenHelper", "getSchedules " + cursor + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        return cursor;
+    }
+
     public int setSchedulesName(ArrayList<Long> schedulesId, String name) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentName = new ContentValues();
         contentName.put(SchoolContract.TableSchedules.COLUMN_NAME, name);
-        String[] whereArgs = new String[schedulesId.size()];
+        int answer = 0;
+        String stringSchedulesId = "";
         for (int i = 0; i < schedulesId.size(); i++) {
-            whereArgs[i] = Long.toString(schedulesId.get(i));
+            stringSchedulesId = stringSchedulesId + schedulesId.get(i) + " | ";
+            if (db.update(SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, contentName, SchoolContract.TableSchedules.KEY_SCHEDULE_ID + " = ?",new String[]{"" + schedulesId.get(i)}) == 1)
+                answer++;
         }
-        int answer = db.update(SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, contentName, SchoolContract.TableSchedules.KEY_SCHEDULE_ID + " = ?", whereArgs);
+        Log.i("DBOpenHelper", "setSchedulesName name= " + name + " id= " + stringSchedulesId + " return = " + answer);
         db.close();
         return answer;
     }
@@ -394,6 +411,73 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
 
     //уроки
+    public long createLesson(String name, long scheduleId, long dateBegin, long dateEnd, long classId, long cabinetId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableLessons.COLUMN_NAME, name);
+        values.put(SchoolContract.TableLessons.KEY_SCHEDULE_ID, scheduleId);
+        values.put(SchoolContract.TableLessons.COLUMN_DATE_BEGIN, dateBegin);
+        values.put(SchoolContract.TableLessons.COLUMN_DATE_END, dateEnd);
+        values.put(SchoolContract.TableLessons.KEY_CLASS_ID, classId);
+        values.put(SchoolContract.TableLessons.KEY_CABINET_ID, cabinetId);
+        long temp = db.insert(SchoolContract.TableLessons.NAME_TABLE_LESSONS, null, values);//-1 = ошибка ввода
+        db.close();
+        Log.i("DBOpenHelper", "createLesson returnId = " + temp + " name= " + name + " scheduleId=" + scheduleId + " dateBegin=" + dateBegin + " dateEnd=" + dateEnd + " classId=" + classId + " cabinetId=" + cabinetId);
+        return temp;
+    }
+
+    public int setLessonsNames(ArrayList<Long> lessonId, String name) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues contentName = new ContentValues();
+        contentName.put(SchoolContract.TableSchedules.COLUMN_NAME, name);
+        int answer = 0;
+        String stringLessonsId = "";
+        for (int i = 0; i < lessonId.size(); i++) {
+            stringLessonsId = stringLessonsId + lessonId.get(i) + " | ";
+            if (db.update(SchoolContract.TableLessons.NAME_TABLE_LESSONS, contentName, SchoolContract.TableLessons.KEY_LESSON_ID + " = ?", new String[]{"" + lessonId.get(i)}) == 1)
+                answer++;
+        }
+        Log.i("DBOpenHelper", "setLessonsNames name= " + name + " id= " + stringLessonsId + " return = " + answer);
+        db.close();
+        return answer;
+    }
+
+    public int setLessonParameters(long lessonId,String lessonNames, long scheduleId, long dateBegin, long dateEnd, long classId, long cabinetId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues contentName = new ContentValues();
+        contentName.put(SchoolContract.TableLessons.COLUMN_NAME, lessonNames);
+        contentName.put(SchoolContract.TableLessons.KEY_SCHEDULE_ID, scheduleId);
+        contentName.put(SchoolContract.TableLessons.COLUMN_DATE_BEGIN, dateBegin);
+        contentName.put(SchoolContract.TableLessons.COLUMN_DATE_END, dateEnd);
+        contentName.put(SchoolContract.TableLessons.KEY_CLASS_ID, classId);
+        contentName.put(SchoolContract.TableLessons.KEY_CABINET_ID, cabinetId);
+        int answer = db.update(SchoolContract.TableLessons.NAME_TABLE_LESSONS, contentName, SchoolContract.TableLessons.KEY_LESSON_ID + " = ?", new String[]{Long.toString(lessonId)});
+        db.close();
+        return answer;
+    }
+
+    public Cursor getLessonsByScheduleId(long scheduleId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] selectionArgs = {scheduleId + ""};
+        Cursor cursor = db.query(SchoolContract.TableLessons.NAME_TABLE_LESSONS, null, SchoolContract.TableLessons.KEY_SCHEDULE_ID + " = ?", selectionArgs, null, null, null);
+        Log.i("DBOpenHelper", "getLessonsByScheduleId scheduleId=" + scheduleId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        return cursor;
+    }
+
+    public int deleteLessons(ArrayList<Long> lessonsId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int answer = 0;
+        String stringLessonsId = "";
+        for (int i = 0; i < lessonsId.size(); i++) {
+            stringLessonsId = stringLessonsId + lessonsId.get(i) + " | ";
+            if (db.delete(SchoolContract.TableLessons.NAME_TABLE_LESSONS, SchoolContract.TableLessons.KEY_LESSON_ID + " = ?", new String[]{"" + lessonsId.get(i)}) == 1)
+                answer++;
+        }
+        Log.i("DBOpenHelper", "deleteLessons id= " + stringLessonsId + " return = " + answer);
+        db.close();
+        return answer;
+    }
+
 
     //работа с бд
     public void restartTable() {//создание бд заново

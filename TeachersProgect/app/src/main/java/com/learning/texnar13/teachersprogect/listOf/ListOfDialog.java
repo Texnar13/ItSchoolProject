@@ -47,6 +47,7 @@ public class ListOfDialog extends DialogFragment {
                 final EditText className = new EditText(getActivity().getApplicationContext());
                 className.setTextColor(Color.BLACK);
                 className.setHint("имя класса");
+                className.setHintTextColor(Color.GRAY);
                 linearLayout.addView(className, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 if (objectsId.size() == 0) {
                     builder.setTitle("создание класса");
@@ -103,9 +104,11 @@ public class ListOfDialog extends DialogFragment {
                 final EditText firstName = new EditText(getActivity().getApplicationContext());
                 firstName.setTextColor(Color.BLACK);
                 firstName.setHint("имя");
+                firstName.setHintTextColor(Color.GRAY);
                 final EditText lastName = new EditText(getActivity().getApplicationContext());
                 lastName.setTextColor(Color.BLACK);
                 lastName.setHint("фамилия");
+                lastName.setHintTextColor(Color.GRAY);
 
                 linearLayout.addView(firstName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 linearLayout.addView(lastName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -166,6 +169,7 @@ public class ListOfDialog extends DialogFragment {
                 final EditText cabinetName = new EditText(getActivity().getApplicationContext());
                 cabinetName.setTextColor(Color.BLACK);
                 cabinetName.setHint("название кабинета");
+                cabinetName.setHintTextColor(Color.GRAY);
 
                 linearLayout.addView(cabinetName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -221,16 +225,20 @@ public class ListOfDialog extends DialogFragment {
                 break;
             case SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES:
 
-                final EditText SchedulesName = new EditText(getActivity().getApplicationContext());
-                SchedulesName.setTextColor(Color.BLACK);
-                SchedulesName.setHint("название расписания");
-                linearLayout.addView(SchedulesName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                final EditText schedulesName = new EditText(getActivity().getApplicationContext());
+                schedulesName.setTextColor(Color.BLACK);
+                schedulesName.setHint("название расписания");
+                schedulesName.setHintTextColor(Color.GRAY);
+                linearLayout.addView(schedulesName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                linearLayout.addView(schedulesName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
                 if (objectsId.size() == 0) {
                     builder.setTitle("создание расписания");
                     builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
-                            db.createSchedule(SchedulesName.getText().toString());
+                            db.createSchedule(schedulesName.getText().toString());
                             {//ставим адаптер
                                 Cursor cursor = db.getSchedules();//получаем расписания
                                 ArrayList<ListOfAdapterObject> listOfSchedules = new ArrayList<ListOfAdapterObject>();//создаём лист с расписаниями
@@ -254,7 +262,7 @@ public class ListOfDialog extends DialogFragment {
                     builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
-                            db.setSchedulesName(objectsId, SchedulesName.getText().toString());
+                            db.setSchedulesName(objectsId, schedulesName.getText().toString());
                             {//ставим адаптер
                                 Cursor cursor = db.getSchedules();//получаем расписания
                                 ArrayList<ListOfAdapterObject> listOfSchedules = new ArrayList<ListOfAdapterObject>();//создаём лист с расписаниями
@@ -273,6 +281,112 @@ public class ListOfDialog extends DialogFragment {
                             dismiss();
                         }
                     });
+                }
+                break;
+            case SchoolContract.TableLessons.NAME_TABLE_LESSONS:
+                final EditText lessonName = new EditText(getActivity().getApplicationContext());
+                lessonName.setTextColor(Color.BLACK);
+                lessonName.setHint("название урока");
+                lessonName.setHintTextColor(Color.GRAY);
+                final EditText dateBegin = new EditText(getActivity().getApplicationContext());
+                dateBegin.setTextColor(Color.BLACK);
+                dateBegin.setHint("дата начала");
+                dateBegin.setHintTextColor(Color.GRAY);
+                final EditText dateEnd = new EditText(getActivity().getApplicationContext());
+                dateEnd.setTextColor(Color.BLACK);
+                dateEnd.setHint("дата окончания");
+                dateEnd.setHintTextColor(Color.GRAY);
+                final EditText classId = new EditText(getActivity().getApplicationContext());
+                classId.setTextColor(Color.BLACK);
+                classId.setHint("id класса");
+                classId.setHintTextColor(Color.GRAY);
+                final EditText cabinetId = new EditText(getActivity().getApplicationContext());
+                cabinetId.setTextColor(Color.BLACK);
+                cabinetId.setHint("id кабинета");
+                cabinetId.setHintTextColor(Color.GRAY);
+
+                linearLayout.addView(lessonName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                linearLayout.addView(dateBegin, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                linearLayout.addView(dateEnd, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                linearLayout.addView(classId, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                linearLayout.addView(cabinetId, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                switch (objectsId.size()) {
+                    case 0:
+                        builder.setTitle("создание урока");
+                        builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
+                                db.createLesson(lessonName.getText().toString(), parentId, Long.parseLong(dateBegin.getText().toString()),Long.parseLong(dateEnd.getText().toString()), Long.parseLong(classId.getText().toString()), Long.parseLong(cabinetId.getText().toString()));
+                                {//ставим адаптер
+                                    Cursor cursor = db.getLessonsByScheduleId(parentId);//получаем уроки по id расписания
+                                    ArrayList<ListOfAdapterObject> listOfLessons = new ArrayList<ListOfAdapterObject>();//создаём лист с уроками
+                                    while (cursor.moveToNext()) {//курсор в лист
+                                        listOfLessons.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)), SchoolContract.TableLessons.NAME_TABLE_LESSONS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID))));
+                                    }
+                                    cursor.close();
+                                    ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(new ListOfAdapter(getActivity(), listOfLessons, false, SchoolContract.TableLessons.NAME_TABLE_LESSONS));
+                                }
+                                db.close();
+                                dismiss();
+                            }
+                        });
+                        builder.setNegativeButton("отмена", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dismiss();
+                            }
+                        });
+                        break;
+                    case 1:
+                        builder.setTitle("редактирование урока");
+                        builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
+                                db.setLessonParameters(objectsId.get(1),lessonName.getText().toString(), parentId, Long.parseLong(dateBegin.getText().toString()),Long.parseLong(dateEnd.getText().toString()), Long.parseLong(classId.getText().toString()), Long.parseLong(cabinetId.getText().toString()));
+                                {//ставим адаптер
+                                    Cursor cursor = db.getLessonsByScheduleId(parentId);//получаем уроки по id расписания
+                                    ArrayList<ListOfAdapterObject> listOfLessons = new ArrayList<ListOfAdapterObject>();//создаём лист с уроками
+                                    while (cursor.moveToNext()) {//курсор в лист
+                                        listOfLessons.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)), SchoolContract.TableLessons.NAME_TABLE_LESSONS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID))));
+                                    }
+                                    cursor.close();
+                                    ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(new ListOfAdapter(getActivity(), listOfLessons, false, SchoolContract.TableLessons.NAME_TABLE_LESSONS));
+                                }
+                                db.close();
+                                dismiss();
+                            }
+                        });
+                        builder.setNegativeButton("отмена", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dismiss();
+                            }
+                        });
+                        break;
+                    default:
+                        builder.setTitle("редактирование уроков");
+                        builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
+                                db.setLessonsNames(objectsId,lessonName.getText().toString());
+                                {//ставим адаптер
+                                    Cursor cursor = db.getLessonsByScheduleId(parentId);//получаем уроки по id расписания
+                                    ArrayList<ListOfAdapterObject> listOfLessons = new ArrayList<ListOfAdapterObject>();//создаём лист с уроками
+                                    while (cursor.moveToNext()) {//курсор в лист
+                                        listOfLessons.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)), SchoolContract.TableLessons.NAME_TABLE_LESSONS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID))));
+                                    }
+                                    cursor.close();
+                                    ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(new ListOfAdapter(getActivity(), listOfLessons, false, SchoolContract.TableLessons.NAME_TABLE_LESSONS));
+                                }
+                                db.close();
+                                dismiss();
+                            }
+                        });
+                        builder.setNegativeButton("отмена", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dismiss();
+                            }
+                        });
+                        break;
                 }
                 break;
         }

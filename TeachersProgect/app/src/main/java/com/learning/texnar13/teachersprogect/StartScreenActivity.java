@@ -33,6 +33,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         buttonSchedule.setOnClickListener(this);
         buttonCabinets.setOnClickListener(this);
         buttonClasses.setOnClickListener(this);
+        //getSupportActionBar().setTitle("помощник учителя");
 
     }
 

@@ -71,6 +71,12 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                         db.close();
                         break;
                     }
+                    case SchoolContract.TableLessons.NAME_TABLE_LESSONS: {
+                        DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                        db.deleteLessons(adapter.getIdCheckedListOfAdapterObjects());
+                        db.close();
+                        break;
+                    }
                 }
 //                ListOfDialog dialog = new ListOfDialog();
 //                dialog.objectParameter = SchoolContract.TableClasses.NAME_TABLE_CLASSES;
@@ -86,6 +92,9 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                 ListOfDialog dialog = new ListOfDialog();
                 dialog.objectParameter = getIntent().getStringExtra(LIST_PARAMETER);
                 if (getIntent().getStringExtra(LIST_PARAMETER).equals(SchoolContract.TableLearners.NAME_TABLE_LEARNERS)) {
+                    dialog.parentId = getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1);
+                }
+                if (getIntent().getStringExtra(LIST_PARAMETER).equals(SchoolContract.TableLessons.NAME_TABLE_LESSONS)) {
                     dialog.parentId = getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1);
                 }
                 dialog.objectsId = adapter.getIdCheckedListOfAdapterObjects();
@@ -105,6 +114,7 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
     @Override
     public void editIsEditMenuVisible(boolean isEditMenuVisible) {
         this.isEditMenuVisible = isEditMenuVisible;
+        Log.i("TeachersApp", "ListOfActivity - editIsEditMenuVisible=" + isEditMenuVisible);
     }
 
     @Override
@@ -124,26 +134,27 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
             @Override
             public void onClick(View view) {
                 ListOfDialog dialog = new ListOfDialog();
-
+                dialog.objectParameter = listParameterValue;
                 switch (listParameterValue) {
                     case SchoolContract.TableClasses.NAME_TABLE_CLASSES://создание классов
-                        dialog.objectParameter = listParameterValue;
                         dialog.show(getFragmentManager(), "dialogNewClass");
                         break;
                     case SchoolContract.TableLearners.NAME_TABLE_LEARNERS://создание учеников
-                        dialog.objectParameter = listParameterValue;
                         dialog.parentId = getIntent().getLongExtra(DOP_LIST_PARAMETER, -1);
                         dialog.show(getFragmentManager(), "dialogNewLearner");
                         break;
                     case SchoolContract.TableCabinets.NAME_TABLE_CABINETS:
-                        dialog.objectParameter = listParameterValue;
                         dialog.show(getFragmentManager(), "dialogNewCabinet");
+                        break;
                     case SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES:
-                        dialog.objectParameter = listParameterValue;
-                        dialog.show(getFragmentManager(), "dialogNewSchedules");
+                        dialog.show(getFragmentManager(), "dialogNewSchedule");
+                        break;
+                    case SchoolContract.TableLessons.NAME_TABLE_LESSONS:
+                        dialog.parentId = getIntent().getLongExtra(DOP_LIST_PARAMETER, -1);
+                        dialog.show(getFragmentManager(), "dialogNewLesson");
                         break;
                     default:
-                        Log.wtf("TeachersApp", "ListOfActivity - in fab, listParameterValue is default!");
+                        Log.wtf("TeachersApp", "ListOfActivity - in fab, listParameterValue is " + listParameterValue);
                 }
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();
@@ -278,6 +289,21 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                 Log.i("TeachersApp", "ListOfActivity - out Schedules");
                 cursor.close();
                 break;
+            case SchoolContract.TableLessons.NAME_TABLE_LESSONS:
+                Cursor tempCursor = db.getSchedules(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));
+                tempCursor.moveToFirst();
+                getSupportActionBar().setTitle("расписание " + db.getSchedules());//ставим заголовок
+                tempCursor.close();
+                cursor = db.getLessonsByScheduleId(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));//получаем уроки по расписанию
+                ArrayList<ListOfAdapterObject> listOfLessons = new ArrayList<ListOfAdapterObject>();//создаём лист с уроками
+                while (cursor.moveToNext()) {//курсор в лист todo передавать не только имя урока но и его параметры
+                    listOfLessons.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)), SchoolContract.TableLessons.NAME_TABLE_LESSONS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID))));
+                }
+                this.adapter = new ListOfAdapter(this, listOfLessons, false, SchoolContract.TableLessons.NAME_TABLE_LESSONS);//создаём адаптер
+                listView.setAdapter(this.adapter);//ставим адаптер
+                Log.i("TeachersApp", "ListOfActivity - out Lessons");
+                cursor.close();
+                break;
             default:
                 Log.wtf("TeachersApp", "ListOfActivity - in out, listParameterValue is default!");
                 break;
@@ -302,7 +328,7 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                 }
                 case SchoolContract.TableLearners.NAME_TABLE_LEARNERS: {
                     Cursor cursor = new DataBaseOpenHelper(this).getLearnersByClassId(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));
-                    ArrayList<ListOfAdapterObject> listOfLearners = new ArrayList<ListOfAdapterObject>();//создаём лист с классами
+                    ArrayList<ListOfAdapterObject> listOfLearners = new ArrayList<ListOfAdapterObject>();//создаём лист с учениками
                     while (cursor.moveToNext()) {//курсор в лист
                         listOfLearners.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) + " " + cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)), SchoolContract.TableLearners.NAME_TABLE_LEARNERS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID))));
                     }
@@ -313,7 +339,7 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                 }
                 case SchoolContract.TableCabinets.NAME_TABLE_CABINETS: {
                     Cursor cursor = new DataBaseOpenHelper(this).getCabinets();
-                    ArrayList<ListOfAdapterObject> listOfCabinets = new ArrayList<ListOfAdapterObject>();//создаём лист с классами
+                    ArrayList<ListOfAdapterObject> listOfCabinets = new ArrayList<ListOfAdapterObject>();//создаём лист с кабинетами
                     while (cursor.moveToNext()) {//курсор в лист
                         listOfCabinets.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)), SchoolContract.TableCabinets.NAME_TABLE_CABINETS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableCabinets.KEY_CABINET_ID))));
                     }
@@ -322,9 +348,9 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                     ((ListView) findViewById(R.id.content_list_of_list_view)).setAdapter(this.adapter);
                     break;
                 }
-                case SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES:{
+                case SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES: {
                     Cursor cursor = new DataBaseOpenHelper(this).getSchedules();
-                    ArrayList<ListOfAdapterObject> listOfSchedules = new ArrayList<ListOfAdapterObject>();//создаём лист с классами
+                    ArrayList<ListOfAdapterObject> listOfSchedules = new ArrayList<ListOfAdapterObject>();//создаём лист с расписаниями
                     while (cursor.moveToNext()) {//курсор в лист
                         listOfSchedules.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableSchedules.COLUMN_NAME)), SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSchedules.KEY_SCHEDULE_ID))));
                     }
@@ -333,7 +359,19 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                     ((ListView) findViewById(R.id.content_list_of_list_view)).setAdapter(this.adapter);
                     break;
                 }
+                case SchoolContract.TableLessons.NAME_TABLE_LESSONS:{
+                    Cursor cursor = new DataBaseOpenHelper(this).getLessonsByScheduleId(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));
+                    ArrayList<ListOfAdapterObject> listOfLessons = new ArrayList<ListOfAdapterObject>();//создаём лист с уроками
+                    while (cursor.moveToNext()) {//курсор в лист
+                        listOfLessons.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)), SchoolContract.TableLessons.NAME_TABLE_LESSONS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID))));
+                    }
+                    cursor.close();
+                    this.adapter = new ListOfAdapter(this, listOfLessons, false, listParameterValue);
+                    ((ListView) findViewById(R.id.content_list_of_list_view)).setAdapter(this.adapter);
+                    break;
+                }
             }
+            isEditMenuVisible = false;
         } else {
             super.onBackPressed();
         }
