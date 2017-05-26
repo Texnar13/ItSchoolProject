@@ -31,6 +31,7 @@ public final class SchoolContract {
         public static final String NAME_TABLE_PLACES = "places";
         public static final String KEY_PLACE_ID = BaseColumns._ID;
         public static final String KEY_DESK_ID = "deskId";
+        public static final String COLUMN_ORDINAL = "number";
     }
 
     public final class TableClasses {
@@ -53,7 +54,7 @@ public final class SchoolContract {
 
         public static final String NAME_TABLE_LEARNERS_ON_PLACES = "learnersOnPlaces";
         public static final String KEY_ATTITUDES_ID = BaseColumns._ID;
-        public static final String KEY_LESSON_ID = "lessonId";//-----------------------------------
+        public static final String KEY_LESSON_ID = "lessonId";
         public static final String KEY_LEARNER_ID = "learnerId";
         public static final String KEY_PLACE_ID = "placeId";
     }

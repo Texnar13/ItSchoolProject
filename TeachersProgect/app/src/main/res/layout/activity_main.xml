@@ -8,54 +8,63 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.learning.texnar13.teachersprogect.LessonActivity">
+    tools:context="com.learning.texnar13.teachersprogect.lesson.LessonActivity">
 
-    <RelativeLayout
-        android:id="@+id/room_layout"
-        android:layout_width="match_parent"
+    <HorizontalScrollView
+        android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:background="#efe3cc">
 
-        <RelativeLayout
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:background="#efe3cc">
 
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            <RelativeLayout
+                android:id="@+id/room_layout"
+                android:layout_width="600dp"
+                android:layout_height="600dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="#efe3cc">
 
-            android:layout_marginLeft="208dp"
-            android:layout_marginStart="208dp"
-            android:layout_marginTop="414dp"
-            android:background="#bce4af00">
+                <RelativeLayout
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="200dp"
+                    android:layout_marginStart="200dp"
+                    android:layout_marginTop="500dp"
+                    android:background="#bce4af00">
 
+                    <LinearLayout
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:background="#bc8e6d02"
+                        android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:background="#bc8e6d02"
-                android:orientation="vertical">
+                    </LinearLayout>
 
-            </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="45dp"
+                        android:layout_marginTop="5dp"
+                        android:background="#0029bf"
+                        android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="45dp"
-                android:layout_marginTop="5dp"
-                android:background="#0029bf"
-                android:orientation="vertical">
-
-            </LinearLayout>
-
-
-        </RelativeLayout>
-
-    </RelativeLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
+    </HorizontalScrollView>
 
 </RelativeLayout>

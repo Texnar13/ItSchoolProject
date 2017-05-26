@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TeachersProgect</string>
+    <string name="app_name">TeachersProject</string>
     <string name="title_activity_list_of">ListOfActivity</string>
     <string name="title_activity_lesson">Lesson</string>
 

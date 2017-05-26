@@ -44,11 +44,11 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLessons.NAME_TABLE_LESSONS + ";");
 
-
+//кабинет
             String sql = "CREATE TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "( " + SchoolContract.TableCabinets.KEY_CABINET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableCabinets.COLUMN_NAME + " VARCHAR ); ";
             db.execSQL(sql);
-
+//парта
             sql = "CREATE TABLE " + SchoolContract.TableDesks.NAME_TABLE_DESKS + "( " + SchoolContract.TableDesks.KEY_DESK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableDesks.COLUMN_X + " INTEGER, " +
                     SchoolContract.TableDesks.COLUMN_Y + " INTEGER, " +
@@ -56,30 +56,33 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     SchoolContract.TableDesks.KEY_CABINET_ID + " INTEGER, " +
                     "FOREIGN KEY(" + SchoolContract.TableDesks.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "(" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ON DELETE CASCADE ); ";
             db.execSQL(sql);
-
+//место
             sql = "CREATE TABLE " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + " ( " + SchoolContract.TablePlaces.KEY_PLACE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TablePlaces.KEY_DESK_ID + " INTEGER, " +
+                    SchoolContract.TablePlaces.COLUMN_ORDINAL + " INTEGER, " +
                     "FOREIGN KEY(" + SchoolContract.TablePlaces.KEY_DESK_ID + ") REFERENCES " + SchoolContract.TableDesks.NAME_TABLE_DESKS + " (" + SchoolContract.TableDesks.KEY_DESK_ID + ") ON DELETE CASCADE ); ";
             db.execSQL(sql);
-
+//класс
             sql = "CREATE TABLE " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + " ( " + SchoolContract.TableClasses.KEY_CLASS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableClasses.COLUMN_CLASS_NAME + " VARCHAR ); ";
             db.execSQL(sql);
-
+//ученик
             sql = "CREATE TABLE " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " ( " + SchoolContract.TableLearners.KEY_LEARNER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableLearners.COLUMN_FIRST_NAME + " VARCHAR, " +
                     SchoolContract.TableLearners.COLUMN_SECOND_NAME + " VARCHAR, " +
                     SchoolContract.TableLearners.KEY_CLASS_ID + " INTEGER, " +
                     "FOREIGN KEY(" + SchoolContract.TableLearners.KEY_CLASS_ID + ") REFERENCES " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + " (" + SchoolContract.TableClasses.KEY_CLASS_ID + ") ON DELETE CASCADE ); ";
             db.execSQL(sql);
-
+//ученик-место
             sql = "CREATE TABLE " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + " ( " + SchoolContract.TableLearnersOnPlaces.KEY_ATTITUDES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    SchoolContract.TableLearnersOnPlaces.KEY_LESSON_ID + " INTEGER, " +
                     SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID + " INTEGER, " +
                     SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID + " INTEGER, " +
+                    "FOREIGN KEY(" + SchoolContract.TableLearnersOnPlaces.KEY_LESSON_ID + ") REFERENCES " + SchoolContract.TableLessons.NAME_TABLE_LESSONS + " (" + SchoolContract.TableLessons.KEY_LESSON_ID + ") ON DELETE CASCADE, " +
                     "FOREIGN KEY(" + SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE, " +
                     "FOREIGN KEY(" + SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID + ") REFERENCES " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + " (" + SchoolContract.TablePlaces.KEY_PLACE_ID + ") ON DELETE CASCADE ); ";
             db.execSQL(sql);
-
+//оценки учеников
             sql = "CREATE TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ( " + SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER, " +
                     SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
@@ -88,11 +91,11 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             db.execSQL(sql);
 
             //------------------------------------------
-
+//расписание
             sql = "CREATE TABLE " + SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES + " ( " + SchoolContract.TableSchedules.KEY_SCHEDULE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableSchedules.COLUMN_NAME + " VARCHAR ); ";
             db.execSQL(sql);
-
+//уроки
             sql = "CREATE TABLE " + SchoolContract.TableLessons.NAME_TABLE_LESSONS + " ( " + SchoolContract.TableLessons.KEY_LESSON_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableLessons.COLUMN_NAME + " VARCHAR, " +
                     SchoolContract.TableLessons.KEY_SCHEDULE_ID + " INTEGER, " +
@@ -188,17 +191,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         long temp = db.insert(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, null, values);//-1 = ошибка ввода
         db.close();
         Log.i("DBOpenHelper", "createLearner returnId= " + temp + " secondName= " + secondName + " name= " + name + " class_id= " + class_id);
-        return temp;
-    }
-
-    public long setLearnerOnPlace(long learner_id, long place_id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID, learner_id);
-        values.put(SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID, place_id);
-        long temp = db.insert(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES, null, values);//-1 = ошибка ввода
-        db.close();
-        Log.i("DBOpenHelper", "setLearnerOnPlace returnId = " + temp + " learner_id= " + learner_id + " place_id= " + place_id);
         return temp;
     }
 
@@ -335,10 +327,11 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
 
     //место
-    public long createPlace(long deskId) {
+    public long createPlace(long deskId, long ordinal) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TablePlaces.KEY_DESK_ID, deskId);
+        values.put(SchoolContract.TablePlaces.COLUMN_ORDINAL, ordinal);
         long temp = db.insert(SchoolContract.TablePlaces.NAME_TABLE_PLACES, null, values);//-1 = ошибка ввода
         db.close();
         Log.i("DBOpenHelper", "createPlace returnId = " + temp + " desk_id= " + deskId);
@@ -352,6 +345,47 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         //db.close();
         return cursor;
     }
+
+
+    //ученик-место
+    public long setLearnerOnPlace(long lessonId, long learnerId, long placeId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableLearnersOnPlaces.KEY_LESSON_ID, lessonId);
+        values.put(SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID, learnerId);
+        values.put(SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID, placeId);
+        long temp = db.insert(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES, null, values);//-1 = ошибка ввода
+        db.close();
+        Log.i("DBOpenHelper", "setLearnerOnPlace returnId = " + temp + " lessonId= " + lessonId + " learnerId= " + learnerId + " placeId= " + placeId);
+        return temp;
+    }
+
+    public Cursor getAttitudesByLessonId(long lessonId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES, null, SchoolContract.TableLearnersOnPlaces.KEY_LESSON_ID + " =?", new String[]{lessonId + ""}, null, null, null);
+        Log.i("DBOpenHelper", "getAttitudesByLessonId lessonId=" + lessonId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        return cursor;
+    }
+
+    public long getLearnerIdByLessonAndPlaceId(long lessonId, long placeId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES, null, SchoolContract.TableLearnersOnPlaces.KEY_LESSON_ID + " =? and " + SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID + " =?", new String[]{Long.toString(lessonId), Long.toString(placeId)}, null, null, null);
+        cursor.moveToFirst();
+        long answer;
+        if (cursor.getCount() == 0) {
+            answer = -1;
+        } else {
+            answer = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID));
+        }
+        Log.i("DBOpenHelper", "getLearnerIdByLessonAndPlaceId count=" + cursor.getCount() + " lessonId=" + lessonId + " placeId=" + placeId + " return=" + answer);
+        cursor.close();
+        db.close();
+        return answer;
+    }
+
+
+    //оценки учеников
+
 
     //расписание
     public long createSchedule(String name) {
@@ -387,7 +421,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         String stringSchedulesId = "";
         for (int i = 0; i < schedulesId.size(); i++) {
             stringSchedulesId = stringSchedulesId + schedulesId.get(i) + " | ";
-            if (db.update(SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, contentName, SchoolContract.TableSchedules.KEY_SCHEDULE_ID + " = ?",new String[]{"" + schedulesId.get(i)}) == 1)
+            if (db.update(SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, contentName, SchoolContract.TableSchedules.KEY_SCHEDULE_ID + " = ?", new String[]{"" + schedulesId.get(i)}) == 1)
                 answer++;
         }
         Log.i("DBOpenHelper", "setSchedulesName name= " + name + " id= " + stringSchedulesId + " return = " + answer);
@@ -442,7 +476,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return answer;
     }
 
-    public int setLessonParameters(long lessonId,String lessonNames, long scheduleId, long dateBegin, long dateEnd, long classId, long cabinetId) {
+    public int setLessonParameters(long lessonId, String lessonNames, long scheduleId, long dateBegin, long dateEnd, long classId, long cabinetId) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentName = new ContentValues();
         contentName.put(SchoolContract.TableLessons.COLUMN_NAME, lessonNames);
@@ -461,6 +495,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         String[] selectionArgs = {scheduleId + ""};
         Cursor cursor = db.query(SchoolContract.TableLessons.NAME_TABLE_LESSONS, null, SchoolContract.TableLessons.KEY_SCHEDULE_ID + " = ?", selectionArgs, null, null, null);
         Log.i("DBOpenHelper", "getLessonsByScheduleId scheduleId=" + scheduleId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        return cursor;
+    }
+
+    public Cursor getLessonById(long lessonId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] selectionArgs = {lessonId + ""};
+        Cursor cursor = db.query(SchoolContract.TableLessons.NAME_TABLE_LESSONS, null, SchoolContract.TableLessons.KEY_LESSON_ID + " = ?", selectionArgs, null, null, null);
+        Log.i("DBOpenHelper", "getLessonById " + cursor + " id=" + lessonId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 

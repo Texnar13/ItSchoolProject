@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.listOf.ListOfActivity;
 
 
@@ -43,6 +45,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         switch (view.getId()) {
             case R.id.start_menu_button_now: {//запуск текущего урока
                 intent = new Intent(this, LessonActivity.class);
+                intent.putExtra(LessonActivity.LESSON_ID, (long) 0);
                 startActivity(intent);
             }
             break;
@@ -50,12 +53,6 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 intent = new Intent(this, ListOfActivity.class);
                 intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES);
                 startActivity(intent);
-
-
-
-
-
-
 
                 //TODO 1 надо адаптировать список под вывод расписаний(пример: расписание на понедельник, вторник, итд) в каждый из которых входят уроки
                 /* таблицы в бд уже реализованы

@@ -11,15 +11,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ListOfDialog extends DialogFragment {
 
@@ -43,6 +48,7 @@ public class ListOfDialog extends DialogFragment {
         LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.new_list_of_dialog_layout);
         switch (objectParameter) {
             case SchoolContract.TableClasses.NAME_TABLE_CLASSES:
+                Log.i("TeachersApp", "ListOfDialog - onCreateDialog - out classes");
 
                 final EditText className = new EditText(getActivity().getApplicationContext());
                 className.setTextColor(Color.BLACK);
@@ -100,6 +106,7 @@ public class ListOfDialog extends DialogFragment {
                 }
                 break;
             case SchoolContract.TableLearners.NAME_TABLE_LEARNERS:
+                Log.i("TeachersApp", "ListOfDialog - onCreateDialog - out learners");
 
                 final EditText firstName = new EditText(getActivity().getApplicationContext());
                 firstName.setTextColor(Color.BLACK);
@@ -165,6 +172,7 @@ public class ListOfDialog extends DialogFragment {
                 }
                 break;
             case SchoolContract.TableCabinets.NAME_TABLE_CABINETS:
+                Log.i("TeachersApp", "ListOfDialog - onCreateDialog - out cabinets");
 
                 final EditText cabinetName = new EditText(getActivity().getApplicationContext());
                 cabinetName.setTextColor(Color.BLACK);
@@ -224,15 +232,14 @@ public class ListOfDialog extends DialogFragment {
                 }
                 break;
             case SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES:
+                Log.i("TeachersApp", "ListOfDialog - onCreateDialog - out schedules");
 
                 final EditText schedulesName = new EditText(getActivity().getApplicationContext());
                 schedulesName.setTextColor(Color.BLACK);
                 schedulesName.setHint("название расписания");
                 schedulesName.setHintTextColor(Color.GRAY);
                 linearLayout.addView(schedulesName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-                linearLayout.addView(schedulesName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
+                
                 if (objectsId.size() == 0) {
                     builder.setTitle("создание расписания");
                     builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
@@ -284,40 +291,71 @@ public class ListOfDialog extends DialogFragment {
                 }
                 break;
             case SchoolContract.TableLessons.NAME_TABLE_LESSONS:
+                Log.i("TeachersApp", "ListOfDialog - onCreateDialog - out lessons " + objectsId);
+
                 final EditText lessonName = new EditText(getActivity().getApplicationContext());
                 lessonName.setTextColor(Color.BLACK);
                 lessonName.setHint("название урока");
                 lessonName.setHintTextColor(Color.GRAY);
-                final EditText dateBegin = new EditText(getActivity().getApplicationContext());
-                dateBegin.setTextColor(Color.BLACK);
-                dateBegin.setHint("дата начала");
-                dateBegin.setHintTextColor(Color.GRAY);
-                final EditText dateEnd = new EditText(getActivity().getApplicationContext());
-                dateEnd.setTextColor(Color.BLACK);
-                dateEnd.setHint("дата окончания");
-                dateEnd.setHintTextColor(Color.GRAY);
-                final EditText classId = new EditText(getActivity().getApplicationContext());
-                classId.setTextColor(Color.BLACK);
-                classId.setHint("id класса");
-                classId.setHintTextColor(Color.GRAY);
-                final EditText cabinetId = new EditText(getActivity().getApplicationContext());
-                cabinetId.setTextColor(Color.BLACK);
-                cabinetId.setHint("id кабинета");
-                cabinetId.setHintTextColor(Color.GRAY);
-
                 linearLayout.addView(lessonName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                linearLayout.addView(dateBegin, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                linearLayout.addView(dateEnd, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                linearLayout.addView(classId, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                linearLayout.addView(cabinetId, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+                final EditText dateBegin = new EditText(getActivity().getApplicationContext());
+                final EditText dateEnd = new EditText(getActivity().getApplicationContext());
+
+                //выпадающие списки
+                final Spinner classesSpinner = new Spinner(getActivity().getApplicationContext());
+                final Spinner cabinetsSpinner = new Spinner(getActivity().getApplicationContext());
+                final DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
+                final Cursor cursorWisClasses = db.getClasses();
+                final Cursor cursorWisCabinets = db.getCabinets();
+                final ArrayList<Long> classesId = new ArrayList<>();
+                final ArrayList<Long> cabinetId = new ArrayList<>();
+
+                if (objectsId.size() < 2) {
+
+                    ArrayList<String> classesNames = new ArrayList<>();
+
+                    while (cursorWisClasses.moveToNext()) {
+                        classesId.add(cursorWisClasses.getLong(cursorWisClasses.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID)));
+                        classesNames.add(cursorWisClasses.getString(cursorWisClasses.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
+                    }
+                    classesSpinner.setAdapter(new ArrayAdapter<>(getActivity().getApplicationContext(), R.layout.list_of_dialog_spiner, R.id.list_of_dialog_spiner_text_view, classesNames.toArray(new String[classesNames.size()])));
+                    linearLayout.addView(classesSpinner, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                    ArrayList<String> cabinetsNames = new ArrayList<>();
+                    while (cursorWisCabinets.moveToNext()) {
+                        cabinetId.add(cursorWisCabinets.getLong(cursorWisCabinets.getColumnIndex(SchoolContract.TableCabinets.KEY_CABINET_ID)));
+                        cabinetsNames.add(cursorWisCabinets.getString(cursorWisCabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)));
+                    }
+                    cabinetsSpinner.setAdapter(new ArrayAdapter<>(getActivity().getApplicationContext(), R.layout.list_of_dialog_spiner, R.id.list_of_dialog_spiner_text_view, cabinetsNames.toArray(new String[cabinetsNames.size()])));
+                    linearLayout.addView(cabinetsSpinner, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+
+                    dateBegin.setTextColor(Color.BLACK);
+                    dateBegin.setHint("дата начала");
+                    dateBegin.setHintTextColor(Color.GRAY);
+                    linearLayout.addView(dateBegin, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                    dateEnd.setTextColor(Color.BLACK);
+                    dateEnd.setHint("дата окончания");
+                    dateEnd.setHintTextColor(Color.GRAY);
+                    linearLayout.addView(dateEnd, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                }
                 switch (objectsId.size()) {
                     case 0:
+
                         builder.setTitle("создание урока");
                         builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
+
                             public void onClick(DialogInterface dialog, int id) {
-                                DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
-                                db.createLesson(lessonName.getText().toString(), parentId, Long.parseLong(dateBegin.getText().toString()),Long.parseLong(dateEnd.getText().toString()), Long.parseLong(classId.getText().toString()), Long.parseLong(cabinetId.getText().toString()));
+
+                                db.createLesson(lessonName.getText().toString(),
+                                        parentId,
+                                        Long.parseLong(dateBegin.getText().toString()),
+                                        Long.parseLong(dateEnd.getText().toString()),
+                                        classesId.get(classesSpinner.getSelectedItemPosition()),
+                                        cabinetId.get(cabinetsSpinner.getSelectedItemPosition()));
                                 {//ставим адаптер
                                     Cursor cursor = db.getLessonsByScheduleId(parentId);//получаем уроки по id расписания
                                     ArrayList<ListOfAdapterObject> listOfLessons = new ArrayList<ListOfAdapterObject>();//создаём лист с уроками
@@ -341,8 +379,10 @@ public class ListOfDialog extends DialogFragment {
                         builder.setTitle("редактирование урока");
                         builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
-                                db.setLessonParameters(objectsId.get(1),lessonName.getText().toString(), parentId, Long.parseLong(dateBegin.getText().toString()),Long.parseLong(dateEnd.getText().toString()), Long.parseLong(classId.getText().toString()), Long.parseLong(cabinetId.getText().toString()));
+                                cursorWisClasses.move(classesSpinner.getSelectedItemPosition() - 1);
+                                cursorWisCabinets.move(cabinetsSpinner.getSelectedItemPosition() - 1);
+
+                                db.setLessonParameters(objectsId.get(0), lessonName.getText().toString(), parentId, Long.parseLong(dateBegin.getText().toString()), Long.parseLong(dateEnd.getText().toString()), cursorWisClasses.getLong(cursorWisClasses.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID)), cursorWisCabinets.getLong(cursorWisCabinets.getColumnIndex(SchoolContract.TableCabinets.KEY_CABINET_ID)));
                                 {//ставим адаптер
                                     Cursor cursor = db.getLessonsByScheduleId(parentId);//получаем уроки по id расписания
                                     ArrayList<ListOfAdapterObject> listOfLessons = new ArrayList<ListOfAdapterObject>();//создаём лист с уроками
@@ -367,7 +407,7 @@ public class ListOfDialog extends DialogFragment {
                         builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
-                                db.setLessonsNames(objectsId,lessonName.getText().toString());
+                                db.setLessonsNames(objectsId, lessonName.getText().toString());
                                 {//ставим адаптер
                                     Cursor cursor = db.getLessonsByScheduleId(parentId);//получаем уроки по id расписания
                                     ArrayList<ListOfAdapterObject> listOfLessons = new ArrayList<ListOfAdapterObject>();//создаём лист с уроками

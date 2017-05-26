@@ -292,7 +292,7 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
             case SchoolContract.TableLessons.NAME_TABLE_LESSONS:
                 Cursor tempCursor = db.getSchedules(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));
                 tempCursor.moveToFirst();
-                getSupportActionBar().setTitle("расписание " + db.getSchedules());//ставим заголовок
+                getSupportActionBar().setTitle("расписание " + tempCursor.getString(tempCursor.getColumnIndex(SchoolContract.TableSchedules.COLUMN_NAME)));//ставим заголовок
                 tempCursor.close();
                 cursor = db.getLessonsByScheduleId(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));//получаем уроки по расписанию
                 ArrayList<ListOfAdapterObject> listOfLessons = new ArrayList<ListOfAdapterObject>();//создаём лист с уроками

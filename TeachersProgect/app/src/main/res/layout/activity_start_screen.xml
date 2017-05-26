@@ -1,33 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/activity_start_screen_relative_layout"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.learning.texnar13.teachersprogect.StartScreenActivity">
 
     <Button
         android:id="@+id/start_menu_button_now"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="текущий урок" />
+        android:layout_above="@+id/start_menu_button_schedule"
+        android:text="текущий урок"
+        android:layout_alignRight="@+id/start_menu_button_schedule"
+        android:layout_alignEnd="@+id/start_menu_button_schedule"
+        android:layout_alignLeft="@+id/start_menu_button_my_cabinets"
+        android:layout_alignStart="@+id/start_menu_button_my_cabinets" />
 
     <Button
         android:id="@+id/start_menu_button_schedule"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="моё расписание" />
+        android:layout_above="@+id/start_menu_button_my_cabinets"
+        android:text="моё расписание"
+        android:layout_alignRight="@+id/start_menu_button_my_cabinets"
+        android:layout_alignEnd="@+id/start_menu_button_my_cabinets"
+        android:layout_alignLeft="@+id/start_menu_button_my_cabinets"
+        android:layout_alignStart="@+id/start_menu_button_my_cabinets" />
 
     <Button
         android:id="@+id/start_menu_button_my_cabinets"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginStart="60dp"
         android:text="мои кабинеты" />
 
     <Button
         android:id="@+id/start_menu_button_my_classes"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="мои классы" />
+        android:layout_below="@+id/start_menu_button_my_cabinets"
+        android:text="мои классы"
+        android:layout_alignLeft="@+id/start_menu_button_my_cabinets"
+        android:layout_alignStart="@+id/start_menu_button_my_cabinets"
+        android:layout_alignRight="@+id/start_menu_button_my_cabinets"
+        android:layout_alignEnd="@+id/start_menu_button_my_cabinets" />
 
 
-</LinearLayout>
+</RelativeLayout>

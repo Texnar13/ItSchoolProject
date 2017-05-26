@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
-import com.learning.texnar13.teachersprogect.LessonActivity;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
