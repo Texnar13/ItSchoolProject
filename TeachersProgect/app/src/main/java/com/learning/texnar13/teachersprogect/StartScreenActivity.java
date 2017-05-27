@@ -44,7 +44,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         tempButtonSeatingRedactor.setOnClickListener(this);
         reload.setOnClickListener(this);
 
-        //getSupportActionBar().setTitle("помощник учителя");
+        getSupportActionBar().setTitle("помощник учителя");
 
     }
 

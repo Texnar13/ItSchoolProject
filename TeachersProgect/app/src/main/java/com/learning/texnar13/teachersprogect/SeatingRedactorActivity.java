@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,7 +22,7 @@ import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
 import java.util.ArrayList;
 
-public class SeatingRedactorActivity extends AppCompatActivity implements chooseLearnerDialogFragmentInterface {
+public class SeatingRedactorActivity extends AppCompatActivity {
 
     final public static String LESSON_ID = "lessonId";
     long lessonId = 1;
@@ -29,7 +30,8 @@ public class SeatingRedactorActivity extends AppCompatActivity implements choose
     long classId;
     int multiplicator = 2;
 
-    long choseLearnerId;
+    static Handler handler;
+
 
     final ArrayList<RedactorLearnerAndGrade> gradeArrayList = new ArrayList<>();//массив с оценками за этот урок;
 
@@ -110,13 +112,18 @@ public class SeatingRedactorActivity extends AppCompatActivity implements choose
                         tempPlaceLayout.removeAllViews();
                         ChooseLearnerDialogFragment dialogFragment = new ChooseLearnerDialogFragment(classId);
                         dialogFragment.show(getFragmentManager(), "chooseLearners");
-                        db.setLearnerOnPlace(lessonId, choseLearnerId, placeId);
-                        //добавляем запись по id ученика и урока
-                        //Cursor chooseCursor = db.getLearner(choseLearnerId);
-                        //chooseCursor.moveToFirst();
-                        //tempLearnerText.setText(chooseCursor.getString(chooseCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)));
-                        tempPlaceLayout.addView(tempLernerImage, tempLernerImageParams);
-                        tempPlaceLayout.addView(tempLearnerText, tempLearnerTextParams);
+                        handler = new Handler() {
+                            public void handleMessage(android.os.Message msg) {
+                                //добавляем запись по id ученика и урока
+                                db.setLearnerOnPlace(lessonId, msg.what, placeId);
+                                Cursor chooseCursor = db.getLearner(msg.what);
+                                chooseCursor.moveToFirst();
+                                //обновляем TextView
+                                tempLearnerText.setText(chooseCursor.getString(chooseCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)));
+                                tempPlaceLayout.addView(tempLernerImage, tempLernerImageParams);
+                                tempPlaceLayout.addView(tempLearnerText, tempLearnerTextParams);
+                            }
+                        };
                     }
                 });
 
@@ -192,10 +199,10 @@ public class SeatingRedactorActivity extends AppCompatActivity implements choose
 
     }
 
-    @Override
-    public void chooseLearnerDialogFragmentInterfaceMethod(long methodItem) {
-        choseLearnerId = methodItem;
-    }
+//    @Override
+//    public void chooseLearnerDialogFragmentInterfaceMethod(long methodItem) {
+//        choseLearnerId = methodItem;
+//    }
 }
 
 class RedactorLearnerAndGrade {
@@ -235,17 +242,21 @@ class ChooseLearnerDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
-        final Cursor learnersCursor = db.getLearnersByClassId(classId);
-        String[] learnersNames = new String[learnersCursor.getCount()];
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());//билдер диалога
+        DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());//база
+        final Cursor learnersCursor = db.getLearnersByClassId(classId);//курсор с учениками переданного класса
+        String[] learnersNames = new String[learnersCursor.getCount()];//Cursor в String[]
         for (int i = 0; i < learnersNames.length; i++) {
             learnersCursor.moveToNext();
             learnersNames[i] = learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) + " " + learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME));
         }
         builder.setItems(learnersNames, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                ((chooseLearnerDialogFragmentInterface) getActivity()).chooseLearnerDialogFragmentInterfaceMethod(learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)));
+                learnersCursor.moveToFirst();
+                learnersCursor.move(which);
+                SeatingRedactorActivity.handler.sendEmptyMessage((int)
+                        learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)));
+                dismiss();
             }
             // The 'which' argument contains the index position
             // of the selected item
