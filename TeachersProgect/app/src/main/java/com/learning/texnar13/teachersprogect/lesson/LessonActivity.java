@@ -27,6 +27,7 @@ import java.util.ArrayList;
 public class LessonActivity extends AppCompatActivity {
 
     public static final String LESSON_ID = "lessonId";
+    final ArrayList<LearnerAndGrade> gradeArrayList = new ArrayList<>();//массив с оценками за этот урок;
     int multiplicator = 2;
 
 
@@ -37,11 +38,34 @@ public class LessonActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.main_menu_end_lesson).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                long[] learnersId = new long[gradeArrayList.size()];
+                long[] grades = new long[gradeArrayList.size()];
+                for (int j = 0; j < gradeArrayList.size(); j++) {
+                    learnersId[j] = gradeArrayList.get(j).getLearnerId();
+                    grades[j] = gradeArrayList.get(j).getGrade();
+                }
+                Intent intent = new Intent(getApplicationContext(), LessonListActivity.class);
+                intent.putExtra(LessonListActivity.LIST_ID, learnersId);
+                intent.putExtra(LessonListActivity.LIST_GRADES, grades);
+                startActivity(intent);
+                finish();
+                return true;
+            }
+        });
+        return true;
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //TODO 3 это класс урока
+        //3 это класс урока
         /*
-        * вывод учеников, парт и мест, по нажатию наученика открывается доп.меню*
+        * вывод учеников, парт и мест, по нажатию на ученика открывается доп.меню*
         где можно выбрать оценку, нет оценки/1/2/3/4/5
         после окончания урока учитель нажимает закончить урок
         выводим стастику за весь урок(2)
@@ -107,7 +131,7 @@ public class LessonActivity extends AppCompatActivity {
         *
         * нажимаем сохранить и сохраняем в таблицу ученик-оценка
         *
-        *todo обязательно надо учитывать позицию ученика
+        *
         *
         *
         *
@@ -116,6 +140,7 @@ public class LessonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         RelativeLayout room = (RelativeLayout) findViewById(R.id.room_layout);
+
 
 
 //        ActionBar actionBar = getActionBar();
@@ -142,8 +167,6 @@ public class LessonActivity extends AppCompatActivity {
 
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
-        generate(db);//начальные данные (для отладки)
-
         //получаем все данные о классе
         lessonCursor = db.getLessonById(lessonId);
         lessonCursor.moveToFirst();
@@ -153,10 +176,7 @@ public class LessonActivity extends AppCompatActivity {
         //learnersCursor = db.getLearnersByClassId(classId);
         //seatingCursor = db.getAttitudesByLessonId(lessonId);
 
-
-        final ArrayList<LearnerAndGrade> gradeArrayList = new ArrayList<>();//массив с оценками за этот урок
         int i = -1;//щётчик учеников
-
 
         //todo берём макс значение парты по X и по y прибавляем отступ минимальных и размер мах парты получаем размер layout
         while (desksCursor.moveToNext()) {
@@ -181,7 +201,7 @@ public class LessonActivity extends AppCompatActivity {
                 tempPlaceLayout.setBackgroundColor(Color.parseColor("#bc8e6d02"));
 
                 RelativeLayout.LayoutParams tempRelativeLayoutPlaceParams = new RelativeLayout.LayoutParams((int) dpFromPx((40 - 2) * multiplicator), (int) dpFromPx((40 - 2) * multiplicator));
-                tempRelativeLayoutPlaceParams.leftMargin = (int) dpFromPx(1 + (40 * (placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1)) * multiplicator);
+                tempRelativeLayoutPlaceParams.leftMargin = (int) dpFromPx((1 + (40 * (placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1))) * multiplicator);
                 tempRelativeLayoutPlaceParams.topMargin = (int) dpFromPx(1);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -390,28 +410,25 @@ public class LessonActivity extends AppCompatActivity {
 
             //добавление парты в комнату
             room.addView(tempRelativeLayoutDesk, tempRelativeLayoutDeskParams);
-
-
-            Button button = new Button(this);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    long[] learnersId = new long[gradeArrayList.size()];
-                    long[] grades = new long[gradeArrayList.size()];
-                    for (int j = 0; j < gradeArrayList.size(); j++) {
-                        learnersId[j]=gradeArrayList.get(j).getLearnerId();
-                        grades[j]=gradeArrayList.get(j).getGrade();
-                    }
-                    Intent intent = new Intent(getApplicationContext(),LessonListActivity.class);
-                    intent.putExtra(LessonListActivity.LIST_ID,learnersId);
-                    intent.putExtra(LessonListActivity.LIST_GRADES,grades);
-                    startActivity(intent);
-                }
-            });
-            room.addView(button, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-
+//            Button button = new Button(this);
+//            button.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//
+//                    long[] learnersId = new long[gradeArrayList.size()];
+//                    long[] grades = new long[gradeArrayList.size()];
+//                    for (int j = 0; j < gradeArrayList.size(); j++) {
+//                        learnersId[j] = gradeArrayList.get(j).getLearnerId();
+//                        grades[j] = gradeArrayList.get(j).getPlaceId();
+//                    }
+//                    Intent intent = new Intent(getApplicationContext(), LessonListActivity.class);
+//                    intent.putExtra(LessonListActivity.LIST_ID, learnersId);
+//                    intent.putExtra(LessonListActivity.LIST_GRADES, grades);
+//                    startActivity(intent);
+//                    finish();
+//                }
+//            });
+//            room.addView(button, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 //        Cursor cursor = db.getDesksByCabinetId(2);
 //        while (cursor.moveToNext()) {
@@ -456,84 +473,7 @@ public class LessonActivity extends AppCompatActivity {
         return px * getApplicationContext().getResources().getDisplayMetrics().density;
     }
 
-    private void generate(DataBaseOpenHelper dbOpenHelper) {
-        dbOpenHelper.restartTable();
 
-        dbOpenHelper.createClass("a1");
-        long classId = dbOpenHelper.createClass("a2");
-
-        long lerner1Id = dbOpenHelper.createLearner("Зинченко", "Сократ", classId);
-        long lerner2Id = dbOpenHelper.createLearner("Шумякин", "Феофан", classId);
-        long lerner3Id = dbOpenHelper.createLearner("Рябец", "Валентин", classId);
-        long lerner4Id = dbOpenHelper.createLearner("Гроша", "Любава", classId);
-        long lerner5Id = dbOpenHelper.createLearner("Авдонина", "Алиса", classId);
-
-
-        long cabinetId = dbOpenHelper.createCabinet("кабинет 406");
-
-        ArrayList<Long> desks = new ArrayList<Long>();
-        ArrayList<Long> places = new ArrayList<Long>();
-        {
-            long desk1Id = dbOpenHelper.createDesk(2, 160, 200, cabinetId);//1
-            places.add(dbOpenHelper.createPlace(desk1Id, 1));
-            places.add(dbOpenHelper.createPlace(desk1Id, 2));
-            desks.add(desk1Id);
-        }
-        {
-            long desk2Id = dbOpenHelper.createDesk(2, 40, 200, cabinetId);//2
-            places.add(dbOpenHelper.createPlace(desk2Id, 1));
-            places.add(dbOpenHelper.createPlace(desk2Id, 2));
-            desks.add(desk2Id);
-        }
-        {
-            long desk3Id = dbOpenHelper.createDesk(2, 160, 120, cabinetId);//3
-            places.add(dbOpenHelper.createPlace(desk3Id, 1));
-            places.add(dbOpenHelper.createPlace(desk3Id, 2));
-            desks.add(desk3Id);
-        }
-        {
-            long desk4Id = dbOpenHelper.createDesk(2, 40, 120, cabinetId);//4
-            places.add(dbOpenHelper.createPlace(desk4Id, 1));
-            places.add(dbOpenHelper.createPlace(desk4Id, 2));
-            desks.add(desk4Id);
-        }
-        {
-            long desk5Id = dbOpenHelper.createDesk(2, 160, 40, cabinetId);//5
-            places.add(dbOpenHelper.createPlace(desk5Id, 1));
-            places.add(dbOpenHelper.createPlace(desk5Id, 2));
-            desks.add(desk5Id);
-        }
-        {
-            long desk6Id = dbOpenHelper.createDesk(2, 40, 40, cabinetId);//6
-            places.add(dbOpenHelper.createPlace(desk6Id, 1));
-            places.add(dbOpenHelper.createPlace(desk6Id, 2));
-            desks.add(desk6Id);
-        }
-        //   |6|  |5|   |    |  |  |  |
-        //   |4|  |3|   |    | 4|  |  |
-        //   |2|  |1|   |    |35|  |21|
-        //       [-]
-
-
-        long scheduleId = dbOpenHelper.createSchedule("понедельник");
-        dbOpenHelper.createSchedule("вторник");
-        dbOpenHelper.createSchedule("среда");
-        dbOpenHelper.createSchedule("четверг");
-        dbOpenHelper.createSchedule("пятница");
-
-        long lessonId = dbOpenHelper.createLesson("физика", scheduleId, 1, 2, classId, cabinetId);
-
-
-        dbOpenHelper.setLearnerOnPlace(lessonId, lerner1Id, places.get(1));
-        dbOpenHelper.setLearnerOnPlace(lessonId, lerner2Id, places.get(0));
-        dbOpenHelper.setLearnerOnPlace(lessonId, lerner3Id, places.get(2));
-        dbOpenHelper.setLearnerOnPlace(lessonId, lerner4Id, places.get(7));
-        dbOpenHelper.setLearnerOnPlace(lessonId, lerner5Id, places.get(3));
-
-
-        dbOpenHelper.close();
-
-    }
 }
 
 class LearnerAndGrade {

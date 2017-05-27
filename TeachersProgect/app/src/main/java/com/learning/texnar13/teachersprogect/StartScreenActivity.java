@@ -8,9 +8,12 @@ import android.view.View;
 import android.widget.Button;
 
 
+import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.listOf.ListOfActivity;
+
+import java.util.ArrayList;
 
 
 public class StartScreenActivity extends AppCompatActivity implements View.OnClickListener {
@@ -19,7 +22,8 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     Button buttonSchedule;//расписание
     Button buttonCabinets;//кабинеты
     Button buttonClasses;//классы
-
+    Button tempButtonSeatingRedactor;
+    Button reload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +34,16 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         buttonSchedule = (Button) findViewById(R.id.start_menu_button_schedule);
         buttonCabinets = (Button) findViewById(R.id.start_menu_button_my_cabinets);
         buttonClasses = (Button) findViewById(R.id.start_menu_button_my_classes);
+        tempButtonSeatingRedactor = (Button) findViewById(R.id.start_menu_button_temp_seating_redactor);
+        reload = (Button) findViewById(R.id.start_menu_button_reload);
 
         buttonNow.setOnClickListener(this);
         buttonSchedule.setOnClickListener(this);
         buttonCabinets.setOnClickListener(this);
         buttonClasses.setOnClickListener(this);
+        tempButtonSeatingRedactor.setOnClickListener(this);
+        reload.setOnClickListener(this);
+
         //getSupportActionBar().setTitle("помощник учителя");
 
     }
@@ -54,7 +63,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES);
                 startActivity(intent);
 
-                //TODO 1 надо адаптировать список под вывод расписаний(пример: расписание на понедельник, вторник, итд) в каждый из которых входят уроки
+                // 1 надо адаптировать список под вывод расписаний(пример: расписание на понедельник, вторник, итд) в каждый из которых входят уроки
                 /* таблицы в бд уже реализованы
                 переименование также по диалогу
                 у уроков ещё и редактирование всех параметров
@@ -79,15 +88,96 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 startActivity(intent);
                 break;
             }
+            case R.id.start_menu_button_temp_seating_redactor: {
+                intent = new Intent(this, SeatingRedactorActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.start_menu_button_reload:{
+                DataBaseOpenHelper dbOpenHelper = new DataBaseOpenHelper(this);
+                dbOpenHelper.restartTable();
 
+                dbOpenHelper.createClass("a1");
+                long classId = dbOpenHelper.createClass("a2");
+
+                long lerner1Id = dbOpenHelper.createLearner("Зинченко", "Сократ", classId);
+                long lerner2Id = dbOpenHelper.createLearner("Шумякин", "Феофан", classId);
+                long lerner3Id = dbOpenHelper.createLearner("Рябец", "Валентин", classId);
+                long lerner4Id = dbOpenHelper.createLearner("Гроша", "Любава", classId);
+                long lerner5Id = dbOpenHelper.createLearner("Авдонина", "Алиса", classId);
+
+
+                long cabinetId = dbOpenHelper.createCabinet("кабинет 406");
+
+                ArrayList<Long> desks = new ArrayList<Long>();
+                ArrayList<Long> places = new ArrayList<Long>();
+                {
+                    long desk1Id = dbOpenHelper.createDesk(2, 160, 200, cabinetId);//1
+                    places.add(dbOpenHelper.createPlace(desk1Id, 1));
+                    places.add(dbOpenHelper.createPlace(desk1Id, 2));
+                    desks.add(desk1Id);
+                }
+                {
+                    long desk2Id = dbOpenHelper.createDesk(2, 40, 200, cabinetId);//2
+                    places.add(dbOpenHelper.createPlace(desk2Id, 1));
+                    places.add(dbOpenHelper.createPlace(desk2Id, 2));
+                    desks.add(desk2Id);
+                }
+                {
+                    long desk3Id = dbOpenHelper.createDesk(2, 160, 120, cabinetId);//3
+                    places.add(dbOpenHelper.createPlace(desk3Id, 1));
+                    places.add(dbOpenHelper.createPlace(desk3Id, 2));
+                    desks.add(desk3Id);
+                }
+                {
+                    long desk4Id = dbOpenHelper.createDesk(2, 40, 120, cabinetId);//4
+                    places.add(dbOpenHelper.createPlace(desk4Id, 1));
+                    places.add(dbOpenHelper.createPlace(desk4Id, 2));
+                    desks.add(desk4Id);
+                }
+                {
+                    long desk5Id = dbOpenHelper.createDesk(2, 160, 40, cabinetId);//5
+                    places.add(dbOpenHelper.createPlace(desk5Id, 1));
+                    places.add(dbOpenHelper.createPlace(desk5Id, 2));
+                    desks.add(desk5Id);
+                }
+                {
+                    long desk6Id = dbOpenHelper.createDesk(2, 40, 40, cabinetId);//6
+                    places.add(dbOpenHelper.createPlace(desk6Id, 1));
+                    places.add(dbOpenHelper.createPlace(desk6Id, 2));
+                    desks.add(desk6Id);
+                }
+                //   |6|  |5|   |    |  |  |  |
+                //   |4|  |3|   |    | 4|  |  |
+                //   |2|  |1|   |    |35|  |21|
+                //       [-]
+
+
+                long scheduleId = dbOpenHelper.createSchedule("понедельник");
+                dbOpenHelper.createSchedule("вторник");
+                dbOpenHelper.createSchedule("среда");
+                dbOpenHelper.createSchedule("четверг");
+                dbOpenHelper.createSchedule("пятница");
+
+                long lessonId = dbOpenHelper.createLesson("физика", scheduleId, 1, 2, classId, cabinetId);
+
+
+                dbOpenHelper.setLearnerOnPlace(lessonId, lerner1Id, places.get(1));
+                dbOpenHelper.setLearnerOnPlace(lessonId, lerner2Id, places.get(0));
+                dbOpenHelper.setLearnerOnPlace(lessonId, lerner3Id, places.get(2));
+                dbOpenHelper.setLearnerOnPlace(lessonId, lerner4Id, places.get(7));
+                dbOpenHelper.setLearnerOnPlace(lessonId, lerner5Id, places.get(3));
+
+
+                dbOpenHelper.close();
+            }
         }
-
     }
 
     @Override
     public void onBackPressed() {
+        Log.i("teachersApp", "StartScreenActivity-back");
         //finish();
-        Log.i("StartScreenActivity", "back");
         super.onBackPressed();
     }
 }

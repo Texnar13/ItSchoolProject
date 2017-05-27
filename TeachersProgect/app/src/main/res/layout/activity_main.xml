@@ -32,7 +32,7 @@
                 android:layout_alignParentTop="true"
                 android:background="#efe3cc">
 
-                <RelativeLayout
+                <!--<RelativeLayout
                     android:layout_width="80dp"
                     android:layout_height="40dp"
                     android:layout_alignParentLeft="true"
@@ -62,7 +62,7 @@
                         android:orientation="vertical">
 
                     </LinearLayout>
-                </RelativeLayout>
+                </RelativeLayout>-->
             </RelativeLayout>
         </ScrollView>
     </HorizontalScrollView>

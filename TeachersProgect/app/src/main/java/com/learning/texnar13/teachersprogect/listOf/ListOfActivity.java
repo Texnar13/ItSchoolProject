@@ -296,7 +296,7 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                 tempCursor.close();
                 cursor = db.getLessonsByScheduleId(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));//получаем уроки по расписанию
                 ArrayList<ListOfAdapterObject> listOfLessons = new ArrayList<ListOfAdapterObject>();//создаём лист с уроками
-                while (cursor.moveToNext()) {//курсор в лист todo передавать не только имя урока но и его параметры
+                while (cursor.moveToNext()) {//курсор в лист todo передавать в список не только имя урока но и его параметры
                     listOfLessons.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)), SchoolContract.TableLessons.NAME_TABLE_LESSONS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID))));
                 }
                 this.adapter = new ListOfAdapter(this, listOfLessons, false, SchoolContract.TableLessons.NAME_TABLE_LESSONS);//создаём адаптер

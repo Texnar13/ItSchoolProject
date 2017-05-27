@@ -53,5 +53,27 @@
         android:layout_alignRight="@+id/start_menu_button_my_cabinets"
         android:layout_alignEnd="@+id/start_menu_button_my_cabinets" />
 
+    <Button
+        android:id="@+id/start_menu_button_temp_seating_redactor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="редактор рассадки"
+        android:layout_below="@+id/start_menu_button_my_classes"
+        android:layout_alignRight="@+id/start_menu_button_my_classes"
+        android:layout_alignEnd="@+id/start_menu_button_my_classes"
+        android:layout_alignLeft="@+id/start_menu_button_my_classes"
+        android:layout_alignStart="@+id/start_menu_button_my_classes" />
+
+    <Button
+        android:id="@+id/start_menu_button_reload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="перезагрузить базу"
+        android:layout_below="@+id/start_menu_button_temp_seating_redactor"
+        android:layout_alignRight="@+id/start_menu_button_temp_seating_redactor"
+        android:layout_alignEnd="@+id/start_menu_button_temp_seating_redactor"
+        android:layout_alignLeft="@+id/start_menu_button_temp_seating_redactor"
+        android:layout_alignStart="@+id/start_menu_button_temp_seating_redactor" />
+
 
 </RelativeLayout>

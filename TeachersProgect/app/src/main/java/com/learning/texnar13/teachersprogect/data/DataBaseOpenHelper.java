@@ -383,8 +383,27 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return answer;
     }
 
+    public int deleteAttitudeByLessonIdAndLearnerId(long lessonId, long learnerId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int answer = db.delete(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES, SchoolContract.TableLearnersOnPlaces.KEY_LESSON_ID + " = ? and "+SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID+" = ?", new String[]{Long.toString(lessonId), Long.toString(learnerId)});
+        Log.i("DBOpenHelper", "deleteAttitudeByLessonIdAndLearnerId lessonId=" +lessonId+" learnerId="+learnerId+ " return = " + answer);
+        db.close();
+        return answer;
+    }
+
 
     //оценки учеников
+    public long createGrade(long learnerId, long grade, long date) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableLearnersGrades.KEY_LEARNER_ID, learnerId);
+        values.put(SchoolContract.TableLearnersGrades.COLUMN_GRADE, grade);
+        values.put(SchoolContract.TableLearnersGrades.COLUMN_DATE, date);
+        long temp = db.insert(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, values);//-1 = ошибка ввода
+        db.close();
+        Log.i("DBOpenHelper", "createGrade returnId = " + temp + " learnerId= " + learnerId + " grade= " + grade + " date= " + date);
+        return temp;
+    }
 
 
     //расписание

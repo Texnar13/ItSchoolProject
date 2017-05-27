@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:title="закончить"
+        android:title="сохранить"
         app:showAsAction="always|withText"
-        android:id="@+id/main_menu_end_lesson"
-        android:icon="@drawable/ic_menu_mark"
+        android:id="@+id/lesson_list_menu_save"
+        android:icon="@drawable/ic_menu_save"
         >
     </item>
 </menu>

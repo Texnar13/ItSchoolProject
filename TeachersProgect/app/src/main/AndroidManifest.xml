@@ -17,14 +17,14 @@
         </activity>
         <activity
             android:name=".lesson.LessonActivity"
-            android:label="@string/title_activity_lesson"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/title_activity_lesson"></activity>
         <activity
             android:name=".listOf.ListOfActivity"
             android:label="@string/title_activity_list_of"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".CabinetRedactorActivity"></activity>
         <activity android:name=".lesson.LessonListActivity"></activity>
+        <activity android:name=".SeatingRedactorActivity"></activity>
     </application>
 
 </manifest>
