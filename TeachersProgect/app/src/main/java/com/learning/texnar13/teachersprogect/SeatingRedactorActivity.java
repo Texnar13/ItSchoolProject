@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
@@ -88,7 +87,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
 
         Cursor desksCursor = db.getDesksByCabinetId(cabinetId);//курсор с партами
 
-        //todo0 берём макс значение парты по X и по y прибавляем отступ минимальных и размер мах парты получаем размер layout или размер экрана смотря что больше
+        //todo берём макс значение парты по X и по y прибавляем отступ минимальных и размер мах парты получаем размер layout или размер экрана смотря что больше
         while (desksCursor.moveToNext()) {
             //создание парты
             RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);
