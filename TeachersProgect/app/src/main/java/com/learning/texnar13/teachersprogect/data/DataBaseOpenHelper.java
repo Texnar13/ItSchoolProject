@@ -226,7 +226,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         Cursor learnersCursor = getLearnersByClassId(classId);
         while (learnersCursor.moveToNext()) {
             long learnerId = learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID));
-            if(getAttitudeIdByLessonIdAndLearnerId(lessonId, learnerId)==-1){
+            if (getAttitudeIdByLessonIdAndLearnerId(lessonId, learnerId) == -1) {
                 answer.add(learnerId);
             }
         }
@@ -337,12 +337,24 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return temp;
     }
 
+    public long setDeskCoordinates(long deskId, long x, long y) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues content = new ContentValues();
+        content.put(SchoolContract.TableDesks.COLUMN_X, x);
+        content.put(SchoolContract.TableDesks.COLUMN_Y, y);
+        int answer = 0;
+        if (db.update(SchoolContract.TableDesks.NAME_TABLE_DESKS, content, SchoolContract.TableDesks.KEY_DESK_ID + " = ?", new String[]{"" + deskId}) == 1)
+            answer++;
+
+        Log.i("DBOpenHelper", "setDeskCoordinates id= " + deskId + " x= " + x + " y= " + y + " return = " + answer);
+        db.close();
+        return answer;
+    }
+
     public Cursor getDesksByCabinetId(long cabinetId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        //String[] selectionArgs = {cabinetId + ""};
         Cursor cursor = db.query(SchoolContract.TableDesks.NAME_TABLE_DESKS, null, SchoolContract.TableDesks.KEY_CABINET_ID + " = ?", new String[]{cabinetId + ""}, null, null, null);//выяснил, не работает проверка в методе query
         Log.i("DBOpenHelper", "getDesksByCabinetId cabinetId=" + cabinetId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
-        //db.close();
         return cursor;
     }
 
@@ -388,20 +400,20 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public long getAttitudeIdByLessonIdAndLearnerId(long lessonId,long learnerId){//если нет то возвращает -1
+    public long getAttitudeIdByLessonIdAndLearnerId(long lessonId, long learnerId) {//если нет то возвращает -1
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES, null, SchoolContract.TableLearnersOnPlaces.KEY_LESSON_ID + " =? and " + SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID +" =?", new String[]{lessonId + "", learnerId + ""}, null, null, null);
-        if(cursor.getCount() == 0){
+        Cursor cursor = db.query(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES, null, SchoolContract.TableLearnersOnPlaces.KEY_LESSON_ID + " =? and " + SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID + " =?", new String[]{lessonId + "", learnerId + ""}, null, null, null);
+        if (cursor.getCount() == 0) {
             cursor.close();
             db.close();
-            Log.i("DBOpenHelper", "getAttitudeIdByLessonIdAndLearnerId lessonId=" + lessonId + " learnerId=" + learnerId + " answer=" + -1 );
+            Log.i("DBOpenHelper", "getAttitudeIdByLessonIdAndLearnerId lessonId=" + lessonId + " learnerId=" + learnerId + " answer=" + -1);
             return -1;
         }
         cursor.moveToFirst();
         long answer = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_ATTITUDES_ID));
         cursor.close();
         db.close();
-        Log.i("DBOpenHelper", "getAttitudeIdByLessonIdAndLearnerId lessonId=" + lessonId + " learnerId=" + learnerId + " answer=" + answer );
+        Log.i("DBOpenHelper", "getAttitudeIdByLessonIdAndLearnerId lessonId=" + lessonId + " learnerId=" + learnerId + " answer=" + answer);
         return answer;
     }//TODO
 
@@ -423,8 +435,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     public int deleteAttitudeByLessonIdAndLearnerId(long lessonId, long learnerId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        int answer = db.delete(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES, SchoolContract.TableLearnersOnPlaces.KEY_LESSON_ID + " = ? and "+SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID+" = ?", new String[]{Long.toString(lessonId), Long.toString(learnerId)});
-        Log.i("DBOpenHelper", "deleteAttitudeByLessonIdAndLearnerId lessonId=" +lessonId+" learnerId="+learnerId+ " return = " + answer);
+        int answer = db.delete(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES, SchoolContract.TableLearnersOnPlaces.KEY_LESSON_ID + " = ? and " + SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID + " = ?", new String[]{Long.toString(lessonId), Long.toString(learnerId)});
+        Log.i("DBOpenHelper", "deleteAttitudeByLessonIdAndLearnerId lessonId=" + lessonId + " learnerId=" + learnerId + " return = " + answer);
         db.close();
         return answer;
     }

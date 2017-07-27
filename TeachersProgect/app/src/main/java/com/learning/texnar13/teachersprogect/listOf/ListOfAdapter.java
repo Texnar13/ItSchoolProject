@@ -21,7 +21,7 @@ import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import java.util.ArrayList;
 
 
-public class ListOfAdapter extends BaseAdapter {
+public class ListOfAdapter extends BaseAdapter {//todo задача адаптера принимать список, отправлять обратно выбранный элемент
     //может нужна переменная был ли этот вызов чекбоксов первым  после отработки метода сделать её false
     //сохраняется массив, который создавался ври первых изменениях значения в следующем меняются, но используется первый
     //он должен обновляться при закрытии диалога возможно при закрытии мы передаём ему старый массив
@@ -29,7 +29,7 @@ public class ListOfAdapter extends BaseAdapter {
     private Context context;
     //private Cursor cursor;
     private LayoutInflater inflater;
-    private ArrayList<ListOfAdapterObject> content;
+    private ArrayList<ListOfAdapterObject> content;//содержит все данные об обьектах списка
     private boolean showCheckBoxes;
     private String type;
 
@@ -43,21 +43,6 @@ public class ListOfAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-//    ListOfAdapter(Activity activity, Cursor cursor, boolean showCheckBoxes) {
-//        ArrayList<ListOfAdapterObject> listOfClasses = new ArrayList<ListOfAdapterObject>();
-//        while (cursor.moveToNext()) {
-//            listOfClasses.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)), SchoolContract.TableClasses.NAME_TABLE_CLASSES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID))));
-//        }
-//        cursor.close();
-//        //this.cursor = cursor;
-//
-//        this.activity = activity;
-//        this.context = activity.getApplicationContext();
-//        this.content = listOfClasses;
-//        this.showCheckBoxes = showCheckBoxes;
-//        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//    }
-
     @Override
     public int getCount() {
         return content.size();
@@ -70,54 +55,50 @@ public class ListOfAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int i) {
-        return content.get(i).getobjId();
+        return content.get(i).getObjId();
     }
 
     //пункт списка
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        Log.i("TeachersApp", "ListOfAdapter - getView position = " + position);
         // используем созданные, но не используемые view
         View view = convertView;
         //if (view == null) {
         //    view = inflater.inflate(R.layout.list_of_adapter_element, parent, false);
         //}
         view = inflater.inflate(R.layout.list_of_adapter_element, parent, false);
-        final ListOfAdapterObject listOfAdapterObject = getListOfAdapterObject(position);
 
+        LinearLayout flat = (LinearLayout) view.findViewById(R.id.list_of_adapter_element_out);//контейнер элемента списка
+        Button title = new Button(context);//элемент списка, пока кнопка
+        title.setText(((ListOfAdapterObject) getItem(position)).getObjName());//ставим имя
+        Log.i("TeachersApp", "ListOfAdapter - getView isChecked = " + ((ListOfAdapterObject) getItem(position)).isChecked()+" position = " + position);
+        if (showCheckBoxes) {//выбираем будем ли помещать в контейнер checkBox и назначаем checkBox-у действия
 
-        LinearLayout flat = (LinearLayout) view.findViewById(R.id.list_of_adapter_element_out);
-        Button title = new Button(context);
-        title.setText(listOfAdapterObject.getobjName());
-        //выводим чекбоксы
-        Log.i("TeachersApp", "ListOfAdapter - getView showCheckBoxes = " + showCheckBoxes);
-        if (showCheckBoxes) {
+            ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(true);//меню с действиями к выбранным heckBox-ам
 
-            ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(true);
-
-            final CheckBox checkBox = new CheckBox(context);
-            checkBox.setChecked(listOfAdapterObject.isChecked());
+            final CheckBox checkBox = new CheckBox(context);//метки
+            checkBox.setChecked(((ListOfAdapterObject) getItem(position)).isChecked());//----------------------------------
 //            if (position == idPressedCheckBox) {
 //                checkBox.setChecked(true);
 //            }
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Log.i("TeachersApp", "ListOfAdapter - getVieW - onCheckedChanged position =" + position);
+                    Log.i("TeachersApp", "ListOfAdapter - getVieW - onCheckedChanged position =" + position + " " + isChecked);
                     checkBox.setChecked(isChecked);
-                    getListOfAdapterObject(position).setChecked(isChecked);
+                    ((ListOfAdapterObject) getItem(position)).setChecked(isChecked);
                 }
             });
             flat.addView(checkBox);
         } else {
-            ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(false);//похоже не работает
+            ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(false);//
             Log.i("TeachersApp", "ListOfAdapter - add new element");
-            final long objId = listOfAdapterObject.getobjId();//получаем id обьекта
+            final long objId = ((ListOfAdapterObject) getItem(position)).getObjId();//получаем id обьекта
             flat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.i("TeachersApp", "ListOfAdapter - classes onClick, id = " + objId);
                     Intent intent;//намерение для запуска ледующего активити
-                    switch (type) {//тип вызывающего обьекта
+                    switch (type) {//тип вызывающего обьекта//// TODO: 21.07.2017 !!!!!!!!!!!!!!!!!!!сделать редактор рассадки открывающимся из определённого меню
                         case SchoolContract.TableClasses.NAME_TABLE_CLASSES://запуск этого активити заново
                             intent = new Intent(context, ListOfActivity.class);
                             intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//с параметром ученики
@@ -130,9 +111,8 @@ public class ListOfAdapter extends BaseAdapter {
 //                            intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного ученика
 //                            activity.startActivity(intent);
 //                            break;
-                        case SchoolContract.TableCabinets.NAME_TABLE_CABINETS://запуск редактора
+                        case SchoolContract.TableCabinets.NAME_TABLE_CABINETS://запуск редактора кабинета
                             intent = new Intent(context, CabinetRedactorActivity.class);
-                            intent.putExtra(CabinetRedactorActivity.EDITED_OBJECT_TYPE, SchoolContract.TableCabinets.NAME_TABLE_CABINETS);//с параметром кабинет
                             intent.putExtra(CabinetRedactorActivity.EDITED_OBJECT_ID, objId);//передаём id выбранного бьекта
                             activity.startActivity(intent);
                             break;
@@ -154,12 +134,12 @@ public class ListOfAdapter extends BaseAdapter {
             });
             flat.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public boolean onLongClick(View view) {//todo0 я в setOnLongClickListener не делаю что-то что есть в onBackPressed может content просрочен
-                    Log.i("TeachersApp", "ListOfAdapter - classes onLongClick, id = " + objId);
-                    listOfAdapterObject.setChecked(true);
+                public boolean onLongClick(View view) {//todo я в setOnLongClickListener не делаю что-то что есть в onBackPressed может content просрочен
+                    Log.i("TeachersApp", "ListOfAdapter - onLongClick, id = " + objId);
+                    ((ListOfAdapterObject) getItem(position)).setChecked(true);
                     Log.i("TeachersApp", "ListOfAdapter - ");
                     ListView listView = (ListView) activity.findViewById(R.id.content_list_of_list_view);
-                    listView.setAdapter(new ListOfAdapter(activity, content, true, type));
+                    listView.setAdapter(new ListOfAdapter(activity, content, true, type));//передаю всё тот же лист, но в них только один чёкнут
                     return true;
                 }
             });
@@ -169,16 +149,12 @@ public class ListOfAdapter extends BaseAdapter {
         return view;
     }
 
-    private ListOfAdapterObject getListOfAdapterObject(int position) {
-        return (ListOfAdapterObject) getItem(position);
-    }
-
-    ArrayList<Long> getIdCheckedListOfAdapterObjects() {//когда создаю новый при помощи fab их на 1 меньше
+    ArrayList<Long> getIdCheckedListOfAdapterObjects() {//todo запоминает первое переименование
         Log.i("TeachersApp", "ListOfAdapter - getIdCheckedListOfAdapterObjects number = " + content.size() + " content = " + content);
         ArrayList<Long> idCheckedListOfAdapterObjects = new ArrayList<>();
         for (int i = 0; i < content.size(); i++) {
             if (content.get(i).isChecked()) {
-                idCheckedListOfAdapterObjects.add(content.get(i).getobjId());
+                idCheckedListOfAdapterObjects.add(content.get(i).getObjId());
             }
         }
         return idCheckedListOfAdapterObjects;
@@ -203,7 +179,7 @@ class ListOfAdapterObject {
         this.objType = type;
         this.objId = id;
         isChecked = false;
-
+        Log.i("TeachersApp", "createListOfAdapterObject - name =" + name + " type =" + type + " objId =" + objId + " isChecked =" + isChecked);
     }
 
     boolean isChecked() {
@@ -215,7 +191,7 @@ class ListOfAdapterObject {
         isChecked = checked;
     }
 
-    String getobjName() {
+    String getObjName() {
         return objName;
     }
 
@@ -231,7 +207,7 @@ class ListOfAdapterObject {
         this.objType = type;
     }
 
-    long getobjId() {
+    long getObjId() {
         return objId;
     }
 
@@ -239,4 +215,3 @@ class ListOfAdapterObject {
         this.objId = id;
     }
 }
-

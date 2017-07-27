@@ -68,7 +68,9 @@ public class ListOfDialog extends DialogFragment {
                                     listOfClasses.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)), SchoolContract.TableClasses.NAME_TABLE_CLASSES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID))));
                                 }
                                 cursor.close();
-                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(new ListOfAdapter(getActivity(), listOfClasses, false, SchoolContract.TableClasses.NAME_TABLE_CLASSES));
+                                ListOfAdapter adapter =new ListOfAdapter(getActivity(), listOfClasses, false, SchoolContract.TableClasses.NAME_TABLE_CLASSES);
+                                ((ListOfActivity)getActivity()).adapter = adapter;//обновляем адаптер в activity чтобы метод   dialog.objectsId = adapter.getIdCheckedListOfAdapterObjects(); имел новый список
+                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(adapter);
                             }
                             db.close();
                             dismiss();
@@ -92,7 +94,9 @@ public class ListOfDialog extends DialogFragment {
                                     listOfClasses.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)), SchoolContract.TableClasses.NAME_TABLE_CLASSES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID))));
                                 }
                                 cursor.close();
-                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(new ListOfAdapter(getActivity(), listOfClasses, false, SchoolContract.TableClasses.NAME_TABLE_CLASSES));
+                                ListOfAdapter adapter =new ListOfAdapter(getActivity(), listOfClasses, false, SchoolContract.TableClasses.NAME_TABLE_CLASSES);
+                                ((ListOfActivity)getActivity()).adapter = adapter;//обновляем адаптер в activity чтобы метод   dialog.objectsId = adapter.getIdCheckedListOfAdapterObjects(); имел новый список
+                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(adapter);
                             }
                             db.close();
                             dismiss();
@@ -134,7 +138,9 @@ public class ListOfDialog extends DialogFragment {
                                     listOfClasses.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) + " " + cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)), SchoolContract.TableLearners.NAME_TABLE_LEARNERS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID))));
                                 }
                                 cursor.close();
-                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(new ListOfAdapter(getActivity(), listOfClasses, false, SchoolContract.TableLearners.NAME_TABLE_LEARNERS));
+                                ListOfAdapter adapter = new ListOfAdapter(getActivity(), listOfClasses, false, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);
+                                ((ListOfActivity)getActivity()).adapter = adapter;//обновляем адаптер в activity чтобы метод   dialog.objectsId = adapter.getIdCheckedListOfAdapterObjects(); имел новый список
+                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(adapter);
                             }
                             db.close();
                             dismiss();
@@ -158,7 +164,9 @@ public class ListOfDialog extends DialogFragment {
                                     listOfClasses.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) + " " + cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)), SchoolContract.TableLearners.NAME_TABLE_LEARNERS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID))));
                                 }
                                 cursor.close();
-                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(new ListOfAdapter(getActivity(), listOfClasses, false, SchoolContract.TableLearners.NAME_TABLE_LEARNERS));
+                                ListOfAdapter adapter =new ListOfAdapter(getActivity(), listOfClasses, false, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);
+                                ((ListOfActivity)getActivity()).adapter = adapter;//обновляем адаптер в activity чтобы метод   dialog.objectsId = adapter.getIdCheckedListOfAdapterObjects(); имел новый список
+                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(adapter);
                             }
                             db.close();
                             dismiss();
@@ -194,7 +202,9 @@ public class ListOfDialog extends DialogFragment {
                                     listOfCabinets.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)), SchoolContract.TableCabinets.NAME_TABLE_CABINETS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableCabinets.KEY_CABINET_ID))));
                                 }
                                 cursor.close();
-                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(new ListOfAdapter(getActivity(), listOfCabinets, false, SchoolContract.TableCabinets.NAME_TABLE_CABINETS));
+                                ListOfAdapter adapter =new ListOfAdapter(getActivity(), listOfCabinets, false, SchoolContract.TableCabinets.NAME_TABLE_CABINETS);
+                                ((ListOfActivity)getActivity()).adapter = adapter;//обновляем адаптер в activity чтобы метод   dialog.objectsId = adapter.getIdCheckedListOfAdapterObjects(); имел новый список
+                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(adapter);
                             }
                             db.close();
                             dismiss();
@@ -218,7 +228,9 @@ public class ListOfDialog extends DialogFragment {
                                     listOfCabinets.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)), SchoolContract.TableCabinets.NAME_TABLE_CABINETS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableCabinets.KEY_CABINET_ID))));
                                 }
                                 cursor.close();
-                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(new ListOfAdapter(getActivity(), listOfCabinets, false, SchoolContract.TableCabinets.NAME_TABLE_CABINETS));
+                                ListOfAdapter adapter =new ListOfAdapter(getActivity(), listOfCabinets, false, SchoolContract.TableCabinets.NAME_TABLE_CABINETS);
+                                ((ListOfActivity)getActivity()).adapter = adapter;//обновляем адаптер в activity чтобы метод   dialog.objectsId = adapter.getIdCheckedListOfAdapterObjects(); имел новый список
+                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(adapter);
                             }
                             db.close();
                             dismiss();
@@ -239,7 +251,7 @@ public class ListOfDialog extends DialogFragment {
                 schedulesName.setHint("название расписания");
                 schedulesName.setHintTextColor(Color.GRAY);
                 linearLayout.addView(schedulesName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                
+
                 if (objectsId.size() == 0) {
                     builder.setTitle("создание расписания");
                     builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
@@ -253,7 +265,9 @@ public class ListOfDialog extends DialogFragment {
                                     listOfSchedules.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableSchedules.COLUMN_NAME)), SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSchedules.KEY_SCHEDULE_ID))));
                                 }
                                 cursor.close();
-                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(new ListOfAdapter(getActivity(), listOfSchedules, false, SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES));
+                                ListOfAdapter adapter =new ListOfAdapter(getActivity(), listOfSchedules, false, SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES);
+                                ((ListOfActivity)getActivity()).adapter = adapter;//обновляем адаптер в activity чтобы метод   dialog.objectsId = adapter.getIdCheckedListOfAdapterObjects(); имел новый список
+                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(adapter);
                             }
                             db.close();
                             dismiss();
@@ -277,7 +291,9 @@ public class ListOfDialog extends DialogFragment {
                                     listOfSchedules.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableSchedules.COLUMN_NAME)), SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSchedules.KEY_SCHEDULE_ID))));
                                 }
                                 cursor.close();
-                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(new ListOfAdapter(getActivity(), listOfSchedules, false, SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES));
+                                ListOfAdapter adapter =new ListOfAdapter(getActivity(), listOfSchedules, false, SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES);
+                                ((ListOfActivity)getActivity()).adapter = adapter;//обновляем адаптер в activity чтобы метод   dialog.objectsId = adapter.getIdCheckedListOfAdapterObjects(); имел новый список
+                                ((ListView) getActivity().findViewById(R.id.content_list_of_list_view)).setAdapter(adapter);
                             }
                             db.close();
                             dismiss();

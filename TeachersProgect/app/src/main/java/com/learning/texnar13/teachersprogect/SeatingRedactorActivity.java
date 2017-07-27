@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -73,6 +74,10 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         RelativeLayout room = (RelativeLayout) findViewById(R.id.seating_redactor_room);
         room.removeAllViews();
 
+        int maxDeskX = 0;//максимальный отступ парты для расчёта размеров отображаемого layout
+        int maxDeskY = 0;
+
+
         final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
         lessonId = getIntent().getLongExtra(LESSON_ID, 1);//получаем id урока по умолчанию 1
@@ -82,12 +87,11 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         cabinetId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_CABINET_ID));
 
         //ставим заголовок имя урока
-        getSupportActionBar().setTitle("редактирование урока ''" + lessonCursor.getString(
-                lessonCursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)) + "''");
+        getSupportActionBar().setTitle("редактирование урока \"" + lessonCursor.getString(
+                lessonCursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)) + "\"");
 
         Cursor desksCursor = db.getDesksByCabinetId(cabinetId);//курсор с партами
 
-        //todo берём макс значение парты по X и по y прибавляем отступ минимальных и размер мах парты получаем размер layout или размер экрана смотря что больше
         while (desksCursor.moveToNext()) {
             //создание парты
             RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);
@@ -100,6 +104,14 @@ public class SeatingRedactorActivity extends AppCompatActivity {
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             Log.i("TeachersApp", "SeatingRedactorActivity - onCreate view desk:" + desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
+
+            //вычисляем максимальный отступ парты
+            if (tempRelativeLayoutDeskParams.leftMargin > maxDeskX) {
+                maxDeskX = tempRelativeLayoutDeskParams.leftMargin;
+            }
+            if (tempRelativeLayoutDeskParams.topMargin > maxDeskY) {
+                maxDeskY = tempRelativeLayoutDeskParams.topMargin;
+            }
 
             //проходим по местам на парте
             final Cursor placeCursor = db.getPlacesByDeskId(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
@@ -237,6 +249,20 @@ public class SeatingRedactorActivity extends AppCompatActivity {
             //добавление парты в комнату
             room.addView(tempRelativeLayoutDesk, tempRelativeLayoutDeskParams);
         }
+
+
+//        // Узнаем размеры экрана из ресурсов
+//        DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
+//
+//        // узнаем размеры экрана из класса Display
+//        Display display = getWindowManager().getDefaultDisplay();
+//        DisplayMetrics metricsB = new DisplayMetrics();
+//        display.getMetrics(metricsB);
+
+        room.setLayoutParams(new FrameLayout.LayoutParams((maxDeskX + (int) dpFromPx(80 + 40) * multiplier), (maxDeskY + (int) dpFromPx(40 + 40) * multiplier)));//(w, h)320*7 = 2240
+        //room.setLayoutParams(new FrameLayout.LayoutParams(1120, 1120));//(w, h)320*7 = 2240
+        Log.i("TeachersProject", "" + (maxDeskX + (80 + 40) * multiplier) + "" + (maxDeskY + (40 + 40) * multiplier));
+        //todo под размер экрана может всё таки  scroll view
     }
 
     private float dpFromPx(float px) {
