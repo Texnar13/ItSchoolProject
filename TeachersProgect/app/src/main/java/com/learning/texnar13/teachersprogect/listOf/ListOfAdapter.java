@@ -3,6 +3,7 @@ package com.learning.texnar13.teachersprogect.listOf;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
 import com.learning.texnar13.teachersprogect.R;
@@ -21,10 +23,7 @@ import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import java.util.ArrayList;
 
 
-public class ListOfAdapter extends BaseAdapter {//todo задача адаптера принимать список, отправлять обратно выбранный элемент
-    //может нужна переменная был ли этот вызов чекбоксов первым  после отработки метода сделать её false
-    //сохраняется массив, который создавался ври первых изменениях значения в следующем меняются, но используется первый
-    //он должен обновляться при закрытии диалога возможно при закрытии мы передаём ему старый массив
+class ListOfAdapter extends BaseAdapter {//todo задача адаптера принимать список, отправлять обратно выбранный элемент
     private Activity activity;
     private Context context;
     //private Cursor cursor;
@@ -39,7 +38,6 @@ public class ListOfAdapter extends BaseAdapter {//todo задача адапте
         this.content = content;//отображаемые обьекты
         this.showCheckBoxes = showCheckBoxes;//есть ли чекбоксы
         this.type = type;//тип отображаемых обьектов
-        //this.idPressedCheckBox = idPressedCheckBox;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -62,7 +60,8 @@ public class ListOfAdapter extends BaseAdapter {//todo задача адапте
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         // используем созданные, но не используемые view
-        View view = convertView;
+        View view;
+        //view = convertView;
         //if (view == null) {
         //    view = inflater.inflate(R.layout.list_of_adapter_element, parent, false);
         //}
@@ -70,6 +69,9 @@ public class ListOfAdapter extends BaseAdapter {//todo задача адапте
 
         LinearLayout flat = (LinearLayout) view.findViewById(R.id.list_of_adapter_element_out);//контейнер элемента списка
         Button title = new Button(context);//элемент списка, пока кнопка
+//        title.setTextSize(20);
+//        title.setTextColor(Color.BLACK);
+//        title.setBackgroundColor(Color.parseColor("#c9c9c9"));
         title.setText(((ListOfAdapterObject) getItem(position)).getObjName());//ставим имя
         Log.i("TeachersApp", "ListOfAdapter - getView isChecked = " + ((ListOfAdapterObject) getItem(position)).isChecked()+" position = " + position);
         if (showCheckBoxes) {//выбираем будем ли помещать в контейнер checkBox и назначаем checkBox-у действия
@@ -93,7 +95,7 @@ public class ListOfAdapter extends BaseAdapter {//todo задача адапте
             ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(false);//
             Log.i("TeachersApp", "ListOfAdapter - add new element");
             final long objId = ((ListOfAdapterObject) getItem(position)).getObjId();//получаем id обьекта
-            flat.setOnClickListener(new View.OnClickListener() {
+            title.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.i("TeachersApp", "ListOfAdapter - classes onClick, id = " + objId);
@@ -116,25 +118,13 @@ public class ListOfAdapter extends BaseAdapter {//todo задача адапте
                             intent.putExtra(CabinetRedactorActivity.EDITED_OBJECT_ID, objId);//передаём id выбранного бьекта
                             activity.startActivity(intent);
                             break;
-                        case SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES://запуск этого активити заново
-                            intent = new Intent(context, ListOfActivity.class);
-                            intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLessons.NAME_TABLE_LESSONS);//с параметром уроки
-                            intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного расписания
-                            activity.startActivity(intent);
-                            break;
-//                        case SchoolContract.TableLessons.NAME_TABLE_LESSONS://todo запуск урока
-//                            intent = new Intent(context, LessonActivity.class);
-//                            intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLessons.NAME_TABLE_LESSONS);//с параметром уроки
-//                            intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного расписания
-//                            activity.startActivity(intent);
-//                            break;
                         default:
                     }
                 }
             });
-            flat.setOnLongClickListener(new View.OnLongClickListener() {
+            title.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public boolean onLongClick(View view) {//todo я в setOnLongClickListener не делаю что-то что есть в onBackPressed может content просрочен
+                public boolean onLongClick(View view) {
                     Log.i("TeachersApp", "ListOfAdapter - onLongClick, id = " + objId);
                     ((ListOfAdapterObject) getItem(position)).setChecked(true);
                     Log.i("TeachersApp", "ListOfAdapter - ");
@@ -145,11 +135,11 @@ public class ListOfAdapter extends BaseAdapter {//todo задача адапте
             });
         }
         activity.invalidateOptionsMenu();//обновляем меню
-        flat.addView(title, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        flat.addView(title, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return view;
     }
 
-    ArrayList<Long> getIdCheckedListOfAdapterObjects() {//todo запоминает первое переименование
+    ArrayList<Long> getIdCheckedListOfAdapterObjects() {
         Log.i("TeachersApp", "ListOfAdapter - getIdCheckedListOfAdapterObjects number = " + content.size() + " content = " + content);
         ArrayList<Long> idCheckedListOfAdapterObjects = new ArrayList<>();
         for (int i = 0; i < content.size(); i++) {

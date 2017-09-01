@@ -22,8 +22,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     final ArrayList<CabinetRedactorPoint> deskCoordinatesList = new ArrayList<>();
     int multiplier = 0;//множитель, задаётся с физических размеров экрана
     long checkedDeskId;
-    float startTouchCoordinateX = 0;
-    float startTouchCoordinateY = 0;
 
 
     //
@@ -32,7 +30,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("TeachersApp", "CabinetRedactorActivity - onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cabinet_redactor);
         RelativeLayout out = (RelativeLayout) findViewById(R.id.redactor_out);
@@ -76,12 +73,16 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 //        */
 
         //какой view появился позже тот и отображаться будет выше
-
-        long lessonId = getIntent().getLongExtra(EDITED_OBJECT_ID, 1);//получаем id урорка
+        long cabinetId = getIntent().getLongExtra(EDITED_OBJECT_ID, 1);//получаем id кабинета
+        Log.i("TeachersApp", "CabinetRedactorActivity - onCreate editedObjectId = " + cabinetId);
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);//доступ к базе данных
-        Cursor lessonCursor = db.getLessonById(lessonId);//курсор с уроком
-        lessonCursor.moveToFirst();
-        long cabinetId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_CABINET_ID));//id кабинета
+
+        Cursor cabinetCursor = db.getCabinets(cabinetId);
+        cabinetCursor.moveToFirst();
+        getSupportActionBar().setTitle("редактирование кабинета \"" +
+                cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)) +
+                "\"");
+        cabinetCursor.close();
 
         //узнаём размеры экрана
         Display display = getWindowManager().getDefaultDisplay();
@@ -113,7 +114,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             out.addView(deskLayout);
         }
 
-        //ставим id для view и по нему id парты onTouch один для всех
+        //ставим id для view и по нему id парты; onTouch один для всех
 
         relativeLayout = new RelativeLayout(this);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(8, 4);
@@ -205,9 +206,9 @@ class CabinetRedactorPoint {
     long x;
     long y;
 
-    public CabinetRedactorPoint(long id, RelativeLayout desk, long x, long y) {
+    CabinetRedactorPoint(long id, RelativeLayout relativeDesk, long x, long y) {
         this.deskId = id;
-        this.desk = desk;
+        this.desk = relativeDesk;
         this.x = x;
         this.y = y;
     }

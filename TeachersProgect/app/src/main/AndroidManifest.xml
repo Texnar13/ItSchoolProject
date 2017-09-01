@@ -17,14 +17,16 @@
         </activity>
         <activity
             android:name=".lesson.LessonActivity"
-            android:label="@string/title_activity_lesson"></activity>
+            android:label="@string/title_activity_lesson" />
         <activity
             android:name=".listOf.ListOfActivity"
             android:label="@string/title_activity_list_of"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".CabinetRedactorActivity"></activity>
-        <activity android:name=".lesson.LessonListActivity"></activity>
-        <activity android:name=".SeatingRedactorActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".CabinetRedactorActivity" />
+        <activity android:name=".lesson.LessonListActivity" />
+        <activity android:name=".SeatingRedactorActivity" />
+        <activity android:name=".ScheduleMonthActivity" />
+        <activity android:name=".ScheduleDayActivity"></activity>
     </application>
 
 </manifest>

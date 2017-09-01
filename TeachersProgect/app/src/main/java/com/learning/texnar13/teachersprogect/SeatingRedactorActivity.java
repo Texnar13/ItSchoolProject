@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -24,7 +25,7 @@ import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import java.util.ArrayList;
 
 //класс с редактором рассадки учеников принимает на вход id урока
-//todo если возникнет надобность - никаких изменений с бд до соранения лучше неделать, чтобы можно было отменить изменения
+//todo если возникнет надобность - никаких изменений с бд до соранения лучше не делать, чтобы можно было отменить изменения
 /*
 * выводим уже рассаженных учеников
 *    _________________________________
@@ -55,8 +56,10 @@ import java.util.ArrayList;
 * */
 public class SeatingRedactorActivity extends AppCompatActivity {
 
-    final public static String LESSON_ID = "lessonId";
-    long lessonId = 1;
+    //final public static String LESSON_ID = "lessonId";
+    final public static String CLASS_ID = "classId";
+    final public static String CABINET_ID = "cabinetId";
+
     long cabinetId;
     long classId;
     int multiplier = 2;//todo зум
@@ -80,15 +83,31 @@ public class SeatingRedactorActivity extends AppCompatActivity {
 
         final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
-        lessonId = getIntent().getLongExtra(LESSON_ID, 1);//получаем id урока по умолчанию 1
-        Cursor lessonCursor = db.getLessonById(lessonId);//курсор с уроком
-        lessonCursor.moveToFirst();
-        classId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_CLASS_ID));
-        cabinetId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_CABINET_ID));
+        //lessonId = getIntent().getLongExtra(LESSON_ID, 1);//получаем id урока по умолчанию 1
+        //Cursor lessonCursor = db.getLessonById(lessonId);//курсор с уроком
+        //lessonCursor.moveToFirst();
+        classId = getIntent().getLongExtra(CLASS_ID, -1);
+        cabinetId = getIntent().getLongExtra(CABINET_ID, -1);
+        if (classId == -1 || cabinetId == -1) {
+            Log.i("TeachersApp", "SeatingRedactorActivity - not intent: classId = " + classId + " cabinetId = " + cabinetId);
+//            Toast toast = new Toast(this);
+//            toast.makeText(this,"не выбран класс или кабинет",Toast.LENGTH_SHORT);
+//            toast.show();
+            finish();
+        }
 
         //ставим заголовок имя урока
-        getSupportActionBar().setTitle("редактирование урока \"" + lessonCursor.getString(
-                lessonCursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)) + "\"");
+        Cursor classCursor = db.getClasses(classId);
+        classCursor.moveToFirst();
+        Cursor cabinetCursor = db.getCabinets(cabinetId);
+        cabinetCursor.moveToFirst();
+        getSupportActionBar().setTitle("рассадка \"" +
+                classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)) +
+                "\" в кабинете \"" +
+                cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)) +
+                "\"");
+        classCursor.close();
+        cabinetCursor.close();
 
         Cursor desksCursor = db.getDesksByCabinetId(cabinetId);//курсор с партами
 
@@ -119,7 +138,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                 //создание места и ученика
 
                 //id
-                final long learnerId = db.getLearnerIdByLessonAndPlaceId(lessonId, placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID)));
+                final long learnerId = db.getLearnerIdByClassIdAndPlaceId(classId, placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID)));
                 final long placeId = placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID));
                 //создание места
                 final LinearLayout tempPlaceLayout = new LinearLayout(this);
@@ -191,7 +210,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             //tempPlaceLayout.removeAllViews();
-                            db.deleteAttitudeByLessonIdAndLearnerId(lessonId, learnerId);//удаляем запись по id ученика и урока
+                            db.deleteAttitudeByLearnerIdAndPlaceId(learnerId, placeId);//удаляем запись по id ученика и урока
                             drawDesks();
                             //tempPlaceLayout.addView(tempImageAdd, tempImageAddParams);
                         }
@@ -203,7 +222,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             //tempPlaceLayout.removeAllViews();
-                            db.deleteAttitudeByLessonIdAndLearnerId(lessonId, learnerId);//удаляем запись по id ученика и урока
+                            db.deleteAttitudeByLearnerIdAndPlaceId(learnerId, placeId);//удаляем запись по id ученика и урока
                             drawDesks();
                             //tempPlaceLayout.addView(tempImageAdd, tempImageAddParams);
 
@@ -221,22 +240,22 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             tempPlaceLayout.removeAllViews();
-                            ChooseLearnerDialogFragment dialogFragment = new ChooseLearnerDialogFragment(lessonId);
+                            ChooseLearnerDialogFragment dialogFragment = new ChooseLearnerDialogFragment(cabinetId, classId);
                             dialogFragment.show(getFragmentManager(), "chooseLearners");
                             handler = new Handler() {
                                 public void handleMessage(android.os.Message msg) {
                                     //возврат -1 если ничего не выбрано иначе id ученика
                                     if (msg.what != -1) {
                                         //добавляем запись по id ученика и урока
-                                        db.setLearnerOnPlace(lessonId, msg.what, placeId);
+                                        db.setLearnerOnPlace(//lessonId,
+                                                msg.what, placeId);
                                     }
                                     drawDesks();
                                 }
                             };
                         }
                     });
-
-                    if (db.getNotPutLearnersIdByLessonId(lessonId).size() != 0)
+                    if (db.getNotPutLearnersIdByCabinetIdAndClassId(cabinetId, classId).size() != 0)
                         tempPlaceLayout.addView(tempImageAdd, tempImageAddParams);
                 }
 
@@ -277,10 +296,13 @@ public class SeatingRedactorActivity extends AppCompatActivity {
 
 class ChooseLearnerDialogFragment extends DialogFragment {//диалог по выбору не распределенного ученика
 
-    long lessonId;
+    //long lessonId;
+    long cabinetId;
+    long classId;
 
-    public ChooseLearnerDialogFragment(long lessonId) {
-        this.lessonId = lessonId;
+    public ChooseLearnerDialogFragment(long cabinetId, long classId) {
+        this.cabinetId = cabinetId;
+        this.classId = classId;
     }
 
     @Override
@@ -288,7 +310,7 @@ class ChooseLearnerDialogFragment extends DialogFragment {//диалог по в
         //
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());//билдер диалога
         final DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());//база
-        final ArrayList<Long> learnersId = db.getNotPutLearnersIdByLessonId(lessonId);//лист с id нераспределенных по местам учеников
+        final ArrayList<Long> learnersId = db.getNotPutLearnersIdByCabinetIdAndClassId(cabinetId, classId);//лист с id нераспределенных по местам учеников
         String[] learnersNames = new String[learnersId.size()];//массив с именами учеников(пустой)
         for (int i = 0; i < learnersNames.length; i++) {//заполняем
             Cursor learnerTempCursor = db.getLearner(learnersId.get(i));//получаем ученика

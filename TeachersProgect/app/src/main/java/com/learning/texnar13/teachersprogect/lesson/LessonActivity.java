@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public class LessonActivity extends AppCompatActivity {
 
-    public static final String LESSON_ID = "lessonId";
+    public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
     final ArrayList<LearnerAndGrade> gradeArrayList = new ArrayList<>();//массив с оценками за этот урок;
     int multiplier = 2;
 
@@ -151,6 +151,7 @@ public class LessonActivity extends AppCompatActivity {
 
 
         long lessonId;
+        long lessonAttitudeId;
         long classId;
         long cabinetId;
         Cursor lessonCursor;//курсор с текущим уроком
@@ -158,19 +159,29 @@ public class LessonActivity extends AppCompatActivity {
         Cursor learnersCursor;//курсор с учениками
         Cursor seatingCursor;//курсор с зависимостями ученик место
 
-        if (getIntent().getLongExtra(LESSON_ID, -1) == 0) {//-1 ошибка 0 найти текущий 1> использовать переданные
-            lessonId = 1;
+        //todo сделать скорре передачу не 0 при текущем а передачу самог текущего урока, то есть все вычисления с датой вне этого класса
+        if (getIntent().getLongExtra(LESSON_ATTITUDE_ID, -1) == -1) {//-1 ошибка 0 найти текущий 1> использовать переданные
+            lessonAttitudeId = 1;//todo todo выдавать ошибку и выходить из активити
         } else {
-            lessonId = getIntent().getLongExtra(LESSON_ID, -1);
+            lessonAttitudeId = getIntent().getLongExtra(LESSON_ATTITUDE_ID, -1);
         }
 
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
         //получаем все данные о классе
-        lessonCursor = db.getLessonById(lessonId);
+        //курсор с зависимостью
+        Cursor lessonAttitudeCursor = db.getLessonAttitudeById(lessonAttitudeId);
+        lessonAttitudeCursor.moveToFirst();
+        //курсор с уроком
+        lessonCursor = db.getLessonById(lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_ID)));
         lessonCursor.moveToFirst();
+
         classId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_CLASS_ID));
-        cabinetId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_CABINET_ID));
+        cabinetId = lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_CABINET_ID));
+
+        lessonCursor.close();
+        lessonAttitudeCursor.close();
+        //курсор с партами
         desksCursor = db.getDesksByCabinetId(cabinetId);
         //learnersCursor = db.getLearnersByClassId(classId);
         //seatingCursor = db.getAttitudesByLessonId(lessonId);
@@ -208,7 +219,7 @@ public class LessonActivity extends AppCompatActivity {
                 Log.i("TeachersApp", "LessonActivity - onCreate view place:" + placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID)));
 
                 //создание ученика
-                long learnerId = db.getLearnerIdByLessonAndPlaceId(lessonId, placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID)));
+                long learnerId = db.getLearnerIdByClassIdAndPlaceId(classId, placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID)));
                 if (learnerId != -1) {
                     //оценки
                     i++;
@@ -479,12 +490,12 @@ class LearnerAndGrade {
     private long learnerId;
     private long grade;
 
-    public LearnerAndGrade(long learnerId, long grade) {
+    LearnerAndGrade(long learnerId, long grade) {
         this.learnerId = learnerId;
         this.grade = grade;
     }
 
-    public long getLearnerId() {
+    long getLearnerId() {
         return learnerId;
     }
 
@@ -492,11 +503,11 @@ class LearnerAndGrade {
         this.learnerId = learnerId;
     }
 
-    public long getGrade() {
+    long getGrade() {
         return grade;
     }
 
-    public void setGrade(long grade) {
+    void setGrade(long grade) {
         this.grade = grade;
     }
 }

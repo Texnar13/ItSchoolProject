@@ -7,14 +7,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.listOf.ListOfActivity;
 
 import java.util.ArrayList;
-
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class StartScreenActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -54,19 +54,16 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         switch (view.getId()) {
             case R.id.start_menu_button_now: {//запуск текущего урока
                 intent = new Intent(this, LessonActivity.class);
-                intent.putExtra(LessonActivity.LESSON_ID, (long) 0);
+                intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, (long) -1);//TODO сделать запуск текущего урока()расчеты вести здесь
                 startActivity(intent);
             }
             break;
             case R.id.start_menu_button_schedule://переход в список расписаний
-                intent = new Intent(this, ListOfActivity.class);
-                intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES);
+                intent = new Intent(this, ScheduleMonthActivity.class);
                 startActivity(intent);
 
-                // 1 надо адаптировать список под вывод расписаний(пример: расписание на понедельник, вторник, итд) в каждый из которых входят уроки
-                /* таблицы в бд уже реализованы
-                переименование также по диалогу
-                у уроков ещё и редактирование всех параметров
+
+                /*
                 * существуют рассадки, то есть как ученики класса сидят в конкретном кабинете (в разных кабинетах ученики одного класса сидят по разному)
                 * если уроку присвоены класс и кабинет, но нет рассадки этого класса в этом кабинете,
                 или не у всех учеников назначено место, то, например, подсвечивать урок
@@ -90,15 +87,17 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
             }
             case R.id.start_menu_button_temp_seating_redactor: {
                 intent = new Intent(this, SeatingRedactorActivity.class);
+                intent.putExtra(SeatingRedactorActivity.CABINET_ID,1L);
+                intent.putExtra(SeatingRedactorActivity.CLASS_ID,2L);
                 startActivity(intent);
                 break;
             }
-            case R.id.start_menu_button_reload:{
+            case R.id.start_menu_button_reload: {
                 DataBaseOpenHelper dbOpenHelper = new DataBaseOpenHelper(this);
                 dbOpenHelper.restartTable();
 
-                dbOpenHelper.createClass("a1");
-                long classId = dbOpenHelper.createClass("a2");
+                dbOpenHelper.createClass("1\"A\"");
+                long classId = dbOpenHelper.createClass("2\"A\"");
 
                 long lerner1Id = dbOpenHelper.createLearner("Зинченко", "Сократ", classId);
                 long lerner2Id = dbOpenHelper.createLearner("Шумякин", "Феофан", classId);
@@ -107,7 +106,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 long lerner5Id = dbOpenHelper.createLearner("Авдонина", "Алиса", classId);
 
 
-                long cabinetId = dbOpenHelper.createCabinet("кабинет 406");
+                long cabinetId = dbOpenHelper.createCabinet("406");
 
                 ArrayList<Long> desks = new ArrayList<Long>();
                 ArrayList<Long> places = new ArrayList<Long>();
@@ -153,22 +152,24 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 //       [-]
 
 
-                long scheduleId = dbOpenHelper.createSchedule("понедельник");
-                dbOpenHelper.createSchedule("вторник");
-                dbOpenHelper.createSchedule("среда");
-                dbOpenHelper.createSchedule("четверг");
-                dbOpenHelper.createSchedule("пятница");
-
-                long lessonId = dbOpenHelper.createLesson("физика", scheduleId, 1, 2, classId, cabinetId);
-
-
-                dbOpenHelper.setLearnerOnPlace(lessonId, lerner1Id, places.get(1));
-                dbOpenHelper.setLearnerOnPlace(lessonId, lerner2Id, places.get(0));
-                dbOpenHelper.setLearnerOnPlace(lessonId, lerner3Id, places.get(2));
-                dbOpenHelper.setLearnerOnPlace(lessonId, lerner4Id, places.get(7));
-                dbOpenHelper.setLearnerOnPlace(lessonId, lerner5Id, places.get(3));
+                long lessonId = dbOpenHelper.createLesson("физика", classId
+                        //, cabinetId
+                );
+                Date startLessonTime = new GregorianCalendar(2017, 7, 10, 8, 30).getTime();//1502343000000 --10 августа
+                Date endLessonTime = new GregorianCalendar(2017, 7, 10, 9, 15).getTime();//  1502345700000
+                long lessonTimeId = dbOpenHelper.setLessonTimeAndCabinet(lessonId,cabinetId, startLessonTime, endLessonTime);
 
 
+                dbOpenHelper.setLearnerOnPlace(//lessonId,
+                        lerner1Id, places.get(1));
+                dbOpenHelper.setLearnerOnPlace(//lessonId,
+                        lerner2Id, places.get(0));
+                dbOpenHelper.setLearnerOnPlace(//lessonId,
+                        lerner3Id, places.get(2));
+                dbOpenHelper.setLearnerOnPlace(//lessonId,
+                        lerner4Id, places.get(7));
+                dbOpenHelper.setLearnerOnPlace(//lessonId,
+                        lerner5Id, places.get(3));
                 dbOpenHelper.close();
             }
         }

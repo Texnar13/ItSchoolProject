@@ -60,14 +60,6 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                         db.deleteCabinets(adapter.getIdCheckedListOfAdapterObjects());
                         break;
                     }
-                    case SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES: {
-                        db.deleteSchedules(adapter.getIdCheckedListOfAdapterObjects());
-                        break;
-                    }
-                    case SchoolContract.TableLessons.NAME_TABLE_LESSONS: {
-                        db.deleteLessons(adapter.getIdCheckedListOfAdapterObjects());
-                        break;
-                    }
                 }
                 db.close();
 
@@ -85,9 +77,6 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                 ListOfDialog dialog = new ListOfDialog();
                 dialog.objectParameter = getIntent().getStringExtra(LIST_PARAMETER);
                 if (getIntent().getStringExtra(LIST_PARAMETER).equals(SchoolContract.TableLearners.NAME_TABLE_LEARNERS)) {
-                    dialog.parentId = getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1);
-                }
-                if (getIntent().getStringExtra(LIST_PARAMETER).equals(SchoolContract.TableLessons.NAME_TABLE_LESSONS)) {
                     dialog.parentId = getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1);
                 }
                 dialog.objectsId = adapter.getIdCheckedListOfAdapterObjects();
@@ -137,13 +126,6 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                         break;
                     case SchoolContract.TableCabinets.NAME_TABLE_CABINETS:
                         dialog.show(getFragmentManager(), "dialogNewCabinet");
-                        break;
-                    case SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES:
-                        dialog.show(getFragmentManager(), "dialogNewSchedule");
-                        break;
-                    case SchoolContract.TableLessons.NAME_TABLE_LESSONS:
-                        dialog.parentId = getIntent().getLongExtra(DOP_LIST_PARAMETER, -1);
-                        dialog.show(getFragmentManager(), "dialogNewLesson");
                         break;
                     default:
                         Log.wtf("TeachersApp", "ListOfActivity - in fab, listParameterValue is " + listParameterValue);
@@ -213,41 +195,6 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                 Log.i("TeachersApp", "ListOfActivity - out cabinets");
                 break;
             }
-            case SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES: {
-                getSupportActionBar().setTitle("мои расписания");//ставим заголовок
-                ArrayList<ListOfAdapterObject> listOfSchedules = new ArrayList<>();//создаём лист с расписаниями
-                {
-                    Cursor cursor = db.getSchedules();//получаем расписания
-                    while (cursor.moveToNext()) {//курсор в лист
-                        listOfSchedules.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableSchedules.COLUMN_NAME)), SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSchedules.KEY_SCHEDULE_ID))));
-                    }
-                    cursor.close();
-                }
-                this.adapter = new ListOfAdapter(this, listOfSchedules, false, SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES);//создаём адаптер
-                listView.setAdapter(this.adapter);//ставим адаптер
-                Log.i("TeachersApp", "ListOfActivity - out Schedules");
-                break;
-            }
-            case SchoolContract.TableLessons.NAME_TABLE_LESSONS: {
-                {
-                    Cursor tempCursor = db.getSchedules(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));
-                    tempCursor.moveToFirst();
-                    getSupportActionBar().setTitle("расписание \"" + tempCursor.getString(tempCursor.getColumnIndex(SchoolContract.TableSchedules.COLUMN_NAME)) + "\"");//ставим заголовок
-                    tempCursor.close();
-                }
-                ArrayList<ListOfAdapterObject> listOfLessons = new ArrayList<ListOfAdapterObject>();//создаём лист с уроками
-                {
-                    Cursor cursor = db.getLessonsByScheduleId(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));//получаем уроки по расписанию
-                    while (cursor.moveToNext()) {//курсор в лист todo передавать в список не только имя урока но и его параметры
-                        listOfLessons.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)), SchoolContract.TableLessons.NAME_TABLE_LESSONS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID))));
-                    }
-                    cursor.close();
-                }
-                this.adapter = new ListOfAdapter(this, listOfLessons, false, SchoolContract.TableLessons.NAME_TABLE_LESSONS);//создаём адаптер
-                listView.setAdapter(this.adapter);//ставим адаптер
-                Log.i("TeachersApp", "ListOfActivity - out Lessons");
-                break;
-            }
             default:
                 Log.wtf("TeachersApp", "ListOfActivity - in out, listParameterValue is default!");
                 break;
@@ -261,11 +208,11 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
             ArrayList<ListOfAdapterObject> list = new ArrayList<>();//создаём лист с обьектами
             switch (listParameterValue) {//исходя из типа заполняем лист
                 case SchoolContract.TableClasses.NAME_TABLE_CLASSES: {
-                        Cursor cursor = new DataBaseOpenHelper(this).getClasses();
-                        while (cursor.moveToNext()) {//курсор в лист
-                            list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)), SchoolContract.TableClasses.NAME_TABLE_CLASSES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID))));
-                        }
-                        cursor.close();
+                    Cursor cursor = new DataBaseOpenHelper(this).getClasses();
+                    while (cursor.moveToNext()) {//курсор в лист
+                        list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)), SchoolContract.TableClasses.NAME_TABLE_CLASSES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID))));
+                    }
+                    cursor.close();
                     break;
                 }
                 case SchoolContract.TableLearners.NAME_TABLE_LEARNERS: {
@@ -280,22 +227,6 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                     Cursor cursor = new DataBaseOpenHelper(this).getCabinets();
                     while (cursor.moveToNext()) {//курсор в лист
                         list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)), SchoolContract.TableCabinets.NAME_TABLE_CABINETS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableCabinets.KEY_CABINET_ID))));
-                    }
-                    cursor.close();
-                    break;
-                }
-                case SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES: {
-                    Cursor cursor = new DataBaseOpenHelper(this).getSchedules();
-                    while (cursor.moveToNext()) {//курсор в лист
-                        list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableSchedules.COLUMN_NAME)), SchoolContract.TableSchedules.NAME_TABLE_SCHEDULES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSchedules.KEY_SCHEDULE_ID))));
-                    }
-                    cursor.close();
-                    break;
-                }
-                case SchoolContract.TableLessons.NAME_TABLE_LESSONS: {
-                    Cursor cursor = new DataBaseOpenHelper(this).getLessonsByScheduleId(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));
-                    while (cursor.moveToNext()) {//курсор в лист
-                        list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)), SchoolContract.TableLessons.NAME_TABLE_LESSONS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID))));
                     }
                     cursor.close();
                     break;

@@ -1,79 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_start_screen_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.learning.texnar13.teachersprogect.StartScreenActivity">
 
-    <Button
-        android:id="@+id/start_menu_button_now"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/start_menu_button_schedule"
-        android:text="текущий урок"
-        android:layout_alignRight="@+id/start_menu_button_schedule"
-        android:layout_alignEnd="@+id/start_menu_button_schedule"
-        android:layout_alignLeft="@+id/start_menu_button_my_cabinets"
-        android:layout_alignStart="@+id/start_menu_button_my_cabinets" />
 
-    <Button
-        android:id="@+id/start_menu_button_schedule"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/start_menu_button_my_cabinets"
-        android:text="моё расписание"
-        android:layout_alignRight="@+id/start_menu_button_my_cabinets"
-        android:layout_alignEnd="@+id/start_menu_button_my_cabinets"
-        android:layout_alignLeft="@+id/start_menu_button_my_cabinets"
-        android:layout_alignStart="@+id/start_menu_button_my_cabinets" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/start_menu_button_my_cabinets"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="60dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginStart="60dp"
-        android:text="мои кабинеты" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="259dp"
+            android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/start_menu_button_my_classes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/start_menu_button_my_cabinets"
-        android:text="мои классы"
-        android:layout_alignLeft="@+id/start_menu_button_my_cabinets"
-        android:layout_alignStart="@+id/start_menu_button_my_cabinets"
-        android:layout_alignRight="@+id/start_menu_button_my_cabinets"
-        android:layout_alignEnd="@+id/start_menu_button_my_cabinets" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-    <Button
-        android:id="@+id/start_menu_button_temp_seating_redactor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="редактор рассадки"
-        android:layout_below="@+id/start_menu_button_my_classes"
-        android:layout_alignRight="@+id/start_menu_button_my_classes"
-        android:layout_alignEnd="@+id/start_menu_button_my_classes"
-        android:layout_alignLeft="@+id/start_menu_button_my_classes"
-        android:layout_alignStart="@+id/start_menu_button_my_classes" />
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+                    <!-- app:srcCompat="@drawable/master_yoda" -->
+                </ImageView>
+            </LinearLayout>
 
-    <Button
-        android:id="@+id/start_menu_button_reload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="перезагрузить базу"
-        android:layout_below="@+id/start_menu_button_temp_seating_redactor"
-        android:layout_alignRight="@+id/start_menu_button_temp_seating_redactor"
-        android:layout_alignEnd="@+id/start_menu_button_temp_seating_redactor"
-        android:layout_alignLeft="@+id/start_menu_button_temp_seating_redactor"
-        android:layout_alignStart="@+id/start_menu_button_temp_seating_redactor" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="196dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/start_menu_button_now"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/start_menu_button_schedule"
+                    android:layout_alignEnd="@+id/start_menu_button_schedule"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignRight="@+id/start_menu_button_schedule"
+                    android:text="текущий урок" />
+
+                <Button
+                    android:id="@+id/start_menu_button_schedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/start_menu_button_my_cabinets"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:text="моё расписание" />
+
+                <Button
+                    android:id="@+id/start_menu_button_my_cabinets"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/start_menu_button_my_classes"
+                    android:layout_alignEnd="@+id/start_menu_button_schedule"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignRight="@+id/start_menu_button_schedule"
+                    android:text="мои кабинеты" />
+
+                <Button
+                    android:id="@+id/start_menu_button_my_classes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/start_menu_button_my_cabinets"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignRight="@+id/start_menu_button_my_cabinets"
+                    android:text="мои классы" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/start_menu_button_temp_seating_redactor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/start_menu_button_reload"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:text="редактор рассадки" />
+
+                <Button
+                    android:id="@+id/start_menu_button_reload"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:text="перезагрузить базу" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 
 </RelativeLayout>
