@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -22,7 +24,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     final ArrayList<CabinetRedactorPoint> deskCoordinatesList = new ArrayList<>();
     int multiplier = 0;//множитель, задаётся с физических размеров экрана
     long checkedDeskId;
-
+    RelativeLayout instrumentalImageRelative;
 
     //
     RelativeLayout relativeLayout;
@@ -73,9 +75,10 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 //        */
 
         //какой view появился позже тот и отображаться будет выше
-        long cabinetId = getIntent().getLongExtra(EDITED_OBJECT_ID, 1);//получаем id кабинета
+
+        final long cabinetId = getIntent().getLongExtra(EDITED_OBJECT_ID, 1);//получаем id кабинета
         Log.i("TeachersApp", "CabinetRedactorActivity - onCreate editedObjectId = " + cabinetId);
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);//доступ к базе данных
+        final DataBaseOpenHelper db = new DataBaseOpenHelper(this);//доступ к базе данных
 
         Cursor cabinetCursor = db.getCabinets(cabinetId);
         cabinetCursor.moveToFirst();
@@ -86,7 +89,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         //узнаём размеры экрана
         Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics metrics = new DisplayMetrics();
+        final DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
 
         if (metrics.widthPixels > metrics.heightPixels) {
@@ -95,6 +98,18 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             multiplier = metrics.widthPixels / 250;
         }
 
+        instrumentalImageRelative = (RelativeLayout) findViewById(R.id.activity_cabinet_redactor_instrumental_relative);
+//        instrumentalImageRelative.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                deskCoordinatesList.add(new CabinetRedactorPoint(
+//                        db.createDesk(2, metrics.widthPixels - 40 * multiplier,
+//                                metrics.heightPixels - 20 * multiplier, cabinetId),
+//                        new RelativeLayout(this),
+//                        deskX, deskY));
+//            }
+//        });todo создание
 
         Cursor desksCursor = db.getDesksByCabinetId(cabinetId);//курсор с партами
         while (desksCursor.moveToNext()) {//начальный вывод парт
@@ -156,6 +171,13 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                             (motionEvent.getX() <= (deskCoordinatesList.get(i).x + 80) * multiplier) &&
                             (motionEvent.getY() >= deskCoordinatesList.get(i).y * multiplier) &&
                             (motionEvent.getY() <= (deskCoordinatesList.get(i).y + 40) * multiplier)) {
+                        instrumentalImageRelative.removeAllViews();
+                        ImageView image = new ImageView(this);
+                        image.setImageResource(R.drawable.ic_delete);
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                        instrumentalImageRelative.addView(image, params);
+
                         checkedDeskId = deskCoordinatesList.get(i).deskId;
                         //совмещаем точку нажатия и центр(-40;-20) парты
                         deskLayoutParams.leftMargin = (int) (motionEvent.getX() - 40 * multiplier);
@@ -182,6 +204,12 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             case MotionEvent.ACTION_CANCEL:
                 for (int i = 0; i < deskCoordinatesList.size(); i++) {
                     if (deskCoordinatesList.get(i).deskId == checkedDeskId) {
+                        instrumentalImageRelative.removeAllViews();
+                        ImageView image = new ImageView(this);
+                        image.setImageResource(R.drawable.ic_input_add);
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                        instrumentalImageRelative.addView(image, params);
                         deskCoordinatesList.get(i).x = (long) ((motionEvent.getX() - 40 * multiplier) / multiplier);
                         deskCoordinatesList.get(i).y = (long) ((motionEvent.getY() - 20 * multiplier) / multiplier);
                         DataBaseOpenHelper db = new DataBaseOpenHelper(this);

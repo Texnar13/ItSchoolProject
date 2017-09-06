@@ -137,7 +137,7 @@ public class LessonActivity extends AppCompatActivity {
         *
         * */
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_lesson_main);
         RelativeLayout room = (RelativeLayout) findViewById(R.id.room_layout);
 
 

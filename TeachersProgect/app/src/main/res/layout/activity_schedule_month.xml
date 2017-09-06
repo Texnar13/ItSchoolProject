@@ -1,54 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.learning.texnar13.teachersprogect.ScheduleMonthActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp">
+        android:layout_height="wrap_content">
 
-        <Button
+        <ImageView
             android:id="@+id/schedule_month_button_previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="назад" />
+            android:layout_alignBottom="@+id/schedule_month_date_text"
+            android:layout_alignTop="@+id/schedule_month_date_text"
+            android:clickable="true"
+            app:srcCompat="@drawable/calendar_left_arrow" />
 
         <TextView
             android:id="@+id/schedule_month_date_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/schedule_month_button_previous"
+            android:layout_toRightOf="@+id/schedule_month_button_previous"
             android:text="TextView" />
 
-        <Button
+        <ImageView
             android:id="@+id/schedule_month_button_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="вперед" />
-    </LinearLayout>
+            android:layout_alignBottom="@+id/schedule_month_date_text"
+            android:layout_alignTop="@+id/schedule_month_date_text"
+            android:layout_toEndOf="@+id/schedule_month_date_text"
+            android:layout_toRightOf="@+id/schedule_month_date_text"
+            android:clickable="true"
+            app:srcCompat="@drawable/calendar_right_arrow" />
 
-    <HorizontalScrollView
-        android:layout_width="wrap_content"
+    </RelativeLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/schedule_month_table"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
 
-        <TableLayout
-            android:id="@+id/schedule_month_table"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp">
-
-        </TableLayout>
-    </HorizontalScrollView>
+    </LinearLayout>
 </LinearLayout>

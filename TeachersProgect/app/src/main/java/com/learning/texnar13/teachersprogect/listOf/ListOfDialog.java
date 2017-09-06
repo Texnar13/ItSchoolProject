@@ -29,7 +29,15 @@ public class ListOfDialog extends DialogFragment {
     long parentId;
     ArrayList<Long> objectsId = new ArrayList<>();
 
-    @Override//конструктор диалога
+    public ListOfDialog(String objectParameter, long parentId, ArrayList<Long> objectsId) {//конструктор этого класса
+        this.objectParameter = objectParameter;
+        this.parentId = parentId;
+        this.objectsId = objectsId;
+    }
+
+    //todo просто передавать параметр в инт что с ним делать
+
+    @Override//создание диалога
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.i("TeachersApp", "ListOfDialog - onCreateDialog");
         // Use the Builder class for convenient dialog construction
@@ -76,7 +84,7 @@ public class ListOfDialog extends DialogFragment {
                 } else {
                     builder.setTitle("редактирование класса");
                     final DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
-                    if(objectsId.size() == 1){
+                    if(objectsId.size() == 1){//если получаем на вход только один класс то ставим в строку его имя
                         Cursor cursor = db.getClasses(objectsId.get(0));
                         cursor.moveToFirst();
                         className.setText(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));

@@ -22,6 +22,7 @@ interface AbleToChangeTheEditMenu {
 }
 
 public class ListOfActivity extends AppCompatActivity implements AbleToChangeTheEditMenu {//todo0 закрыть все курсоры и базы данных
+    //todo сделать общий метод обновления адаптера
 
     public static final String LIST_PARAMETER = "listParameter";
     public static final String DOP_LIST_PARAMETER = "dopListParameter";
@@ -30,7 +31,8 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
     String listParameterValue;
 
     boolean isEditMenuVisible = false;
-    ListOfAdapter adapter;
+    AppCompatActivity listOfActivity = this;
+    ListOfAdapter adapter;//ссылка на адаптер
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -47,22 +49,36 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
             public boolean onMenuItemClick(MenuItem menuItem) {
                 //реализовываем в адаптере получение списка чёкнутых и скармливаем базе данных
                 DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                ArrayList<ListOfAdapterObject> list = new ArrayList<>();//создаём лист с классами
+                Cursor cursor;
                 switch (getIntent().getStringExtra(LIST_PARAMETER)) {//todo -1 при удалении, и в диалог
                     case SchoolContract.TableClasses.NAME_TABLE_CLASSES: {
                         db.deleteClasses(adapter.getIdCheckedListOfAdapterObjects());
+                        cursor = db.getClasses();//получаем классы
                         break;
                     }
                     case SchoolContract.TableLearners.NAME_TABLE_LEARNERS: {
                         db.deleteLearners(adapter.getIdCheckedListOfAdapterObjects());
+                        cursor = db.getLearnersByClassId(getIntent().getLongExtra(DOP_LIST_PARAMETER, 0));//получаем учеников
                         break;
                     }
                     case SchoolContract.TableCabinets.NAME_TABLE_CABINETS: {
                         db.deleteCabinets(adapter.getIdCheckedListOfAdapterObjects());
+                        cursor = db.getCabinets();//получаем кабинеты
                         break;
                     }
+                    default:
+                        throw new RuntimeException("notDefaultListParameter(" + getIntent().getStringExtra(LIST_PARAMETER) + ")");
                 }
-                db.close();
+                while (cursor.moveToNext()) {//курсор в лист
+                    list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)), SchoolContract.TableClasses.NAME_TABLE_CLASSES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID))));
+                }
+                cursor.close();
 
+                ListOfAdapter newAdapter = new ListOfAdapter(listOfActivity, list, false, SchoolContract.TableClasses.NAME_TABLE_CLASSES);
+                adapter = newAdapter;
+                ((ListView) findViewById(R.id.content_list_of_list_view)).setAdapter(newAdapter);
+                db.close();
 //                ListOfDialog dialog = new ListOfDialog();
 //                dialog.objectParameter = SchoolContract.TableClasses.NAME_TABLE_CLASSES;
 //                dialog.objectsId = adapter.getIdCheckedListOfAdapterObjects();
@@ -73,20 +89,13 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
         menu.findItem(R.id.list_of_menu_rename).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Log.i("TeachersApp", "ListOfActivity - onPrepareOptionsMenu renameId =" + adapter.getIdCheckedListOfAdapterObjects());
-                ListOfDialog dialog = new ListOfDialog();
-                dialog.objectParameter = getIntent().getStringExtra(LIST_PARAMETER);
-                if (getIntent().getStringExtra(LIST_PARAMETER).equals(SchoolContract.TableLearners.NAME_TABLE_LEARNERS)) {
-                    dialog.parentId = getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1);
-                }
-                dialog.objectsId = adapter.getIdCheckedListOfAdapterObjects();
+                Log.i("TeachersApp", "ListOfActivity - onPrepareOptionsMenu renameId =" +
+                        adapter.getIdCheckedListOfAdapterObjects());
+                ListOfDialog dialog = new ListOfDialog(getIntent().getStringExtra(LIST_PARAMETER),
+                        getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, -1),
+                        adapter.getIdCheckedListOfAdapterObjects());
                 dialog.show(getFragmentManager(), "dialogEdit");
-
-//                new DataBaseOpenHelper(getApplicationContext()).setClassesNames(adapter.getIdCheckedListOfAdapterObjects(), "2z");
-
-
                 //вызываем диалог, ставим имя и обновляем из диалога
-                //добавить обновление списка скорее всего через общий метод, хотя не факт возможно это мне пришло в голову лишь для удобства
                 return true;
             }
         });
@@ -114,22 +123,9 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ListOfDialog dialog = new ListOfDialog();
-                dialog.objectParameter = listParameterValue;
-                switch (listParameterValue) {
-                    case SchoolContract.TableClasses.NAME_TABLE_CLASSES://создание классов
-                        dialog.show(getFragmentManager(), "dialogNewClass");
-                        break;
-                    case SchoolContract.TableLearners.NAME_TABLE_LEARNERS://создание учеников
-                        dialog.parentId = getIntent().getLongExtra(DOP_LIST_PARAMETER, -1);
-                        dialog.show(getFragmentManager(), "dialogNewLearner");
-                        break;
-                    case SchoolContract.TableCabinets.NAME_TABLE_CABINETS:
-                        dialog.show(getFragmentManager(), "dialogNewCabinet");
-                        break;
-                    default:
-                        Log.wtf("TeachersApp", "ListOfActivity - in fab, listParameterValue is " + listParameterValue);
-                }
+                Log.i("TeachersApp","ListOfActivity - newUnit(fab.OnClickListener)");
+                ListOfDialog dialog = new ListOfDialog(listParameterValue,getIntent().getLongExtra(DOP_LIST_PARAMETER, -1), new ArrayList<Long>());
+                dialog.show(getFragmentManager(), "dialogNewUnit");
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();
             }

@@ -73,11 +73,16 @@ class ListOfAdapter extends BaseAdapter {//todo задача адаптера п
 //        title.setTextColor(Color.BLACK);
 //        title.setBackgroundColor(Color.parseColor("#c9c9c9"));
         title.setText(((ListOfAdapterObject) getItem(position)).getObjName());//ставим имя
-        Log.i("TeachersApp", "ListOfAdapter - getView isChecked = " + ((ListOfAdapterObject) getItem(position)).isChecked()+" position = " + position);
+        Log.i("TeachersApp", "ListOfAdapter - getView isChecked = " + ((ListOfAdapterObject) getItem(position)).isChecked() + " position = " + position);
         if (showCheckBoxes) {//выбираем будем ли помещать в контейнер checkBox и назначаем checkBox-у действия
 
-            ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(true);//меню с действиями к выбранным heckBox-ам
-
+            try {
+                ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(true);//меню с действиями к выбранным heckBox-ам
+            } catch (java.lang.ClassCastException err) {//активити должно имплементировать вывод меню
+                Log.e("TeachersApp", "you must implements AbleToChangeTheEditMenu in your class");
+                err.printStackTrace();
+                activity.finish();
+            }
             final CheckBox checkBox = new CheckBox(context);//метки
             checkBox.setChecked(((ListOfAdapterObject) getItem(position)).isChecked());//----------------------------------
 //            if (position == idPressedCheckBox) {
@@ -92,7 +97,13 @@ class ListOfAdapter extends BaseAdapter {//todo задача адаптера п
             });
             flat.addView(checkBox);
         } else {
-            ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(false);//
+            try {
+                ((AbleToChangeTheEditMenu) activity).editIsEditMenuVisible(false);//
+            } catch (java.lang.ClassCastException err) {
+                Log.e("TeachersApp", "you must implements AbleToChangeTheEditMenu in your class");
+                err.printStackTrace();
+                activity.finish();
+            }
             Log.i("TeachersApp", "ListOfAdapter - add new element");
             final long objId = ((ListOfAdapterObject) getItem(position)).getObjId();//получаем id обьекта
             title.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +118,8 @@ class ListOfAdapter extends BaseAdapter {//todo задача адаптера п
                             intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного класса
                             activity.startActivity(intent);
                             break;
+
+                        //todo статистика оценок ученика
 //                        case SchoolContract.TableLearners.NAME_TABLE_LEARNERS://todo0 будем переходить к статистике оценок ученика
 //                            intent = new Intent(context, ListOfActivity.class);
 //                            intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//с параметром
