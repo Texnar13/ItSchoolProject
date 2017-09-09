@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -18,14 +17,16 @@ import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
 import java.util.ArrayList;
 
-public class CabinetRedactorActivity extends AppCompatActivity implements View.OnTouchListener {
+public class CabinetRedactorActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
 
     public static final String EDITED_OBJECT_ID = "id";//ID редактируемого обьекта
-    final ArrayList<CabinetRedactorPoint> deskCoordinatesList = new ArrayList<>();
+    ArrayList<CabinetRedactorPoint> deskCoordinatesList = new ArrayList<>();
     int multiplier = 0;//множитель, задаётся с физических размеров экрана
     long checkedDeskId;
-    RelativeLayout instrumentalImageRelative;
-
+    ImageView instrumentalImage;
+    RelativeLayout out;
+    long cabinetId;
+    DisplayMetrics metrics;
     //
     RelativeLayout relativeLayout;
     //
@@ -34,7 +35,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cabinet_redactor);
-        RelativeLayout out = (RelativeLayout) findViewById(R.id.redactor_out);
+        out = (RelativeLayout) findViewById(R.id.redactor_out);
         //TODO 2 это редактор кабинетов, пока понадобятся только двухместные парты,
 //        /* выводим все парты находящиеся в этом кабинете
 //        * при нажатии на картинку "плюс" в центре экрана появляется парта,
@@ -76,7 +77,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         //какой view появился позже тот и отображаться будет выше
 
-        final long cabinetId = getIntent().getLongExtra(EDITED_OBJECT_ID, 1);//получаем id кабинета
+        cabinetId = getIntent().getLongExtra(EDITED_OBJECT_ID, 1);//получаем id кабинета
         Log.i("TeachersApp", "CabinetRedactorActivity - onCreate editedObjectId = " + cabinetId);
         final DataBaseOpenHelper db = new DataBaseOpenHelper(this);//доступ к базе данных
 
@@ -89,17 +90,18 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         //узнаём размеры экрана
         Display display = getWindowManager().getDefaultDisplay();
-        final DisplayMetrics metrics = new DisplayMetrics();
+        metrics = new DisplayMetrics();
         display.getMetrics(metrics);
 
-        if (metrics.widthPixels > metrics.heightPixels) {
-            multiplier = metrics.heightPixels / 250;//500
-        } else {
-            multiplier = metrics.widthPixels / 250;
-        }
+//        if (metrics.widthPixels > metrics.heightPixels) {
+//            multiplier = metrics.heightPixels / 250;//500
+//        } else {
+//            multiplier = metrics.widthPixels / 250;
+//        }
+        multiplier = 5;
 
-        instrumentalImageRelative = (RelativeLayout) findViewById(R.id.activity_cabinet_redactor_instrumental_relative);
-        //instrumentalImageRelative.setOnClickListener(this);//todo создание
+        instrumentalImage = (ImageView) findViewById(R.id.activity_cabinet_redactor_instrumental_image);
+        instrumentalImage.setOnClickListener(this);//todo создание
 
         Cursor desksCursor = db.getDesksByCabinetId(cabinetId);//курсор с партами
         while (desksCursor.moveToNext()) {//начальный вывод парт
@@ -128,6 +130,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
         layoutParams.leftMargin = 50;
         layoutParams.topMargin = 50;
+
         relativeLayout.setLayoutParams(layoutParams);
         out.setOnTouchListener(this);
         relativeLayout.setBackgroundColor(Color.RED);
@@ -137,6 +140,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+
         //
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(8, 4);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -161,12 +165,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                             (motionEvent.getX() <= (deskCoordinatesList.get(i).x + 80) * multiplier) &&
                             (motionEvent.getY() >= deskCoordinatesList.get(i).y * multiplier) &&
                             (motionEvent.getY() <= (deskCoordinatesList.get(i).y + 40) * multiplier)) {
-                        instrumentalImageRelative.removeAllViews();
-                        ImageView image = new ImageView(this);
-                        image.setImageResource(R.drawable.ic_delete);
-                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-                        instrumentalImageRelative.addView(image, params);
+
+                        instrumentalImage.setImageResource(R.drawable.ic_delete);
 
                         checkedDeskId = deskCoordinatesList.get(i).deskId;
                         //совмещаем точку нажатия и центр(-40;-20) парты
@@ -184,9 +184,23 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 //
                 for (int i = 0; i < deskCoordinatesList.size(); i++) {
                     if (deskCoordinatesList.get(i).deskId == checkedDeskId) {
-                        deskLayoutParams.leftMargin = (int) (motionEvent.getX() - 40 * multiplier);
-                        deskLayoutParams.topMargin = (int) (motionEvent.getY() - 20 * multiplier);
-                        deskCoordinatesList.get(i).desk.setLayoutParams(deskLayoutParams);
+                        //если палец находится в пределах крестика то удаляем парту
+                        if ((motionEvent.getX() >= out.getWidth() / 2 - 25 * getApplicationContext().getResources().getDisplayMetrics().density) &&
+                                (motionEvent.getX() <= out.getWidth() / 2 + 25 * getApplicationContext().getResources().getDisplayMetrics().density) &&
+                                (motionEvent.getY() >= out.getHeight() - 50 * getApplicationContext().getResources().getDisplayMetrics().density) &&
+                                (motionEvent.getY() <= out.getHeight())) {
+                            Log.i("TeachersApp", "yay!");
+                            //удаляем парту
+                            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+                            db.deleteDesk(deskCoordinatesList.get(i).deskId);
+                            out.removeView(deskCoordinatesList.get(i).desk);
+                            deskCoordinatesList.remove(i);
+                        } else {
+
+                            deskLayoutParams.leftMargin = (int) (motionEvent.getX() - 40 * multiplier);
+                            deskLayoutParams.topMargin = (int) (motionEvent.getY() - 20 * multiplier);
+                            deskCoordinatesList.get(i).desk.setLayoutParams(deskLayoutParams);
+                        }
                     }
                 }
                 break;
@@ -194,12 +208,9 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             case MotionEvent.ACTION_CANCEL:
                 for (int i = 0; i < deskCoordinatesList.size(); i++) {
                     if (deskCoordinatesList.get(i).deskId == checkedDeskId) {
-                        instrumentalImageRelative.removeAllViews();
-                        ImageView image = new ImageView(this);
-                        image.setImageResource(R.drawable.ic_input_add);
-                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-                        instrumentalImageRelative.addView(image, params);
+
+                        instrumentalImage.setImageResource(R.drawable.ic_input_add);
+
                         deskCoordinatesList.get(i).x = (long) ((motionEvent.getX() - 40 * multiplier) / multiplier);
                         deskCoordinatesList.get(i).y = (long) ((motionEvent.getY() - 20 * multiplier) / multiplier);
                         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
@@ -213,8 +224,38 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 checkedDeskId = -1;
                 break;
         }
-
         return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+        //todo места к парте
+        // узнаем размеры экрана из класса Display
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics metricsB = new DisplayMetrics();
+        display.getMetrics(metricsB);
+
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        long deskId = db.createDesk(2, (metricsB.widthPixels / 2) / multiplier, (metricsB.heightPixels / 2) / multiplier, cabinetId);
+
+        db.createPlace(deskId, 1);
+        db.createPlace(deskId, 2);
+
+        RelativeLayout newDeskLayout = new RelativeLayout(this);
+
+        RelativeLayout.LayoutParams newDeskLayoutParams = new RelativeLayout.LayoutParams(80 * multiplier, 40 * multiplier);
+        newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+        newDeskLayoutParams.leftMargin = (metricsB.widthPixels / 2);
+        newDeskLayoutParams.topMargin = (metricsB.heightPixels / 2);
+        newDeskLayout.setLayoutParams(newDeskLayoutParams);
+        newDeskLayout.setBackgroundColor(Color.GRAY);
+
+        deskCoordinatesList.add(new CabinetRedactorPoint(deskId, newDeskLayout, (metricsB.widthPixels / 2) / multiplier, (metricsB.heightPixels / 2) / multiplier));
+
+        out.addView(newDeskLayout);
+
     }
 }
 

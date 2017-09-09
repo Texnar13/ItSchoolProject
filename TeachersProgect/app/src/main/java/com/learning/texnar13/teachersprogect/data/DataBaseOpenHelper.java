@@ -406,6 +406,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public int deleteDesk(long deskId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int answer = db.delete(SchoolContract.TableDesks.NAME_TABLE_DESKS, SchoolContract.TableDesks.KEY_DESK_ID + " = ?", new String[]{"" + deskId});
+        Log.i("DBOpenHelper", "deleteDesk id= " + deskId + " return = " + answer);
+        db.close();
+        return answer;
+    }
+
 
     //место
     public long createPlace(long deskId, long ordinal) {
@@ -562,7 +570,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     //урок и его время проведения
 
-    public long setLessonTimeAndCabinet(long lessonId,long cabinetId, Date startTime, Date endTime) {
+    public long setLessonTimeAndCabinet(long lessonId, long cabinetId, Date startTime, Date endTime) {
         //date и database
 //todo
         SQLiteDatabase db = this.getWritableDatabase();
@@ -578,7 +586,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return answer;
     }
 
-    public Cursor getLessonAttitudeById(long attitudeId){
+    public Cursor getLessonAttitudeById(long attitudeId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {attitudeId + ""};
         Cursor cursor = db.query(SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME, null, SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_AND_TIME_ATTITUDE_ID + " = ?", selectionArgs, null, null, null);
@@ -636,4 +644,3 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 //        return c;
 //    }
 }
-

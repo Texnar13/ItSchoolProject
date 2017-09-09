@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/redactor_out"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -12,52 +12,40 @@
 
     tools:context="com.learning.texnar13.teachersprogect.CabinetRedactorActivity">
 
+    <RelativeLayout
+        android:id="@+id/redactor_out"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true">
+
+    </RelativeLayout>
+
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:baselineAligned="false"
         android:orientation="horizontal">
 
+
+
         <RelativeLayout
-            android:layout_width="match_parent"
+
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
 
             <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/activity_cabinet_redactor_instrumental_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_centerInParent="true"
-                app:srcCompat="@android:drawable/ic_delete" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/activity_cabinet_redactor_instrumental_relative"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:background="#baffa9"
                 app:srcCompat="@drawable/ic_input_add" />
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                app:srcCompat="@android:drawable/ic_input_add" />
-        </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>
