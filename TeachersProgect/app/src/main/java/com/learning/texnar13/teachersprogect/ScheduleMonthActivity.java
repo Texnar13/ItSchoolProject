@@ -252,7 +252,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                         );
                         db.close();
                         if (lessonsAttitudesId.size() != 0) {
-                            day.setTextSize(30);
+                            day.setTextColor(Color.GREEN);
                         }
                     }
                     //выделяем текущую дату

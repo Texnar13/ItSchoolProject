@@ -148,8 +148,8 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 long lessonId = dbOpenHelper.createLesson("физика", classId
                         //, cabinetId
                 );
-                Date startLessonTime = new GregorianCalendar(2017, 7, 10, 8, 30).getTime();//1502343000000 --10 августа
-                Date endLessonTime = new GregorianCalendar(2017, 7, 10, 9, 15).getTime();//  1502345700000
+                Date startLessonTime = new GregorianCalendar(2017, 8, 10, 8, 30).getTime();//1502343000000 --10 августа
+                Date endLessonTime = new GregorianCalendar(2017, 8, 10, 9, 15).getTime();//на 7 месяц  1502345700000
                 dbOpenHelper.setLessonTimeAndCabinet(lessonId,cabinetId, startLessonTime, endLessonTime);
 
 
