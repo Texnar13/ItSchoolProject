@@ -101,7 +101,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         classCursor.moveToFirst();
         Cursor cabinetCursor = db.getCabinets(cabinetId);
         cabinetCursor.moveToFirst();
-        getSupportActionBar().setTitle("рассадка \"" +
+        setTitle("рассадка \"" +
                 classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)) +
                 "\" в кабинете \"" +
                 cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)) +

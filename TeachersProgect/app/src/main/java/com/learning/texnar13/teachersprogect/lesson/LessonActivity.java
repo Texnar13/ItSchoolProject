@@ -150,14 +150,11 @@ public class LessonActivity extends AppCompatActivity {
 //        actionBar.setTitle("title");
 
 
-        long lessonId;
         long lessonAttitudeId;
         long classId;
         long cabinetId;
         Cursor lessonCursor;//курсор с текущим уроком
         Cursor desksCursor;//курсор с партами
-        Cursor learnersCursor;//курсор с учениками
-        Cursor seatingCursor;//курсор с зависимостями ученик место
 
         //todo сделать скорре передачу не 0 при текущем а передачу самог текущего урока, то есть все вычисления с датой вне этого класса
         if (getIntent().getLongExtra(LESSON_ATTITUDE_ID, -1) == -1) {//-1 ошибка 0 найти текущий 1> использовать переданные
@@ -497,10 +494,6 @@ class LearnerAndGrade {
 
     long getLearnerId() {
         return learnerId;
-    }
-
-    public void setLearnerId(long learnerId) {
-        this.learnerId = learnerId;
     }
 
     long getGrade() {

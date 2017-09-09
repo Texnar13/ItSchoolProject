@@ -1,20 +1,17 @@
 package com.learning.texnar13.teachersprogect.lesson;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.R;
-import com.learning.texnar13.teachersprogect.StartScreenActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
@@ -59,7 +56,7 @@ public class LessonListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_list);
 
-        getSupportActionBar().setTitle("итоги урока");
+        setTitle("итоги урока");
 
         LinearLayout list = (LinearLayout) findViewById(R.id.activity_lesson_list);
 

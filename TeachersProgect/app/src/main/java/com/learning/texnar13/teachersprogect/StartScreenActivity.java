@@ -44,7 +44,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         tempButtonSeatingRedactor.setOnClickListener(this);
         reload.setOnClickListener(this);
 
-        getSupportActionBar().setTitle("помощник учителя");
+        setTitle("помощник учителя");
 
     }
 
@@ -108,43 +108,36 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
                 long cabinetId = dbOpenHelper.createCabinet("406");
 
-                ArrayList<Long> desks = new ArrayList<Long>();
-                ArrayList<Long> places = new ArrayList<Long>();
+                ArrayList<Long> places = new ArrayList<>();
                 {
                     long desk1Id = dbOpenHelper.createDesk(2, 160, 200, cabinetId);//1
                     places.add(dbOpenHelper.createPlace(desk1Id, 1));
                     places.add(dbOpenHelper.createPlace(desk1Id, 2));
-                    desks.add(desk1Id);
                 }
                 {
                     long desk2Id = dbOpenHelper.createDesk(2, 40, 200, cabinetId);//2
                     places.add(dbOpenHelper.createPlace(desk2Id, 1));
                     places.add(dbOpenHelper.createPlace(desk2Id, 2));
-                    desks.add(desk2Id);
                 }
                 {
                     long desk3Id = dbOpenHelper.createDesk(2, 160, 120, cabinetId);//3
                     places.add(dbOpenHelper.createPlace(desk3Id, 1));
                     places.add(dbOpenHelper.createPlace(desk3Id, 2));
-                    desks.add(desk3Id);
                 }
                 {
                     long desk4Id = dbOpenHelper.createDesk(2, 40, 120, cabinetId);//4
                     places.add(dbOpenHelper.createPlace(desk4Id, 1));
                     places.add(dbOpenHelper.createPlace(desk4Id, 2));
-                    desks.add(desk4Id);
                 }
                 {
                     long desk5Id = dbOpenHelper.createDesk(2, 160, 40, cabinetId);//5
                     places.add(dbOpenHelper.createPlace(desk5Id, 1));
                     places.add(dbOpenHelper.createPlace(desk5Id, 2));
-                    desks.add(desk5Id);
                 }
                 {
                     long desk6Id = dbOpenHelper.createDesk(2, 40, 40, cabinetId);//6
                     places.add(dbOpenHelper.createPlace(desk6Id, 1));
                     places.add(dbOpenHelper.createPlace(desk6Id, 2));
-                    desks.add(desk6Id);
                 }
                 //   |6|  |5|   |    |  |  |  |
                 //   |4|  |3|   |    | 4|  |  |
@@ -157,7 +150,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 );
                 Date startLessonTime = new GregorianCalendar(2017, 7, 10, 8, 30).getTime();//1502343000000 --10 августа
                 Date endLessonTime = new GregorianCalendar(2017, 7, 10, 9, 15).getTime();//  1502345700000
-                long lessonTimeId = dbOpenHelper.setLessonTimeAndCabinet(lessonId,cabinetId, startLessonTime, endLessonTime);
+                dbOpenHelper.setLessonTimeAndCabinet(lessonId,cabinetId, startLessonTime, endLessonTime);
 
 
                 dbOpenHelper.setLearnerOnPlace(//lessonId,
