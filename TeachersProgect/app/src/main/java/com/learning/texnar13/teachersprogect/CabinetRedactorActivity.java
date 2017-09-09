@@ -195,6 +195,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                             db.deleteDesk(deskCoordinatesList.get(i).deskId);
                             out.removeView(deskCoordinatesList.get(i).desk);
                             deskCoordinatesList.remove(i);
+                            instrumentalImage.setImageResource(R.drawable.ic_input_add);
                         } else {
 
                             deskLayoutParams.leftMargin = (int) (motionEvent.getX() - 40 * multiplier);

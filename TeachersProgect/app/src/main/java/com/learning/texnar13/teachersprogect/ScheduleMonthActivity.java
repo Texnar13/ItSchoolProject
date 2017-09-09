@@ -212,7 +212,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 if (flag && monthDay != countOfDays) {
                     //вывод дня
                     TextView day = new TextView(this);
-                    final int dayForIntent = monthDay + 1;
+                    final int dayForIntent = monthDay;
                     day.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
