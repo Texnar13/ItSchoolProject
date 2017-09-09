@@ -99,17 +99,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         }
 
         instrumentalImageRelative = (RelativeLayout) findViewById(R.id.activity_cabinet_redactor_instrumental_relative);
-//        instrumentalImageRelative.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                deskCoordinatesList.add(new CabinetRedactorPoint(
-//                        db.createDesk(2, metrics.widthPixels - 40 * multiplier,
-//                                metrics.heightPixels - 20 * multiplier, cabinetId),
-//                        new RelativeLayout(this),
-//                        deskX, deskY));
-//            }
-//        });todo создание
+        //instrumentalImageRelative.setOnClickListener(this);//todo создание
 
         Cursor desksCursor = db.getDesksByCabinetId(cabinetId);//курсор с партами
         while (desksCursor.moveToNext()) {//начальный вывод парт
