@@ -30,7 +30,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         ImageView next = (ImageView) findViewById(R.id.schedule_month_button_next);
         final TextView dateText = (TextView) findViewById(R.id.schedule_month_date_text);
 
-        final String months[] = {"Янв.", "Фев.", "Мар.", "Апр.", "Май", "Июнь", "Июль", "Авг.", "Сен.", "Окт.", "Ноя.", "Дек."};
+        final String months[] = {"Янв.", "Фев.", "Мар.", "Апр.", "Май", "Июнь", "Июль",
+                "Авг.", "Сен.", "Окт.", "Ноя.", "Дек."};
 
         final Calendar currentCalendar = new GregorianCalendar();//календарь
         currentCalendar.setTime(new Date());//получаем текущую дату
@@ -38,7 +39,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         currentCalendar.setTime(new Date());//получаем текущую дату
 
         outMonth(currentCalendar, currentCalendar, linearLayout);
-        dateText.setText(months[currentCalendar.get(Calendar.MONTH)] + " " + currentCalendar.get(Calendar.YEAR));
+        dateText.setText(
+                months[currentCalendar.get(Calendar.MONTH)] +
+                        " " + currentCalendar.get(Calendar.YEAR)
+        );
 
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +53,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 } else {
                     changingCalendar.set(Calendar.MONTH, changingCalendar.get(Calendar.MONTH) - 1);
                 }
-                dateText.setText(months[changingCalendar.get(Calendar.MONTH)] + " " + changingCalendar.get(Calendar.YEAR));
+                dateText.setText(
+                        months[changingCalendar.get(Calendar.MONTH)] +
+                                " " + changingCalendar.get(Calendar.YEAR)
+                );
                 outMonth(changingCalendar, currentCalendar, linearLayout);
             }
         });
@@ -62,7 +69,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 } else {
                     changingCalendar.set(Calendar.MONTH, changingCalendar.get(Calendar.MONTH) + 1);
                 }
-                dateText.setText(months[changingCalendar.get(Calendar.MONTH)] + " " + changingCalendar.get(Calendar.YEAR));
+                dateText.setText(
+                        months[changingCalendar.get(Calendar.MONTH)] +
+                                " " + changingCalendar.get(Calendar.YEAR)
+                );
                 outMonth(changingCalendar, currentCalendar, linearLayout);
             }
         });
@@ -149,9 +159,18 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             weekLinearRows[i].setGravity(LinearLayout.VERTICAL);
             weekLinearRows[i].setWeightSum(7f);
             if (i == 0) {
-                linearOut.addView(weekLinearRows[i], new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1.13f));
+                linearOut.addView(
+                        weekLinearRows[i],
+                        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT, 1.13f)
+                );
             } else {
-                linearOut.addView(weekLinearRows[i], new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1f));
+                linearOut.addView(
+                        weekLinearRows[i],
+                        new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+                );
             }
         }
 
@@ -164,7 +183,12 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             day.setTextColor(Color.BLACK);
             day.setGravity(Gravity.CENTER);
             day.setBackgroundColor(Color.LTGRAY);
-            weekLinearRows[0].addView(day, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 1f));
+            weekLinearRows[0].addView(
+                    day,
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            );
         }
         //Log.i("TeachersApp", "" + (25/7));
 //todo убрать одинаковые записи
@@ -176,87 +200,77 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             boolean flag = false; //начат ли вывод дней месяца
             for (int i = 0; i < 6 * 7; i++) {
 
+                TextView day = new TextView(this);
+                day.setTextSize(20);
+                day.setTextColor(Color.BLACK);
+                if (weekDay == 5||weekDay == 6) {
+                    day.setBackgroundColor(Color.LTGRAY);
+                } else
+                    day.setBackgroundColor(Color.WHITE);
+                day.setGravity(Gravity.CENTER);
+                LinearLayout linearLayout = new LinearLayout(this);
+                linearLayout.setGravity(Gravity.CENTER);
+                LinearLayout.LayoutParams dayParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                );
+                dayParams.setMargins(1, 5, 1, 5);
+
                 if (weekDay == dayOfWeek) {
                     flag = true;
                 }
-                if (!flag) {
-                    //пустая до календаря
-                    TextView day = new TextView(this);
-                    day.setTextSize(20);
-                    day.setTextColor(Color.BLACK);
-                    day.setBackgroundColor(Color.WHITE);
-                    day.setGravity(Gravity.CENTER);
-                    LinearLayout linearLayout = new LinearLayout(this);
-                    linearLayout.setGravity(Gravity.CENTER);
-                    LinearLayout.LayoutParams dayParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                    dayParams.setMargins(1, 5, 1, 5);
-                    linearLayout.addView(day, dayParams);//250
-                    weekLinearRows[weekOfMonth].addView(linearLayout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1f));//260
-                }
-
-                if (monthDay == countOfDays) {
-                    //пустая после календаря
-                    TextView day = new TextView(this);
-                    day.setTextSize(20);
-                    day.setTextColor(Color.BLACK);
-                    day.setBackgroundColor(Color.WHITE);
-                    day.setGravity(Gravity.CENTER);
-                    LinearLayout linearLayout = new LinearLayout(this);
-                    linearLayout.setGravity(Gravity.CENTER);
-                    LinearLayout.LayoutParams dayParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                    dayParams.setMargins(1, 5, 1, 5);
-                    linearLayout.addView(day, dayParams);//250
-                    weekLinearRows[weekOfMonth].addView(linearLayout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1f));//260
-                }
-
+//                if (!flag) {
+//                    //пустая до календаря
+//                }
+//
+//                if (monthDay == countOfDays) {
+//                    //пустая после календаря
+//                }
                 if (flag && monthDay != countOfDays) {
                     //вывод дня
-                    TextView day = new TextView(this);
-                    final int dayForIntent = monthDay;
+                    final int dayForIntent = monthDay + 1;
                     day.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            goToScheduleDayActivity(dayForIntent, viewCalendar.get(Calendar.MONTH), viewCalendar.get(Calendar.YEAR));
+                            goToScheduleDayActivity(
+                                    dayForIntent,
+                                    viewCalendar.get(Calendar.MONTH),
+                                    viewCalendar.get(Calendar.YEAR)
+                            );
                         }
                     });
                     day.setText(dayForIntent + "");
-                    {
+                    {//проверка наличия уроков
                         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-                        ArrayList<Long> lessonsAttitudesId = db.getLessonsAttitudesIdByTimePeriod(new GregorianCalendar(viewCalendar.get(Calendar.YEAR),
+                        ArrayList<Long> lessonsAttitudesId = db.getLessonsAttitudesIdByTimePeriod(
+                                new GregorianCalendar(
+                                        viewCalendar.get(Calendar.YEAR),
                                         viewCalendar.get(Calendar.MONTH), dayForIntent, 0, 0, 0),
-                                new GregorianCalendar(viewCalendar.get(Calendar.YEAR),
-                                        viewCalendar.get(Calendar.MONTH), dayForIntent, 23, 59, 59));
+                                new GregorianCalendar(
+                                        viewCalendar.get(Calendar.YEAR),
+                                        viewCalendar.get(Calendar.MONTH), dayForIntent, 23, 59, 59)
+                        );
                         db.close();
-                        if (lessonsAttitudesId.size() == 0) {
-                            day.setTextSize(20);
-                        } else {
+                        if (lessonsAttitudesId.size() != 0) {
                             day.setTextSize(30);
                         }
-                        day.setTextColor(Color.BLACK);
                     }
-                    day.setTextColor(Color.BLACK);
-                    day.setBackgroundColor(Color.WHITE);
-                    day.setGravity(Gravity.CENTER);
-                    LinearLayout linearLayout = new LinearLayout(this);
-                    linearLayout.setGravity(Gravity.CENTER);
                     //выделяем текущую дату
                     int currDay = currentCalendar.get(Calendar.DATE);
                     if (viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
-                            viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH) &&
-                            monthDay == currDay) {
+                            viewCalendar.get(Calendar.MONTH) ==
+                                    currentCalendar.get(Calendar.MONTH) &&
+                            dayForIntent == currDay) {
                         linearLayout.setBackgroundColor(Color.RED);
-                        LinearLayout.LayoutParams dayParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                        dayParams.setMargins(2, 10, 2, 10);
-                        linearLayout.addView(day, dayParams);//240
-                    } else {
-                        LinearLayout.LayoutParams dayParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                        dayParams.setMargins(1, 5, 1, 5);
-                        linearLayout.addView(day, dayParams);//250
+                        dayParams.setMargins(1, 8, 1, 8);
                     }
-                    weekLinearRows[weekOfMonth].addView(linearLayout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1f));//260
                     monthDay++;
                 }
 
+                linearLayout.addView(day, dayParams);//250
+                weekLinearRows[weekOfMonth].addView(linearLayout,
+                        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT, 1f));//260
 
                 if (weekDay == 6) {
                     weekOfMonth++;
