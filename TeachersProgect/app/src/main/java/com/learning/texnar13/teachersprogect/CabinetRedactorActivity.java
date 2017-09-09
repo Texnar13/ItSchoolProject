@@ -82,7 +82,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         Cursor cabinetCursor = db.getCabinets(cabinetId);
         cabinetCursor.moveToFirst();
-        getSupportActionBar().setTitle("редактирование кабинета \"" +
+        setTitle("редактирование кабинета \"" +
                 cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)) +
                 "\"");
         cabinetCursor.close();
