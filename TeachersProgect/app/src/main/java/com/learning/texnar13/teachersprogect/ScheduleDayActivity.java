@@ -52,7 +52,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
         final Calendar calendar = new GregorianCalendar(year, month, day);
 
-        outDay(calendar, table);
+        outViewDay(calendar, table);
 
 
         previous.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +71,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) - 1);
                 }
                 dateText.setText(calendar.get(Calendar.DAY_OF_MONTH) + " " + months[calendar.get(Calendar.MONTH)]);
-                outDay(calendar, table);
+                outViewDay(calendar, table);
 
             }
         });
@@ -91,12 +91,12 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
                 }
                 dateText.setText(calendar.get(Calendar.DAY_OF_MONTH) + " " + months[calendar.get(Calendar.MONTH)]);
-                outDay(calendar, table);
+                outViewDay(calendar, table);
             }
         });
     }
 
-    void outDay(Calendar viewDay, TableLayout table) {
+    void outViewDay(Calendar viewDay, TableLayout table) {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
         table.removeAllViews();
@@ -164,7 +164,10 @@ public class ScheduleDayActivity extends AppCompatActivity {
         TableRow tableRows[] = new TableRow[8];
         for (int i = 0; i < tableRows.length; i++) {
             tableRows[i] = new TableRow(this);
+            boolean isLessonReady = false;
             long lessonAttitudeId = -1;
+            long lessonClassId = -1;
+            long lessonCabinetId = -1;
             String lessonName;
             String lessonClass;
             String lessonCabinet;
@@ -187,24 +190,32 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     );
 
                     //класс
-                    Cursor classCursor = db.getClasses(lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_CLASS_ID)));
+                    lessonClassId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_CLASS_ID));
+                    lessonCursor.close();
+                    Cursor classCursor = db.getClasses(lessonClassId);
                     classCursor.moveToFirst();
                     lessonClass = classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
                     classCursor.close();
-                    lessonCursor.close();
 
 
                     //кабинет
-                    Cursor cabinetCursor = db.getCabinets(lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_CABINET_ID)));
+                    lessonCabinetId = lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_CABINET_ID));
+                    lessonAttitudeCursor.close();
+                    Cursor cabinetCursor = db.getCabinets(lessonCabinetId);
                     cabinetCursor.moveToFirst();
                     lessonCabinet = cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
                     cabinetCursor.close();
-                    lessonAttitudeCursor.close();
+
                 } else {
+
                     lessonName = "---";
                     lessonClass = "---";
                     lessonCabinet = "---";
                 }
+            }
+            //проверяем все ли ученики рассажены
+            if (db.getNotPutLearnersIdByCabinetIdAndClassId(lessonCabinetId, lessonClassId).size() == 0) {
+                isLessonReady = true;
             }
 
             for (int j = 0; j < tableHeadStrings.length; j++) {
@@ -217,8 +228,22 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     bodyText.setBackgroundColor(Color.LTGRAY);
                 } else {
                     bodyText.setTextColor(Color.BLACK);
-                    bodyText.setBackgroundColor(Color.WHITE);
+                    if (isLessonReady) {
+                        bodyText.setBackgroundColor(Color.WHITE);
+                    } else {
+                        bodyText.setBackgroundColor(Color.RED);
+                    }
                 }
+                bodyText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+//                        if(isLessonReady){
+//
+//                        }else{
+//
+//                        }
+                    }
+                });
 
                 //параметры для клеток
                 RelativeLayout.LayoutParams bodyParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
@@ -250,7 +275,9 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     bodyText.setText("  " + lessonCabinet + "  ");
 
                 } else if (j == 5) {//параметры для доп.
-
+                    if (!isLessonReady) {
+                        bodyText.setText("  рассадите учеников!  ");
+                    }
 
                 }
 
@@ -451,7 +478,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
             //добавляем в таблицу ряд
             tableRows[i].setBackgroundColor(Color.LTGRAY);
             table.addView(tableRows[i], new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
-
+            db.close();
 
         }
     }
