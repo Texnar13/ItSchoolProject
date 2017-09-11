@@ -214,7 +214,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT
                 );
-                dayParams.setMargins(1, 5, 1, 5);
+                dayParams.setMargins((int) pxFromDp(0.25f),(int) pxFromDp(1.3f), (int) pxFromDp(0.25f), (int) pxFromDp(1.3f));
 
                 if (weekDay == dayOfWeek) {
                     flag = true;
@@ -262,7 +262,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                                     currentCalendar.get(Calendar.MONTH) &&
                             dayForIntent == currDay) {
                         linearLayout.setBackgroundColor(Color.RED);
-                        dayParams.setMargins(1, 8, 1, 8);
+                        dayParams.setMargins((int) pxFromDp(0.25f), (int) pxFromDp(2.08f), (int) pxFromDp(0.25f), (int) pxFromDp(2.08f));
                     }
                     monthDay++;
                 }
@@ -410,6 +410,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 //                j++;
 //            }
 //        }
+    }
+
+    float pxFromDp(float dp){
+        return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
 
     void goToScheduleDayActivity(int day, int month, int year) {

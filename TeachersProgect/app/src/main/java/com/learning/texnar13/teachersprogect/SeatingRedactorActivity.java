@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Handler;
@@ -291,15 +292,17 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         return px * getApplicationContext().getResources().getDisplayMetrics().density;
 
     }
-//    @Override
-//    public void chooseLearnerDialogFragmentInterfaceMethod(long methodItem) {
-//        choseLearnerId = methodItem;
-//    }
+
+    @Override
+    public void onBackPressed() {
+        //Intent backIntent = new Intent();
+        setResult(RESULT_OK);
+        super.onBackPressed();
+    }
 }
 
 class ChooseLearnerDialogFragment extends DialogFragment {//диалог по выбору не распределенного ученика
-
-    //long lessonId;
+    
     long cabinetId;
     long classId;
 
@@ -344,5 +347,5 @@ class ChooseLearnerDialogFragment extends DialogFragment {//диалог по в
         super.onDismiss(dialog);
         SeatingRedactorActivity.handler.sendEmptyMessage(-1);
     }
-}
 
+}

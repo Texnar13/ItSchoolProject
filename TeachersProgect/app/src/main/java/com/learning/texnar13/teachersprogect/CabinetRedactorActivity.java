@@ -93,12 +93,11 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         metrics = new DisplayMetrics();
         display.getMetrics(metrics);
 
-//        if (metrics.widthPixels > metrics.heightPixels) {
-//            multiplier = metrics.heightPixels / 250;//500
-//        } else {
-//            multiplier = metrics.widthPixels / 250;
-//        }
-        multiplier = 5;
+        if (metrics.widthPixels > metrics.heightPixels) {
+            multiplier = metrics.heightPixels / 250;//500
+        } else {
+            multiplier = metrics.widthPixels / 250;
+        }
 
         instrumentalImage = (ImageView) findViewById(R.id.activity_cabinet_redactor_instrumental_image);
         instrumentalImage.setOnClickListener(this);//todo создание

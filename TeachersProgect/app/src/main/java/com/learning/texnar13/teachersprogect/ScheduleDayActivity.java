@@ -20,22 +20,27 @@ import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class ScheduleDayActivity extends AppCompatActivity {
+public class ScheduleDayActivity extends AppCompatActivity{
 
     public static final String INTENT_DAY = "day";
     public static final String INTENT_MONTH = "month";
     public static final String INTENT_YEAR = "year";
+
+    int day = -1;
+    int month = -1;
+    int year = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_day);
 
-        int day = getIntent().getIntExtra(INTENT_DAY, -1);
-        final int month = getIntent().getIntExtra(INTENT_MONTH, -1);
-        int year = getIntent().getIntExtra(INTENT_YEAR, -1);
+        day = getIntent().getIntExtra(INTENT_DAY, -1);
+        month = getIntent().getIntExtra(INTENT_MONTH, -1);
+        year = getIntent().getIntExtra(INTENT_YEAR, -1);
         if (day == -1 || month == -1 || year == -1) {
             Log.wtf("TeachersApp", "wtf intent: ScheduleDayActivity day = " + day + " month = " + month + " year = " + year);
             finish();
@@ -124,15 +129,15 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_START);
                 tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                tableRelativeParams.rightMargin = 10;
-                tableRelativeParams.bottomMargin = 10;
+                tableRelativeParams.rightMargin = (int)pxFromDp(3f);//10
+                tableRelativeParams.bottomMargin = (int)pxFromDp(3f);//10
                 tableRelativeParams.leftMargin = 0;
                 tableRelativeParams.topMargin = 0;
                 //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
                 RelativeLayout relativeLayout = new RelativeLayout(this);
                 relativeLayout.setBackgroundColor(Color.GRAY);
                 relativeLayout.addView(tableHeadTexts[i], tableRelativeParams);
-                head.addView(relativeLayout, RelativeLayout.LayoutParams.MATCH_PARENT, 200);
+                head.addView(relativeLayout, RelativeLayout.LayoutParams.MATCH_PARENT, (int) pxFromDp(50f));
 
                 head.setBackgroundColor(Color.RED);//todo красный только на время отладки
             }
@@ -237,27 +242,40 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     }
                 }
                 {//обработка нажатия
-                    final boolean isLessonReadyForClick = isLessonReady;
+                    final boolean intentIsLessonReady = isLessonReady;
 
                     final long lessonAttitudeIdForIntent = lessonAttitudeId;
+
+                    final Intent intentForLessonEditor = new Intent(this, LessonRedactorActivity.class);
+                    intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, lessonAttitudeId);
 
                     final Intent intentForStartLesson = new Intent(this, LessonActivity.class);
                     intentForStartLesson.putExtra(LessonActivity.LESSON_ATTITUDE_ID, lessonAttitudeId);
 
-                    final Intent intentForStartRedactor = new Intent(this, SeatingRedactorActivity.class);
-                    intentForStartRedactor.putExtra(SeatingRedactorActivity.CABINET_ID, lessonCabinetId);
-                    intentForStartRedactor.putExtra(SeatingRedactorActivity.CLASS_ID, lessonClassId);
+                    final Intent intentForStartSeatingRedactor = new Intent(this, SeatingRedactorActivity.class);
+                    intentForStartSeatingRedactor.putExtra(SeatingRedactorActivity.CABINET_ID, lessonCabinetId);
+                    intentForStartSeatingRedactor.putExtra(SeatingRedactorActivity.CLASS_ID, lessonClassId);
 
                     bodyText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if (lessonAttitudeIdForIntent == -1) {
-                                //создание урока
-                            } else if (isLessonReadyForClick) {
+                            if (lessonAttitudeIdForIntent == -1) {//создание урока
+                                startActivityForResult(intentForLessonEditor,1);
+                            } else if (intentIsLessonReady) {//начать урок
                                 startActivity(intentForStartLesson);
                             } else {
-                                startActivity(intentForStartRedactor);
+                                startActivityForResult(intentForStartSeatingRedactor,1);//редактировать
                             }
+                        }
+                    });
+
+                    bodyText.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            if (!(lessonAttitudeIdForIntent == -1)) {//редактирование урока
+                                startActivityForResult(intentForLessonEditor,1);
+                            }
+                            return true;
                         }
                     });
                 }
@@ -270,14 +288,14 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 bodyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 bodyParams.addRule(RelativeLayout.ALIGN_PARENT_START);
                 bodyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                bodyParams.rightMargin = 10;
-                bodyParams.bottomMargin = 5;
+                bodyParams.rightMargin = (int)pxFromDp(3f);//10
+                bodyParams.bottomMargin = (int)pxFromDp(1.5f);//5
                 bodyParams.leftMargin = 0;
                 bodyParams.topMargin = 0;
 
 
                 if (j == 0) {//параметры для No
-                    bodyText.setText("  " + (i + 1) + "  ");
+                    bodyText.setText(" " + (i + 1) + " ");
 
                 } else if (j == 1) {//параметры для времени
                     bodyText.setText("  " + timePeriodsString[i] + "  ");
@@ -302,186 +320,190 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
                 }
 
+                Calendar calendar = new GregorianCalendar();//получаем текущее время
+                calendar.setTime(new Date());
+
                 RelativeLayout relativeLayout = new RelativeLayout(this);
-                relativeLayout.setBackgroundColor(Color.GRAY);
+                if (calendar.getTime().getTime() >= calendarStartTime[i].getTime().getTime() && calendar.getTime().getTime() <= calendarEndTime[i].getTime().getTime()) {
+                    relativeLayout.setBackgroundColor(Color.RED);
+                } else
+                    relativeLayout.setBackgroundColor(Color.GRAY);
                 relativeLayout.addView(bodyText, bodyParams);
-                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
+                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT,(int) pxFromDp(50f));//200
             }
+//            //клетка в столбце No
+//            TextView bodyNo = new TextView(this);
+//            {
+//                //параметры TextView
+//                bodyNo.setText("  " + (i + 1) + "  ");
+//                bodyNo.setTextSize(20);
+//                if (lessonAttitudeId == -1) {
+//                    bodyNo.setTextColor(Color.GRAY);
+//                    bodyNo.setBackgroundColor(Color.LTGRAY);
+//                } else {
+//                    bodyNo.setTextColor(Color.BLACK);
+//                    bodyNo.setBackgroundColor(Color.WHITE);
+//                }
+//                bodyNo.setGravity(Gravity.CENTER);
+//
+//                //параметры для клеток
+//                RelativeLayout.LayoutParams bodyParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//                bodyParams.rightMargin = 10;
+//                bodyParams.bottomMargin = 5;
+//                bodyParams.leftMargin = 0;
+//                bodyParams.topMargin = 0;
+//                //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
+//                RelativeLayout relativeLayout = new RelativeLayout(this);
+//                relativeLayout.setBackgroundColor(Color.GRAY);
+//                relativeLayout.addView(bodyNo, bodyParams);
+//                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
+//            }
+//
+//
+//            //клетка в столбце время
+//            TextView bodyTime = new TextView(this);
+//            {
+//                bodyTime.setText("  " + timePeriodsString[i] + "  ");
+//                bodyTime.setTextSize(20);
+//                if (lessonAttitudeId == -1) {
+//                    bodyTime.setTextColor(Color.GRAY);
+//                    bodyTime.setBackgroundColor(Color.LTGRAY);
+//                } else {
+//                    bodyTime.setTextColor(Color.BLACK);
+//                    bodyTime.setBackgroundColor(Color.WHITE);
+//                }
+//                bodyTime.setGravity(Gravity.CENTER);
+//                //параметры TextView
+//                //параметры для клеток
+//                RelativeLayout.LayoutParams bodyParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//                bodyParams.rightMargin = 10;
+//                bodyParams.bottomMargin = 5;
+//                bodyParams.leftMargin = 0;
+//                bodyParams.topMargin = 0;
+//                //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
+//                RelativeLayout relativeLayout = new RelativeLayout(this);
+//                relativeLayout.setBackgroundColor(Color.GRAY);
+//                relativeLayout.addView(bodyTime, bodyParams);
+//                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
+//            }
+//
+//
+//            //клетка в столбце время
+//            TextView bodyLessonName = new TextView(this);
+//            {
+//
+//                bodyLessonName.setTextSize(20);
+//                if (lessonAttitudeId == -1) {
+//                    bodyLessonName.setTextColor(Color.GRAY);
+//                    bodyLessonName.setBackgroundColor(Color.LTGRAY);
+//                } else {
+//                    bodyLessonName.setTextColor(Color.BLACK);
+//                    bodyLessonName.setBackgroundColor(Color.WHITE);
+//                }
+//                bodyLessonName.setText("  " + lessonName + "  ");
+//                bodyLessonName.setGravity(Gravity.CENTER);
+//                //параметры TextView
+//                //параметры для клеток
+//                RelativeLayout.LayoutParams bodyParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//                bodyParams.rightMargin = 10;
+//                bodyParams.bottomMargin = 5;
+//                bodyParams.leftMargin = 0;
+//                bodyParams.topMargin = 0;
+//                //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
+//                RelativeLayout relativeLayout = new RelativeLayout(this);
+//                relativeLayout.setBackgroundColor(Color.GRAY);
+//                relativeLayout.addView(bodyLessonName, bodyParams);
+//                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
+//            }
+//
+//
+//            //клетка в столбце класс
+//            TextView bodyClass = new TextView(this);
+//            {
+//
+//                bodyClass.setTextSize(20);
+//                if (lessonAttitudeId == -1) {
+//                    bodyClass.setTextColor(Color.GRAY);
+//                    bodyClass.setBackgroundColor(Color.LTGRAY);
+//                } else {
+//                    bodyClass.setTextColor(Color.BLACK);
+//                    bodyClass.setBackgroundColor(Color.WHITE);
+//                }
+//                bodyClass.setText("  " + lessonClass + "  ");
+//                bodyClass.setGravity(Gravity.CENTER);
+//                //параметры TextView
+//                //параметры для клеток
+//                RelativeLayout.LayoutParams bodyParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//                bodyParams.rightMargin = 10;
+//                bodyParams.bottomMargin = 5;
+//                bodyParams.leftMargin = 0;
+//                bodyParams.topMargin = 0;
+//                //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
+//                RelativeLayout relativeLayout = new RelativeLayout(this);
+//                relativeLayout.setBackgroundColor(Color.GRAY);
+//                relativeLayout.addView(bodyClass, bodyParams);
+//                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
+//            }
+//
+//
+//            //клетка в столбце кабинет
+//            TextView bodyCabinet = new TextView(this);
+//            {
+//
+//                bodyCabinet.setTextSize(20);
+//                if (lessonAttitudeId == -1) {
+//                    bodyCabinet.setTextColor(Color.GRAY);
+//                    bodyCabinet.setBackgroundColor(Color.LTGRAY);
+//                } else {
+//                    bodyCabinet.setTextColor(Color.BLACK);
+//                    bodyCabinet.setBackgroundColor(Color.WHITE);
+//                }
+//                bodyCabinet.setText("  " + lessonCabinet + "  ");
+//                bodyCabinet.setGravity(Gravity.CENTER);
+//                //параметры TextView
+//                //параметры для клеток
+//                RelativeLayout.LayoutParams bodyParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+//                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//                bodyParams.rightMargin = 10;
+//                bodyParams.bottomMargin = 5;
+//                bodyParams.leftMargin = 0;
+//                bodyParams.topMargin = 0;
+//                //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
+//                RelativeLayout relativeLayout = new RelativeLayout(this);
+//                relativeLayout.setBackgroundColor(Color.GRAY);
+//                relativeLayout.addView(bodyCabinet, bodyParams);
+//                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
+//            }
 
-            /*
-            //клетка в столбце No
-            TextView bodyNo = new TextView(this);
-            {
-                //параметры TextView
-                bodyNo.setText("  " + (i + 1) + "  ");
-                bodyNo.setTextSize(20);
-                if (lessonAttitudeId == -1) {
-                    bodyNo.setTextColor(Color.GRAY);
-                    bodyNo.setBackgroundColor(Color.LTGRAY);
-                } else {
-                    bodyNo.setTextColor(Color.BLACK);
-                    bodyNo.setBackgroundColor(Color.WHITE);
-                }
-                bodyNo.setGravity(Gravity.CENTER);
-
-                //параметры для клеток
-                RelativeLayout.LayoutParams bodyParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                bodyParams.rightMargin = 10;
-                bodyParams.bottomMargin = 5;
-                bodyParams.leftMargin = 0;
-                bodyParams.topMargin = 0;
-                //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
-                RelativeLayout relativeLayout = new RelativeLayout(this);
-                relativeLayout.setBackgroundColor(Color.GRAY);
-                relativeLayout.addView(bodyNo, bodyParams);
-                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
-            }
-
-
-            //клетка в столбце время
-            TextView bodyTime = new TextView(this);
-            {
-                bodyTime.setText("  " + timePeriodsString[i] + "  ");
-                bodyTime.setTextSize(20);
-                if (lessonAttitudeId == -1) {
-                    bodyTime.setTextColor(Color.GRAY);
-                    bodyTime.setBackgroundColor(Color.LTGRAY);
-                } else {
-                    bodyTime.setTextColor(Color.BLACK);
-                    bodyTime.setBackgroundColor(Color.WHITE);
-                }
-                bodyTime.setGravity(Gravity.CENTER);
-                //параметры TextView
-                //параметры для клеток
-                RelativeLayout.LayoutParams bodyParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                bodyParams.rightMargin = 10;
-                bodyParams.bottomMargin = 5;
-                bodyParams.leftMargin = 0;
-                bodyParams.topMargin = 0;
-                //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
-                RelativeLayout relativeLayout = new RelativeLayout(this);
-                relativeLayout.setBackgroundColor(Color.GRAY);
-                relativeLayout.addView(bodyTime, bodyParams);
-                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
-            }
-
-
-            //клетка в столбце время
-            TextView bodyLessonName = new TextView(this);
-            {
-
-                bodyLessonName.setTextSize(20);
-                if (lessonAttitudeId == -1) {
-                    bodyLessonName.setTextColor(Color.GRAY);
-                    bodyLessonName.setBackgroundColor(Color.LTGRAY);
-                } else {
-                    bodyLessonName.setTextColor(Color.BLACK);
-                    bodyLessonName.setBackgroundColor(Color.WHITE);
-                }
-                bodyLessonName.setText("  " + lessonName + "  ");
-                bodyLessonName.setGravity(Gravity.CENTER);
-                //параметры TextView
-                //параметры для клеток
-                RelativeLayout.LayoutParams bodyParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                bodyParams.rightMargin = 10;
-                bodyParams.bottomMargin = 5;
-                bodyParams.leftMargin = 0;
-                bodyParams.topMargin = 0;
-                //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
-                RelativeLayout relativeLayout = new RelativeLayout(this);
-                relativeLayout.setBackgroundColor(Color.GRAY);
-                relativeLayout.addView(bodyLessonName, bodyParams);
-                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
-            }
-
-
-            //клетка в столбце класс
-            TextView bodyClass = new TextView(this);
-            {
-
-                bodyClass.setTextSize(20);
-                if (lessonAttitudeId == -1) {
-                    bodyClass.setTextColor(Color.GRAY);
-                    bodyClass.setBackgroundColor(Color.LTGRAY);
-                } else {
-                    bodyClass.setTextColor(Color.BLACK);
-                    bodyClass.setBackgroundColor(Color.WHITE);
-                }
-                bodyClass.setText("  " + lessonClass + "  ");
-                bodyClass.setGravity(Gravity.CENTER);
-                //параметры TextView
-                //параметры для клеток
-                RelativeLayout.LayoutParams bodyParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                bodyParams.rightMargin = 10;
-                bodyParams.bottomMargin = 5;
-                bodyParams.leftMargin = 0;
-                bodyParams.topMargin = 0;
-                //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
-                RelativeLayout relativeLayout = new RelativeLayout(this);
-                relativeLayout.setBackgroundColor(Color.GRAY);
-                relativeLayout.addView(bodyClass, bodyParams);
-                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
-            }
-
-
-            //клетка в столбце кабинет
-            TextView bodyCabinet = new TextView(this);
-            {
-
-                bodyCabinet.setTextSize(20);
-                if (lessonAttitudeId == -1) {
-                    bodyCabinet.setTextColor(Color.GRAY);
-                    bodyCabinet.setBackgroundColor(Color.LTGRAY);
-                } else {
-                    bodyCabinet.setTextColor(Color.BLACK);
-                    bodyCabinet.setBackgroundColor(Color.WHITE);
-                }
-                bodyCabinet.setText("  " + lessonCabinet + "  ");
-                bodyCabinet.setGravity(Gravity.CENTER);
-                //параметры TextView
-                //параметры для клеток
-                RelativeLayout.LayoutParams bodyParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                bodyParams.rightMargin = 10;
-                bodyParams.bottomMargin = 5;
-                bodyParams.leftMargin = 0;
-                bodyParams.topMargin = 0;
-                //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
-                RelativeLayout relativeLayout = new RelativeLayout(this);
-                relativeLayout.setBackgroundColor(Color.GRAY);
-                relativeLayout.addView(bodyCabinet, bodyParams);
-                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
-            }
-*/
 
             //----
 
@@ -503,4 +525,18 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        TableLayout table = (TableLayout) findViewById(R.id.schedule_day_table);
+        Calendar calendar = new GregorianCalendar(year, month, day);
+        outViewDay(calendar, table);
+    }
+
+    float pxFromDp(float dp){
+        return dp * getApplicationContext().getResources().getDisplayMetrics().density;
+    }
 }
+

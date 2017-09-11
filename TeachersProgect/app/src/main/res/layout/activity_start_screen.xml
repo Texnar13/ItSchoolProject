@@ -11,7 +11,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,43 +72,25 @@
                     android:id="@+id/start_menu_button_now"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/start_menu_button_schedule"
-                    android:layout_alignEnd="@+id/start_menu_button_schedule"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignRight="@+id/start_menu_button_schedule"
-                    android:text="текущий урок" />
+                   android:text="текущий урок" />
 
                 <Button
                     android:id="@+id/start_menu_button_schedule"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/start_menu_button_my_cabinets"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
                     android:text="моё расписание" />
 
                 <Button
                     android:id="@+id/start_menu_button_my_cabinets"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/start_menu_button_my_classes"
-                    android:layout_alignEnd="@+id/start_menu_button_schedule"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignRight="@+id/start_menu_button_schedule"
                     android:text="мои кабинеты" />
 
                 <Button
                     android:id="@+id/start_menu_button_my_classes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignEnd="@+id/start_menu_button_my_cabinets"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignRight="@+id/start_menu_button_my_cabinets"
-                    android:text="мои классы" />
+                    android:text="мои ученики" />
 
             </LinearLayout>
 
@@ -118,18 +103,12 @@
                     android:id="@+id/start_menu_button_temp_seating_redactor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/start_menu_button_reload"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
                     android:text="редактор рассадки" />
 
                 <Button
                     android:id="@+id/start_menu_button_reload"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
                     android:text="перезагрузить базу" />
             </LinearLayout>
         </LinearLayout>

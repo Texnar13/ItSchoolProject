@@ -141,7 +141,6 @@ public class LessonActivity extends AppCompatActivity {
         RelativeLayout room = (RelativeLayout) findViewById(R.id.room_layout);
 
 
-
 //        ActionBar actionBar = getActionBar();
 //        actionBar.hide();
 //
@@ -209,7 +208,7 @@ public class LessonActivity extends AppCompatActivity {
 
                 RelativeLayout.LayoutParams tempRelativeLayoutPlaceParams = new RelativeLayout.LayoutParams((int) dpFromPx((40 - 2) * multiplier), (int) dpFromPx((40 - 2) * multiplier));
                 tempRelativeLayoutPlaceParams.leftMargin = (int) dpFromPx((1 + (40 * (placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1))) * multiplier);
-                tempRelativeLayoutPlaceParams.topMargin = (int) dpFromPx(1);
+                tempRelativeLayoutPlaceParams.topMargin = (int) dpFromPx(multiplier);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_START);
@@ -230,7 +229,7 @@ public class LessonActivity extends AppCompatActivity {
                     final ImageView tempLernerImage = new ImageView(this);
                     tempLernerImage.setImageResource(R.drawable.learner_gray);//по умолчанию серая картинка
                     LinearLayout.LayoutParams tempLernerImageParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1F);
-                    tempLernerImage.setOnClickListener(new View.OnClickListener() {
+                    View.OnClickListener onClickListener = new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             if (gradeArrayList.get(tempGradeId).getGrade() != 5) {
@@ -260,8 +259,9 @@ public class LessonActivity extends AppCompatActivity {
                                     break;
                             }
                         }
-                    });
-                    tempLernerImage.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                    };
+                    tempLernerImage.setOnClickListener(onClickListener);
+                    View.OnCreateContextMenuListener onCreateContextMenuListener = new View.OnCreateContextMenuListener() {
                         @Override
                         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
                             contextMenu.add(0, 0, 0, "нет оценки").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -313,95 +313,14 @@ public class LessonActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                    });
+                    };
+                    tempLernerImage.setOnCreateContextMenuListener(onCreateContextMenuListener);
                     tempPlaceLayout.addView(tempLernerImage, tempLernerImageParams);
 
                     //текст ученика
                     TextView tempLearnerText = new TextView(this);
-                    tempLearnerText.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (gradeArrayList.get(tempGradeId).getGrade() != 5) {
-                                gradeArrayList.get(tempGradeId).setGrade(gradeArrayList.get(tempGradeId).getGrade() + 1);
-                            } else {
-                                gradeArrayList.get(tempGradeId).setGrade(0);
-                            }
-
-                            switch ((int) gradeArrayList.get(tempGradeId).getGrade()) {
-                                case 0:
-                                    tempLernerImage.setImageResource(R.drawable.learner_gray);
-                                    break;
-                                case 1:
-                                    tempLernerImage.setImageResource(R.drawable.learner_red);
-                                    break;
-                                case 2:
-                                    tempLernerImage.setImageResource(R.drawable.learner_orange);
-                                    break;
-                                case 3:
-                                    tempLernerImage.setImageResource(R.drawable.learner_yellow);
-                                    break;
-                                case 4:
-                                    tempLernerImage.setImageResource(R.drawable.learner_lime);
-                                    break;
-                                case 5:
-                                    tempLernerImage.setImageResource(R.drawable.learner_green);
-                                    break;
-                            }
-                        }
-                    });
-                    tempLearnerText.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
-                        @Override
-                        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-                            contextMenu.add(0, 0, 0, "нет оценки").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    tempLernerImage.setImageResource(R.drawable.learner_gray);
-                                    gradeArrayList.get(tempGradeId).setGrade(0);
-                                    return true;
-                                }
-                            });
-                            contextMenu.add(0, 1, 0, "1").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    tempLernerImage.setImageResource(R.drawable.learner_red);
-                                    gradeArrayList.get(tempGradeId).setGrade(1);
-                                    return true;
-                                }
-                            });
-                            contextMenu.add(0, 2, 0, "2").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    tempLernerImage.setImageResource(R.drawable.learner_orange);
-                                    gradeArrayList.get(tempGradeId).setGrade(2);
-                                    return true;
-                                }
-                            });
-                            contextMenu.add(0, 3, 0, "3").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    tempLernerImage.setImageResource(R.drawable.learner_yellow);
-                                    gradeArrayList.get(tempGradeId).setGrade(3);
-                                    return true;
-                                }
-                            });
-                            contextMenu.add(0, 4, 0, "4").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    tempLernerImage.setImageResource(R.drawable.learner_lime);
-                                    gradeArrayList.get(tempGradeId).setGrade(4);
-                                    return true;
-                                }
-                            });
-                            contextMenu.add(0, 5, 0, "5").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    tempLernerImage.setImageResource(R.drawable.learner_green);
-                                    gradeArrayList.get(tempGradeId).setGrade(5);
-                                    return true;
-                                }
-                            });
-                        }
-                    });
+                    tempLearnerText.setOnClickListener(onClickListener);
+                    tempLearnerText.setOnCreateContextMenuListener(onCreateContextMenuListener);
                     tempLearnerText.setGravity(Gravity.CENTER_HORIZONTAL);
                     tempLearnerText.setTextColor(Color.WHITE);
                     tempLearnerText.setText(learnerCursor.getString(learnerCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)));
@@ -417,61 +336,7 @@ public class LessonActivity extends AppCompatActivity {
 
             //добавление парты в комнату
             room.addView(tempRelativeLayoutDesk, tempRelativeLayoutDeskParams);
-//            Button button = new Button(this);
-//            button.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//
-//                    long[] learnersId = new long[gradeArrayList.size()];
-//                    long[] grades = new long[gradeArrayList.size()];
-//                    for (int j = 0; j < gradeArrayList.size(); j++) {
-//                        learnersId[j] = gradeArrayList.get(j).getLearnerId();
-//                        grades[j] = gradeArrayList.get(j).getPlaceId();
-//                    }
-//                    Intent intent = new Intent(getApplicationContext(), LessonListActivity.class);
-//                    intent.putExtra(LessonListActivity.LIST_ID, learnersId);
-//                    intent.putExtra(LessonListActivity.LIST_GRADES, grades);
-//                    startActivity(intent);
-//                    finish();
-//                }
-//            });
-//            room.addView(button, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
-//        Cursor cursor = db.getDesksByCabinetId(2);
-//        while (cursor.moveToNext()) {
-//            //создание парты
-//            RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);
-//            tempRelativeLayoutDesk.setBackgroundColor(Color.parseColor("#bce4af00"));
-//
-//            RelativeLayout.LayoutParams tempLayoutParams = new RelativeLayout.LayoutParams((int) dpFromPx(80), (int) dpFromPx(40));
-//            tempLayoutParams.leftMargin = (int) dpFromPx(cursor.getLong(cursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)));
-//            tempLayoutParams.topMargin = (int) dpFromPx(cursor.getLong(cursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)));
-//            tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-//            tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//            tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-//            Log.i("LessonActivity", "view desk:" + cursor.getLong(cursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
-//
-//            //создание места
-//            Cursor cursorPlace = db.getPlacesByDeskId(cursor.getLong(cursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
-//            while (cursorPlace.moveToNext()) {
-//                Log.i("LessonActivity", "view place:" + cursorPlace.getLong(cursorPlace.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID)));
-////                RelativeLayout tempRelativeLayoutPlace = new RelativeLayout(this);
-////                tempRelativeLayoutDesk.setBackgroundColor(Color.parseColor("#bc8e6d02"));
-////
-////                RelativeLayout.LayoutParams tempPlaceLayoutParams = new RelativeLayout.LayoutParams((int) dpFromPx(30), (int) dpFromPx(30));
-////                tempLayoutParams.leftMargin = (int) dpFromPx(5);
-////                tempLayoutParams.topMargin = (int) dpFromPx(5);
-////                tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-////                tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-////                tempLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-////
-////                tempRelativeLayoutDesk.addView(tempRelativeLayoutPlace, tempPlaceLayoutParams);
-//            }
-//            cursorPlace.close();
-//
-//            //добавление парты уже с местами
-//            room.addView(tempRelativeLayoutDesk, tempLayoutParams);
-//        }
         desksCursor.close();
         db.close();
     }
