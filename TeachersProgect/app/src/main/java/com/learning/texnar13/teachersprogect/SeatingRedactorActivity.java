@@ -94,6 +94,9 @@ public class SeatingRedactorActivity extends AppCompatActivity {
 //            toast.makeText(this,"не выбран класс или кабинет",Toast.LENGTH_SHORT);
 //            toast.show();
             finish();
+            Toast toast = Toast.makeText(this,"не выбран класс или кабинет для редактирования", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
         }
 
         //ставим заголовок имя урока

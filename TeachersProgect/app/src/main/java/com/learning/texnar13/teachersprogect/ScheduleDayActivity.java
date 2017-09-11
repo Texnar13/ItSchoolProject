@@ -1,5 +1,6 @@
 package com.learning.texnar13.teachersprogect;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -234,16 +236,31 @@ public class ScheduleDayActivity extends AppCompatActivity {
                         bodyText.setBackgroundColor(Color.RED);
                     }
                 }
-                bodyText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-//                        if(isLessonReady){
-//
-//                        }else{
-//
-//                        }
-                    }
-                });
+                {//обработка нажатия
+                    final boolean isLessonReadyForClick = isLessonReady;
+
+                    final long lessonAttitudeIdForIntent = lessonAttitudeId;
+
+                    final Intent intentForStartLesson = new Intent(this, LessonActivity.class);
+                    intentForStartLesson.putExtra(LessonActivity.LESSON_ATTITUDE_ID, lessonAttitudeId);
+
+                    final Intent intentForStartRedactor = new Intent(this, SeatingRedactorActivity.class);
+                    intentForStartRedactor.putExtra(SeatingRedactorActivity.CABINET_ID, lessonCabinetId);
+                    intentForStartRedactor.putExtra(SeatingRedactorActivity.CLASS_ID, lessonClassId);
+
+                    bodyText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (lessonAttitudeIdForIntent == -1) {
+                                //создание урока
+                            } else if (isLessonReadyForClick) {
+                                startActivity(intentForStartLesson);
+                            } else {
+                                startActivity(intentForStartRedactor);
+                            }
+                        }
+                    });
+                }
 
                 //параметры для клеток
                 RelativeLayout.LayoutParams bodyParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
@@ -275,8 +292,12 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     bodyText.setText("  " + lessonCabinet + "  ");
 
                 } else if (j == 5) {//параметры для доп.
-                    if (!isLessonReady) {
+                    if (lessonAttitudeId == -1) {
+                        bodyText.setText("  нет урока, добавить?  ");
+                    } else if (!isLessonReady) {
                         bodyText.setText("  рассадите учеников!  ");
+                    } else {
+                        bodyText.setText("  готово, начать урок?  ");
                     }
 
                 }
