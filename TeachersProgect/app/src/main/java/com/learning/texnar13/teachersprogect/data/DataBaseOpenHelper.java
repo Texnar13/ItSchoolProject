@@ -553,6 +553,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public Cursor getLessonsByClassId(long classId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] selectionArgs = {classId + ""};
+        Cursor cursor = db.query(SchoolContract.TableLessons.NAME_TABLE_LESSONS, null, SchoolContract.TableLessons.KEY_CLASS_ID + " = ?", selectionArgs, null, null, null);
+        Log.i("DBOpenHelper", "getLessonByClassId " + cursor + " classId=" + classId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        return cursor;
+    }
+
     public int deleteLessons(ArrayList<Long> lessonsId) {
         SQLiteDatabase db = this.getReadableDatabase();
         int answer = 0;
