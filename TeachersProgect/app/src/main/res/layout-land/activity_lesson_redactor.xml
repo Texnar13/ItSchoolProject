@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
     android:background="#dedede"
+    android:orientation="horizontal"
     tools:context="com.learning.texnar13.teachersprogect.LessonRedactorActivity">
 
     <LinearLayout
@@ -28,11 +28,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="кабинет"
+                    android:text="класс"
                     android:textAppearance="@style/TextAppearance.AppCompat.Button" />
 
                 <Spinner
-                    android:id="@+id/activity_lesson_redactor_cabinet_spinner"
+                    android:id="@+id/activity_lesson_redactor_class_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -46,37 +46,40 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="класс"
+                    android:text="кабинет"
                     android:textAppearance="@style/TextAppearance.AppCompat.Button" />
 
                 <Spinner
-                    android:id="@+id/activity_lesson_redactor_class_spinner"
+                    android:id="@+id/activity_lesson_redactor_cabinet_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <LinearLayout
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/activity_lesson_redactor_seating_state"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_above="@+id/activity_lesson_redactor_seating_redactor_button"
-                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_horizontal"
                     android:text="TextView" />
 
                 <Button
                     android:id="@+id/activity_lesson_redactor_seating_redactor_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:text="редактировать" />
-            </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
