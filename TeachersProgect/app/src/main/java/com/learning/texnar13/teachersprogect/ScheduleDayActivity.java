@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -33,7 +34,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
     int month = -1;
     int year = -1;
 
-    LessonTimePeriod[] lessonStandartTimePeriods = new LessonTimePeriod[8];
+    static LessonTimePeriod[] lessonStandartTimePeriods = new LessonTimePeriod[8];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +152,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
         String timePeriodsString[] = {"8:30-9:15", "9:30-10:15", "10:30-11:15", "11:30-12:15", "12:25-13:10", "13:30-14:15", "14:25-15:10", "15:20-16:05"};
 
         lessonStandartTimePeriods[0] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 8, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 9, 15));
-        lessonStandartTimePeriods[1] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 9, 30),  new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 10, 15));
+        lessonStandartTimePeriods[1] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 9, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 10, 15));
         lessonStandartTimePeriods[2] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 10, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 11, 15));
         lessonStandartTimePeriods[3] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 11, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 12, 15));
         lessonStandartTimePeriods[4] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 12, 25), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 13, 10));
@@ -259,12 +260,16 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
                     final long lessonAttitudeIdForIntent = lessonAttitudeId;
 
+                    //создание/редактирование урока
                     final Intent intentForLessonEditor = new Intent(this, LessonRedactorActivity.class);
                     intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, lessonAttitudeId);
 
+                    //начать урок
                     final Intent intentForStartLesson = new Intent(this, LessonActivity.class);
                     intentForStartLesson.putExtra(LessonActivity.LESSON_ATTITUDE_ID, lessonAttitudeId);
 
+                    //редактировать
+                    final Toast toastSeatingRedactor = Toast.makeText(this, "Вы не можете начать урок пока не рассадите учеников!", Toast.LENGTH_LONG);
                     final Intent intentForStartSeatingRedactor = new Intent(this, SeatingRedactorActivity.class);
                     intentForStartSeatingRedactor.putExtra(SeatingRedactorActivity.CABINET_ID, lessonCabinetId);
                     intentForStartSeatingRedactor.putExtra(SeatingRedactorActivity.CLASS_ID, lessonClassId);
@@ -277,6 +282,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                             } else if (intentIsLessonReady) {//начать урок
                                 startActivity(intentForStartLesson);
                             } else {
+                                toastSeatingRedactor.show();
                                 startActivityForResult(intentForStartSeatingRedactor, 1);//редактировать
                             }
                         }
@@ -554,10 +560,10 @@ public class ScheduleDayActivity extends AppCompatActivity {
 }
 
 class LessonTimePeriod {
-    Calendar calendarStartTime;
-    Calendar calendarEndTime;
+    GregorianCalendar calendarStartTime;
+    GregorianCalendar calendarEndTime;
 
-    public LessonTimePeriod(Calendar calendarStartTime, Calendar calendarEndTime) {
+    public LessonTimePeriod(GregorianCalendar calendarStartTime, GregorianCalendar calendarEndTime) {
         this.calendarStartTime = calendarStartTime;
         this.calendarEndTime = calendarEndTime;
     }

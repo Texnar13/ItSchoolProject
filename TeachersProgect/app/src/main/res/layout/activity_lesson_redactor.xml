@@ -29,13 +29,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:gravity="center"
                     android:text="класс"
                     android:textAppearance="@style/TextAppearance.AppCompat.Button" />
 
                 <Spinner
                     android:id="@+id/activity_lesson_redactor_class_spinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent" />
             </LinearLayout>
 
             <LinearLayout
@@ -45,6 +46,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="кабинет"
@@ -53,7 +55,7 @@
                 <Spinner
                     android:id="@+id/activity_lesson_redactor_cabinet_spinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent" />
             </LinearLayout>
 
 
@@ -69,8 +71,11 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:gravity="center_horizontal"
-                    android:text="TextView" />
+                    android:layout_toLeftOf="@+id/activity_lesson_redactor_seating_redactor_button"
+                    android:layout_toStartOf="@+id/activity_lesson_redactor_seating_redactor_button"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                 <Button
                     android:id="@+id/activity_lesson_redactor_seating_redactor_button"
@@ -90,6 +95,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:gravity="center"
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -99,7 +105,7 @@
             <Spinner
                 android:id="@+id/activity_lesson_redactor_lesson_name_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
         </LinearLayout>
     </LinearLayout>
 
@@ -107,51 +113,65 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Время:"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Время:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <CheckBox
+                    android:id="@+id/activity_lesson_redactor_time_check_box"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="своё время" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/activity_lesson_redactor_time_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
             </LinearLayout>
-
         </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <CheckBox
-                android:id="@+id/activity_lesson_redactor_time_check_box"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:text="своё время" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <Button
+                android:id="@+id/activity_lesson_redactor_remoove_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="удалить" />
+            <Button
                 android:id="@+id/activity_lesson_redactor_save_button"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:text="сохранить" />
 
-        </RelativeLayout>
+
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

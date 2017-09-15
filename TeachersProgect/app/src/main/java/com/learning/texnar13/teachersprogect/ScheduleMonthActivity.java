@@ -146,8 +146,16 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             }
         }
         //задаем количество дней в месяце
-        int monthCapacity[] = {31, 28,//todo високосный 29
-                31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        int monthCapacity[];
+        if (viewCalendar.get(Calendar.YEAR) % 4 == 0 &&
+                viewCalendar.get(Calendar.YEAR) % 100 != 0 ||
+                viewCalendar.get(Calendar.YEAR) % 400 == 0) {
+            monthCapacity = new int[]{31, 29,//високосный
+                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        } else {
+            monthCapacity = new int[]{31, 28,//не високосный
+                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        }
         int countOfDays = monthCapacity[viewCalendar.get(Calendar.MONTH)];
         //создаем 7 tableRow и помещаем их в таблицу (1 на день недели и 6 на календарь)
         //linearOut.setWeightSum(1f);
@@ -203,7 +211,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 TextView day = new TextView(this);
                 day.setTextSize(20);
                 day.setTextColor(Color.BLACK);
-                if (weekDay == 5||weekDay == 6) {
+                if (weekDay == 5 || weekDay == 6) {
                     day.setBackgroundColor(Color.LTGRAY);
                 } else
                     day.setBackgroundColor(Color.WHITE);
@@ -214,7 +222,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT
                 );
-                dayParams.setMargins((int) pxFromDp(0.25f),(int) pxFromDp(1.3f), (int) pxFromDp(0.25f), (int) pxFromDp(1.3f));
+                dayParams.setMargins((int) pxFromDp(0.25f), (int) pxFromDp(1.3f), (int) pxFromDp(0.25f), (int) pxFromDp(1.3f));
 
                 if (weekDay == dayOfWeek) {
                     flag = true;
@@ -412,7 +420,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 //        }
     }
 
-    float pxFromDp(float dp){
+    float pxFromDp(float dp) {
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
 
