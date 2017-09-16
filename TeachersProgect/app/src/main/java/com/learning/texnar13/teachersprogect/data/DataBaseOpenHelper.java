@@ -642,6 +642,30 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return answer;
     }
 
+    public long getLessonsAttitudesIdByTime(Calendar time) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] selectionArgs = {
+                time.getTime().getTime() + ""
+                , time.getTime().getTime() + ""
+        };
+        Cursor cursor = db.query(SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME,
+                null, SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " <= ? AND " +
+                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_END + " >= ?",
+                selectionArgs, null, null, null);
+        long answer;
+        if(cursor.getCount() !=0){
+        cursor.moveToFirst();
+            answer = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_AND_TIME_ATTITUDE_ID));
+            cursor.close();
+            Log.i("DBOpenHelper", "getLessonsAttitudesIdByTimePeriod time=" + time.getTime().getTime()  + " answer=" + answer);
+            return answer;
+        }else{
+            cursor.close();
+            Log.i("DBOpenHelper", "getLessonsAttitudesIdByTimePeriod time=" + time.getTime().getTime()  + " answer=" + (-1));
+            return -1;
+        }
+    }
+
     public int deleteLessonTimeAndCabinet(long attitudeId) {
         SQLiteDatabase db = this.getReadableDatabase();
         int answer = db.delete(SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME, SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_AND_TIME_ATTITUDE_ID+ " = ?", new String[]{"" + attitudeId});

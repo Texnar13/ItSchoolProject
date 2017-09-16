@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -104,8 +105,17 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         switch (view.getId()) {
             case R.id.start_menu_button_now: {//запуск текущего урока
                 intent = new Intent(this, LessonActivity.class);
-                intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, (long) -1);//TODO сделать запуск текущего урока()расчеты вести здесь
-                startActivity(intent);
+                GregorianCalendar currentCalendar = new GregorianCalendar();//получаем текущее время
+                currentCalendar.setTime(new Date());
+                DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+                long attitudeId = db.getLessonsAttitudesIdByTime(currentCalendar);
+                if (attitudeId == -1) {
+                    Toast toast = Toast.makeText(this,"на текущий момент нет доступных уроков",Toast.LENGTH_SHORT);
+                    toast.show();
+                } else {
+                    intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, attitudeId);//TODO сделать запуск текущего урока()расчеты вести здесь
+                    startActivity(intent);
+                }
             }
             break;
             case R.id.start_menu_button_schedule://переход в список расписаний
@@ -191,9 +201,9 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 long lessonId = dbOpenHelper.createLesson("физика", classId
                         //, cabinetId
                 );
-                Date startLessonTime = new GregorianCalendar(2017, 8, 10, 8, 30).getTime();//1502343000000 --10 августа
-                Date endLessonTime = new GregorianCalendar(2017, 8, 10, 9, 15).getTime();//на 7 месяц  1502345700000
-                dbOpenHelper.setLessonTimeAndCabinet(lessonId,cabinetId, startLessonTime, endLessonTime);
+                Date startLessonTime = new GregorianCalendar(2017, 8, 17, 8, 30).getTime();//1502343000000 --10 августа
+                Date endLessonTime = new GregorianCalendar(2017, 8, 17, 9, 15).getTime();//на 7 месяц  1502345700000
+                dbOpenHelper.setLessonTimeAndCabinet(lessonId, cabinetId, startLessonTime, endLessonTime);
 
 
                 dbOpenHelper.setLearnerOnPlace(//lessonId,
