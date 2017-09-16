@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,11 +39,11 @@ public class LessonRedactorActivity extends AppCompatActivity {
 
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
 
-    long attitudeId = -1;
+    long attitudeId = -1;//todo почему она не нужна?
 
     //класс-кабинет
     TextView seatingStateText;
-    final ClassCabinet classCabinetId = new ClassCabinet(1, 1);//todo предусмотреть вариант если уроков вобще нет или у принимаемого урока не стандартное время. проверка нет ли на этом времени урока.
+    final ClassCabinet classCabinetId = new ClassCabinet(1, 1);//todo предусмотреть вариант если уроков вобще нет или у принимаемого урока не стандартное время. проверка нет ли на этом времени урока. переворот экрана.
 
     //урок
     long chosenLessonId = -1;
@@ -64,6 +65,8 @@ public class LessonRedactorActivity extends AppCompatActivity {
             return;
         }
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
+
         final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
 
@@ -78,6 +81,9 @@ public class LessonRedactorActivity extends AppCompatActivity {
         timeOut = (LinearLayout) findViewById(R.id.activity_lesson_redactor_time_layout);
         CheckBox timeCheckBox = (CheckBox) findViewById(R.id.activity_lesson_redactor_time_check_box);
         //общие
+        LinearLayout buttonsOut = (LinearLayout) findViewById(R.id.activity_lesson_redactor_buttons_out);
+        Button removeButton = (Button) findViewById(R.id.activity_lesson_redactor_remove_button);
+        Button backButton = (Button) findViewById(R.id.activity_lesson_redactor_back_button);
         Button saveButton = (Button) findViewById(R.id.activity_lesson_redactor_save_button);
 
 
@@ -205,25 +211,46 @@ public class LessonRedactorActivity extends AppCompatActivity {
             }
         }
 
-        //сохранение изменений
         final long finalAttitudeId = attitudeId;
+        if (attitudeId == -1) {
+            buttonsOut.removeView(removeButton);
+            //отмена
+            backButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+        } else {
+            buttonsOut.removeView(backButton);
+            //удаление урока
+            removeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    db.deleteLessonTimeAndCabinet(finalAttitudeId);
+                    finish();
+                }
+            });
+        }
+
+        //сохранение изменений
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!isTmeYours) {//по формату вывода
                     if (chosenLessonId != -1) {//единственный пункт который может быть не выбран
                         if (finalAttitudeId == -1) {//создание
-                            Log.i("TeachersApp", "LessonRedactorActivity - create lesson chosenLessonId =" + chosenLessonId + " cabinetId =" + classCabinetId.cabinetId+" calendarStartTime ="+lessonTime.calendarStartTime.getTime().getTime() + " calendarEndTime =" + lessonTime.calendarEndTime.getTime().getTime());
-                            db.setLessonTimeAndCabinet(chosenLessonId,classCabinetId.cabinetId,lessonTime.calendarStartTime.getTime(),lessonTime.calendarEndTime.getTime());
-
+                            Log.i("TeachersApp", "LessonRedactorActivity - create lesson chosenLessonId =" + chosenLessonId + " cabinetId =" + classCabinetId.cabinetId + " calendarStartTime =" + lessonTime.calendarStartTime.getTime().getTime() + " calendarEndTime =" + lessonTime.calendarEndTime.getTime().getTime());
+                            db.setLessonTimeAndCabinet(chosenLessonId, classCabinetId.cabinetId, lessonTime.calendarStartTime.getTime(), lessonTime.calendarEndTime.getTime());
+                            finish();
                         } else {//или изменение
-//                            Log.i("TeachersApp", "LessonRedactorActivity - edit lesson chosenLessonId =" + chosenLessonId + " cabinetId =" + classCabinetId.cabinetId+" calendarStartTime ="+lessonTime.calendarStartTime.getTime().getTime() + " calendarEndTime =" + lessonTime.calendarEndTime.getTime().getTime());
-//                            db.(chosenLessonId,classCabinetId.cabinetId,lessonTime.calendarStartTime.getTime(),lessonTime.calendarEndTime.getTime());
-
+                            Log.i("TeachersApp", "LessonRedactorActivity - edit lesson chosenLessonId =" + chosenLessonId + " cabinetId =" + classCabinetId.cabinetId + " calendarStartTime =" + lessonTime.calendarStartTime.getTime().getTime() + " calendarEndTime =" + lessonTime.calendarEndTime.getTime().getTime());
+                            db.editLessonTimeAndCabinet(finalAttitudeId, chosenLessonId, classCabinetId.cabinetId, lessonTime.calendarStartTime.getTime(), lessonTime.calendarEndTime.getTime());
+                            finish();
                         }
                     } else {
-                        Toast toast = Toast.makeText(getApplicationContext(),"не выбран урок!",Toast.LENGTH_SHORT);
-                                toast.show();
+                        Toast toast = Toast.makeText(getApplicationContext(), "не выбран урок!", Toast.LENGTH_SHORT);
+                        toast.show();
                     }
                 }
             }
@@ -240,7 +267,17 @@ public class LessonRedactorActivity extends AppCompatActivity {
         seatingTextUpdate(classCabinetId);
     }
 
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item){
+        switch (item.getItemId()) {
+            case android.R.id.home://кнопка назад в actionBar
+                onBackPressed();
+                return true;
 
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     void changeTimeFormat(boolean isTmeYours) {
         timeOut.removeAllViews();
         if (!isTmeYours) {

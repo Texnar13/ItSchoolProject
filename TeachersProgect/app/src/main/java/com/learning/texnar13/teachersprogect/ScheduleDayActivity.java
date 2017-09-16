@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -40,6 +41,8 @@ public class ScheduleDayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_day);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
 
         day = getIntent().getIntExtra(INTENT_DAY, -1);
         month = getIntent().getIntExtra(INTENT_MONTH, -1);
@@ -557,6 +560,19 @@ public class ScheduleDayActivity extends AppCompatActivity {
     float pxFromDp(float dp) {
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home://кнопка назад в actionBar
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }
 
 class LessonTimePeriod {

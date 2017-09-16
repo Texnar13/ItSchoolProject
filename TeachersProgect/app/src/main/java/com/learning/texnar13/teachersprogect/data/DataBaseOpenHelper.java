@@ -580,7 +580,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     public long setLessonTimeAndCabinet(long lessonId, long cabinetId, Date startTime, Date endTime) {
         //date и database
-//todo
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_ID, lessonId);
@@ -591,6 +590,22 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         contentValues.put(SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_END, endTime.getTime());
         long answer = db.insert(SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME, null, contentValues);
         Log.i("DBOpenHelper", "setLessonTime lessonId= " + lessonId + " cabinetId= " + cabinetId + " startTime= " + startTime.toString() + " endTime= " + endTime.toString() + " return = " + answer);
+        return answer;
+    }
+
+    public int editLessonTimeAndCabinet(long attitudeId, long lessonId, long cabinetId, Date startTime, Date endTime) {
+        //date и database
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_ID, lessonId);
+        //--
+        contentValues.put(SchoolContract.TableLessonAndTimeWithCabinet.KEY_CABINET_ID, cabinetId);
+        //--
+        contentValues.put(SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN, startTime.getTime());
+        contentValues.put(SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_END, endTime.getTime());
+        int answer = db.update(SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME, contentValues, SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_AND_TIME_ATTITUDE_ID + " = ?", new String[]{Long.toString(attitudeId)});
+
+        Log.i("DBOpenHelper", "editLessonTimeAndCabinet attitudeId= " + attitudeId + " lessonId= " + lessonId + " cabinetId= " + cabinetId + " startTime= " + startTime.toString() + " endTime= " + endTime.toString() + " return = " + answer);
         return answer;
     }
 
@@ -624,6 +639,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         Log.i("DBOpenHelper", "getLessonsAttitudesIdByTimePeriod periodStart=" + periodStart.getTime().getTime() + " periodEnd=" + periodEnd.getTime().getTime() + " answer=" + stringLessonsAttitudesId);
+        return answer;
+    }
+
+    public int deleteLessonTimeAndCabinet(long attitudeId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int answer = db.delete(SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME, SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_AND_TIME_ATTITUDE_ID+ " = ?", new String[]{"" + attitudeId});
+        Log.i("DBOpenHelper", "deleteLessonTimeAndCabinet attitudeId= " + attitudeId + " return = " + answer);
+        db.close();
         return answer;
     }
 

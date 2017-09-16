@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -28,6 +29,8 @@ public class LessonActivity extends AppCompatActivity {
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
     final ArrayList<LearnerAndGrade> gradeArrayList = new ArrayList<>();//массив с оценками за этот урок;
     int multiplier = 2;
+
+    private Toolbar toolbar;
 
 
     @Override
@@ -61,6 +64,7 @@ public class LessonActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
 
         //3 это класс урока
         /*
@@ -138,6 +142,10 @@ public class LessonActivity extends AppCompatActivity {
         * */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_main);
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
+
         RelativeLayout room = (RelativeLayout) findViewById(R.id.room_layout);
 
 
@@ -345,6 +353,17 @@ public class LessonActivity extends AppCompatActivity {
         return px * getApplicationContext().getResources().getDisplayMetrics().density;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home://кнопка назад в actionBar
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
 }
 

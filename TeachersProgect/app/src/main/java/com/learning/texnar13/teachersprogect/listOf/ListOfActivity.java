@@ -115,6 +115,7 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
 
         listParameterValue = getIntent().getStringExtra(LIST_PARAMETER);
         final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
@@ -123,8 +124,8 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("TeachersApp","ListOfActivity - newUnit(fab.OnClickListener)");
-                ListOfDialog dialog = new ListOfDialog(listParameterValue,getIntent().getLongExtra(DOP_LIST_PARAMETER, -1), new ArrayList<Long>());
+                Log.i("TeachersApp", "ListOfActivity - newUnit(fab.OnClickListener)");
+                ListOfDialog dialog = new ListOfDialog(listParameterValue, getIntent().getLongExtra(DOP_LIST_PARAMETER, -1), new ArrayList<Long>());
                 dialog.show(getFragmentManager(), "dialogNewUnit");
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();
@@ -196,6 +197,18 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                 break;
         }
         db.close();//закрыли базу данных
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home://кнопка назад в actionBar
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

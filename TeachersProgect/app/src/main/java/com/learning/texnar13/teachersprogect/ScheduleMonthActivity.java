@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,6 +25,9 @@ public class ScheduleMonthActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_month);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
+
         final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.schedule_month_table);
 
         ImageView previous = (ImageView) findViewById(R.id.schedule_month_button_previous);
@@ -430,5 +434,17 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         intent.putExtra(ScheduleDayActivity.INTENT_MONTH, month);
         intent.putExtra(ScheduleDayActivity.INTENT_YEAR, year);
         this.startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home://кнопка назад в actionBar
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

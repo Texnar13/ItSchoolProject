@@ -152,23 +152,35 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/activity_lesson_redactor_buttons_out"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/activity_lesson_redactor_remoove_button"
+                android:layout_gravity="center"
+                android:id="@+id/activity_lesson_redactor_remove_button"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:text="удалить" />
+                android:layout_weight="1"
+                android:text="удалить урок" />
             <Button
+                android:layout_gravity="center"
+                android:id="@+id/activity_lesson_redactor_back_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_weight="1"
+                android:text="отмена" />
+
+            <Button
+                android:layout_gravity="center"
                 android:id="@+id/activity_lesson_redactor_save_button"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:layout_weight="1"
                 android:text="сохранить" />
 
 

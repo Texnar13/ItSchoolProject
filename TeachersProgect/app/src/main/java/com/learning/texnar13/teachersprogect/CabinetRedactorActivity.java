@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,6 +37,9 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cabinet_redactor);
         out = (RelativeLayout) findViewById(R.id.redactor_out);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
+
         //TODO 2 это редактор кабинетов, пока понадобятся только двухместные парты,
 //        /* выводим все парты находящиеся в этом кабинете
 //        * при нажатии на картинку "плюс" в центре экрана появляется парта,
@@ -256,6 +260,18 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         out.addView(newDeskLayout);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home://кнопка назад в actionBar
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
 
