@@ -45,7 +45,7 @@
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_centerInParent="true"
                     android:layout_marginEnd="20dp"
                     android:layout_marginLeft="20dp"
@@ -72,7 +72,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/spot_2" />
@@ -80,6 +80,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleType="fitXY"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -92,7 +93,7 @@
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_centerInParent="true"
                     android:layout_marginEnd="20dp"
                     android:layout_marginLeft="20dp"
@@ -113,16 +114,14 @@
 
         <RelativeLayout
             android:id="@+id/start_menu_button_my_cabinets"
+            android:layout_marginTop="0dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:layout_weight="1">
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/spot_3" />
@@ -169,7 +168,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/spot_4" />
@@ -216,7 +215,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/spot_5" />
