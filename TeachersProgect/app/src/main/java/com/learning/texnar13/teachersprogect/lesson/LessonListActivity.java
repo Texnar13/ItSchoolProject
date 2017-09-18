@@ -18,10 +18,12 @@ import com.learning.texnar13.teachersprogect.data.SchoolContract;
 public class LessonListActivity extends AppCompatActivity {
 
     public static final String LIST_ID = "listId";
-    public static final String LIST_GRADES = "listGrades";
+    public static final String FIRST_LIST_GRADES = "listGrades1";
+    public static final String SECOND_LIST_GRADES = "listGrade2s";
+    public static final String THIRD_LIST_GRADES = "listGrades3";
 
     long[] learnersIdArray;
-    long[] gradeArray;
+    long[][] gradeArray = new long[3][];
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -38,8 +40,14 @@ public class LessonListActivity extends AppCompatActivity {
                 Log.i("TeachersApp", "LessonListActivity - onPrepareOptionsMenu - onMenuItemClick");
                 DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                 for (int i = 0; i < learnersIdArray.length; i++) {
-                    if (gradeArray[i] != 0) {
-                        db.createGrade(learnersIdArray[i], gradeArray[i], 1);
+                    if (gradeArray[0][i] != 0) {
+                        db.createGrade(learnersIdArray[i], gradeArray[0][i], 1);//todo id урока
+                    }
+                    if (gradeArray[1][i] != 0) {
+                        db.createGrade(learnersIdArray[i], gradeArray[1][i], 1);
+                    }
+                    if (gradeArray[2][i] != 0) {
+                        db.createGrade(learnersIdArray[i], gradeArray[2][i], 1);
                     }
                 }
                 finish();
@@ -60,43 +68,50 @@ public class LessonListActivity extends AppCompatActivity {
 
         LinearLayout list = (LinearLayout) findViewById(R.id.activity_lesson_list);
 
-
         learnersIdArray = getIntent().getLongArrayExtra(LIST_ID);
-        gradeArray = getIntent().getLongArrayExtra(LIST_GRADES);
+        gradeArray[0] = getIntent().getLongArrayExtra(FIRST_LIST_GRADES);
+        gradeArray[1] = getIntent().getLongArrayExtra(SECOND_LIST_GRADES);
+        gradeArray[2] = getIntent().getLongArrayExtra(THIRD_LIST_GRADES);
 
-        DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         boolean flag = false;
-        for (int j = 0; j < gradeArray.length; j++) {
+        for (int i = 0; i < gradeArray[0].length; i++) {//робегаясь по длинне побочных массивов вывожу из главных оценки
             LinearLayout tempLayout = new LinearLayout(getApplicationContext());//контейнер имя оценка
 
-            TextView textViewWisName = new TextView(getApplicationContext());//имя
-            textViewWisName.setGravity(Gravity.CENTER_HORIZONTAL);
-            textViewWisName.setTextColor(Color.GRAY);
+            //выводим ученика
+            TextView textViewWithName = new TextView(getApplicationContext());//имя
+            textViewWithName.setGravity(Gravity.CENTER_HORIZONTAL);
+            textViewWithName.setTextColor(Color.GRAY);
             if (flag) {
-                textViewWisName.setBackgroundColor(Color.parseColor("#d8d5ff"));
+                textViewWithName.setBackgroundColor(Color.parseColor("#d8d5ff"));
             }
-            textViewWisName.setTextSize(30F);
-            Cursor currentLearner = db.getLearner(learnersIdArray[j]);
+            textViewWithName.setTextSize(30F);
+            Cursor currentLearner = db.getLearner(learnersIdArray[i]);
             currentLearner.moveToFirst();
-            textViewWisName.setText(currentLearner.getString(currentLearner.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME))
+            textViewWithName.setText(currentLearner.getString(currentLearner.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME))
                     + " " + currentLearner.getString(currentLearner.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)));
             currentLearner.close();
-            tempLayout.addView(textViewWisName, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F));
+            tempLayout.addView(textViewWithName, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F));
 
-            TextView textViewWisGrade = new TextView(getApplicationContext());//оценка
-            textViewWisGrade.setTextColor(Color.GRAY);
-            if (!flag) {
-                textViewWisGrade.setBackgroundColor(Color.parseColor("#d8d5ff"));
-                flag = true;
-            } else {
-                flag = false;
+            for (int j = 0; j < gradeArray.length; j++) {
+
+                TextView textViewWisGrade = new TextView(getApplicationContext());//оценка
+                textViewWisGrade.setTextColor(Color.GRAY);
+                if (!flag) {
+                    textViewWisGrade.setBackgroundColor(Color.parseColor("#d8d5ff"));
+                    flag = true;
+                } else {
+                    flag = false;
+                }
+                textViewWisGrade.setTextSize(30F);
+                textViewWisGrade.setGravity(Gravity.CENTER_HORIZONTAL);
+                if (gradeArray[j][i] == 0) {
+                    textViewWisGrade.setText("-");
+                } else {
+                    textViewWisGrade.setText(Long.toString(gradeArray[j][i]));
+                }
+                tempLayout.addView(textViewWisGrade, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 4F));
             }
-            textViewWisGrade.setTextSize(30F);
-            textViewWisGrade.setGravity(Gravity.CENTER_HORIZONTAL);
-            textViewWisGrade.setText(Long.toString(gradeArray[j]));
-            tempLayout.addView(textViewWisGrade, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 4F));
-
-
             list.addView(tempLayout);
         }
         db.close();

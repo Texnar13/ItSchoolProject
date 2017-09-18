@@ -32,12 +32,15 @@ import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class LessonRedactorActivity extends AppCompatActivity {
 
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
+    public static final String LESSON_START_TIME = "lessonStartTime";
+    public static final String LESSON_END_TIME = "lessonEndTime";
 
     long attitudeId = -1;//todo почему она не нужна?
 
@@ -57,7 +60,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_redactor);
-        long attitudeId = getIntent().getLongExtra(LESSON_ATTITUDE_ID, -2);
+        attitudeId = getIntent().getLongExtra(LESSON_ATTITUDE_ID, -2);
         if (attitudeId == -2) {
             Toast toast = Toast.makeText(this, "не выбран урок!", Toast.LENGTH_SHORT);
             toast.show();
@@ -87,8 +90,12 @@ public class LessonRedactorActivity extends AppCompatActivity {
         Button saveButton = (Button) findViewById(R.id.activity_lesson_redactor_save_button);
 
 
+        lessonTime = new LessonTimePeriod(new GregorianCalendar(), new GregorianCalendar());
         if (attitudeId == -1) {
             setTitle("создание урока");
+            lessonTime.calendarStartTime.setTime(new Date(getIntent().getLongExtra(LESSON_START_TIME, 1)));
+            lessonTime.calendarEndTime.setTime(new Date(getIntent().getLongExtra(LESSON_END_TIME, 1)));
+
         } else {
             setTitle("редактирование урока");
 
@@ -99,7 +106,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
             chosenLessonId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_ID));
             Cursor lessonCursor = db.getLessonById(chosenLessonId);
             lessonCursor.moveToFirst();
-            lessonTime = new LessonTimePeriod(new GregorianCalendar(), new GregorianCalendar());
+
             lessonTime.calendarStartTime.setTime(new Date(attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN))));
             lessonTime.calendarEndTime.setTime(new Date(attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_END))));
 
@@ -268,7 +275,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected (MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home://кнопка назад в actionBar
                 onBackPressed();
@@ -278,13 +285,14 @@ public class LessonRedactorActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
     void changeTimeFormat(boolean isTmeYours) {
         timeOut.removeAllViews();
         if (!isTmeYours) {
             //стандартное расписание
             Spinner spinner = new Spinner(this);
 
-            //todo массив с calendar
+            //массив с calendar
             final String textTime[] = new String[ScheduleDayActivity.lessonStandartTimePeriods.length];
             SimpleDateFormat textTimeFormat = new SimpleDateFormat("H.m");
             for (int i = 0; i < textTime.length; i++) {
@@ -293,6 +301,9 @@ public class LessonRedactorActivity extends AppCompatActivity {
 
                         textTimeFormat.format(ScheduleDayActivity.lessonStandartTimePeriods[i].calendarEndTime.getTime()) + "  ";
             }
+
+
+
 
 
             final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, textTime);
@@ -311,6 +322,22 @@ public class LessonRedactorActivity extends AppCompatActivity {
 
                 }
             });
+            //ставим выбранное время
+            for (int i = 0; i < ScheduleDayActivity.lessonStandartTimePeriods.length; i++) {
+                if (lessonTime.calendarStartTime.get(Calendar.HOUR_OF_DAY) ==
+                        ScheduleDayActivity.lessonStandartTimePeriods[i].calendarStartTime.get(Calendar.HOUR_OF_DAY) &&
+                        lessonTime.calendarStartTime.get(Calendar.MINUTE) ==
+                                ScheduleDayActivity.lessonStandartTimePeriods[i].calendarStartTime.get(Calendar.MINUTE) &&
+
+                        lessonTime.calendarEndTime.get(Calendar.HOUR_OF_DAY) ==
+                                ScheduleDayActivity.lessonStandartTimePeriods[i].calendarEndTime.get(Calendar.HOUR_OF_DAY) &&
+                        lessonTime.calendarEndTime.get(Calendar.MINUTE) ==
+                                ScheduleDayActivity.lessonStandartTimePeriods[i].calendarEndTime.get(Calendar.MINUTE)
+                        ) {
+                    Log.i("TeachersApp", "chooseTime :" + (i+1));
+                    spinner.setSelection(i);
+                }
+            }
 
 
             LinearLayout.LayoutParams spinnerTimeParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

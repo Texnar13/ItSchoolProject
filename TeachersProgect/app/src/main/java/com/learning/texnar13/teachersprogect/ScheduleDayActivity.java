@@ -266,12 +266,15 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     //создание/редактирование урока
                     final Intent intentForLessonEditor = new Intent(this, LessonRedactorActivity.class);
                     intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, lessonAttitudeId);
+                    intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_START_TIME, lessonStandartTimePeriods[i].calendarStartTime.getTime().getTime());
+                    intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_END_TIME, lessonStandartTimePeriods[i].calendarEndTime.getTime().getTime());
+
 
                     //начать урок
                     final Intent intentForStartLesson = new Intent(this, LessonActivity.class);
                     intentForStartLesson.putExtra(LessonActivity.LESSON_ATTITUDE_ID, lessonAttitudeId);
 
-                    //редактировать
+                    //редактировать рассадку
                     final Toast toastSeatingRedactor = Toast.makeText(this, "Вы не можете начать урок пока не рассадите учеников!", Toast.LENGTH_LONG);
                     final Intent intentForStartSeatingRedactor = new Intent(this, SeatingRedactorActivity.class);
                     intentForStartSeatingRedactor.putExtra(SeatingRedactorActivity.CABINET_ID, lessonCabinetId);

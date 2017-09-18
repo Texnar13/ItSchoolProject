@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -17,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -29,8 +29,6 @@ public class LessonActivity extends AppCompatActivity {
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
     final ArrayList<LearnerAndGrade> gradeArrayList = new ArrayList<>();//массив с оценками за этот урок;
     int multiplier = 2;
-
-    private Toolbar toolbar;
 
 
     @Override
@@ -45,14 +43,20 @@ public class LessonActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 long[] learnersId = new long[gradeArrayList.size()];
-                long[] grades = new long[gradeArrayList.size()];
+                long[] grades1 = new long[gradeArrayList.size()];
+                long[] grades2 = new long[gradeArrayList.size()];
+                long[] grades3 = new long[gradeArrayList.size()];
                 for (int j = 0; j < gradeArrayList.size(); j++) {
                     learnersId[j] = gradeArrayList.get(j).getLearnerId();
-                    grades[j] = gradeArrayList.get(j).getGrade();
+                    grades1[j] = gradeArrayList.get(j).getRawGrade(0);
+                    grades2[j] = gradeArrayList.get(j).getRawGrade(1);
+                    grades3[j] = gradeArrayList.get(j).getRawGrade(2);
                 }
                 Intent intent = new Intent(getApplicationContext(), LessonListActivity.class);
                 intent.putExtra(LessonListActivity.LIST_ID, learnersId);
-                intent.putExtra(LessonListActivity.LIST_GRADES, grades);
+                intent.putExtra(LessonListActivity.FIRST_LIST_GRADES, grades1);
+                intent.putExtra(LessonListActivity.SECOND_LIST_GRADES, grades2);
+                intent.putExtra(LessonListActivity.THIRD_LIST_GRADES, grades3);
                 startActivity(intent);
                 finish();
                 return true;
@@ -149,23 +153,19 @@ public class LessonActivity extends AppCompatActivity {
         RelativeLayout room = (RelativeLayout) findViewById(R.id.room_layout);
 
 
-//        ActionBar actionBar = getActionBar();
-//        actionBar.hide();
-//
-//        actionBar.show();
-//        actionBar.setSubtitle("subtitle");
-//        actionBar.setTitle("title");
-
-
         long lessonAttitudeId;
         long classId;
         long cabinetId;
         Cursor lessonCursor;//курсор с текущим уроком
         Cursor desksCursor;//курсор с партами
 
-        //todo сделать скорре передачу не 0 при текущем а передачу самог текущего урока, то есть все вычисления с датой вне этого класса
-        if (getIntent().getLongExtra(LESSON_ATTITUDE_ID, -1) == -1) {//-1 ошибка 0 найти текущий 1> использовать переданные
-            lessonAttitudeId = 1;//todo todo выдавать ошибку и выходить из активити
+
+        if (getIntent().getLongExtra(LESSON_ATTITUDE_ID, -1) == -1) {//-1 ошибка, 1> использовать переданные
+            Toast toast = Toast.makeText(this, "ошибка при получении урока!", Toast.LENGTH_LONG);
+            toast.show();
+            Log.i("TeachersApp", "LessonActivity - error with intent attitudeId == 1");
+            finish();
+            return;
         } else {
             lessonAttitudeId = getIntent().getLongExtra(LESSON_ATTITUDE_ID, -1);
         }
@@ -210,9 +210,9 @@ public class LessonActivity extends AppCompatActivity {
             Cursor placeCursor = db.getPlacesByDeskId(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
             while (placeCursor.moveToNext()) {
 
-                LinearLayout tempPlaceLayout = new LinearLayout(this);
-                tempPlaceLayout.setOrientation(LinearLayout.VERTICAL);
-                tempPlaceLayout.setBackgroundColor(Color.parseColor("#bc8e6d02"));
+                // layout с учеником и оценками
+                RelativeLayout gradeLearnerPlaceOut = new RelativeLayout(this);
+                gradeLearnerPlaceOut.setBackgroundColor(Color.parseColor("#bc8e6d02"));
 
                 RelativeLayout.LayoutParams tempRelativeLayoutPlaceParams = new RelativeLayout.LayoutParams((int) dpFromPx((40 - 2) * multiplier), (int) dpFromPx((40 - 2) * multiplier));
                 tempRelativeLayoutPlaceParams.leftMargin = (int) dpFromPx((1 + (40 * (placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1))) * multiplier);
@@ -220,6 +220,42 @@ public class LessonActivity extends AppCompatActivity {
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+
+                final TextView grade1Text = new TextView(this);
+                grade1Text.setTextColor(Color.WHITE);
+                grade1Text.setTextSize(multiplier * 10);
+                grade1Text.setText("-");
+
+
+                final TextView grade2Text = new TextView(this);
+                grade2Text.setTextColor(Color.WHITE);
+                grade2Text.setTextSize(multiplier * 10);
+                grade2Text.setText("-");
+
+                RelativeLayout.LayoutParams grade1TextParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+                grade1TextParams.setMargins(multiplier, 0, 0, 0);
+                //grade1TextParams.setMarginStart(multiplier);
+
+                RelativeLayout.LayoutParams grade2TextParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+                grade2TextParams.setMargins(0, 0, multiplier, 0);
+
+                gradeLearnerPlaceOut.addView(grade1Text, grade1TextParams);
+                gradeLearnerPlaceOut.addView(grade2Text, grade2TextParams);
+
+
+                // layout с учеником и текстом
+                LinearLayout tempPlaceLayout = new LinearLayout(this);
+                tempPlaceLayout.setOrientation(LinearLayout.VERTICAL);
+
+                LinearLayout.LayoutParams tempPlaceLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+
                 Log.i("TeachersApp", "LessonActivity - onCreate view place:" + placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID)));
 
                 //создание ученика
@@ -228,7 +264,7 @@ public class LessonActivity extends AppCompatActivity {
                     //оценки
                     i++;
                     final int tempGradeId = i;
-                    gradeArrayList.add(i, new LearnerAndGrade(learnerId, 0));
+                    gradeArrayList.add(i, new LearnerAndGrade(learnerId));
 
 
                     Cursor learnerCursor = db.getLearner(learnerId);//получаем ученика
@@ -241,15 +277,15 @@ public class LessonActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             if (gradeArrayList.get(tempGradeId).getGrade() != 5) {
-                                gradeArrayList.get(tempGradeId).setGrade(gradeArrayList.get(tempGradeId).getGrade() + 1);
+                                gradeArrayList.get(tempGradeId).setGrade((byte) (1 + gradeArrayList.get(tempGradeId).getGrade()));
                             } else {
-                                gradeArrayList.get(tempGradeId).setGrade(0);
+                                gradeArrayList.get(tempGradeId).setGrade((byte) 1);
                             }
 
                             switch ((int) gradeArrayList.get(tempGradeId).getGrade()) {
-                                case 0:
-                                    tempLernerImage.setImageResource(R.drawable.learner_gray);
-                                    break;
+//                                case 0:
+//                                    tempLernerImage.setImageResource(R.drawable.learner_gray);
+//                                    break;
                                 case 1:
                                     tempLernerImage.setImageResource(R.drawable.learner_red);
                                     break;
@@ -276,7 +312,7 @@ public class LessonActivity extends AppCompatActivity {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem menuItem) {
                                     tempLernerImage.setImageResource(R.drawable.learner_gray);
-                                    gradeArrayList.get(tempGradeId).setGrade(0);
+                                    gradeArrayList.get(tempGradeId).setGrade((byte) 0);
                                     return true;
                                 }
                             });
@@ -284,7 +320,7 @@ public class LessonActivity extends AppCompatActivity {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem menuItem) {
                                     tempLernerImage.setImageResource(R.drawable.learner_red);
-                                    gradeArrayList.get(tempGradeId).setGrade(1);
+                                    gradeArrayList.get(tempGradeId).setGrade((byte) 1);
                                     return true;
                                 }
                             });
@@ -292,7 +328,7 @@ public class LessonActivity extends AppCompatActivity {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem menuItem) {
                                     tempLernerImage.setImageResource(R.drawable.learner_orange);
-                                    gradeArrayList.get(tempGradeId).setGrade(2);
+                                    gradeArrayList.get(tempGradeId).setGrade((byte) 2);
                                     return true;
                                 }
                             });
@@ -300,7 +336,7 @@ public class LessonActivity extends AppCompatActivity {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem menuItem) {
                                     tempLernerImage.setImageResource(R.drawable.learner_yellow);
-                                    gradeArrayList.get(tempGradeId).setGrade(3);
+                                    gradeArrayList.get(tempGradeId).setGrade((byte) 3);
                                     return true;
                                 }
                             });
@@ -308,7 +344,7 @@ public class LessonActivity extends AppCompatActivity {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem menuItem) {
                                     tempLernerImage.setImageResource(R.drawable.learner_lime);
-                                    gradeArrayList.get(tempGradeId).setGrade(4);
+                                    gradeArrayList.get(tempGradeId).setGrade((byte) 4);
                                     return true;
                                 }
                             });
@@ -316,10 +352,29 @@ public class LessonActivity extends AppCompatActivity {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem menuItem) {
                                     tempLernerImage.setImageResource(R.drawable.learner_green);
-                                    gradeArrayList.get(tempGradeId).setGrade(5);
+                                    gradeArrayList.get(tempGradeId).setGrade((byte) 5);
                                     return true;
                                 }
                             });
+                            if (gradeArrayList.get(tempGradeId).getGradesCount() != 2 && gradeArrayList.get(tempGradeId).getGrade() != 0) {
+
+                                contextMenu.add(0, 6, 0, "новая оценка").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_gray);
+                                        switch (gradeArrayList.get(tempGradeId).getGradesCount()) {
+                                            case 0:
+                                                grade1Text.setText("" + gradeArrayList.get(tempGradeId).getGrade());
+                                                break;
+                                            case 1:
+                                                grade2Text.setText("" + gradeArrayList.get(tempGradeId).getGrade());
+                                                break;
+                                        }
+                                        gradeArrayList.get(tempGradeId).nextGrade();
+                                        return true;
+                                    }
+                                });
+                            }
                         }
                     };
                     tempLernerImage.setOnCreateContextMenuListener(onCreateContextMenuListener);
@@ -337,8 +392,10 @@ public class LessonActivity extends AppCompatActivity {
                 }
                 Log.i("TeachersApp", "LessonActivity!!! " + learnerId);
 
+
+                gradeLearnerPlaceOut.addView(tempPlaceLayout, tempPlaceLayoutParams);
                 //добавление места в парту
-                tempRelativeLayoutDesk.addView(tempPlaceLayout, tempRelativeLayoutPlaceParams);
+                tempRelativeLayoutDesk.addView(gradeLearnerPlaceOut, tempRelativeLayoutPlaceParams);
             }
             placeCursor.close();
 
@@ -369,23 +426,41 @@ public class LessonActivity extends AppCompatActivity {
 
 class LearnerAndGrade {
     private long learnerId;
-    private long grade;
+    private byte gradesCount = 0;
+    private byte[] grade = new byte[3];
 
-    LearnerAndGrade(long learnerId, long grade) {
+
+    LearnerAndGrade(long learnerId) {
         this.learnerId = learnerId;
-        this.grade = grade;
     }
 
     long getLearnerId() {
         return learnerId;
     }
 
-    long getGrade() {
-        return grade;
+    byte getGrade() {
+        return grade[gradesCount];
     }
 
-    void setGrade(long grade) {
-        this.grade = grade;
+    byte getRawGrade(int i) {
+        if (i >= 0 && i <= 2) {
+            return grade[i];
+        }
+        return grade[0];
+    }
+
+    void setGrade(byte grade) {
+        this.grade[gradesCount] = grade;
+    }
+
+    void nextGrade() {
+        if (gradesCount != 2) {
+            gradesCount++;
+        }
+    }
+
+    public byte getGradesCount() {
+        return gradesCount;
     }
 }
 
