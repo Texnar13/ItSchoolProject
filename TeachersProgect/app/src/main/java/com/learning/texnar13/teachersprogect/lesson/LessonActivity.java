@@ -224,13 +224,13 @@ public class LessonActivity extends AppCompatActivity {
                 final TextView grade1Text = new TextView(this);
                 grade1Text.setTextColor(Color.WHITE);
                 grade1Text.setTextSize(multiplier * 10);
-                grade1Text.setText("-");
+                grade1Text.setText("");
 
 
                 final TextView grade2Text = new TextView(this);
                 grade2Text.setTextColor(Color.WHITE);
                 grade2Text.setTextSize(multiplier * 10);
-                grade2Text.setText("-");
+                grade2Text.setText("");
 
                 RelativeLayout.LayoutParams grade1TextParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -308,56 +308,68 @@ public class LessonActivity extends AppCompatActivity {
                     View.OnCreateContextMenuListener onCreateContextMenuListener = new View.OnCreateContextMenuListener() {
                         @Override
                         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-                            contextMenu.add(0, 0, 0, "нет оценки").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    tempLernerImage.setImageResource(R.drawable.learner_gray);
-                                    gradeArrayList.get(tempGradeId).setGrade((byte) 0);
-                                    return true;
-                                }
-                            });
-                            contextMenu.add(0, 1, 0, "1").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    tempLernerImage.setImageResource(R.drawable.learner_red);
-                                    gradeArrayList.get(tempGradeId).setGrade((byte) 1);
-                                    return true;
-                                }
-                            });
-                            contextMenu.add(0, 2, 0, "2").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    tempLernerImage.setImageResource(R.drawable.learner_orange);
-                                    gradeArrayList.get(tempGradeId).setGrade((byte) 2);
-                                    return true;
-                                }
-                            });
-                            contextMenu.add(0, 3, 0, "3").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    tempLernerImage.setImageResource(R.drawable.learner_yellow);
-                                    gradeArrayList.get(tempGradeId).setGrade((byte) 3);
-                                    return true;
-                                }
-                            });
-                            contextMenu.add(0, 4, 0, "4").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    tempLernerImage.setImageResource(R.drawable.learner_lime);
-                                    gradeArrayList.get(tempGradeId).setGrade((byte) 4);
-                                    return true;
-                                }
-                            });
-                            contextMenu.add(0, 5, 0, "5").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    tempLernerImage.setImageResource(R.drawable.learner_green);
-                                    gradeArrayList.get(tempGradeId).setGrade((byte) 5);
-                                    return true;
-                                }
-                            });
-                            if (gradeArrayList.get(tempGradeId).getGradesCount() != 2 && gradeArrayList.get(tempGradeId).getGrade() != 0) {
 
+                            if (gradeArrayList.get(tempGradeId).getGrade() != 0) {
+                                contextMenu.add(0, 0, 0, "нет оценки").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_gray);
+                                        gradeArrayList.get(tempGradeId).setGrade((byte) 0);
+                                        return true;
+                                    }
+                                });
+                            }
+                            if (gradeArrayList.get(tempGradeId).getGrade() != 1) {
+                                contextMenu.add(0, 1, 0, "1").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_red);
+                                        gradeArrayList.get(tempGradeId).setGrade((byte) 1);
+                                        return true;
+                                    }
+                                });
+                            }
+                            if (gradeArrayList.get(tempGradeId).getGrade() != 2) {
+                                contextMenu.add(0, 2, 0, "2").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_orange);
+                                        gradeArrayList.get(tempGradeId).setGrade((byte) 2);
+                                        return true;
+                                    }
+                                });
+                            }
+                            if (gradeArrayList.get(tempGradeId).getGrade() != 3) {
+                                contextMenu.add(0, 3, 0, "3").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_yellow);
+                                        gradeArrayList.get(tempGradeId).setGrade((byte) 3);
+                                        return true;
+                                    }
+                                });
+                            }
+                            if (gradeArrayList.get(tempGradeId).getGrade() != 4) {
+                                contextMenu.add(0, 4, 0, "4").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_lime);
+                                        gradeArrayList.get(tempGradeId).setGrade((byte) 4);
+                                        return true;
+                                    }
+                                });
+                            }
+                            if (gradeArrayList.get(tempGradeId).getGrade() != 5) {
+                                contextMenu.add(0, 5, 0, "5").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_green);
+                                        gradeArrayList.get(tempGradeId).setGrade((byte) 5);
+                                        return true;
+                                    }
+                                });
+                            }
+                            if (gradeArrayList.get(tempGradeId).getGradesCount() != 2 && gradeArrayList.get(tempGradeId).getGrade() != 0) {
                                 contextMenu.add(0, 6, 0, "новая оценка").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
@@ -459,7 +471,7 @@ class LearnerAndGrade {
         }
     }
 
-    public byte getGradesCount() {
+    byte getGradesCount() {
         return gradesCount;
     }
 }

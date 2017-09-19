@@ -35,7 +35,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
     int month = -1;
     int year = -1;
 
-    static LessonTimePeriod[] lessonStandartTimePeriods = new LessonTimePeriod[8];
+    static LessonTimePeriod[] lessonStandardTimePeriods = new LessonTimePeriod[9];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +113,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
         table.removeAllViews();
-        String tableHeadStrings[] = {"No", "время", "название ур.", "класс", "кабинет", "доп."};
+        String tableHeadStrings[] = {"№", "время", "предмет", "класс", "каб.", "доп."};
 
         //шапка таблицы
         {
@@ -126,7 +126,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 tableHeadTexts[i].setTextSize(20);
                 tableHeadTexts[i].setTextColor(Color.BLACK);
                 tableHeadTexts[i].setGravity(Gravity.CENTER);
-                tableHeadTexts[i].setBackgroundColor(Color.WHITE);
+                tableHeadTexts[i].setBackgroundColor(Color.parseColor("#e4ea7e"));
                 //параметры для клеток
                 RelativeLayout.LayoutParams tableRelativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
                 tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -135,13 +135,13 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_START);
                 tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                tableRelativeParams.rightMargin = (int) pxFromDp(3f);//10
-                tableRelativeParams.bottomMargin = (int) pxFromDp(3f);//10
+                tableRelativeParams.rightMargin = (int) pxFromDp(1f);//10
+                tableRelativeParams.bottomMargin = (int) pxFromDp(1f);//10
                 tableRelativeParams.leftMargin = 0;
-                tableRelativeParams.topMargin = 0;
+                tableRelativeParams.topMargin = (int) pxFromDp(1f);
                 //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
                 RelativeLayout relativeLayout = new RelativeLayout(this);
-                relativeLayout.setBackgroundColor(Color.GRAY);
+                relativeLayout.setBackgroundColor(Color.parseColor("#fdffdf"));
                 relativeLayout.addView(tableHeadTexts[i], tableRelativeParams);
                 head.addView(relativeLayout, RelativeLayout.LayoutParams.MATCH_PARENT, (int) pxFromDp(50f));
 
@@ -152,16 +152,17 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
 
         //тело таблицы
-        String timePeriodsString[] = {"8:30-9:15", "9:30-10:15", "10:30-11:15", "11:30-12:15", "12:25-13:10", "13:30-14:15", "14:25-15:10", "15:20-16:05"};
+        String timePeriodsString[] = {"8:30-9:15", "9:30-10:15", "10:30-11:15", "11:30-12:15", "12:25-13:10", "13:30-14:15", "14:25-15:10", "15:20-16:05", "внеурочное время"};
 
-        lessonStandartTimePeriods[0] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 8, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 9, 15));
-        lessonStandartTimePeriods[1] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 9, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 10, 15));
-        lessonStandartTimePeriods[2] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 10, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 11, 15));
-        lessonStandartTimePeriods[3] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 11, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 12, 15));
-        lessonStandartTimePeriods[4] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 12, 25), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 13, 10));
-        lessonStandartTimePeriods[5] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 13, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 14, 15));
-        lessonStandartTimePeriods[6] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 14, 25), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 15, 10));
-        lessonStandartTimePeriods[7] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 15, 20), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 16, 5));
+        lessonStandardTimePeriods[0] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 8, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 9, 15));
+        lessonStandardTimePeriods[1] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 9, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 10, 15));
+        lessonStandardTimePeriods[2] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 10, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 11, 15));
+        lessonStandardTimePeriods[3] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 11, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 12, 15));
+        lessonStandardTimePeriods[4] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 12, 25), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 13, 10));
+        lessonStandardTimePeriods[5] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 13, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 14, 15));
+        lessonStandardTimePeriods[6] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 14, 25), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 15, 10));
+        lessonStandardTimePeriods[7] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 15, 20), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 16, 5));
+        lessonStandardTimePeriods[8] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 16, 5), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 23, 59));
 
 
 //        Calendar calendarStartTime[] = {
@@ -185,7 +186,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
 //                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 16, 5)
 //        };
 
-        TableRow tableRows[] = new TableRow[8];
+        TableRow tableRows[] = new TableRow[9];
         for (int i = 0; i < tableRows.length; i++) {
             tableRows[i] = new TableRow(this);
             boolean isLessonReady = false;
@@ -196,7 +197,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
             String lessonClass;
             String lessonCabinet;
             {
-                ArrayList<Long> arrayList = db.getLessonsAttitudesIdByTimePeriod(lessonStandartTimePeriods[i].calendarStartTime, lessonStandartTimePeriods[i].calendarEndTime);
+                ArrayList<Long> arrayList = db.getLessonsAttitudesIdByTimePeriod(lessonStandardTimePeriods[i].calendarStartTime, lessonStandardTimePeriods[i].calendarEndTime);
                 if (arrayList.size() != 0) {
                     lessonAttitudeId = arrayList.get(0);
 
@@ -253,9 +254,10 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 } else {
                     bodyText.setTextColor(Color.BLACK);
                     if (isLessonReady) {
-                        bodyText.setBackgroundColor(Color.WHITE);
+                        bodyText.setBackgroundColor(Color.parseColor("#fdffdf"));//светло салатовый
                     } else {
-                        bodyText.setBackgroundColor(Color.RED);
+
+                        bodyText.setBackgroundColor(Color.parseColor("#ff7700"));//оранжевый
                     }
                 }
                 {//обработка нажатия
@@ -266,8 +268,8 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     //создание/редактирование урока
                     final Intent intentForLessonEditor = new Intent(this, LessonRedactorActivity.class);
                     intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, lessonAttitudeId);
-                    intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_START_TIME, lessonStandartTimePeriods[i].calendarStartTime.getTime().getTime());
-                    intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_END_TIME, lessonStandartTimePeriods[i].calendarEndTime.getTime().getTime());
+                    intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_START_TIME, lessonStandardTimePeriods[i].calendarStartTime.getTime().getTime());
+                    intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_END_TIME, lessonStandardTimePeriods[i].calendarEndTime.getTime().getTime());
 
 
                     //начать урок
@@ -313,9 +315,9 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 bodyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 bodyParams.addRule(RelativeLayout.ALIGN_PARENT_START);
                 bodyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                bodyParams.rightMargin = (int) pxFromDp(3f);//10
-                bodyParams.bottomMargin = (int) pxFromDp(1.5f);//5
+                bodyParams.rightMargin = (int) pxFromDp(1f);//10
                 bodyParams.leftMargin = 0;
+                bodyParams.bottomMargin = 0;//5
                 bodyParams.topMargin = 0;
 
 
@@ -349,10 +351,12 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 calendar.setTime(new Date());
 
                 RelativeLayout relativeLayout = new RelativeLayout(this);
-                if (calendar.getTime().getTime() >= lessonStandartTimePeriods[i].calendarStartTime.getTime().getTime() && calendar.getTime().getTime() <= lessonStandartTimePeriods[i].calendarEndTime.getTime().getTime()) {
+                if (calendar.getTime().getTime() >= lessonStandardTimePeriods[i].calendarStartTime.getTime().getTime() && calendar.getTime().getTime() <= lessonStandardTimePeriods[i].calendarEndTime.getTime().getTime()) {
                     relativeLayout.setBackgroundColor(Color.RED);
+                    bodyParams.bottomMargin = (int) pxFromDp(3f);//5
+                    bodyParams.topMargin = (int) pxFromDp(3f);
                 } else
-                    relativeLayout.setBackgroundColor(Color.GRAY);
+                    relativeLayout.setBackgroundColor(Color.parseColor("#fdffdf"));
                 relativeLayout.addView(bodyText, bodyParams);
                 tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, (int) pxFromDp(50f));//200
             }

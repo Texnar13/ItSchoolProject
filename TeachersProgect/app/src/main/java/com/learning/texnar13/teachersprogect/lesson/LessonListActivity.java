@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -24,12 +25,15 @@ public class LessonListActivity extends AppCompatActivity {
 
     long[] learnersIdArray;
     long[][] gradeArray = new long[3][];
+    Toast toast;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.lesson_list_menu, menu);
         return true;
     }
+
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -49,6 +53,7 @@ public class LessonListActivity extends AppCompatActivity {
                     if (gradeArray[2][i] != 0) {
                         db.createGrade(learnersIdArray[i], gradeArray[2][i], 1);
                     }
+                    toast.show();
                 }
                 finish();
                 return true;
@@ -61,6 +66,8 @@ public class LessonListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        toast = Toast.makeText(this, "все оценки успешно сохранены!", Toast.LENGTH_LONG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_list);
 

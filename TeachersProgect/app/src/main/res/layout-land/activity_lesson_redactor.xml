@@ -10,179 +10,180 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/activity_lesson_redactor_title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="класс"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Button" />
-
-                <Spinner
-                    android:id="@+id/activity_lesson_redactor_class_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="кабинет"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Button" />
-
-                <Spinner
-                    android:id="@+id/activity_lesson_redactor_cabinet_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
-
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/activity_lesson_redactor_seating_state"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/activity_lesson_redactor_seating_redactor_button"
-                    android:layout_toStartOf="@+id/activity_lesson_redactor_seating_redactor_button"
-                    android:gravity="center"
-                    android:text="TextView"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                <Button
-                    android:id="@+id/activity_lesson_redactor_seating_redactor_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:text="редактировать" />
-            </RelativeLayout>
-        </LinearLayout>
+            android:gravity="center"
+            android:text="TextView" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="2"
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="center"
+                android:text="класс"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <Spinner
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/activity_lesson_redactor_class_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="horizontal">
+
+            <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="урок"
-                android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+                android:gravity="center"
+                android:text="предмет"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <Spinner
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
                 android:id="@+id/activity_lesson_redactor_lesson_name_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="кабинет"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <Spinner
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/activity_lesson_redactor_cabinet_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
                     android:text="Время:"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <CheckBox
-                    android:id="@+id/activity_lesson_redactor_time_check_box"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="своё время" />
+                <LinearLayout
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/activity_lesson_redactor_time_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/activity_lesson_redactor_time_layout"
+            <CheckBox
+                android:id="@+id/activity_lesson_redactor_time_check_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:text="своё время" />
 
-            </LinearLayout>
         </LinearLayout>
+
+        <Button
+            android:id="@+id/activity_lesson_redactor_seating_redactor_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="2"
+            android:text="редактировать рассадку" />
+
+        <TextView
+            android:id="@+id/activity_lesson_redactor_seating_state"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/activity_lesson_redactor_seating_redactor_button"
+            android:layout_toStartOf="@+id/activity_lesson_redactor_seating_redactor_button"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="TextView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <LinearLayout
             android:id="@+id/activity_lesson_redactor_buttons_out"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="2"
             android:orientation="horizontal">
 
             <Button
-                android:layout_gravity="center"
                 android:id="@+id/activity_lesson_redactor_remove_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:text="удалить урок" />
+
             <Button
-                android:layout_gravity="center"
                 android:id="@+id/activity_lesson_redactor_back_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:text="отмена" />
 
             <Button
-                android:layout_gravity="center"
                 android:id="@+id/activity_lesson_redactor_save_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:text="сохранить" />
 
 
         </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

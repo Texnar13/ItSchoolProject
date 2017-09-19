@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -84,6 +85,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
         timeOut = (LinearLayout) findViewById(R.id.activity_lesson_redactor_time_layout);
         CheckBox timeCheckBox = (CheckBox) findViewById(R.id.activity_lesson_redactor_time_check_box);
         //общие
+        TextView title = (TextView) findViewById(R.id.activity_lesson_redactor_title);
         LinearLayout buttonsOut = (LinearLayout) findViewById(R.id.activity_lesson_redactor_buttons_out);
         Button removeButton = (Button) findViewById(R.id.activity_lesson_redactor_remove_button);
         Button backButton = (Button) findViewById(R.id.activity_lesson_redactor_back_button);
@@ -92,12 +94,11 @@ public class LessonRedactorActivity extends AppCompatActivity {
 
         lessonTime = new LessonTimePeriod(new GregorianCalendar(), new GregorianCalendar());
         if (attitudeId == -1) {
-            setTitle("создание урока");
+            title.setText("Создание урока");
             lessonTime.calendarStartTime.setTime(new Date(getIntent().getLongExtra(LESSON_START_TIME, 1)));
             lessonTime.calendarEndTime.setTime(new Date(getIntent().getLongExtra(LESSON_END_TIME, 1)));
-
         } else {
-            setTitle("редактирование урока");
+            title.setText("Редактирование урока");
 
             Cursor attitudeCursor = db.getLessonAttitudeById(attitudeId);
             attitudeCursor.moveToFirst();
@@ -293,17 +294,14 @@ public class LessonRedactorActivity extends AppCompatActivity {
             Spinner spinner = new Spinner(this);
 
             //массив с calendar
-            final String textTime[] = new String[ScheduleDayActivity.lessonStandartTimePeriods.length];
+            final String textTime[] = new String[ScheduleDayActivity.lessonStandardTimePeriods.length];
             SimpleDateFormat textTimeFormat = new SimpleDateFormat("H.m");
             for (int i = 0; i < textTime.length; i++) {
                 textTime[i] = "  " + (i + 1) + " урок " +
-                        textTimeFormat.format(ScheduleDayActivity.lessonStandartTimePeriods[i].calendarStartTime.getTime()) + "-" +
+                        textTimeFormat.format(ScheduleDayActivity.lessonStandardTimePeriods[i].calendarStartTime.getTime()) + "-" +
 
-                        textTimeFormat.format(ScheduleDayActivity.lessonStandartTimePeriods[i].calendarEndTime.getTime()) + "  ";
+                        textTimeFormat.format(ScheduleDayActivity.lessonStandardTimePeriods[i].calendarEndTime.getTime()) + "  ";
             }
-
-
-
 
 
             final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, textTime);
@@ -313,7 +311,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
 
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    lessonTime = ScheduleDayActivity.lessonStandartTimePeriods[i];
+                    lessonTime = ScheduleDayActivity.lessonStandardTimePeriods[i];
                     Log.i("TeachersApp", "chooseStandartLesson :" + textTime[i]);
                 }
 
@@ -323,24 +321,25 @@ public class LessonRedactorActivity extends AppCompatActivity {
                 }
             });
             //ставим выбранное время
-            for (int i = 0; i < ScheduleDayActivity.lessonStandartTimePeriods.length; i++) {
+            for (int i = 0; i < ScheduleDayActivity.lessonStandardTimePeriods.length; i++) {
                 if (lessonTime.calendarStartTime.get(Calendar.HOUR_OF_DAY) ==
-                        ScheduleDayActivity.lessonStandartTimePeriods[i].calendarStartTime.get(Calendar.HOUR_OF_DAY) &&
+                        ScheduleDayActivity.lessonStandardTimePeriods[i].calendarStartTime.get(Calendar.HOUR_OF_DAY) &&
                         lessonTime.calendarStartTime.get(Calendar.MINUTE) ==
-                                ScheduleDayActivity.lessonStandartTimePeriods[i].calendarStartTime.get(Calendar.MINUTE) &&
+                                ScheduleDayActivity.lessonStandardTimePeriods[i].calendarStartTime.get(Calendar.MINUTE) &&
 
                         lessonTime.calendarEndTime.get(Calendar.HOUR_OF_DAY) ==
-                                ScheduleDayActivity.lessonStandartTimePeriods[i].calendarEndTime.get(Calendar.HOUR_OF_DAY) &&
+                                ScheduleDayActivity.lessonStandardTimePeriods[i].calendarEndTime.get(Calendar.HOUR_OF_DAY) &&
                         lessonTime.calendarEndTime.get(Calendar.MINUTE) ==
-                                ScheduleDayActivity.lessonStandartTimePeriods[i].calendarEndTime.get(Calendar.MINUTE)
+                                ScheduleDayActivity.lessonStandardTimePeriods[i].calendarEndTime.get(Calendar.MINUTE)
                         ) {
-                    Log.i("TeachersApp", "chooseTime :" + (i+1));
+                    Log.i("TeachersApp", "chooseTime :" + (i + 1));
                     spinner.setSelection(i);
                 }
             }
 
 
             LinearLayout.LayoutParams spinnerTimeParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            spinnerTimeParams.gravity = Gravity.CENTER;
 
             timeOut.addView(spinner, spinnerTimeParams);
         } else {
@@ -349,7 +348,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
         }
     }
 
-    public void createLesson(long classId, String name) {
+    void createLesson(long classId, String name) {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         db.createLesson(name, classId);
         availableLessonsOut(classCabinetId.classId);
@@ -390,7 +389,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
             lessonsId[i - 1] = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID));
             stringLessons[i] = cursor.getString(cursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME));
         }
-        stringLessons[stringLessons.length - 1] = "+ создать урок?";
+        stringLessons[stringLessons.length - 1] = "+ создать предмет для этого класса?";
         stringLessons[0] = "выберите...";
         cursor.close();
         db.close();
@@ -491,6 +490,7 @@ class CustomAdapter extends ArrayAdapter {
             convertView = View.inflate(context, textViewResourceId, null);
         //if (flag || isFirstElementVisible) {
         TextView tv = (TextView) convertView;
+        tv.setGravity(Gravity.CENTER);
         tv.setBackgroundColor(Color.WHITE);
         tv.setText(objects[position]);
         //}

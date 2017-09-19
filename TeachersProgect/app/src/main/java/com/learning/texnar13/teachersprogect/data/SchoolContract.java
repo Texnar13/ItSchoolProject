@@ -56,7 +56,7 @@ public final class SchoolContract {
         public static final String NAME_TABLE_LEARNERS_GRADES = "learnersGrades";
         public static final String KEY_GRADE_ID = BaseColumns._ID;
         public static final String COLUMN_GRADE = "grade";
-        public static final String COLUMN_DATE = "date";
+        public static final String KEY_LESSON_ID = "lessonId";
         public static final String KEY_LEARNER_ID = "learnerId";
     }
 

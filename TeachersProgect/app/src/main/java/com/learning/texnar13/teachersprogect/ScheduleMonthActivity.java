@@ -187,14 +187,14 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         }
 
         //выводим ряд дни недели
-        String week[] = {"Пн.", "Вт.", "Ср.", "Чт.", "Пт.", "Сб.", "Вс."};
+        String week[] = {"ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"};
         for (int i = 0; i < 7; i++) {
             TextView day = new TextView(this);
             day.setText(week[i]);
-            day.setTextSize(20);
+            day.setTextSize(15);
             day.setTextColor(Color.BLACK);
             day.setGravity(Gravity.CENTER);
-            day.setBackgroundColor(Color.LTGRAY);
+            day.setBackgroundColor(Color.parseColor("#e4ea7e"));
             weekLinearRows[0].addView(
                     day,
                     new LinearLayout.LayoutParams(
@@ -216,9 +216,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 day.setTextSize(20);
                 day.setTextColor(Color.BLACK);
                 if (weekDay == 5 || weekDay == 6) {
-                    day.setBackgroundColor(Color.LTGRAY);
+                    day.setBackgroundColor(Color.parseColor("#fbffb9"));
                 } else
-                    day.setBackgroundColor(Color.WHITE);
+                    //day.setBackgroundColor(Color.WHITE);
+                    day.setBackgroundColor(Color.parseColor("#fdffdf"));
                 day.setGravity(Gravity.CENTER);
                 LinearLayout linearLayout = new LinearLayout(this);
                 linearLayout.setGravity(Gravity.CENTER);
@@ -264,7 +265,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                         );
                         db.close();
                         if (lessonsAttitudesId.size() != 0) {
-                            day.setTextColor(Color.GREEN);
+                            day.setTextSize(30);
+                            day.setTextColor(Color.parseColor("#469500"));
                         }
                     }
                     //выделяем текущую дату
@@ -274,7 +276,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                                     currentCalendar.get(Calendar.MONTH) &&
                             dayForIntent == currDay) {
                         linearLayout.setBackgroundColor(Color.RED);
-                        dayParams.setMargins((int) pxFromDp(0.25f), (int) pxFromDp(2.08f), (int) pxFromDp(0.25f), (int) pxFromDp(2.08f));
+                        dayParams.setMargins((int) pxFromDp(2.08f), (int) pxFromDp(2.08f), (int) pxFromDp(2.08f), (int) pxFromDp(2.08f));
                     }
                     monthDay++;
                 }

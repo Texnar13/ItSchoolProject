@@ -93,7 +93,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             sql = "CREATE TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ( " + SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER, " +
                     SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
-                    SchoolContract.TableLearnersGrades.COLUMN_DATE + " VARCHAR, " +
+                    SchoolContract.TableLearnersGrades.KEY_LESSON_ID + " INTEGER, " +
                     "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); ";
             db.execSQL(sql);
 //уроки
@@ -466,15 +466,15 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
 
     //оценки учеников
-    public long createGrade(long learnerId, long grade, long date) {
+    public long createGrade(long learnerId, long grade, long lessonId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableLearnersGrades.KEY_LEARNER_ID, learnerId);
         values.put(SchoolContract.TableLearnersGrades.COLUMN_GRADE, grade);
-        values.put(SchoolContract.TableLearnersGrades.COLUMN_DATE, date);
+        values.put(SchoolContract.TableLearnersGrades.KEY_LESSON_ID, lessonId);
         long temp = db.insert(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, values);//-1 = ошибка ввода
         db.close();
-        Log.i("DBOpenHelper", "createGrade returnId = " + temp + " learnerId= " + learnerId + " grade= " + grade + " date= " + date);
+        Log.i("DBOpenHelper", "createGrade returnId = " + temp + " learnerId= " + learnerId + " grade= " + grade + " lessonId= " + lessonId);
         return temp;
     }
 

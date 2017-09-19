@@ -2,5 +2,6 @@
     <string name="app_name">TeachersProject</string>
     <string name="title_activity_list_of">ListOfActivity</string>
     <string name="title_activity_lesson">Lesson</string>
+    <string name="lesson_list_menu_save_text">сохранить</string>
 
 </resources>
