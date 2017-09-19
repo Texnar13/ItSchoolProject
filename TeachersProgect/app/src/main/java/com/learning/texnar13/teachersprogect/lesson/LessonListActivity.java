@@ -90,7 +90,7 @@ public class LessonListActivity extends AppCompatActivity {
             textViewWithName.setGravity(Gravity.CENTER_HORIZONTAL);
             textViewWithName.setTextColor(Color.GRAY);
             if (flag) {
-                textViewWithName.setBackgroundColor(Color.parseColor("#d8d5ff"));
+                textViewWithName.setBackgroundColor(Color.parseColor("#fbe2e7"));
             }
             textViewWithName.setTextSize(30F);
             Cursor currentLearner = db.getLearner(learnersIdArray[i]);
@@ -105,7 +105,7 @@ public class LessonListActivity extends AppCompatActivity {
                 TextView textViewWisGrade = new TextView(getApplicationContext());//оценка
                 textViewWisGrade.setTextColor(Color.GRAY);
                 if (!flag) {
-                    textViewWisGrade.setBackgroundColor(Color.parseColor("#d8d5ff"));
+                    textViewWisGrade.setBackgroundColor(Color.parseColor("#fbe2e7"));
                     flag = true;
                 } else {
                     flag = false;

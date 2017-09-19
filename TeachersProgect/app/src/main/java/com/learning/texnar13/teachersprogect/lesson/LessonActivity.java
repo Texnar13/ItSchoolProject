@@ -196,7 +196,7 @@ public class LessonActivity extends AppCompatActivity {
         while (desksCursor.moveToNext()) {
             //создание парты
             RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);
-            tempRelativeLayoutDesk.setBackgroundColor(Color.parseColor("#bce4af00"));
+            tempRelativeLayoutDesk.setBackgroundColor(Color.GRAY);
 
             RelativeLayout.LayoutParams tempRelativeLayoutDeskParams = new RelativeLayout.LayoutParams((int) dpFromPx(80 * multiplier), (int) dpFromPx(40 * multiplier));
             tempRelativeLayoutDeskParams.leftMargin = (int) dpFromPx(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * multiplier);
@@ -212,7 +212,7 @@ public class LessonActivity extends AppCompatActivity {
 
                 // layout с учеником и оценками
                 RelativeLayout gradeLearnerPlaceOut = new RelativeLayout(this);
-                gradeLearnerPlaceOut.setBackgroundColor(Color.parseColor("#bc8e6d02"));
+                gradeLearnerPlaceOut.setBackgroundColor(Color.LTGRAY);
 
                 RelativeLayout.LayoutParams tempRelativeLayoutPlaceParams = new RelativeLayout.LayoutParams((int) dpFromPx((40 - 2) * multiplier), (int) dpFromPx((40 - 2) * multiplier));
                 tempRelativeLayoutPlaceParams.leftMargin = (int) dpFromPx((1 + (40 * (placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1))) * multiplier);

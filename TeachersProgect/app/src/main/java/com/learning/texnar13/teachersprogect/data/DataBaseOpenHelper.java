@@ -501,7 +501,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentName = new ContentValues();
         contentName.put(SchoolContract.TableLessons.COLUMN_NAME, name);
-        //todo вместо tableLessons строкой выше стояло tableSchedules я заменил правильно ли это? надо проверить
         int answer = 0;
         String stringLessonsId = "";
         for (int i = 0; i < lessonId.size(); i++) {
@@ -514,9 +513,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return answer;
     }
 
-    public int setLessonParameters(long lessonId, String lessonName, long classId
-                                   //,long cabinetId
-    ) {
+    public int setLessonParameters(long lessonId, String lessonName, long classId) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentName = new ContentValues();
         contentName.put(SchoolContract.TableLessons.COLUMN_NAME, lessonName);

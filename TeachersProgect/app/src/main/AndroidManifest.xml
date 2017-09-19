@@ -27,7 +27,8 @@
         <activity android:name=".SeatingRedactorActivity" />
         <activity android:name=".ScheduleMonthActivity" />
         <activity android:name=".ScheduleDayActivity" />
-        <activity android:name=".LessonRedactorActivity"></activity>
+        <activity android:name=".LessonRedactorActivity" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

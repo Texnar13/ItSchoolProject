@@ -155,7 +155,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
             classesCursor.close();
 
             final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, stringClasses);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
             classSpinner.setAdapter(adapter);
             classSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -164,7 +164,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
 
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                    availableLessonsOut(classesId[pos]);
+                    availableLessonsOut(classesId[pos], 0);
                     Log.i("TeachersApp", "LessonRedactorActivity - class spinner onItemSelected pos =" + pos + " id =" + classesId[pos]);
                     //classSpinner.setSelection(pos);
                     classCabinetId.classId = classesId[pos];
@@ -194,7 +194,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
             cabinetsCursor.close();
 
             final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, stringCabinets);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
             cabinetSpinner.setAdapter(adapter);
             cabinetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -305,14 +305,14 @@ public class LessonRedactorActivity extends AppCompatActivity {
 
 
             final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, textTime);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
             spinner.setAdapter(adapter);
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     lessonTime = ScheduleDayActivity.lessonStandardTimePeriods[i];
-                    Log.i("TeachersApp", "chooseStandartLesson :" + textTime[i]);
+                    Log.i("TeachersApp", "chooseStandardLesson :" + textTime[i]);
                 }
 
                 @Override
@@ -348,13 +348,6 @@ public class LessonRedactorActivity extends AppCompatActivity {
         }
     }
 
-    void createLesson(long classId, String name) {
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        db.createLesson(name, classId);
-        availableLessonsOut(classCabinetId.classId);
-        db.close();
-    }
-
     private class ClassCabinet {
         long classId;
         long cabinetId;
@@ -365,38 +358,44 @@ public class LessonRedactorActivity extends AppCompatActivity {
         }
     }
 
+    //текст рассадки
     void seatingTextUpdate(ClassCabinet classCabinet) {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         ArrayList<Long> arrayList = db.getNotPutLearnersIdByCabinetIdAndClassId(classCabinet.cabinetId, classCabinet.classId);
         if (arrayList.size() == 0) {
-            seatingStateText.setText("ок");
-            seatingStateText.setTextColor(Color.GREEN);
+            seatingStateText.setText("ученики рассажены в этом кабинете");
+            seatingStateText.setTextColor(Color.parseColor("#469500"));
         } else {
             seatingStateText.setText("ученики не рассажены!");
-            seatingStateText.setTextColor(Color.RED);
+            seatingStateText.setTextColor(Color.parseColor("#ff7700"));
         }
     }
 
-    void availableLessonsOut(long classViewId) {
+    //вывод предметов
+    void availableLessonsOut(final long classViewId, final int position) {
 
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         Cursor cursor = db.getLessonsByClassId(classViewId);
-        final String[] stringLessons = new String[cursor.getCount() + 2];
+        final String[] stringLessons = new String[cursor.getCount() + 3];
+        final String[] stringOnlyLessons = new String[cursor.getCount()];
         final long[] lessonsId = new long[cursor.getCount()];
         //Log.i("TeachersApp", "LessonRedactorActivity - " + stringLessons.length);
-        for (int i = 1; i < stringLessons.length - 1; i++) {
+        for (int i = 1; i < stringLessons.length - 2; i++) {
             cursor.moveToNext();
             lessonsId[i - 1] = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID));
             stringLessons[i] = cursor.getString(cursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME));
+            stringOnlyLessons[i - 1] = stringLessons[i];
         }
-        stringLessons[stringLessons.length - 1] = "+ создать предмет для этого класса?";
-        stringLessons[0] = "выберите...";
+        stringLessons[stringLessons.length - 1] = "-  удалить предмет(ы)";
+        stringLessons[stringLessons.length - 2] = "+ создать предмет для этого класса";
+        stringLessons[0] = "выберите предмет:";
         cursor.close();
         db.close();
 
         final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, stringLessons);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
         lessonNameSpinner.setAdapter(adapter);
+        lessonNameSpinner.setSelection(position);
         lessonNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -406,9 +405,83 @@ public class LessonRedactorActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 Log.i("TeachersApp", "LessonRedactorActivity - availableLessonsOut onItemSelected " + pos);
                 if (stringLessons.length - 1 == pos) {
-                    //диалог создания урока
+                    Log.i("TeachersApp", "LessonRedactorActivity - remove lesson");
+                    DialogFragment removeDialog = new DialogFragment() {
+                        @Override
+                        public Dialog onCreateDialog(Bundle savedInstanceState) {
+                            final ArrayList<Integer> mSelectedItems = new ArrayList<>();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("удаление предметов")
+                                    .setMultiChoiceItems(stringOnlyLessons, null,
+                                            new DialogInterface.OnMultiChoiceClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which,
+                                                                    boolean isChecked) {
+                                                    if (isChecked) {
+                                                        // If the user checked the item, add it to the selected items
+                                                        mSelectedItems.add(which);
+                                                    } else if (mSelectedItems.contains(which)) {
+                                                        // Else, if the item is already in the array, remove it
+                                                        mSelectedItems.remove(Integer.valueOf(which));
+                                                    }
+                                                }
+                                            })
+                                    // Set the action buttons
+                                    .setPositiveButton("удалить", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dismiss();
+                                            ArrayList<Long> deleteList = new ArrayList<Long>(mSelectedItems.size());
+                                            for (int itemPoz : mSelectedItems) {
+                                                deleteList.add(lessonsId[itemPoz]);
+                                            }
+                                            db.deleteLessons(deleteList);
+                                            availableLessonsOut(classViewId, 0);
+                                        }
+                                    })
+                                    .setNegativeButton("отмена", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dismiss();
+                                            availableLessonsOut(classViewId, position);
+                                        }
+                                    });
+                            return builder.create();
+                        }
+                    };
+                    removeDialog.show(getFragmentManager(), "removeLessons");
+                } else if (stringLessons.length - 2 == pos) {
+                    //диалог создания предмета
                     Log.i("TeachersApp", "LessonRedactorActivity - new lesson");
-                    EnterLessonNameDialog lessonNameDialog = new EnterLessonNameDialog();
+                    DialogFragment lessonNameDialog = new DialogFragment() {
+                        @Override
+                        public Dialog onCreateDialog(Bundle savedInstanceState) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                            LinearLayout out = (LinearLayout) getActivity().getLayoutInflater().inflate(R.layout.activity_lesson_redactor_dialog_lesson_name, null);
+                            final EditText lessonNameEditText = (EditText) out.findViewById(R.id.activity_lesson_redactor_dialog_lesson_name_edit_text);
+
+                            builder.setTitle("добавление предмета");
+                            builder.setView(out)
+                                    .setPositiveButton("добавить", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            db.createLesson(lessonNameEditText.getText().toString(), classCabinetId.classId);
+                                            availableLessonsOut(classCabinetId.classId, stringLessons.length - 2);
+                                            dismiss();
+                                        }
+                                    })
+                                    .setNegativeButton("отмена", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            availableLessonsOut(classCabinetId.classId, position);
+                                            dismiss();
+
+                                        }
+                                    });
+
+                            return builder.create();
+                        }
+                    };
                     lessonNameDialog.show(getFragmentManager(), "createLesson");
                 } else if (pos != 0) {
                     Log.i("TeachersApp", "LessonRedactorActivity - chosen lesson id = " + lessonsId[pos - 1]);
@@ -425,46 +498,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
         //spinner.setSelection(2);//элемент по умолчанию
     }
 
-    class EnterLessonNameDialog extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            LinearLayout out = (LinearLayout) inflater.inflate(R.layout.activity_lesson_redactor_dialog_lesson_name, null);
-
-            final EditText lessonNameEditText = (EditText) out.findViewById(R.id.activity_lesson_redactor_dialog_lesson_name_edit_text);
-
-
-            builder.setTitle("добавление предмета");
-            builder.setView(out)
-                    .setPositiveButton("добавить", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            // sign in the user ...
-                            availableLessonsOut(classCabinetId.classId);
-                            createLesson(classCabinetId.classId, lessonNameEditText.getText().toString());
-                            dismiss();
-                        }
-                    })
-                    .setNegativeButton("отмена", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            availableLessonsOut(classCabinetId.classId);
-                            EnterLessonNameDialog.this.getDialog().cancel();
-
-                        }
-                    });
-
-            return builder.create();
-
-        }
-
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            super.onCancel(dialog);
-            availableLessonsOut(classCabinetId.classId);
-        }
-    }
 }
 
 class CustomAdapter extends ArrayAdapter {
@@ -491,7 +525,7 @@ class CustomAdapter extends ArrayAdapter {
         //if (flag || isFirstElementVisible) {
         TextView tv = (TextView) convertView;
         tv.setGravity(Gravity.CENTER);
-        tv.setBackgroundColor(Color.WHITE);
+        tv.setBackgroundColor(Color.parseColor("#e4ea7e"));//светло салатовый
         tv.setText(objects[position]);
         //}
         return convertView;

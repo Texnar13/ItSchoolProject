@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#dedede"
     android:orientation="vertical"
     tools:context="com.learning.texnar13.teachersprogect.LessonRedactorActivity">
 
 
     <LinearLayout
+        android:background="#fdffdf"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -17,6 +17,8 @@
             android:id="@+id/activity_lesson_redactor_title"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:textColor="#469500"
+            android:textSize="30dp"
             android:layout_weight="1"
             android:gravity="center"
             android:text="TextView" />
@@ -29,10 +31,12 @@
 
             <TextView
                 android:id="@+id/textView2"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="класс"
+                android:text="класс:"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <Spinner
@@ -51,10 +55,12 @@
 
             <TextView
                 android:id="@+id/textView3"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="предмет"
+                android:text="предмет:"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <Spinner
@@ -73,9 +79,11 @@
 
             <TextView
                 android:layout_width="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="кабинет"
+                android:text="кабинет:"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <Spinner
@@ -100,9 +108,11 @@
 
                 <TextView
                     android:layout_width="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="Время:"
+                    android:text="время:"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <LinearLayout
@@ -125,16 +135,6 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/activity_lesson_redactor_seating_redactor_button"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_weight="2"
-            android:text="редактировать рассадку" />
-
         <TextView
             android:id="@+id/activity_lesson_redactor_seating_state"
             android:layout_width="match_parent"
@@ -149,6 +149,17 @@
             android:text="TextView"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
+        <Button
+            android:id="@+id/activity_lesson_redactor_seating_redactor_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#e4ea7e"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="2"
+            android:text="редактировать рассадку" />
+
         <LinearLayout
             android:id="@+id/activity_lesson_redactor_buttons_out"
             android:layout_width="match_parent"
@@ -161,6 +172,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:background="#e4ea7e"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:text="удалить урок" />
@@ -170,6 +182,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:background="#e4ea7e"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:text="отмена" />
@@ -177,6 +190,9 @@
             <Button
                 android:id="@+id/activity_lesson_redactor_save_button"
                 android:layout_width="0dp"
+                android:background="#e4ea7e"
+                android:layout_marginLeft="3dp"
+                android:layout_marginStart="3dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_gravity="center"

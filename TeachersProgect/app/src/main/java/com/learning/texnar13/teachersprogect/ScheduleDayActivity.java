@@ -58,8 +58,16 @@ public class ScheduleDayActivity extends AppCompatActivity {
         final TableLayout table = (TableLayout) findViewById(R.id.schedule_day_table);
 
         final String months[] = {"Янв.", "Фев.", "Мар.", "Апр.", "Май", "Июнь", "Июль", "Авг.", "Сен.", "Окт.", "Ноя.", "Дек."};
-        final int monthCapacity[] = {31, 28,//високосный 29
-                31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        final int monthCapacity[];
+        if (year % 4 == 0 &&
+                year % 100 != 0 ||
+                year % 400 == 0) {
+            monthCapacity = new int[]{31, 29,//високосный
+                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        } else {
+            monthCapacity = new int[]{31, 28,//не високосный
+                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        }
         dateText.setText(day + " " + months[month]);
         dateText.setGravity(Gravity.CENTER);
 
@@ -162,7 +170,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
         lessonStandardTimePeriods[5] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 13, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 14, 15));
         lessonStandardTimePeriods[6] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 14, 25), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 15, 10));
         lessonStandardTimePeriods[7] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 15, 20), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 16, 5));
-        lessonStandardTimePeriods[8] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 16, 5), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 23, 59));
+        lessonStandardTimePeriods[8] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 16, 6), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 23, 59));
 
 
 //        Calendar calendarStartTime[] = {

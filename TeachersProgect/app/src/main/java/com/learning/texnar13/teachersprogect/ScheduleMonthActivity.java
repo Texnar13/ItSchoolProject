@@ -1,6 +1,11 @@
 package com.learning.texnar13.teachersprogect;
 
 import android.content.Intent;
+import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
+import android.gesture.Prediction;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 
@@ -20,11 +27,25 @@ import java.util.GregorianCalendar;
 
 public class ScheduleMonthActivity extends AppCompatActivity {
 
+    private GestureLibrary gestureLib;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_schedule_month);
+
+        GestureOverlayView gestureOverlayView = new GestureOverlayView(this);
+        View inflate = getLayoutInflater().inflate(R.layout.activity_schedule_month, null);
+        gestureOverlayView.addView(inflate);
+        gestureOverlayView.setGestureColor(Color.TRANSPARENT);//делаем невидимым
+        gestureOverlayView.setUncertainGestureColor(Color.TRANSPARENT);
+
+        gestureLib = GestureLibraries.fromRawResource(this, R.raw.gestures);
+        if (!gestureLib.load()) {
+            finish();
+            return;
+        }
+        setContentView(gestureOverlayView);
+        //setContentView(R.layout.activity_schedule_month);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
 
@@ -47,6 +68,49 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 months[currentCalendar.get(Calendar.MONTH)] +
                         " " + currentCalendar.get(Calendar.YEAR)
         );
+
+        //жесты
+        gestureOverlayView.addOnGesturePerformedListener(new GestureOverlayView.OnGesturePerformedListener() {
+            @Override
+            public void onGesturePerformed(GestureOverlayView gestureOverlayView, Gesture gesture) {
+                ArrayList<Prediction> predictions = gestureLib.recognize(gesture);
+                for (Prediction prediction : predictions) {
+                    if (prediction.score > 1.0) {
+                        switch (prediction.name) {
+                            case "forward_swipe":
+                                if ((changingCalendar.get(Calendar.MONTH)) == 11) {
+                                    changingCalendar.set(Calendar.MONTH, 0);
+                                    changingCalendar.set(Calendar.YEAR, changingCalendar.get(Calendar.YEAR) + 1);
+                                } else {
+                                    changingCalendar.set(Calendar.MONTH, changingCalendar.get(Calendar.MONTH) + 1);
+                                }
+                                dateText.setText(
+                                        months[changingCalendar.get(Calendar.MONTH)] +
+                                                " " + changingCalendar.get(Calendar.YEAR)
+                                );
+                                outMonth(changingCalendar, currentCalendar, linearLayout);
+                                break;
+                            case "back_swipe":
+                                if ((changingCalendar.get(Calendar.MONTH)) == 0) {
+                                    changingCalendar.set(Calendar.MONTH, 11);
+                                    changingCalendar.set(Calendar.YEAR, changingCalendar.get(Calendar.YEAR) - 1);
+                                } else {
+                                    changingCalendar.set(Calendar.MONTH, changingCalendar.get(Calendar.MONTH) - 1);
+                                }
+                                dateText.setText(
+                                        months[changingCalendar.get(Calendar.MONTH)] +
+                                                " " + changingCalendar.get(Calendar.YEAR)
+                                );
+                                outMonth(changingCalendar, currentCalendar, linearLayout);
+                                break;
+                        }
+                        //Toast.makeText(getApplicationContext(), prediction.name, Toast.LENGTH_SHORT)
+                               // .show();
+                    }
+                }
+            }
+        });
+
 
         previous.setOnClickListener(new View.OnClickListener() {
             @Override

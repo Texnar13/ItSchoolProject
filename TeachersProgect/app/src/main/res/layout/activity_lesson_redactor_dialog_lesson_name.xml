@@ -9,6 +9,6 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="название урока"/>
+        android:hint="название"/>
 
 </LinearLayout>
