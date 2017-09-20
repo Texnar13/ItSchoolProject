@@ -1,8 +1,12 @@
 package com.learning.texnar13.teachersprogect;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -18,34 +22,52 @@ import java.util.GregorianCalendar;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    public static final String INTERFACE_SIZE = "deskSize";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        setTitle("Настройки");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
+
+
         //изменение размера
+
+
+
+        final SharedPreferences.Editor editor = StartScreenActivity.mSettings.edit();
+
+
         SeekBar sizeSeekBar = (SeekBar) findViewById(R.id.activity_settings_seekBar);
         LinearLayout sizeShowLayOut = (LinearLayout) findViewById(R.id.activity_settings_size_show_layout);
 
         final RelativeLayout room = new RelativeLayout(this);
         sizeShowLayOut.addView(room, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
+        sizeSeekBar.setProgress(StartScreenActivity.mSettings.getInt(INTERFACE_SIZE, 50));
+        updateShowRoom(room, StartScreenActivity.mSettings.getInt(INTERFACE_SIZE, 50));
+
 
         sizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {//не когда касается, а когда начинает двигаться
+
             }
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (i != 0) {//избегаем деления на ноль
                     updateShowRoom(room, i);
+                    editor.putInt(INTERFACE_SIZE, i);
                 }
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                editor.apply();
             }
         });
 
@@ -133,6 +155,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void updateShowRoom(RelativeLayout room, float multiplier) {
         room.removeAllViews();
 
+
         multiplier = multiplier / 1000;
 
         RelativeLayout[] tables = new RelativeLayout[4];
@@ -163,5 +186,17 @@ public class SettingsActivity extends AppCompatActivity {
 
     private float pxFromDp(float dp) {
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home://кнопка назад в actionBar
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

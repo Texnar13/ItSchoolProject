@@ -71,7 +71,7 @@ public class LessonListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_list);
 
-        setTitle("итоги урока");
+        setTitle("Итоги урока");
 
         LinearLayout list = (LinearLayout) findViewById(R.id.activity_lesson_list);
 

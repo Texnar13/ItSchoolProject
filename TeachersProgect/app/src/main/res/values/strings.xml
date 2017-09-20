@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Teachers assistant</string>
+    <string name="app_name">Teacher\'s assistant</string>
     <string name="title_activity_list_of">ListOfActivity</string>
     <string name="title_activity_lesson">Lesson</string>
     <string name="lesson_list_menu_save_text">сохранить</string>

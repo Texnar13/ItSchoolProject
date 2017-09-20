@@ -363,10 +363,10 @@ public class LessonRedactorActivity extends AppCompatActivity {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         ArrayList<Long> arrayList = db.getNotPutLearnersIdByCabinetIdAndClassId(classCabinet.cabinetId, classCabinet.classId);
         if (arrayList.size() == 0) {
-            seatingStateText.setText("ученики рассажены в этом кабинете");
+            seatingStateText.setText("Ученики рассажены в этом кабинете!");
             seatingStateText.setTextColor(Color.parseColor("#469500"));
         } else {
-            seatingStateText.setText("ученики не рассажены!");
+            seatingStateText.setText("Ученики не рассажены!");
             seatingStateText.setTextColor(Color.parseColor("#ff7700"));
         }
     }
@@ -526,6 +526,7 @@ class CustomAdapter extends ArrayAdapter {
         TextView tv = (TextView) convertView;
         tv.setGravity(Gravity.CENTER);
         tv.setBackgroundColor(Color.parseColor("#e4ea7e"));//светло салатовый
+        //tv.setBackgroundColor(Color.WHITE);//светло салатовый
         tv.setText(objects[position]);
         //}
         return convertView;

@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +38,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         gestureOverlayView.setGestureColor(Color.TRANSPARENT);//делаем невидимым
         gestureOverlayView.setUncertainGestureColor(Color.TRANSPARENT);
 
+        setTitle("Календарь");
         gestureLib = GestureLibraries.fromRawResource(this, R.raw.gestures);
         if (!gestureLib.load()) {
             finish();

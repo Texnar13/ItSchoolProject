@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -63,7 +64,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
 
     long cabinetId;
     long classId;
-    int multiplier = 2;//todo зум
+    float multiplier = 2;
 
     static Handler handler;
 
@@ -71,12 +72,17 @@ public class SeatingRedactorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seating_redactor);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
+
         drawDesks();
     }
 
     private void drawDesks() {
         RelativeLayout room = (RelativeLayout) findViewById(R.id.seating_redactor_room);
         room.removeAllViews();
+
+        multiplier = StartScreenActivity.mSettings.getInt(SettingsActivity.INTERFACE_SIZE, 50) / 1000f;
 
         int maxDeskX = 0;//максимальный отступ парты для расчёта размеров отображаемого layout
         int maxDeskY = 0;
@@ -95,7 +101,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
 //            toast.makeText(this,"не выбран класс или кабинет",Toast.LENGTH_SHORT);
 //            toast.show();
             finish();
-            Toast toast = Toast.makeText(this,"не выбран класс или кабинет для редактирования", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this, "не выбран класс или кабинет для редактирования", Toast.LENGTH_SHORT);
             toast.show();
             return;
         }
@@ -118,11 +124,11 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         while (desksCursor.moveToNext()) {
             //создание парты
             RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);
-            tempRelativeLayoutDesk.setBackgroundColor(Color.parseColor("#bce4af00"));
+            tempRelativeLayoutDesk.setBackgroundColor(Color.LTGRAY);
 
-            RelativeLayout.LayoutParams tempRelativeLayoutDeskParams = new RelativeLayout.LayoutParams((int) dpFromPx(80 * multiplier), (int) dpFromPx(40 * multiplier));
-            tempRelativeLayoutDeskParams.leftMargin = (int) dpFromPx(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * multiplier);
-            tempRelativeLayoutDeskParams.topMargin = (int) dpFromPx(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * multiplier);
+            RelativeLayout.LayoutParams tempRelativeLayoutDeskParams = new RelativeLayout.LayoutParams((int) dpFromPx(1000 * desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES)) * multiplier), (int) dpFromPx(1000 * multiplier));
+            tempRelativeLayoutDeskParams.leftMargin = (int) dpFromPx(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * 25 * multiplier);
+            tempRelativeLayoutDeskParams.topMargin = (int) dpFromPx(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * 25 * multiplier);
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_START);
@@ -147,10 +153,10 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                 //создание места
                 final LinearLayout tempPlaceLayout = new LinearLayout(this);
                 tempPlaceLayout.setOrientation(LinearLayout.VERTICAL);
-                tempPlaceLayout.setBackgroundColor(Color.parseColor("#bc8e6d02"));
-                RelativeLayout.LayoutParams tempRelativeLayoutPlaceParams = new RelativeLayout.LayoutParams((int) dpFromPx((40 - 2) * multiplier), (int) dpFromPx((40 - 2) * multiplier));
-                tempRelativeLayoutPlaceParams.leftMargin = (int) dpFromPx((1 + (40 * (placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1))) * multiplier);
-                tempRelativeLayoutPlaceParams.topMargin = (int) dpFromPx(multiplier);
+                tempPlaceLayout.setBackgroundColor(Color.parseColor("#e4ea7e"));
+                RelativeLayout.LayoutParams tempRelativeLayoutPlaceParams = new RelativeLayout.LayoutParams((int) dpFromPx((1000 - 50) * multiplier), (int) dpFromPx((1000 - 50) * multiplier));
+                tempRelativeLayoutPlaceParams.leftMargin = (int) dpFromPx((25 + (1000 * (placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1))) * multiplier);
+                tempRelativeLayoutPlaceParams.topMargin = (int) dpFromPx(25 * multiplier);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_START);
@@ -178,7 +184,6 @@ public class SeatingRedactorActivity extends AppCompatActivity {
 //                        dialogFragment.show(getFragmentManager(), "chooseLearners");
 //                        handler = new Handler() {
 //                            public void handleMessage(android.os.Message msg) {
-//                                //todo сделать возврат -1 если ничего не выбрано и отменить вывод кнопок если список пуст
 //                                //добавляем запись по id ученика и урока
 //                                db.setLearnerOnPlace(lessonId, msg.what, placeId);
 //                                //Cursor chooseCursor = db.getLearner(msg.what);
@@ -205,7 +210,8 @@ public class SeatingRedactorActivity extends AppCompatActivity {
 
                     //создание текста ученика
                     final TextView tempLearnerText = new TextView(this);
-                    final LinearLayout.LayoutParams tempLearnerTextParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 2F);
+                    tempLearnerText.setTextSize(200 * multiplier);
+                    final LinearLayout.LayoutParams tempLearnerTextParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 3F);
                     tempLearnerText.setGravity(Gravity.CENTER_HORIZONTAL);
                     tempLearnerText.setTextColor(Color.WHITE);
 
@@ -282,9 +288,9 @@ public class SeatingRedactorActivity extends AppCompatActivity {
 //        DisplayMetrics metricsB = new DisplayMetrics();
 //        display.getMetrics(metricsB);
 
-        room.setLayoutParams(new FrameLayout.LayoutParams((maxDeskX + (int) dpFromPx(80 + 40) * multiplier), (maxDeskY + (int) dpFromPx(40 + 40) * multiplier)));//(w, h)320*7 = 2240
+        room.setLayoutParams(new FrameLayout.LayoutParams((maxDeskX + (int) dpFromPx((2000 + 1000) * multiplier)), (maxDeskY + (int) dpFromPx((2000 + 1000) * multiplier))));//(w, h)320*7 = 2240
         //room.setLayoutParams(new FrameLayout.LayoutParams(1120, 1120));//(w, h)320*7 = 2240
-        Log.i("TeachersProject", "" + (maxDeskX + (80 + 40) * multiplier) + "" + (maxDeskY + (40 + 40) * multiplier));
+        Log.i("TeachersProject", "" + (maxDeskX + (int) dpFromPx((2000 + 1000) * multiplier)) + "" + (maxDeskY + (int) dpFromPx((2000 + 1000) * multiplier)));
         //todo под размер экрана может всё таки  scroll view
     }
 
@@ -299,10 +305,22 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         setResult(RESULT_OK);
         super.onBackPressed();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home://кнопка назад в actionBar
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
 
 class ChooseLearnerDialogFragment extends DialogFragment {//диалог по выбору не распределенного ученика
-    
+
     long cabinetId;
     long classId;
 

@@ -11,12 +11,11 @@
         android:layout_alignParentBottom="false"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:background="#efe3cc">
+        android:background="#fdffdf">
 
         <ScrollView
             android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:background="#efe3cc">
+            android:layout_height="match_parent">
 
             <RelativeLayout
                 android:id="@+id/seating_redactor_room"
@@ -24,8 +23,7 @@
                 android:layout_height="600dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:background="#efe3cc">
+                android:layout_alignParentTop="true">
 
             </RelativeLayout>
         </ScrollView>

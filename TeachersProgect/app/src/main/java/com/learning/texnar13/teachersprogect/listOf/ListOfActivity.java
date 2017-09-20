@@ -1,6 +1,8 @@
 package com.learning.texnar13.teachersprogect.listOf;
 
+import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.learning.texnar13.teachersprogect.R;
@@ -132,11 +135,13 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
             }
         });
 
+        LinearLayout room = (LinearLayout) findViewById(R.id.content_list_of_content_room);
         ListView listView = (ListView) findViewById(R.id.content_list_of_list_view);
+
         //будущий курсор с обьектами вывода;
         switch (listParameterValue) {//вибираем тип содержимого списка
             case SchoolContract.TableClasses.NAME_TABLE_CLASSES: {
-                getSupportActionBar().setTitle("мои классы");//ставим заголовок
+                getSupportActionBar().setTitle("Мои классы");//ставим заголовок
                 ArrayList<ListOfAdapterObject> listOfClasses = new ArrayList<>();//получаем классы из базы данных и заносим их в arrayList
                 {
                     Cursor cursor = db.getClasses();
@@ -157,7 +162,7 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                 {//ставим заголовок
                     Cursor tempCursor = db.getClasses(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));
                     tempCursor.moveToFirst();
-                    getSupportActionBar().setTitle("ученики в классе " + tempCursor.getString(tempCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
+                    getSupportActionBar().setTitle("Ученики в классе " + tempCursor.getString(tempCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
                     tempCursor.close();
                 }
                 ArrayList<ListOfAdapterObject> listOfLearners = new ArrayList<>();//создаём лист с классами
@@ -178,7 +183,11 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                 break;
             }
             case SchoolContract.TableCabinets.NAME_TABLE_CABINETS: {
-                getSupportActionBar().setTitle("мои кабинеты");//ставим заголовок
+                //дизайн
+                fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f5ce9d")));
+                room.setBackgroundColor(Color.WHITE);//parseColor("#f4e6d3")
+
+                getSupportActionBar().setTitle("Мои кабинеты");//ставим заголовок
                 ArrayList<ListOfAdapterObject> listOfCabinets = new ArrayList<>();//создаём лист с классами
                 {
                     Cursor cursor = db.getCabinets();//получаем кабинеты

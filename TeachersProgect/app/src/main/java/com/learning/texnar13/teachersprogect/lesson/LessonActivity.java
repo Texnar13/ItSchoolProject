@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.R;
+import com.learning.texnar13.teachersprogect.SettingsActivity;
+import com.learning.texnar13.teachersprogect.StartScreenActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
@@ -28,7 +30,7 @@ public class LessonActivity extends AppCompatActivity {
 
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
     final ArrayList<LearnerAndGrade> gradeArrayList = new ArrayList<>();//массив с оценками за этот урок;
-    int multiplier = 2;
+    float multiplier = 2;
 
 
     @Override
@@ -147,7 +149,9 @@ public class LessonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_main);
 
+        multiplier = StartScreenActivity.mSettings.getInt(SettingsActivity.INTERFACE_SIZE, 50) / 1000f;
 
+        setTitle("Урок");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
 
         RelativeLayout room = (RelativeLayout) findViewById(R.id.room_layout);
@@ -196,11 +200,15 @@ public class LessonActivity extends AppCompatActivity {
         while (desksCursor.moveToNext()) {
             //создание парты
             RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);
-            tempRelativeLayoutDesk.setBackgroundColor(Color.GRAY);
+            tempRelativeLayoutDesk.setBackgroundColor(Color.LTGRAY);
 
-            RelativeLayout.LayoutParams tempRelativeLayoutDeskParams = new RelativeLayout.LayoutParams((int) dpFromPx(80 * multiplier), (int) dpFromPx(40 * multiplier));
-            tempRelativeLayoutDeskParams.leftMargin = (int) dpFromPx(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * multiplier);
-            tempRelativeLayoutDeskParams.topMargin = (int) dpFromPx(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * multiplier);
+            //длина парты по количеству мест
+            RelativeLayout.LayoutParams tempRelativeLayoutDeskParams =
+                    new RelativeLayout.LayoutParams((int) pxFromDp(
+                            desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES)) *
+                                    1000 * multiplier), (int) pxFromDp(1000 * multiplier));
+            tempRelativeLayoutDeskParams.leftMargin = (int) pxFromDp(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * 25 * multiplier);
+            tempRelativeLayoutDeskParams.topMargin = (int) pxFromDp(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * 25 * multiplier);
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_START);
@@ -212,38 +220,38 @@ public class LessonActivity extends AppCompatActivity {
 
                 // layout с учеником и оценками
                 RelativeLayout gradeLearnerPlaceOut = new RelativeLayout(this);
-                gradeLearnerPlaceOut.setBackgroundColor(Color.LTGRAY);
+                gradeLearnerPlaceOut.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
-                RelativeLayout.LayoutParams tempRelativeLayoutPlaceParams = new RelativeLayout.LayoutParams((int) dpFromPx((40 - 2) * multiplier), (int) dpFromPx((40 - 2) * multiplier));
-                tempRelativeLayoutPlaceParams.leftMargin = (int) dpFromPx((1 + (40 * (placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1))) * multiplier);
-                tempRelativeLayoutPlaceParams.topMargin = (int) dpFromPx(multiplier);
+                RelativeLayout.LayoutParams tempRelativeLayoutPlaceParams = new RelativeLayout.LayoutParams((int) pxFromDp((1000 - 50) * multiplier), (int) pxFromDp((1000 - 50) * multiplier));
+                tempRelativeLayoutPlaceParams.leftMargin = (int) pxFromDp((25 + (1000 * (placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1))) * multiplier);
+                tempRelativeLayoutPlaceParams.topMargin = (int) pxFromDp(25 * multiplier);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_START);
 
                 final TextView grade1Text = new TextView(this);
                 grade1Text.setTextColor(Color.WHITE);
-                grade1Text.setTextSize(multiplier * 10);
+                grade1Text.setTextSize(325 * multiplier);
                 grade1Text.setText("");
 
 
                 final TextView grade2Text = new TextView(this);
                 grade2Text.setTextColor(Color.WHITE);
-                grade2Text.setTextSize(multiplier * 10);
+                grade2Text.setTextSize(325 * multiplier);
                 grade2Text.setText("");
 
                 RelativeLayout.LayoutParams grade1TextParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-                grade1TextParams.setMargins(multiplier, 0, 0, 0);
+                grade1TextParams.setMargins((int) pxFromDp(25 * multiplier), 0, 0, 0);
                 //grade1TextParams.setMarginStart(multiplier);
 
                 RelativeLayout.LayoutParams grade2TextParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-                grade2TextParams.setMargins(0, 0, multiplier, 0);
+                grade2TextParams.setMargins(0, 0, (int) pxFromDp(25 * multiplier), 0);
 
                 gradeLearnerPlaceOut.addView(grade1Text, grade1TextParams);
                 gradeLearnerPlaceOut.addView(grade2Text, grade2TextParams);
@@ -395,11 +403,12 @@ public class LessonActivity extends AppCompatActivity {
                     //текст ученика
                     TextView tempLearnerText = new TextView(this);
                     tempLearnerText.setOnClickListener(onClickListener);
+                    tempLearnerText.setTextSize(200 * multiplier);
                     tempLearnerText.setOnCreateContextMenuListener(onCreateContextMenuListener);
                     tempLearnerText.setGravity(Gravity.CENTER_HORIZONTAL);
                     tempLearnerText.setTextColor(Color.WHITE);
                     tempLearnerText.setText(learnerCursor.getString(learnerCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)));
-                    LinearLayout.LayoutParams tempLearnerTextParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 2F);
+                    LinearLayout.LayoutParams tempLearnerTextParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 3F);
                     tempPlaceLayout.addView(tempLearnerText, tempLearnerTextParams);
                 }
                 Log.i("TeachersApp", "LessonActivity!!! " + learnerId);
@@ -418,8 +427,8 @@ public class LessonActivity extends AppCompatActivity {
         db.close();
     }
 
-    private float dpFromPx(float px) {
-        return px * getApplicationContext().getResources().getDisplayMetrics().density;
+    private float pxFromDp(float dp) {
+        return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
 
     @Override

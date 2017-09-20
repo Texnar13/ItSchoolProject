@@ -69,9 +69,16 @@ class ListOfAdapter extends BaseAdapter {//todo задача адаптера п
 
         LinearLayout flat = (LinearLayout) view.findViewById(R.id.list_of_adapter_element_out);//контейнер элемента списка
         Button title = new Button(context);//элемент списка, пока кнопка
-//        title.setTextSize(20);
+//
 //        title.setTextColor(Color.BLACK);
 //        title.setBackgroundColor(Color.parseColor("#c9c9c9"));
+        switch (type) {
+            case SchoolContract.TableCabinets.NAME_TABLE_CABINETS:
+                title.setBackgroundColor(Color.parseColor("#f5ce9d"));
+                title.setTextSize(20);
+                title.setTextColor(Color.parseColor("#88591d"));//parseColor("#5c3a0d")
+                break;
+        }
         title.setText(((ListOfAdapterObject) getItem(position)).getObjName());//ставим имя
         Log.i("TeachersApp", "ListOfAdapter - getView isChecked = " + ((ListOfAdapterObject) getItem(position)).isChecked() + " position = " + position);
         if (showCheckBoxes) {//выбираем будем ли помещать в контейнер checkBox и назначаем checkBox-у действия
@@ -111,7 +118,7 @@ class ListOfAdapter extends BaseAdapter {//todo задача адаптера п
                 public void onClick(View view) {
                     Log.i("TeachersApp", "ListOfAdapter - classes onClick, id = " + objId);
                     Intent intent;//намерение для запуска ледующего активити
-                    switch (type) {//тип вызывающего обьекта//// TODO: 21.07.2017 !!!!!!!!!!!!!!!!!!!сделать редактор рассадки открывающимся из определённого меню
+                    switch (type) {//тип вызывающего обьекта
                         case SchoolContract.TableClasses.NAME_TABLE_CLASSES://запуск этого активити заново
                             intent = new Intent(context, ListOfActivity.class);
                             intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//с параметром ученики

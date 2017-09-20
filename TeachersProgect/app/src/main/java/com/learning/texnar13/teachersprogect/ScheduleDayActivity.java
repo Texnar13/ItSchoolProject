@@ -42,6 +42,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_day);
 
+        setTitle("Расписание на день");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
 
         day = getIntent().getIntExtra(INTENT_DAY, -1);
