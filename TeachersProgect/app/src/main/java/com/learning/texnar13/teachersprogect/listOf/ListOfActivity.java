@@ -141,7 +141,11 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
         //будущий курсор с обьектами вывода;
         switch (listParameterValue) {//вибираем тип содержимого списка
             case SchoolContract.TableClasses.NAME_TABLE_CLASSES: {
-                getSupportActionBar().setTitle("Мои классы");//ставим заголовок
+                //дизайн
+                fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#bed7e9")));
+                room.setBackgroundColor(Color.WHITE);//parseColor("#f4e6d3")
+                //ставим заголовок
+                getSupportActionBar().setTitle("Мои классы");
                 ArrayList<ListOfAdapterObject> listOfClasses = new ArrayList<>();//получаем классы из базы данных и заносим их в arrayList
                 {
                     Cursor cursor = db.getClasses();
@@ -159,6 +163,9 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
             }
             break;
             case SchoolContract.TableLearners.NAME_TABLE_LEARNERS: {
+                //дизайн
+                fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#bed7e9")));
+                room.setBackgroundColor(Color.WHITE);//parseColor("#f4e6d3")
                 {//ставим заголовок
                     Cursor tempCursor = db.getClasses(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));
                     tempCursor.moveToFirst();

@@ -300,7 +300,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                                 startActivity(intentForStartLesson);
                             } else {
                                 toastSeatingRedactor.show();
-                                startActivityForResult(intentForStartSeatingRedactor, 1);//редактировать
+                                startActivityForResult(intentForStartSeatingRedactor, 1);//редактировать рассадку
                             }
                         }
                     });
@@ -308,9 +308,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     bodyText.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
-                            if (!(lessonAttitudeIdForIntent == -1)) {//редактирование урока
-                                startActivityForResult(intentForLessonEditor, 1);
-                            }
+                            startActivityForResult(intentForLessonEditor, 1);//создание/редактирование урока
                             return true;
                         }
                     });

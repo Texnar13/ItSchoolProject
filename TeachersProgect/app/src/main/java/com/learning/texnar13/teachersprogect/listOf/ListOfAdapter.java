@@ -68,7 +68,7 @@ class ListOfAdapter extends BaseAdapter {//todo задача адаптера п
         view = inflater.inflate(R.layout.list_of_adapter_element, parent, false);
 
         LinearLayout flat = (LinearLayout) view.findViewById(R.id.list_of_adapter_element_out);//контейнер элемента списка
-        Button title = new Button(context);//элемент списка, пока кнопка
+        TextView title = new Button(context);//элемент списка, пока кнопка
 //
 //        title.setTextColor(Color.BLACK);
 //        title.setBackgroundColor(Color.parseColor("#c9c9c9"));
@@ -78,6 +78,19 @@ class ListOfAdapter extends BaseAdapter {//todo задача адаптера п
                 title.setTextSize(20);
                 title.setTextColor(Color.parseColor("#88591d"));//parseColor("#5c3a0d")
                 break;
+            case SchoolContract.TableClasses.NAME_TABLE_CLASSES:
+                title.setBackgroundColor(Color.parseColor("#bed7e9"));
+                title.setTextSize(20);
+                title.setTextColor(Color.parseColor("#1f5b85"));
+                break;
+            case SchoolContract.TableLearners.NAME_TABLE_LEARNERS:
+                title.setBackgroundColor(Color.TRANSPARENT);
+                title.setClickable(false);
+                title.setTextSize(20);
+                title.setTextColor(Color.parseColor("#1f5b85"));
+                break;
+            default:
+                throw new  RuntimeException();
         }
         title.setText(((ListOfAdapterObject) getItem(position)).getObjName());//ставим имя
         Log.i("TeachersApp", "ListOfAdapter - getView isChecked = " + ((ListOfAdapterObject) getItem(position)).isChecked() + " position = " + position);

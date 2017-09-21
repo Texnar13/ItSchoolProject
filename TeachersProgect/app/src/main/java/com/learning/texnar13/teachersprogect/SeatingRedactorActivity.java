@@ -239,6 +239,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                         }
                     });
                     tempLearnerText.setText(learnerCursor.getString(learnerCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)));
+                    tempLearnerText.setTextColor(Color.GRAY);
                     tempPlaceLayout.addView(tempLearnerText, tempLearnerTextParams);
                     learnerCursor.close();
                 } else {

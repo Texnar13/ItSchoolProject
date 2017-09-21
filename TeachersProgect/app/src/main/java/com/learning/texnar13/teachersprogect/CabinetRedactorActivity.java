@@ -115,7 +115,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             deskLayoutParams.leftMargin = (int) pxFromDp(deskX * 25 * multiplier);
             deskLayoutParams.topMargin = (int) pxFromDp(deskY * 25 * multiplier);
             deskLayout.setLayoutParams(deskLayoutParams);
-            deskLayout.setBackgroundColor(Color.GRAY);
+            deskLayout.setBackgroundColor(Color.parseColor("#f1bd7d"));
             out.addView(deskLayout);
         }
 
@@ -249,7 +249,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         newDeskLayoutParams.leftMargin = (metricsB.widthPixels / 2);
         newDeskLayoutParams.topMargin = (metricsB.heightPixels / 2);
         newDeskLayout.setLayoutParams(newDeskLayoutParams);
-        newDeskLayout.setBackgroundColor(Color.GRAY);
+        newDeskLayout.setBackgroundColor(Color.parseColor("#f1bd7d"));
 
         deskCoordinatesList.add(new CabinetRedactorPoint(deskId, newDeskLayout, (int) (dpFromPx(metricsB.widthPixels / 2) / (25 * multiplier)), (int) (dpFromPx(metricsB.heightPixels / 2)  / (25 * multiplier))));
 
