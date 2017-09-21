@@ -376,7 +376,13 @@ public class LessonRedactorActivity extends AppCompatActivity {
 
         final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         Cursor cursor = db.getLessonsByClassId(classViewId);
-        final String[] stringLessons = new String[cursor.getCount() + 3];
+        final int count = cursor.getCount();
+        final String[] stringLessons;
+        if (count == 0) {
+            stringLessons = new String[cursor.getCount() + 2];
+        } else {
+            stringLessons = new String[cursor.getCount() + 3];
+        }
         final String[] stringOnlyLessons = new String[cursor.getCount()];
         final long[] lessonsId = new long[cursor.getCount()];
         //Log.i("TeachersApp", "LessonRedactorActivity - " + stringLessons.length);
@@ -386,12 +392,19 @@ public class LessonRedactorActivity extends AppCompatActivity {
             stringLessons[i] = cursor.getString(cursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME));
             stringOnlyLessons[i - 1] = stringLessons[i];
         }
-        stringLessons[stringLessons.length - 1] = "-  удалить предмет(ы)";
-        stringLessons[stringLessons.length - 2] = "+ создать предмет для этого класса";
+
+        if (count == 0) {
+            stringLessons[stringLessons.length - 1] = "+ создать предмет для этого класса";
+        } else {
+            stringLessons[stringLessons.length - 1] = "-  удалить предмет(ы)";
+            stringLessons[stringLessons.length - 2] = "+ создать предмет для этого класса";
+        }
+
         stringLessons[0] = "выберите предмет:";
         cursor.close();
         db.close();
 
+        final String [] finalStringLessons = stringLessons;
         final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, stringLessons);
         adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
         lessonNameSpinner.setAdapter(adapter);
@@ -404,7 +417,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 Log.i("TeachersApp", "LessonRedactorActivity - availableLessonsOut onItemSelected " + pos);
-                if (stringLessons.length - 1 == pos) {
+                if (count != 0 && finalStringLessons.length - 1 == pos) {
                     Log.i("TeachersApp", "LessonRedactorActivity - remove lesson");
                     DialogFragment removeDialog = new DialogFragment() {
                         @Override
@@ -450,7 +463,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
                         }
                     };
                     removeDialog.show(getFragmentManager(), "removeLessons");
-                } else if (stringLessons.length - 2 == pos) {
+                } else if ((count != 0 && stringLessons.length - 2 == pos)||(count == 0 &&finalStringLessons.length - 1 == pos)) {
                     //диалог создания предмета
                     Log.i("TeachersApp", "LessonRedactorActivity - new lesson");
                     DialogFragment lessonNameDialog = new DialogFragment() {

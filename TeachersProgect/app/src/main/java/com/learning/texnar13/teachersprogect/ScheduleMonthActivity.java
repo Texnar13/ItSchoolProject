@@ -1,6 +1,7 @@
 package com.learning.texnar13.teachersprogect;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.gesture.Gesture;
 import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
@@ -39,6 +40,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         gestureOverlayView.setUncertainGestureColor(Color.TRANSPARENT);
 
         setTitle("Календарь");
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//вертикальная ориентация
+
         gestureLib = GestureLibraries.fromRawResource(this, R.raw.gestures);
         if (!gestureLib.load()) {
             finish();
