@@ -14,7 +14,7 @@ import java.util.Date;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 4;
+    private static final int DB_VERSION = 5;
 
 
     public DataBaseOpenHelper(Context context) {
@@ -40,8 +40,10 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     private void updateDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.i("DataBaseOpenHelper", "updateDatabase old=" + oldVersion + " new=" + newVersion);
 
-        if (oldVersion < 5) {//если база версии 5 и выше, то она не запустит этот код
+        if (oldVersion < 6) {//если база версии 6 и выше, то она не запустит этот код
+            //создаём пустые таблицы без за полнения
             db.execSQL("PRAGMA foreign_keys = OFF");
+            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableDesks.NAME_TABLE_DESKS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + ";");
@@ -53,8 +55,15 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME + ";");
             db.execSQL("PRAGMA foreign_keys = ON");
 
+
+//настройки
+            String sql = "CREATE TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + "( " + SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME + " VARCHAR, " +
+                    SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE + " INTEGER ); ";
+            db.execSQL(sql);
+
 //кабинет
-            String sql = "CREATE TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "( " + SchoolContract.TableCabinets.KEY_CABINET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            sql = "CREATE TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "( " + SchoolContract.TableCabinets.KEY_CABINET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableCabinets.COLUMN_NAME + " VARCHAR ); ";
             db.execSQL(sql);
 //парта
@@ -118,7 +127,49 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         }
     }
 
+    //настройки
+    public long createNewSettingsProfile(String profileName, int interfaceSize) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME, profileName);
+        values.put(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE, interfaceSize);
+        long temp = db.insert(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, values);//-1 = ошибка ввода
+        Log.i("DBOpenHelper", "createSettingsProfile returnId = " + temp + " profileName= " + profileName + " interfaceSize= " + interfaceSize);
+        db.close();
+        return temp;
+    }
+
+    public int setSettingsProfileParameters(long profileId, String profileName, int interfaceSize) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME, profileName);
+        values.put(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE, interfaceSize);
+        int temp = db.update(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, values, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId});
+        Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + temp + " profileId= " + profileId + " profileName= " + profileName + " interfaceSize= " + interfaceSize);
+        db.close();
+        return temp;
+    }
+
+    public long getInterfaceSizeBySettingsProfileId(long profileId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] selectionArgs = {profileId + ""};
+        Cursor cursor = db.query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", selectionArgs, null, null, null);
+        long answer;
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            answer = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE));
+        } else {
+            answer = -1;
+        }
+        Log.i("DBOpenHelper", "getInterfaceSizeBySettingsProfileId profileId=" + profileId + " return=" + answer);
+
+        cursor.close();
+        return answer;
+    }
+
+
     //класс
+
     public long createClass(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
 //        String sql = "INSERT INTO NAME_TABLE_CLASSES( " + SchoolContract.TableClasses.COLUMN_CLASS_NAME + " ) " +
@@ -650,22 +701,22 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_END + " >= ?",
                 selectionArgs, null, null, null);
         long answer;
-        if(cursor.getCount() !=0){
-        cursor.moveToFirst();
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
             answer = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_AND_TIME_ATTITUDE_ID));
             cursor.close();
-            Log.i("DBOpenHelper", "getLessonsAttitudesIdByTimePeriod time=" + time.getTime().getTime()  + " answer=" + answer);
+            Log.i("DBOpenHelper", "getLessonsAttitudesIdByTimePeriod time=" + time.getTime().getTime() + " answer=" + answer);
             return answer;
-        }else{
+        } else {
             cursor.close();
-            Log.i("DBOpenHelper", "getLessonsAttitudesIdByTimePeriod time=" + time.getTime().getTime()  + " answer=" + (-1));
+            Log.i("DBOpenHelper", "getLessonsAttitudesIdByTimePeriod time=" + time.getTime().getTime() + " answer=" + (-1));
             return -1;
         }
     }
 
     public int deleteLessonTimeAndCabinet(long attitudeId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        int answer = db.delete(SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME, SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_AND_TIME_ATTITUDE_ID+ " = ?", new String[]{"" + attitudeId});
+        int answer = db.delete(SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME, SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_AND_TIME_ATTITUDE_ID + " = ?", new String[]{"" + attitudeId});
         Log.i("DBOpenHelper", "deleteLessonTimeAndCabinet attitudeId= " + attitudeId + " return = " + answer);
         db.close();
         return answer;

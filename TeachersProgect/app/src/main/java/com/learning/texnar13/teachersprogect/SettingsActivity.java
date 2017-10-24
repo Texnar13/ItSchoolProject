@@ -36,10 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         //изменение размера
 
-
-
-        final SharedPreferences.Editor editor = StartScreenActivity.mSettings.edit();
-
+        final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
         SeekBar sizeSeekBar = (SeekBar) findViewById(R.id.activity_settings_seekBar);
         LinearLayout sizeShowLayOut = (LinearLayout) findViewById(R.id.activity_settings_size_show_layout);
@@ -47,8 +44,12 @@ public class SettingsActivity extends AppCompatActivity {
         final RelativeLayout room = new RelativeLayout(this);
         sizeShowLayOut.addView(room, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
-        sizeSeekBar.setProgress(StartScreenActivity.mSettings.getInt(INTERFACE_SIZE, 50));
-        updateShowRoom(room, StartScreenActivity.mSettings.getInt(INTERFACE_SIZE, 50));
+
+        if (db.getInterfaceSizeBySettingsProfileId(1) == -1){
+            db.createNewSettingsProfile("default", 50);//TODO Skipped 49 frames!  The application may be doing too much work on its main thread.
+        }
+        sizeSeekBar.setProgress((int) db.getInterfaceSizeBySettingsProfileId(1));
+        updateShowRoom(room, (int) db.getInterfaceSizeBySettingsProfileId(1));
 
 
         sizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -62,13 +63,12 @@ public class SettingsActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (i != 0) {//избегаем деления на ноль
                     updateShowRoom(room, i);
-                    editor.putInt(INTERFACE_SIZE, i);
+                    db.setSettingsProfileParameters(1, "default", i);
                 }
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                editor.apply();
             }
         });
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -149,7 +150,9 @@ public class LessonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_main);
 
-        multiplier = StartScreenActivity.mSettings.getInt(SettingsActivity.INTERFACE_SIZE, 50) / 1000f;
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+
+        multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
 
         setTitle("Урок");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
@@ -173,8 +176,6 @@ public class LessonActivity extends AppCompatActivity {
         } else {
             lessonAttitudeId = getIntent().getLongExtra(LESSON_ATTITUDE_ID, -1);
         }
-
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
         //получаем все данные о классе
         //курсор с зависимостью

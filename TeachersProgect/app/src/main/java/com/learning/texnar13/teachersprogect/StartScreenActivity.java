@@ -27,9 +27,6 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     RelativeLayout relButtonClasses;//классы
     RelativeLayout relButtonSettings;
 
-    //обьект настроек
-    public static SharedPreferences mSettings;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //09-16 23:11:20.094 4549-4549/com.learning.texnar13.teachersprogect E/AndroidRuntime: FATAL EXCEPTION: main
@@ -86,9 +83,6 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 //        at java.lang.reflect.Method.invoke(Native Method)
 //        at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:1230)
 //        at com.andr
-
-        mSettings = PreferenceManager.getDefaultSharedPreferences(this);//сохранение настроек
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_screen);

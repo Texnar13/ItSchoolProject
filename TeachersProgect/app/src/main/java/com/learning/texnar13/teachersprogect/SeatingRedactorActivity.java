@@ -82,13 +82,13 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         RelativeLayout room = (RelativeLayout) findViewById(R.id.seating_redactor_room);
         room.removeAllViews();
 
-        multiplier = StartScreenActivity.mSettings.getInt(SettingsActivity.INTERFACE_SIZE, 50) / 1000f;
+        final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+
+        multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
 
         int maxDeskX = 0;//максимальный отступ парты для расчёта размеров отображаемого layout
         int maxDeskY = 0;
 
-
-        final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
         //lessonId = getIntent().getLongExtra(LESSON_ID, 1);//получаем id урока по умолчанию 1
         //Cursor lessonCursor = db.getLessonById(lessonId);//курсор с уроком

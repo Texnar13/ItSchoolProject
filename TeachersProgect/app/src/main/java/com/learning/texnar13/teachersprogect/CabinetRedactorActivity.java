@@ -38,8 +38,9 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_cabinet_redactor);
         out = (RelativeLayout) findViewById(R.id.redactor_out);
 
-        multiplier = StartScreenActivity.mSettings.getInt(SettingsActivity.INTERFACE_SIZE, 50) / 1000f
-        ;
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+
+        multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
 
         Log.i("TeachersApp", "" + multiplier);
 
@@ -88,7 +89,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         cabinetId = getIntent().getLongExtra(EDITED_OBJECT_ID, 1);//получаем id кабинета
         Log.i("TeachersApp", "CabinetRedactorActivity - onCreate editedObjectId = " + cabinetId);
-        final DataBaseOpenHelper db = new DataBaseOpenHelper(this);//доступ к базе данных
 
         Cursor cabinetCursor = db.getCabinets(cabinetId);
         cabinetCursor.moveToFirst();

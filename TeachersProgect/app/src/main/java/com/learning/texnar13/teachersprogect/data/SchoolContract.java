@@ -9,6 +9,13 @@ public final class SchoolContract {
     SchoolContract() {
     }
 
+    public final class TableSettingsData {
+        public static final String NAME_TABLE_SETTINGS = "settingsData";
+        public static final String KEY_SETTINGS_PROFILE_ID = BaseColumns._ID;
+        public static final String COLUMN_PROFILE_NAME = "profileName";
+        public static final String COLUMN_INTERFACE_SIZE = "interfaceSize";
+    }
+
     public final class TableCabinets {
         public static final String NAME_TABLE_CABINETS = "cabinets";
         public static final String KEY_CABINET_ID = BaseColumns._ID;
