@@ -48,7 +48,6 @@ public class LessonRedactorActivity extends AppCompatActivity {
     //класс-кабинет
     TextView seatingStateText;
     final ClassCabinet classCabinetId = new ClassCabinet(1, 1);//todo предусмотреть вариант если уроков вобще нет или у принимаемого урока не стандартное время. проверка нет ли на этом времени урока. переворот экрана.
-
     //урок
     long chosenLessonId = -1;
     Spinner lessonNameSpinner;
@@ -177,7 +176,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
 
             for (int i = 0; i < classesId.length; i++) {//ставим текущий класс в спиннер
                 if (classesId[i] == classCabinetId.classId) {
-                    classSpinner.setSelection(i);
+                    classSpinner.setSelection(i, false);
                 }
             }
         }
@@ -214,7 +213,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
             cabinetsCursor.close();
             for (int i = 0; i < cabinetsId.length; i++) {//ставим текущий класс в спиннер
                 if (cabinetsId[i] == classCabinetId.cabinetId) {
-                    cabinetSpinner.setSelection(i);
+                    cabinetSpinner.setSelection(i, false);
                 }
             }
         }
@@ -332,8 +331,8 @@ public class LessonRedactorActivity extends AppCompatActivity {
                         lessonTime.calendarEndTime.get(Calendar.MINUTE) ==
                                 ScheduleDayActivity.lessonStandardTimePeriods[i].calendarEndTime.get(Calendar.MINUTE)
                         ) {
-                    Log.i("TeachersApp", "chooseTime :" + (i + 1));
-                    spinner.setSelection(i);
+                    Log.i("TeachersApp", "changeTimeFormat:chooseTime:" + (i + 1));
+                    spinner.setSelection(i, false);// TODO OOOOOOOOOOOOOOOOOOOOOOOOOOTODO Здееееееесь//TODO ошибка где-то в этом классе
                 }
             }
 
@@ -404,11 +403,11 @@ public class LessonRedactorActivity extends AppCompatActivity {
         cursor.close();
         db.close();
 
-        final String [] finalStringLessons = stringLessons;
+        final String[] finalStringLessons = stringLessons;
         final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, stringLessons);
         adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
         lessonNameSpinner.setAdapter(adapter);
-        lessonNameSpinner.setSelection(position);
+        lessonNameSpinner.setSelection(position, false);
         lessonNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -463,7 +462,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
                         }
                     };
                     removeDialog.show(getFragmentManager(), "removeLessons");
-                } else if ((count != 0 && stringLessons.length - 2 == pos)||(count == 0 &&finalStringLessons.length - 1 == pos)) {
+                } else if ((count != 0 && stringLessons.length - 2 == pos) || (count == 0 && finalStringLessons.length - 1 == pos)) {
                     //диалог создания предмета
                     Log.i("TeachersApp", "LessonRedactorActivity - new lesson");
                     DialogFragment lessonNameDialog = new DialogFragment() {

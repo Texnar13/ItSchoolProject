@@ -195,22 +195,23 @@ public class ScheduleDayActivity extends AppCompatActivity {
 //                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 16, 5)
 //        };
 
-        TableRow tableRows[] = new TableRow[9];
+        TableRow tableRows[] = new TableRow[9];//строки таблицы
         for (int i = 0; i < tableRows.length; i++) {
-            tableRows[i] = new TableRow(this);
-            boolean isLessonReady = false;
-            long lessonAttitudeId = -1;
+            tableRows[i] = new TableRow(this);//инициализация
+            boolean isLessonReady = false;//можно ли начать урок
+            long lessonAttitudeId = -1;//id-шники
             long lessonClassId = -1;
             long lessonCabinetId = -1;
-            String lessonName;
+            String lessonName;//строки которые выводятся в таблицу
             String lessonClass;
             String lessonCabinet;
             {
+                //id урока в выбарнном интервале времени (45 мин)
                 ArrayList<Long> arrayList = db.getLessonsAttitudesIdByTimePeriod(lessonStandardTimePeriods[i].calendarStartTime, lessonStandardTimePeriods[i].calendarEndTime);
-                if (arrayList.size() != 0) {
-                    lessonAttitudeId = arrayList.get(0);
+                if (arrayList.size() != 0) {//есть ли в это время урок
+                    lessonAttitudeId = arrayList.get(0);//id зависимости урока
 
-                    Cursor lessonAttitudeCursor = db.getLessonAttitudeById(lessonAttitudeId);
+                    Cursor lessonAttitudeCursor = db.getLessonAttitudeById(lessonAttitudeId);//зависимость по id
                     lessonAttitudeCursor.moveToFirst();
                     //имя
                     Cursor lessonCursor = db.getLessonById(
@@ -219,7 +220,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                                             SchoolContract.TableLessonAndTimeWithCabinet.
                                                     KEY_LESSON_ID)));
                     lessonCursor.moveToFirst();
-                    lessonName = lessonCursor.getString(
+                    lessonName = lessonCursor.getString(//ставим имя урока
                             lessonCursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)
                     );
 
