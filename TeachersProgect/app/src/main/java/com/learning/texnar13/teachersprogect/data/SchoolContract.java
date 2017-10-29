@@ -35,7 +35,7 @@ public final class SchoolContract {
         public static final String NAME_TABLE_PLACES = "places";
         public static final String KEY_PLACE_ID = BaseColumns._ID;
         public static final String KEY_DESK_ID = "deskId";
-        public static final String COLUMN_ORDINAL = "number";//которое по счету место
+        public static final String COLUMN_ORDINAL = "number";//какое по счету место
     }
 
     public final class TableClasses {
@@ -72,20 +72,24 @@ public final class SchoolContract {
         public static final String KEY_LESSON_ID = BaseColumns._ID;
         public static final String COLUMN_NAME = "name";
         public static final String KEY_CLASS_ID = "classId";
-        //public static final String KEY_CABINET_ID = "cabinetId";
     }
+
     //--
     public final class TableLessonAndTimeWithCabinet {
-        //public final class TableLessonsAndTime {
-        public static final String NAME_TABLE_LESSONS_AND_TIME = "lessonsAnd";
+        public static final String NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET = "lessonsAnd";
         public static final String KEY_LESSON_AND_TIME_ATTITUDE_ID = BaseColumns._ID;
         public static final String KEY_LESSON_ID = "lessonId";
-        //--
         public static final String KEY_CABINET_ID = "cabinetId";
-        //--
         public static final String COLUMN_DATE_BEGIN = "lessonDateBegin";
         public static final String COLUMN_DATE_END = "lessonDateEnd";
-
+        //--1
+        public static final String COLUMN_REPEAT = "repeat";
+        //constants:
+        public static final int CONSTANT_REPEAT_NEVER = 0;
+        public static final int CONSTANT_REPEAT_DAILY = 1;
+        public static final int CONSTANT_REPEAT_WEEKLY = 2;
+        public static final int CONSTANT_REPEAT_MONTHLY = 3;
+        //--1
     }
     //--
 }

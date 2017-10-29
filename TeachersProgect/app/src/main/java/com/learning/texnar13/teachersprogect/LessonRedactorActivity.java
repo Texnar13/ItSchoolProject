@@ -54,6 +54,11 @@ public class LessonRedactorActivity extends AppCompatActivity {
     //время
     LinearLayout timeOut;
     LessonTimePeriod lessonTime;
+    Spinner lessonRepeatSpinner;
+    long repeat = 0;
+    String[] repeatPeriodsNames = {"никогда", "ежедневно", "еженедельно"
+            //, "ежемесячно"//todo
+    };
     boolean isTmeYours = false;
 
     @Override
@@ -83,6 +88,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
         //время
         timeOut = (LinearLayout) findViewById(R.id.activity_lesson_redactor_time_layout);
         CheckBox timeCheckBox = (CheckBox) findViewById(R.id.activity_lesson_redactor_time_check_box);
+        lessonRepeatSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_lesson_repeat_spinner);
         //общие
         TextView title = (TextView) findViewById(R.id.activity_lesson_redactor_title);
         LinearLayout buttonsOut = (LinearLayout) findViewById(R.id.activity_lesson_redactor_buttons_out);
@@ -109,6 +115,8 @@ public class LessonRedactorActivity extends AppCompatActivity {
 
             lessonTime.calendarStartTime.setTime(new Date(attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN))));
             lessonTime.calendarEndTime.setTime(new Date(attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_END))));
+
+            repeat = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT));
 
             classCabinetId.classId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_CLASS_ID));
             classCabinetId.cabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_CABINET_ID));
@@ -218,6 +226,24 @@ public class LessonRedactorActivity extends AppCompatActivity {
             }
         }
 
+        {//назначение повторений
+            CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, repeatPeriodsNames);
+            adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
+            lessonRepeatSpinner.setAdapter(adapter);
+            lessonRepeatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    repeat = i;
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+            lessonRepeatSpinner.setSelection((int) repeat, false);
+        }
+
         final long finalAttitudeId = attitudeId;
         if (attitudeId == -1) {
             buttonsOut.removeView(removeButton);
@@ -248,11 +274,11 @@ public class LessonRedactorActivity extends AppCompatActivity {
                     if (chosenLessonId != -1) {//единственный пункт который может быть не выбран
                         if (finalAttitudeId == -1) {//создание
                             Log.i("TeachersApp", "LessonRedactorActivity - create lesson chosenLessonId =" + chosenLessonId + " cabinetId =" + classCabinetId.cabinetId + " calendarStartTime =" + lessonTime.calendarStartTime.getTime().getTime() + " calendarEndTime =" + lessonTime.calendarEndTime.getTime().getTime());
-                            db.setLessonTimeAndCabinet(chosenLessonId, classCabinetId.cabinetId, lessonTime.calendarStartTime.getTime(), lessonTime.calendarEndTime.getTime());
+                            db.setLessonTimeAndCabinet(chosenLessonId, classCabinetId.cabinetId, lessonTime.calendarStartTime.getTime(), lessonTime.calendarEndTime.getTime(), repeat);
                             finish();
                         } else {//или изменение
                             Log.i("TeachersApp", "LessonRedactorActivity - edit lesson chosenLessonId =" + chosenLessonId + " cabinetId =" + classCabinetId.cabinetId + " calendarStartTime =" + lessonTime.calendarStartTime.getTime().getTime() + " calendarEndTime =" + lessonTime.calendarEndTime.getTime().getTime());
-                            db.editLessonTimeAndCabinet(finalAttitudeId, chosenLessonId, classCabinetId.cabinetId, lessonTime.calendarStartTime.getTime(), lessonTime.calendarEndTime.getTime());
+                            db.editLessonTimeAndCabinet(finalAttitudeId, chosenLessonId, classCabinetId.cabinetId, lessonTime.calendarStartTime.getTime(), lessonTime.calendarEndTime.getTime(), repeat);
                             finish();
                         }
                     } else {
@@ -332,7 +358,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
                                 ScheduleDayActivity.lessonStandardTimePeriods[i].calendarEndTime.get(Calendar.MINUTE)
                         ) {
                     Log.i("TeachersApp", "changeTimeFormat:chooseTime:" + (i + 1));
-                    spinner.setSelection(i, false);// TODO OOOOOOOOOOOOOOOOOOOOOOOOOOTODO Здееееееесь//TODO ошибка где-то в этом классе
+                    spinner.setSelection(i, false);
                 }
             }
 

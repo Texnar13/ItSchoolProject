@@ -126,8 +126,8 @@ public class ListOfDialog extends DialogFragment {
                 lastName.setHint("фамилия");
                 lastName.setHintTextColor(Color.GRAY);
 
-                linearLayout.addView(firstName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 linearLayout.addView(lastName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                linearLayout.addView(firstName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
 
                 if (objectsId.size() == 0) {
