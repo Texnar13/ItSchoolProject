@@ -136,7 +136,7 @@ public class SettingsActivity extends AppCompatActivity {
                 );
                 Date startLessonTime = new GregorianCalendar(2017, 10, 17, 8, 30).getTime();//1502343000000 --10 августа
                 Date endLessonTime = new GregorianCalendar(2017, 10, 17, 9, 15).getTime();//на 7 месяц  1502345700000
-                dbOpenHelper.setLessonTimeAndCabinet(lessonId, cabinetId, startLessonTime, endLessonTime, SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_DAILY);
+                dbOpenHelper.setLessonTimeAndCabinet(lessonId, cabinetId, startLessonTime, endLessonTime, SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_NEVER);
 
                 db.createNewSettingsProfile("default", 50);//создание настроек после удаления таблицы
 

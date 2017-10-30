@@ -670,51 +670,38 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public ArrayList<Long> getLessonsAttitudesIdByTimePeriod(Calendar periodStart, Calendar periodEnd) {//todo , long repeatPeriod
         //проверяется только дата начала уроков
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] selectionArgs = {
-                periodStart.getTime().getTime() + ""
-                , periodEnd.getTime().getTime() + ""
-                //--1
-                , (periodStart.getTime().getTime() % 86400000) + "",//делим на день, оставшееся - время прошедшеее с 00.00
-                (periodEnd.getTime().getTime() % 86400000) + "",//делим на день, оставшееся - время прошедшеее с 00.00
-                (periodStart.getTime().getTime() % 604800000) + "",//на неделю
-                (periodEnd.getTime().getTime() % 604800000) + ""//на неделю
-                //--1
-        };
-
-
-        Cursor cursor = db.query(SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET, null,
-                //SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " >= ? AND " +
-                //       SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " <= ?",
-                "(" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " >= ? AND " + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " <= ?) OR ((" +
-                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " = " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_DAILY + ") AND ((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " % 86400000) >= ?) AND ((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " % 86400000) <= ?)) OR ((" +
-                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " = " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_WEEKLY + ") AND ((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " % 604800000) >= ?) AND ((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " % 604800000) <= ?))",
-
-                /*
-                * "(COLUMN_DATE_BEGIN >= ? AND COLUMN_DATE_BEGIN <= ?) OR (
-                * COLUMN_REPEAT == CONSTANT_REPEAT_DAILY AND (COLUMN_DATE_BEGIN % 86400000) >= ? AND (COLUMN_DATE_BEGIN % 86400000)<= ?) OR (
-                * COLUMN_REPEAT == CONSTANT_REPEAT_WEEKLY AND (COLUMN_DATE_BEGIN % 604800000) >= ? AND (COLUMN_DATE_BEGIN % 604800000)<= ?)",
-                * */
-                selectionArgs, null, null, null);
-
-
-        /*Cursor cursor = db.rawQuery("SELECT * FROM " + SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET +
-                " WHERE ((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " >= ? AND " +  SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " <= ?) OR ((" +
-                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " = " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_DAILY + ") AND ((" +  SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " % 86400000) >= ?) AND ((" +  SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " % 86400000)<= ?)) OR ((" +
-                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " = " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_WEEKLY + ") AND ((" +  SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " % 604800000) >= ?) AND ((" +  SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " % 604800000)<= ?)))"
-        , null);*/
-
-
-        Log.i("Teachers app", "----" + (periodStart.getTime().getTime()) + "     " + new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime());
-        Log.i("Teachers app", "++++" + "(" +new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime()+ " >= "+periodStart.getTime().getTime()+" AND " +new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime() + " <= "+periodEnd.getTime().getTime()+") OR ((COLUMN_REPEAT = CONSTANT_REPEAT_DAILY) AND ("+(new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime()% 86400000)+" >= =-----"+(periodStart.getTime().getTime() % 86400000)+") AND (" +(  new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime()  % 86400000)+ "<= "+(periodEnd.getTime().getTime() % 86400000)+")) OR ((" +
-                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " = " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_WEEKLY + ") AND (" +(  new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime()  % 604800000)+ " >= "+(periodStart.getTime().getTime() % 604800000)+") AND (" +(  new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime() % 604800000) + " <= "+(periodEnd.getTime().getTime() % 604800000)+")))"+
-                "     " + new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime() % 86400000);
-
+//        String[] selectionArgs = {
+//                periodStart.getTime().getTime() + ""
+//                , periodEnd.getTime().getTime() + ""
+//                //--1
+//                , ((periodStart.getTime().getTime() - 75600000) % 86400000) + "",//делим на день, оставшееся - время прошедшеее с 00.00
+//                ((periodEnd.getTime().getTime() - 75600000) % 86400000) + "",//делим на день, оставшееся - время прошедшеее с 00.00
+//                ((periodStart.getTime().getTime() - 75600000) % 604800000) + "",//на неделю
+//                ((periodEnd.getTime().getTime() - 75600000) % 604800000) + ""//на неделю
+//                //--1
+//        };
+//        Cursor cursor = db.query(SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET, null,
+//                //SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " >= ? AND " +
+//                //       SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " <= ?",
+//                "(" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " >= ? AND " + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " <= ?) OR ((" +//                                                                    Todo здесь
+//                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " = " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_DAILY + ") AND (((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " - 75600000) % 86400000) >= ?) AND (((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " - 75600000) % 86400000) <= ?)) OR ((" +
+//                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " = " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_WEEKLY + ") AND (((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " - 75600000) % 604800000) >= ?) AND (((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " - 75600000) % 604800000) <= ?))",
+//                selectionArgs, null, null, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET +
+                        " WHERE ((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " >= " + periodStart.getTime().getTime() + " AND " + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " <= " + periodEnd.getTime().getTime() + ") OR ((" +
+                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " = " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_DAILY + ") AND (((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + "- 75600000) % 86400000) >= " + ((periodStart.getTime().getTime() - 75600000) % 86400000) + ") AND (((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + "- 75600000) % 86400000)<= " + ((periodEnd.getTime().getTime() - 75600000) % 86400000) + ")) OR ((" +
+                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " = " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_WEEKLY + ") AND (((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + "- 75600000) % 604800000) >= " + ((periodStart.getTime().getTime() - 75600000) % 604800000) + ") AND (((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + "- 75600000) % 604800000)<= " + ((periodEnd.getTime().getTime() - 75600000) % 604800000) + ")))"
+                , null);
+//        Log.i("Teachers app", "***" + (((1510896600000L - 75600000) % 86400000) <= (1510865999000L - 75600000) % 86400000));
+//        Log.i("Teachers app", "----" + (periodStart.getTime().getTime()) + "     " + new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime());
+//        Log.i("Teachers app", "++++" + "(" + new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime() + " >= " + periodStart.getTime().getTime() + " AND " + new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime() + " <= " + periodEnd.getTime().getTime() + ") OR ((COLUMN_REPEAT = CONSTANT_REPEAT_DAILY) AND (" + ((new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime() - 75600000) % 86400000) + " >= =-----" + ((periodStart.getTime().getTime() - 75600000) % 86400000) + ") AND (" + ((new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime() - 75600000) % 86400000) + "<= " + ((periodEnd.getTime().getTime() - 75600000) % 86400000) + ")) OR ((" +
+//                SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " = " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_WEEKLY + ") AND (" + ((new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime() - 75600000) % 604800000) + " >= " + ((periodStart.getTime().getTime() - 75600000) % 604800000) + ") AND (" + ((new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime() - 75600000) % 604800000) + " <= " + ((periodEnd.getTime().getTime() - 75600000) % 604800000) + ")))" +
+//                "     " + new GregorianCalendar(2017, 10, 17, 8, 30).getTime().getTime() % 86400000);
         ArrayList<Long> answer = new ArrayList<>();
         StringBuilder stringLessonsAttitudesId = new StringBuilder();
         while (cursor.moveToNext()) {
             long id = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_AND_TIME_ATTITUDE_ID));
             stringLessonsAttitudesId.append(id);
-            stringLessonsAttitudesId.append("");//todo
             stringLessonsAttitudesId.append(" | ");
             answer.add(id);
         }
@@ -725,18 +712,25 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     public long getLessonsAttitudesIdByTime(Calendar time) {//попадает ли переданное время в какое-либо из событий
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] selectionArgs = {
-                time.getTime().getTime() + ""
-                , time.getTime().getTime() + ""
+//        String[] selectionArgs = {
+//                time.getTime().getTime() + ""
+//                , time.getTime().getTime() + ""
+//
+//        };
+//        Cursor cursor = db.query(SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET,
+//                null, SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " <= ? AND " +
+//                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_END + " >= ?",
+//                //(COLUMN_DATE_BEGIN >= ? AND COLUMN_DATE_BEGIN <= ?) OR
+//                //(COLUMN_REPEAT == 1 AND (COLUMN_DATE_BEGIN % 86400000) >= ? AND (COLUMN_DATE_BEGIN % 86400000)<= ?) OR
+//                //(COLUMN_REPEAT == 2 AND (COLUMN_DATE_BEGIN % 604800000) >= ? AND (COLUMN_DATE_BEGIN % 604800000)<= ?)"
+//                selectionArgs, null, null, null);
 
-        };
-        Cursor cursor = db.query(SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET,
-                null, SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " <= ? AND " +
-                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_END + " >= ?",
-                //(COLUMN_DATE_BEGIN >= ? AND COLUMN_DATE_BEGIN <= ?) OR
-                //(COLUMN_REPEAT == 1 AND (COLUMN_DATE_BEGIN % 86400000) >= ? AND (COLUMN_DATE_BEGIN % 86400000)<= ?) OR
-                //(COLUMN_REPEAT == 2 AND (COLUMN_DATE_BEGIN % 604800000) >= ? AND (COLUMN_DATE_BEGIN % 604800000)<= ?)"
-                selectionArgs, null, null, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET +
+                        " WHERE ((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " <= " + time.getTime().getTime() + " AND " +
+                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_END + " >= " + time.getTime().getTime() + ") OR ((" +
+                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " = " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_DAILY + ") AND (((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + "- 75600000) % 86400000) <= " + ((time.getTime().getTime() - 75600000) % 86400000) + ") AND (((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_END + "- 75600000) % 86400000)>= " + ((time.getTime().getTime() - 75600000) % 86400000) + ")) OR ((" +
+                        SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " = " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_WEEKLY + ") AND (((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + "- 75600000) % 604800000) <= " + ((time.getTime().getTime() - 75600000) % 604800000) + ") AND (((" + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_END + "- 75600000) % 604800000)>= " + ((time.getTime().getTime() - 75600000) % 604800000) + ")))"
+                , null);
         long answer;
         if (cursor.getCount() != 0) {
             cursor.moveToFirst();
