@@ -3,6 +3,6 @@
     <string name="title_activity_list_of">ListOfActivity</string>
     <string name="title_activity_lesson">Lesson</string>
     <string name="lesson_list_menu_save_text">сохранить</string>
-    <string name="title_activity_learners_and_grades_list">LearnersAndGradesListActivity</string>
+    <string name="title_activity_learners_and_grades">LearnersGrades</string>
 
 </resources>

@@ -32,8 +32,8 @@
         <activity android:name=".LessonRedactorActivity" />
         <activity android:name=".SettingsActivity" />
         <activity
-            android:name=".LearnersAndGradesListActivity"
-            android:label="@string/title_activity_learners_and_grades_list"
+            android:name=".LearnersAndGradesActivity"
+            android:label="@string/title_activity_learners_and_grades"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
