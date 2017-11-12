@@ -65,6 +65,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
     long cabinetId;
     long classId;
     float multiplier = 2;
+    //long []  = { };
 
     static Handler handler;
 
@@ -319,6 +320,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         }
     }
 }
+
 
 class ChooseLearnerDialogFragment extends DialogFragment {//диалог по выбору не распределенного ученика
 

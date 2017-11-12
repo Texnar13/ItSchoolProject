@@ -30,7 +30,11 @@
         <activity android:name=".ScheduleMonthActivity" />
         <activity android:name=".ScheduleDayActivity" />
         <activity android:name=".LessonRedactorActivity" />
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
+        <activity
+            android:name=".LearnersAndGradesListActivity"
+            android:label="@string/title_activity_learners_and_grades_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

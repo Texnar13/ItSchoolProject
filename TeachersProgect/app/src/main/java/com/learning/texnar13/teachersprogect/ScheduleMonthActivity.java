@@ -10,6 +10,7 @@ import android.gesture.Prediction;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,11 +60,11 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
         final String months[] = {"Янв.", "Фев.", "Мар.", "Апр.", "Май", "Июнь", "Июль",
                 "Авг.", "Сен.", "Окт.", "Ноя.", "Дек."};
-
+        Date date = new Date();//получаем текущую дату
         final Calendar currentCalendar = new GregorianCalendar();//календарь
-        currentCalendar.setTime(new Date());//получаем текущую дату
+        currentCalendar.setTime(date);
         final Calendar changingCalendar = new GregorianCalendar();//календарь
-        currentCalendar.setTime(new Date());//получаем текущую дату
+        currentCalendar.setTime(date);
 
         outMonth(currentCalendar, currentCalendar, linearLayout);
         dateText.setText(
@@ -107,7 +108,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                                 break;
                         }
                         //Toast.makeText(getApplicationContext(), prediction.name, Toast.LENGTH_SHORT)
-                               // .show();
+                        // .show();
                     }
                 }
             }

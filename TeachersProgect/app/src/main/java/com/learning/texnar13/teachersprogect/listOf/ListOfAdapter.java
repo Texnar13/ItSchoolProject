@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
+import com.learning.texnar13.teachersprogect.LearnersAndGradesListActivity;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
@@ -140,12 +141,12 @@ class ListOfAdapter extends BaseAdapter {//todo задача адаптера п
                             break;
 
                         //todo статистика оценок ученика
-//                        case SchoolContract.TableLearners.NAME_TABLE_LEARNERS://todo0 будем переходить к статистике оценок ученика
-//                            intent = new Intent(context, ListOfActivity.class);
-//                            intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//с параметром
-//                            intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного ученика
-//                            activity.startActivity(intent);
-//                            break;
+                        case SchoolContract.TableLearners.NAME_TABLE_LEARNERS://todo0 будем переходить к статистике оценок ученика
+                            intent = new Intent(context, LearnersAndGradesListActivity.class);
+                            //intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//с параметром
+                            //intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного ученика
+                            activity.startActivity(intent);
+                            break;
                         case SchoolContract.TableCabinets.NAME_TABLE_CABINETS://запуск редактора кабинета
                             intent = new Intent(context, CabinetRedactorActivity.class);
                             intent.putExtra(CabinetRedactorActivity.EDITED_OBJECT_ID, objId);//передаём id выбранного бьекта
