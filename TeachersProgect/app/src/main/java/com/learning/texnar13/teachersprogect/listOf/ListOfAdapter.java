@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
-import com.learning.texnar13.teachersprogect.LearnersAndGradesListActivity;
+import com.learning.texnar13.teachersprogect.LearnersAndGrades.LearnersAndGradesActivity;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
@@ -134,17 +134,17 @@ class ListOfAdapter extends BaseAdapter {//todo задача адаптера п
                     Intent intent;//намерение для запуска ледующего активити
                     switch (type) {//тип вызывающего обьекта
                         case SchoolContract.TableClasses.NAME_TABLE_CLASSES://запуск этого активити заново
-                            intent = new Intent(context, ListOfActivity.class);
-                            intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//с параметром ученики
-                            intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного класса
-                            activity.startActivity(intent);
-                            break;
-
-                        //todo статистика оценок ученика
-                        case SchoolContract.TableLearners.NAME_TABLE_LEARNERS://todo0 будем переходить к статистике оценок ученика
-                            intent = new Intent(context, LearnersAndGradesListActivity.class);
+//                            intent = new Intent(context, ListOfActivity.class);
+//                            intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//с параметром ученики
+//                            intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного класса
+//                            activity.startActivity(intent);
+//                            break;
+//
+//                        //todo статистика оценок ученика
+//                        case SchoolContract.TableLearners.NAME_TABLE_LEARNERS://todo0 будем переходить к статистике оценок ученика
+                            intent = new Intent(context, LearnersAndGradesActivity.class);
                             //intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//с параметром
-                            //intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного ученика
+                            intent.putExtra(LearnersAndGradesActivity.CLASS_ID, objId);//передаём id выбранного ученика
                             activity.startActivity(intent);
                             break;
                         case SchoolContract.TableCabinets.NAME_TABLE_CABINETS://запуск редактора кабинета

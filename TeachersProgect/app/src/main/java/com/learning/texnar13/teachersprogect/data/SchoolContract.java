@@ -63,6 +63,7 @@ public final class SchoolContract {
         public static final String NAME_TABLE_LEARNERS_GRADES = "learnersGrades";
         public static final String KEY_GRADE_ID = BaseColumns._ID;
         public static final String COLUMN_GRADE = "grade";
+        public static final String COLUMN_TIME_STAMP = "time";//в timestamp
         public static final String KEY_LESSON_ID = "lessonId";
         public static final String KEY_LEARNER_ID = "learnerId";
     }
@@ -80,8 +81,8 @@ public final class SchoolContract {
         public static final String KEY_LESSON_AND_TIME_ATTITUDE_ID = BaseColumns._ID;
         public static final String KEY_LESSON_ID = "lessonId";
         public static final String KEY_CABINET_ID = "cabinetId";
-        public static final String COLUMN_DATE_BEGIN = "lessonDateBegin";
-        public static final String COLUMN_DATE_END = "lessonDateEnd";
+        public static final String COLUMN_DATE_BEGIN = "lessonDateBegin";//todo timestamp
+        public static final String COLUMN_DATE_END = "lessonDateEnd";//todo timestamp
         //--1
         public static final String COLUMN_REPEAT = "repeat";
         //constants:

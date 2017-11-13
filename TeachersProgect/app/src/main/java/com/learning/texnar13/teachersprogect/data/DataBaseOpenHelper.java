@@ -128,6 +128,9 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         if (oldVersion < 6) {
             db.execSQL("ALTER TABLE " + SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET + " ADD COLUMN " + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " INTEGER DEFAULT " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_NEVER + ";");//колонка для повторения уроков
         }
+        if (oldVersion < 7){
+            db.execSQL("ALTER TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ADD COLUMN " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP ;");
+        }
 
     }
 

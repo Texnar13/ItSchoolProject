@@ -293,7 +293,6 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         room.setLayoutParams(new FrameLayout.LayoutParams((maxDeskX + (int) dpFromPx((2000 + 1000) * multiplier)), (maxDeskY + (int) dpFromPx((2000 + 1000) * multiplier))));//(w, h)320*7 = 2240
         //room.setLayoutParams(new FrameLayout.LayoutParams(1120, 1120));//(w, h)320*7 = 2240
         Log.i("TeachersProject", "" + (maxDeskX + (int) dpFromPx((2000 + 1000) * multiplier)) + "" + (maxDeskY + (int) dpFromPx((2000 + 1000) * multiplier)));
-        //todo под размер экрана может всё таки  scroll view
     }
 
     private float dpFromPx(float px) {

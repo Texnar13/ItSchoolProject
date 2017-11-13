@@ -116,7 +116,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                     Toast toast = Toast.makeText(this,"на текущий момент нет доступных уроков",Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
-                    intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, attitudeId);//TODO сделать запуск текущего урока()расчеты вести здесь
+                    intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, attitudeId);
                     startActivity(intent);
                 }
             }

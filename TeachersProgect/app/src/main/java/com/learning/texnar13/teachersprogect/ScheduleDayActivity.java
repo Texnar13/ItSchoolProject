@@ -154,7 +154,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 relativeLayout.addView(tableHeadTexts[i], tableRelativeParams);
                 head.addView(relativeLayout, RelativeLayout.LayoutParams.MATCH_PARENT, (int) pxFromDp(50f));
 
-                head.setBackgroundColor(Color.RED);//todo красный только на время отладки
+                head.setBackgroundColor(Color.RED);//красный только на время отладки
             }
             table.addView(head);
         }
