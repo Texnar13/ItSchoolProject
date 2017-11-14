@@ -260,7 +260,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public long getLearnerIdByClassIdAndPlaceId(long classId, long placeId) {
+    public long getLearnerIdByClassIdAndPlaceId(long classId, long placeId) {//todo КОСТЫЛИЩЕЕЕЕ!!!!111 во всех отношениях
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor learnersCursor = this.getLearnersByClassId(classId);
         ArrayList<Long> learnersId = new ArrayList<>(learnersCursor.getCount());//получаем по классу id учеников
@@ -506,7 +506,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return temp;
     }
 
-    private Cursor getAttitudeByLearnerIdAndPlaceId(Long learnerId, Long placeId) {
+    public Cursor getAttitudeByLearnerIdAndPlaceId(Long learnerId, Long placeId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES, null, SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID + " = ? AND " + SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID + " = ?", new String[]{Long.toString(learnerId), Long.toString(placeId)}, null, null, null);
         Log.i("DBOpenHelper", "getAttitudeByLearnerIdAndPlaceId learnerId=" + learnerId + " placeId=" + placeId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames())

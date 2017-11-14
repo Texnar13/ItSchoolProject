@@ -14,10 +14,12 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,16 +60,30 @@ import java.util.ArrayList;
 * */
 public class SeatingRedactorActivity extends AppCompatActivity {
 
+    //константы
     //final public static String LESSON_ID = "lessonId";
     final public static String CLASS_ID = "classId";
     final public static String CABINET_ID = "cabinetId";
 
+    //технические переменные
+    static Handler handler;
+    int maxDeskX = 0;
+    int maxDeskY = 0;
+    float multiplier;
+
+    //главные переменные
     long cabinetId;
     long classId;
-    float multiplier = 2;
+
+    //массивы с данными из бд
+    ArrayList<DeskUnit> desksList = new ArrayList<>();
+    ArrayList<LearnerUnit> learnersList = new ArrayList<>();
+    ArrayList<AttitudeUnit> attitudesList = new ArrayList<>();
     //long []  = { };
 
-    static Handler handler;
+    //параметры view
+    RelativeLayout.LayoutParams tempRelativeLayoutDeskParams;
+    RelativeLayout.LayoutParams tempRelativeLayoutPlaceParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,38 +92,21 @@ public class SeatingRedactorActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
 
-        drawDesks();
-    }
-
-    private void drawDesks() {
-        RelativeLayout room = (RelativeLayout) findViewById(R.id.seating_redactor_room);
-        room.removeAllViews();
-
-        final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-
+        //----инициализация переменных----
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
-
-        int maxDeskX = 0;//максимальный отступ парты для расчёта размеров отображаемого layout
-        int maxDeskY = 0;
-
-
-        //lessonId = getIntent().getLongExtra(LESSON_ID, 1);//получаем id урока по умолчанию 1
-        //Cursor lessonCursor = db.getLessonById(lessonId);//курсор с уроком
-        //lessonCursor.moveToFirst();
         classId = getIntent().getLongExtra(CLASS_ID, -1);
         cabinetId = getIntent().getLongExtra(CABINET_ID, -1);
         if (classId == -1 || cabinetId == -1) {
-            Log.i("TeachersApp", "SeatingRedactorActivity - not intent: classId = " + classId + " cabinetId = " + cabinetId);
-//            Toast toast = new Toast(this);
-//            toast.makeText(this,"не выбран класс или кабинет",Toast.LENGTH_SHORT);
-//            toast.show();
+            Log.e("TeachersApp", "SeatingRedactorActivity - not  intent: classId = " + classId + " cabinetId = " + cabinetId);
             finish();
             Toast toast = Toast.makeText(this, "не выбран класс или кабинет для редактирования", Toast.LENGTH_SHORT);
             toast.show();
             return;
         }
 
-        //ставим заголовок имя урока
+        //----расставляем постоянные данные----
+        // ставим заголовок имя урока
         Cursor classCursor = db.getClasses(classId);
         classCursor.moveToFirst();
         Cursor cabinetCursor = db.getCabinets(cabinetId);
@@ -120,90 +119,123 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         classCursor.close();
         cabinetCursor.close();
 
-        Cursor desksCursor = db.getDesksByCabinetId(cabinetId);//курсор с партами
+        // выводим учеников из базы данных
+        Cursor learnersCursor = db.getLearnersByClassId(classId);
+        while (learnersCursor.moveToNext()) {
+            learnersList.add(new LearnerUnit(
+                    learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)),
+                    learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)),
+                    learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)),
+                    learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_CLASS_ID))
+            ));
+        }
+        learnersCursor.close();
 
+        // выводим парты из базы данных
+        Cursor desksCursor = db.getDesksByCabinetId(cabinetId);//курсор с партами
         while (desksCursor.moveToNext()) {
+            //все параметры самой парты
+            DeskUnit deskUnit = new DeskUnit(
+                    desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)),
+                    desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)),
+                    desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)),
+                    desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES))
+            );
+            desksList.add(deskUnit);
+            //вычисляем максимальный отступ парты
+            if (deskUnit.x * 100 * multiplier > maxDeskX) {//максимальный отступ парты для расчёта размеров отображаемого layout
+                maxDeskX = (int) (deskUnit.x * 100 * multiplier);
+            }
+            if (deskUnit.y * 100 * multiplier > maxDeskY) {
+                maxDeskY = (int) (deskUnit.y * 100 * multiplier);
+            }
+            //выводим места на партах из базы данных
+            Cursor placesCursor = db.getPlacesByDeskId(deskUnit.id);
+            while (placesCursor.moveToNext()) {
+                PlaceUnit placeUnit = new PlaceUnit(
+                        placesCursor.getLong(placesCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID)),
+                        placesCursor.getLong(placesCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_DESK_ID)),
+                        placesCursor.getLong(placesCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)));
+                deskUnit.placesList.add(placeUnit);
+                // выводим зависимости из базы данных
+                for (int i = 0; i < learnersList.size(); i++) {//пробегаемся по ученикам, ищем совпадения с этим местом
+                    Cursor attitudesCursor = db.getAttitudeByLearnerIdAndPlaceId(learnersList.get(i).id, placeUnit.id);
+                    while (attitudesCursor.moveToNext()) {
+                        attitudesList.add(new AttitudeUnit(
+                                attitudesCursor.getLong(attitudesCursor.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_ATTITUDES_ID)),
+                                attitudesCursor.getLong(attitudesCursor.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID)),
+                                attitudesCursor.getLong(attitudesCursor.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID))
+                        ));
+                    }
+                }
+            }
+            placesCursor.close();
+        }
+        desksCursor.close();
+
+        //----параметры view----
+        //параметры для всех парт
+        //параметры для всех мест
+
+
+        //----выводим всё----
+        drawDesks(db);
+    }
+
+    private void drawDesks(final DataBaseOpenHelper db) {
+        RelativeLayout room = (RelativeLayout) findViewById(R.id.seating_redactor_room);
+        room.removeAllViews();
+
+        for (DeskUnit deskUnit : desksList) {//пробегаемся по выгруженным партам
+
             //создание парты
             RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);
             tempRelativeLayoutDesk.setBackgroundColor(Color.LTGRAY);
-
-            RelativeLayout.LayoutParams tempRelativeLayoutDeskParams = new RelativeLayout.LayoutParams((int) dpFromPx(1000 * desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES)) * multiplier), (int) dpFromPx(1000 * multiplier));
-            tempRelativeLayoutDeskParams.leftMargin = (int) dpFromPx(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * 25 * multiplier);
-            tempRelativeLayoutDeskParams.topMargin = (int) dpFromPx(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * 25 * multiplier);
+            //настраиваем параметры под конкретную парту
+            tempRelativeLayoutDeskParams = new RelativeLayout.LayoutParams(
+                    (int) dpFromPx(1000 * deskUnit.countOfPlaces * multiplier),
+                    (int) dpFromPx(1000 * multiplier));//размеры проставляются далее индивидуально
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-            Log.i("TeachersApp", "SeatingRedactorActivity - onCreate view desk:" + desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
+            tempRelativeLayoutDeskParams.leftMargin =
+                    (int) dpFromPx(deskUnit.x * 25 * multiplier);
+            tempRelativeLayoutDeskParams.topMargin =
+                    (int) dpFromPx(deskUnit.y * 25 * multiplier);
+            Log.i("TeachersApp", "SeatingRedactorActivity - draw - view desk:" + deskUnit.id);
 
-            //вычисляем максимальный отступ парты
-            if (tempRelativeLayoutDeskParams.leftMargin > maxDeskX) {
-                maxDeskX = tempRelativeLayoutDeskParams.leftMargin;
-            }
-            if (tempRelativeLayoutDeskParams.topMargin > maxDeskY) {
-                maxDeskY = tempRelativeLayoutDeskParams.topMargin;
-            }
-
-            //проходим по местам на парте
-            final Cursor placeCursor = db.getPlacesByDeskId(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
-            while (placeCursor.moveToNext()) {
+            for (final PlaceUnit placeUnit : deskUnit.placesList) {//проходим по местам на парте
                 //создание места и ученика
 
-                //id
-                final long learnerId = db.getLearnerIdByClassIdAndPlaceId(classId, placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID)));
-                final long placeId = placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID));
+                //получаем id ученика
+                long learnerId = -1;
+                int attitudeIndex = -1;
+                for (int i = 0; i < attitudesList.size(); i++) {
+                    if (attitudesList.get(i).placeId == placeUnit.id) {
+                        learnerId = attitudesList.get(i).learnerId;
+                        attitudeIndex = i;
+                        break;
+                    }
+                }
                 //создание места
                 final LinearLayout tempPlaceLayout = new LinearLayout(this);
                 tempPlaceLayout.setOrientation(LinearLayout.VERTICAL);
                 tempPlaceLayout.setBackgroundColor(Color.parseColor("#e4ea7e"));
-                RelativeLayout.LayoutParams tempRelativeLayoutPlaceParams = new RelativeLayout.LayoutParams((int) dpFromPx((1000 - 50) * multiplier), (int) dpFromPx((1000 - 50) * multiplier));
-                tempRelativeLayoutPlaceParams.leftMargin = (int) dpFromPx((25 + (1000 * (placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1))) * multiplier);
-                tempRelativeLayoutPlaceParams.topMargin = (int) dpFromPx(25 * multiplier);
+                //настраиваем параметры под конкретное место
+                tempRelativeLayoutPlaceParams = new RelativeLayout.LayoutParams(
+                        (int) dpFromPx((1000 - 50) * multiplier),
+                        (int) dpFromPx((1000 - 50) * multiplier));
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-                Log.i("TeachersApp", "SeatingRedactorActivity - onCreate view place:" + placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID)));
-//                //создание картинки ученика
-//                final ImageView tempLernerImage = new ImageView(this);
-//                final LinearLayout.LayoutParams tempLernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F);
-//                tempLernerImage.setImageResource(R.drawable.learner_gray);//по умолчанию серая картинка
-//
-//                //создание текста ученика
-//                final TextView tempLearnerText = new TextView(this);
-//                final LinearLayout.LayoutParams tempLearnerTextParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 2F);
-//                tempLearnerText.setGravity(Gravity.CENTER_HORIZONTAL);
-//                tempLearnerText.setTextColor(Color.WHITE);
-//
-//                //создание кнопки добавить ученика
-//                final ImageView tempImageAdd = new ImageView(getApplicationContext());
-//                final LinearLayout.LayoutParams tempImageAddParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-//                tempImageAdd.setImageResource(R.drawable.ic_menu_add);
-//                tempImageAdd.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        tempPlaceLayout.removeAllViews();
-//                        ChooseLearnerDialogFragment dialogFragment = new ChooseLearnerDialogFragment(lessonId);
-//                        dialogFragment.show(getFragmentManager(), "chooseLearners");
-//                        handler = new Handler() {
-//                            public void handleMessage(android.os.Message msg) {
-//                                //добавляем запись по id ученика и урока
-//                                db.setLearnerOnPlace(lessonId, msg.what, placeId);
-//                                //Cursor chooseCursor = db.getLearner(msg.what);
-//                                //chooseCursor.moveToFirst();
-//                                //обновляем TextView
-//                                //tempLearnerText.setText(chooseCursor.getString(chooseCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)));
-//                                //tempPlaceLayout.addView(tempLernerImage, tempLernerImageParams);
-//                                //tempPlaceLayout.addView(tempLearnerText, tempLearnerTextParams);
-//                                //chooseCursor.close();
-//                                drawDesks();
-//                            }
-//                        };
-//                    }
-//                });
+                tempRelativeLayoutPlaceParams.leftMargin = (int) dpFromPx((25 + (1000 * (placeUnit.ordinalNumber - 1))) * multiplier);
+                tempRelativeLayoutPlaceParams.topMargin = (int) dpFromPx(25 * multiplier);
+                Log.i("TeachersApp", "SeatingRedactorActivity - draw view place:" + placeUnit.id);
+                //садим ученика на место
                 if (learnerId != -1) {//если id ученика не равно -1 то выводим ученика иначе кнопку добавить ученика
-
-                    final Cursor learnerCursor = db.getLearner(learnerId);//получаем ученика
-                    learnerCursor.moveToFirst();
-
+                    //final переменная
+                    final long finalLearnerId = learnerId;
+                    final int finalAttitudeIndex = attitudeIndex;
                     //создание картинки ученика
                     final ImageView tempLernerImage = new ImageView(this);
                     final LinearLayout.LayoutParams tempLernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F);
@@ -214,16 +246,23 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                     tempLearnerText.setTextSize(200 * multiplier);
                     final LinearLayout.LayoutParams tempLearnerTextParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 3F);
                     tempLearnerText.setGravity(Gravity.CENTER_HORIZONTAL);
-                    tempLearnerText.setTextColor(Color.WHITE);
-
+                    tempLearnerText.setTextColor(Color.GRAY);
+                    String learnerLastName = "";
+                    //получаем текст ученика
+                    for (int i = 0; i < learnersList.size(); i++) {
+                        if (learnersList.get(i).id == learnerId) {
+                            learnerLastName = learnersList.get(i).lastName;
+                            break;
+                        }
+                    }
+                    tempLearnerText.setText(learnerLastName);
                     //картинка ученика
                     tempLernerImage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //tempPlaceLayout.removeAllViews();
-                            db.deleteAttitudeByLearnerIdAndPlaceId(learnerId, placeId);//удаляем запись по id ученика и урока
-                            drawDesks();
-                            //tempPlaceLayout.addView(tempImageAdd, tempImageAddParams);
+                            db.deleteAttitudeByLearnerIdAndPlaceId(finalLearnerId, placeUnit.id);//сразу удаляем запись по id ученика и урока
+                            attitudesList.remove(finalAttitudeIndex);
+                            drawDesks(db);
                         }
                     });
                     tempPlaceLayout.addView(tempLernerImage, tempLernerImageParams);
@@ -232,17 +271,13 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                     tempLearnerText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //tempPlaceLayout.removeAllViews();
-                            db.deleteAttitudeByLearnerIdAndPlaceId(learnerId, placeId);//удаляем запись по id ученика и урока
-                            drawDesks();
-                            //tempPlaceLayout.addView(tempImageAdd, tempImageAddParams);
+                            db.deleteAttitudeByLearnerIdAndPlaceId(finalLearnerId, placeUnit.id);//сразу удаляем запись по id ученика и урока
+                            attitudesList.remove(finalAttitudeIndex);
+                            drawDesks(db);
 
                         }
                     });
-                    tempLearnerText.setText(learnerCursor.getString(learnerCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)));
-                    tempLearnerText.setTextColor(Color.GRAY);
                     tempPlaceLayout.addView(tempLearnerText, tempLearnerTextParams);
-                    learnerCursor.close();
                 } else {
                     //создание кнопки добавить ученика
                     final ImageView tempImageAdd = new ImageView(getApplicationContext());
@@ -259,15 +294,21 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                                     //возврат -1 если ничего не выбрано иначе id ученика
                                     if (msg.what != -1) {
                                         //добавляем запись по id ученика и урока
-                                        db.setLearnerOnPlace(//lessonId,
-                                                msg.what, placeId);
+
+                                        attitudesList.add(//добавляем зависимость в локальный массив
+                                                new AttitudeUnit(
+                                                        db.setLearnerOnPlace(msg.what, placeUnit.id),//добавляем зависимость в базу получаем id
+                                                        msg.what,//id ученика
+                                                        placeUnit.id//d места
+                                                )
+                                        );
                                     }
-                                    drawDesks();
+                                    drawDesks(db);
                                 }
                             };
                         }
                     });
-                    if (db.getNotPutLearnersIdByCabinetIdAndClassId(cabinetId, classId).size() != 0)
+                    if (learnersList.size() != attitudesList.size())
                         tempPlaceLayout.addView(tempImageAdd, tempImageAddParams);
                 }
 
@@ -275,22 +316,17 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                 //добавление места в парту
                 tempRelativeLayoutDesk.addView(tempPlaceLayout, tempRelativeLayoutPlaceParams);
             }
-            placeCursor.close();
 
             //добавление парты в комнату
             room.addView(tempRelativeLayoutDesk, tempRelativeLayoutDeskParams);
         }
-
-
-//        // Узнаем размеры экрана из ресурсов
-//        DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
-//
-//        // узнаем размеры экрана из класса Display
-//        Display display = getWindowManager().getDefaultDisplay();
-//        DisplayMetrics metricsB = new DisplayMetrics();
-//        display.getMetrics(metricsB);
-
-        room.setLayoutParams(new FrameLayout.LayoutParams((maxDeskX + (int) dpFromPx((2000 + 1000) * multiplier)), (maxDeskY + (int) dpFromPx((2000 + 1000) * multiplier))));//(w, h)320*7 = 2240
+        room.setLayoutParams(new LinearLayout.LayoutParams((maxDeskX
+                + (int) dpFromPx(3000 * multiplier)
+        ), (maxDeskY//всё правильно
+                + (int) dpFromPx(2250 * multiplier)
+        )));
+        //room.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));//(w, h)320*7 = 2240
+        //room.setLayoutParams(new FrameLayout.LayoutParams(1000, 2000));//(w, h)320*7 = 2240
         //room.setLayoutParams(new FrameLayout.LayoutParams(1120, 1120));//(w, h)320*7 = 2240
         Log.i("TeachersProject", "" + (maxDeskX + (int) dpFromPx((2000 + 1000) * multiplier)) + "" + (maxDeskY + (int) dpFromPx((2000 + 1000) * multiplier)));
     }
@@ -369,3 +405,60 @@ class ChooseLearnerDialogFragment extends DialogFragment {//диалог по в
     }
 
 }
+
+class DeskUnit {//хранит в себе одну парту
+    long id;
+    long x;
+    long y;
+    long countOfPlaces;
+    ArrayList<PlaceUnit> placesList;
+
+    public DeskUnit(long id, long x, long y, long countOfPlaces) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.countOfPlaces = countOfPlaces;
+        this.placesList = new ArrayList<>();
+    }
+}
+
+class PlaceUnit {//хранит в себе одно место
+    long id;
+    long deskId;
+    long ordinalNumber;
+
+    public PlaceUnit(long id, long deskId, long ordinalNumber) {
+        this.id = id;
+        this.deskId = deskId;
+        this.ordinalNumber = ordinalNumber;
+    }
+}
+
+class LearnerUnit {//хранит в себе одного ученика
+    long id;
+    String name;
+    String lastName;
+    long classId;
+
+    public LearnerUnit(long id, String name, String lastName, long classId) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.classId = classId;
+    }
+}
+
+
+class AttitudeUnit {//хранит в себе зависимость ученик место
+    long id;
+    long learnerId;
+    long placeId;
+
+    public AttitudeUnit(long id, long learnerId, long placeId) {
+        this.id = id;
+        this.learnerId = learnerId;
+        this.placeId = placeId;
+    }
+}
+
+
