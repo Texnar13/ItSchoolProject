@@ -320,11 +320,10 @@ public class SeatingRedactorActivity extends AppCompatActivity {
             //добавление парты в комнату
             room.addView(tempRelativeLayoutDesk, tempRelativeLayoutDeskParams);
         }
-        room.setLayoutParams(new LinearLayout.LayoutParams((maxDeskX
-                + (int) dpFromPx(3000 * multiplier)
-        ), (maxDeskY//всё правильно
-                + (int) dpFromPx(2250 * multiplier)
-        )));
+        room.setLayoutParams(new LinearLayout.LayoutParams(
+                (maxDeskX + (int) dpFromPx(3000 * multiplier)),
+                (maxDeskY + (int) dpFromPx(2250 * multiplier))
+        ));
         //room.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));//(w, h)320*7 = 2240
         //room.setLayoutParams(new FrameLayout.LayoutParams(1000, 2000));//(w, h)320*7 = 2240
         //room.setLayoutParams(new FrameLayout.LayoutParams(1120, 1120));//(w, h)320*7 = 2240

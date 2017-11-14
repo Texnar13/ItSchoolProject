@@ -22,47 +22,22 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent">
 
-            <RelativeLayout
-                android:id="@+id/room_layout"
-                android:layout_width="600dp"
-                android:layout_height="600dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:background="#fbe2e7">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <!--<RelativeLayout
-                    android:layout_width="80dp"
-                    android:layout_height="40dp"
+                <RelativeLayout
+                    android:id="@+id/room_layout"
+                    android:layout_width="600dp"
+                    android:layout_height="600dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginLeft="200dp"
-                    android:layout_marginStart="200dp"
-                    android:layout_marginTop="500dp"
-                    android:background="#bce4af00">
+                    android:background="#fbe2e7">
 
-                    <LinearLayout
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="5dp"
-                        android:background="#bc8e6d02"
-                        android:orientation="vertical">
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="45dp"
-                        android:layout_marginTop="5dp"
-                        android:background="#0029bf"
-                        android:orientation="vertical">
-
-                    </LinearLayout>
-                </RelativeLayout>-->
-            </RelativeLayout>
+                </RelativeLayout>
+            </LinearLayout>
         </ScrollView>
     </HorizontalScrollView>
 </RelativeLayout>

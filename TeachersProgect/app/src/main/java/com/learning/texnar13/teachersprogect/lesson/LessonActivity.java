@@ -165,6 +165,8 @@ public class LessonActivity extends AppCompatActivity {
         long cabinetId;
         Cursor lessonCursor;//курсор с текущим уроком
         Cursor desksCursor;//курсор с партами
+        int maxX = 0;//размеры экрана попарте
+        int maxY = 0;
 
 
         if (getIntent().getLongExtra(LESSON_ATTITUDE_ID, -1) == -1) {//-1 ошибка, 1> использовать переданные
@@ -214,6 +216,14 @@ public class LessonActivity extends AppCompatActivity {
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             Log.i("TeachersApp", "LessonActivity - onCreate view desk:" + desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
+
+            //считаем максимальную парту
+            if (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * 100 * multiplier > maxX) {
+                maxX = (int) (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * 100 * multiplier);
+            }if (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * 100 * multiplier > maxY) {
+                maxY = (int) (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * 100 * multiplier);
+            }
+
 
             //создание места
             Cursor placeCursor = db.getPlacesByDeskId(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
@@ -424,12 +434,20 @@ public class LessonActivity extends AppCompatActivity {
             //добавление парты в комнату
             room.addView(tempRelativeLayoutDesk, tempRelativeLayoutDeskParams);
         }
+        room.setLayoutParams(new LinearLayout.LayoutParams(
+                (maxX + (int) dpFromPx(3000 * multiplier)),
+                (maxY + (int) dpFromPx(2250 * multiplier))
+        ));
         desksCursor.close();
         db.close();
     }
 
     private float pxFromDp(float dp) {
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
+    }
+    private float dpFromPx(float px) {
+        return px * getApplicationContext().getResources().getDisplayMetrics().density;
+
     }
 
     @Override
