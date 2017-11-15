@@ -295,6 +295,7 @@ public class LessonActivity extends AppCompatActivity {
                     View.OnClickListener onClickListener = new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            if(gradeArrayList.get(tempGradeId).getGrade() != -2)
                             if (gradeArrayList.get(tempGradeId).getGrade() != 5) {
                                 gradeArrayList.get(tempGradeId).setGrade((byte) (1 + gradeArrayList.get(tempGradeId).getGrade()));
                             } else {
@@ -302,6 +303,9 @@ public class LessonActivity extends AppCompatActivity {
                             }
 
                             switch ((int) gradeArrayList.get(tempGradeId).getGrade()) {
+                                case -2:
+                                    tempLernerImage.setImageResource(R.drawable.learner_white);
+                                    break;
 //                                case 0:
 //                                    tempLernerImage.setImageResource(R.drawable.learner_gray);
 //                                    break;
@@ -328,6 +332,16 @@ public class LessonActivity extends AppCompatActivity {
                         @Override
                         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
 
+                            if (gradeArrayList.get(tempGradeId).getGrade() != -2 && gradeArrayList.get(tempGradeId).getGradesCount() < 1) {
+                                contextMenu.add(0, -2, 0, "отсутствует").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_white);
+                                        gradeArrayList.get(tempGradeId).setGrade((byte) -2);
+                                        return true;
+                                    }
+                                });
+                            }
                             if (gradeArrayList.get(tempGradeId).getGrade() != 0) {
                                 contextMenu.add(0, 0, 0, "нет оценки").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
@@ -388,7 +402,7 @@ public class LessonActivity extends AppCompatActivity {
                                     }
                                 });
                             }
-                            if (gradeArrayList.get(tempGradeId).getGradesCount() != 2 && gradeArrayList.get(tempGradeId).getGrade() != 0) {
+                            if (gradeArrayList.get(tempGradeId).getGradesCount() != 2 && gradeArrayList.get(tempGradeId).getGrade() != 0 && gradeArrayList.get(tempGradeId).getGrade() != -2) {
                                 contextMenu.add(0, 6, 0, "новая оценка").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {

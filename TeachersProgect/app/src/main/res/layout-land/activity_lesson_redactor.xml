@@ -153,7 +153,6 @@
                 android:id="@+id/activity_lesson_redactor_lesson_repeat_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#e4ea7e"
                 android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp" />
         </LinearLayout>

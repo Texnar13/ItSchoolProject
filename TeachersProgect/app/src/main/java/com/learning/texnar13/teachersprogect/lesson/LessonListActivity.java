@@ -115,7 +115,12 @@ public class LessonListActivity extends AppCompatActivity {
                 if (gradeArray[j][i] == 0) {
                     textViewWisGrade.setText("-");
                 } else {
-                    textViewWisGrade.setText(Long.toString(gradeArray[j][i]));
+                    if(gradeArray[j][i] != -2){
+                        textViewWisGrade.setText(Long.toString(gradeArray[j][i]));
+                    }else{
+                        textViewWisGrade.setText("Н");
+                    }
+
                 }
                 tempLayout.addView(textViewWisGrade, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 4F));
             }

@@ -227,14 +227,14 @@ public class LessonRedactorActivity extends AppCompatActivity {
         }
 
         {//назначение повторений todo error
-            //final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, );
+            final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, repeatPeriodsNames);
 
-            // Настраиваем адаптер
-            ArrayAdapter<?> adapter = new
-                    ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, repeatPeriodsNames);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //  адаптер
+//            ArrayAdapter<?> adapter = new
+//                    ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, repeatPeriodsNames);
+//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-            //adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
+            adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
             lessonRepeatSpinner
                     .setAdapter(
                             adapter);
