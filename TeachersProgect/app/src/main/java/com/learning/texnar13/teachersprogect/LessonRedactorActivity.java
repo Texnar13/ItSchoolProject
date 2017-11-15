@@ -54,7 +54,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
     //время
     LinearLayout timeOut;
     LessonTimePeriod lessonTime;
-    Spinner lessonRepeatSpinner;
+
     long repeat = 0;
     String[] repeatPeriodsNames = {"никогда", "ежедневно", "еженедельно"
             //, "ежемесячно"//todo
@@ -88,7 +88,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
         //время
         timeOut = (LinearLayout) findViewById(R.id.activity_lesson_redactor_time_layout);
         CheckBox timeCheckBox = (CheckBox) findViewById(R.id.activity_lesson_redactor_time_check_box);
-        lessonRepeatSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_lesson_repeat_spinner);
+        Spinner lessonRepeatSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_lesson_repeat_spinner);
         //общие
         TextView title = (TextView) findViewById(R.id.activity_lesson_redactor_title);
         LinearLayout buttonsOut = (LinearLayout) findViewById(R.id.activity_lesson_redactor_buttons_out);
@@ -226,10 +226,18 @@ public class LessonRedactorActivity extends AppCompatActivity {
             }
         }
 
-        {//назначение повторений
-            CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, repeatPeriodsNames);
-            adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
-            lessonRepeatSpinner.setAdapter(adapter);
+        {//назначение повторений todo error
+            //final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, );
+
+            // Настраиваем адаптер
+            ArrayAdapter<?> adapter = new
+                    ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, repeatPeriodsNames);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            //adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
+            lessonRepeatSpinner
+                    .setAdapter(
+                            adapter);
             lessonRepeatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

@@ -133,6 +133,30 @@
                 android:text="своё время" />
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:gravity="center"
+                android:text="повторы:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <Spinner
+                android:id="@+id/activity_lesson_redactor_lesson_repeat_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#e4ea7e"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/activity_lesson_redactor_seating_state"
