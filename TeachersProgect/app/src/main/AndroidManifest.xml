@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.learning.texnar13.teachersprogect"
     android:versionCode="6"
-    android:versionName="1.163">
+    android:versionName="1.164">
 
     <application
         android:allowBackup="true"

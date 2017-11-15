@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +85,7 @@ public class ListOfDialog extends DialogFragment {
                 } else {
                     builder.setTitle("редактирование класса");
                     final DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
-                    if(objectsId.size() == 1){//если получаем на вход только один класс то ставим в строку его имя
+                    if (objectsId.size() == 1) {//если получаем на вход только один класс то ставим в строку его имя
                         Cursor cursor = db.getClasses(objectsId.get(0));
                         cursor.moveToFirst();
                         className.setText(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
@@ -120,10 +121,12 @@ public class ListOfDialog extends DialogFragment {
                 final EditText firstName = new EditText(getActivity().getApplicationContext());
                 firstName.setTextColor(Color.BLACK);
                 firstName.setHint("имя");
+                firstName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
                 firstName.setHintTextColor(Color.GRAY);
                 final EditText lastName = new EditText(getActivity().getApplicationContext());
                 lastName.setTextColor(Color.BLACK);
                 lastName.setHint("фамилия");
+                lastName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
                 lastName.setHintTextColor(Color.GRAY);
 
                 linearLayout.addView(lastName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -157,11 +160,19 @@ public class ListOfDialog extends DialogFragment {
                         }
                     });
                 } else {
+                    {//ставим имена в поля
+                        DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
+                        Cursor learner = db.getLearner(objectsId.get(0));
+                        learner.moveToFirst();
+                        firstName.setText(learner.getString(learner.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)));
+                        lastName.setText(learner.getString(learner.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)));
+                        learner.close();
+                    }
                     builder.setTitle("редактирование ученика");
                     builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
-                            db.setLearnerNameAndLastName(objectsId, lastName.getText().toString(), firstName.getText().toString());
+                            db.setLearnerNameAndLastName(objectsId, firstName.getText().toString(), lastName.getText().toString());
                             {//ставим адаптер
                                 Cursor cursor = db.getLearnersByClassId(parentId);//получаем учеников
                                 ArrayList<ListOfAdapterObject> listOfClasses = new ArrayList<>();//создаём лист с учениками
