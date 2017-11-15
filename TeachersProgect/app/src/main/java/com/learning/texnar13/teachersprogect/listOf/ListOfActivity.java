@@ -228,39 +228,39 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
     }
 
     @Override
-    public void onBackPressed() {
-        if (isEditMenuVisible) {
-            ArrayList<ListOfAdapterObject> list = new ArrayList<>();//создаём лист с обьектами
-            switch (listParameterValue) {//исходя из типа заполняем лист
-                case SchoolContract.TableClasses.NAME_TABLE_CLASSES: {
-                    Cursor cursor = new DataBaseOpenHelper(this).getClasses();
-                    while (cursor.moveToNext()) {//курсор в лист
-                        list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)), SchoolContract.TableClasses.NAME_TABLE_CLASSES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID))));
+            public void onBackPressed() {
+                if (isEditMenuVisible) {
+                    ArrayList<ListOfAdapterObject> list = new ArrayList<>();//создаём лист с обьектами
+                    switch (listParameterValue) {//исходя из типа заполняем лист
+                        case SchoolContract.TableClasses.NAME_TABLE_CLASSES: {
+                            Cursor cursor = new DataBaseOpenHelper(this).getClasses();
+                            while (cursor.moveToNext()) {//курсор в лист
+                                list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)), SchoolContract.TableClasses.NAME_TABLE_CLASSES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID))));
+                            }
+                            cursor.close();
+                            break;
+                        }
+                        case SchoolContract.TableLearners.NAME_TABLE_LEARNERS: {
+                            Cursor cursor = new DataBaseOpenHelper(this).getLearnersByClassId(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));
+                            while (cursor.moveToNext()) {//курсор в лист
+                                list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) + " " + cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)), SchoolContract.TableLearners.NAME_TABLE_LEARNERS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID))));
+                            }
+                            cursor.close();
+                            break;
+                        }
+                        case SchoolContract.TableCabinets.NAME_TABLE_CABINETS: {
+                            Cursor cursor = new DataBaseOpenHelper(this).getCabinets();
+                            while (cursor.moveToNext()) {//курсор в лист
+                                list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)), SchoolContract.TableCabinets.NAME_TABLE_CABINETS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableCabinets.KEY_CABINET_ID))));
+                            }
+                            cursor.close();
+                            break;
+                        }
                     }
-                    cursor.close();
-                    break;
-                }
-                case SchoolContract.TableLearners.NAME_TABLE_LEARNERS: {
-                    Cursor cursor = new DataBaseOpenHelper(this).getLearnersByClassId(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));
-                    while (cursor.moveToNext()) {//курсор в лист
-                        list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) + " " + cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)), SchoolContract.TableLearners.NAME_TABLE_LEARNERS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID))));
-                    }
-                    cursor.close();
-                    break;
-                }
-                case SchoolContract.TableCabinets.NAME_TABLE_CABINETS: {
-                    Cursor cursor = new DataBaseOpenHelper(this).getCabinets();
-                    while (cursor.moveToNext()) {//курсор в лист
-                        list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)), SchoolContract.TableCabinets.NAME_TABLE_CABINETS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableCabinets.KEY_CABINET_ID))));
-                    }
-                    cursor.close();
-                    break;
-                }
-            }
-            this.adapter = new ListOfAdapter(this, list, false, listParameterValue);
-            ((ListView) findViewById(R.id.content_list_of_list_view)).setAdapter(this.adapter);
-            isEditMenuVisible = false;
-        } else {
+                    this.adapter = new ListOfAdapter(this, list, false, listParameterValue);
+                    ((ListView) findViewById(R.id.content_list_of_list_view)).setAdapter(this.adapter);
+                    isEditMenuVisible = false;
+                } else {
             super.onBackPressed();
         }
     }

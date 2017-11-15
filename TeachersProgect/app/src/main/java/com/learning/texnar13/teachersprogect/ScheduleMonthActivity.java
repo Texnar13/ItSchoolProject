@@ -234,7 +234,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         for (int i = 0; i < weekLinearRows.length; i++) {
             weekLinearRows[i] = new LinearLayout(this);
             //weekTableRows[i].setWeight(1);
-            weekLinearRows[i].setBackgroundColor(Color.GRAY);
+            weekLinearRows[i].setBackgroundColor(Color.LTGRAY);
             weekLinearRows[i].setGravity(LinearLayout.VERTICAL);
             weekLinearRows[i].setWeightSum(7f);
             if (i == 0) {
@@ -261,7 +261,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             day.setTextSize(15);
             day.setTextColor(Color.BLACK);
             day.setGravity(Gravity.CENTER);
-            day.setBackgroundColor(Color.parseColor("#e4ea7e"));
+            day.setBackgroundColor(Color.WHITE);//Color.LTGRAY"#e4ea7e""#fbffb9""#fdffdf"
             weekLinearRows[0].addView(
                     day,
                     new LinearLayout.LayoutParams(
@@ -283,10 +283,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 day.setTextSize(20);
                 day.setTextColor(Color.BLACK);
                 if (weekDay == 5 || weekDay == 6) {
-                    day.setBackgroundColor(Color.parseColor("#fbffb9"));
+                    day.setBackgroundColor(Color.parseColor("#fdffdf"));//"#fbffb9"
                 } else
                     //day.setBackgroundColor(Color.WHITE);
-                    day.setBackgroundColor(Color.parseColor("#fdffdf"));
+                    day.setBackgroundColor(Color.WHITE);//"#fdffdf"parseColor()
                 day.setGravity(Gravity.CENTER);
                 LinearLayout linearLayout = new LinearLayout(this);
                 linearLayout.setGravity(Gravity.CENTER);

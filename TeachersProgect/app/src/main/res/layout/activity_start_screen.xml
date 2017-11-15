@@ -28,20 +28,20 @@
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:scaleType="fitXY"
-                app:srcCompat="@drawable/spot_1" />
+                app:srcCompat="@drawable/_1_pink_spot" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <!--LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:orientation="vertical">
 
-                </LinearLayout>
+                </LinearLayout-->
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -52,15 +52,15 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/start_text_current_lesson" />
+                    app:srcCompat="@drawable/_1_current_lesson_text" />
 
-                <LinearLayout
+                <!--LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:orientation="vertical">
 
-                </LinearLayout>
+                </LinearLayout-->
             </LinearLayout>
         </RelativeLayout>
 
@@ -75,7 +75,7 @@
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:scaleType="fitXY"
-                app:srcCompat="@drawable/spot_2" />
+                app:srcCompat="@drawable/_2_green_spot" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -83,13 +83,13 @@
                 android:scaleType="fitXY"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <!--LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:orientation="vertical">
 
-                </LinearLayout>
+                </LinearLayout-->
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -100,15 +100,15 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/start_text_my_schedule" />
+                    app:srcCompat="@drawable/_2_my_schedule_text" />
 
-                <LinearLayout
+                <!--LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:orientation="vertical">
 
-                </LinearLayout>
+                </LinearLayout-->
             </LinearLayout>
         </RelativeLayout>
 
@@ -124,20 +124,20 @@
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:scaleType="fitXY"
-                app:srcCompat="@drawable/spot_3" />
+                app:srcCompat="@drawable/_3_yellow_spot" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <!--LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:orientation="vertical">
 
-                </LinearLayout>
+                </LinearLayout-->
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -148,15 +148,15 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/start_text_my_cabinets" />
+                    app:srcCompat="@drawable/_3_my_cabinets_text" />
 
-                <LinearLayout
+                <!--LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:orientation="vertical">
 
-                </LinearLayout>
+                </LinearLayout-->
             </LinearLayout>
         </RelativeLayout>
 
@@ -171,20 +171,20 @@
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:scaleType="fitXY"
-                app:srcCompat="@drawable/spot_4" />
+                app:srcCompat="@drawable/_4_blue_spot" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <!--LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:orientation="vertical">
 
-                </LinearLayout>
+                </LinearLayout-->
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -195,15 +195,15 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/start_text_my_learners" />
+                    app:srcCompat="@drawable/_4_my_learners_text" />
 
-                <LinearLayout
+                <!--LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:orientation="vertical">
 
-                </LinearLayout>
+                </LinearLayout-->
             </LinearLayout>
         </RelativeLayout>
 
@@ -216,22 +216,24 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:scaleType="fitXY"
-                app:srcCompat="@drawable/spot_5" />
+                app:srcCompat="@drawable/_5_violet_spot" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <!--LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:orientation="vertical">
 
-                </LinearLayout>
+                </LinearLayout-->
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -243,16 +245,16 @@
                     android:layout_marginStart="20dp"
 
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/start_text_settings" />
+                    app:srcCompat="@drawable/_5_settings_text" />
 
-                <LinearLayout
+                <!--LinearLayout
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:orientation="vertical">
 
-                </LinearLayout>
+                </LinearLayout-->
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
