@@ -88,28 +88,42 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
         //Spinner
 
 
-        //таблица
+        //таблицы
         //----------имена----------
         TableLayout learnersNamesTable = (TableLayout) findViewById(R.id.learners_and_grades_table_names);
         //----------оценки----------
         TableLayout learnersGradesTable = (TableLayout) findViewById(R.id.learners_and_grades_table);
 
         //---заголовок---
-        //имена
+        //заголовок ученика
         TableRow headNameRaw = new TableRow(this);
-
+        //рамка
+        LinearLayout headNameOut = new LinearLayout(this);
+        headNameOut.setBackgroundColor(Color.parseColor("#1f5b85"));
+        //текст заголовка ученика
         TextView headName = new TextView(this);
         headName.setText("Ф.И.");
         headName.setBackgroundColor(Color.parseColor("#bed7e9"));
         headName.setGravity(Gravity.CENTER);
         headName.setTextColor(Color.parseColor("#1f5b85"));
-        headNameRaw.addView(headName, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
+        //отступы рамки
+        LinearLayout.LayoutParams headNameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        headNameParams.setMargins(1,3,1,3);
+        //текст в рамку
+        headNameOut.addView(headName,headNameParams);
+        //рамку в строку
+        headNameRaw.addView(headNameOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
+        //строку в таблицу
+        learnersNamesTable.addView(headNameRaw, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
 
-        learnersNamesTable.addView(headNameRaw, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
 
         //дни
         TableRow headGrades = new TableRow(this);
         for (int i = 0; i < countOfDays; i++) {
+            //рамка
+            LinearLayout headDateOut = new LinearLayout(this);
+            headDateOut.setBackgroundColor(Color.LTGRAY);
+            //текст заголовка ученика
             TextView headDate = new TextView(this);
             headDate.setTextColor(Color.BLACK);
             headDate.setBackgroundColor(Color.WHITE);
@@ -119,24 +133,39 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
             } else {
                 headDate.setText(" " + (i + 1) + "  ");
             }
-            headGrades.addView(headDate, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            //отступы рамки
+            LinearLayout.LayoutParams headDateParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            headDateParams.setMargins(1,3,1,3);
+            //текст в рамку
+            headDateOut.addView(headDate,headDateParams);
+            //рамку в строку
+            headGrades.addView(headDateOut, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         }
-        learnersGradesTable.addView(headGrades, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
+        //строку в таблицу
+        learnersGradesTable.addView(headGrades, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
         //---тело---
         for (int i = 0; i < learnersNames.size(); i++) {//пробегаемся по ученикам
-            //строка ученика
+            //строка с учеником и оценками
             TableRow learner = new TableRow(this);
             TableRow learnerGrades = new TableRow(this);
 
+            //рамка
+            LinearLayout learnerNameOut = new LinearLayout(this);
+            learnerNameOut.setBackgroundColor(Color.parseColor("#1f5b85"));
             //текст ученика
             TextView learnerName = new TextView(this);
             learnerName.setTextColor(Color.parseColor("#1f5b85"));
             learnerName.setBackgroundColor(Color.parseColor("#bed7e9"));
             learnerName.setGravity(Gravity.CENTER);
             learnerName.setText(learnersNames.get(i));
-            //текст в строку
-            learner.addView(learnerName, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            //отступы рамки
+            LinearLayout.LayoutParams learnerNameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            learnerNameParams.setMargins(1,3,1,3);
+            //текст в рамку
+            learnerNameOut.addView(learnerName,learnerNameParams);
+            //рамку в строку
+            learner.addView(learnerNameOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
 
             //вывод дат
             for (int j = 0; j < countOfDays; j++) {//и по датам
@@ -155,7 +184,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
                 //текст в рамку
                 dateOut.addView(learnerGrade,textParams);
                 //добавляем всё в строку
-                learnerGrades.addView(dateOut, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
+                learnerGrades.addView(dateOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
 
             }
             //добавляем строку в таблицу

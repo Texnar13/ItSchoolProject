@@ -10,7 +10,6 @@ import android.gesture.Prediction;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +27,9 @@ import java.util.GregorianCalendar;
 public class ScheduleMonthActivity extends AppCompatActivity {
 
     private GestureLibrary gestureLib;
+
+    LinearLayout linearLayout;
+    GregorianCalendar changingCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
 
-        final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.schedule_month_table);
+        linearLayout = (LinearLayout) findViewById(R.id.schedule_month_table);
 
         ImageView previous = (ImageView) findViewById(R.id.schedule_month_button_previous);
         ImageView next = (ImageView) findViewById(R.id.schedule_month_button_next);
@@ -63,8 +65,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         Date date = new Date();//получаем текущую дату
         final Calendar currentCalendar = new GregorianCalendar();//календарь
         currentCalendar.setTime(date);
-        final Calendar changingCalendar = new GregorianCalendar();//календарь
-        currentCalendar.setTime(date);
+        changingCalendar = new GregorianCalendar();//календарь
+        changingCalendar.setTime(date);
 
         outMonth(currentCalendar, currentCalendar, linearLayout);
         dateText.setText(
@@ -294,7 +296,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT
                 );
-                dayParams.setMargins((int) pxFromDp(0.25f), (int) pxFromDp(1.3f), (int) pxFromDp(0.25f), (int) pxFromDp(1.3f));
+                dayParams.setMargins((int) pxFromDp(0.5f), (int) pxFromDp(1.3f), (int) pxFromDp(0.5f), (int) pxFromDp(1.3f));
 
                 if (weekDay == dayOfWeek) {
                     flag = true;
@@ -515,5 +517,13 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        GregorianCalendar currTime = new GregorianCalendar();
+        currTime.setTime(new Date());
+        outMonth(changingCalendar, currTime, linearLayout);
+        super.onResume();
     }
 }
