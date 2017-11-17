@@ -151,7 +151,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 tableRelativeParams.topMargin = (int) pxFromDp(1f);
                 //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
                 RelativeLayout relativeLayout = new RelativeLayout(this);
-                relativeLayout.setBackgroundColor(Color.parseColor("#fdffdf"));
+                relativeLayout.setBackgroundColor(Color.WHITE);//"#fdffdf"
                 relativeLayout.addView(tableHeadTexts[i], tableRelativeParams);
                 head.addView(relativeLayout, RelativeLayout.LayoutParams.MATCH_PARENT, (int) pxFromDp(50f));
 
@@ -265,7 +265,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 } else {
                     bodyText.setTextColor(Color.BLACK);
                     if (isLessonReady) {
-                        bodyText.setBackgroundColor(Color.parseColor("#fdffdf"));//светло салатовый
+                        bodyText.setBackgroundColor(Color.WHITE);//светло салатовый"#fdffdf"
                     } else {
 
                         bodyText.setBackgroundColor(Color.parseColor("#ff7700"));//оранжевый
@@ -358,14 +358,14 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
                 Calendar calendar = new GregorianCalendar();//получаем текущее время
                 calendar.setTime(new Date());
-
+                //ищем текущий
                 RelativeLayout relativeLayout = new RelativeLayout(this);
                 if (calendar.getTime().getTime() >= lessonStandardTimePeriods[i].calendarStartTime.getTime().getTime() && calendar.getTime().getTime() <= lessonStandardTimePeriods[i].calendarEndTime.getTime().getTime()) {
                     relativeLayout.setBackgroundColor(Color.RED);
                     bodyParams.bottomMargin = (int) pxFromDp(3f);//5
                     bodyParams.topMargin = (int) pxFromDp(3f);
                 } else
-                    relativeLayout.setBackgroundColor(Color.parseColor("#fdffdf"));
+                    relativeLayout.setBackgroundColor(Color.WHITE);//"#fdffdf"
                 relativeLayout.addView(bodyText, bodyParams);
                 tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, (int) pxFromDp(50f));//200
             }

@@ -165,7 +165,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         for (int i = 0; i < 4; i++) {
             tables[i] = new RelativeLayout(this);
-            tables[i].setBackgroundColor(Color.LTGRAY);
+            tables[i].setBackgroundColor(Color.parseColor("#dad5de"));
             tablesParams[i] = new RelativeLayout.LayoutParams(
                     (int) pxFromDp(2000 * multiplier), (int) pxFromDp(1000 * multiplier));
 

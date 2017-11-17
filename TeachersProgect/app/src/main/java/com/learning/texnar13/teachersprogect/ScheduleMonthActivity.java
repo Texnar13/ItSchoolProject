@@ -285,7 +285,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 day.setTextSize(20);
                 day.setTextColor(Color.BLACK);
                 if (weekDay == 5 || weekDay == 6) {
-                    day.setBackgroundColor(Color.parseColor("#fdffdf"));//"#fbffb9"
+                    day.setBackgroundColor(Color.parseColor("#ebffd6"));//"#fbffb9"#fdffdf
                 } else
                     //day.setBackgroundColor(Color.WHITE);
                     day.setBackgroundColor(Color.WHITE);//"#fdffdf"parseColor()

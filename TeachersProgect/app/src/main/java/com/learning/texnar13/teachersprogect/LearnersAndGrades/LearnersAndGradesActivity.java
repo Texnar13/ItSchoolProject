@@ -103,6 +103,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
         //текст заголовка ученика
         TextView headName = new TextView(this);
         headName.setText("Ф.И.");
+        headName.setTextSize(20);
         headName.setBackgroundColor(Color.parseColor("#bed7e9"));
         headName.setGravity(Gravity.CENTER);
         headName.setTextColor(Color.parseColor("#1f5b85"));
@@ -126,6 +127,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
             //текст заголовка ученика
             TextView headDate = new TextView(this);
             headDate.setTextColor(Color.BLACK);
+            headDate.setTextSize(20);
             headDate.setBackgroundColor(Color.WHITE);
             headDate.setGravity(Gravity.CENTER);
             if (i > 9) {
@@ -155,6 +157,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
             learnerNameOut.setBackgroundColor(Color.parseColor("#1f5b85"));
             //текст ученика
             TextView learnerName = new TextView(this);
+            learnerName.setTextSize(20);
             learnerName.setTextColor(Color.parseColor("#1f5b85"));
             learnerName.setBackgroundColor(Color.parseColor("#bed7e9"));
             learnerName.setGravity(Gravity.CENTER);
@@ -175,6 +178,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
                 //текст
                 TextView learnerGrade = new TextView(this);
                 learnerGrade.setTextColor(Color.BLACK);
+                learnerGrade.setTextSize(20);
                 learnerGrade.setBackgroundColor(Color.WHITE);
                 learnerGrade.setGravity(Gravity.CENTER);
                 learnerGrade.setText(" " + "-" + "  ");
