@@ -14,9 +14,12 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -25,13 +28,21 @@ import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class LearnersAndGradesActivity extends AppCompatActivity {
 
     public static final String CLASS_ID = "classId";
 
-    int countOfDays = 30;
+    //переменные выводящиеся из бд
+    ArrayList<Long> learnersId;
+    ArrayList<String> learnersNames;
+    int changingSubjectPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,19 +60,18 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
             }
         });
 
-        //переданные данные
+        //----переданные данные----
         Intent intent = getIntent();
         long classId = intent.getLongExtra(CLASS_ID, -1);
         if (classId == -1) {
-            finish();
-        }//выходим если не передан класс
-
-        //база данных
+            finish();//выходим если не передан класс
+        }
+        //----база данных----
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         Cursor learnersCursor = db.getLearnersByClassId(classId);
 
-        ArrayList<Long> learnersId = new ArrayList<>();//id учеников
-        ArrayList<String> learnersNames = new ArrayList<>();//имена учеников
+        learnersId = new ArrayList<>();//id учеников
+        learnersNames = new ArrayList<>();//имена учеников
         while (learnersCursor.moveToNext()) {
             learnersId.add(learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)));
             learnersNames.add(
@@ -83,35 +93,108 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
                 classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
         classCursor.close();
 
+        //----переключение даты----
+        //константы
+        final String[] monsesNames = {"ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"};
+        //изменяющийся календарь
+        final GregorianCalendar changingCalendar = new GregorianCalendar();
+        changingCalendar.setTime(new Date());
+        //обьявление кнопок и текста
+        ImageView imageButtonPrevious = (ImageView) findViewById(R.id.learners_and_grades_activity_button_previous);
+        final TextView dateText = (TextView) findViewById(R.id.learners_and_grades_activity_date_text);
+        ImageView imageButtonNext = (ImageView) findViewById(R.id.learners_and_grades_activity_button_next);
+        //кнопка назад
+        imageButtonPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (changingCalendar.get(Calendar.MONTH) == 0) {
+                    changingCalendar.set(Calendar.MONTH, 11);
+                    changingCalendar.set(Calendar.YEAR, changingCalendar.get(Calendar.YEAR) - 1);
+                } else {
+                    changingCalendar.set(Calendar.MONTH, changingCalendar.get(Calendar.MONTH) - 1);
+                }
+                dateText.setText(monsesNames[changingCalendar.get(Calendar.MONTH)] + " " + changingCalendar.get(Calendar.YEAR));
+                updateTable(changingSubjectPosition, changingCalendar);
+            }
+        });
+        //кнопка впеёд
+        imageButtonNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (changingCalendar.get(Calendar.MONTH) == 11) {
+                    changingCalendar.set(Calendar.MONTH, 0);
+                    changingCalendar.set(Calendar.YEAR, changingCalendar.get(Calendar.YEAR) + 1);
+                } else {
+                    changingCalendar.set(Calendar.MONTH, changingCalendar.get(Calendar.MONTH) + 1);
+                }
+                dateText.setText(monsesNames[changingCalendar.get(Calendar.MONTH)] + " " + changingCalendar.get(Calendar.YEAR));
+                updateTable(changingSubjectPosition, changingCalendar);
+            }
+        });
 
-        //спинер с предметами
-        //Spinner
+        //----спинер с предметами----
+        Spinner subjectSpinner = (Spinner) findViewById(R.id.learners_and_grades_activity_subject_spinner);
+        //выводим из базы данных список предметов
+        Cursor subjectsCursor = db.getLessonsByClassId(classId);
+        final long[] subjectsId = new long[subjectsCursor.getCount()];
+        final String[] subjectsNames = new String[subjectsCursor.getCount()];
+        for (int i = 0; i < subjectsCursor.getCount(); i++) {
+            subjectsCursor.moveToNext();
+            subjectsId[i] = (subjectsCursor.getLong(subjectsCursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID)));
+            subjectsNames[i] = (subjectsCursor.getString(subjectsCursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)));
+        }
+        subjectsCursor.close();
+        //адаптер для спиннера
+        CustomAdapter subjectAdapter = new CustomAdapter(this, R.layout.learners_and_grades_activity_subjects_spinner_element, subjectsNames);
+        subjectSpinner.setAdapter(subjectAdapter);
+        subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                changingSubjectPosition = i;
+                updateTable(subjectsId[i], changingCalendar);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+        dateText.setText(monsesNames[changingCalendar.get(Calendar.MONTH)] + " " + changingCalendar.get(Calendar.YEAR));
+        updateTable(subjectsId[0], changingCalendar);//выводим оценки при старте
+    }
+
+    void updateTable(long subjectId, GregorianCalendar viewCalendar) {
+        //получаем оценки из бд
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
         //таблицы
         //----------имена----------
         TableLayout learnersNamesTable = (TableLayout) findViewById(R.id.learners_and_grades_table_names);
+        learnersNamesTable.removeAllViews();
         //----------оценки----------
         TableLayout learnersGradesTable = (TableLayout) findViewById(R.id.learners_and_grades_table);
+        learnersGradesTable.removeAllViews();
 
         //---заголовок---
         //заголовок ученика
         TableRow headNameRaw = new TableRow(this);
         //рамка
         LinearLayout headNameOut = new LinearLayout(this);
-        headNameOut.setBackgroundColor(Color.parseColor("#1f5b85"));
+        headNameOut.setBackgroundColor(Color.BLACK);//parseColor("#1f5b85")
         //текст заголовка ученика
         TextView headName = new TextView(this);
         headName.setText("Ф.И.");
         headName.setTextSize(20);
-        headName.setBackgroundColor(Color.parseColor("#bed7e9"));
+        headName.setBackgroundColor(Color.WHITE);//светло синий"#bed7e9"Color.parseColor()
         headName.setGravity(Gravity.CENTER);
-        headName.setTextColor(Color.parseColor("#1f5b85"));
+        headName.setTextColor(Color.BLACK);//тёмно синий parseColor("#1f5b85")
         //отступы рамки
         LinearLayout.LayoutParams headNameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        headNameParams.setMargins(1,3,1,3);
+        headNameParams.setMargins(0, 0, 0, (int) pxFromDp(2));
         //текст в рамку
-        headNameOut.addView(headName,headNameParams);
+        headNameOut.addView(headName, headNameParams);
         //рамку в строку
         headNameRaw.addView(headNameOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
         //строку в таблицу
@@ -120,10 +203,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
 
         //дни
         TableRow headGrades = new TableRow(this);
-        for (int i = 0; i < countOfDays; i++) {
+        for (int i = 0; i < viewCalendar.getMaximum(Calendar.DAY_OF_MONTH); i++) {
             //рамка
             LinearLayout headDateOut = new LinearLayout(this);
-            headDateOut.setBackgroundColor(Color.LTGRAY);
+            headDateOut.setBackgroundColor(Color.BLACK);
             //текст заголовка ученика
             TextView headDate = new TextView(this);
             headDate.setTextColor(Color.BLACK);
@@ -133,13 +216,13 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
             if (i > 9) {
                 headDate.setText(" " + (i + 1) + " ");
             } else {
-                headDate.setText(" " + (i + 1) + "  ");
+                headDate.setText(" " + (i + 1) + " ");
             }
             //отступы рамки
             LinearLayout.LayoutParams headDateParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            headDateParams.setMargins(1,3,1,3);
+            headDateParams.setMargins(0, 0, 0, (int) pxFromDp(2));
             //текст в рамку
-            headDateOut.addView(headDate,headDateParams);
+            headDateOut.addView(headDate, headDateParams);
             //рамку в строку
             headGrades.addView(headDateOut, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         }
@@ -154,39 +237,62 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
 
             //рамка
             LinearLayout learnerNameOut = new LinearLayout(this);
-            learnerNameOut.setBackgroundColor(Color.parseColor("#1f5b85"));
+            learnerNameOut.setBackgroundColor(Color.BLACK);//parseColor("#1f5b85")
+            //контейнер для текста
+            LinearLayout dateContainer = new LinearLayout(this);
+            dateContainer.setBackgroundColor(Color.WHITE);
             //текст ученика
             TextView learnerName = new TextView(this);
             learnerName.setTextSize(20);
-            learnerName.setTextColor(Color.parseColor("#1f5b85"));
-            learnerName.setBackgroundColor(Color.parseColor("#bed7e9"));
-            learnerName.setGravity(Gravity.CENTER);
+            learnerName.setTextColor(Color.BLACK);//parseColor("#1f5b85")
+            learnerName.setBackgroundColor(Color.WHITE);//"#bed7e9"
+            learnerName.setGravity(Gravity.BOTTOM);
             learnerName.setText(learnersNames.get(i));
-            //отступы рамки
+            //отступы контейнера в рамке
             LinearLayout.LayoutParams learnerNameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            learnerNameParams.setMargins(1,3,1,3);
-            //текст в рамку
-            learnerNameOut.addView(learnerName,learnerNameParams);
+            learnerNameParams.setMargins((int) pxFromDp(10), 0, (int) pxFromDp(10), 0);
+            //текст в контейнер
+            dateContainer.addView(learnerName, learnerNameParams);
+            //отступы рамки
+            LinearLayout.LayoutParams dateContainerParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            dateContainerParams.setMargins(0, 0, 0, (int) pxFromDp(2));
+            //контейнер в рамку
+            learnerNameOut.addView(dateContainer, dateContainerParams);
             //рамку в строку
             learner.addView(learnerNameOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
 
             //вывод дат
-            for (int j = 0; j < countOfDays; j++) {//и по датам
+            for (int j = 0; j < viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH); j++) {//и по датам
+                //достаём текст из бд
+                ArrayList<Integer> gradesArray = new ArrayList<>();
+
+                Cursor grades = db.getGradesByLearnerIdAndDayTime(learnersId.get(i), viewCalendar);
+                while (grades.moveToNext()) {
+                    gradesArray.add(grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_GRADE)));
+
+                }
+                grades.close();
+
                 //рамка
                 LinearLayout dateOut = new LinearLayout(this);
-                dateOut.setBackgroundColor(Color.LTGRAY);
+                dateOut.setBackgroundColor(Color.BLACK);
                 //текст
                 TextView learnerGrade = new TextView(this);
                 learnerGrade.setTextColor(Color.BLACK);
                 learnerGrade.setTextSize(20);
                 learnerGrade.setBackgroundColor(Color.WHITE);
                 learnerGrade.setGravity(Gravity.CENTER);
-                learnerGrade.setText(" " + "-" + "  ");
+                if (gradesArray.size() == 0) {
+                    learnerGrade.setText(" - ");
+                } else {
+                    learnerGrade.setText(" " + gradesArray.get(0) + " ");
+                }
                 //отступы рамки
                 LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                textParams.setMargins(1,3,1,3);
+                textParams.setMargins(0, 0, 0, (int) pxFromDp(2));
+
                 //текст в рамку
-                dateOut.addView(learnerGrade,textParams);
+                dateOut.addView(learnerGrade, textParams);
                 //добавляем всё в строку
                 learnerGrades.addView(dateOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
 
@@ -207,6 +313,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private float pxFromDp(float dp) {
+        return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
 
 }
@@ -235,8 +345,8 @@ class CustomAdapter extends ArrayAdapter {
         //if (flag || isFirstElementVisible) {
         TextView tv = (TextView) convertView;
         tv.setGravity(Gravity.CENTER);
-        tv.setBackgroundColor(Color.parseColor("#e4ea7e"));//светло салатовый
-        //tv.setBackgroundColor(Color.WHITE);//светло салатовый
+        //tv.setBackgroundColor(Color.parseColor("#bed7e9"));//светло синий
+        tv.setBackgroundColor(Color.WHITE);
         tv.setText(objects[position]);
         //}
         return convertView;

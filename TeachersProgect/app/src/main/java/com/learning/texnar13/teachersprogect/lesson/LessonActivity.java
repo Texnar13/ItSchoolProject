@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.learning.texnar13.teachersprogect.LearnersAndGrades.LearnersAndGradesActivity;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.SettingsActivity;
 import com.learning.texnar13.teachersprogect.StartScreenActivity;
@@ -32,6 +33,8 @@ public class LessonActivity extends AppCompatActivity {
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
     final ArrayList<LearnerAndGrade> gradeArrayList = new ArrayList<>();//массив с оценками за этот урок;
     float multiplier = 2;
+    long lessonAttitudeId;
+    long lessonId;
 
 
     @Override
@@ -56,6 +59,8 @@ public class LessonActivity extends AppCompatActivity {
                     grades3[j] = gradeArrayList.get(j).getRawGrade(2);
                 }
                 Intent intent = new Intent(getApplicationContext(), LessonListActivity.class);
+                intent.putExtra(LessonListActivity.ATTITUDE_ID,lessonAttitudeId);
+                intent.putExtra(LessonListActivity.LESSON_ID,lessonId);
                 intent.putExtra(LessonListActivity.LIST_ID, learnersId);
                 intent.putExtra(LessonListActivity.FIRST_LIST_GRADES, grades1);
                 intent.putExtra(LessonListActivity.SECOND_LIST_GRADES, grades2);
@@ -163,6 +168,7 @@ public class LessonActivity extends AppCompatActivity {
         long lessonAttitudeId;
         long classId;
         long cabinetId;
+
         Cursor lessonCursor;//курсор с текущим уроком
         Cursor desksCursor;//курсор с партами
         int maxX = 0;//размеры экрана попарте
@@ -187,6 +193,7 @@ public class LessonActivity extends AppCompatActivity {
         lessonCursor = db.getLessonById(lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_ID)));
         lessonCursor.moveToFirst();
 
+        lessonId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID));
         classId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_CLASS_ID));
         cabinetId = lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_CABINET_ID));
 
@@ -199,7 +206,6 @@ public class LessonActivity extends AppCompatActivity {
 
         int i = -1;//щётчик учеников
 
-        //todo берём макс значение парты по X и по y прибавляем отступ минимальных и размер мах парты получаем размер layout
         while (desksCursor.moveToNext()) {
             //создание парты
             RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);

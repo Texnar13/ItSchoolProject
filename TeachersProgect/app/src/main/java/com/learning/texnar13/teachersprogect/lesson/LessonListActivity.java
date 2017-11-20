@@ -16,16 +16,23 @@ import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class LessonListActivity extends AppCompatActivity {
 
+    public static final String ATTITUDE_ID = "attitudeId";
+    public static final String LESSON_ID = "lessonId";
     public static final String LIST_ID = "listId";
     public static final String FIRST_LIST_GRADES = "listGrades1";
-    public static final String SECOND_LIST_GRADES = "listGrade2s";
+    public static final String SECOND_LIST_GRADES = "listGrades2";
     public static final String THIRD_LIST_GRADES = "listGrades3";
 
     long[] learnersIdArray;
     long[][] gradeArray = new long[3][];
     Toast toast;
+    long attitudeId;
+    long lessonId;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -43,17 +50,25 @@ public class LessonListActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 Log.i("TeachersApp", "LessonListActivity - onPrepareOptionsMenu - onMenuItemClick");
                 DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                //получаем id ласса
+//                Cursor attitudeCursor = db.getLessonById(lessonId);
+//                attitudeCursor.moveToFirst();
+//                long lessonTime = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN));
+//                attitudeCursor.close();
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
                 for (int i = 0; i < learnersIdArray.length; i++) {
-                    if (gradeArray[0][i] != 0) {
-                        db.createGrade(learnersIdArray[i], gradeArray[0][i], 1);//todo id урока
-                    }
-                    if (gradeArray[1][i] != 0) {
-                        db.createGrade(learnersIdArray[i], gradeArray[1][i], 1);
-                    }
-                    if (gradeArray[2][i] != 0) {
-                        db.createGrade(learnersIdArray[i], gradeArray[2][i], 1);
-                    }
-                    toast.show();
+//                    if (gradeArray[0][i] != 0) {
+//                        db.createGrade(learnersIdArray[i], gradeArray[0][i], lessonId, dateFormat.format(new Date(lessonTime)));//todo id урока
+//                    }
+//                    if (gradeArray[1][i] != 0) {
+//                        db.createGrade(learnersIdArray[i], gradeArray[1][i], lessonId, dateFormat.format(new Date(lessonTime)));
+//                    }
+//                    if (gradeArray[2][i] != 0) {
+//                        db.createGrade(learnersIdArray[i], gradeArray[2][i], lessonId, dateFormat.format(new Date(lessonTime)));
+//                    }
+//                    toast.show();
                 }
                 finish();
                 return true;
@@ -75,6 +90,8 @@ public class LessonListActivity extends AppCompatActivity {
 
         LinearLayout list = (LinearLayout) findViewById(R.id.activity_lesson_list);
 
+        attitudeId = getIntent().getLongExtra(ATTITUDE_ID,-1);
+        lessonId = getIntent().getLongExtra(LESSON_ID,-1);
         learnersIdArray = getIntent().getLongArrayExtra(LIST_ID);
         gradeArray[0] = getIntent().getLongArrayExtra(FIRST_LIST_GRADES);
         gradeArray[1] = getIntent().getLongArrayExtra(SECOND_LIST_GRADES);

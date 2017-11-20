@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -15,7 +16,7 @@ import java.util.GregorianCalendar;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 6;
+    private static final int DB_VERSION = 7;
 
 
     public DataBaseOpenHelper(Context context) {
@@ -128,9 +129,9 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         if (oldVersion < 6) {
             db.execSQL("ALTER TABLE " + SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET + " ADD COLUMN " + SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " INTEGER DEFAULT " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_NEVER + ";");//колонка для повторения уроков
         }
-//        if (oldVersion < 7){
-//            db.execSQL("ALTER TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ADD COLUMN " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP ;");
-//        }
+        if (oldVersion < 7) {
+            db.execSQL("ALTER TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ADD COLUMN " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TEXT DEFAULT '0000-00-00 00:00:00';");//время поставленной оценки
+        }
 
     }
 
@@ -176,7 +177,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
 
     //класс
-
     public long createClass(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
 //        String sql = "INSERT INTO NAME_TABLE_CLASSES( " + SchoolContract.TableClasses.COLUMN_CLASS_NAME + " ) " +
@@ -524,20 +524,42 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
 
     //оценки учеников
-    public long createGrade(long learnerId, long grade, long lessonId) {
+    public long createGrade(long learnerId, long grade, long lessonId, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableLearnersGrades.KEY_LEARNER_ID, learnerId);
         values.put(SchoolContract.TableLearnersGrades.COLUMN_GRADE, grade);
         values.put(SchoolContract.TableLearnersGrades.KEY_LESSON_ID, lessonId);
+        values.put(SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP, date);
         long temp = db.insert(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, values);//-1 = ошибка ввода
         db.close();
-        Log.i("DBOpenHelper", "createGrade returnId = " + temp + " learnerId= " + learnerId + " grade= " + grade + " lessonId= " + lessonId);
+        Log.i("DBOpenHelper", "createGrade returnId = " + temp + " learnerId= " + learnerId + " grade= " + grade + " lessonId= " + lessonId + " date= " + date);
+        return temp;
+    }
+
+    public Cursor getGradesByLearnerIdAndDayTime(long learnerId, GregorianCalendar viewCalendar) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//%Y-%m-%dT%H:%M:%S
+        GregorianCalendar endCalendar = new GregorianCalendar();
+        endCalendar.setTime(new Date(viewCalendar.getTime().getTime() + 86400));
+        Cursor cursor = db.query(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " = ? AND " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " BETWEEN ? AND ?", new String[]{Long.toString(learnerId), dateFormat.format(viewCalendar.getTime()), dateFormat.format(endCalendar.getTime())}, null, null, null);
+        Log.i("DBOpenHelper", "getAttitudeByLearnerIdAndPlaceId learnerId=" + learnerId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames())
+        );
+        return cursor;
+    }
+
+    public long editGrade(long gradeId, long grade) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableLearnersGrades.COLUMN_GRADE, grade);
+        long temp = db.update(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, values, SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " = ?", new String[]{Long.toString(gradeId)});//-1 = ошибка ввода
+        db.close();
+        Log.i("DBOpenHelper", "editGrade returnId = " + temp + " grade= " + grade + " gradeId= " + gradeId);
         return temp;
     }
 
 
-    //уроки
+    //уроки(предметы)
     public long createLesson(String name, long classId//,long cabinetId
     ) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -554,22 +576,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return temp;
     }
 
-    //todo лучше вообще убрать этот метод, т.к. он будет бесполезен
-    public int setLessonsNames(ArrayList<Long> lessonId, String name) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        ContentValues contentName = new ContentValues();
-        contentName.put(SchoolContract.TableLessons.COLUMN_NAME, name);
-        int answer = 0;
-        String stringLessonsId = "";
-        for (int i = 0; i < lessonId.size(); i++) {
-            stringLessonsId = stringLessonsId + lessonId.get(i) + " | ";
-            if (db.update(SchoolContract.TableLessons.NAME_TABLE_LESSONS, contentName, SchoolContract.TableLessons.KEY_LESSON_ID + " = ?", new String[]{"" + lessonId.get(i)}) == 1)
-                answer++;
-        }
-        Log.i("DBOpenHelper", "setLessonsNames name= " + name + " id= " + stringLessonsId + " return = " + answer);
-        db.close();
-        return answer;
-    }
 
     public int setLessonParameters(long lessonId, String lessonName, long classId) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -760,24 +766,4 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public void restartTable() {//создание бд заново
         onUpgrade(this.getReadableDatabase(), 0, 100);
     }
-
-
-//    public boolean addPerson(String COLUMN_NAME, String add) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        ContentValues contentValues = new ContentValues();
-//
-//        contentValues.put(COLUMN_NAME, COLUMN_NAME);
-//        contentValues.put(COLUMN_ADD, add);
-//
-//        db.insert(TABLE_NAME, null, contentValues);
-//        db.close();
-//        return true;
-//    }
-//
-//    public Cursor getPerson(int id) {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        String sql = "SELECT * FROM Persons WHERE id=" + id + ";";
-//        Cursor c = db.rawQuery(sql, null);
-//        return c;
-//    }
 }
