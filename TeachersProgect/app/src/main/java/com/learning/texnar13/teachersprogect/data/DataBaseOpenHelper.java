@@ -16,7 +16,7 @@ import java.util.GregorianCalendar;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 7;
+    private static final int DB_VERSION = 8;
 
 
     public DataBaseOpenHelper(Context context) {
@@ -43,7 +43,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         Log.i("DataBaseOpenHelper", "updateDatabase old=" + oldVersion + " new=" + newVersion);
 
         if (oldVersion < 5) {//если база версии 5 и выше, то она не запустит этот код //создаём пустые таблицы без за полнения
-            db.execSQL("PRAGMA foreign_keys = OFF");
+            db.execSQL("PRAGMA foreign_keys = OFF;");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableDesks.NAME_TABLE_DESKS + ";");
@@ -54,7 +54,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLessons.NAME_TABLE_LESSONS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET + ";");
-            db.execSQL("PRAGMA foreign_keys = ON");
+            db.execSQL("PRAGMA foreign_keys = ON;");
 
 
 //настройки
@@ -131,6 +131,42 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         }
         if (oldVersion < 7) {
             db.execSQL("ALTER TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ADD COLUMN " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TEXT DEFAULT '0000-00-00 00:00:00';");//время поставленной оценки
+        }
+
+        if (oldVersion < 8) {//добавляем foreign key
+            db.execSQL("PRAGMA foreign_keys = OFF;");
+            // --для кабинетов--
+
+            //db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET + "_old;");
+
+            //переименовываем таблицу
+            db.execSQL("ALTER TABLE " + SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET + " RENAME TO " + SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET + "_old;");
+            //создаём новую таблицу
+            db.execSQL("CREATE TABLE " + SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET + " ( " + SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_AND_TIME_ATTITUDE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_ID + " INTEGER, " +
+                    SchoolContract.TableLessonAndTimeWithCabinet.KEY_CABINET_ID + " INTEGER, " +
+                    SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN + " INTEGER, " +
+                    SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_END + " INTEGER, " +
+                    SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT + " INTEGER DEFAULT " + SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_NEVER+", "+
+                    "FOREIGN KEY(" + SchoolContract.TableLessonAndTimeWithCabinet.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + " (" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ON DELETE CASCADE ," +
+                    "FOREIGN KEY(" + SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_ID + ") REFERENCES " + SchoolContract.TableLessons.NAME_TABLE_LESSONS + " (" + SchoolContract.TableLessons.KEY_LESSON_ID + ") ON DELETE CASCADE ); "
+            );
+            //переносим значения
+            db.execSQL("INSERT INTO " + SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET + " SELECT * FROM " + SchoolContract.TableLessonAndTimeWithCabinet.NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET + "_old;");
+            //удаляем старую таблицу
+            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
+
+            // --для оценок--
+            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
+            String sql = "CREATE TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ( " + SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER, " +
+                    SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
+                    SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TEXT DEFAULT '0000-00-00 00:00:00', "+
+                    SchoolContract.TableLearnersGrades.KEY_LESSON_ID + " INTEGER, " +
+                    "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LESSON_ID + ") REFERENCES " + SchoolContract.TableLessons.NAME_TABLE_LESSONS + " (" + SchoolContract.TableLessons.KEY_LESSON_ID + ") ON DELETE CASCADE ); " +
+                    "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); ";
+            db.execSQL(sql);
+            db.execSQL("PRAGMA foreign_keys = ON");
         }
 
     }

@@ -211,7 +211,6 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 ArrayList<Long> arrayList = db.getLessonsAttitudesIdByTimePeriod(lessonStandardTimePeriods[i].calendarStartTime, lessonStandardTimePeriods[i].calendarEndTime);
                 if (arrayList.size() != 0) {//есть ли в это время урок
                     lessonAttitudeId = arrayList.get(0);//id зависимости урока
-
                     Cursor lessonAttitudeCursor = db.getLessonAttitudeById(lessonAttitudeId);//зависимость по id
                     lessonAttitudeCursor.moveToFirst();
                     //имя
