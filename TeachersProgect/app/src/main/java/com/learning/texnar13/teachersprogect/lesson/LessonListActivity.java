@@ -17,7 +17,6 @@ import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class LessonListActivity extends AppCompatActivity {
 

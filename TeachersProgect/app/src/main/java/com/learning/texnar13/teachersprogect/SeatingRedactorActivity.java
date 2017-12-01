@@ -167,6 +167,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                                 attitudesCursor.getLong(attitudesCursor.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID))
                         ));
                     }
+                    attitudesCursor.close();
                 }
             }
             placesCursor.close();
@@ -387,6 +388,7 @@ class ChooseLearnerDialogFragment extends DialogFragment {//диалог по в
                 //посылаем id выбранного ученика
                 SeatingRedactorActivity.handler.sendEmptyMessage((int)
                         learnerTempCursor.getLong(learnerTempCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)));
+                learnerTempCursor.close();
                 dismiss();
             }
             // The 'which' argument contains the index position

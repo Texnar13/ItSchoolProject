@@ -89,6 +89,7 @@ public class ListOfDialog extends DialogFragment {
                         Cursor cursor = db.getClasses(objectsId.get(0));
                         cursor.moveToFirst();
                         className.setText(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
+                        cursor.close();
                     }
                     builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -204,12 +205,17 @@ public class ListOfDialog extends DialogFragment {
                 cabinetName.setHintTextColor(Color.GRAY);
 
                 linearLayout.addView(cabinetName, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
+                final DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
+                if (objectsId.size() == 1) {//если получаем на вход только один кабинет то ставим в строку его имя
+                    Cursor cursor = db.getCabinets(objectsId.get(0));
+                    cursor.moveToFirst();
+                    cabinetName.setText(cursor.getString(cursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)));
+                    cursor.close();
+                }
                 if (objectsId.size() == 0) {
                     builder.setTitle("создание кабинета");
                     builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());
                             db.createCabinet(cabinetName.getText().toString());
                             {//ставим адаптер
                                 Cursor cursor = db.getCabinets();//получаем кабинеты

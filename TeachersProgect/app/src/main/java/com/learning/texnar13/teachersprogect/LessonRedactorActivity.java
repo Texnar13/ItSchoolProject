@@ -180,7 +180,6 @@ public class LessonRedactorActivity extends AppCompatActivity {
                     adapter.flag = true;
                 }
             });
-            classesCursor.close();
 
             for (int i = 0; i < classesId.length; i++) {//ставим текущий класс в спиннер
                 if (classesId[i] == classCabinetId.classId) {
@@ -218,7 +217,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
                     adapter.flag = true;
                 }
             });
-            cabinetsCursor.close();
+
             for (int i = 0; i < cabinetsId.length; i++) {//ставим текущий класс в спиннер
                 if (cabinetsId[i] == classCabinetId.cabinetId) {
                     cabinetSpinner.setSelection(i, false);

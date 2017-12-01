@@ -27,7 +27,6 @@ import java.util.ArrayList;
 class ListOfAdapter extends BaseAdapter {//todo задача адаптера принимать список, отправлять обратно выбранный элемент
     private Activity activity;
     private Context context;
-    //private Cursor cursor;
     private LayoutInflater inflater;
     private ArrayList<ListOfAdapterObject> content;//содержит все данные об обьектах списка
     private boolean showCheckBoxes;

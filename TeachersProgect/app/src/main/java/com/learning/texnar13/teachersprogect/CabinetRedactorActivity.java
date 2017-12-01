@@ -27,7 +27,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     ImageView instrumentalImage;
     RelativeLayout out;
     long cabinetId;
-    DisplayMetrics metrics;
     //
     RelativeLayout relativeLayout;
     //
@@ -118,6 +117,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             deskLayout.setBackgroundColor(Color.parseColor("#f1bd7d"));
             out.addView(deskLayout);
         }
+        desksCursor.close();
 
 
         //красная точка

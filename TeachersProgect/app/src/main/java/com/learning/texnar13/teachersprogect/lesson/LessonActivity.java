@@ -441,10 +441,9 @@ public class LessonActivity extends AppCompatActivity {
                     tempLearnerText.setText(learnerCursor.getString(learnerCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)));
                     LinearLayout.LayoutParams tempLearnerTextParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 3F);
                     tempPlaceLayout.addView(tempLearnerText, tempLearnerTextParams);
+
+                    learnerCursor.close();
                 }
-                Log.i("TeachersApp", "LessonActivity!!! " + learnerId);
-
-
                 gradeLearnerPlaceOut.addView(tempPlaceLayout, tempPlaceLayoutParams);
                 //добавление места в парту
                 tempRelativeLayoutDesk.addView(gradeLearnerPlaceOut, tempRelativeLayoutPlaceParams);
