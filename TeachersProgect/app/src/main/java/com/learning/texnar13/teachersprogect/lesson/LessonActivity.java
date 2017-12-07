@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -19,10 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.learning.texnar13.teachersprogect.LearnersAndGrades.LearnersAndGradesActivity;
 import com.learning.texnar13.teachersprogect.R;
-import com.learning.texnar13.teachersprogect.SettingsActivity;
-import com.learning.texnar13.teachersprogect.StartScreenActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
@@ -59,8 +55,8 @@ public class LessonActivity extends AppCompatActivity {
                     grades3[j] = gradeArrayList.get(j).getRawGrade(2);
                 }
                 Intent intent = new Intent(getApplicationContext(), LessonListActivity.class);
-                intent.putExtra(LessonListActivity.ATTITUDE_ID,lessonAttitudeId);
-                intent.putExtra(LessonListActivity.LESSON_ID,lessonId);
+                intent.putExtra(LessonListActivity.ATTITUDE_ID, lessonAttitudeId);
+                intent.putExtra(LessonListActivity.LESSON_ID, lessonId);
                 intent.putExtra(LessonListActivity.LIST_ID, learnersId);
                 intent.putExtra(LessonListActivity.FIRST_LIST_GRADES, grades1);
                 intent.putExtra(LessonListActivity.SECOND_LIST_GRADES, grades2);
@@ -165,7 +161,6 @@ public class LessonActivity extends AppCompatActivity {
         RelativeLayout room = (RelativeLayout) findViewById(R.id.room_layout);
 
 
-        long lessonAttitudeId;
         long classId;
         long cabinetId;
 
@@ -189,6 +184,7 @@ public class LessonActivity extends AppCompatActivity {
         //курсор с зависимостью
         Cursor lessonAttitudeCursor = db.getLessonAttitudeById(lessonAttitudeId);
         lessonAttitudeCursor.moveToFirst();
+
         //курсор с уроком
         lessonCursor = db.getLessonById(lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_ID)));
         lessonCursor.moveToFirst();
@@ -226,7 +222,8 @@ public class LessonActivity extends AppCompatActivity {
             //считаем максимальную парту
             if (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * 100 * multiplier > maxX) {
                 maxX = (int) (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * 100 * multiplier);
-            }if (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * 100 * multiplier > maxY) {
+            }
+            if (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * 100 * multiplier > maxY) {
                 maxY = (int) (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * 100 * multiplier);
             }
 
@@ -301,12 +298,12 @@ public class LessonActivity extends AppCompatActivity {
                     View.OnClickListener onClickListener = new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if(gradeArrayList.get(tempGradeId).getGrade() != -2)
-                            if (gradeArrayList.get(tempGradeId).getGrade() != 5) {
-                                gradeArrayList.get(tempGradeId).setGrade((byte) (1 + gradeArrayList.get(tempGradeId).getGrade()));
-                            } else {
-                                gradeArrayList.get(tempGradeId).setGrade((byte) 1);
-                            }
+                            if (gradeArrayList.get(tempGradeId).getGrade() != -2)
+                                if (gradeArrayList.get(tempGradeId).getGrade() != 5) {
+                                    gradeArrayList.get(tempGradeId).setGrade((byte) (1 + gradeArrayList.get(tempGradeId).getGrade()));
+                                } else {
+                                    gradeArrayList.get(tempGradeId).setGrade((byte) 1);
+                                }
 
                             switch ((int) gradeArrayList.get(tempGradeId).getGrade()) {
                                 case -2:
@@ -464,6 +461,7 @@ public class LessonActivity extends AppCompatActivity {
     private float pxFromDp(float dp) {
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
+
     private float dpFromPx(float px) {
         return px * getApplicationContext().getResources().getDisplayMetrics().density;
 

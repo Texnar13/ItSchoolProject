@@ -74,7 +74,15 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                         throw new RuntimeException("notDefaultListParameter(" + getIntent().getStringExtra(LIST_PARAMETER) + ")");
                 }
                 while (cursor.moveToNext()) {//курсор в лист
-                    list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)), SchoolContract.TableClasses.NAME_TABLE_CLASSES, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID))));
+                    list.add(
+                            new ListOfAdapterObject(
+                                    cursor.getString(
+                                            cursor.getColumnIndex(
+                                                    SchoolContract.TableClasses.COLUMN_CLASS_NAME)),
+                                    SchoolContract.TableClasses.NAME_TABLE_CLASSES,
+                                    cursor.getLong(
+                                            cursor.getColumnIndex(
+                                                    SchoolContract.TableClasses.KEY_CLASS_ID))));
                 }
                 cursor.close();
 
