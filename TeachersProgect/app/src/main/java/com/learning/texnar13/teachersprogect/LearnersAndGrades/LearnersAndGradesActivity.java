@@ -132,13 +132,13 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
         //----спинер с предметами----
         Spinner subjectSpinner = (Spinner) findViewById(R.id.learners_and_grades_activity_subject_spinner);
         //выводим из базы данных список предметов
-        Cursor subjectsCursor = db.getLessonsByClassId(classId);
+        Cursor subjectsCursor = db.getSubjectsByClassId(classId);
         final long[] subjectsId = new long[subjectsCursor.getCount()];
         final String[] subjectsNames = new String[subjectsCursor.getCount()];
         for (int i = 0; i < subjectsCursor.getCount(); i++) {
             subjectsCursor.moveToNext();
-            subjectsId[i] = (subjectsCursor.getLong(subjectsCursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID)));
-            subjectsNames[i] = (subjectsCursor.getString(subjectsCursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)));
+            subjectsId[i] = (subjectsCursor.getLong(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID)));
+            subjectsNames[i] = (subjectsCursor.getString(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME)));
         }
         subjectsCursor.close();
         //адаптер для спиннера

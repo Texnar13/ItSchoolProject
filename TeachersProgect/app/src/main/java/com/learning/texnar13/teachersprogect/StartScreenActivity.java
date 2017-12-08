@@ -1,9 +1,7 @@
 package com.learning.texnar13.teachersprogect;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +13,6 @@ import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.listOf.ListOfActivity;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -111,7 +108,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 GregorianCalendar currentCalendar = new GregorianCalendar();//получаем текущее время
                 currentCalendar.setTime(new Date());
                 DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-                long attitudeId = db.getLessonsAttitudesIdByTime(currentCalendar);
+                long attitudeId = db.getSubjectAndTimeCabinetAttitudeIdByTime(currentCalendar);
                 if (attitudeId == -1) {
                     Toast toast = Toast.makeText(this,"на текущий момент нет доступных уроков",Toast.LENGTH_SHORT);
                     toast.show();

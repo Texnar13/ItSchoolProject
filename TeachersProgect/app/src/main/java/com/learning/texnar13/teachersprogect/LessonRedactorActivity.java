@@ -13,7 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,21 +104,21 @@ public class LessonRedactorActivity extends AppCompatActivity {
         } else {
             title.setText("Редактирование урока");
 
-            Cursor attitudeCursor = db.getLessonAttitudeById(attitudeId);
+            Cursor attitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(attitudeId);
             attitudeCursor.moveToFirst();
-            attitudeId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_AND_TIME_ATTITUDE_ID));
+            attitudeId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID));
 
-            chosenLessonId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_ID));
-            Cursor lessonCursor = db.getLessonById(chosenLessonId);
+            chosenLessonId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
+            Cursor lessonCursor = db.getSubjectById(chosenLessonId);
             lessonCursor.moveToFirst();
 
-            lessonTime.calendarStartTime.setTime(new Date(attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN))));
-            lessonTime.calendarEndTime.setTime(new Date(attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_END))));
+            lessonTime.calendarStartTime.setTime(new Date(attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN))));
+            lessonTime.calendarEndTime.setTime(new Date(attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END))));
 
-            repeat = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_REPEAT));
+            repeat = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT));
 
-            classCabinetId.classId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_CLASS_ID));
-            classCabinetId.cabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_CABINET_ID));
+            classCabinetId.classId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
+            classCabinetId.cabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
 
 
             lessonCursor.close();
@@ -267,7 +266,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
             removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    db.deleteLessonTimeAndCabinet(finalAttitudeId);
+                    db.deleteSubjectAndTimeCabinetAttitude(finalAttitudeId);
                     finish();
                 }
             });
@@ -407,7 +406,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
     void availableLessonsOut(final long classViewId, final int position) {
 
         final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        Cursor cursor = db.getLessonsByClassId(classViewId);
+        Cursor cursor = db.getSubjectsByClassId(classViewId);
         final int count = cursor.getCount();
         final String[] stringLessons;
         if (count == 0) {
@@ -420,8 +419,8 @@ public class LessonRedactorActivity extends AppCompatActivity {
         //Log.i("TeachersApp", "LessonRedactorActivity - " + stringLessons.length);
         for (int i = 1; i < stringLessons.length - 2; i++) {
             cursor.moveToNext();
-            lessonsId[i - 1] = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID));
-            stringLessons[i] = cursor.getString(cursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME));
+            lessonsId[i - 1] = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID));
+            stringLessons[i] = cursor.getString(cursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME));
             stringOnlyLessons[i - 1] = stringLessons[i];
         }
 
@@ -480,7 +479,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
                                             for (int itemPoz : mSelectedItems) {
                                                 deleteList.add(lessonsId[itemPoz]);
                                             }
-                                            db.deleteLessons(deleteList);
+                                            db.deleteSubjects(deleteList);
                                             availableLessonsOut(classViewId, 0);
                                         }
                                     })
@@ -511,7 +510,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
                                     .setPositiveButton("добавить", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int id) {
-                                            db.createLesson(lessonNameEditText.getText().toString(), classCabinetId.classId);
+                                            db.createSubject(lessonNameEditText.getText().toString(), classCabinetId.classId);
                                             availableLessonsOut(classCabinetId.classId, stringLessons.length - 2);
                                             dismiss();
                                         }
@@ -527,7 +526,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
                             return builder.create();
                         }
                     };
-                    lessonNameDialog.show(getFragmentManager(), "createLesson");
+                    lessonNameDialog.show(getFragmentManager(), "createSubject");
                 } else if (pos != 0) {
                     Log.i("TeachersApp", "LessonRedactorActivity - chosen lesson id = " + lessonsId[pos - 1]);
                     chosenLessonId = lessonsId[pos - 1];

@@ -50,7 +50,7 @@ public class LessonListActivity extends AppCompatActivity {
                 Log.i("TeachersApp", "LessonListActivity - onPrepareOptionsMenu - onMenuItemClick");
                 DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                 //получаем id класса
-                Cursor attitudeCursor = db.getLessonAttitudeById(attitudeId);
+                Cursor attitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(attitudeId);
                 if (attitudeCursor.getCount() == 0) {//если не найдена зависимость
                     Toast toast = Toast.makeText(getApplicationContext(),"Не передан урок. Оценки не сохранены",Toast.LENGTH_LONG);
                     toast.show();
@@ -59,7 +59,7 @@ public class LessonListActivity extends AppCompatActivity {
                     return false;
                 }
                 attitudeCursor.moveToFirst();
-                long lessonTime = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.COLUMN_DATE_BEGIN));
+                long lessonTime = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN));
                 attitudeCursor.close();
 
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

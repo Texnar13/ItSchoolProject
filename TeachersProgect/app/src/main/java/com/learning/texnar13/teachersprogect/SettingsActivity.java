@@ -1,19 +1,14 @@
 package com.learning.texnar13.teachersprogect;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -131,12 +126,12 @@ public class SettingsActivity extends AppCompatActivity {
                 //       [-]
 
 
-                long lessonId = dbOpenHelper.createLesson("физика", classId
+                long lessonId = dbOpenHelper.createSubject("физика", classId
                         //, cabinetId
                 );
                 Date startLessonTime = new GregorianCalendar(2017, 10, 17, 8, 30).getTime();//1502343000000 --10 августа
                 Date endLessonTime = new GregorianCalendar(2017, 10, 17, 9, 15).getTime();//на 7 месяц  1502345700000
-                dbOpenHelper.setLessonTimeAndCabinet(lessonId, cabinetId, startLessonTime, endLessonTime, SchoolContract.TableLessonAndTimeWithCabinet.CONSTANT_REPEAT_NEVER);
+                dbOpenHelper.setLessonTimeAndCabinet(lessonId, cabinetId, startLessonTime, endLessonTime, SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER);
 
                 db.createNewSettingsProfile("default", 50);//создание настроек после удаления таблицы
 

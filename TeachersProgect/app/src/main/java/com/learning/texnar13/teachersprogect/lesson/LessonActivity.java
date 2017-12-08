@@ -182,16 +182,16 @@ public class LessonActivity extends AppCompatActivity {
 
         //получаем все данные о классе
         //курсор с зависимостью
-        Cursor lessonAttitudeCursor = db.getLessonAttitudeById(lessonAttitudeId);
+        Cursor lessonAttitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(lessonAttitudeId);
         lessonAttitudeCursor.moveToFirst();
 
         //курсор с уроком
-        lessonCursor = db.getLessonById(lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_LESSON_ID)));
+        lessonCursor = db.getSubjectById(lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID)));
         lessonCursor.moveToFirst();
 
-        lessonId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_LESSON_ID));
-        classId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_CLASS_ID));
-        cabinetId = lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_CABINET_ID));
+        lessonId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID));
+        classId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
+        cabinetId = lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
 
         lessonCursor.close();
         lessonAttitudeCursor.close();

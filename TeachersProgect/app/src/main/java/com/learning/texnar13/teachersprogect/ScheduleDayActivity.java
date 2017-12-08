@@ -16,7 +16,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.learning.texnar13.teachersprogect.LearnersAndGrades.LearnersAndGradesActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
@@ -208,24 +207,24 @@ public class ScheduleDayActivity extends AppCompatActivity {
             String lessonCabinet;
             {
                 //id урока в выбарнном интервале времени (45 мин)
-                ArrayList<Long> arrayList = db.getLessonsAttitudesIdByTimePeriod(lessonStandardTimePeriods[i].calendarStartTime, lessonStandardTimePeriods[i].calendarEndTime);
+                ArrayList<Long> arrayList = db.getSubjectAndTimeCabinetAttitudesIdByTimePeriod(lessonStandardTimePeriods[i].calendarStartTime, lessonStandardTimePeriods[i].calendarEndTime);
                 if (arrayList.size() != 0) {//есть ли в это время урок
                     lessonAttitudeId = arrayList.get(0);//id зависимости урока
-                    Cursor lessonAttitudeCursor = db.getLessonAttitudeById(lessonAttitudeId);//зависимость по id
+                    Cursor lessonAttitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(lessonAttitudeId);//зависимость по id
                     lessonAttitudeCursor.moveToFirst();
                     //имя
-                    Cursor lessonCursor = db.getLessonById(
+                    Cursor lessonCursor = db.getSubjectById(
                             lessonAttitudeCursor.getLong(
                                     lessonAttitudeCursor.getColumnIndex(
-                                            SchoolContract.TableLessonAndTimeWithCabinet.
-                                                    KEY_LESSON_ID)));
+                                            SchoolContract.TableSubjectAndTimeCabinetAttitude.
+                                                    KEY_SUBJECT_ID)));
                     lessonCursor.moveToFirst();
                     lessonName = lessonCursor.getString(//ставим имя урока
-                            lessonCursor.getColumnIndex(SchoolContract.TableLessons.COLUMN_NAME)
+                            lessonCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME)
                     );
 
                     //класс
-                    lessonClassId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableLessons.KEY_CLASS_ID));
+                    lessonClassId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
                     lessonCursor.close();
                     Cursor classCursor = db.getClasses(lessonClassId);
                     classCursor.moveToFirst();
@@ -234,7 +233,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
 
                     //кабинет
-                    lessonCabinetId = lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableLessonAndTimeWithCabinet.KEY_CABINET_ID));
+                    lessonCabinetId = lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
                     lessonAttitudeCursor.close();
                     Cursor cabinetCursor = db.getCabinets(lessonCabinetId);
                     cabinetCursor.moveToFirst();

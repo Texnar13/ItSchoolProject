@@ -154,8 +154,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
     }
 
     /*
-4213-24213/com.learning.texnar13.teachersprogect I/DBOpenHelper: getLessonsAttitudesIdByTimePeriod periodStart=1627333200000 periodEnd=1627419599000 answer=
-09-03 17:17:49.864 24213-24213/com.learning.texnar13.teachersprogect I/DBOpenHelper: getLessonsAttitudesIdByTimePeriod periodStart=1627419600000 periodEnd=1627505999000 answer=
+4213-24213/com.learning.texnar13.teachersprogect I/DBOpenHelper: getSubjectAndTimeCabinetAttitudesIdByTimePeriod periodStart=1627333200000 periodEnd=1627419599000 answer=
+09-03 17:17:49.864 24213-24213/com.learning.texnar13.teachersprogect I/DBOpenHelper: getSubjectAndTimeCabinetAttitudesIdByTimePeriod periodStart=1627419600000 periodEnd=1627505999000 answer=
 09-03 17:17:49.864 24213-24213/com.learning.texnar13.teachersprogect W/SQLiteLog: (28) failed to open "/data/user/0/com.learning.texnar13.teachersprogect/databases/school-journal" with flag (131072) and mode_t (1b0) due to error (24)
 09-03 17:17:49.864 24213-24213/com.learning.texnar13.teachersprogect E/SQLiteLog: (14) cannot open file at line 31517 of [2ef4f3a5b1]
 09-03 17:17:49.864 24213-24213/com.learning.texnar13.teachersprogect E/SQLiteLog: (14) os_unix.c:31517: (24) open(/data/user/0/com.learning.texnar13.teachersprogect/databases/school-journal) -
@@ -186,7 +186,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                                                                                            at android.database.sqlite.SQLiteCursor.getCount(SQLiteCursor.java:132)
                                                                                            at android.database.AbstractCursor.moveToPosition(AbstractCursor.java:219)
                                                                                            at android.database.AbstractCursor.moveToNext(AbstractCursor.java:268)
-                                                                                           at com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper.getLessonsAttitudesIdByTimePeriod(DataBaseOpenHelper.java:603)
+                                                                                           at com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper.getSubjectAndTimeCabinetAttitudesIdByTimePeriod(DataBaseOpenHelper.java:603)
                                                                                            at com.learning.texnar13.teachersprogect.ScheduleMonthActivity.outMonth(ScheduleMonthActivity.java:212)
                                                                                            at com.learning.texnar13.teachersprogect.ScheduleMonthActivity$2.onClick(ScheduleMonthActivity.java:68)
                                                                                            at android.view.View.performClick(View.java:5702)
@@ -324,7 +324,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                     day.setText(dayForIntent + "");
                     {//проверка наличия уроков
                         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-                        ArrayList<Long> lessonsAttitudesId = db.getLessonsAttitudesIdByTimePeriod(
+                        ArrayList<Long> lessonsAttitudesId = db.getSubjectAndTimeCabinetAttitudesIdByTimePeriod(
                                 new GregorianCalendar(
                                         viewCalendar.get(Calendar.YEAR),
                                         viewCalendar.get(Calendar.MONTH), dayForIntent, 0, 0, 0),
@@ -392,7 +392,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 //                day.setText(n + "");
 //                {
 //                    DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-//                    ArrayList<Long> lessonsAttitudesId = db.getLessonsAttitudesIdByTimePeriod(new GregorianCalendar(viewCalendar.get(Calendar.YEAR),
+//                    ArrayList<Long> lessonsAttitudesId = db.getSubjectAndTimeCabinetAttitudesIdByTimePeriod(new GregorianCalendar(viewCalendar.get(Calendar.YEAR),
 //                                    viewCalendar.get(Calendar.MONTH), n, 0, 0, 0),
 //                            new GregorianCalendar(viewCalendar.get(Calendar.YEAR),
 //                                    viewCalendar.get(Calendar.MONTH), n, 23, 59, 59));
@@ -459,7 +459,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 //                day.setText(n + "");
 //                {
 //                    DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-//                    ArrayList<Long> lessonsAttitudesId = db.getLessonsAttitudesIdByTimePeriod(new GregorianCalendar(viewCalendar.get(Calendar.YEAR),
+//                    ArrayList<Long> lessonsAttitudesId = db.getSubjectAndTimeCabinetAttitudesIdByTimePeriod(new GregorianCalendar(viewCalendar.get(Calendar.YEAR),
 //                                    viewCalendar.get(Calendar.MONTH), n, 0, 0, 0),
 //                            new GregorianCalendar(viewCalendar.get(Calendar.YEAR),
 //                                    viewCalendar.get(Calendar.MONTH), n, 23, 59, 59));

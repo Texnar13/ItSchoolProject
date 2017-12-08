@@ -64,33 +64,30 @@ public final class SchoolContract {
         public static final String KEY_GRADE_ID = BaseColumns._ID;
         public static final String COLUMN_GRADE = "grade";
         public static final String COLUMN_TIME_STAMP = "time";//в timestamp"yyyy-MM-dd HH:mm:ss"
-        public static final String KEY_LESSON_ID = "lessonId";
+        public static final String KEY_SUBJECT_ID = "subjectId";//rename to subject
         public static final String KEY_LEARNER_ID = "learnerId";
     }
 
-    public final class TableLessons {
-        public static final String NAME_TABLE_LESSONS = "lessons";
-        public static final String KEY_LESSON_ID = BaseColumns._ID;
+    public final class TableSubjects {
+        public static final String NAME_TABLE_SUBJECTS = "subjects";//rename to subject
+        public static final String KEY_SUBJECT_ID = BaseColumns._ID;
         public static final String COLUMN_NAME = "name";
         public static final String KEY_CLASS_ID = "classId";
     }
 
-    //--
-    public final class TableLessonAndTimeWithCabinet {
-        public static final String NAME_TABLE_LESSONS_AND_TIME_WITH_CABINET = "lessonsAnd";
-        public static final String KEY_LESSON_AND_TIME_ATTITUDE_ID = BaseColumns._ID;
-        public static final String KEY_LESSON_ID = "lessonId";
+    public final class TableSubjectAndTimeCabinetAttitude {
+        public static final String NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE = "lessonAndTimeWithCabinet";//rename to lessonAndTimeWithCabinet
+        public static final String KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID = BaseColumns._ID;
+        public static final String KEY_SUBJECT_ID = "subjectId";//rename to subjectId
         public static final String KEY_CABINET_ID = "cabinetId";
         public static final String COLUMN_DATE_BEGIN = "lessonDateBegin";//todo timestamp
         public static final String COLUMN_DATE_END = "lessonDateEnd";//todo timestamp
-        //--1
         public static final String COLUMN_REPEAT = "repeat";
         //constants:
         public static final int CONSTANT_REPEAT_NEVER = 0;
         public static final int CONSTANT_REPEAT_DAILY = 1;
         public static final int CONSTANT_REPEAT_WEEKLY = 2;
-        public static final int CONSTANT_REPEAT_MONTHLY = 3;
-        //--1
+        public static final int CONSTANT_REPEAT_ON_WORKING_DAYS = 3;
+        public static final int CONSTANT_REPEAT_MONTHLY = 4;
     }
-    //--
 }
