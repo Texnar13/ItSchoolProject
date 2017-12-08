@@ -102,9 +102,20 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
             public boolean onMenuItemClick(MenuItem menuItem) {
                 Log.i("TeachersApp", "ListOfActivity - onPrepareOptionsMenu renameId =" +
                         adapter.getIdCheckedListOfAdapterObjects());
-                ListOfDialog dialog = new ListOfDialog(getIntent().getStringExtra(LIST_PARAMETER),
-                        getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, -1),
-                        adapter.getIdCheckedListOfAdapterObjects());
+                //параметры для диалога
+                Bundle bundle = new Bundle();
+                bundle.putString("objectParameter",getIntent().getStringExtra(LIST_PARAMETER));
+                bundle.putLong("parentId",getIntent().getLongExtra(DOP_LIST_PARAMETER, -1));
+                {
+                    ArrayList<Long> idCheckedListOfAdapterObjects = adapter.getIdCheckedListOfAdapterObjects();
+                    long[] idObjects = new long[idCheckedListOfAdapterObjects.size()];
+                    for (int i = 0; i < idCheckedListOfAdapterObjects.size(); i++) {
+                        idObjects[i]=idCheckedListOfAdapterObjects.get(i);
+                    }
+                    bundle.putLongArray("objectsId", idObjects);
+                }
+                ListOfDialog dialog = new ListOfDialog();
+                dialog.setArguments(bundle);
                 dialog.show(getFragmentManager(), "dialogEdit");
                 //вызываем диалог, ставим имя и обновляем из диалога
                 return true;
@@ -136,7 +147,12 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
             @Override
             public void onClick(View view) {
                 Log.i("TeachersApp", "ListOfActivity - newUnit(fab.OnClickListener)");
-                ListOfDialog dialog = new ListOfDialog(listParameterValue, getIntent().getLongExtra(DOP_LIST_PARAMETER, -1), new ArrayList<Long>());
+                Bundle bundle = new Bundle();
+                bundle.putString("objectParameter",listParameterValue);
+                bundle.putLong("parentId",getIntent().getLongExtra(DOP_LIST_PARAMETER, -1));
+                bundle.putLongArray("objectsId",new long[0]);
+                ListOfDialog dialog = new ListOfDialog();
+                dialog.setArguments(bundle);
                 dialog.show(getFragmentManager(), "dialogNewUnit");
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();

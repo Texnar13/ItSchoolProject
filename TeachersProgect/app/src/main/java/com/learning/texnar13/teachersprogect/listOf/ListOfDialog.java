@@ -12,11 +12,9 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
 
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -30,16 +28,22 @@ public class ListOfDialog extends DialogFragment {
     long parentId;
     ArrayList<Long> objectsId = new ArrayList<>();
 
-    public ListOfDialog(String objectParameter, long parentId, ArrayList<Long> objectsId) {//конструктор этого класса
-        this.objectParameter = objectParameter;
-        this.parentId = parentId;
-        this.objectsId = objectsId;
+    public ListOfDialog() {//конструктор этого класса
+
     }
 
     //todo просто передавать параметр в инт что с ним делать
 
     @Override//создание диалога
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        //инициализация
+        this.objectParameter = getArguments().getString("objectParameter");
+        this.parentId = getArguments().getLong("parentId");
+        long[] array = getArguments().getLongArray("objectsId");
+        for (int i = 0; i < array.length; i++) {
+            objectsId.add(array[i]);
+        }
+
         Log.i("TeachersApp", "ListOfDialog - onCreateDialog");
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -59,6 +61,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
             //, "ежемесячно"//todo
     };
     boolean isTmeYours = false;
+    static Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -435,6 +438,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
         cursor.close();
         db.close();
 
+        Log.i("TeachersApp","deb7");
         final String[] finalStringLessons = stringLessons;
         final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, stringLessons);
         adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
@@ -450,83 +454,50 @@ public class LessonRedactorActivity extends AppCompatActivity {
                 Log.i("TeachersApp", "LessonRedactorActivity - availableLessonsOut onItemSelected " + pos);
                 if (count != 0 && finalStringLessons.length - 1 == pos) {
                     Log.i("TeachersApp", "LessonRedactorActivity - remove lesson");
-                    DialogFragment removeDialog = new DialogFragment() {
-                        @Override
-                        public Dialog onCreateDialog(Bundle savedInstanceState) {
-                            final ArrayList<Integer> mSelectedItems = new ArrayList<>();
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setTitle("удаление предметов")
-                                    .setMultiChoiceItems(stringOnlyLessons, null,
-                                            new DialogInterface.OnMultiChoiceClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which,
-                                                                    boolean isChecked) {
-                                                    if (isChecked) {
-                                                        // If the user checked the item, add it to the selected items
-                                                        mSelectedItems.add(which);
-                                                    } else if (mSelectedItems.contains(which)) {
-                                                        // Else, if the item is already in the array, remove it
-                                                        mSelectedItems.remove(Integer.valueOf(which));
-                                                    }
-                                                }
-                                            })
-                                    // Set the action buttons
-                                    .setPositiveButton("удалить", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dismiss();
-                                            ArrayList<Long> deleteList = new ArrayList<Long>(mSelectedItems.size());
-                                            for (int itemPoz : mSelectedItems) {
-                                                deleteList.add(lessonsId[itemPoz]);
-                                            }
-                                            db.deleteSubjects(deleteList);
-                                            availableLessonsOut(classViewId, 0);
-                                        }
-                                    })
-                                    .setNegativeButton("отмена", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dismiss();
-                                            availableLessonsOut(classViewId, position);
-                                        }
-                                    });
-                            return builder.create();
+                    //обратная связь от диалога
+                    handler = new Handler() {
+                        public void handleMessage(Message msg) {
+                            super.handleMessage(msg);
+                            if (msg.what == 0) {
+                                availableLessonsOut(classViewId, 0);
+                            }
+                            if (msg.what == 1) {
+                                availableLessonsOut(classViewId, position);
+                            }
                         }
                     };
+                    //данные передаваемые в диалог
+                    Bundle args = new Bundle();
+                    args.putStringArray("stringOnlyLessons", stringOnlyLessons);
+                    args.putLongArray("lessonsId", lessonsId);
+                    args.putLongArray("lessonsId", lessonsId);
+                    //диалог по удалению
+                    RemoveDialogFragment removeDialog = new RemoveDialogFragment();
+                    removeDialog.setArguments(args);
                     removeDialog.show(getFragmentManager(), "removeLessons");
+
                 } else if ((count != 0 && stringLessons.length - 2 == pos) || (count == 0 && finalStringLessons.length - 1 == pos)) {
                     //диалог создания предмета
                     Log.i("TeachersApp", "LessonRedactorActivity - new lesson");
-                    DialogFragment lessonNameDialog = new DialogFragment() {
-                        @Override
-                        public Dialog onCreateDialog(Bundle savedInstanceState) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                            LinearLayout out = (LinearLayout) getActivity().getLayoutInflater().inflate(R.layout.activity_lesson_redactor_dialog_lesson_name, null);
-                            final EditText lessonNameEditText = (EditText) out.findViewById(R.id.activity_lesson_redactor_dialog_lesson_name_edit_text);
-
-                            builder.setTitle("добавление предмета");
-                            builder.setView(out)
-                                    .setPositiveButton("добавить", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            db.createSubject(lessonNameEditText.getText().toString(), classCabinetId.classId);
-                                            availableLessonsOut(classCabinetId.classId, stringLessons.length - 2);
-                                            dismiss();
-                                        }
-                                    })
-                                    .setNegativeButton("отмена", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            availableLessonsOut(classCabinetId.classId, position);
-                                            dismiss();
-
-                                        }
-                                    });
-
-                            return builder.create();
+                    Log.i("TeachersApp","deb6");
+                    //диалог по созданию нового предмета
+                    LessonNameDialogFragment lessonNameDialogFragment = new LessonNameDialogFragment();
+                    lessonNameDialogFragment.show(getFragmentManager(), "createSubject");
+                    //обратная связь от диалога
+                    handler = new Handler() {
+                        public void handleMessage(Message msg) {
+                            super.handleMessage(msg);
+                            if (msg.what == 0) {
+                                availableLessonsOut(classCabinetId.classId, stringLessons.length - 2);
+                                Log.i("TeachersApp","deb5");
+                            }
+                            if (msg.what == 1) {
+                                Log.i("TeachersApp","deb4");
+                                availableLessonsOut(classCabinetId.classId, position);
+                            }
                         }
                     };
-                    lessonNameDialog.show(getFragmentManager(), "createSubject");
+                    Log.i("TeachersApp","deb3");
                 } else if (pos != 0) {
                     Log.i("TeachersApp", "LessonRedactorActivity - chosen lesson id = " + lessonsId[pos - 1]);
                     chosenLessonId = lessonsId[pos - 1];
@@ -542,6 +513,87 @@ public class LessonRedactorActivity extends AppCompatActivity {
         //spinner.setSelection(2);//элемент по умолчанию
     }
 
+    public static class RemoveDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final ArrayList<Integer> mSelectedItems = new ArrayList<>();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("удаление предметов")
+                    .setMultiChoiceItems(getArguments().getStringArray("stringOnlyLessons"), null,
+                            new DialogInterface.OnMultiChoiceClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which,
+                                                    boolean isChecked) {
+                                    if (isChecked) {
+                                        // If the user checked the item, add it to the selected items
+                                        mSelectedItems.add(which);
+                                    } else if (mSelectedItems.contains(which)) {
+                                        // Else, if the item is already in the array, remove it
+                                        mSelectedItems.remove(Integer.valueOf(which));
+                                    }
+                                }
+                            })
+                    // Set the action buttons
+                    .setPositiveButton("удалить", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dismiss();
+
+
+                            long[] lessonsId = getArguments().getLongArray("lessonsId");
+                            ArrayList<Long> deleteList = new ArrayList<Long>(mSelectedItems.size());
+                            for (int itemPoz : mSelectedItems) {
+                                deleteList.add(lessonsId[itemPoz]);
+                            }
+                            (new DataBaseOpenHelper(getActivity().getApplicationContext())).deleteSubjects(deleteList);
+                            handler.sendEmptyMessage(0);
+                            //availableLessonsOut(classViewId, 0);
+                        }
+                    })
+                    .setNegativeButton("отмена", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dismiss();
+                            handler.sendEmptyMessage(1);
+                            //availableLessonsOut(classViewId, position);
+                        }
+                    });
+            return builder.create();
+        }
+
+    }
+
+    public static class LessonNameDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            LinearLayout out = (LinearLayout) getActivity().getLayoutInflater().inflate(R.layout.activity_lesson_redactor_dialog_lesson_name, null);
+            final EditText lessonNameEditText = (EditText) out.findViewById(R.id.activity_lesson_redactor_dialog_lesson_name_edit_text);
+
+            builder.setTitle("добавление предмета");
+            builder.setView(out)
+                    .setPositiveButton("добавить", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            Log.i("TeachersApp","deb1");
+                            //(new DataBaseOpenHelper(getActivity().getApplicationContext())).createSubject(lessonNameEditText.getText().toString(), classCabinetId.classId);
+                            handler.sendEmptyMessage(0);
+                            dismiss();
+                        }
+                    })
+                    .setNegativeButton("отмена", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Log.i("TeachersApp","deb2");
+                            handler.sendEmptyMessage(1);
+                            dismiss();
+
+                        }
+                    });
+
+            return builder.create();
+        }
+    }
 
 }
 
@@ -576,5 +628,8 @@ class CustomAdapter extends ArrayAdapter {
         return convertView;
     }
 }
+
+
+
 
 
