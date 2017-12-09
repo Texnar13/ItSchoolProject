@@ -38,16 +38,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class LessonRedactorActivity extends AppCompatActivity {
+public class LessonRedactorActivity extends AppCompatActivity implements LessonNameDialogInterface {
 
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
     public static final String LESSON_START_TIME = "lessonStartTime";
     public static final String LESSON_END_TIME = "lessonEndTime";
 
-    long attitudeId = -1;//todo почему она не нужна?
+    //id лавной зависимости
+    long attitudeId = -1;
 
     //класс-кабинет
     TextView seatingStateText;
+    //выбранные класс и кабинет
     final ClassCabinet classCabinetId = new ClassCabinet(1, 1);//todo предусмотреть вариант если уроков вобще нет или у принимаемого урока не стандартное время. проверка нет ли на этом времени урока. переворот экрана.
     //урок
     long chosenLessonId = -1;
@@ -438,7 +440,6 @@ public class LessonRedactorActivity extends AppCompatActivity {
         cursor.close();
         db.close();
 
-        Log.i("TeachersApp","deb7");
         final String[] finalStringLessons = stringLessons;
         final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, stringLessons);
         adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
@@ -471,6 +472,7 @@ public class LessonRedactorActivity extends AppCompatActivity {
                     args.putStringArray("stringOnlyLessons", stringOnlyLessons);
                     args.putLongArray("lessonsId", lessonsId);
                     args.putLongArray("lessonsId", lessonsId);
+                    args.putInt("position",position);
                     //диалог по удалению
                     RemoveDialogFragment removeDialog = new RemoveDialogFragment();
                     removeDialog.setArguments(args);
@@ -479,25 +481,14 @@ public class LessonRedactorActivity extends AppCompatActivity {
                 } else if ((count != 0 && stringLessons.length - 2 == pos) || (count == 0 && finalStringLessons.length - 1 == pos)) {
                     //диалог создания предмета
                     Log.i("TeachersApp", "LessonRedactorActivity - new lesson");
-                    Log.i("TeachersApp","deb6");
+                    //данные для диалога
+                    Bundle args = new Bundle();
+                    args.putStringArray("stringLessons", stringLessons);
+                    args.putInt("position",position);
                     //диалог по созданию нового предмета
                     LessonNameDialogFragment lessonNameDialogFragment = new LessonNameDialogFragment();
+                    lessonNameDialogFragment.setArguments(args);
                     lessonNameDialogFragment.show(getFragmentManager(), "createSubject");
-                    //обратная связь от диалога
-                    handler = new Handler() {
-                        public void handleMessage(Message msg) {
-                            super.handleMessage(msg);
-                            if (msg.what == 0) {
-                                availableLessonsOut(classCabinetId.classId, stringLessons.length - 2);
-                                Log.i("TeachersApp","deb5");
-                            }
-                            if (msg.what == 1) {
-                                Log.i("TeachersApp","deb4");
-                                availableLessonsOut(classCabinetId.classId, position);
-                            }
-                        }
-                    };
-                    Log.i("TeachersApp","deb3");
                 } else if (pos != 0) {
                     Log.i("TeachersApp", "LessonRedactorActivity - chosen lesson id = " + lessonsId[pos - 1]);
                     chosenLessonId = lessonsId[pos - 1];
@@ -576,18 +567,25 @@ public class LessonRedactorActivity extends AppCompatActivity {
                     .setPositiveButton("добавить", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            Log.i("TeachersApp","deb1");
-                            //(new DataBaseOpenHelper(getActivity().getApplicationContext())).createSubject(lessonNameEditText.getText().toString(), classCabinetId.classId);
-                            handler.sendEmptyMessage(0);
+                            ((LessonNameDialogInterface) getActivity())
+                                    .lessonNameDialogMethod(
+                                            1,
+                                            getArguments().getStringArray("stringLessons").length - 2,
+                                            lessonNameEditText.getText().toString()
+                                    );
+
                             dismiss();
                         }
                     })
                     .setNegativeButton("отмена", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            Log.i("TeachersApp","deb2");
-                            handler.sendEmptyMessage(1);
+                            ((LessonNameDialogInterface) getActivity())
+                                    .lessonNameDialogMethod(
+                                            0,
+                                            getArguments().getInt("position"),
+                                            ""
+                                    );
                             dismiss();
-
                         }
                     });
 
@@ -595,6 +593,20 @@ public class LessonRedactorActivity extends AppCompatActivity {
         }
     }
 
+    @Override//обратная связь от диалога
+    public void lessonNameDialogMethod(int code, int position, String classNameText) {
+        if( code==1){
+            (new DataBaseOpenHelper(this)).createSubject(classNameText, classCabinetId.classId);
+            availableLessonsOut(classCabinetId.classId, position);
+        } else{
+            availableLessonsOut(classCabinetId.classId, position);
+        }
+
+    }
+}
+
+interface LessonNameDialogInterface {//обратная связь от диалога
+    void lessonNameDialogMethod(int code, int position, String classNameText);
 }
 
 class CustomAdapter extends ArrayAdapter {

@@ -288,7 +288,11 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             tempPlaceLayout.removeAllViews();
-                            ChooseLearnerDialogFragment dialogFragment = new ChooseLearnerDialogFragment(cabinetId, classId);
+                            Bundle bundle = new Bundle();
+                            bundle.putLong("cabinetId",cabinetId);
+                            bundle.putLong("classId",classId);
+                            ChooseLearnerDialogFragment dialogFragment = new ChooseLearnerDialogFragment();
+                            dialogFragment.setArguments(bundle);
                             dialogFragment.show(getFragmentManager(), "chooseLearners");
                             handler = new Handler() {
                                 public void handleMessage(android.os.Message msg) {
@@ -354,58 +358,63 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-}
 
+    public static class ChooseLearnerDialogFragment extends DialogFragment {//диалог по выбору не распределенного ученика
 
-class ChooseLearnerDialogFragment extends DialogFragment {//диалог по выбору не распределенного ученика
+        long cabinetId;
+        long classId;
 
-    long cabinetId;
-    long classId;
+        public ChooseLearnerDialogFragment() {
 
-    public ChooseLearnerDialogFragment(long cabinetId, long classId) {
-        this.cabinetId = cabinetId;
-        this.classId = classId;
-    }
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        //
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());//билдер диалога
-        final DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());//база
-        final ArrayList<Long> learnersId = db.getNotPutLearnersIdByCabinetIdAndClassId(cabinetId, classId);//лист с id нераспределенных по местам учеников
-        String[] learnersNames = new String[learnersId.size()];//массив с именами учеников(пустой)
-        for (int i = 0; i < learnersNames.length; i++) {//заполняем
-            Cursor learnerTempCursor = db.getLearner(learnersId.get(i));//получаем ученика
-            learnerTempCursor.moveToFirst();
-            //получаем имя
-            learnersNames[i] = learnerTempCursor.getString(learnerTempCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) + " " + learnerTempCursor.getString(learnerTempCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME));
-            learnerTempCursor.close();
         }
-        builder.setItems(learnersNames, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {//лист с именами
-                Cursor learnerTempCursor = db.getLearner(learnersId.get(which));//получаем выбранного ученика
-                learnerTempCursor.moveToFirst();
-                //посылаем id выбранного ученика
-                SeatingRedactorActivity.handler.sendEmptyMessage((int)
-                        learnerTempCursor.getLong(learnerTempCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)));
-                learnerTempCursor.close();
-                dismiss();
-            }
-            // The 'which' argument contains the index position
-            // of the selected item
-        });
-        // Create the AlertDialog object and return it
-        return builder.create();
-    }
 
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        Log.i("teachersApp", "SeatingRedactorActivity/ChooseLearnerDialogFragment/onDismiss");
-        super.onDismiss(dialog);
-        SeatingRedactorActivity.handler.sendEmptyMessage(-1);
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            //
+            // инициализация переменных
+            this.cabinetId = getArguments().getLong("cabinetId");
+            this.classId = getArguments().getLong("classId");
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());//билдер диалога
+            final DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());//база
+            final ArrayList<Long> learnersId = db.getNotPutLearnersIdByCabinetIdAndClassId(cabinetId, classId);//лист с id нераспределенных по местам учеников
+            String[] learnersNames = new String[learnersId.size()];//массив с именами учеников(пустой)
+            for (int i = 0; i < learnersNames.length; i++) {//заполняем
+                Cursor learnerTempCursor = db.getLearner(learnersId.get(i));//получаем ученика
+                learnerTempCursor.moveToFirst();
+                //получаем имя
+                learnersNames[i] = learnerTempCursor.getString(learnerTempCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) + " " + learnerTempCursor.getString(learnerTempCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME));
+                learnerTempCursor.close();
+            }
+            builder.setItems(learnersNames, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {//лист с именами
+                    Cursor learnerTempCursor = db.getLearner(learnersId.get(which));//получаем выбранного ученика
+                    learnerTempCursor.moveToFirst();
+                    //посылаем id выбранного ученика
+                    SeatingRedactorActivity.handler.sendEmptyMessage((int)
+                            learnerTempCursor.getLong(learnerTempCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)));
+                    learnerTempCursor.close();
+                    dismiss();
+                }
+                // The 'which' argument contains the index position
+                // of the selected item
+            });
+            // Create the AlertDialog object and return it
+            return builder.create();
+        }
+
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+            Log.i("teachersApp", "SeatingRedactorActivity/ChooseLearnerDialogFragment/onDismiss");
+            super.onDismiss(dialog);
+            SeatingRedactorActivity.handler.sendEmptyMessage(-1);
+        }
+
     }
 
 }
+
+
+
 
 class DeskUnit {//хранит в себе одну парту
     long id;
