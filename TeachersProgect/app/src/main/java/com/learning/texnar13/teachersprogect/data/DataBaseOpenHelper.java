@@ -40,7 +40,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     }
 
     private void updateDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.i("DataBaseOpenHelper", "updateDatabase old=" + oldVersion + " new=" + newVersion);
+        Log.i("DBOpenHelper", "updateDatabase old=" + oldVersion + " new=" + newVersion);
 
         if (oldVersion < 1) {//то приложение либо новое, либо удаляются данные
 
@@ -292,6 +292,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 db.execSQL("PRAGMA foreign_keys = ON");
             }
         }
+        db.close();
     }
 
     //настройки
@@ -329,8 +330,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             answer = -1;
         }
         Log.i("DBOpenHelper", "getInterfaceSizeBySettingsProfileId profileId=" + profileId + " return=" + answer);
-
         cursor.close();
+        db.close();
         return answer;
     }
 
@@ -440,6 +441,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         Log.i("DBOpenHelper", "getLearnerIdByClassIdAndPlaceId classId=" + classId + " placeId=" + placeId + " answer=" + answer);
+        db.close();
         return answer;
     }
 
@@ -817,6 +819,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT, repeatPeriod);
         long answer = db.insert(SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE, null, contentValues);
         Log.i("DBOpenHelper", "setLessonTime subjectId= " + subjectId + " cabinetId= " + cabinetId + " startTime= " + startTime.toString() + " endTime= " + endTime.toString() + " repeatPeriod= " + repeatPeriod + " return = " + answer);
+        db.close();
         return answer;
     }
 
@@ -830,7 +833,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END, endTime.getTime());
         contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT, repeatPeriod);
         int answer = db.update(SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE, contentValues, SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " = ?", new String[]{Long.toString(attitudeId)});
-
+        db.close();
         Log.i("DBOpenHelper", "editLessonTimeAndCabinet attitudeId= " + attitudeId + " subjectId= " + subjectId + " cabinetId= " + cabinetId + " startTime= " + startTime.toString() + " endTime= " + endTime.toString() + " return = " + answer);
         return answer;
     }
@@ -883,6 +886,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudesIdByTimePeriod periodStart=" + periodStart.getTime().getTime() + " periodEnd=" + periodEnd.getTime().getTime() + " answer=" + stringSubjectAndTimeCabinetAttitudesId);
+        db.close();
         return answer;
     }
 
@@ -913,10 +917,12 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             answer = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID));
             cursor.close();
             Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudesIdByTimePeriod time=" + time.getTime().getTime() + " answer=" + answer);
+            db.close();
             return answer;
         } else {
             cursor.close();
             Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudesIdByTimePeriod time=" + time.getTime().getTime() + " answer=" + (-1));
+            db.close();
             return -1;
         }
     }

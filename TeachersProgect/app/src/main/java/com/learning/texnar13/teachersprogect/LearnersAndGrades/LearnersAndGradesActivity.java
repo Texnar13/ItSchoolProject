@@ -7,9 +7,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,14 +32,36 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class LearnersAndGradesActivity extends AppCompatActivity {
+public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface {
 
     public static final String CLASS_ID = "classId";
 
-    //переменные выводящиеся из бд
-    ArrayList<Long> learnersId;
-    ArrayList<String> learnersNames;
+    //----переменные выводящиеся из бд----
+    //класс
+    long classId = -1;
+    //ученики
+    ArrayList<Long> learnersId = new ArrayList<>();//id учеников
+    ArrayList<String> learnersTitles = new ArrayList<>();//имена учеников
+    //выбранный урок
     int changingSubjectPosition = 0;
+    //оценки
+    int[][][][] grades;//[ученик][день][урок][оценка]
+    //выводимая дата
+    //Calendar;
+//TODO сделать поток для подгрузки данных 49 кадров пропускается!!!!!!
+    @Override
+    public void createLearner(String lastName, String name, long classId) {
+        //создание ученика вызываемое диалогом CreateLearnerDialogFragment
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        db.createLearner(lastName, name, classId);
+        //обновляем список учеников
+        getLearnersFromDB();
+        //обновляем таблицу
+        GregorianCalendar changingCalendar = new GregorianCalendar();
+        changingCalendar.setTime(new Date());
+        updateTable(changingSubjectPosition, changingCalendar);
+        db.close();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,41 +69,34 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_learners_and_grades);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        //----переданные данные----
+//----переданные данные----
         Intent intent = getIntent();
-        long classId = intent.getLongExtra(CLASS_ID, -1);
+        classId = intent.getLongExtra(CLASS_ID, -1);
         if (classId == -1) {
             finish();//выходим если не передан класс
         }
-        //----база данных----
+//----кнопка добавить ученика----
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.learners_and_grades_add_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //создаем диалог
+                CreateLearnerDialogFragment createLearnerDialog = new CreateLearnerDialogFragment();
+                //создаем параметры
+                Bundle args = new Bundle();
+                args.putLong("classId", classId);
+                createLearnerDialog.setArguments(args);
+                //показываем диалог
+                createLearnerDialog.show(getFragmentManager(), "createLearnerDialog");
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+            }
+        });
+//----база данных----
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        Cursor learnersCursor = db.getLearnersByClassId(classId);
-
-        learnersId = new ArrayList<>();//id учеников
-        learnersNames = new ArrayList<>();//имена учеников
-        while (learnersCursor.moveToNext()) {
-            learnersId.add(learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)));
-            learnersNames.add(
-                    learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) + " " +
-                            learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME))
-            );
-        }
-        learnersCursor.close();
-
-        //todo в общем так, загружаем список предметов и создаём общую переменную (в классе) в которую заносим id выбранного предмета, по нажатию на пункт спинера обновить оценки, сделать на это отдельный метод
-
-
-        //заголовок
+//----вывод учеников из бд----
+        getLearnersFromDB();
+//----заголовок----
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
         //название класса
         Cursor classCursor = db.getClasses(classId);
@@ -89,10 +104,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("в разработкеУченики в классе " +
                 classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
         classCursor.close();
-
-        //----переключение даты----
+//----переключение даты----
         //константы
-        final String[] monsesNames = {"ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"};
+        final String[] monthsNames = {
+                "ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ",
+                "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"
+        };
         //изменяющийся календарь
         final GregorianCalendar changingCalendar = new GregorianCalendar();
         changingCalendar.setTime(new Date());
@@ -110,7 +127,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
                 } else {
                     changingCalendar.set(Calendar.MONTH, changingCalendar.get(Calendar.MONTH) - 1);
                 }
-                dateText.setText(monsesNames[changingCalendar.get(Calendar.MONTH)] + " " + changingCalendar.get(Calendar.YEAR));
+                dateText.setText(monthsNames[changingCalendar.get(Calendar.MONTH)] + " " + changingCalendar.get(Calendar.YEAR));
                 updateTable(changingSubjectPosition, changingCalendar);
             }
         });
@@ -124,12 +141,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
                 } else {
                     changingCalendar.set(Calendar.MONTH, changingCalendar.get(Calendar.MONTH) + 1);
                 }
-                dateText.setText(monsesNames[changingCalendar.get(Calendar.MONTH)] + " " + changingCalendar.get(Calendar.YEAR));
+                dateText.setText(monthsNames[changingCalendar.get(Calendar.MONTH)] + " " + changingCalendar.get(Calendar.YEAR));
                 updateTable(changingSubjectPosition, changingCalendar);
             }
         });
-
-        //----спинер с предметами----
+//----спинер с предметами----
         Spinner subjectSpinner = (Spinner) findViewById(R.id.learners_and_grades_activity_subject_spinner);
         //выводим из базы данных список предметов
         Cursor subjectsCursor = db.getSubjectsByClassId(classId);
@@ -158,23 +174,24 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
         });
 
 
-        dateText.setText(monsesNames[changingCalendar.get(Calendar.MONTH)] + " " + changingCalendar.get(Calendar.YEAR));
+        dateText.setText(monthsNames[changingCalendar.get(Calendar.MONTH)] + " " + changingCalendar.get(Calendar.YEAR));
         updateTable(subjectsId[0], changingCalendar);//выводим оценки при старте
+        db.close();
     }
 
+    //вывод таблицы
     void updateTable(long subjectId, GregorianCalendar viewCalendar) {
-        //получаем оценки из бд
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-
-        //таблицы
-        //----------имена----------
+        //чистка
+        //имена
         TableLayout learnersNamesTable = (TableLayout) findViewById(R.id.learners_and_grades_table_names);
         learnersNamesTable.removeAllViews();
-        //----------оценки----------
+        //оценки
         TableLayout learnersGradesTable = (TableLayout) findViewById(R.id.learners_and_grades_table);
         learnersGradesTable.removeAllViews();
-
-        //---заголовок---
+//----таблицы----
+// ---имена---
+// ---оценки---
+//  -заголовок-
         //заголовок ученика
         TableRow headNameRaw = new TableRow(this);
         //рамка
@@ -226,8 +243,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
         //строку в таблицу
         learnersGradesTable.addView(headGrades, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
-        //---тело---
-        for (int i = 0; i < learnersNames.size(); i++) {//пробегаемся по ученикам
+//  -тело-
+        for (int i = 0; i < learnersTitles.size(); i++) {//пробегаемся по ученикам
             //строка с учеником и оценками
             TableRow learner = new TableRow(this);
             TableRow learnerGrades = new TableRow(this);
@@ -244,7 +261,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
             learnerName.setTextColor(Color.BLACK);//parseColor("#1f5b85")
             learnerName.setBackgroundColor(Color.WHITE);//"#bed7e9"
             learnerName.setGravity(Gravity.BOTTOM);
-            learnerName.setText(learnersNames.get(i));
+            learnerName.setText(learnersTitles.get(i));
             //отступы контейнера в рамке
             LinearLayout.LayoutParams learnerNameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             learnerNameParams.setMargins((int) pxFromDp(10), 0, (int) pxFromDp(10), 0);
@@ -262,14 +279,15 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
             for (int j = 0; j < viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH); j++) {//и по датам
                 //достаём текст из бд
                 ArrayList<Integer> gradesArray = new ArrayList<>();
-
+//todo нахрен здесь оценки
+                DataBaseOpenHelper db = new DataBaseOpenHelper(this);
                 Cursor grades = db.getGradesByLearnerIdAndDayTime(learnersId.get(i), viewCalendar);
                 while (grades.moveToNext()) {
                     gradesArray.add(grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_GRADE)));
 
                 }
                 grades.close();
-
+                db.close();
                 //рамка
                 LinearLayout dateOut = new LinearLayout(this);
                 dateOut.setBackgroundColor(Color.BLACK);
@@ -298,6 +316,47 @@ public class LearnersAndGradesActivity extends AppCompatActivity {
             learnersNamesTable.addView(learner, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
             learnersGradesTable.addView(learnerGrades, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
         }
+    }
+
+    void getLearnersFromDB() {//вывод учеников из бд
+        //чистим массивы от предыдущих значений
+        learnersId = new ArrayList<>();
+        learnersTitles = new ArrayList<>();
+        //обновляем массивы свежими данными
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        Cursor learnersCursor = db.getLearnersByClassId(classId);
+        while (learnersCursor.moveToNext()) {
+            learnersId.add(
+                    learnersCursor.getLong(
+                            learnersCursor.getColumnIndex(
+                                    SchoolContract.TableLearners.KEY_LEARNER_ID
+                            )
+                    )
+            );
+            learnersTitles.add(
+                    learnersCursor.getString(learnersCursor.getColumnIndex(
+                            SchoolContract.TableLearners.COLUMN_SECOND_NAME
+                    )) + " " +
+                            learnersCursor.getString(learnersCursor.getColumnIndex(
+                                    SchoolContract.TableLearners.COLUMN_FIRST_NAME
+                            ))
+            );
+        }
+        learnersCursor.close();
+        db.close();
+    }
+
+    void getGradesFromDB() {//вывод оценок из бд//----вывод оценок из бд----
+        //чистим массивы от предыдущих значений
+        grades = new int[learnersId.size()][0][0][3];
+        //обновляем массивы свежими данными
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        for (int i = 0; i < grades.length; i++) {
+            for (int j = 0; j < 3; j++) {
+                //grades[i][j] = db.get;
+            }
+        }
+        db.close();
     }
 
     @Override
