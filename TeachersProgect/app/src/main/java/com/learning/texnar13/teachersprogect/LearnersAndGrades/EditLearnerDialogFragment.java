@@ -13,25 +13,32 @@ import android.widget.LinearLayout;
 
 import com.learning.texnar13.teachersprogect.R;
 
-public class CreateLearnerDialogFragment extends DialogFragment {
+public class EditLearnerDialogFragment extends DialogFragment {//входные данные предыдущее имя, фамилия, id
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //заголовок
-        builder.setTitle("Добавление ученика");
+        builder.setTitle("Редактирование ученика");
 
         //layout диалога
-        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.create_learner_dialog_fragment_layout, null);
+        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.edit_learner_dialog_fragment_layout, null);
         builder.setView(dialogLayout);
         //LinearLayout в layout файле
-        LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.create_learner_dialog_fragment_linear_layout);
+        LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.edit_learner_dialog_fragment_linear_layout);
 
         //текстовое поле фамилии
         final EditText editLastName = new EditText(getActivity());
         editLastName.setTextColor(Color.BLACK);
         editLastName.setHint("ФАМИЛИЯ");
         editLastName.setHintTextColor(Color.GRAY);
+        try {//входные данные предыдущая фамилия
+            editLastName.setText(getArguments().getString("lastName"));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Log.i("TeachersApp","you must give bundle argument \"lastName\"");
+        }
         //добавляем текстовое поле
         linearLayout.addView(editLastName);
         //текстовое поле имени
@@ -39,11 +46,17 @@ public class CreateLearnerDialogFragment extends DialogFragment {
         editName.setTextColor(Color.BLACK);
         editName.setHint("ИМЯ");
         editName.setHintTextColor(Color.GRAY);
+        try {//входные данные предыдущее имя
+            editName.setText(getArguments().getString("name"));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Log.i("TeachersApp","you must give bundle argument \"name\"");
+        }
         //добавляем текстовое поле
         linearLayout.addView(editName);
 
         //кнопки согласия/отмены
-        builder.setPositiveButton("обавление", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("добавление", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 try {
@@ -51,7 +64,7 @@ public class CreateLearnerDialogFragment extends DialogFragment {
                     ((CreateLearnerInterface) getActivity()).createLearner(
                             editLastName.getText().toString(),
                             editName.getText().toString(),
-                            getArguments().getLong("classId")
+                            getArguments().getLong("learnerId")
                     );
                 } catch (java.lang.ClassCastException e) {
                     //в вызвающей активности должен быть имплементирован класс CreateLearnerInterface
@@ -60,7 +73,7 @@ public class CreateLearnerDialogFragment extends DialogFragment {
                             "TeachersApp",
                             "CreateLearnerDialogFragment: you must implements CreateLearnerInterface in your activity"
                     );
-                } catch (java.lang.NullPointerException e){
+                } catch (java.lang.NullPointerException e) {
                     //в диалог необходимо передать id класса( Bungle putLong("classId",classId) )
                     e.printStackTrace();
                     Log.i(
@@ -90,6 +103,7 @@ public class CreateLearnerDialogFragment extends DialogFragment {
     }
 }
 
-interface CreateLearnerInterface {
-    void createLearner(String lastName, String name, long classId);
+interface EditLearnerDialogInterface {
+    void editLearner(String lastName, String name, long learnerId);
 }
+

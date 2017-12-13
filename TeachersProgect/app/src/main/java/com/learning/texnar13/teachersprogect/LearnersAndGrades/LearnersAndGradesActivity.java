@@ -32,7 +32,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface {
+public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface {
 
     public static final String CLASS_ID = "classId";
 
@@ -46,6 +46,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     int changingSubjectPosition = 0;
     //оценки
     int[][][][] grades;//[ученик][день][урок][оценка]
+
     //выводимая дата
     //Calendar;
 //TODO сделать поток для подгрузки данных 49 кадров пропускается!!!!!!
@@ -57,9 +58,25 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //обновляем список учеников
         getLearnersFromDB();
         //обновляем таблицу
-        GregorianCalendar changingCalendar = new GregorianCalendar();
-        changingCalendar.setTime(new Date());
-        updateTable(changingSubjectPosition, changingCalendar);
+        GregorianCalendar currentCalendar = new GregorianCalendar();
+        currentCalendar.setTime(new Date());
+        updateTable(changingSubjectPosition, currentCalendar);
+        db.close();
+    }
+
+    @Override
+    public void editLearner(String lastName, String name, long learnerId) {
+        //редактирование ученика вызываемое диалогом CreateLearnerDialogFragment
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        ArrayList<Long> classesId = new ArrayList<>();
+        classesId.add(classId);
+        db.setLearnerNameAndLastName(classesId, name, lastName);
+        //обновляем список учеников
+        getLearnersFromDB();
+        //обновляем таблицу
+        GregorianCalendar currentCalendar = new GregorianCalendar();
+        currentCalendar.setTime(new Date());
+        updateTable(changingSubjectPosition, currentCalendar);
         db.close();
     }
 
@@ -191,7 +208,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 //----таблицы----
 // ---имена---
 // ---оценки---
-//  -заголовок-
+//-шапка-
         //заголовок ученика
         TableRow headNameRaw = new TableRow(this);
         //рамка
@@ -213,7 +230,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         headNameRaw.addView(headNameOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
         //строку в таблицу
         learnersNamesTable.addView(headNameRaw, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
-
 
         //дни
         TableRow headGrades = new TableRow(this);
@@ -243,7 +259,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //строку в таблицу
         learnersGradesTable.addView(headGrades, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
-//  -тело-
+//-тело таблицы-
         for (int i = 0; i < learnersTitles.size(); i++) {//пробегаемся по ученикам
             //строка с учеником и оценками
             TableRow learner = new TableRow(this);
@@ -274,6 +290,38 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             learnerNameOut.addView(dateContainer, dateContainerParams);
             //рамку в строку
             learner.addView(learnerNameOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
+            //действия при нажатии на имя ученика
+            final int finalI = i;
+            learnerNameOut.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    //диалог
+                    EditLearnerDialogFragment editDialog = new EditLearnerDialogFragment();
+                    //-данные для диалога-
+                    //получаем из бд
+                    DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                    Cursor learnerCursor = db.getLearner(learnersId.get(finalI));
+                    learnerCursor.moveToFirst();
+                    //создаем обьект с данными
+                    Bundle args = new Bundle();
+                    args.putLong("learnerId",learnersId.get(finalI));
+                    args.putString("name",learnerCursor.getString(
+                            learnerCursor.getColumnIndex(
+                                    SchoolContract.TableLearners.COLUMN_FIRST_NAME)
+                    ));
+                    args.putString("lastName",learnerCursor.getString(
+                            learnerCursor.getColumnIndex(
+                                    SchoolContract.TableLearners.COLUMN_SECOND_NAME)
+                    ));
+                    //данные диалогу
+                    editDialog.setArguments(args);
+                    //показать диалог
+                    editDialog.show(getFragmentManager(),"editLearnerDialog");
+                    learnerCursor.close();
+                    db.close();
+                    return true;
+                }
+            });
 
             //вывод дат
             for (int j = 0; j < viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH); j++) {//и по датам
@@ -374,7 +422,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     private float pxFromDp(float dp) {
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
-
 }
 
 class CustomAdapter extends ArrayAdapter {
