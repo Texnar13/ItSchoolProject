@@ -5,6 +5,7 @@ import android.provider.BaseColumns;
 public final class SchoolContract {
 
     public static final String DB_NAME = "school";
+    public static final String DECODING_TIMES_STRING = "yyyy-MM-dd HH:mm:ss";
 
     SchoolContract() {
     }
@@ -67,7 +68,7 @@ public final class SchoolContract {
         public static final String KEY_SUBJECT_ID = "subjectId";//rename to subject
         public static final String KEY_LEARNER_ID = "learnerId";
         //constants:
-        public static final String DECODING_TIMES_STRING = "yyyy-MM-dd HH:mm:ss";
+
     }
 
     public static final class TableSubjects {
