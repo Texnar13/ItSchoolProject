@@ -43,7 +43,7 @@ public class CreateLearnerDialogFragment extends DialogFragment {
         linearLayout.addView(editName);
 
         //кнопки согласия/отмены
-        builder.setPositiveButton("обавление", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("добавление", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 try {

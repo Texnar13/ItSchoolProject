@@ -56,12 +56,12 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
         linearLayout.addView(editName);
 
         //кнопки согласия/отмены
-        builder.setPositiveButton("добавление", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 try {
                     //вызываем в активности метод по созданию ученика и передаем ей имя и фамилию
-                    ((CreateLearnerInterface) getActivity()).createLearner(
+                    ((EditLearnerDialogInterface) getActivity()).editLearner(
                             editLastName.getText().toString(),
                             editName.getText().toString(),
                             getArguments().getLong("learnerId")

@@ -9,20 +9,20 @@ public final class SchoolContract {
     SchoolContract() {
     }
 
-    public final class TableSettingsData {
+    public static final class TableSettingsData {
         public static final String NAME_TABLE_SETTINGS = "settingsData";
         public static final String KEY_SETTINGS_PROFILE_ID = BaseColumns._ID;
         public static final String COLUMN_PROFILE_NAME = "profileName";
         public static final String COLUMN_INTERFACE_SIZE = "interfaceSize";
     }
 
-    public final class TableCabinets {
+    public static final class TableCabinets {
         public static final String NAME_TABLE_CABINETS = "cabinets";
         public static final String KEY_CABINET_ID = BaseColumns._ID;
         public static final String COLUMN_NAME = "name";
     }
 
-    public final class TableDesks {
+    public static final class TableDesks {
         public static final String NAME_TABLE_DESKS = "desks";
         public static final String KEY_DESK_ID = BaseColumns._ID;
         public static final String COLUMN_X = "x";
@@ -31,20 +31,20 @@ public final class SchoolContract {
         public static final String KEY_CABINET_ID = "cabinetId";
     }
 
-    public final class TablePlaces {
+    public static final class TablePlaces {
         public static final String NAME_TABLE_PLACES = "places";
         public static final String KEY_PLACE_ID = BaseColumns._ID;
         public static final String KEY_DESK_ID = "deskId";
         public static final String COLUMN_ORDINAL = "number";//какое по счету место
     }
 
-    public final class TableClasses {
+    public static final class TableClasses {
         public static final String NAME_TABLE_CLASSES = "classes";
         public static final String KEY_CLASS_ID = BaseColumns._ID;
         public static final String COLUMN_CLASS_NAME = "className";
     }
 
-    public final class TableLearners {
+    public static final class TableLearners {
         public static final String NAME_TABLE_LEARNERS = "learners";
         public static final String KEY_LEARNER_ID = BaseColumns._ID;
         public static final String COLUMN_FIRST_NAME = "firstName";
@@ -52,30 +52,32 @@ public final class SchoolContract {
         public static final String KEY_CLASS_ID = "classId";
     }
 
-    public final class TableLearnersOnPlaces {
+    public static final class TableLearnersOnPlaces {
         public static final String NAME_TABLE_LEARNERS_ON_PLACES = "learnersOnPlaces";
         public static final String KEY_ATTITUDES_ID = BaseColumns._ID;
         public static final String KEY_LEARNER_ID = "learnerId";
         public static final String KEY_PLACE_ID = "placeId";
     }
 
-    public final class TableLearnersGrades {
+    public static final class TableLearnersGrades {
         public static final String NAME_TABLE_LEARNERS_GRADES = "learnersGrades";
         public static final String KEY_GRADE_ID = BaseColumns._ID;
         public static final String COLUMN_GRADE = "grade";
         public static final String COLUMN_TIME_STAMP = "time";//в timestamp"yyyy-MM-dd HH:mm:ss"
         public static final String KEY_SUBJECT_ID = "subjectId";//rename to subject
         public static final String KEY_LEARNER_ID = "learnerId";
+        //constants:
+        public static final String DECODING_TIMES_STRING = "yyyy-MM-dd HH:mm:ss";
     }
 
-    public final class TableSubjects {
+    public static final class TableSubjects {
         public static final String NAME_TABLE_SUBJECTS = "subjects";//rename to subject
         public static final String KEY_SUBJECT_ID = BaseColumns._ID;
         public static final String COLUMN_NAME = "name";
         public static final String KEY_CLASS_ID = "classId";
     }
 
-    public final class TableSubjectAndTimeCabinetAttitude {
+    public static final class TableSubjectAndTimeCabinetAttitude {
         public static final String NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE = "lessonAndTimeWithCabinet";//rename to lessonAndTimeWithCabinet
         public static final String KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID = BaseColumns._ID;
         public static final String KEY_SUBJECT_ID = "subjectId";//rename to subjectId
@@ -84,6 +86,20 @@ public final class SchoolContract {
         public static final String COLUMN_DATE_END = "lessonDateEnd";//todo timestamp
         public static final String COLUMN_REPEAT = "repeat";
         //constants:
+
+        //standard lessons times
+        public static final int [][][] STANDARD_LESSONS_TIMES = {
+                {{8,30}, {9,15}},//первый урок
+                {{9,30}, {10,15}},//второй урок
+                {{10,30}, {11,15}},//третий урок
+                {{11,30}, {12,15}},//четвёртый урок
+                {{12,25}, {13,10}},//пятый урок
+                {{13,30}, {14,15}},//шестой урок
+                {{14,25}, {15,10}},//седьмой урок
+                {{15,20}, {16,5}},//восьмой урок
+                {{16,6}, {23,59}}//внеурочное время
+        };
+        //repeat
         public static final int CONSTANT_REPEAT_NEVER = 0;
         public static final int CONSTANT_REPEAT_DAILY = 1;
         public static final int CONSTANT_REPEAT_WEEKLY = 2;

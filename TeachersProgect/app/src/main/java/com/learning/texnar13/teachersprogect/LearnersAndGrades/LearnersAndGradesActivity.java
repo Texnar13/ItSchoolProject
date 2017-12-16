@@ -24,9 +24,12 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.R;
+import com.learning.texnar13.teachersprogect.ScheduleDayActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,18 +41,27 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     //----переменные выводящиеся из бд----
     //класс
-    long classId = -1;
+    static long classId = -1;
     //ученики
-    ArrayList<Long> learnersId = new ArrayList<>();//id учеников
-    ArrayList<String> learnersTitles = new ArrayList<>();//имена учеников
+    static ArrayList<Long> learnersId = new ArrayList<>();//id учеников
+    static ArrayList<String> learnersTitles = new ArrayList<>();//имена учеников
+    //массив с уроками
+    static long[] subjectsId;
     //выбранный урок
-    int changingSubjectPosition = 0;
+    static int changingSubjectPosition = 0;
     //оценки
-    int[][][][] grades;//[ученик][день][урок][оценка]
-
+    ArrayList<ArrayList<ArrayList<ArrayList<Integer>>>> grades = new ArrayList<>();
+    //static int[][][][] grades;//[ученик][день][урок][оценка]
     //выводимая дата
-    //Calendar;
+    static GregorianCalendar viewCalendar = null;
+    //таблица с учениками
+    TableLayout learnersNamesTable;
+    //таблица с оценками
+    TableLayout learnersGradesTable;
+
 //TODO сделать поток для подгрузки данных 49 кадров пропускается!!!!!!
+
+    //методы работы с диалогом
     @Override
     public void createLearner(String lastName, String name, long classId) {
         //создание ученика вызываемое диалогом CreateLearnerDialogFragment
@@ -60,26 +72,27 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //обновляем таблицу
         GregorianCalendar currentCalendar = new GregorianCalendar();
         currentCalendar.setTime(new Date());
-        updateTable(changingSubjectPosition, currentCalendar);
+        updateTable();
         db.close();
     }
 
     @Override
     public void editLearner(String lastName, String name, long learnerId) {
-        //редактирование ученика вызываемое диалогом CreateLearnerDialogFragment
+        //редактирование ученика вызываемое диалогом EditLearnerDialogFragment
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        ArrayList<Long> classesId = new ArrayList<>();
-        classesId.add(classId);
-        db.setLearnerNameAndLastName(classesId, name, lastName);
+        ArrayList<Long> learnersId = new ArrayList<>();
+        learnersId.add(learnerId);
+        db.setLearnerNameAndLastName(learnersId, name, lastName);
         //обновляем список учеников
         getLearnersFromDB();
         //обновляем таблицу
         GregorianCalendar currentCalendar = new GregorianCalendar();
         currentCalendar.setTime(new Date());
-        updateTable(changingSubjectPosition, currentCalendar);
+        updateTable();
         db.close();
     }
 
+    //метод старта активности
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +131,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //название класса
         Cursor classCursor = db.getClasses(classId);
         classCursor.moveToFirst();
-        getSupportActionBar().setTitle("в разработкеУченики в классе " +
+        getSupportActionBar().setTitle("Ученики в классе " +
                 classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
         classCursor.close();
 //----переключение даты----
@@ -128,8 +141,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"
         };
         //изменяющийся календарь
-        final GregorianCalendar changingCalendar = new GregorianCalendar();
-        changingCalendar.setTime(new Date());
+        if (viewCalendar == null) {//если зашли в активность а не переворачивали экран ставим тек дату
+            viewCalendar = new GregorianCalendar();
+            viewCalendar.setTime(new Date());
+        }
         //обьявление кнопок и текста
         ImageView imageButtonPrevious = (ImageView) findViewById(R.id.learners_and_grades_activity_button_previous);
         final TextView dateText = (TextView) findViewById(R.id.learners_and_grades_activity_date_text);
@@ -138,35 +153,35 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         imageButtonPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (changingCalendar.get(Calendar.MONTH) == 0) {
-                    changingCalendar.set(Calendar.MONTH, 11);
-                    changingCalendar.set(Calendar.YEAR, changingCalendar.get(Calendar.YEAR) - 1);
+                if (viewCalendar.get(Calendar.MONTH) == 0) {
+                    viewCalendar.set(Calendar.MONTH, 11);
+                    viewCalendar.set(Calendar.YEAR, viewCalendar.get(Calendar.YEAR) - 1);
                 } else {
-                    changingCalendar.set(Calendar.MONTH, changingCalendar.get(Calendar.MONTH) - 1);
+                    viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) - 1);
                 }
-                dateText.setText(monthsNames[changingCalendar.get(Calendar.MONTH)] + " " + changingCalendar.get(Calendar.YEAR));
-                updateTable(changingSubjectPosition, changingCalendar);
+                dateText.setText(monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR));
+                updateTable();
             }
         });
         //кнопка впеёд
         imageButtonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (changingCalendar.get(Calendar.MONTH) == 11) {
-                    changingCalendar.set(Calendar.MONTH, 0);
-                    changingCalendar.set(Calendar.YEAR, changingCalendar.get(Calendar.YEAR) + 1);
+                if (viewCalendar.get(Calendar.MONTH) == 11) {
+                    viewCalendar.set(Calendar.MONTH, 0);
+                    viewCalendar.set(Calendar.YEAR, viewCalendar.get(Calendar.YEAR) + 1);
                 } else {
-                    changingCalendar.set(Calendar.MONTH, changingCalendar.get(Calendar.MONTH) + 1);
+                    viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) + 1);
                 }
-                dateText.setText(monthsNames[changingCalendar.get(Calendar.MONTH)] + " " + changingCalendar.get(Calendar.YEAR));
-                updateTable(changingSubjectPosition, changingCalendar);
+                dateText.setText(monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR));
+                updateTable();
             }
         });
 //----спинер с предметами----
         Spinner subjectSpinner = (Spinner) findViewById(R.id.learners_and_grades_activity_subject_spinner);
         //выводим из базы данных список предметов
         Cursor subjectsCursor = db.getSubjectsByClassId(classId);
-        final long[] subjectsId = new long[subjectsCursor.getCount()];
+        subjectsId = new long[subjectsCursor.getCount()];
         final String[] subjectsNames = new String[subjectsCursor.getCount()];
         for (int i = 0; i < subjectsCursor.getCount(); i++) {
             subjectsCursor.moveToNext();
@@ -181,7 +196,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 changingSubjectPosition = i;
-                updateTable(subjectsId[i], changingCalendar);
+                updateTable();
             }
 
             @Override
@@ -189,26 +204,28 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
             }
         });
+        //текст с месяцем
+        dateText.setText(monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR));
 
-
-        dateText.setText(monthsNames[changingCalendar.get(Calendar.MONTH)] + " " + changingCalendar.get(Calendar.YEAR));
-        updateTable(subjectsId[0], changingCalendar);//выводим оценки при старте
+        //таблица с именами
+        learnersNamesTable = (TableLayout) findViewById(R.id.learners_and_grades_table_names);
+        //таблица с оценками
+        learnersGradesTable = (TableLayout) findViewById(R.id.learners_and_grades_table);
+        //выводим имена и оценки при старте
+        updateTable();
         db.close();
     }
 
     //вывод таблицы
-    void updateTable(long subjectId, GregorianCalendar viewCalendar) {
+    void updateTable() {
         //чистка
         //имена
-        TableLayout learnersNamesTable = (TableLayout) findViewById(R.id.learners_and_grades_table_names);
         learnersNamesTable.removeAllViews();
         //оценки
-        TableLayout learnersGradesTable = (TableLayout) findViewById(R.id.learners_and_grades_table);
         learnersGradesTable.removeAllViews();
-//----таблицы----
-// ---имена---
-// ---оценки---
-//-шапка-
+//таблицы
+//-шапка
+//--имена
         //заголовок ученика
         TableRow headNameRaw = new TableRow(this);
         //рамка
@@ -230,7 +247,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         headNameRaw.addView(headNameOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
         //строку в таблицу
         learnersNamesTable.addView(headNameRaw, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
-
+//--оценки
         //дни
         TableRow headGrades = new TableRow(this);
         for (int i = 0; i < viewCalendar.getMaximum(Calendar.DAY_OF_MONTH); i++) {
@@ -243,11 +260,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             headDate.setTextSize(20);
             headDate.setBackgroundColor(Color.WHITE);
             headDate.setGravity(Gravity.CENTER);
-            if (i > 9) {
-                headDate.setText(" " + (i + 1) + " ");
-            } else {
-                headDate.setText(" " + (i + 1) + " ");
-            }
+            headDate.setText(" " + (i + 1) + " ");
             //отступы рамки
             LinearLayout.LayoutParams headDateParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             headDateParams.setMargins(0, 0, 0, (int) pxFromDp(2));
@@ -256,15 +269,13 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             //рамку в строку
             headGrades.addView(headDateOut, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         }
-        //строку в таблицу
+        //строку с шапкой в таблицу
         learnersGradesTable.addView(headGrades, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
-//-тело таблицы-
+//-тело таблицы
         for (int i = 0; i < learnersTitles.size(); i++) {//пробегаемся по ученикам
-            //строка с учеником и оценками
+//--строка с учеником
             TableRow learner = new TableRow(this);
-            TableRow learnerGrades = new TableRow(this);
-
             //рамка
             LinearLayout learnerNameOut = new LinearLayout(this);
             learnerNameOut.setBackgroundColor(Color.BLACK);//parseColor("#1f5b85")
@@ -304,68 +315,36 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     learnerCursor.moveToFirst();
                     //создаем обьект с данными
                     Bundle args = new Bundle();
-                    args.putLong("learnerId",learnersId.get(finalI));
-                    args.putString("name",learnerCursor.getString(
+                    args.putLong("learnerId", learnersId.get(finalI));
+                    args.putString("name", learnerCursor.getString(
                             learnerCursor.getColumnIndex(
                                     SchoolContract.TableLearners.COLUMN_FIRST_NAME)
                     ));
-                    args.putString("lastName",learnerCursor.getString(
+                    args.putString("lastName", learnerCursor.getString(
                             learnerCursor.getColumnIndex(
                                     SchoolContract.TableLearners.COLUMN_SECOND_NAME)
                     ));
                     //данные диалогу
                     editDialog.setArguments(args);
                     //показать диалог
-                    editDialog.show(getFragmentManager(),"editLearnerDialog");
+                    editDialog.show(getFragmentManager(), "editLearnerDialog");
                     learnerCursor.close();
                     db.close();
                     return true;
                 }
             });
 
-            //вывод дат
-            for (int j = 0; j < viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH); j++) {//и по датам
-                //достаём текст из бд
-                ArrayList<Integer> gradesArray = new ArrayList<>();
-//todo нахрен здесь оценки
-                DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-                Cursor grades = db.getGradesByLearnerIdAndDayTime(learnersId.get(i), viewCalendar);
-                while (grades.moveToNext()) {
-                    gradesArray.add(grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_GRADE)));
 
-                }
-                grades.close();
-                db.close();
-                //рамка
-                LinearLayout dateOut = new LinearLayout(this);
-                dateOut.setBackgroundColor(Color.BLACK);
-                //текст
-                TextView learnerGrade = new TextView(this);
-                learnerGrade.setTextColor(Color.BLACK);
-                learnerGrade.setTextSize(20);
-                learnerGrade.setBackgroundColor(Color.WHITE);
-                learnerGrade.setGravity(Gravity.CENTER);
-                if (gradesArray.size() == 0) {
-                    learnerGrade.setText(" - ");
-                } else {
-                    learnerGrade.setText(" " + gradesArray.get(0) + " ");
-                }
-                //отступы рамки
-                LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                textParams.setMargins(0, 0, 0, (int) pxFromDp(2));
-
-                //текст в рамку
-                dateOut.addView(learnerGrade, textParams);
-                //добавляем всё в строку
-                learnerGrades.addView(dateOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
-
-            }
             //добавляем строку в таблицу
             learnersNamesTable.addView(learner, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
-            learnersGradesTable.addView(learnerGrades, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
         }
+        //получение оценок из базы
+        getGradesFromDB();
+        //вывод оценок в таблицу
+        outGradesInTable();
     }
 
+    //обновление данных
     void getLearnersFromDB() {//вывод учеников из бд
         //чистим массивы от предыдущих значений
         learnersId = new ArrayList<>();
@@ -394,17 +373,149 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         db.close();
     }
 
-    void getGradesFromDB() {//вывод оценок из бд//----вывод оценок из бд----
-        //чистим массивы от предыдущих значений
-        grades = new int[learnersId.size()][0][0][3];
-        //обновляем массивы свежими данными
+    void getGradesFromDB() {//вывод оценок из бд//----вывод оценок из бд----//временный массив для новых значений
+
+        //чистим массив от предыдущих значений
+        grades = new ArrayList<>();
+        //[ученик][день][урок][оценка]
+
+        //изменяющися календари для вывода
+        GregorianCalendar outHelpStartCalendar = new GregorianCalendar(
+                viewCalendar.get(Calendar.YEAR),
+                viewCalendar.get(Calendar.MONTH),
+                1,
+                0,
+                0,
+                0
+        );
+        GregorianCalendar outHelpEndCalendar = new GregorianCalendar(
+                viewCalendar.get(Calendar.YEAR),
+                viewCalendar.get(Calendar.MONTH),
+                1,
+                0,
+                0,
+                0
+        );
+
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        for (int i = 0; i < grades.length; i++) {
-            for (int j = 0; j < 3; j++) {
-                //grades[i][j] = db.get;
+        //обновляем массивы свежими данными
+        // по ученикам
+        for (int i = 0; i < learnersId.size(); i++) {
+            // инициализируем в нутри массива массив
+            grades.add(new ArrayList<ArrayList<ArrayList<Integer>>>());
+            //по дням
+            for (int j = 0; j < viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH); j++) {
+                outHelpStartCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
+                outHelpEndCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
+                //инициализируем в нутри массива массив
+                grades.get(i).add(new ArrayList<ArrayList<Integer>>());
+                //по урокам
+                for (int k = 0; k < 9; k++) {
+                    //инициализируем в нутри массива массив
+                    grades.get(i).get(j).add(new ArrayList<Integer>());
+                    //начало урока
+                    outHelpStartCalendar.set(Calendar.HOUR_OF_DAY,
+                            SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][0][0]
+                    );
+                    outHelpStartCalendar.set(Calendar.MINUTE,
+                            SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][0][1]
+                    );
+                    //конец урока
+                    outHelpEndCalendar.set(Calendar.HOUR_OF_DAY,
+                            SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][0]
+                    );
+                    outHelpEndCalendar.set(Calendar.MINUTE,
+                            SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][1]
+                    );
+                    //получаем оценки по времени
+                    Cursor gradesLessonCursor = db.getGradesByLearnerIdAndTimePeriod(
+                            learnersId.get(i),
+                            outHelpStartCalendar,
+                            outHelpEndCalendar
+                    );
+                    //по оценкам
+                    for (int l = 0; l < gradesLessonCursor.getCount(); l++) {
+
+                        gradesLessonCursor.moveToPosition(l);
+                        //выводим наконец оценку
+                        grades.get(i).get(j).get(k).add(
+                                gradesLessonCursor.getInt(
+                                        gradesLessonCursor.getColumnIndex(
+                                                SchoolContract.TableLearnersGrades.COLUMN_GRADE
+                                        )
+                                ));
+                    }
+                    gradesLessonCursor.close();
+                }
             }
         }
         db.close();
+
+    }
+
+    void outGradesInTable() {
+        //пробегаемся по ученикам
+        for (int i = 0; i < grades.size(); i++) {
+            //новая строка
+            TableRow learnerGrades = new TableRow(this);
+
+            GregorianCalendar gradesOutCalendar = viewCalendar;
+            gradesOutCalendar.set(Calendar.DAY_OF_MONTH, 1);
+            gradesOutCalendar.set(Calendar.HOUR_OF_DAY, 0);
+            gradesOutCalendar.set(Calendar.MINUTE, 0);
+            gradesOutCalendar.set(Calendar.SECOND, 0);
+
+            // и по датам
+            for (int j = 0; j < grades.get(i).size(); j++) {
+
+                //рамка
+                LinearLayout dateOut = new LinearLayout(this);
+                dateOut.setBackgroundColor(Color.BLACK);
+                //текст
+                TextView learnerGrade = new TextView(this);
+                learnerGrade.setTextColor(Color.BLACK);
+                learnerGrade.setTextSize(20);
+                learnerGrade.setBackgroundColor(Color.WHITE);
+                learnerGrade.setGravity(Gravity.CENTER);
+                //по урокам в дне
+                for (int k = 0; k < grades.get(i).get(j).size(); k++) {
+                    //по оценкам в уроке
+                    for (int l = 0; l < grades.get(i).get(j).get(k).size(); l++) {
+                        switch (
+                                grades.get(i).get(j).get(k).get(l)) {
+                            case 0:
+
+                                break;
+                            case -2:
+                                if (!learnerGrade.getText().toString().equals("")) {
+                                    learnerGrade.setText(learnerGrade.getText().toString() + "Н ");
+                                } else
+                                    learnerGrade.setText(learnerGrade.getText().toString() + " Н ");
+                                break;
+                            default:
+                                if (!learnerGrade.getText().toString().equals("")) {
+                                    learnerGrade.setText(learnerGrade.getText().toString() + grades.get(i).get(j).get(k).get(l) + " ");
+                                } else
+                                    learnerGrade.setText(learnerGrade.getText().toString() + " " + grades.get(i).get(j).get(k).get(l) + " ");
+                        }
+                    }
+
+                }
+                if (learnerGrade.getText().toString().equals("")) {
+                    learnerGrade.setText(" - ");
+                }
+
+                //отступы рамки
+                LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                textParams.setMargins(0, 0, 0, (int) pxFromDp(2));
+                //текст в рамку
+                dateOut.addView(learnerGrade, textParams);
+                //добавляем всё в строку
+                learnerGrades.addView(dateOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
+            }
+            //добавляем строку в таблицу
+            learnersGradesTable.addView(learnerGrades, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
+        }
     }
 
     @Override
