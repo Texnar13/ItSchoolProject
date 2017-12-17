@@ -59,23 +59,24 @@ public class LessonListActivity extends AppCompatActivity {
                     return false;
                 }
                 attitudeCursor.moveToFirst();
-                long lessonTime = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN));
+                String lessonTime = attitudeCursor.getString(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN));
                 attitudeCursor.close();
 
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                 for (int i = 0; i < learnersIdArray.length; i++) {
                     if (gradeArray[0][i] != 0) {
-                        db.createGrade(learnersIdArray[i], gradeArray[0][i], lessonId, dateFormat.format(new Date(lessonTime)));//todo id урока
+                        db.createGrade(learnersIdArray[i], gradeArray[0][i], lessonId, lessonTime);
                     }
                     if (gradeArray[1][i] != 0) {
-                        db.createGrade(learnersIdArray[i], gradeArray[1][i], lessonId, dateFormat.format(new Date(lessonTime)));
+                        db.createGrade(learnersIdArray[i], gradeArray[1][i], lessonId, lessonTime);
                     }
                     if (gradeArray[2][i] != 0) {
-                        db.createGrade(learnersIdArray[i], gradeArray[2][i], lessonId, dateFormat.format(new Date(lessonTime)));
+                        db.createGrade(learnersIdArray[i], gradeArray[2][i], lessonId, lessonTime);
                     }
                     toast.show();
                 }
+                db.close();
                 finish();
                 return true;
             }
