@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -36,6 +37,9 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
     boolean isEditMenuVisible = false;
     AppCompatActivity listOfActivity = this;
     ListOfAdapter adapter;//ссылка на адаптер
+
+    //текст в центре экрана
+    public static TextView stateText;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,6 +143,9 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
 
+        //находим ссылку на текст в центре экрана
+        stateText = (TextView) findViewById(R.id.list_of_state_text);
+
         listParameterValue = getIntent().getStringExtra(LIST_PARAMETER);
         final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
@@ -165,6 +172,8 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
         //будущий курсор с обьектами вывода;
         switch (listParameterValue) {//вибираем тип содержимого списка
             case SchoolContract.TableClasses.NAME_TABLE_CLASSES: {
+                //ставим центральный текст по умолчанию(для классов)
+                stateText.setText("Здесь выводятся созданные вами классы с учениками. Чтобы создать новый класс нажмите кнопку '+', для редактирования, удерживайте класс, затем в меню выберите 'карандаш', чтобы переименовать, или 'корзину', чтобы удалить класс. Для просмотра учеников в классе нажмите на него в списке. ");
                 //дизайн
                 fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#bed7e9")));
                 room.setBackgroundColor(Color.WHITE);//parseColor("#f4e6d3")
@@ -214,6 +223,8 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                 break;
             }
             case SchoolContract.TableCabinets.NAME_TABLE_CABINETS: {
+                //ставим центральный текст по умолчанию(для кабинетов)
+                stateText.setText("Здесь выводятся созданные вами кабинеты, в которых вы можете расставлять парты. Чтобы создать новый кабинет нажмите кнопку '+', для редактирования, удерживайте кабинет, затем в меню выберите 'карандаш', чтобы переименовать, или 'корзину', чтобы удалить кабинет. Для расстановки парт в кабинете нажмите на него в списке. ");
                 //дизайн
                 fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f5ce9d")));
                 room.setBackgroundColor(Color.WHITE);//parseColor("#f4e6d3")

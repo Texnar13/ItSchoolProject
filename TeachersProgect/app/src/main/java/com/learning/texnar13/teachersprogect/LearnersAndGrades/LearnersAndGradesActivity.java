@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -18,11 +22,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.learning.texnar13.teachersprogect.LessonRedactorActivity;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.ScheduleDayActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -50,16 +57,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     //выбранный урок
     static int changingSubjectPosition = 0;
     //оценки
-    ArrayList<ArrayList<ArrayList<ArrayList<Integer>>>> grades = new ArrayList<>();
-    //static int[][][][] grades;//[ученик][день][урок][оценка]
+    //ArrayList<ArrayList<ArrayList<ArrayList<Integer>>>> grades = new ArrayList<>();
+    static int[][][][] grades = {};//[ученик][день][урок][оценка]
     //выводимая дата
     static GregorianCalendar viewCalendar = null;
     //таблица с учениками
     TableLayout learnersNamesTable;
     //таблица с оценками
     TableLayout learnersGradesTable;
-
-//TODO сделать поток для подгрузки данных 49 кадров пропускается!!!!!!
 
     //методы работы с диалогом
     @Override
@@ -221,8 +226,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //чистка
         //имена
         learnersNamesTable.removeAllViews();
-        //оценки
-        learnersGradesTable.removeAllViews();
 //таблицы
 //-шапка
 //--имена
@@ -248,29 +251,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //строку в таблицу
         learnersNamesTable.addView(headNameRaw, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
 //--оценки
-        //дни
-        TableRow headGrades = new TableRow(this);
-        for (int i = 0; i < viewCalendar.getMaximum(Calendar.DAY_OF_MONTH); i++) {
-            //рамка
-            LinearLayout headDateOut = new LinearLayout(this);
-            headDateOut.setBackgroundColor(Color.BLACK);
-            //текст заголовка ученика
-            TextView headDate = new TextView(this);
-            headDate.setTextColor(Color.BLACK);
-            headDate.setTextSize(20);
-            headDate.setBackgroundColor(Color.WHITE);
-            headDate.setGravity(Gravity.CENTER);
-            headDate.setText(" " + (i + 1) + " ");
-            //отступы рамки
-            LinearLayout.LayoutParams headDateParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            headDateParams.setMargins(0, 0, 0, (int) pxFromDp(2));
-            //текст в рамку
-            headDateOut.addView(headDate, headDateParams);
-            //рамку в строку
-            headGrades.addView(headDateOut, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        }
-        //строку с шапкой в таблицу
-        learnersGradesTable.addView(headGrades, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
 //-тело таблицы
         for (int i = 0; i < learnersTitles.size(); i++) {//пробегаемся по ученикам
@@ -338,10 +318,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             //добавляем строку в таблицу
             learnersNamesTable.addView(learner, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
         }
-        //получение оценок из базы
-        getGradesFromDB();
-        //вывод оценок в таблицу
-        outGradesInTable();
+        //заполнен ли массив с оценками?(например при повороте экрана)
+        if (grades.length == 0) {
+            //получение оценок из базы, и вывод их в таблицу
+            getGradesFromDB();
+        } else {
+            //только вывод в таблицу
+            outGradesInTable();
+        }
     }
 
     //обновление данных
@@ -373,89 +357,152 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         db.close();
     }
 
-    void getGradesFromDB() {//вывод оценок из бд//----вывод оценок из бд----//временный массив для новых значений
+    RelativeLayout gradesRoom;
 
-        //чистим массив от предыдущих значений
-        grades = new ArrayList<>();
-        //[ученик][день][урок][оценка]
 
-        //изменяющися календари для вывода
-        GregorianCalendar outHelpStartCalendar = new GregorianCalendar(
-                viewCalendar.get(Calendar.YEAR),
-                viewCalendar.get(Calendar.MONTH),
-                1,
-                0,
-                0,
-                0
-        );
-        GregorianCalendar outHelpEndCalendar = new GregorianCalendar(
-                viewCalendar.get(Calendar.YEAR),
-                viewCalendar.get(Calendar.MONTH),
-                1,
-                0,
-                0,
-                0
-        );
+    void getGradesFromDB() {//вывод оценок из бд//----вывод оценок из бд----
+        //область с таблицей
+        gradesRoom = (RelativeLayout) findViewById(R.id.learners_and_grades_table_relative);
 
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        //обновляем массивы свежими данными
-        // по ученикам
-        for (int i = 0; i < learnersId.size(); i++) {
-            // инициализируем в нутри массива массив
-            grades.add(new ArrayList<ArrayList<ArrayList<Integer>>>());
-            //по дням
-            for (int j = 0; j < viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH); j++) {
-                outHelpStartCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
-                outHelpEndCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
-                //инициализируем в нутри массива массив
-                grades.get(i).add(new ArrayList<ArrayList<Integer>>());
-                //по урокам
-                for (int k = 0; k < 9; k++) {
-                    //инициализируем в нутри массива массив
-                    grades.get(i).get(j).add(new ArrayList<Integer>());
-                    //начало урока
-                    outHelpStartCalendar.set(Calendar.HOUR_OF_DAY,
-                            SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][0][0]
-                    );
-                    outHelpStartCalendar.set(Calendar.MINUTE,
-                            SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][0][1]
-                    );
-                    //конец урока
-                    outHelpEndCalendar.set(Calendar.HOUR_OF_DAY,
-                            SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][0]
-                    );
-                    outHelpEndCalendar.set(Calendar.MINUTE,
-                            SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][1]
-                    );
-                    //получаем оценки по времени
-                    Cursor gradesLessonCursor = db.getGradesByLearnerIdAndTimePeriod(
-                            learnersId.get(i),
-                            outHelpStartCalendar,
-                            outHelpEndCalendar
-                    );
-                    //по оценкам
-                    for (int l = 0; l < gradesLessonCursor.getCount(); l++) {
+        //вывод оценок перед загрузкой данных, чтобы таблица не была пустая
+        outGradesInTable();
 
-                        gradesLessonCursor.moveToPosition(l);
-                        //выводим наконец оценку
-                        grades.get(i).get(j).get(k).add(
-                                gradesLessonCursor.getInt(
-                                        gradesLessonCursor.getColumnIndex(
-                                                SchoolContract.TableLearnersGrades.COLUMN_GRADE
-                                        )
-                                ));
-                    }
-                    gradesLessonCursor.close();
-                }
+        //выводим прогресс бар
+        final ProgressBar progressBar = new ProgressBar(getApplicationContext());
+        gradesRoom.addView(progressBar, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+
+        //вывод оценок по завершении получения данных
+        final Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                //вывод оценок
+                outGradesInTable();
+                //удаляем прогресс бар
+                gradesRoom.removeView(progressBar);
             }
-        }
-        db.close();
+        };
 
+        //делаем всё в потоке
+        final Thread progressThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //-- заполняем бд
+                //чистим массив от предыдущих значений
+                grades = new int
+                        [learnersId.size()]
+                        [viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)]
+                        [9]
+                        [3];
+                //[ученик][день][урок][оценка]
+
+                //изменяющися календари для вывода
+                GregorianCalendar outHelpStartCalendar = new GregorianCalendar(
+                        viewCalendar.get(Calendar.YEAR),
+                        viewCalendar.get(Calendar.MONTH),
+                        1,
+                        0,
+                        0,
+                        0
+                );
+                GregorianCalendar outHelpEndCalendar = new GregorianCalendar(
+                        viewCalendar.get(Calendar.YEAR),
+                        viewCalendar.get(Calendar.MONTH),
+                        1,
+                        0,
+                        0,
+                        0
+                );
+
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                //обновляем массивы свежими данными
+                // по ученикам
+                for (int i = 0; i < learnersId.size(); i++) {
+                    //по дням
+                    for (int j = 0; j < viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH); j++) {
+                        outHelpStartCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
+                        outHelpEndCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
+                        //по урокам
+                        for (int k = 0; k < 9; k++) {
+                            //--время--
+                            //начало урока
+                            outHelpStartCalendar.set(Calendar.HOUR_OF_DAY,
+                                    SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][0][0]
+                            );
+                            outHelpStartCalendar.set(Calendar.MINUTE,
+                                    SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][0][1]
+                            );
+                            //конец урока
+                            outHelpEndCalendar.set(Calendar.HOUR_OF_DAY,
+                                    SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][0]
+                            );
+                            outHelpEndCalendar.set(Calendar.MINUTE,
+                                    SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][1]
+                            );
+
+                            //получаем оценки по времени
+                            Cursor gradesLessonCursor = db.getGradesByLearnerIdAndTimePeriod(
+                                    learnersId.get(i),
+                                    outHelpStartCalendar,
+                                    outHelpEndCalendar
+                            );
+                            //по оценкам
+                            for (int l = 0; l < gradesLessonCursor.getCount(); l++) {
+
+                                gradesLessonCursor.moveToPosition(l);
+                                //выводим наконец оценку
+                                grades[i][j][k][l] =
+                                        gradesLessonCursor.getInt(
+                                                gradesLessonCursor.getColumnIndex(
+                                                        SchoolContract.TableLearnersGrades.COLUMN_GRADE
+                                                )
+                                        );
+                            }
+                            gradesLessonCursor.close();
+
+
+                        }
+                    }
+                }
+                db.close();
+
+                //выводим оценки после загрузки
+                handler.sendEmptyMessage(0);
+            }
+        });
+        progressThread.setName("getGradesThread");
+        progressThread.start();
     }
 
     void outGradesInTable() {
+        //оценки
+        learnersGradesTable.removeAllViews();
+//---шапка
+        //дни
+        TableRow headGrades = new TableRow(this);
+        for (int i = 0; i < viewCalendar.getMaximum(Calendar.DAY_OF_MONTH); i++) {
+            //рамка
+            LinearLayout headDateOut = new LinearLayout(this);
+            headDateOut.setBackgroundColor(Color.BLACK);
+            //текст заголовка ученика
+            TextView headDate = new TextView(this);
+            headDate.setTextColor(Color.BLACK);
+            headDate.setTextSize(20);
+            headDate.setBackgroundColor(Color.WHITE);
+            headDate.setGravity(Gravity.CENTER);
+            headDate.setText(" " + (i + 1) + " ");
+            //отступы рамки
+            LinearLayout.LayoutParams headDateParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            headDateParams.setMargins(0, 0, 0, (int) pxFromDp(2));
+            //текст в рамку
+            headDateOut.addView(headDate, headDateParams);
+            //рамку в строку
+            headGrades.addView(headDateOut, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        }
+        //строку с шапкой в таблицу
+        learnersGradesTable.addView(headGrades, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+//---тело
         //пробегаемся по ученикам
-        for (int i = 0; i < grades.size(); i++) {
+        for (int i = 0; i < grades.length; i++) {
             //новая строка
             TableRow learnerGrades = new TableRow(this);
 
@@ -466,7 +513,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             gradesOutCalendar.set(Calendar.SECOND, 0);
 
             // и по датам
-            for (int j = 0; j < grades.get(i).size(); j++) {
+            for (int j = 0; j < grades[i].length; j++) {
 
                 //рамка
                 LinearLayout dateOut = new LinearLayout(this);
@@ -478,11 +525,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 learnerGrade.setBackgroundColor(Color.WHITE);
                 learnerGrade.setGravity(Gravity.CENTER);
                 //по урокам в дне
-                for (int k = 0; k < grades.get(i).get(j).size(); k++) {
+                for (int k = 0; k < grades[i][j].length; k++) {
                     //по оценкам в уроке
-                    for (int l = 0; l < grades.get(i).get(j).get(k).size(); l++) {
+                    for (int l = 0; l < grades[i][j][k].length; l++) {
                         switch (
-                                grades.get(i).get(j).get(k).get(l)) {
+                                grades[i][j][k][l]) {
                             case 0:
 
                                 break;
@@ -494,9 +541,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 break;
                             default:
                                 if (!learnerGrade.getText().toString().equals("")) {
-                                    learnerGrade.setText(learnerGrade.getText().toString() + grades.get(i).get(j).get(k).get(l) + " ");
+                                    learnerGrade.setText(learnerGrade.getText().toString() + grades[i][j][k][l] + " ");
                                 } else
-                                    learnerGrade.setText(learnerGrade.getText().toString() + " " + grades.get(i).get(j).get(k).get(l) + " ");
+                                    learnerGrade.setText(learnerGrade.getText().toString() + " " + grades[i][j][k][l] + " ");
                         }
                     }
 

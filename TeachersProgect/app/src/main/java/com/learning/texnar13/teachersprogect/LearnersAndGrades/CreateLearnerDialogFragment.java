@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -27,20 +28,23 @@ public class CreateLearnerDialogFragment extends DialogFragment {
         //LinearLayout в layout файле
         LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.create_learner_dialog_fragment_linear_layout);
 
-        //текстовое поле фамилии
-        final EditText editLastName = new EditText(getActivity());
-        editLastName.setTextColor(Color.BLACK);
-        editLastName.setHint("ФАМИЛИЯ");
-        editLastName.setHintTextColor(Color.GRAY);
-        //добавляем текстовое поле
-        linearLayout.addView(editLastName);
         //текстовое поле имени
         final EditText editName = new EditText(getActivity());
         editName.setTextColor(Color.BLACK);
         editName.setHint("ИМЯ");
+        editName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         editName.setHintTextColor(Color.GRAY);
         //добавляем текстовое поле
         linearLayout.addView(editName);
+
+        //текстовое поле фамилии
+        final EditText editLastName = new EditText(getActivity());
+        editLastName.setTextColor(Color.BLACK);
+        editLastName.setHint("ФАМИЛИЯ");
+        editLastName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        editLastName.setHintTextColor(Color.GRAY);
+        //добавляем текстовое поле
+        linearLayout.addView(editLastName);
 
         //кнопки согласия/отмены
         builder.setPositiveButton("добавление", new DialogInterface.OnClickListener() {

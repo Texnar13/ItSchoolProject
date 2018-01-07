@@ -120,13 +120,18 @@
                 android:layout_height="match_parent">
 
 
-                <TableLayout
-                    android:id="@+id/learners_and_grades_table"
+                <RelativeLayout
+                    android:id="@+id/learners_and_grades_table_relative"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent">
 
-                </TableLayout>
+                    <TableLayout
+                        android:id="@+id/learners_and_grades_table"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
 
+                    </TableLayout>
+                </RelativeLayout>
             </HorizontalScrollView>
         </LinearLayout>
     </ScrollView>

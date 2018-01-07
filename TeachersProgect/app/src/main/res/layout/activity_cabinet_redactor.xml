@@ -16,9 +16,21 @@
         android:id="@+id/redactor_out"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#f3e4d2"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="#f3e4d2">
 
+        <TextView
+            android:id="@+id/cabinet_redactor_state_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginStart="50dp"
+            android:text="---"
+            android:textSize="10pt" />
     </RelativeLayout>
 
     <LinearLayout
@@ -31,8 +43,6 @@
         android:baselineAligned="false"
 
         android:orientation="horizontal">
-
-
 
         <RelativeLayout
 

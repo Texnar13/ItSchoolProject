@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -27,9 +28,10 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     ImageView instrumentalImage;
     RelativeLayout out;
     long cabinetId;
-    //
-    RelativeLayout relativeLayout;
-    //
+    TextView stateText;
+//    //
+//    RelativeLayout relativeLayout;
+//    //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +40,12 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         out = (RelativeLayout) findViewById(R.id.redactor_out);
 
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-
+        //коэффициент размера интерфейса
         multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
 
         Log.i("TeachersApp", "" + multiplier);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
+        //кнопка назад в actionBar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //TODO 2 это редактор кабинетов, пока понадобятся только двухместные парты,
 //        /* выводим все парты находящиеся в этом кабинете
@@ -119,32 +121,48 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         }
         desksCursor.close();
 
+        //текст в центре
+        stateText = (TextView) findViewById(R.id.cabinet_redactor_state_text);
+        stateText.setText("Добавьте парту нажатием на '+', и поставьте ее так как она стоит в кабинете. Для удаления нажмите на парту и перетащите ее к появившемуся красному кресту");
+        //если парт нет, то показываем текст
+        if (deskCoordinatesList.size() == 0) {
+            stateText.setText("Добавьте парту нажатием на '+', и поставьте ее так как она стоит в кабинете. Для удаления нажмите на парту и перетащите ее к появившемуся красному кресту");
+        } else {
+            stateText.setText("");
+        }
 
-        //красная точка
-        relativeLayout = new RelativeLayout(this);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(8, 4);//фиксированный размер
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-        layoutParams.leftMargin = 50;
-        layoutParams.topMargin = 50;
 
-        relativeLayout.setLayoutParams(layoutParams);
+//        //красная точка
+//        relativeLayout = new RelativeLayout(this);
+//        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(8, 4);//фиксированный размер
+//        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+//        layoutParams.leftMargin = 50;
+//        layoutParams.topMargin = 50;
+
+        //relativeLayout.setLayoutParams(layoutParams);
         out.setOnTouchListener(this);
-        relativeLayout.setBackgroundColor(Color.RED);
-        out.addView(relativeLayout);
+        //relativeLayout.setBackgroundColor(Color.RED);
+        //out.addView(relativeLayout);
 
     }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+        //если парт нет, то показываем текст
+        if (deskCoordinatesList.size() == 0) {
+            stateText.setText("Добавьте парту нажатием на '+', и поставьте ее так как она стоит в кабинете. Для удаления нажмите на парту и перетащите ее к появившемуся красному кресту");
+        } else {
+            stateText.setText("");
+        }
 
-        //
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(8, 4);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-        //
+//        //
+//        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(8, 4);
+//        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+//        //
 
         RelativeLayout.LayoutParams deskLayoutParams = new RelativeLayout.LayoutParams((int) pxFromDp(2000 * multiplier), (int) pxFromDp(1000 * multiplier));
         deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -153,11 +171,11 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                //
-                layoutParams.leftMargin = (int) (motionEvent.getX());
-                layoutParams.topMargin = (int) (motionEvent.getY());
-                relativeLayout.setLayoutParams(layoutParams);
-                //
+//                //
+//                layoutParams.leftMargin = (int) (motionEvent.getX());
+//                layoutParams.topMargin = (int) (motionEvent.getY());
+//                relativeLayout.setLayoutParams(layoutParams);
+//                //
                 for (int i = 0; i < deskCoordinatesList.size(); i++) {
                     if ((motionEvent.getX() >= pxFromDp(deskCoordinatesList.get(i).x * 25 * multiplier)) &&
                             (motionEvent.getX() <= pxFromDp((deskCoordinatesList.get(i).x * 25 + 2000) * multiplier)) &&
@@ -175,11 +193,11 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 }
                 break;
             case MotionEvent.ACTION_MOVE://старые + новая - x нажатия
-                //
-                layoutParams.leftMargin = (int) (motionEvent.getX());
-                layoutParams.topMargin = (int) (motionEvent.getY());
-                relativeLayout.setLayoutParams(layoutParams);
-                //
+//                //
+//                layoutParams.leftMargin = (int) (motionEvent.getX());
+//                layoutParams.topMargin = (int) (motionEvent.getY());
+//                relativeLayout.setLayoutParams(layoutParams);
+//                //
                 for (int i = 0; i < deskCoordinatesList.size(); i++) {
                     if (deskCoordinatesList.get(i).deskId == checkedDeskId) {
                         //если палец находится в пределах крестика то удаляем парту
@@ -235,7 +253,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         display.getMetrics(metricsB);
 
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        long deskId = db.createDesk(2, (int) (dpFromPx(metricsB.widthPixels / 2) / (25 * multiplier)), (int) (dpFromPx(metricsB.heightPixels / 2)  / (25 * multiplier)), cabinetId);
+        long deskId = db.createDesk(2, (int) (dpFromPx(metricsB.widthPixels / 2) / (25 * multiplier)), (int) (dpFromPx(metricsB.heightPixels / 2) / (25 * multiplier)), cabinetId);
 
         db.createPlace(deskId, 1);
         db.createPlace(deskId, 2);
@@ -246,14 +264,16 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-        newDeskLayoutParams.leftMargin = (metricsB.widthPixels / 2);
-        newDeskLayoutParams.topMargin = (metricsB.heightPixels / 2);
+        newDeskLayoutParams.leftMargin = (int) (metricsB.widthPixels / 2 - pxFromDp(1000 * multiplier));
+        newDeskLayoutParams.topMargin = (int) (metricsB.heightPixels / 2 - pxFromDp(500 * multiplier));
         newDeskLayout.setLayoutParams(newDeskLayoutParams);
         newDeskLayout.setBackgroundColor(Color.parseColor("#f1bd7d"));
 
-        deskCoordinatesList.add(new CabinetRedactorPoint(deskId, newDeskLayout, (int) (dpFromPx(metricsB.widthPixels / 2) / (25 * multiplier)), (int) (dpFromPx(metricsB.heightPixels / 2)  / (25 * multiplier))));
+        deskCoordinatesList.add(new CabinetRedactorPoint(deskId, newDeskLayout, (int) (dpFromPx(metricsB.widthPixels / 2 - pxFromDp(1000 * multiplier)) / (25 * multiplier)), (int) (dpFromPx(metricsB.heightPixels / 2 - pxFromDp(500 * multiplier)) / (25 * multiplier))));
 
         out.addView(newDeskLayout);
+        //появилась парта, удаляем текст
+        stateText.setText("");
 
     }
 
