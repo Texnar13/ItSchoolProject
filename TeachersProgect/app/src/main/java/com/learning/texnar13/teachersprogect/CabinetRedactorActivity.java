@@ -100,7 +100,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
 
         instrumentalImage = (ImageView) findViewById(R.id.activity_cabinet_redactor_instrumental_image);
-        instrumentalImage.setOnClickListener(this);//todo создание
+        instrumentalImage.setOnClickListener(this);
 
         Cursor desksCursor = db.getDesksByCabinetId(cabinetId);//курсор с партами
         while (desksCursor.moveToNext()) {//начальный вывод парт

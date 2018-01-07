@@ -59,7 +59,7 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
         //добавляем текстовое поле
         linearLayout.addView(editLastName);
 
-        //кнопки согласия/отмены
+        //кнопка сохранения изменений
         builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -78,18 +78,45 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
                             "CreateLearnerDialogFragment: you must implements CreateLearnerInterface in your activity"
                     );
                 } catch (java.lang.NullPointerException e) {
-                    //в диалог необходимо передать id класса( Bungle putLong("classId",classId) )
+                    //в диалог необходимо передать id ученика( Bungle putLong("learnerId",learnerId) )
                     e.printStackTrace();
                     Log.i(
                             "TeachersApp",
-                            "CreateLearnerDialogFragment: you must give classId( Bungle putLong(\"classId\",classId) )"
+                            "CreateLearnerDialogFragment: you must give learnerId( Bungle putLong(\"learnerId\",learnerId) )"
                     );
                 }
             }
         });
+        //просто выход из диалога
         builder.setNegativeButton("отмена", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        //удаление ученика
+        builder.setNeutralButton("удалить", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                try {
+                    //вызываем в активности метод по далению ученика и передаем id
+                    ((EditLearnerDialogInterface) getActivity()).removeLearner(
+                            getArguments().getLong("learnerId")
+                    );
+                } catch (java.lang.ClassCastException e) {
+                    //в вызвающей активности должен быть имплементирован класс CreateLearnerInterface
+                    e.printStackTrace();
+                    Log.i(
+                            "TeachersApp",
+                            "CreateLearnerDialogFragment: you must implements CreateLearnerInterface in your activity"
+                    );
+                } catch (java.lang.NullPointerException e) {
+                    //в диалог необходимо передать id ученика( Bungle putLong("learnerId",learnerId) )
+                    e.printStackTrace();
+                    Log.i(
+                            "TeachersApp",
+                            "CreateLearnerDialogFragment: you must give learnerId( Bungle putLong(\"learnerId\",learnerId) )"
+                    );
+                }
             }
         });
 
@@ -109,5 +136,6 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
 
 interface EditLearnerDialogInterface {
     void editLearner(String lastName, String name, long learnerId);
+    void removeLearner(long learnerId);
 }
 

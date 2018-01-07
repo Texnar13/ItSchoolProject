@@ -139,7 +139,6 @@ class ListOfAdapter extends BaseAdapter {//todo задача адаптера п
 //                            activity.startActivity(intent);
 //                            break;
 
-                        //todo статистика оценок ученика
 //                        case SchoolContract.TableLearners.NAME_TABLE_LEARNERS://todo0 будем переходить к статистике оценок ученика
 
                             intent = new Intent(context, LearnersAndGradesActivity.class);

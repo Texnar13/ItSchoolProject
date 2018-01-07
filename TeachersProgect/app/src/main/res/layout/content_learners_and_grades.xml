@@ -11,129 +11,152 @@
     tools:context="com.learning.texnar13.teachersprogect.LearnersAndGrades.LearnersAndGradesActivity"
     tools:showIn="@layout/activity_learners_and_grades">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:background="#bed7e9"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:gravity="center"
-            android:text="ПРЕДМЕТ:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="#000000" />
-
-        <Spinner
-            android:id="@+id/learners_and_grades_activity_subject_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:background="#bed7e9">
-
-        <TextView
-            android:id="@+id/textView"
+            android:id="@+id/learners_and_grades_state_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:gravity="center"
-            android:text="МЕСЯЦ:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="#000000" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/learners_and_grades_activity_button_previous"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/learners_and_grades_activity_date_text"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignTop="@+id/learners_and_grades_activity_date_text"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/learners_and_grades_activity_date_text"
-                android:layout_toStartOf="@+id/learners_and_grades_activity_date_text"
-                android:clickable="true"
-                app:srcCompat="@drawable/calendar_left_arrow" />
-
-            <TextView
-                android:id="@+id/learners_and_grades_activity_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="TextView"
-                android:textSize="20sp" />
-
-            <ImageView
-                android:id="@+id/learners_and_grades_activity_button_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/learners_and_grades_activity_date_text"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/learners_and_grades_activity_date_text"
-                android:layout_toRightOf="@+id/learners_and_grades_activity_date_text"
-                android:clickable="true"
-                app:srcCompat="@drawable/calendar_right_arrow" />
-
-        </RelativeLayout>
-    </LinearLayout>
-
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginStart="50dp"
+            android:text="---"
+            android:textSize="10pt" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TableLayout
-                android:id="@+id/learners_and_grades_table_names"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#bed7e9"
+                android:orientation="horizontal">
 
-            </TableLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:text="ПРЕДМЕТ:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#000000" />
 
-            <HorizontalScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                <Spinner
+                    android:id="@+id/learners_and_grades_activity_subject_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="#bed7e9">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:text="МЕСЯЦ:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#000000" />
 
                 <RelativeLayout
-                    android:id="@+id/learners_and_grades_table_relative"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/learners_and_grades_activity_button_previous"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/learners_and_grades_activity_date_text"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignTop="@+id/learners_and_grades_activity_date_text"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/learners_and_grades_activity_date_text"
+                        android:layout_toStartOf="@+id/learners_and_grades_activity_date_text"
+                        android:clickable="true"
+                        app:srcCompat="@drawable/calendar_left_arrow" />
+
+                    <TextView
+                        android:id="@+id/learners_and_grades_activity_date_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="TextView"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:id="@+id/learners_and_grades_activity_button_next"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/learners_and_grades_activity_date_text"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@+id/learners_and_grades_activity_date_text"
+                        android:layout_toRightOf="@+id/learners_and_grades_activity_date_text"
+                        android:clickable="true"
+                        app:srcCompat="@drawable/calendar_right_arrow" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <TableLayout
-                        android:id="@+id/learners_and_grades_table"
+                        android:id="@+id/learners_and_grades_table_names"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent">
 
                     </TableLayout>
-                </RelativeLayout>
-            </HorizontalScrollView>
-        </LinearLayout>
-    </ScrollView>
 
+                    <HorizontalScrollView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+
+                        <RelativeLayout
+                            android:id="@+id/learners_and_grades_table_relative"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
+
+                            <TableLayout
+                                android:id="@+id/learners_and_grades_table"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent">
+
+                            </TableLayout>
+                        </RelativeLayout>
+                    </HorizontalScrollView>
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

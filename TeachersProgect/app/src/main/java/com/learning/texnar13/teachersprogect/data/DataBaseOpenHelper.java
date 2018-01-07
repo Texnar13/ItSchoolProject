@@ -885,7 +885,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public ArrayList<Long> getSubjectAndTimeCabinetAttitudesIdByTimePeriod(GregorianCalendar periodStart, GregorianCalendar periodEnd) {//todo , long repeatPeriod
+    public ArrayList<Long> getSubjectAndTimeCabinetAttitudesIdByTimePeriod(GregorianCalendar periodStart, GregorianCalendar periodEnd) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SchoolContract.DECODING_TIMES_STRING);
         SimpleDateFormat timeDateFormat = new SimpleDateFormat("HH:mm:ss");
         //проверяется только дата начала уроков

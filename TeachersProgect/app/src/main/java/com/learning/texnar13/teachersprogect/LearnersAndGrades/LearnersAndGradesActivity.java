@@ -97,6 +97,22 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         db.close();
     }
 
+    @Override
+    public void removeLearner(long learnerId) {
+        //редактирование ученика вызываемое диалогом EditLearnerDialogFragment
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        ArrayList<Long> learnersId = new ArrayList<>();
+        learnersId.add(learnerId);
+        db.deleteLearners(learnersId);
+        //обновляем список учеников
+        getLearnersFromDB();
+        //обновляем таблицу
+        GregorianCalendar currentCalendar = new GregorianCalendar();
+        currentCalendar.setTime(new Date());
+        updateTable();
+        db.close();
+    }
+
     //метод старта активности
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +120,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         setContentView(R.layout.activity_learners_and_grades);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //текст в центре
+        TextView stateText = (TextView)findViewById(R.id.learners_and_grades_state_text);
+        stateText.setText("Здесь выводится список ваших учеников и их оценки по датам. Кнопка '+' добавит ученика, долгоге нажатие на его имя, откроет окно, где можно переименовать или удалить ученика. Сверху можно выбрать дисциплину в которой ставились оценки, и месяц за который выводятся оценки.");
 //----переданные данные----
         Intent intent = getIntent();
         classId = intent.getLongExtra(CLASS_ID, -1);
@@ -318,14 +337,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             //добавляем строку в таблицу
             learnersNamesTable.addView(learner, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
         }
-        //заполнен ли массив с оценками?(например при повороте экрана)
-        if (grades.length == 0) {
-            //получение оценок из базы, и вывод их в таблицу
-            getGradesFromDB();
-        } else {
-            //только вывод в таблицу
-            outGradesInTable();
-        }
+        getGradesFromDB();
     }
 
     //обновление данных

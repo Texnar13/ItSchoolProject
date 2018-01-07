@@ -50,7 +50,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
     //класс-кабинет
     TextView seatingStateText;
     //выбранные класс и кабинет
-    final ClassCabinet classCabinetId = new ClassCabinet(1, 1);//todo предусмотреть вариант если уроков вобще нет или у принимаемого урока не стандартное время. проверка нет ли на этом времени урока. переворот экрана.
+    final ClassCabinet classCabinetId = new ClassCabinet(1, 1);//todo предусмотреть вариант если уроков вобще нет или у принимаемого урока не стандартное время. проверка нет ли на этом времени урока.
     //урок
     long chosenLessonId = -1;
     Spinner lessonNameSpinner;
@@ -229,7 +229,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
             }
         }
 
-        {//назначение повторений todo error
+        {//назначение повторений
             final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, repeatPeriodsNames);
 
             //  адаптер
