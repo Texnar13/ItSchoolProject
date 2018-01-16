@@ -1,6 +1,7 @@
 package com.learning.texnar13.teachersprogect;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -26,60 +27,6 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//09-16 23:11:20.094 4549-4549/com.learning.texnar13.teachersprogect E/AndroidRuntime: FATAL EXCEPTION: main
-//        Process: com.learning.texnar13.teachersprogect, PID: 4549
-//        java.lang.OutOfMemoryError: Failed to allocate a 43261452 byte allocation with 5103456 free bytes and 4MB until OOM
-//        at dalvik.system.VMRuntime.newNonMovableArray(Native Method)
-//        at android.graphics.BitmapFactory.nativeDecodeAsset(Native Method)
-//        at android.graphics.BitmapFactory.decodeStream(BitmapFactory.java:856)
-//        at android.graphics.BitmapFactory.decodeResourceStream(BitmapFactory.java:675)
-//        at android.graphics.drawable.Drawable.createFromResourceStream(Drawable.java:2228)
-//        at android.content.res.Resources.loadDrawableForCookie(Resources.java:4215)
-//        at android.content.res.Resources.loadDrawable(Resources.java:4089)
-//        at android.content.res.Resources.getDrawable(Resources.java:2005)
-//        at android.content.res.Resources.getDrawable(Resources.java:1987)
-//        at android.content.Context.getDrawable(Context.java:464)
-//        at android.support.v4.content.ContextCompatApi21.getDrawable(ContextCompatApi21.java:30)
-//        at android.support.v4.content.ContextCompat.getDrawable(ContextCompat.java:372)
-//        at android.support.v7.widget.AppCompatDrawableManager.getDrawable(AppCompatDrawableManager.java:202)
-//        at android.support.v7.widget.AppCompatDrawableManager.getDrawable(AppCompatDrawableManager.java:190)
-//        at android.support.v7.content.res.AppCompatResources.getDrawable(AppCompatResources.java:100)
-//        at android.support.v7.widget.AppCompatImageHelper.loadFromAttributes(AppCompatImageHelper.java:54)
-//        at android.support.v7.widget.AppCompatImageView.<init>(AppCompatImageView.java:66)
-//        at android.support.v7.widget.AppCompatImageView.<init>(AppCompatImageView.java:56)
-//        at android.support.v7.app.AppCompatViewInflater.createView(AppCompatViewInflater.java:106)
-//        at android.support.v7.app.AppCompatDelegateImplV9.createView(AppCompatDelegateImplV9.java:1029)
-//        at android.support.v7.app.AppCompatDelegateImplV9.onCreateView(AppCompatDelegateImplV9.java:1087)
-//        at android.support.v4.view.LayoutInflaterCompatHC$FactoryWrapperHC.onCreateView(LayoutInflaterCompatHC.java:47)
-//        at android.view.LayoutInflater.createViewFromTag(LayoutInflater.java:758)
-//        at android.view.LayoutInflater.createViewFromTag(LayoutInflater.java:716)
-//        at android.view.LayoutInflater.rInflate(LayoutInflater.java:847)
-//        at android.view.LayoutInflater.rInflateChildren(LayoutInflater.java:810)
-//        at android.view.LayoutInflater.rInflate(LayoutInflater.java:855)
-//        at android.view.LayoutInflater.rInflateChildren(LayoutInflater.java:810)
-//        at android.view.LayoutInflater.rInflate(LayoutInflater.java:855)
-//        at android.view.LayoutInflater.rInflateChildren(LayoutInflater.java:810)
-//        at android.view.LayoutInflater.rInflate(LayoutInflater.java:855)
-//        at android.view.LayoutInflater.rInflateChildren(LayoutInflater.java:810)
-//        at android.view.LayoutInflater.inflate(LayoutInflater.java:527)
-//        at android.view.LayoutInflater.inflate(LayoutInflater.java:429)
-//        at android.view.LayoutInflater.inflate(LayoutInflater.java:380)
-//        at android.support.v7.app.AppCompatDelegateImplV9.setContentView(AppCompatDelegateImplV9.java:292)
-//        at android.support.v7.app.AppCompatActivity.setContentView(AppCompatActivity.java:140)
-//        at com.learning.texnar13.teachersprogect.StartScreenActivity.onCreate(StartScreenActivity.java:32)
-//        at android.app.Activity.performCreate(Activity.java:6876)
-//        at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1135)
-//        at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:3207)
-//        at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:3350)
-//        at android.app.ActivityThread.handleRelaunchActivity(ActivityThread.java:5395)
-//        at android.app.ActivityThread.access$1200(ActivityThread.java:222)
-//        at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1801)
-//        at android.os.Handler.dispatchMessage(Handler.java:102)
-//        at android.os.Looper.loop(Looper.java:158)
-//        at android.app.ActivityThread.main(ActivityThread.java:7237)
-//        at java.lang.reflect.Method.invoke(Native Method)
-//        at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:1230)
-//        at com.andr
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_screen);
@@ -96,7 +43,21 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         relButtonSettings.setOnClickListener(this);
 
         //setTitle("помощник учителя");
+    }
 
+    @Override
+    protected void onStart() {
+        //при входе на эту активность
+        //проверка на запись настроек
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        Cursor settingCursor = db.getSettingProfileById(1);//получаем первый профиль настроек
+        Log.e("TeachersApp","settingCursor.getCount() = "+settingCursor.getCount());
+        if(settingCursor.getCount() == 0){//если нет профиля настроек
+            db.createNewSettingsProfileWithId1("default", 50);//тогда создем его
+        }
+        settingCursor.close();
+        db.close();
+        super.onStart();
     }
 
     @Override

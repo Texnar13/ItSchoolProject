@@ -83,12 +83,12 @@ class ListOfAdapter extends BaseAdapter {//todo задача адаптера п
                 title.setTextSize(20);
                 title.setTextColor(Color.parseColor("#1f5b85"));
                 break;
-            case SchoolContract.TableLearners.NAME_TABLE_LEARNERS:
-                title.setBackgroundColor(Color.TRANSPARENT);
-                title.setClickable(false);
-                title.setTextSize(20);
-                title.setTextColor(Color.parseColor("#1f5b85"));
-                break;
+//            case SchoolContract.TableLearners.NAME_TABLE_LEARNERS:
+//                title.setBackgroundColor(Color.TRANSPARENT);
+//                title.setClickable(false);
+//                title.setTextSize(20);
+//                title.setTextColor(Color.parseColor("#1f5b85"));
+//                break;
             default:
                 throw new  RuntimeException();
         }
@@ -133,17 +133,8 @@ class ListOfAdapter extends BaseAdapter {//todo задача адаптера п
                     Intent intent;//намерение для запуска ледующего активити
                     switch (type) {//тип !вызывающего! обьекта
                         case SchoolContract.TableClasses.NAME_TABLE_CLASSES://запуск этого активити заново
-//                            intent = new Intent(context, ListOfActivity.class);
-//                            intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//с параметром ученики
-//                            intent.putExtra(ListOfActivity.DOP_LIST_PARAMETER, objId);//передаём id выбранного класса
-//                            activity.startActivity(intent);
-//                            break;
-
-//                        case SchoolContract.TableLearners.NAME_TABLE_LEARNERS://todo0 будем переходить к статистике оценок ученика
-
                             intent = new Intent(context, LearnersAndGradesActivity.class);
-                            //intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//с параметром
-                            intent.putExtra(LearnersAndGradesActivity.CLASS_ID, objId);//передаём id выбранного ученика
+                            intent.putExtra(LearnersAndGradesActivity.CLASS_ID, objId);//вызываем вывод оценок передаём id выбранного класса
                             activity.startActivity(intent);
                             break;
                         case SchoolContract.TableCabinets.NAME_TABLE_CABINETS://запуск редактора кабинета

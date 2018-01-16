@@ -57,7 +57,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     //выбранный урок
     static int changingSubjectPosition = 0;
     //оценки
-    //ArrayList<ArrayList<ArrayList<ArrayList<Integer>>>> grades = new ArrayList<>();
     static int[][][][] grades = {};//[ученик][день][урок][оценка]
     //выводимая дата
     static GregorianCalendar viewCalendar = null;
@@ -121,7 +120,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //текст в центре
-        TextView stateText = (TextView)findViewById(R.id.learners_and_grades_state_text);
+        TextView stateText = (TextView) findViewById(R.id.learners_and_grades_state_text);
         stateText.setText("Здесь выводится список ваших учеников и их оценки по датам. Кнопка '+' добавит ученика, долгоге нажатие на его имя, откроет окно, где можно переименовать или удалить ученика. Сверху можно выбрать дисциплину в которой ставились оценки, и месяц за который выводятся оценки.");
 //----переданные данные----
         Intent intent = getIntent();
@@ -240,7 +239,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         db.close();
     }
 
-    //вывод таблицы
+    //вывод имен учеников в таблицу
     void updateTable() {
         //чистка
         //имена
@@ -269,7 +268,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         headNameRaw.addView(headNameOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
         //строку в таблицу
         learnersNamesTable.addView(headNameRaw, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
-//--оценки
 
 //-тело таблицы
         for (int i = 0; i < learnersTitles.size(); i++) {//пробегаемся по ученикам
@@ -333,14 +331,13 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 }
             });
 
-
             //добавляем строку в таблицу
             learnersNamesTable.addView(learner, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
         }
         getGradesFromDB();
     }
 
-    //обновление данных
+    //ученики из базы
     void getLearnersFromDB() {//вывод учеников из бд
         //чистим массивы от предыдущих значений
         learnersId = new ArrayList<>();
@@ -371,7 +368,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     RelativeLayout gradesRoom;
 
-
+    //оценки из базы
     void getGradesFromDB() {//вывод оценок из бд//----вывод оценок из бд----
         //область с таблицей
         gradesRoom = (RelativeLayout) findViewById(R.id.learners_and_grades_table_relative);
@@ -451,14 +448,19 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][1]
                             );
 
-                            //получаем оценки по времени
-                            Cursor gradesLessonCursor = db.getGradesByLearnerIdAndTimePeriod(
+                            //получаем оценки по времени todo и предмету
+                            Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
                                     learnersId.get(i),
+                                    subjectsId[changingSubjectPosition],
                                     outHelpStartCalendar,
                                     outHelpEndCalendar
                             );
                             //по оценкам
-                            for (int l = 0; l < gradesLessonCursor.getCount(); l++) {
+                            int n;
+                            if (gradesLessonCursor.getCount() <= 3) {
+                                n = gradesLessonCursor.getCount();
+                            } else n = 3;
+                            for (int l = 0; l < n; l++) {
 
                                 gradesLessonCursor.moveToPosition(l);
                                 //выводим наконец оценку
@@ -485,6 +487,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         progressThread.start();
     }
 
+    //вывод оценок в таблицу
     void outGradesInTable() {
         //оценки
         learnersGradesTable.removeAllViews();

@@ -42,7 +42,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         if (db.getInterfaceSizeBySettingsProfileId(1) == -1){
-            db.createNewSettingsProfile("default", 50);//TODO Skipped 49 frames!  The application may be doing too much work on its main thread.
+            db.createNewSettingsProfileWithId1("default", 50);//TODO Skipped 49 frames!  The application may be doing too much work on its main thread.
         }
         sizeSeekBar.setProgress((int) db.getInterfaceSizeBySettingsProfileId(1));
         updateShowRoom(room, (int) db.getInterfaceSizeBySettingsProfileId(1));
@@ -133,7 +133,7 @@ public class SettingsActivity extends AppCompatActivity {
                 Date endLessonTime = new GregorianCalendar(2017, 10, 17, 9, 15).getTime();//на 7 месяц  1502345700000
                 dbOpenHelper.setLessonTimeAndCabinet(lessonId, cabinetId, startLessonTime, endLessonTime, SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER);
 
-                db.createNewSettingsProfile("default", 50);//создание настроек после удаления таблицы
+                //db.createNewSettingsProfileWithId1("default", 50);//создание настроек после удаления таблицы
 
                 dbOpenHelper.setLearnerOnPlace(//lessonId,
                         lerner1Id, places.get(1));

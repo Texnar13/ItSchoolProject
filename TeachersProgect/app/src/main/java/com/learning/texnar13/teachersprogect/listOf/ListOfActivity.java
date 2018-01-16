@@ -64,11 +64,11 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                         cursor = db.getClasses();//получаем классы
                         break;
                     }
-                    case SchoolContract.TableLearners.NAME_TABLE_LEARNERS: {
-                        db.deleteLearners(adapter.getIdCheckedListOfAdapterObjects());
-                        cursor = db.getLearnersByClassId(getIntent().getLongExtra(DOP_LIST_PARAMETER, 0));//получаем учеников
-                        break;
-                    }
+//                    case SchoolContract.TableLearners.NAME_TABLE_LEARNERS: {
+//                        db.deleteLearners(adapter.getIdCheckedListOfAdapterObjects());
+//                        cursor = db.getLearnersByClassId(getIntent().getLongExtra(DOP_LIST_PARAMETER, 0));//получаем учеников
+//                        break;
+//                    }
                     case SchoolContract.TableCabinets.NAME_TABLE_CABINETS: {
                         db.deleteCabinets(adapter.getIdCheckedListOfAdapterObjects());
                         cursor = db.getCabinets();//получаем кабинеты
@@ -89,6 +89,37 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                                                     SchoolContract.TableClasses.KEY_CLASS_ID))));
                 }
                 cursor.close();
+
+                /*
+                01-08 18:22:37.422 4755-4755/com.learning.texnar13.teachersprogect E/CursorWindow: Failed to read row 0, column -1 from a CursorWindow which has 1 rows, 2 columns.
+01-08 18:22:37.422 4755-4755/com.learning.texnar13.teachersprogect D/AndroidRuntime: Shutting down VM
+
+
+                                                                                     --------- beginning of crash
+01-08 18:22:37.423 4755-4755/com.learning.texnar13.teachersprogect E/AndroidRuntime: FATAL EXCEPTION: main
+                                                                                     Process: com.learning.texnar13.teachersprogect, PID: 4755
+                                                                                     java.lang.IllegalStateException: Couldn't read row 0, col -1 from CursorWindow.  Make sure the Cursor is initialized correctly before accessing data from it.
+                                                                                         at android.database.CursorWindow.nativeGetString(Native Method)
+                                                                                         at android.database.CursorWindow.getString(CursorWindow.java:438)
+                                                                                         at android.database.AbstractWindowedCursor.getString(AbstractWindowedCursor.java:51)
+                                                                                         at com.learning.texnar13.teachersprogect.listOf.ListOfActivity$1.onMenuItemClick(ListOfActivity.java:83)
+                                                                                         at android.support.v7.view.menu.MenuItemImpl.invoke(MenuItemImpl.java:152)
+                                                                                         at android.support.v7.view.menu.MenuBuilder.performItemAction(MenuBuilder.java:969)
+                                                                                         at android.support.v7.view.menu.MenuBuilder.performItemAction(MenuBuilder.java:959)
+                                                                                         at android.support.v7.widget.ActionMenuView.invokeItem(ActionMenuView.java:623)
+                                                                                         at android.support.v7.view.menu.ActionMenuItemView.onClick(ActionMenuItemView.java:154)
+                                                                                         at android.view.View.performClick(View.java:4780)
+                                                                                         at android.view.View$PerformClick.run(View.java:19866)
+                                                                                         at android.os.Handler.handleCallback(Handler.java:739)
+                                                                                         at android.os.Handler.dispatchMessage(Handler.java:95)
+                                                                                         at android.os.Looper.loop(Looper.java:135)
+                                                                                         at android.app.ActivityThread.main(ActivityThread.java:5254)
+                                                                                         at java.lang.reflect.Method.invoke(Native Method)
+                                                                                         at java.lang.reflect.Method.invoke(Method.java:372)
+                                                                                         at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:903)
+                                                                                         at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:698)
+                                                                                         */
+
 
                 ListOfAdapter newAdapter = new ListOfAdapter(listOfActivity, list, false, SchoolContract.TableClasses.NAME_TABLE_CLASSES);
                 adapter = newAdapter;
@@ -195,36 +226,36 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
 
             }
             break;
-            case SchoolContract.TableLearners.NAME_TABLE_LEARNERS: {
-                //дизайн
-                fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#bed7e9")));
-                room.setBackgroundColor(Color.WHITE);//parseColor("#f4e6d3")
-                {//ставим заголовок
-                    Cursor tempCursor = db.getClasses(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));
-                    tempCursor.moveToFirst();
-                    getSupportActionBar().setTitle("Ученики в классе " + tempCursor.getString(tempCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
-                    tempCursor.close();
-                }
-                ArrayList<ListOfAdapterObject> listOfLearners = new ArrayList<>();//создаём лист с классами
-                {
-                    Cursor cursor = db.getLearnersByClassId(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));//получаем учеников в курсоре по id класса (по умолчанию по первому классу)
-                    while (cursor.moveToNext()) {//курсор в лист
-                        listOfLearners.add(new ListOfAdapterObject(cursor.getString(
-                                cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) +
-                                " " + cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)),
-                                SchoolContract.TableLearners.NAME_TABLE_LEARNERS,
-                                cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID))));
-                    }
-                    cursor.close();
-                }
-                this.adapter = new ListOfAdapter(this, listOfLearners, false, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//создаём адаптер со списком учеников
-                listView.setAdapter(this.adapter);//ставим адаптер
-                Log.i("TeachersApp ", "ListOfActivity - out learners");
-                break;
-            }
+//            case SchoolContract.TableLearners.NAME_TABLE_LEARNERS: {
+//                //дизайн
+//                fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#bed7e9")));
+//                room.setBackgroundColor(Color.WHITE);//parseColor("#f4e6d3")
+//                {//ставим заголовок
+//                    Cursor tempCursor = db.getClasses(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));
+//                    tempCursor.moveToFirst();
+//                    getSupportActionBar().setTitle("Ученики в классе " + tempCursor.getString(tempCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
+//                    tempCursor.close();
+//                }
+//                ArrayList<ListOfAdapterObject> listOfLearners = new ArrayList<>();//создаём лист с классами
+//                {
+//                    Cursor cursor = db.getLearnersByClassId(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));//получаем учеников в курсоре по id класса (по умолчанию по первому классу)
+//                    while (cursor.moveToNext()) {//курсор в лист
+//                        listOfLearners.add(new ListOfAdapterObject(cursor.getString(
+//                                cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) +
+//                                " " + cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)),
+//                                SchoolContract.TableLearners.NAME_TABLE_LEARNERS,
+//                                cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID))));
+//                    }
+//                    cursor.close();
+//                }
+//                this.adapter = new ListOfAdapter(this, listOfLearners, false, SchoolContract.TableLearners.NAME_TABLE_LEARNERS);//создаём адаптер со списком учеников
+//                listView.setAdapter(this.adapter);//ставим адаптер
+//                Log.i("TeachersApp ", "ListOfActivity - out learners");
+//                break;
+//            }
             case SchoolContract.TableCabinets.NAME_TABLE_CABINETS: {
                 //ставим центральный текст по умолчанию(для кабинетов)
-                stateText.setText("Здесь выводятся созданные вами кабинеты, в которых вы можете расставлять парты. Чтобы создать новый кабинет нажмите кнопку '+', для редактирования, удерживайте кабинет, затем в меню выберите 'карандаш', чтобы переименовать, или 'корзину', чтобы удалить кабинет. Для расстановки парт в кабинете нажмите на него в списке. ");
+                stateText.setText("Для создания нового кабинета нажмите кнопку '+' внизу экрана, затем введите его номер или название. Для расстановки парт войдите в кабинет нажав на него в списке. Для редактирования нажмите и удерживайте кабинет, затем в меню сверху выберите карандаш, чтобы переименовать его или корзину, чтобы его удалить(если не хотите изменять кабинет, нажмите кнопку назад чтобы выйти из меню).");
                 //дизайн
                 fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f5ce9d")));
                 room.setBackgroundColor(Color.WHITE);//parseColor("#f4e6d3")
@@ -275,14 +306,14 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                             cursor.close();
                             break;
                         }
-                        case SchoolContract.TableLearners.NAME_TABLE_LEARNERS: {
-                            Cursor cursor = new DataBaseOpenHelper(this).getLearnersByClassId(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));
-                            while (cursor.moveToNext()) {//курсор в лист
-                                list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) + " " + cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)), SchoolContract.TableLearners.NAME_TABLE_LEARNERS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID))));
-                            }
-                            cursor.close();
-                            break;
-                        }
+//                        case SchoolContract.TableLearners.NAME_TABLE_LEARNERS: {
+//                            Cursor cursor = new DataBaseOpenHelper(this).getLearnersByClassId(getIntent().getLongExtra(ListOfActivity.DOP_LIST_PARAMETER, 1));
+//                            while (cursor.moveToNext()) {//курсор в лист
+//                                list.add(new ListOfAdapterObject(cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) + " " + cursor.getString(cursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)), SchoolContract.TableLearners.NAME_TABLE_LEARNERS, cursor.getLong(cursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID))));
+//                            }
+//                            cursor.close();
+//                            break;
+//                        }
                         case SchoolContract.TableCabinets.NAME_TABLE_CABINETS: {
                             Cursor cursor = new DataBaseOpenHelper(this).getCabinets();
                             while (cursor.moveToNext()) {//курсор в лист

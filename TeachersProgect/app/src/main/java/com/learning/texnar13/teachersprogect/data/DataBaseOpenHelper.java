@@ -338,6 +338,18 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     }
 
     //настройки
+    public long createNewSettingsProfileWithId1(String profileName, int interfaceSize) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID, 1);
+        values.put(SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME, profileName);
+        values.put(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE, interfaceSize);
+        long temp = db.insert(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, values);//-1 = ошибка ввода
+        Log.i("DBOpenHelper", "createSettingsProfile returnId = " + temp + " profileName= " + profileName + " interfaceSize= " + interfaceSize);
+        //db.close();
+        return temp;
+    }
+
     public long createNewSettingsProfile(String profileName, int interfaceSize) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -375,6 +387,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         cursor.close();
         //db.close();
         return answer;
+    }
+
+    public Cursor getSettingProfileById(long id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] selectionArgs = {id + ""};
+        Cursor cursor = db.query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", selectionArgs, null, null, null);
+        Log.i("DBOpenHelper", "getInterfaceSizeBySettingsProfileId profileId=" + id + " return=" + cursor);
+        return cursor;
     }
 
 
@@ -745,13 +765,13 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getGradesByLearnerIdAndTimePeriod(long learnerId, GregorianCalendar startTame, GregorianCalendar endTime) {
+    public Cursor getGradesByLearnerIdSubjectAndTimePeriod(long learnerId, long subjectId, GregorianCalendar startTame, GregorianCalendar endTime) {
         SQLiteDatabase db = this.getReadableDatabase();
         //шаблон по которому время хранится в бд
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//%Y-%m-%d %H:%M:%S
-        //запрашиваем оценки между startTime и endTime
-        Cursor cursor = db.query(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " = ? AND " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " BETWEEN \"" + dateFormat.format(startTame.getTime()) + "\" AND \"" + dateFormat.format(endTime.getTime()) + "\"", new String[]{Long.toString(learnerId)}, null, null, null);
-        Log.i("DBOpenHelper", "" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " = ? AND " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " BETWEEN \"" + dateFormat.format(startTame.getTime()) + "\" AND \"" + dateFormat.format(endTime.getTime()) + "\"" + "getGradesByLearnerIdAndTimePeriod learnerId=" + learnerId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        //запрашиваем оценки ученика по уроку находящиеся между startTime и endTime
+        Cursor cursor = db.query(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " = ? AND " + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " = ? AND " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " BETWEEN \"" + dateFormat.format(startTame.getTime()) + "\" AND \"" + dateFormat.format(endTime.getTime()) + "\"", new String[]{Long.toString(learnerId), Long.toString(subjectId)}, null, null, null);
+        Log.i("DBOpenHelper", "" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " = ? AND " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " BETWEEN \"" + dateFormat.format(startTame.getTime()) + "\" AND \"" + dateFormat.format(endTime.getTime()) + "\"" + "getGradesByLearnerIdAndTimePeriod learnerId=" + learnerId + " subjectId=" + subjectId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -954,11 +974,10 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         onUpgrade(this.getReadableDatabase(), 0, 100);
     }
 
-    String format(int i) {
-        if (i < 10) {
-            return "0" + i;
-        } else return "" + i;
-    }
-
+//    String format(int i) {
+//        if (i < 10) {
+//            return "0" + i;
+//        } else return "" + i;
+//    }
 
 }
