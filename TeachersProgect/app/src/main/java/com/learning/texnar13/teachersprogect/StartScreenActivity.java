@@ -13,6 +13,7 @@ import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.listOf.ListOfActivity;
+import com.learning.texnar13.teachersprogect.settings.SettingsActivity;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -51,7 +52,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         //проверка на запись настроек
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         Cursor settingCursor = db.getSettingProfileById(1);//получаем первый профиль настроек
-        Log.e("TeachersApp","settingCursor.getCount() = "+settingCursor.getCount());
+        Log.i("TeachersApp","StartScreen - settingCursor.getCount() = "+settingCursor.getCount());
         if(settingCursor.getCount() == 0){//если нет профиля настроек
             db.createNewSettingsProfileWithId1("default", 50);//тогда создем его
         }

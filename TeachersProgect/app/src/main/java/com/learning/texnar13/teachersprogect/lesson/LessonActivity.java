@@ -32,16 +32,17 @@ public class LessonActivity extends AppCompatActivity {
     long lessonAttitudeId;
     long lessonId;
 
-
+//подготовка меню
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.lesson_menu, menu);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.main_menu_end_lesson).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        //закончить урок
+        menu.findItem(R.id.lesson_menu_end_lesson).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 long[] learnersId = new long[gradeArrayList.size()];
@@ -66,10 +67,19 @@ public class LessonActivity extends AppCompatActivity {
                 return true;
             }
         });
+        //подсказка
+        menu.findItem(R.id.lesson_menu_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent intent = new Intent(getApplicationContext(), LessonHelp.class);
+                startActivity(intent);
+                return true;
+            }
+        });
         return true;
     }
 
-
+//создание
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -154,9 +164,10 @@ public class LessonActivity extends AppCompatActivity {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
         multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
-
+        //заголовок
         setTitle("Урок");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
+        //кнопка назад в actionBar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         RelativeLayout room = (RelativeLayout) findViewById(R.id.room_layout);
 
@@ -466,11 +477,12 @@ public class LessonActivity extends AppCompatActivity {
         return px * getApplicationContext().getResources().getDisplayMetrics().density;
 
     }
-
+//функциональные кнопки
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home://кнопка назад в actionBar
+            //кнопка назад в actionBar
+            case android.R.id.home:
                 onBackPressed();
                 return true;
 
@@ -481,11 +493,11 @@ public class LessonActivity extends AppCompatActivity {
 
 }
 
+//класс для хранения данных
 class LearnerAndGrade {
     private long learnerId;
     private byte gradesCount = 0;
     private byte[] grade = new byte[3];
-
 
     LearnerAndGrade(long learnerId) {
         this.learnerId = learnerId;

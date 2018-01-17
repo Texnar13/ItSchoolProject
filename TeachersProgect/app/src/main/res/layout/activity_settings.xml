@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#faf6ff"
-    tools:context="com.learning.texnar13.teachersprogect.SettingsActivity">
+    tools:context="com.learning.texnar13.teachersprogect.settings.SettingsActivity">
 
     <ScrollView
         android:layout_width="match_parent"

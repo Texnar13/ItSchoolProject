@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect;
+package com.learning.texnar13.teachersprogect.settings;
 
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
+import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
@@ -18,8 +19,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class SettingsActivity extends AppCompatActivity {
-
-    public static final String INTERFACE_SIZE = "deskSize";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +132,8 @@ public class SettingsActivity extends AppCompatActivity {
                 Date endLessonTime = new GregorianCalendar(2017, 10, 17, 9, 15).getTime();//на 7 месяц  1502345700000
                 dbOpenHelper.setLessonTimeAndCabinet(lessonId, cabinetId, startLessonTime, endLessonTime, SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER);
 
-                //db.createNewSettingsProfileWithId1("default", 50);//создание настроек после удаления таблицы
+                //создание настроек после удаления таблицы
+                //db.createNewSettingsProfileWithId1("default", 50);
 
                 dbOpenHelper.setLearnerOnPlace(//lessonId,
                         lerner1Id, places.get(1));

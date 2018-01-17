@@ -1,5 +1,6 @@
 package com.learning.texnar13.teachersprogect.LearnersAndGrades;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,7 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.LessonRedactorActivity;
 import com.learning.texnar13.teachersprogect.R;
@@ -112,6 +115,34 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         db.close();
     }
 
+
+    //меню
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.learners_and_grades_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.learners_and_grades_menu_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Log.i("TeachersApp", "LearnersAndGradesActivity - menu - help");
+                //преход на шпаргалку
+                Intent intent = new Intent(getApplicationContext(),LearnersAndGradesHelp.class);
+                startActivity(intent);
+
+                return true;
+            }
+        });
+
+        return true;
+    }
+
+
+
+
     //метод старта активности
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,8 +151,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //текст в центре
-        TextView stateText = (TextView) findViewById(R.id.learners_and_grades_state_text);
-        stateText.setText("Здесь выводится список ваших учеников и их оценки по датам. Кнопка '+' добавит ученика, долгоге нажатие на его имя, откроет окно, где можно переименовать или удалить ученика. Сверху можно выбрать дисциплину в которой ставились оценки, и месяц за который выводятся оценки.");
+        //TextView stateText = (TextView) findViewById(R.id.learners_and_grades_state_text);
+        //stateText.setText("Здесь выводится список ваших учеников и их оценки по датам. Кнопка '+' добавит ученика, долгоге нажатие на его имя, откроет окно, где можно переименовать или удалить ученика. Сверху можно выбрать дисциплину в которой ставились оценки, и месяц за который выводятся оценки.");
 //----переданные данные----
         Intent intent = getIntent();
         classId = intent.getLongExtra(CLASS_ID, -1);

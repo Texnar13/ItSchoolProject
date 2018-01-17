@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context = ".lesson.LessonActivity"
+    >
+    <!--android:icon="@drawable/ic_menu_mark"-->
+    <item
+        android:id="@+id/lesson_menu_end_lesson"
+        android:title="закончить"
+        app:showAsAction="ifRoom|withText">
+    </item>
+    <item
+        android:id="@+id/lesson_menu_help"
+        android:title="помощь"
+        app:showAsAction="withText">
+    </item>
+
+</menu>

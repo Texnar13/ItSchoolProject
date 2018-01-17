@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.learning.texnar13.teachersprogect"
-    android:versionCode="19"
-    android:versionName="1.456">
+    android:versionCode="20"
+    android:versionName="1.459">
 
     <application
         android:allowBackup="true"
@@ -30,13 +30,13 @@
         <activity android:name=".ScheduleMonthActivity" />
         <activity android:name=".ScheduleDayActivity" />
         <activity android:name=".LessonRedactorActivity" />
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".settings.SettingsActivity" />
         <activity
             android:name=".LearnersAndGrades.LearnersAndGradesActivity"
             android:label="@string/title_activity_learners_and_grades"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".LearnersAndGrades.LearnersAndGradesHelp" />
+        <activity android:name=".lesson.LessonHelp"></activity>
     </application>
 
 </manifest>
