@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
@@ -97,8 +98,9 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 сдеать кнопку в диалоге, что-то вроде "редактировать рассадку учеников" */
                 break;
             case R.id.start_menu_button_my_cabinets://переход в список кабинетов
-                intent = new Intent(this, ListOfActivity.class);
-                intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableCabinets.NAME_TABLE_CABINETS);
+                //intent = new Intent(this, ListOfActivity.class);
+                intent = new Intent(this, CabinetsOutActivity.class);
+                //intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableCabinets.NAME_TABLE_CABINETS);
                 startActivity(intent);
                 break;
             case R.id.start_menu_button_my_classes: {//переход в список классов

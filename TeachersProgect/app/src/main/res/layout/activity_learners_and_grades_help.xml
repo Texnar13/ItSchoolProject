@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.learning.texnar13.teachersprogect.LearnersAndGrades.LearnersAndGradesHelp">
+    tools:context="com.learning.texnar13.teachersprogect.LearnersAndGradesOut.LearnersAndGradesHelp">
 
     <TextView
         android:id="@+id/learners_and_grades_help_text"

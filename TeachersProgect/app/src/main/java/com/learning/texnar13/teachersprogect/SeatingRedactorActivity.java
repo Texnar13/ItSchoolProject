@@ -283,7 +283,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                     //создание кнопки добавить ученика
                     final ImageView tempImageAdd = new ImageView(getApplicationContext());
                     final LinearLayout.LayoutParams tempImageAddParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                    tempImageAdd.setImageResource(R.drawable.ic_menu_add);
+                    tempImageAdd.setImageResource(R.drawable.standart_ic_menu_add);
                     tempImageAdd.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

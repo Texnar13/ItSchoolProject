@@ -1,14 +1,11 @@
-package com.learning.texnar13.teachersprogect.LearnersAndGrades;
+package com.learning.texnar13.teachersprogect.LearnersAndGradesOut;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -30,16 +27,11 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.learning.texnar13.teachersprogect.LessonRedactorActivity;
 import com.learning.texnar13.teachersprogect.R;
-import com.learning.texnar13.teachersprogect.ScheduleDayActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -148,7 +140,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learners_and_grades);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.cabinets_out_toolbar);
         setSupportActionBar(toolbar);
         //текст в центре
         //TextView stateText = (TextView) findViewById(R.id.learners_and_grades_state_text);
@@ -244,7 +236,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         }
         subjectsCursor.close();
         //адаптер для спиннера
-        CustomAdapter subjectAdapter = new CustomAdapter(this, R.layout.learners_and_grades_activity_subjects_spinner_element, subjectsNames);
+        CustomAdapter subjectAdapter = new CustomAdapter(this, R.layout.spiner_element_learners_and_grades_subjects, subjectsNames);
         subjectSpinner.setAdapter(subjectAdapter);
         subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

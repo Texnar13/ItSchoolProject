@@ -166,7 +166,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
             classesCursor.close();
 
             final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, stringClasses);
-            adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
+            adapter.setDropDownViewResource(R.layout.spiner_element_dropdown_lesson_redactor);
             classSpinner.setAdapter(adapter);
             classSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -204,7 +204,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
             cabinetsCursor.close();
 
             final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, stringCabinets);
-            adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
+            adapter.setDropDownViewResource(R.layout.spiner_element_dropdown_lesson_redactor);
             cabinetSpinner.setAdapter(adapter);
             cabinetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -237,7 +237,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
 //                    ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, repeatPeriodsNames);
 //            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-            adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
+            adapter.setDropDownViewResource(R.layout.spiner_element_dropdown_lesson_redactor);
             lessonRepeatSpinner
                     .setAdapter(
                             adapter);
@@ -341,7 +341,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
 
 
             final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, textTime);
-            adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
+            adapter.setDropDownViewResource(R.layout.spiner_element_dropdown_lesson_redactor);
             spinner.setAdapter(adapter);
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -442,7 +442,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
 
         final String[] finalStringLessons = stringLessons;
         final CustomAdapter adapter = new CustomAdapter(this, android.R.layout.simple_spinner_item, stringLessons);
-        adapter.setDropDownViewResource(R.layout.lesson_redactor_spiner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spiner_element_dropdown_lesson_redactor);
         lessonNameSpinner.setAdapter(adapter);
         lessonNameSpinner.setSelection(position, false);
         lessonNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

@@ -32,11 +32,15 @@
         <activity android:name=".LessonRedactorActivity" />
         <activity android:name=".settings.SettingsActivity" />
         <activity
-            android:name=".LearnersAndGrades.LearnersAndGradesActivity"
+            android:name=".LearnersAndGradesOut.LearnersAndGradesActivity"
             android:label="@string/title_activity_learners_and_grades"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".LearnersAndGrades.LearnersAndGradesHelp" />
-        <activity android:name=".lesson.LessonHelp"></activity>
+        <activity android:name=".LearnersAndGradesOut.LearnersAndGradesHelp" />
+        <activity android:name=".lesson.LessonHelp" />
+        <activity
+            android:name=".cabinetsOut.CabinetsOutActivity"
+            android:label="@string/title_activity_cabinets_out"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

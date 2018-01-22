@@ -80,7 +80,42 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
                 while (cursor.moveToNext()) {//курсор в лист
                     list.add(
                             new ListOfAdapterObject(
-                                    cursor.getString(
+                                    cursor.getString(//
+                                            /* ListOfAdapter - getView isChecked = true position = 1
+01-22 14:37:16.076 3175-3175/com.learning.texnar13.teachersprogect I/TeachersApp: ListOfActivity - editIsEditMenuVisible=true
+01-22 14:37:16.087 3175-3175/com.learning.texnar13.teachersprogect I/TeachersApp: ListOfActivity - onPrepareOptionsMenu
+01-22 14:37:17.270 3175-3175/com.learning.texnar13.teachersprogect I/TeachersApp: ListOfAdapter - getIdCheckedListOfAdapterObjects number = 2 content = [objId =1 isChecked =false, objId =2 isChecked =true]
+01-22 14:37:17.287 3175-3175/com.learning.texnar13.teachersprogect I/DBOpenHelper: deleteCabinets id= 2 |  return = 1
+01-22 14:37:17.288 3175-3175/com.learning.texnar13.teachersprogect I/DBOpenHelper: getCabinets android.database.sqlite.SQLiteCursor@311d2af number=1 content=[_id, name]
+01-22 14:37:17.289 3175-3175/com.learning.texnar13.teachersprogect E/CursorWindow: Failed to read row 0, column -1 from a CursorWindow which has 1 rows, 2 columns.
+01-22 14:37:17.290 3175-3175/com.learning.texnar13.teachersprogect D/AndroidRuntime: Shutting down VM
+
+
+                                                                                     --------- beginning of crash
+01-22 14:37:17.293 3175-3175/com.learning.texnar13.teachersprogect E/AndroidRuntime: FATAL EXCEPTION: main
+                                                                                     Process: com.learning.texnar13.teachersprogect, PID: 3175
+                                                                                     java.lang.IllegalStateException: Couldn't read row 0, col -1 from CursorWindow.  Make sure the Cursor is initialized correctly before accessing data from it.
+                                                                                         at android.database.CursorWindow.nativeGetString(Native Method)
+                                                                                         at android.database.CursorWindow.getString(CursorWindow.java:438)
+                                                                                         at android.database.AbstractWindowedCursor.getString(AbstractWindowedCursor.java:51)
+                                                                                         at com.learning.texnar13.teachersprogect.listOf.ListOfActivity$1.onMenuItemClick(ListOfActivity.java:83)
+                                                                                         at android.support.v7.view.menu.MenuItemImpl.invoke(MenuItemImpl.java:152)
+                                                                                         at android.support.v7.view.menu.MenuBuilder.performItemAction(MenuBuilder.java:969)
+                                                                                         at android.support.v7.view.menu.MenuBuilder.performItemAction(MenuBuilder.java:959)
+                                                                                         at android.support.v7.widget.ActionMenuView.invokeItem(ActionMenuView.java:623)
+                                                                                         at android.support.v7.view.menu.ActionMenuItemView.onClick(ActionMenuItemView.java:154)
+                                                                                         at android.view.View.performClick(View.java:4780)
+                                                                                         at android.view.View$PerformClick.run(View.java:19866)
+                                                                                         at android.os.Handler.handleCallback(Handler.java:739)
+                                                                                         at android.os.Handler.dispatchMessage(Handler.java:95)
+                                                                                         at android.os.Looper.loop(Looper.java:135)
+                                                                                         at android.app.ActivityThread.main(ActivityThread.java:5254)
+                                                                                         at java.lang.reflect.Method.invoke(Native Method)
+                                                                                         at java.lang.reflect.Method.invoke(Method.java:372)
+                                                                                         at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:903)
+                                                                                         at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:698)
+*/
+
                                             cursor.getColumnIndex(
                                                     SchoolContract.TableClasses.COLUMN_CLASS_NAME)),
                                     SchoolContract.TableClasses.NAME_TABLE_CLASSES,
@@ -170,7 +205,7 @@ public class ListOfActivity extends AppCompatActivity implements AbleToChangeThe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.cabinets_out_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
 

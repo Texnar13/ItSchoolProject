@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
-import com.learning.texnar13.teachersprogect.LearnersAndGrades.LearnersAndGradesActivity;
+import com.learning.texnar13.teachersprogect.LearnersAndGradesOut.LearnersAndGradesActivity;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
@@ -139,7 +139,7 @@ class ListOfAdapter extends BaseAdapter {//todo задача адаптера п
                             break;
                         case SchoolContract.TableCabinets.NAME_TABLE_CABINETS://запуск редактора кабинета
                             intent = new Intent(context, CabinetRedactorActivity.class);
-                            intent.putExtra(CabinetRedactorActivity.EDITED_OBJECT_ID, objId);//передаём id выбранного бьекта
+                            intent.putExtra(CabinetRedactorActivity.EDITED_OBJECT_ID, objId);//передаём id выбранного обьекта
                             activity.startActivity(intent);
                             break;
                         default:

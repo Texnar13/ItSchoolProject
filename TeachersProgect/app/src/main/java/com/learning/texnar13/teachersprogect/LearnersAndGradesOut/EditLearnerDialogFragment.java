@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.LearnersAndGrades;
+package com.learning.texnar13.teachersprogect.LearnersAndGradesOut;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -24,7 +24,7 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
         builder.setTitle("Редактирование ученика");
 
         //layout диалога
-        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.edit_learner_dialog_fragment_layout, null);
+        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_layout_edit_learner, null);
         builder.setView(dialogLayout);
         //LinearLayout в layout файле
         LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.edit_learner_dialog_fragment_linear_layout);
@@ -71,18 +71,18 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
                             getArguments().getLong("learnerId")
                     );
                 } catch (java.lang.ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован класс CreateLearnerInterface
+                    //в вызвающей активности должен быть имплементирован класс EditLearnerInterface
                     e.printStackTrace();
                     Log.i(
                             "TeachersApp",
-                            "CreateLearnerDialogFragment: you must implements CreateLearnerInterface in your activity"
+                            "EditLearnerDialogFragment: you must implements EditLearnerInterface in your activity"
                     );
                 } catch (java.lang.NullPointerException e) {
                     //в диалог необходимо передать id ученика( Bungle putLong("learnerId",learnerId) )
                     e.printStackTrace();
                     Log.i(
                             "TeachersApp",
-                            "CreateLearnerDialogFragment: you must give learnerId( Bungle putLong(\"learnerId\",learnerId) )"
+                            "EditLearnerDialogFragment: you must give learnerId( Bungle putLong(\"learnerId\",learnerId) )"
                     );
                 }
             }
@@ -103,18 +103,18 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
                             getArguments().getLong("learnerId")
                     );
                 } catch (java.lang.ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован класс CreateLearnerInterface
+                    //в вызвающей активности должен быть имплементирован класс EditLearnerInterface
                     e.printStackTrace();
                     Log.i(
                             "TeachersApp",
-                            "CreateLearnerDialogFragment: you must implements CreateLearnerInterface in your activity"
+                            "EditLearnerDialogFragment: you must implements EditLearnerInterface in your activity"
                     );
                 } catch (java.lang.NullPointerException e) {
                     //в диалог необходимо передать id ученика( Bungle putLong("learnerId",learnerId) )
                     e.printStackTrace();
                     Log.i(
                             "TeachersApp",
-                            "CreateLearnerDialogFragment: you must give learnerId( Bungle putLong(\"learnerId\",learnerId) )"
+                            "EditLearnerDialogFragment: you must give learnerId( Bungle putLong(\"learnerId\",learnerId) )"
                     );
                 }
             }
