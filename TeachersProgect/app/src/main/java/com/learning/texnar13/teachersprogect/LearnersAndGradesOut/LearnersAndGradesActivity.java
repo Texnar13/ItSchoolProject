@@ -122,7 +122,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             public boolean onMenuItemClick(MenuItem menuItem) {
                 Log.i("TeachersApp", "LearnersAndGradesActivity - menu - help");
                 //преход на шпаргалку
-                Intent intent = new Intent(getApplicationContext(),LearnersAndGradesHelp.class);
+                Intent intent = new Intent(getApplicationContext(), LearnersAndGradesHelp.class);
                 startActivity(intent);
 
                 return true;
@@ -131,8 +131,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
         return true;
     }
-
-
 
 
     //метод старта активности
@@ -236,7 +234,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         }
         subjectsCursor.close();
         //адаптер для спиннера
-        CustomAdapter subjectAdapter = new CustomAdapter(this, R.layout.spiner_element_learners_and_grades_subjects, subjectsNames);
+        CustomAdapter subjectAdapter = new CustomAdapter(this, R.layout.spiner_dropdown_element_learners_and_grades_subjects, subjectsNames);
         subjectSpinner.setAdapter(subjectAdapter);
         subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -444,63 +442,64 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         0,
                         0
                 );
+                if (subjectsId.length != 0) {
+                    DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                    //обновляем массивы свежими данными
+                    // по ученикам
+                    for (int i = 0; i < learnersId.size(); i++) {
+                        //по дням
+                        for (int j = 0; j < viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH); j++) {
+                            outHelpStartCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
+                            outHelpEndCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
+                            //по урокам
+                            for (int k = 0; k < 9; k++) {
+                                //--время--
+                                //начало урока
+                                outHelpStartCalendar.set(Calendar.HOUR_OF_DAY,
+                                        SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][0][0]
+                                );
+                                outHelpStartCalendar.set(Calendar.MINUTE,
+                                        SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][0][1]
+                                );
+                                //конец урока
+                                outHelpEndCalendar.set(Calendar.HOUR_OF_DAY,
+                                        SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][0]
+                                );
+                                outHelpEndCalendar.set(Calendar.MINUTE,
+                                        SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][1]
+                                );
+                                //получаем оценки по времени todo и предмету
+                                Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
+                                        learnersId.get(i),
+                                        subjectsId[changingSubjectPosition],
 
-                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                //обновляем массивы свежими данными
-                // по ученикам
-                for (int i = 0; i < learnersId.size(); i++) {
-                    //по дням
-                    for (int j = 0; j < viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH); j++) {
-                        outHelpStartCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
-                        outHelpEndCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
-                        //по урокам
-                        for (int k = 0; k < 9; k++) {
-                            //--время--
-                            //начало урока
-                            outHelpStartCalendar.set(Calendar.HOUR_OF_DAY,
-                                    SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][0][0]
-                            );
-                            outHelpStartCalendar.set(Calendar.MINUTE,
-                                    SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][0][1]
-                            );
-                            //конец урока
-                            outHelpEndCalendar.set(Calendar.HOUR_OF_DAY,
-                                    SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][0]
-                            );
-                            outHelpEndCalendar.set(Calendar.MINUTE,
-                                    SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][1]
-                            );
+                                        outHelpStartCalendar,
+                                        outHelpEndCalendar
+                                );
+                                //по оценкам
+                                int n;
+                                if (gradesLessonCursor.getCount() <= 3) {
+                                    n = gradesLessonCursor.getCount();
+                                } else n = 3;
+                                for (int l = 0; l < n; l++) {
 
-                            //получаем оценки по времени todo и предмету
-                            Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
-                                    learnersId.get(i),
-                                    subjectsId[changingSubjectPosition],
-                                    outHelpStartCalendar,
-                                    outHelpEndCalendar
-                            );
-                            //по оценкам
-                            int n;
-                            if (gradesLessonCursor.getCount() <= 3) {
-                                n = gradesLessonCursor.getCount();
-                            } else n = 3;
-                            for (int l = 0; l < n; l++) {
+                                    gradesLessonCursor.moveToPosition(l);
+                                    //выводим наконец оценку
+                                    grades[i][j][k][l] =
+                                            gradesLessonCursor.getInt(
+                                                    gradesLessonCursor.getColumnIndex(
+                                                            SchoolContract.TableLearnersGrades.COLUMN_GRADE
+                                                    )
+                                            );
+                                }
+                                gradesLessonCursor.close();
 
-                                gradesLessonCursor.moveToPosition(l);
-                                //выводим наконец оценку
-                                grades[i][j][k][l] =
-                                        gradesLessonCursor.getInt(
-                                                gradesLessonCursor.getColumnIndex(
-                                                        SchoolContract.TableLearnersGrades.COLUMN_GRADE
-                                                )
-                                        );
+
                             }
-                            gradesLessonCursor.close();
-
-
                         }
                     }
+                    db.close();
                 }
-                db.close();
 
                 //выводим оценки после загрузки
                 handler.sendEmptyMessage(0);

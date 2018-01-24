@@ -3,12 +3,14 @@ package com.learning.texnar13.teachersprogect.settings;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -19,6 +21,33 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class SettingsActivity extends AppCompatActivity {
+
+    //-------------------------------меню сверху--------------------------------------------------------
+
+    //раздуваем неаше меню
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.settings_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    //назначаем функции меню
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        //кнопка помощь
+        menu.findItem(R.id.settings_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Toast toast = Toast.makeText(getApplicationContext(),"В разработке ¯\\_(ツ)_/¯",Toast.LENGTH_LONG);
+                toast.show();
+
+                return true;
+            }
+        });
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

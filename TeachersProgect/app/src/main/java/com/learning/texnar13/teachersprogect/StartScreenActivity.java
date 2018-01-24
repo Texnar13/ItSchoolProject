@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -21,22 +23,55 @@ import java.util.GregorianCalendar;
 
 public class StartScreenActivity extends AppCompatActivity implements View.OnClickListener {
 
-    RelativeLayout relButtonNow;//текущий урок
-    RelativeLayout relButtonSchedule;//расписание
-    RelativeLayout relButtonCabinets;//кабинеты
-    RelativeLayout relButtonClasses;//классы
+    //текущий урок
+    RelativeLayout relButtonNow;
+    // расписание
+    RelativeLayout relButtonSchedule;
+    // кабинеты
+    RelativeLayout relButtonCabinets;
+    // классы
+    RelativeLayout relButtonClasses;
+    // настройки
     RelativeLayout relButtonSettings;
+
+//-------------------------------меню сверху--------------------------------------------------------
+
+    //раздуваем неаше меню
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.start_screen_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    //назначаем функции меню
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        //кнопка помощь
+        menu.findItem(R.id.start_screen_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Toast toast = Toast.makeText(getApplicationContext(),"В разработке ¯\\_(ツ)_/¯",Toast.LENGTH_LONG);
+                toast.show();
+
+                return true;
+            }
+        });
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_screen);
-        relButtonNow = (RelativeLayout) findViewById(R.id.start_menu_button_now);
-        relButtonSchedule = (RelativeLayout) findViewById(R.id.start_menu_button_schedule);
-        relButtonCabinets = (RelativeLayout) findViewById(R.id.start_menu_button_my_cabinets);
-        relButtonClasses = (RelativeLayout) findViewById(R.id.start_menu_button_my_classes);
-        relButtonSettings = (RelativeLayout) findViewById(R.id.start_menu_button_reload);
+        relButtonNow = (RelativeLayout) findViewById(R.id.start_screen_button_now);
+        relButtonSchedule = (RelativeLayout) findViewById(R.id.start_screen_button_schedule);
+        relButtonCabinets = (RelativeLayout) findViewById(R.id.start_screen_button_my_cabinets);
+        relButtonClasses = (RelativeLayout) findViewById(R.id.start_screen_button_my_classes);
+        relButtonSettings = (RelativeLayout) findViewById(R.id.start_screen_button_reload);
 
         relButtonNow.setOnClickListener(this);
         relButtonSchedule.setOnClickListener(this);
@@ -66,7 +101,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
-            case R.id.start_menu_button_now: {//запуск текущего урока
+            case R.id.start_screen_button_now: {//запуск текущего урока
                 intent = new Intent(this, LessonActivity.class);
                 GregorianCalendar currentCalendar = new GregorianCalendar();//получаем текущее время
                 currentCalendar.setTime(new Date());
@@ -81,7 +116,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 }
             }
             break;
-            case R.id.start_menu_button_schedule://переход в список расписаний
+            case R.id.start_screen_button_schedule://переход в список расписаний
                 intent = new Intent(this, ScheduleMonthActivity.class);
                 startActivity(intent);
 
@@ -97,19 +132,19 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 * должен открываться редактор рассадки, скорее всего надо будет
                 сдеать кнопку в диалоге, что-то вроде "редактировать рассадку учеников" */
                 break;
-            case R.id.start_menu_button_my_cabinets://переход в список кабинетов
+            case R.id.start_screen_button_my_cabinets://переход в список кабинетов
                 //intent = new Intent(this, ListOfActivity.class);
                 intent = new Intent(this, CabinetsOutActivity.class);
                 //intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableCabinets.NAME_TABLE_CABINETS);
                 startActivity(intent);
                 break;
-            case R.id.start_menu_button_my_classes: {//переход в список классов
+            case R.id.start_screen_button_my_classes: {//переход в список классов
                 intent = new Intent(this, ListOfActivity.class);
                 intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableClasses.NAME_TABLE_CLASSES);
                 startActivity(intent);
                 break;
             }
-            case R.id.start_menu_button_reload: {
+            case R.id.start_screen_button_reload: {
                 intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;

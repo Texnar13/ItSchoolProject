@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,6 +37,33 @@ public class ScheduleDayActivity extends AppCompatActivity {
     int year = -1;
 
     static LessonTimePeriod[] lessonStandardTimePeriods = new LessonTimePeriod[9];
+
+//-------------------------------меню сверху--------------------------------------------------------
+
+    //раздуваем неаше меню
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.shedule_day_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    //назначаем функции меню
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        //кнопка помощь
+        menu.findItem(R.id.shedule_day_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Toast toast = Toast.makeText(getApplicationContext(),"В разработке ¯\\_(ツ)_/¯",Toast.LENGTH_LONG);
+                toast.show();
+
+                return true;
+            }
+        });
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

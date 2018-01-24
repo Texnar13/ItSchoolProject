@@ -18,7 +18,7 @@
 
 
         <RelativeLayout
-            android:id="@+id/start_menu_button_now"
+            android:id="@+id/start_screen_button_now"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
@@ -65,7 +65,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/start_menu_button_schedule"
+            android:id="@+id/start_screen_button_schedule"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
@@ -113,7 +113,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/start_menu_button_my_cabinets"
+            android:id="@+id/start_screen_button_my_cabinets"
             android:layout_marginTop="0dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -161,7 +161,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/start_menu_button_my_classes"
+            android:id="@+id/start_screen_button_my_classes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
@@ -208,7 +208,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/start_menu_button_reload"
+            android:id="@+id/start_screen_button_reload"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
