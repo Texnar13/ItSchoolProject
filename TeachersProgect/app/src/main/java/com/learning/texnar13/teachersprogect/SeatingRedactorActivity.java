@@ -61,7 +61,7 @@ import java.util.ArrayList;
 public class SeatingRedactorActivity extends AppCompatActivity {
 
     //константы
-    //final public static String LESSON_ID = "lessonId";
+    //final public static String SUBJECT_ID = "lessonId";
     final public static String CLASS_ID = "classId";
     final public static String CABINET_ID = "cabinetId";
 

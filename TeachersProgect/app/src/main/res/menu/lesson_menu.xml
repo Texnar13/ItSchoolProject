@@ -5,13 +5,23 @@
     tools:context=".lesson.LessonActivity">
     <!--android:icon="@drawable/ic_menu_mark"-->
     <item
-        android:id="@+id/lesson_menu_help"
-        android:title="помощь"
+        android:id="@+id/lesson_menu_end_lesson"
+        android:title="закончить"
+        app:showAsAction="withText|ifRoom">
+    </item>
+    <item
+        android:id="@+id/lesson_menu_edit_seating"
+        android:title="посадить учеников"
         app:showAsAction="withText">
     </item>
     <item
-        android:id="@+id/lesson_menu_end_lesson"
-        android:title="закончить"
+        android:id="@+id/lesson_menu_edit_tables"
+        android:title="расставить парты"
         app:showAsAction="withText">
     </item>
+    <item
+    android:id="@+id/lesson_menu_help"
+    android:title="помощь"
+    app:showAsAction="withText">
+</item>
 </menu>

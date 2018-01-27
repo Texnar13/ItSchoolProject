@@ -10,9 +10,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StartScreenActivity">
+        <activity android:name=".startScreen.StartScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -24,7 +25,7 @@
             android:label="@string/title_activity_list_of"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".CabinetRedactorActivity" />
-        <activity android:name=".lesson.LessonListActivity" />
+        <activity android:name=".lesson.lessonList.LessonListActivity" />
         <activity android:name=".SeatingRedactorActivity" />
         <activity android:name=".ScheduleMonthActivity" />
         <activity android:name=".ScheduleDayActivity" />
@@ -39,7 +40,8 @@
         <activity
             android:name=".cabinetsOut.CabinetsOutActivity"
             android:label="@string/title_activity_cabinets_out"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".startScreen.StartScreenHelp"></activity>
     </application>
 
 </manifest>

@@ -5,7 +5,7 @@
     android:id="@+id/activity_start_screen_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.learning.texnar13.teachersprogect.StartScreenActivity">
+    tools:context="com.learning.texnar13.teachersprogect.startScreen.StartScreenActivity">
 
 
     <LinearLayout
@@ -16,53 +16,6 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
-
-        <RelativeLayout
-            android:id="@+id/start_screen_button_now"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/_1_pink_spot" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <!--LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                </LinearLayout-->
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/_1_current_lesson_text" />
-
-                <!--LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                </LinearLayout-->
-            </LinearLayout>
-        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/start_screen_button_schedule"
@@ -80,8 +33,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:scaleType="fitXY">
 
                 <!--LinearLayout
                     android:layout_width="match_parent"
@@ -101,54 +54,6 @@
                     android:layout_marginStart="20dp"
                     android:layout_weight="1"
                     app:srcCompat="@drawable/_2_my_schedule_text" />
-
-                <!--LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                </LinearLayout-->
-            </LinearLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/start_screen_button_my_cabinets"
-            android:layout_marginTop="0dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/_3_yellow_spot" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <!--LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                </LinearLayout-->
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/_3_my_cabinets_text" />
 
                 <!--LinearLayout
                     android:layout_width="match_parent"
@@ -196,6 +101,101 @@
                     android:layout_marginStart="20dp"
                     android:layout_weight="1"
                     app:srcCompat="@drawable/_4_my_learners_text" />
+
+                <!--LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                </LinearLayout-->
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/start_screen_button_my_cabinets"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/_3_yellow_spot" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!--LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                </LinearLayout-->
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/_3_my_cabinets_text" />
+
+                <!--LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                </LinearLayout-->
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/start_screen_button_now"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/_1_pink_spot" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!--LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                </LinearLayout-->
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/_1_current_lesson_text" />
 
                 <!--LinearLayout
                     android:layout_width="match_parent"

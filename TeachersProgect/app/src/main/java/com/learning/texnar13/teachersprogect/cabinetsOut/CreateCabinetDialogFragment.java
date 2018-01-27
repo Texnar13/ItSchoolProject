@@ -32,6 +32,7 @@ public class CreateCabinetDialogFragment extends DialogFragment{
         final EditText editName = new EditText(getActivity());
         editName.setTextColor(Color.BLACK);
         editName.setHint("ИМЯ");
+        //editName.setSingleLine(true);
         editName.setInputType(InputType.TYPE_CLASS_TEXT);
         editName.setHintTextColor(Color.GRAY);
         //добавляем текстовое поле

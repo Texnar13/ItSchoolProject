@@ -123,10 +123,10 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         //текст в центре
         stateText = (TextView) findViewById(R.id.cabinet_redactor_state_text);
-        stateText.setText("Добавьте парту нажатием на '+', и поставьте ее так как она стоит в кабинете. Для удаления нажмите на парту и перетащите ее к появившемуся красному кресту");
+        stateText.setText("Добавьте парту нажатием на '+', и поставьте ее так как она стоит в кабинете. Для удаления нажмите на парту и перетащите ее к появившемуся красному крестику");
         //если парт нет, то показываем текст
         if (deskCoordinatesList.size() == 0) {
-            stateText.setText("Добавьте парту нажатием на '+', и поставьте ее так как она стоит в кабинете. Для удаления нажмите на парту и перетащите ее к появившемуся красному кресту");
+            stateText.setText("Добавьте парту нажатием на '+', и поставьте ее так как она стоит в кабинете. Для удаления нажмите на парту и перетащите ее к появившемуся красному крестику");
         } else {
             stateText.setText("");
         }
@@ -152,7 +152,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     public boolean onTouch(View view, MotionEvent motionEvent) {
         //если парт нет, то показываем текст
         if (deskCoordinatesList.size() == 0) {
-            stateText.setText("Добавьте парту нажатием на '+', и поставьте ее так как она стоит в кабинете. Для удаления нажмите на парту и перетащите ее к появившемуся красному кресту");
+            stateText.setText("Добавьте парту нажатием на '+', и поставьте ее так как она стоит в кабинете. Для удаления нажмите на парту и перетащите ее к появившемуся красному крестику");
         } else {
             stateText.setText("");
         }

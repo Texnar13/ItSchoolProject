@@ -20,89 +20,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements SettingsRemoveInterface{
 
-    //-------------------------------меню сверху--------------------------------------------------------
-
-    //раздуваем неаше меню
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    //назначаем функции меню
-    @Override
-    public boolean onPrepareOptionsMenu(final Menu menu) {
-        //кнопка помощь
-        menu.findItem(R.id.settings_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Toast toast = Toast.makeText(getApplicationContext(),"В разработке ¯\\_(ツ)_/¯",Toast.LENGTH_LONG);
-                toast.show();
-
-                return true;
-            }
-        });
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-
+//-----------------------------------метод для диалога----------------------------------------------
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-
-        setTitle("Настройки");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
-
-
-        //изменение размера
-
-        final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-
-        SeekBar sizeSeekBar = (SeekBar) findViewById(R.id.activity_settings_seekBar);
-        LinearLayout sizeShowLayOut = (LinearLayout) findViewById(R.id.activity_settings_size_show_layout);
-
-        final RelativeLayout room = new RelativeLayout(this);
-        sizeShowLayOut.addView(room, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-
-        if (db.getInterfaceSizeBySettingsProfileId(1) == -1){
-            db.createNewSettingsProfileWithId1("default", 50);//TODO Skipped 49 frames!  The application may be doing too much work on its main thread.
-        }
-        sizeSeekBar.setProgress((int) db.getInterfaceSizeBySettingsProfileId(1));
-        updateShowRoom(room, (int) db.getInterfaceSizeBySettingsProfileId(1));
-
-
-        sizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {//не когда касается, а когда начинает двигаться
-
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (i != 0) {//избегаем деления на ноль
-                    updateShowRoom(room, i);
-                    db.setSettingsProfileParameters(1, "default", i);
-                }
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
-
-
-        //удаление данных
-        Button removeDataButton = (Button) findViewById(R.id.activity_settings_remove_data_button);
-        removeDataButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DataBaseOpenHelper dbOpenHelper = new DataBaseOpenHelper(getApplicationContext());
+    public void settingsRemove() {
+        DataBaseOpenHelper dbOpenHelper = new DataBaseOpenHelper(getApplicationContext());
                 dbOpenHelper.restartTable();
 
                 dbOpenHelper.createClass("1\"A\"");
@@ -175,6 +99,96 @@ public class SettingsActivity extends AppCompatActivity {
                 dbOpenHelper.setLearnerOnPlace(//lessonId,
                         lerner5Id, places.get(3));
                 dbOpenHelper.close();
+
+                Toast toast = Toast.makeText(this,"Данные удалены успешно!", Toast.LENGTH_LONG);
+                toast.show();
+    }
+
+    //-------------------------------меню сверху--------------------------------------------------------
+
+//    //раздуваем неаше меню
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.settings_menu, menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
+//
+//    //назначаем функции меню
+//    @Override
+//    public boolean onPrepareOptionsMenu(final Menu menu) {
+//        //кнопка помощь
+//        menu.findItem(R.id.settings_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem menuItem) {
+//                Toast toast = Toast.makeText(getApplicationContext(),"В разработке ¯\\_(ツ)_/¯",Toast.LENGTH_LONG);
+//                toast.show();
+//
+//                return true;
+//            }
+//        });
+//        return super.onPrepareOptionsMenu(menu);
+//    }
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings);
+
+        setTitle("Настройки");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
+
+
+        //изменение размера
+
+        final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+
+        SeekBar sizeSeekBar = (SeekBar) findViewById(R.id.activity_settings_seekBar);
+        LinearLayout sizeShowLayOut = (LinearLayout) findViewById(R.id.activity_settings_size_show_layout);
+
+        final RelativeLayout room = new RelativeLayout(this);
+        sizeShowLayOut.addView(room, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
+
+        if (db.getInterfaceSizeBySettingsProfileId(1) == -1){
+            db.createNewSettingsProfileWithId1("default", 50);//TODO Skipped 49 frames!  The application may be doing too much work on its main thread.
+        }
+        sizeSeekBar.setProgress((int) db.getInterfaceSizeBySettingsProfileId(1));
+        updateShowRoom(room, (int) db.getInterfaceSizeBySettingsProfileId(1));
+
+
+        sizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {//не когда касается, а когда начинает двигаться
+
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if (i != 0) {//избегаем деления на ноль
+                    updateShowRoom(room, i);
+                    db.setSettingsProfileParameters(1, "default", i);
+                }
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+
+        //удаление данных
+        Button removeDataButton = (Button) findViewById(R.id.activity_settings_remove_data_button);
+        removeDataButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //создаем диалог
+                SettingsRemoveDataDialogFragment removeDialog =
+                        new SettingsRemoveDataDialogFragment();
+                // запускаем
+                removeDialog.show(getFragmentManager(),"removeSettingsDialog");
             }
         });
     }
