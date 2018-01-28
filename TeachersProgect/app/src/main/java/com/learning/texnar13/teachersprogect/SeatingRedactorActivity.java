@@ -289,8 +289,8 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             tempPlaceLayout.removeAllViews();
                             Bundle bundle = new Bundle();
-                            bundle.putLong("cabinetId",cabinetId);
-                            bundle.putLong("classId",classId);
+                            bundle.putLong("cabinetId", cabinetId);
+                            bundle.putLong("classId", classId);
                             ChooseLearnerDialogFragment dialogFragment = new ChooseLearnerDialogFragment();
                             dialogFragment.setArguments(bundle);
                             dialogFragment.show(getFragmentManager(), "chooseLearners");
@@ -412,8 +412,6 @@ public class SeatingRedactorActivity extends AppCompatActivity {
     }
 
 }
-
-
 
 
 class DeskUnit {//хранит в себе одну парту

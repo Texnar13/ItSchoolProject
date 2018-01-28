@@ -127,33 +127,49 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <TableLayout
-                        android:id="@+id/learners_and_grades_table_names"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                    </TableLayout>
-
-                    <HorizontalScrollView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent">
-
-
-                        <RelativeLayout
-                            android:id="@+id/learners_and_grades_table_relative"
+                        <TableLayout
+                            android:id="@+id/learners_and_grades_table_names"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent">
 
-                            <TableLayout
-                                android:id="@+id/learners_and_grades_table"
+                        </TableLayout>
+
+                        <HorizontalScrollView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
+
+
+                            <RelativeLayout
+                                android:id="@+id/learners_and_grades_table_relative"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent">
 
-                            </TableLayout>
-                        </RelativeLayout>
-                    </HorizontalScrollView>
+                                <TableLayout
+                                    android:id="@+id/learners_and_grades_table"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent">
+
+                                </TableLayout>
+                            </RelativeLayout>
+                        </HorizontalScrollView>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Здесь выводится список ваших учеников и их оценки по датам. Кнопка '+' добавит ученика, долгоге нажатие на его имя, откроет окно, где можно переименовать или удалить ученика. Сверху можно выбрать дисциплину в которой ставились оценки, и месяц за который выводятся оценки."
+                        android:textSize="10pt">
+
+                    </TextView>
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>

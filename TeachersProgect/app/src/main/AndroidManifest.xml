@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.learning.texnar13.teachersprogect"
-    android:versionCode="20"
-    android:versionName="1.459">
+    android:versionCode="21"
+    android:versionName="1.650">
 
     <application
         android:allowBackup="true"
@@ -41,7 +41,8 @@
         <activity
             android:name=".learnersClassesOut.LearnersClassesOutActivity"
             android:label="@string/title_activity_learners_classes_out"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

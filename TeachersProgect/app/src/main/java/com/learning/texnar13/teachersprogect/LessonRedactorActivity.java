@@ -44,13 +44,13 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
     public static final String LESSON_START_TIME = "lessonStartTime";
     public static final String LESSON_END_TIME = "lessonEndTime";
 
-    //id лавной зависимости
+    //id главной зависимости
     long attitudeId = -1;
 
     //класс-кабинет
     TextView seatingStateText;
     //выбранные класс и кабинет
-    final ClassCabinet classCabinetId = new ClassCabinet(1, 1);//todo предусмотреть вариант если уроков вобще нет или у принимаемого урока не стандартное время. проверка нет ли на этом времени урока.
+    final ClassCabinet classCabinetId = new ClassCabinet(-1, -1);//todo предусмотреть вариант если уроков вобще нет или у принимаемого урока не стандартное время. проверка нет ли на этом времени урока.
     //урок
     long chosenLessonId = -1;
     Spinner lessonNameSpinner;
@@ -293,7 +293,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
                             finish();
                         }
                     } else {
-                        Toast toast = Toast.makeText(getApplicationContext(), "не выбран урок!", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getApplicationContext(), "не выбран предмет!", Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 }

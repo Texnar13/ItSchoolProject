@@ -59,6 +59,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     TableLayout learnersNamesTable;
     //таблица с оценками
     TableLayout learnersGradesTable;
+    //поток загрузки
+    Thread progressThread;
+    //переменная отвечающая за работу потока
+    boolean flag = true;
 
     //методы работы с диалогом
     @Override
@@ -109,28 +113,28 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
 
     //меню
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.learners_and_grades_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.learners_and_grades_menu_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Log.i("TeachersApp", "LearnersAndGradesActivity - menu - help");
-                //преход на шпаргалку
-                Intent intent = new Intent(getApplicationContext(), LearnersAndGradesHelp.class);
-                startActivity(intent);
-
-                return true;
-            }
-        });
-
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.learners_and_grades_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//        menu.findItem(R.id.learners_and_grades_menu_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem menuItem) {
+//                Log.i("TeachersApp", "LearnersAndGradesActivity - menu - help");
+//                //преход на шпаргалку
+//                Intent intent = new Intent(getApplicationContext(), LearnersAndGradesHelp.class);
+//                startActivity(intent);
+//
+//                return true;
+//            }
+//        });
+//
+//        return true;
+//    }
 
 
     //метод старта активности
@@ -197,6 +201,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         imageButtonPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                flag = false;
                 if (viewCalendar.get(Calendar.MONTH) == 0) {
                     viewCalendar.set(Calendar.MONTH, 11);
                     viewCalendar.set(Calendar.YEAR, viewCalendar.get(Calendar.YEAR) - 1);
@@ -207,10 +212,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 updateTable();
             }
         });
-        //кнопка впеёд
+        //кнопка вперёд
         imageButtonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                flag = false;
                 if (viewCalendar.get(Calendar.MONTH) == 11) {
                     viewCalendar.set(Calendar.MONTH, 0);
                     viewCalendar.set(Calendar.YEAR, viewCalendar.get(Calendar.YEAR) + 1);
@@ -391,6 +397,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     //оценки из базы
     void getGradesFromDB() {//вывод оценок из бд//----вывод оценок из бд----
+        //если метод вызывается опять, то разрешаем подгрузку данных
+        flag = true;
+
         //область с таблицей
         gradesRoom = (RelativeLayout) findViewById(R.id.learners_and_grades_table_relative);
 
@@ -413,7 +422,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         };
 
         //делаем всё в потоке
-        final Thread progressThread = new Thread(new Runnable() {
+        progressThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 //-- заполняем бд
@@ -453,6 +462,17 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                             outHelpEndCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
                             //по урокам
                             for (int k = 0; k < 9; k++) {
+                                //проверяем переменную потока
+                                if(!flag){
+                                    //если была команда закрыть поток без подгрузки
+                                    //удаляем прогресс бар
+                                    //выводим оценки после загрузки
+                                    handler.sendEmptyMessage(0);
+                                    //закрываем
+                                    return;
+                                }
+
+
                                 //--время--
                                 //начало урока
                                 outHelpStartCalendar.set(Calendar.HOUR_OF_DAY,
@@ -468,7 +488,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 outHelpEndCalendar.set(Calendar.MINUTE,
                                         SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][1]
                                 );
-                                //получаем оценки по времени todo и предмету
+                                //получаем оценки по времени и предмету
                                 Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
                                         learnersId.get(i),
                                         subjectsId[changingSubjectPosition],
@@ -612,6 +632,16 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+//-------при закрытии активности-----------
+
+    @Override
+    protected void onStop() {
+        //останавливаем поток
+        flag = false;
+
+        super.onStop();
     }
 
     private float pxFromDp(float dp) {

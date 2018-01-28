@@ -51,9 +51,10 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         menu.findItem(R.id.start_screen_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(getApplicationContext(), StartScreenHelp.class);
-                startActivity(intent);
-
+//                Intent intent = new Intent(getApplicationContext(), StartScreenHelp.class);
+//                startActivity(intent);
+                Toast toast = Toast.makeText(getApplicationContext(),"В разработке ¯\\_(ツ)_/¯",Toast.LENGTH_LONG);
+                toast.show();
                 return true;
             }
         });
