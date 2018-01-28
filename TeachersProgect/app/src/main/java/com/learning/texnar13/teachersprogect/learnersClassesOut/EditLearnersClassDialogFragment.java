@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.cabinetsOut;
+package com.learning.texnar13.teachersprogect.learnersClassesOut;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,20 +14,20 @@ import android.widget.LinearLayout;
 
 import com.learning.texnar13.teachersprogect.R;
 
-public class EditCabinetDialogFragment extends DialogFragment {
+public class EditLearnersClassDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //заголовок
-        builder.setTitle("Редактирование кабинета");
+        builder.setTitle("Редактирование класса");
 
         //layout диалога
-        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_layout_edit_cabinet, null);
+        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_layout_edit_learners_class, null);
         builder.setView(dialogLayout);
         //LinearLayout в layout файле
-        LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.edit_cabinet_dialog_fragment_linear_layout);
+        LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.edit_learners_class_dialog_fragment_linear_layout);
 
 //текстовое поле имени
         final EditText editName = new EditText(getActivity());
@@ -49,24 +49,24 @@ public class EditCabinetDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 try {
-                    //вызываем в активности метод по созданию кабинета и передаем ей имя
-                    ((EditCabinetDialogInterface) getActivity()).editCabinet(
+                    //вызываем в активности метод по созданию класса и передаем ей имя
+                    ((com.learning.texnar13.teachersprogect.learnersClassesOut.EditLearnersClassDialogInterface) getActivity()).editLearnersClass(
                             editName.getText().toString(),
-                            getArguments().getLong("cabinetId")
+                            getArguments().getLong("classId")
                     );
                 } catch (java.lang.ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован интерфейс EditCabinetInterface
+                    //в вызвающей активности должен быть имплементирован интерфейс EditLearnersClassDialogInterface
                     e.printStackTrace();
                     Log.i(
                             "TeachersApp",
-                            "EditCabinetDialogFragment: you must implements EditCabinetDialogInterface in your activity"
+                            "EditLearnersClassDialogFragment: you must implements EditLearnersClassDialogInterface in your activity"
                     );
                 } catch (java.lang.NullPointerException e) {
-                    //в диалог необходимо передать id кабинета( Bungle putLong("cabinetId",cabinetId) )
+                    //в диалог необходимо передать id класса( Bungle putLong("classId",classId) )
                     e.printStackTrace();
                     Log.i(
                             "TeachersApp",
-                            "EditCabinetDialogFragment: you must give cabinetId( Bungle putLong(\"cabinetId\",cabinetId) )"
+                            "EditLearnersClassDialogFragment: you must give classId( Bungle putLong(\"classId\",classId) )"
                     );
                 }
             }
@@ -77,28 +77,28 @@ public class EditCabinetDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialogInterface, int i) {
             }
         });
-//удаление кабинета
+//удаление класса
         builder.setNeutralButton("удалить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 try {
-                    //вызываем в активности метод по далению кабинета и передаем id
-                    ((EditCabinetDialogInterface) getActivity()).removeCabinet(
-                            getArguments().getLong("cabinetId")
+                    //вызываем в активности метод по далению класса и передаем id
+                    ((com.learning.texnar13.teachersprogect.learnersClassesOut.EditLearnersClassDialogInterface) getActivity()).removeLearnersClass(
+                            getArguments().getLong("classId")
                     );
                 } catch (java.lang.ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован интерфейс EditCabinetInterface
+                    //в вызвающей активности должен быть имплементирован интерфейс EditLearnersClassDialogInterface
                     e.printStackTrace();
                     Log.i(
                             "TeachersApp",
-                            "EditCabinetDialogFragment: you must implements EditCabinetDialogInterface in your activity"
+                            "EditLearnersClassDialogFragment: you must implements EditLearnersClassDialogInterface in your activity"
                     );
                 } catch (java.lang.NullPointerException e) {
-                    //в диалог необходимо передать id кабинета( Bungle putLong("cabinetId",cabinetId) )
+                    //в диалог необходимо передать id класса( Bungle putLong("classId",classId) )
                     e.printStackTrace();
                     Log.i(
                             "TeachersApp",
-                            "EditCabinetDialogFragment: you must give cabinetId( Bungle putLong(\"cabinetId\",cabinetId) )"
+                            "EditLearnersClassDialogFragment: you must give classId( Bungle putLong(\"classId\",classId) )"
                     );
                 }
             }
@@ -118,7 +118,7 @@ public class EditCabinetDialogFragment extends DialogFragment {
     }
 }
 
-interface EditCabinetDialogInterface {
-    void editCabinet(String name, long cabinetId);
-    void removeCabinet(long cabinetId);
+interface EditLearnersClassDialogInterface {
+    void editLearnersClass(String name, long classId);
+    void removeLearnersClass(long classId);
 }

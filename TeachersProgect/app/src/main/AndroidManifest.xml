@@ -20,10 +20,6 @@
         <activity
             android:name=".lesson.LessonActivity"
             android:label="@string/title_activity_lesson" />
-        <activity
-            android:name=".listOf.ListOfActivity"
-            android:label="@string/title_activity_list_of"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".CabinetRedactorActivity" />
         <activity android:name=".lesson.lessonList.LessonListActivity" />
         <activity android:name=".SeatingRedactorActivity" />
@@ -41,7 +37,11 @@
             android:name=".cabinetsOut.CabinetsOutActivity"
             android:label="@string/title_activity_cabinets_out"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".startScreen.StartScreenHelp"></activity>
+        <activity android:name=".startScreen.StartScreenHelp" />
+        <activity
+            android:name=".learnersClassesOut.LearnersClassesOutActivity"
+            android:label="@string/title_activity_learners_classes_out"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

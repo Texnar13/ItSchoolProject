@@ -31,7 +31,7 @@ public class LessonListActivity extends AppCompatActivity {
     //---полученные---
     //id учеников
     long[] learnersIdArray;
-    //массив оценок: 1 оценка - ученики, 2 оценка - ученики, 3 оценка - ученики
+    //массив оценок: номер оценки, оценка
     long[][] gradeArray = new long[3][];
     //id зависимости
     long attitudeId;

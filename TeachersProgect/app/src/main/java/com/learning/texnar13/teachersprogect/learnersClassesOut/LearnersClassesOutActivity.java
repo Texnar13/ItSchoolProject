@@ -1,36 +1,32 @@
-package com.learning.texnar13.teachersprogect.cabinetsOut;
+package com.learning.texnar13.teachersprogect.learnersClassesOut;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
+import com.learning.texnar13.teachersprogect.LearnersAndGradesOut.LearnersAndGradesActivity;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
 import java.util.ArrayList;
 
-public class CabinetsOutActivity extends AppCompatActivity implements EditCabinetDialogInterface, CreateCabinetInterface {
+public class LearnersClassesOutActivity extends AppCompatActivity implements EditLearnersClassDialogInterface, CreateLearnersClassDialogInterface {
 
     //static потом (для переворота)
-    Long[] cabinetsId;
-    String[] cabinetsNames;
+    Long[] learnersClassesId;
+    String[] classesNames;
     LinearLayout room;
 
 //---------------------------------методы диалогов--------------------------------------------------
@@ -39,146 +35,120 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
 //-----создание-----
 
     @Override
-    public void createCabinet(String name) {
-        //создаем кабинет
+    public void createLearnersClass(String name) {
+        //создаем класс
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        db.createCabinet(name);
+        db.createClass(name);
         db.close();
         //опять выводим списки
-        getCabinets();
-        outCabinets();
+        getLearnersClasses();
+        outLearnersClasses();
     }
 
 //-----редактирование-----
 
     //переименование
     @Override
-    public void editCabinet(String name, long cabinetId) {
-        //изменяем кабинет
+    public void editLearnersClass(String name, long classId) {
+        //изменяем класс
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         ArrayList<Long> arrayList = new ArrayList<>();
-        arrayList.add(cabinetId);
-        db.setCabinetName(arrayList, name);
+        arrayList.add(classId);
+        db.setClassesNames(arrayList, name);
         db.close();
         //опять выводим списки
-        getCabinets();
-        outCabinets();
+        getLearnersClasses();
+        outLearnersClasses();
     }
 
     //удаление
     @Override
-    public void removeCabinet(long cabinetId) {
-        //удаляем кабинет
+    public void removeLearnersClass(long classId) {
+        //удаляем класс
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         ArrayList<Long> arrayList = new ArrayList<>();
-        arrayList.add(cabinetId);
-        db.deleteCabinets(arrayList);
+        arrayList.add(classId);
+        db.deleteClasses(arrayList);
         db.close();
         //опять выводим списки
-        getCabinets();
-        outCabinets();
+        getLearnersClasses();
+        outLearnersClasses();
     }
-
-//-------------------------------меню сверху--------------------------------------------------------
-
-//убрал за ненадобностью в подсказке
-//    //раздуваем неаше меню
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.cabinets_out_menu, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
-//
-//    //назначаем функции меню
-//    @Override
-//    public boolean onPrepareOptionsMenu(final Menu menu) {
-//        //кнопка помощь
-//        menu.findItem(R.id.cabinets_out_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem menuItem) {
-//                Toast toast = Toast.makeText(getApplicationContext(),"В разработке ¯\\_(ツ)_/¯",Toast.LENGTH_LONG);
-//                toast.show();
-//
-//                return true;
-//            }
-//        });
-//        return super.onPrepareOptionsMenu(menu);
-//    }
 
 //------------------------------создаем активность--------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cabinets_out);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.cabinets_out_toolbar);
+        setContentView(R.layout.activity_learners_classes_out);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.learners_classes_out_toolbar);
         setSupportActionBar(toolbar);
 
         //------заголовок--------
-        setTitle("Мои кабинеты");
+        setTitle("Мои классы");
 
         //кнопка назад
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //------плавающая кнопка с низу--------
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.learners_classes_out_add_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //-----диалог создания-----
                 //инициализируем диалог
-                CreateCabinetDialogFragment createCabinetDialog = new CreateCabinetDialogFragment();
+                CreateLearnersClassDialogFragment createClassDialog = new CreateLearnersClassDialogFragment();
                 //показать диалог
-                createCabinetDialog.show(getFragmentManager(), "createCabinetDialog");
+                createClassDialog.show(getFragmentManager(), "createClassDialog");
 
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
             }
         });
-        fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f5ce9d")));
+        fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#bed7e9")));
 
         //--------экран со списком---------
         //создание
-        room = (LinearLayout) findViewById(R.id.cabinets_out_room);
+        room = (LinearLayout) findViewById(R.id.learners_classes_out_room);
 
         //обновляем данные
-        getCabinets();
+        getLearnersClasses();
         //выводим с новыми данными
-        outCabinets();
+        outLearnersClasses();
     }
 
-//-----------------------------------обновляем список кабинетов-------------------------------------
+//-----------------------------------обновляем список классов-------------------------------------
 
-    void getCabinets() {
-        //выводим кабинеты из бд
+    void getLearnersClasses() {
+        //выводим классы из бд
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        Cursor cabinets = db.getCabinets();
+        Cursor learnersClass = db.getClasses();
         //инициализируем и очищаем массивы
-        cabinetsId = new Long[cabinets.getCount()];
-        cabinetsNames = new String[cabinets.getCount()];
+        learnersClassesId = new Long[learnersClass.getCount()];
+        classesNames = new String[learnersClass.getCount()];
         //пробегаемся по курсору
-        for (int i = 0; i < cabinetsId.length; i++) {
-            cabinets.moveToPosition(i);
-            //получаем id кабинета
-            cabinetsId[i] = cabinets.getLong(
-                    cabinets.getColumnIndex(SchoolContract.TableCabinets.KEY_CABINET_ID)
+        for (int i = 0; i < learnersClassesId.length; i++) {
+            learnersClass.moveToPosition(i);
+            //получаем id класса
+            learnersClassesId[i] = learnersClass.getLong(
+                    learnersClass.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID)
             );
-            cabinetsNames[i] = cabinets.getString(
-                    cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)
+            classesNames[i] = learnersClass.getString(
+                    learnersClass.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)
             );
         }
         //заканчиваем работу
-        cabinets.close();
+        learnersClass.close();
         db.close();
     }
 
-//-----------------------------------выводим список кабинетов---------------------------------------
+//-----------------------------------выводим список классов---------------------------------------
 
-    void outCabinets() {
+    void outLearnersClasses() {
         //удаляем все что было
         room.removeAllViews();
-        //пробегаемся по кабинетам и создаем список из LinearLayout
-        for (int i = 0; i < cabinetsId.length; i++) {
+        //пробегаемся по классам и создаем список из LinearLayout
+        for (int i = 0; i < learnersClassesId.length; i++) {
 //создаем пункт списка-----------
             //список
             //-контейнер
@@ -187,7 +157,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
 //------контейнер----
             //создаем LinearLayout
             LinearLayout container = new LinearLayout(this);
-            container.setBackgroundColor(Color.parseColor("#f5ce9d"));
+            container.setBackgroundColor(Color.parseColor("#bed7e9"));
 
             //параметры контейнера(т.к. элемент находится в LinearLayout то и параметры используем его)
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
@@ -201,7 +171,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
             TextView item = new TextView(this);
             item.setGravity(Gravity.CENTER);
             item.setTextSize(25);
-            item.setTextColor(Color.parseColor("#88591d"));
+            item.setTextColor(Color.parseColor("#1f5b85"));
 
             //параметры пункта(т.к. элемент находится в LinearLayout то и параметры используем его)
             LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
@@ -212,24 +182,24 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
             itemParams.setMargins(10, 30, 10, 30);
 
             //--выводим текст--
-            item.setText(cabinetsNames[i]);
+            item.setText(classesNames[i]);
 
 //------помещаем текст в контейнер--------
             container.addView(item, itemParams);
 //------помещаем контейнер в список-------
             room.addView(container, containerParams);
 
-//------нажатие на пункт списка-------
+//------------------нажатие на пункт списка----------------------
             //номер пункта в списке
-            final long finalId = cabinetsId[i];
+            final long finalId = learnersClassesId[i];
 //--короткое--
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //переходим на редактирование этого кабинета
-                    Intent intent = new Intent(getApplicationContext(), CabinetRedactorActivity.class);
-                    //передаём id выбранного кабинета
-                    intent.putExtra(CabinetRedactorActivity.EDITED_OBJECT_ID, finalId);
+                    //переходим к ученикам этого класса
+                    Intent intent = new Intent(getApplicationContext(), LearnersAndGradesActivity.class);
+                    //передаём id выбранного класса
+                    intent.putExtra(LearnersAndGradesActivity.CLASS_ID, finalId);
                     startActivity(intent);
                 }
             });
@@ -239,26 +209,26 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
                 @Override
                 public boolean onLongClick(View view) {
                     //инициализируем диалог
-                    EditCabinetDialogFragment editDialog = new EditCabinetDialogFragment();
+                    EditLearnersClassDialogFragment editDialog = new EditLearnersClassDialogFragment();
                     //-данные для диалога-
                     //получаем из бд
                     DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                    //кабинеты по Id
-                    Cursor cabinetCursor = db.getCabinets(finalId);
-                    cabinetCursor.moveToFirst();
+                    //классы по Id
+                    Cursor classCursor = db.getClasses(finalId);
+                    classCursor.moveToFirst();
                     //создаем обьект с данными
                     Bundle args = new Bundle();
-                    args.putLong("cabinetId", finalId);
-                    args.putString("name", cabinetCursor.getString(
-                            cabinetCursor.getColumnIndex(
-                                    SchoolContract.TableCabinets.COLUMN_NAME)
+                    args.putLong("classId", finalId);
+                    args.putString("name", classCursor.getString(
+                            classCursor.getColumnIndex(
+                                    SchoolContract.TableClasses.COLUMN_CLASS_NAME)
                     ));
                     //данные диалогу
                     editDialog.setArguments(args);
                     //показать диалог
-                    editDialog.show(getFragmentManager(), "editCabinetDialog");
+                    editDialog.show(getFragmentManager(), "editClassDialog");
                     //заканчиваем работу с бд
-                    cabinetCursor.close();
+                    classCursor.close();
                     db.close();
                     return true;
                 }
@@ -293,7 +263,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         helpText1.setGravity(Gravity.CENTER);
         helpText1.setTextSize(20);
         helpText1.setTextColor(Color.GRAY);
-        helpText1.setText("Чтобы создать кабинет, нажмите \"+\" и введите его название. ");
+        helpText1.setText("Чтобы создать класс, нажмите \"+\" и введите его название. ");
         //добавляем
         container.addView(
                 helpText1,
@@ -307,7 +277,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         helpText2.setGravity(Gravity.CENTER);
         helpText2.setTextSize(20);
         helpText2.setTextColor(Color.GRAY);
-        helpText2.setText("Чтобы расставить парты, нажмите на нужный вам кабинет.");
+        helpText2.setText("Чтобы посмотреть список учеников и их оценки, нажмите на нужный вам класс.");
         //добавляем
         container.addView(
                 helpText2,
@@ -321,7 +291,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         helpText3.setGravity(Gravity.CENTER);
         helpText3.setTextSize(20);
         helpText3.setTextColor(Color.GRAY);
-        helpText3.setText("Чтобы переименовать или удалить кабинет, нажмите на него и удерживайте.");
+        helpText3.setText("Чтобы переименовать или удалить класс с учениками, нажмите на него и удерживайте.");
         //добавляем
         container.addView(
                 helpText3,

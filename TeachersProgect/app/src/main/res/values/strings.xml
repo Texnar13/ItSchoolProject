@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Teacher\'s assistant</string>
-    <string name="title_activity_list_of">ListOfActivity</string>
     <string name="title_activity_lesson">Lesson</string>
-    <string name="lesson_list_menu_save_text">сохранить</string>
     <string name="title_activity_learners_and_grades">LearnersGrades</string>
     <string name="title_activity_cabinets_out">CabinetsOutActivity</string>
+    <string name="title_activity_learners_classes_out">LearnersClassesOutActivity</string>
+    <string name="lesson_list_menu_save_text">сохранить</string>
 
 </resources>

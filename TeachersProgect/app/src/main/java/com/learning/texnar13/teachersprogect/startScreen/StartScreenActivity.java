@@ -15,9 +15,8 @@ import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.ScheduleMonthActivity;
 import com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
-import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.learnersClassesOut.LearnersClassesOutActivity;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
-import com.learning.texnar13.teachersprogect.listOf.ListOfActivity;
 import com.learning.texnar13.teachersprogect.settings.SettingsActivity;
 
 import java.util.Date;
@@ -52,7 +51,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         menu.findItem(R.id.start_screen_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(getApplicationContext(),StartScreenHelp.class);
+                Intent intent = new Intent(getApplicationContext(), StartScreenHelp.class);
                 startActivity(intent);
 
                 return true;
@@ -60,8 +59,6 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         });
         return super.onPrepareOptionsMenu(menu);
     }
-
-
 
 
     @Override
@@ -90,8 +87,8 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         //проверка на запись настроек
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         Cursor settingCursor = db.getSettingProfileById(1);//получаем первый профиль настроек
-        Log.i("TeachersApp","StartScreen - settingCursor.getCount() = "+settingCursor.getCount());
-        if(settingCursor.getCount() == 0){//если нет профиля настроек
+        Log.i("TeachersApp", "StartScreen - settingCursor.getCount() = " + settingCursor.getCount());
+        if (settingCursor.getCount() == 0) {//если нет профиля настроек
             db.createNewSettingsProfileWithId1("default", 50);//тогда создем его
         }
         settingCursor.close();
@@ -110,7 +107,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 DataBaseOpenHelper db = new DataBaseOpenHelper(this);
                 long attitudeId = db.getSubjectAndTimeCabinetAttitudeIdByTime(currentCalendar);
                 if (attitudeId == -1) {
-                    Toast toast = Toast.makeText(this,"на текущий момент нет доступных уроков",Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(this, "на текущий момент нет доступных уроков", Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
                     intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, attitudeId);
@@ -135,14 +132,11 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 сдеать кнопку в диалоге, что-то вроде "редактировать рассадку учеников" */
                 break;
             case R.id.start_screen_button_my_cabinets://переход в список кабинетов
-                //intent = new Intent(this, ListOfActivity.class);
                 intent = new Intent(this, CabinetsOutActivity.class);
-                //intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableCabinets.NAME_TABLE_CABINETS);
                 startActivity(intent);
                 break;
             case R.id.start_screen_button_my_classes: {//переход в список классов
-                intent = new Intent(this, ListOfActivity.class);
-                intent.putExtra(ListOfActivity.LIST_PARAMETER, SchoolContract.TableClasses.NAME_TABLE_CLASSES);
+                intent = new Intent(this, LearnersClassesOutActivity.class);
                 startActivity(intent);
                 break;
             }
