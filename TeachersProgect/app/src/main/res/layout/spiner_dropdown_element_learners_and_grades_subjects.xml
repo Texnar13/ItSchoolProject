@@ -6,6 +6,7 @@
     android:textColor="#1f5b85"
     android:textSize="20sp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:ellipsize="marquee"
+    android:background="#ffffff"
     android:textAlignment="inherit"/>

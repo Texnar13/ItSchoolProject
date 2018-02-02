@@ -614,6 +614,23 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 textParams.setMargins(0, 0, 0, (int) pxFromDp(2));
                 //текст в рамку
                 dateOut.addView(learnerGrade, textParams);
+
+//                //при нажатии на оценку
+//                dateOut.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        //вызываем диалог по ее изменению
+//                        EditGradeDialogFragment editGrade = new EditGradeDialogFragment();
+//                        //параметры
+//                        Bundle bundle = new Bundle();
+//                        bundle.putIntArray(EditGradeDialogFragment.GRADES, );
+//                        //bundle.putLongArray(EditGradeDialogFragment.GRADES_ID, );
+//                        editGrade.show(getFragmentManager(),"EditGrade");
+//                    }
+//                });
+
+
+
                 //добавляем всё в строку
                 learnerGrades.addView(dateOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
             }

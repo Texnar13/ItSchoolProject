@@ -209,7 +209,8 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
                     ViewGroup.LayoutParams.WRAP_CONTENT//в
             );
             itemParams.gravity = Gravity.CENTER;
-            itemParams.setMargins(10, 30, 10, 30);
+            // отступы текста в рамке
+            itemParams.setMargins((int) pxFromDp(3), (int) pxFromDp(9), (int) pxFromDp(3), (int) pxFromDp(9));
 
             //--выводим текст--
             item.setText(cabinetsNames[i]);
@@ -285,7 +286,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                 );
-        containerParams.setMargins(50,50,50,50);
+        containerParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
 
         //---1 текст---
         //создаем
@@ -330,11 +331,12 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         );
 
         //---выводим контейнер в экран---
-        room.addView(container,containerParams);
+        room.addView(container, containerParams);
 
     }
 
-    //системные кнопки
+//------системные кнопки--------
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -346,5 +348,15 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    //---------форматы----------
+
+    private float pxFromDp(float px) {
+        return px * getApplicationContext().getResources().getDisplayMetrics().density;
+    }
+
+    private float dpFromPx(float px) {
+        return px / getApplicationContext().getResources().getDisplayMetrics().density;
     }
 }

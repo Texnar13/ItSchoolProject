@@ -179,7 +179,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
                     ViewGroup.LayoutParams.WRAP_CONTENT//в
             );
             itemParams.gravity = Gravity.CENTER;
-            itemParams.setMargins(10, 30, 10, 30);
+            itemParams.setMargins((int) pxFromDp(3), (int) pxFromDp(9), (int) pxFromDp(3), (int) pxFromDp(9));
 
             //--выводим текст--
             item.setText(classesNames[i]);
@@ -255,7 +255,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                 );
-        containerParams.setMargins(50,50,50,50);
+        containerParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
 
         //---1 текст---
         //создаем
@@ -316,5 +316,15 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    //---------форматы----------
+
+    private float pxFromDp(float px) {
+        return px * getApplicationContext().getResources().getDisplayMetrics().density;
+    }
+
+    private float dpFromPx(float px) {
+        return px / getApplicationContext().getResources().getDisplayMetrics().density;
     }
 }
