@@ -38,6 +38,7 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
         long[] gradesId = {};
         try {
             grades = getArguments().getIntArray(GRADES);
+
             //gradesId = getArguments().getLongArray(GRADES_ID);
         } catch (NullPointerException e) {
             e.printStackTrace();
