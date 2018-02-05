@@ -608,7 +608,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     if (i % 2 == 0) {
                         headDate.setBackgroundColor(Color.WHITE);
                     } else {
-                        headDate.setBackgroundColor(Color.BLUE);
+                        headDate.setBackgroundColor(Color.parseColor("#bed7e9"));
                     }
                     headDate.setGravity(Gravity.CENTER);
                     if (j != 0) {
