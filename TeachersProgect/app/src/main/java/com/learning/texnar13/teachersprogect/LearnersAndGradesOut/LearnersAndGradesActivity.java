@@ -1,22 +1,18 @@
 package com.learning.texnar13.teachersprogect.LearnersAndGradesOut;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -27,17 +23,19 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface {
+public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface {
 
 //--получаем из intent--
 
@@ -71,12 +69,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     boolean flag = true;
 
     //оценки
-    static int[][][][] grades = {};//[ученик][день][урок][оценка]
-
-
-//    //поток загрузки
-//    Thread progressThread;
-
+    static GradeUnit[][][][] grades = {};//[ученик][день][урок][оценка]
 
 //===========методы работы с диалогом============
 
@@ -127,6 +120,29 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         currentCalendar.setTime(new Date());
         updateTable();
         db.close();
+    }
+
+    //---редактирование ученика---
+    @Override
+    public void editGrade(long[] gradesId, long learnersId, int[] grades, long subjectsId, String[] dates) {
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        for (int i = 0; i < gradesId.length; i++) {
+            if (gradesId[i] == -1) {//если оценки нет то создаем ее
+                if (grades[i] != 0) {
+                    db.createGrade(learnersId, grades[i], subjectsId, dates[i]);
+                }
+            } else {//если есть
+                if (grades[i] == 0) {//удаляем
+                    db.removeGrade(gradesId[i]);
+                } else {//или меняем
+                    db.editGrade(gradesId[i], grades[i]);
+                }
+            }
+        }
+        updateTable();
+        Toast toast = Toast.makeText(this, "оценки сохранены", Toast.LENGTH_SHORT);
+        toast.show();
+
     }
 
 
@@ -347,14 +363,26 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         Thread progressThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                //для перевода даты в пустые оценки
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 //-- заполняем бд
                 //чистим массив от предыдущих значений
-                grades = new int
+                grades = new GradeUnit
                         [learnersId.size()]
                         [viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)]
                         [9]
                         [3];
                 //[ученик][день][урок][оценка]
+                // и инициализируем его()
+                for (int i = 0; i < grades.length; i++) {
+                    for (int j = 0; j < grades[i].length; j++) {
+                        for (int k = 0; k < grades[i][j].length; k++) {
+                            for (int l = 0; l < grades[i][j][k].length; l++) {
+                                grades[i][j][k][l] = new GradeUnit();
+                            }
+                        }
+                    }
+                }
 
                 //изменяющися календари для вывода
                 GregorianCalendar outHelpStartCalendar = new GregorianCalendar(
@@ -419,21 +447,53 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                         outHelpEndCalendar
                                 );
                                 //по оценкам
-                                int n;
-                                if (gradesLessonCursor.getCount() <= 3) {
-                                    n = gradesLessonCursor.getCount();
-                                } else n = 3;
-                                for (int l = 0; l < n; l++) {
-
-                                    gradesLessonCursor.moveToPosition(l);
-                                    //выводим наконец оценку
-                                    grades[i][j][k][l] =
-                                            gradesLessonCursor.getInt(
-                                                    gradesLessonCursor.getColumnIndex(
-                                                            SchoolContract.TableLearnersGrades.COLUMN_GRADE
-                                                    )
-                                            );
+                                for (int l = 0; l < 3; l++) {
+                                    if (gradesLessonCursor.moveToPosition(l)) {
+                                        //есть оценка
+                                        grades[i][j][k][l] = new GradeUnit(learnersId.get(i),
+                                                gradesLessonCursor.getLong(gradesLessonCursor.getColumnIndex(
+                                                        SchoolContract.TableLearnersGrades.KEY_GRADE_ID
+                                                )),
+                                                gradesLessonCursor.getInt(gradesLessonCursor.getColumnIndex(
+                                                        SchoolContract.TableLearnersGrades.COLUMN_GRADE
+                                                )),
+                                                subjectsId[changingSubjectPosition],
+                                                gradesLessonCursor.getString(gradesLessonCursor.getColumnIndex(
+                                                        SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP
+                                                ))
+                                        );
+                                    } else {
+                                        //нет оценки
+                                        grades[i][j][k][l] = new GradeUnit(
+                                                learnersId.get(i),
+                                                -1,
+                                                0,
+                                                subjectsId[changingSubjectPosition],
+                                                dateFormat.format(outHelpStartCalendar.getTime())
+                                        );
+                                    }
                                 }
+//                                int n;
+//                                if (gradesLessonCursor.getCount() <= 3) {
+//                                    n = gradesLessonCursor.getCount();
+//                                } else n = 3;
+//                                for (int l = 0; l < n; l++) {
+//
+//                                    gradesLessonCursor.moveToPosition(l);
+//                                    //выводим наконец оценку
+//                                    grades[i][j][k][l] = new GradeUnit(learnersId.get(i),
+//                                            gradesLessonCursor.getLong(gradesLessonCursor.getColumnIndex(
+//                                                    SchoolContract.TableLearnersGrades.KEY_GRADE_ID
+//                                            )),
+//                                            gradesLessonCursor.getInt(gradesLessonCursor.getColumnIndex(
+//                                                    SchoolContract.TableLearnersGrades.COLUMN_GRADE
+//                                            )),
+//                                            subjectsId[changingSubjectPosition],
+//                                            gradesLessonCursor.getString(gradesLessonCursor.getColumnIndex(
+//                                                    SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP
+//                                            ))
+//                                    );
+//                                }
                                 gradesLessonCursor.close();
                             }
                         }
@@ -588,7 +648,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     //по оценкам за этот день
                     for (int l = 0; l < 3; l++) {
                         //[ученик][день][урок][оценка]
-                        if (grades[k][i][j][l]
+                        if (grades[k][i][j][l].grade
                                 != 0) {
                             flag = true;
                             break out;
@@ -640,7 +700,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         //по оценкам в уроке
                         for (int l = 0; l < grades[k][i][j].length; l++) {
                             switch (
-                                    grades[k][i][j][l]) {
+                                    grades[k][i][j][l].grade) {
                                 case 0:
 
                                     break;
@@ -652,9 +712,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     break;
                                 default:
                                     if (!learnerGrade.getText().toString().equals("")) {
-                                        learnerGrade.setText(learnerGrade.getText().toString() + grades[k][i][j][l] + " ");
+                                        learnerGrade.setText(learnerGrade.getText().toString() + grades[k][i][j][l].grade + " ");
                                     } else
-                                        learnerGrade.setText(learnerGrade.getText().toString() + " " + grades[k][i][j][l] + " ");
+                                        learnerGrade.setText(learnerGrade.getText().toString() + " " + grades[k][i][j][l].grade + " ");
                             }
                         }
 
@@ -671,7 +731,18 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         //добавляем всё в строку
                         learnerTableRows[k].addView(dateOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
 
-                        final int [] arrayGrade = grades[k][i][j];
+                        final int[] arrayGrade = new int[grades[k][i][j].length];
+                        final long[] arrayGradeId = new long[grades[k][i][j].length];
+                        final long finalLearnerId = grades[k][i][j][0].learnerId;
+                        final long finalSubjectId = grades[k][i][j][0].subjectId;
+                        final String finalDate[] = new String[grades[k][i][j].length];
+
+
+                        for (int l = 0; l < arrayGrade.length; l++) {
+                            arrayGrade[l] = grades[k][i][j][l].grade;
+                            arrayGradeId[l] = grades[k][i][j][l].id;
+                            finalDate[l] = grades[k][i][j][l].date;
+                        }
                         //при нажатии на оценку
                         dateOut.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -680,9 +751,19 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 EditGradeDialogFragment editGrade = new EditGradeDialogFragment();
                                 //параметры
                                 Bundle bundle = new Bundle();
+                                // id оценки
+                                bundle.putLongArray(EditGradeDialogFragment.GRADES_ID, arrayGradeId);
+                                // id ученика
+                                bundle.putLong(EditGradeDialogFragment.LEARNER_ID, finalLearnerId);
+                                // оценка
                                 bundle.putIntArray(EditGradeDialogFragment.GRADES, arrayGrade);
+                                // id предмета
+                                bundle.putLong(EditGradeDialogFragment.SUBJECT_ID, finalSubjectId);
+                                // дата
+                                bundle.putStringArray(EditGradeDialogFragment.DATE, finalDate);
                                 // TODO: 04.02.2018 сделать редактирование
-//                        //bundle.putLongArray(EditGradeDialogFragment.GRADES_ID, );
+                                Log.e("" + finalDate[0] + " " + finalSubjectId, "---");
+
                                 editGrade.setArguments(bundle);
                                 editGrade.show(getFragmentManager(), "EditGrade");
                             }
@@ -804,6 +885,25 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
 
-
 }
 
+class GradeUnit {
+    long learnerId = -1;
+    long id = -1;
+    int grade = 0;
+    long subjectId = -1;
+    String date;
+
+
+    GradeUnit(long learnerId, long id, int grade, long subjectId, String date) {
+        this.learnerId = learnerId;
+        this.id = id;
+        this.grade = grade;
+        this.subjectId = subjectId;
+        this.date = date;
+    }
+
+    GradeUnit() {
+
+    }
+}

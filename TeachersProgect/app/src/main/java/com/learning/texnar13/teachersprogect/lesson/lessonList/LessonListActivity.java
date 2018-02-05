@@ -97,7 +97,7 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
                 String lessonTime = attitudeCursor.getString(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN));
                 attitudeCursor.close();
 
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                 //сохранить оценки
                 for (int i = 0; i < learnersGrades.length; i++) {

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.LearnersAndGradesOut.LearnersAndGradesActivity;
@@ -83,6 +84,9 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
         setContentView(R.layout.activity_learners_classes_out);
         Toolbar toolbar = (Toolbar) findViewById(R.id.learners_classes_out_toolbar);
         setSupportActionBar(toolbar);
+
+//        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.test_lay);
+//        relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams((int) getApplicationContext().getResources().getDisplayMetrics().heightPixels, getApplicationContext().getResources().getDisplayMetrics().heightPixels));
 
         //------заголовок--------
         setTitle("Мои классы");
@@ -300,7 +304,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
         );
 
         //---выводим контейнер в экран---
-        room.addView(container,containerParams);
+        room.addView(container, containerParams);
 
     }
 

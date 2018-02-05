@@ -785,6 +785,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return temp;
     }
 
+    public long removeGrade(long gradeId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long temp = db.delete(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " = ?", new String[]{Long.toString(gradeId)});//-1 = ошибка ввода
+        //db.close();
+        Log.i("DBOpenHelper", "removeGrade returnId = " + temp + " gradeId= " + gradeId);
+        return temp;
+    }
+
 
     //уроки(предметы)
     public long createSubject(String name, long classId//,long cabinetId

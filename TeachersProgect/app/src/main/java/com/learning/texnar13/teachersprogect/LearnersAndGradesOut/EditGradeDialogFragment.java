@@ -17,7 +17,10 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
 
     //передаваемые данные
     public static final String GRADES_ID = "gradesId";
+    public static final String LEARNER_ID= "learnerId";
     public static final String GRADES = "grades";
+    public static final String SUBJECT_ID = "subjectId";
+    public static final String DATE = "date";
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -38,8 +41,7 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
         long[] gradesId = {};
         try {
             grades = getArguments().getIntArray(GRADES);
-
-            //gradesId = getArguments().getLongArray(GRADES_ID);
+            gradesId = getArguments().getLongArray(GRADES_ID);
         } catch (NullPointerException e) {
             e.printStackTrace();
             Log.i("TeachersApp", "you must give bundle argument \"" + GRADES + "\"");
@@ -56,7 +58,7 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
                 gradesText
         );
         //массив со спиннерами
-        Spinner[] spinners = new Spinner[grades.length];
+        final Spinner[] spinners = new Spinner[grades.length];
 
         //инициализируем
         for (int i = 0; i < spinners.length; i++) {
@@ -89,40 +91,49 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
 
 
 //----кнопка сохранения изменений----
+        //передаваемые массивы
+        final int[] finalGrades = grades;
+        final long[] finalGradesId = gradesId;
         builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-//                try {
-//                    int tempI;
-//                    switch (spinner.getSelectedItemPosition()) {
-//                        case 0:
-//                            tempI = -2;
-//                            break;
-//                        default:
-//                            tempI = spinner.getSelectedItemPosition() - 1;
-//                            break;
-//                    }
-//
-//                    //вызываем в активности метод по изменению оценки и передаем выбранную оценку
-//                    ((EditGradeDialogInterface) getActivity()).editGrade(
-//                            getArguments().getInt(GRADE_ID),
-//                            tempI
-//                    );
-//                } catch (java.lang.ClassCastException e) {
-//                    //в вызвающей активности должен быть имплементирован класс EditGradeDialogInterface
-//                    e.printStackTrace();
-//                    Log.i(
-//                            "TeachersApp",
-//                            "EditGradeDialogFragment: you must implements EditGradeDialogInterface in your activity"
-//                    );
-//                } catch (java.lang.NullPointerException e) {
-//                    //в диалог необходимо передать оценку и позиции( Bungle putLong("grade",grade) )
-//                    e.printStackTrace();
-//                    Log.i(
-//                            "TeachersApp",
-//                            "EditGradeDialogFragment: you must give grade or id( Bungle putLong(\"" + GRADE + "\",grade) )"
-//                    );
-//                }
+                try {
+                    for (int j = 0; j < spinners.length; j++) {
+
+                        switch (spinners[j].getSelectedItemPosition()) {
+                            case 0:
+                                finalGrades[j] = -2;
+                                break;
+                            default:
+                                finalGrades[j] = spinners[j].getSelectedItemPosition() - 1;
+                                break;
+                        }
+                    }
+
+                    Log.e(""+getArguments().getStringArray(DATE)[0],"---");
+                    //вызываем в активности метод по изменению оценки и передаем выбранную оценку
+                    ((EditGradeDialogInterface) getActivity()).editGrade(
+                            finalGradesId,
+                            getArguments().getLong(LEARNER_ID),
+                            finalGrades,
+                            getArguments().getLong(SUBJECT_ID),
+                            getArguments().getStringArray(DATE)
+                    );
+                } catch (java.lang.ClassCastException e) {
+                    //в вызвающей активности должен быть имплементирован класс EditGradeDialogInterface
+                    e.printStackTrace();
+                    Log.i(
+                            "TeachersApp",
+                            "EditGradeDialogFragment: you must implements EditGradeDialogInterface in your activity"
+                    );
+                } catch (java.lang.NullPointerException e) {
+                    //в диалог необходимо передать оценку и позиции( Bungle putLong("grade",grade) )
+                    e.printStackTrace();
+                    Log.i(
+                            "TeachersApp",
+                            "EditGradeDialogFragment: you must give grade or id( Bungle putLong(\"" + GRADES + "\",grades[]) )"
+                    );
+                }
             }
         });
         //просто выход из диалога
@@ -146,5 +157,5 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
 }
 
 interface EditGradeDialogInterface {
-    void editGrade(int gradeId, int grade);
+    void editGrade(long[] gradesId,long learnerId, int[] grades, long subjectId, String [] dates);
 }
