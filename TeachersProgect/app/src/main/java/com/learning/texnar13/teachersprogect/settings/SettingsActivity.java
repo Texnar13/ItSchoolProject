@@ -104,33 +104,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
                 toast.show();
     }
 
-    //-------------------------------меню сверху--------------------------------------------------------
-
-//    //раздуваем неаше меню
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.settings_menu, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
-//
-//    //назначаем функции меню
-//    @Override
-//    public boolean onPrepareOptionsMenu(final Menu menu) {
-//        //кнопка помощь
-//        menu.findItem(R.id.settings_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem menuItem) {
-//                Toast toast = Toast.makeText(getApplicationContext(),"В разработке ¯\\_(ツ)_/¯",Toast.LENGTH_LONG);
-//                toast.show();
-//
-//                return true;
-//            }
-//        });
-//        return super.onPrepareOptionsMenu(menu);
-//    }
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,6 +148,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 

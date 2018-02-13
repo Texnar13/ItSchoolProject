@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ZoomControls;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
 import com.learning.texnar13.teachersprogect.R;
@@ -45,6 +46,7 @@ public class LessonActivity extends AppCompatActivity {
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
     //--переменные--
     float multiplier = 2;
+    RelativeLayout room;
     //--загружаемые из бд данные--
     //id
     static long lessonAttitudeId = -2;
@@ -215,6 +217,54 @@ public class LessonActivity extends AppCompatActivity {
             //закончили работать с учениками
             learnersCursor.close();
         }
+
+//---инициализация компонентов---
+//поле вывода, класс
+        room = (RelativeLayout) findViewById(R.id.room_layout);
+//кнопки зума
+        ZoomControls zoomControls = (ZoomControls) findViewById(R.id.lesson_zoom_buttons);
+
+        // увеличение
+        zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //изменяем размер
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                //проверяем можем ли изменять
+                int last = (int) db.getInterfaceSizeBySettingsProfileId(1);
+                if (last < 96) {
+                    db.setSettingsProfileParameters(
+                            1,
+                            "default",
+                            last + 3
+                    );
+                    db.close();
+                    //выводим все
+                    outDecks();
+                }
+            }
+        });
+
+        // уменьшение
+        zoomControls.setOnZoomOutClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //изменяем размер
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                //проверяем можем ли изменять
+                int last = (int) db.getInterfaceSizeBySettingsProfileId(1);
+                if (last > 5) {
+                    db.setSettingsProfileParameters(
+                            1,
+                            "default",
+                            (int) db.getInterfaceSizeBySettingsProfileId(1) - 3
+                    );
+                    db.close();
+                    //выводим все
+                    outDecks();
+                }
+            }
+        });
+
+
 /*
     * подгружаются все ученики, id кабинета, класса, предмета, зав. урок-время
     * создаются массивы с оценками(или подгружаются;)),
@@ -299,392 +349,15 @@ public class LessonActivity extends AppCompatActivity {
 
 //------------------------------------запуск экрана-------------------------------------------------
 
+    Cursor desksCursor;
+
     @Override
     protected void onStart() {
         super.onStart();
         //сразу ставим заголовок
         setTitle(lessonName);
-//-------------------------------загружаем не статичные поля----------------------------------------
-//                      (обновляются при перезаходе на активность)
-        //поле вывода, класс
-        RelativeLayout room = (RelativeLayout) findViewById(R.id.room_layout);
 
-        //размеры экрана по парте
-        int maxX = 0;
-        int maxY = 0;
-
-        //база данных
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        //размер парт
-        multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
-        //курсор с партами
-        Cursor desksCursor = db.getDesksByCabinetId(cabinetId);
-
-//--------------------------------вывод парт и учеников---------------------------------------------
-
-        //чистим класс
-        room.removeAllViews();
-        //выводим парты
-        for (int deskIterator = 0; deskIterator < desksCursor.getCount(); deskIterator++) {
-            desksCursor.moveToPosition(deskIterator);
-//-----------создание парты-----------
-            RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);
-            tempRelativeLayoutDesk.setBackgroundColor(Color.LTGRAY);
-
-            //длина парты по количеству мест и фикс. ширина
-            RelativeLayout.LayoutParams tempRelativeLayoutDeskParams =
-                    new RelativeLayout.LayoutParams(
-                            (int) pxFromDp(
-                                    desksCursor.getLong(desksCursor.getColumnIndex(
-                                            SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES
-                                    )) * 1000 * multiplier),
-                            (int) pxFromDp(1000 * multiplier));
-            //координаты парт
-            tempRelativeLayoutDeskParams.leftMargin = (int) pxFromDp(
-                    desksCursor.getLong(desksCursor.getColumnIndex(
-                            SchoolContract.TableDesks.COLUMN_X
-                    )) * 25 * multiplier);
-            tempRelativeLayoutDeskParams.topMargin = (int) pxFromDp(
-                    desksCursor.getLong(desksCursor.getColumnIndex(
-                            SchoolContract.TableDesks.COLUMN_Y
-                    )) * 25 * multiplier);
-            tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-
-
-//-----считаем максимальную парту-----
-            if (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * 100 * multiplier > maxX) {
-                maxX = (int) (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * 100 * multiplier);
-            }
-            if (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * 100 * multiplier > maxY) {
-                maxY = (int) (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * 100 * multiplier);
-            }
-
-
-            //выводим места на парте
-            Cursor placeCursor = db.getPlacesByDeskId(
-                    desksCursor.getLong(desksCursor.getColumnIndex(
-                            SchoolContract.TableDesks.KEY_DESK_ID
-                    ))
-            );
-            for (int placeIterator = 0; placeIterator < placeCursor.getCount(); placeIterator++) {
-                placeCursor.moveToPosition(placeIterator);
-//-----------создание места-----------
-//-место
-//---контейнер
-//-----оценки
-//-----контейнер ученика
-//-------имя ученика
-//-------картинка ученика
-
-
-//-----контейнер-----
-                //создаем layout с контейнером ученика и оценками
-                RelativeLayout placeOut = new RelativeLayout(this);
-                placeOut.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                //ставим размеры
-                RelativeLayout.LayoutParams placeParams = new RelativeLayout.LayoutParams(
-                        (int) pxFromDp((1000 - 50) * multiplier),
-                        (int) pxFromDp((1000 - 50) * multiplier)
-                );
-                // и отступы
-                placeParams.leftMargin = (int) pxFromDp(
-                        (25 + (1000 * (
-                                placeCursor.getLong(placeCursor.getColumnIndex(
-                                        SchoolContract.TablePlaces.COLUMN_ORDINAL
-                                )) - 1))) * multiplier);
-                placeParams.topMargin = (int) pxFromDp(25 * multiplier);
-                placeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                placeParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                placeParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-
-//-----текст оценок-----
-                //текст с оценками
-                final TextView grade1Text = new TextView(this);
-                grade1Text.setTextColor(Color.WHITE);
-                grade1Text.setTextSize(325 * multiplier);
-                grade1Text.setText("");
-
-                final TextView grade2Text = new TextView(this);
-                grade2Text.setTextColor(Color.WHITE);
-                grade2Text.setTextSize(325 * multiplier);
-                grade2Text.setText("");
-
-                //параметры текста
-                RelativeLayout.LayoutParams grade1TextParams = new RelativeLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                );
-                grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-                grade1TextParams.setMargins((int) pxFromDp(25 * multiplier), 0, 0, 0);
-
-                RelativeLayout.LayoutParams grade2TextParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-                grade2TextParams.setMargins(0, 0, (int) pxFromDp(25 * multiplier), 0);
-
-                //выводим текст в контейнер
-                placeOut.addView(grade1Text, grade1TextParams);
-                placeOut.addView(grade2Text, grade2TextParams);
-
-//------создание ученика на месте------
-
-//-----контейнер ученика----
-//(с именем и картинкой)
-                //контейнер
-                LinearLayout learnerConteiner = new LinearLayout(this);
-                learnerConteiner.setOrientation(LinearLayout.VERTICAL);
-                //параметры контейнера
-                LinearLayout.LayoutParams learnerConteinerParams = new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                );
-
-                //получаем ученика, который сидит на этом месте
-                long learnerId = db.getLearnerIdByClassIdAndPlaceId(
-                        learnersClassId,
-                        placeCursor.getLong(placeCursor.getColumnIndex(
-                                SchoolContract.TablePlaces.KEY_PLACE_ID
-                        ))
-                );
-                //если ученик есть
-                if (learnerId != -1) {
-
-                    //ищем ученика в массиве с оценками
-                    int temp = -1;
-                    for (int i = 0; i < learnersAndGrades.length; i++) {
-                        if (learnersAndGrades[i].learnerId == learnerId) {
-                            temp = i;
-                            break;
-                        }
-                    }
-                    final int learnerPozition = temp;
-
-                    //получаем ученика
-                    Cursor learnerCursor = db.getLearner(learnerId);
-                    learnerCursor.moveToFirst();
-
-                    //старые данные сохраненных оценок
-                    if (learnersAndGrades[learnerPozition].getGradesCount() == 2) {
-                        grade2Text.setText("" + learnersAndGrades[learnerPozition].getRawGrade(1));
-                    }
-                    if (learnersAndGrades[learnerPozition].getGradesCount() >= 1) {
-                        grade1Text.setText("" + learnersAndGrades[learnerPozition].getRawGrade(0));
-                    }
-
-//------------картинка ученика------------
-                    //создаем картинку
-                    final ImageView tempLernerImage = new ImageView(this);
-                    //ставим ей изображение по оценке(из памяти)
-                    switch ((int) learnersAndGrades[learnerPozition].getGrade()) {
-                        case -2:
-                            tempLernerImage.setImageResource(R.drawable.learner_white);
-                            break;
-                        case 0:
-                            tempLernerImage.setImageResource(R.drawable.learner_gray);
-                            break;
-                        case 1:
-                            tempLernerImage.setImageResource(R.drawable.learner_red);
-                            break;
-                        case 2:
-                            tempLernerImage.setImageResource(R.drawable.learner_orange);
-                            break;
-                        case 3:
-                            tempLernerImage.setImageResource(R.drawable.learner_yellow);
-                            break;
-                        case 4:
-                            tempLernerImage.setImageResource(R.drawable.learner_lime);
-                            break;
-                        case 5:
-                            tempLernerImage.setImageResource(R.drawable.learner_green);
-                            break;
-                    }
-                    //параметры картинки
-                    LinearLayout.LayoutParams tempLernerImageParams = new LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            1F
-                    );
-
-                    //добавляем картинку в контейнер
-                    learnerConteiner.addView(tempLernerImage, tempLernerImageParams);
-//---------------текст ученика---------------
-                    //создание текста
-                    TextView tempLearnerText = new TextView(this);
-                    tempLearnerText.setTextSize(200 * multiplier);
-                    tempLearnerText.setGravity(Gravity.CENTER_HORIZONTAL);
-                    tempLearnerText.setTextColor(Color.WHITE);
-                    tempLearnerText.setText(
-                            learnerCursor.getString(learnerCursor.getColumnIndex(
-                                    SchoolContract.TableLearners.COLUMN_SECOND_NAME
-                            ))
-                    );
-
-                    //параметры текста
-                    LinearLayout.LayoutParams tempLearnerTextParams = new LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            3F
-                    );
-
-                    //добавляем текст в контейнер
-                    learnerConteiner.addView(tempLearnerText, tempLearnerTextParams);
-
-//------------при нажатии на контейнер ученика------------
-                    learnerConteiner.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (learnersAndGrades[learnerPozition].grade[0] != -2)
-                                if (learnersAndGrades[learnerPozition].getGrade() != 5) {
-                                    learnersAndGrades[learnerPozition].setGrade(
-                                            (byte) (1 + learnersAndGrades[learnerPozition].getGrade())
-                                    );
-                                } else {
-                                    learnersAndGrades[learnerPozition].setGrade((byte) 1);
-                                }
-
-                            switch ((int) learnersAndGrades[learnerPozition].getGrade()) {
-                                case -2:
-                                    tempLernerImage.setImageResource(R.drawable.learner_white);
-                                    break;
-//                                case 0:
-//                                    tempLernerImage.setImageResource(R.drawable.learner_gray);
-//                                    break;
-                                case 1:
-                                    tempLernerImage.setImageResource(R.drawable.learner_red);
-                                    break;
-                                case 2:
-                                    tempLernerImage.setImageResource(R.drawable.learner_orange);
-                                    break;
-                                case 3:
-                                    tempLernerImage.setImageResource(R.drawable.learner_yellow);
-                                    break;
-                                case 4:
-                                    tempLernerImage.setImageResource(R.drawable.learner_lime);
-                                    break;
-                                case 5:
-                                    tempLernerImage.setImageResource(R.drawable.learner_green);
-                                    break;
-                            }
-                        }
-                    });
-
-                    learnerConteiner.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
-                        @Override
-                        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-
-                            if (learnersAndGrades[learnerPozition].getGrade() != -2 && learnersAndGrades[learnerPozition].getGradesCount() < 1) {
-                                contextMenu.add(0, -2, 0, "отсутствует").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_white);
-                                        learnersAndGrades[learnerPozition].setGrade((byte) -2);
-                                        return true;
-                                    }
-                                });
-                            }
-                            if (learnersAndGrades[learnerPozition].getGrade() != 0) {
-                                contextMenu.add(0, 0, 0, "нет оценки").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_gray);
-                                        learnersAndGrades[learnerPozition].setGrade((byte) 0);
-                                        return true;
-                                    }
-                                });
-                            }
-                            if (learnersAndGrades[learnerPozition].getGrade() != 1) {
-                                contextMenu.add(0, 1, 0, "1").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_red);
-                                        learnersAndGrades[learnerPozition].setGrade((byte) 1);
-                                        return true;
-                                    }
-                                });
-                            }
-                            if (learnersAndGrades[learnerPozition].getGrade() != 2) {
-                                contextMenu.add(0, 2, 0, "2").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_orange);
-                                        learnersAndGrades[learnerPozition].setGrade((byte) 2);
-                                        return true;
-                                    }
-                                });
-                            }
-                            if (learnersAndGrades[learnerPozition].getGrade() != 3) {
-                                contextMenu.add(0, 3, 0, "3").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_yellow);
-                                        learnersAndGrades[learnerPozition].setGrade((byte) 3);
-                                        return true;
-                                    }
-                                });
-                            }
-                            if (learnersAndGrades[learnerPozition].getGrade() != 4) {
-                                contextMenu.add(0, 4, 0, "4").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_lime);
-                                        learnersAndGrades[learnerPozition].setGrade((byte) 4);
-                                        return true;
-                                    }
-                                });
-                            }
-                            if (learnersAndGrades[learnerPozition].getGrade() != 5) {
-                                contextMenu.add(0, 5, 0, "5").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_green);
-                                        learnersAndGrades[learnerPozition].setGrade((byte) 5);
-                                        return true;
-                                    }
-                                });
-                            }
-                            if (learnersAndGrades[learnerPozition].getGradesCount() != 2 && learnersAndGrades[learnerPozition].getGrade() != 0 && learnersAndGrades[learnerPozition].getGrade() != -2) {
-                                contextMenu.add(0, 6, 0, "новая оценка").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_gray);
-                                        switch (learnersAndGrades[learnerPozition].getGradesCount()) {
-                                            case 0:
-                                                grade1Text.setText("" + learnersAndGrades[learnerPozition].getGrade());
-                                                break;
-                                            case 1:
-                                                grade2Text.setText("" + learnersAndGrades[learnerPozition].getGrade());
-                                                break;
-                                        }
-                                        learnersAndGrades[learnerPozition].nextGrade();
-                                        return true;
-                                    }
-                                });
-                            }
-                        }
-                    });
-
-                    learnerCursor.close();
-                }
-                //добавляем контейнер с текстом и картинкой в основной контейнер
-                placeOut.addView(learnerConteiner, learnerConteinerParams);
-                tempRelativeLayoutDesk.addView(placeOut, placeParams);
-            }
-            placeCursor.close();
-            room.addView(tempRelativeLayoutDesk, tempRelativeLayoutDeskParams);
-        }
-        //размеры комнаты по самой дальней парте
-        room.setLayoutParams(new LinearLayout.LayoutParams(
-                (maxX + (int) dpFromPx(3000 * multiplier)),
-                (maxY + (int) dpFromPx(2250 * multiplier))
-        ));
-        desksCursor.close();
-        db.close();
-
+        outDecks();
 //-------------------------------получение данных-----------------------------------
 //        //база данных
 //        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
@@ -830,7 +503,6 @@ public class LessonActivity extends AppCompatActivity {
 //
 //                    Cursor learnerCursor = db.getLearner(learnerId);//получаем ученика
 //                    learnerCursor.moveToFirst();
-        Log.i("", "");
 ////------------картинка ученика------------
 //                    final ImageView tempLernerImage = new ImageView(this);
 //                    tempLernerImage.setImageResource(R.drawable.learner_gray);//по умолчанию серая картинка
@@ -969,7 +641,7 @@ public class LessonActivity extends AppCompatActivity {
 //                    tempLernerImage.setOnCreateContextMenuListener(onCreateContextMenuListener);
 //                    tempPlaceLayout.addView(tempLernerImage, tempLernerImageParams);
 //
-        Log.i("", "");
+
 ////---------------текст ученика---------------
 //                    TextView tempLearnerText = new TextView(this);
 //                    tempLearnerText.setOnClickListener(onClickListener);
@@ -998,6 +670,391 @@ public class LessonActivity extends AppCompatActivity {
 //        ));
 //        desksCursor.close();
 //        db.close();
+    }
+
+//------------------------------------вывод графики-------------------------------------------------
+
+    void outDecks() {
+
+//-------------------------------загружаем не статичные поля----------------------------------------
+//                      (обновляются при перезаходе на активность)
+
+        //база данных
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        //размер парт
+        multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
+        //курсор с партами
+        desksCursor = db.getDesksByCabinetId(cabinetId);
+        //размеры экрана по парте
+        int maxX = 0;
+        int maxY = 0;
+
+//--------------------------------вывод парт и учеников---------------------------------------------
+
+        //чистим класс
+        room.removeAllViews();
+        //выводим парты
+        for (int deskIterator = 0; deskIterator < desksCursor.getCount(); deskIterator++) {
+            desksCursor.moveToPosition(deskIterator);
+//-----------создание парты-----------
+            RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);
+            tempRelativeLayoutDesk.setBackgroundColor(Color.LTGRAY);
+
+            //длина парты по количеству мест и фикс. ширина
+            RelativeLayout.LayoutParams tempRelativeLayoutDeskParams =
+                    new RelativeLayout.LayoutParams(
+                            (int) pxFromDp(
+                                    desksCursor.getLong(desksCursor.getColumnIndex(
+                                            SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES
+                                    )) * 1000 * multiplier),
+                            (int) pxFromDp(1000 * multiplier));
+            //координаты парт
+            tempRelativeLayoutDeskParams.leftMargin = (int) pxFromDp(
+                    desksCursor.getLong(desksCursor.getColumnIndex(
+                            SchoolContract.TableDesks.COLUMN_X
+                    )) * 25 * multiplier);
+            tempRelativeLayoutDeskParams.topMargin = (int) pxFromDp(
+                    desksCursor.getLong(desksCursor.getColumnIndex(
+                            SchoolContract.TableDesks.COLUMN_Y
+                    )) * 25 * multiplier);
+            tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+
+
+//-----считаем максимальную парту-----
+            if (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * 100 * multiplier > maxX) {
+                maxX = (int) (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * 100 * multiplier);
+            }
+            if (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * 100 * multiplier > maxY) {
+                maxY = (int) (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * 100 * multiplier);
+            }
+
+
+            //выводим места на парте
+            Cursor placeCursor = db.getPlacesByDeskId(
+                    desksCursor.getLong(desksCursor.getColumnIndex(
+                            SchoolContract.TableDesks.KEY_DESK_ID
+                    ))
+            );
+            for (int placeIterator = 0; placeIterator < placeCursor.getCount(); placeIterator++) {
+                placeCursor.moveToPosition(placeIterator);
+//-----------создание места-----------
+//-место
+//---контейнер
+//-----оценки
+//-----контейнер ученика
+//-------имя ученика
+//-------картинка ученика
+
+
+//-----контейнер-----
+                //создаем layout с контейнером ученика и оценками
+                RelativeLayout placeOut = new RelativeLayout(this);
+                placeOut.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                //ставим размеры
+                RelativeLayout.LayoutParams placeParams = new RelativeLayout.LayoutParams(
+                        (int) pxFromDp((1000 - 50) * multiplier),
+                        (int) pxFromDp((1000 - 50) * multiplier)
+                );
+                // и отступы
+                placeParams.leftMargin = (int) pxFromDp(
+                        (25 + (1000 * (
+                                placeCursor.getLong(placeCursor.getColumnIndex(
+                                        SchoolContract.TablePlaces.COLUMN_ORDINAL
+                                )) - 1))) * multiplier);
+                placeParams.topMargin = (int) pxFromDp(25 * multiplier);
+                placeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                placeParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                placeParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+
+//-----текст оценок-----
+                //текст с оценками
+                final TextView grade1Text = new TextView(this);
+                grade1Text.setTextColor(Color.WHITE);
+                grade1Text.setTextSize(325 * multiplier);
+                grade1Text.setText("");
+
+                final TextView grade2Text = new TextView(this);
+                grade2Text.setTextColor(Color.WHITE);
+                grade2Text.setTextSize(325 * multiplier);
+                grade2Text.setText("");
+
+                //параметры текста
+                RelativeLayout.LayoutParams grade1TextParams = new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+                grade1TextParams.setMargins((int) pxFromDp(25 * multiplier), 0, 0, 0);
+
+                RelativeLayout.LayoutParams grade2TextParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+                grade2TextParams.setMargins(0, 0, (int) pxFromDp(25 * multiplier), 0);
+
+                //выводим текст в контейнер
+                placeOut.addView(grade1Text, grade1TextParams);
+                placeOut.addView(grade2Text, grade2TextParams);
+
+//------создание ученика на месте------
+
+//-----контейнер ученика----
+//(с именем и картинкой)
+                //контейнер
+                LinearLayout learnerContainer = new LinearLayout(this);
+                learnerContainer.setOrientation(LinearLayout.VERTICAL);
+                //параметры контейнера
+                LinearLayout.LayoutParams learnerContainerParams = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                );
+
+                //получаем ученика, который сидит на этом месте
+                long learnerId = db.getLearnerIdByClassIdAndPlaceId(
+                        learnersClassId,
+                        placeCursor.getLong(placeCursor.getColumnIndex(
+                                SchoolContract.TablePlaces.KEY_PLACE_ID
+                        ))
+                );
+                //если ученик есть
+                if (learnerId != -1) {
+
+                    //ищем ученика в массиве с оценками
+                    int temp = -1;
+                    for (int i = 0; i < learnersAndGrades.length; i++) {
+                        if (learnersAndGrades[i].learnerId == learnerId) {
+                            temp = i;
+                            break;
+                        }
+                    }
+                    final int learnerPozition = temp;
+
+                    //получаем ученика
+                    Cursor learnerCursor = db.getLearner(learnerId);
+                    learnerCursor.moveToFirst();
+
+                    //старые данные сохраненных оценок
+                    if (learnersAndGrades[learnerPozition].getGradesCount() == 2) {
+                        grade2Text.setText("" + learnersAndGrades[learnerPozition].getRawGrade(1));
+                    }
+                    if (learnersAndGrades[learnerPozition].getGradesCount() >= 1) {
+                        grade1Text.setText("" + learnersAndGrades[learnerPozition].getRawGrade(0));
+                    }
+
+//------------картинка ученика------------
+                    //создаем картинку
+                    final ImageView tempLernerImage = new ImageView(this);
+                    //ставим ей изображение по оценке(из памяти)
+                    switch ((int) learnersAndGrades[learnerPozition].getGrade()) {
+                        case -2:
+                            tempLernerImage.setImageResource(R.drawable.learner_white);
+                            break;
+                        case 0:
+                            tempLernerImage.setImageResource(R.drawable.learner_gray);
+                            break;
+                        case 1:
+                            tempLernerImage.setImageResource(R.drawable.learner_red);
+                            break;
+                        case 2:
+                            tempLernerImage.setImageResource(R.drawable.learner_orange);
+                            break;
+                        case 3:
+                            tempLernerImage.setImageResource(R.drawable.learner_yellow);
+                            break;
+                        case 4:
+                            tempLernerImage.setImageResource(R.drawable.learner_lime);
+                            break;
+                        case 5:
+                            tempLernerImage.setImageResource(R.drawable.learner_green);
+                            break;
+                    }
+                    //параметры картинки
+                    LinearLayout.LayoutParams tempLernerImageParams = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            1F
+                    );
+
+                    //добавляем картинку в контейнер
+                    learnerContainer.addView(tempLernerImage, tempLernerImageParams);
+//---------------текст ученика---------------
+                    //создание текста
+                    TextView tempLearnerText = new TextView(this);
+                    tempLearnerText.setTextSize(200 * multiplier);
+                    tempLearnerText.setSingleLine(true);
+                    tempLearnerText.setGravity(Gravity.TOP);
+                    tempLearnerText.setTextColor(Color.WHITE);
+                    tempLearnerText.setAllCaps(true);
+                    tempLearnerText.setText(
+                            learnerCursor.getString(learnerCursor.getColumnIndex(
+                                    SchoolContract.TableLearners.COLUMN_SECOND_NAME
+                            ))
+                    );
+
+                    //параметры текста
+                    LinearLayout.LayoutParams tempLearnerTextParams = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            2F
+                    );
+
+                    //добавляем текст в контейнер
+                    learnerContainer.addView(tempLearnerText, tempLearnerTextParams);
+
+//------------при нажатии на контейнер ученика------------
+                    learnerContainer.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (learnersAndGrades[learnerPozition].grade[0] != -2)
+                                if (learnersAndGrades[learnerPozition].getGrade() != 5) {
+                                    learnersAndGrades[learnerPozition].setGrade(
+                                            (byte) (1 + learnersAndGrades[learnerPozition].getGrade())
+                                    );
+                                } else {
+                                    learnersAndGrades[learnerPozition].setGrade((byte) 1);
+                                }
+
+                            switch ((int) learnersAndGrades[learnerPozition].getGrade()) {
+                                case -2:
+                                    tempLernerImage.setImageResource(R.drawable.learner_white);
+                                    break;
+//                                case 0:
+//                                    tempLernerImage.setImageResource(R.drawable.learner_gray);
+//                                    break;
+                                case 1:
+                                    tempLernerImage.setImageResource(R.drawable.learner_red);
+                                    break;
+                                case 2:
+                                    tempLernerImage.setImageResource(R.drawable.learner_orange);
+                                    break;
+                                case 3:
+                                    tempLernerImage.setImageResource(R.drawable.learner_yellow);
+                                    break;
+                                case 4:
+                                    tempLernerImage.setImageResource(R.drawable.learner_lime);
+                                    break;
+                                case 5:
+                                    tempLernerImage.setImageResource(R.drawable.learner_green);
+                                    break;
+                            }
+                        }
+                    });
+
+                    learnerContainer.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                        @Override
+                        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+
+                            if (learnersAndGrades[learnerPozition].getGrade() != -2 && learnersAndGrades[learnerPozition].getGradesCount() < 1) {
+                                contextMenu.add(0, -2, 0, "отсутствует").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_white);
+                                        learnersAndGrades[learnerPozition].setGrade((byte) -2);
+                                        return true;
+                                    }
+                                });
+                            }
+                            if (learnersAndGrades[learnerPozition].getGrade() != 0) {
+                                contextMenu.add(0, 0, 0, "нет оценки").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_gray);
+                                        learnersAndGrades[learnerPozition].setGrade((byte) 0);
+                                        return true;
+                                    }
+                                });
+                            }
+                            if (learnersAndGrades[learnerPozition].getGrade() != 1) {
+                                contextMenu.add(0, 1, 0, "1").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_red);
+                                        learnersAndGrades[learnerPozition].setGrade((byte) 1);
+                                        return true;
+                                    }
+                                });
+                            }
+                            if (learnersAndGrades[learnerPozition].getGrade() != 2) {
+                                contextMenu.add(0, 2, 0, "2").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_orange);
+                                        learnersAndGrades[learnerPozition].setGrade((byte) 2);
+                                        return true;
+                                    }
+                                });
+                            }
+                            if (learnersAndGrades[learnerPozition].getGrade() != 3) {
+                                contextMenu.add(0, 3, 0, "3").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_yellow);
+                                        learnersAndGrades[learnerPozition].setGrade((byte) 3);
+                                        return true;
+                                    }
+                                });
+                            }
+                            if (learnersAndGrades[learnerPozition].getGrade() != 4) {
+                                contextMenu.add(0, 4, 0, "4").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_lime);
+                                        learnersAndGrades[learnerPozition].setGrade((byte) 4);
+                                        return true;
+                                    }
+                                });
+                            }
+                            if (learnersAndGrades[learnerPozition].getGrade() != 5) {
+                                contextMenu.add(0, 5, 0, "5").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_green);
+                                        learnersAndGrades[learnerPozition].setGrade((byte) 5);
+                                        return true;
+                                    }
+                                });
+                            }
+                            if (learnersAndGrades[learnerPozition].getGradesCount() != 2 && learnersAndGrades[learnerPozition].getGrade() != 0 && learnersAndGrades[learnerPozition].getGrade() != -2) {
+                                contextMenu.add(0, 6, 0, "новая оценка").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.learner_gray);
+                                        switch (learnersAndGrades[learnerPozition].getGradesCount()) {
+                                            case 0:
+                                                grade1Text.setText("" + learnersAndGrades[learnerPozition].getGrade());
+                                                break;
+                                            case 1:
+                                                grade2Text.setText("" + learnersAndGrades[learnerPozition].getGrade());
+                                                break;
+                                        }
+                                        learnersAndGrades[learnerPozition].nextGrade();
+                                        return true;
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                    learnerCursor.close();
+                }
+                //добавляем контейнер с текстом и картинкой в основной контейнер
+                placeOut.addView(learnerContainer, learnerContainerParams);
+                tempRelativeLayoutDesk.addView(placeOut, placeParams);
+            }
+            placeCursor.close();
+            room.addView(tempRelativeLayoutDesk, tempRelativeLayoutDeskParams);
+        }
+        //размеры комнаты по самой дальней парте
+        room.setLayoutParams(new LinearLayout.LayoutParams(
+                (maxX + (int) dpFromPx(3000 * multiplier)),
+                (maxY + (int) dpFromPx(2250 * multiplier))
+        ));
+        desksCursor.close();
+        db.close();
     }
 
 //----------------------------------------функциональные кнопки-------------------------------------

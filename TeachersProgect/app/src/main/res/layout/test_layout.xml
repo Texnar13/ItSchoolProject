@@ -11,7 +11,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
+        <ImageView
+            android:topRightRadius="10dp"
+            android:layout_width="600dp"
+            android:layout_height="600dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/lesson_help_all" />
+
         <RelativeLayout
+
+            android:rotation="45"
             android:layout_width="125dp"
             android:layout_height="62dp"
             android:layout_alignParentLeft="true"
@@ -19,15 +28,12 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="64dp"
             android:layout_marginStart="64dp"
-            android:layout_marginTop="168dp">
-
+            android:layout_marginTop="168dp"
+            android:background="#53181818">
+            <ImageView
+                android:layout_width="600dp"
+                android:layout_height="600dp"
+                app:srcCompat="@drawable/lesson_help_all" />
         </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="600dp"
-            android:layout_height="600dp"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/lesson_help_all" />
     </RelativeLayout>
 </LinearLayout>

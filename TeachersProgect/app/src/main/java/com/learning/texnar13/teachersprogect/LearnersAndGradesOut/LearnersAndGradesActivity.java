@@ -327,7 +327,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     void getGradesFromDB() {
 //----вывод оценок перед загрузкой данных, чтобы таблица не была пустая----
-        outGradesInTable();
+        //outGradesInTable();
 
 //----выводим прогресс бар----
         //область с таблицей, нужна для прогресс бара
@@ -440,7 +440,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 );
                                 //получаем оценки по времени и предмету
                                 Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
-                                        learnersId.get(i),
+                                        learnersId.get(i),//todo здесь ошибка java.lang.ArrayIndexOutOfBoundsException
                                         subjectsId[changingSubjectPosition],
 
                                         outHelpStartCalendar,
@@ -465,7 +465,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     } else {
                                         //нет оценки
                                         grades[i][j][k][l] = new GradeUnit(
-                                                learnersId.get(i),
+                                                learnersId.get(i),//todo здесь ошибка indexOutOfBounds
                                                 -1,
                                                 0,
                                                 subjectsId[changingSubjectPosition],
@@ -648,7 +648,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     //по оценкам за этот день
                     for (int l = 0; l < 3; l++) {
                         //[ученик][день][урок][оценка]
-                        if (grades[k][i][j][l].grade
+                        if (grades[k][i][j][l].grade//todo здесь ошибка java.lang.NullPointerException//(возникает когда они слишком часто нажимают на смену месяца при большом количестве дней)
                                 != 0) {
                             flag = true;
                             break out;

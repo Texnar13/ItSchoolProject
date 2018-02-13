@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class LessonRedactorActivity extends AppCompatActivity implements LessonNameDialogInterface {
 
@@ -331,7 +332,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
 
             //массив с calendar
             final String textTime[] = new String[ScheduleDayActivity.lessonStandardTimePeriods.length];
-            SimpleDateFormat textTimeFormat = new SimpleDateFormat("H.m");
+            SimpleDateFormat textTimeFormat = new SimpleDateFormat("H.m", Locale.getDefault());
             for (int i = 0; i < textTime.length; i++) {
                 textTime[i] = "  " + (i + 1) + " урок " +
                         textTimeFormat.format(ScheduleDayActivity.lessonStandardTimePeriods[i].calendarStartTime.getTime()) + "-" +

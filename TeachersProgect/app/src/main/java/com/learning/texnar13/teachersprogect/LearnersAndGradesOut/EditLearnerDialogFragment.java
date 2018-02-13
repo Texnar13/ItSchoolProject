@@ -29,21 +29,6 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
         //LinearLayout в layout файле
         LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.edit_learner_dialog_fragment_linear_layout);
 
-        //текстовое поле имени
-        final EditText editName = new EditText(getActivity());
-        editName.setTextColor(Color.BLACK);
-        editName.setHint("ИМЯ");
-        editName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-        editName.setHintTextColor(Color.GRAY);
-        try {//входные данные предыдущее имя
-            editName.setText(getArguments().getString("name"));
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            Log.i("TeachersApp","you must give bundle argument \"name\"");
-        }
-        //добавляем текстовое поле
-        linearLayout.addView(editName);
-
         //текстовое поле фамилии
         final EditText editLastName = new EditText(getActivity());
         editLastName.setTextColor(Color.BLACK);
@@ -58,6 +43,21 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
         }
         //добавляем текстовое поле
         linearLayout.addView(editLastName);
+
+        //текстовое поле имени
+        final EditText editName = new EditText(getActivity());
+        editName.setTextColor(Color.BLACK);
+        editName.setHint("ИМЯ");
+        editName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        editName.setHintTextColor(Color.GRAY);
+        try {//входные данные предыдущее имя
+            editName.setText(getArguments().getString("name"));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Log.i("TeachersApp","you must give bundle argument \"name\"");
+        }
+        //добавляем текстовое поле
+        linearLayout.addView(editName);
 
         //кнопка сохранения изменений
         builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {

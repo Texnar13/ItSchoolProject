@@ -27,17 +27,30 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+
                 <RelativeLayout
                     android:id="@+id/room_layout"
-                    android:layout_width="600dp"
-                    android:layout_height="600dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:background="#fbe2e7">
 
                 </RelativeLayout>
+
             </LinearLayout>
+
         </ScrollView>
     </HorizontalScrollView>
+
+    <ZoomControls
+        android:id="@+id/lesson_zoom_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="bottom" />
+
 </RelativeLayout>

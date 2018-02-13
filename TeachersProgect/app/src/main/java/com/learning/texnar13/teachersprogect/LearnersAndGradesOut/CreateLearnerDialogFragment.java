@@ -28,15 +28,6 @@ public class CreateLearnerDialogFragment extends DialogFragment {
         //LinearLayout в layout файле
         LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.create_learner_dialog_fragment_linear_layout);
 
-        //текстовое поле имени
-        final EditText editName = new EditText(getActivity());
-        editName.setTextColor(Color.BLACK);
-        editName.setHint("ИМЯ");
-        editName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-        editName.setHintTextColor(Color.GRAY);
-        //добавляем текстовое поле
-        linearLayout.addView(editName);
-
         //текстовое поле фамилии
         final EditText editLastName = new EditText(getActivity());
         editLastName.setTextColor(Color.BLACK);
@@ -45,6 +36,15 @@ public class CreateLearnerDialogFragment extends DialogFragment {
         editLastName.setHintTextColor(Color.GRAY);
         //добавляем текстовое поле
         linearLayout.addView(editLastName);
+
+        //текстовое поле имени
+        final EditText editName = new EditText(getActivity());
+        editName.setTextColor(Color.BLACK);
+        editName.setHint("ИМЯ");
+        editName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        editName.setHintTextColor(Color.GRAY);
+        //добавляем текстовое поле
+        linearLayout.addView(editName);
 
         //кнопки согласия/отмены
         builder.setPositiveButton("добавление", new DialogInterface.OnClickListener() {
