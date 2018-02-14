@@ -785,7 +785,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 bundle.putLong(EditGradeDialogFragment.SUBJECT_ID, finalSubjectId);
                                 // дата
                                 bundle.putStringArray(EditGradeDialogFragment.DATE, finalDate);
-                                // TODO: 04.02.2018 сделать редактирование
+
                                 Log.e("" + finalDate[0] + " " + finalSubjectId, "---");
 
                                 editGrade.setArguments(bundle);
