@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ZoomControls;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -93,7 +94,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         Cursor cabinetCursor = db.getCabinets(cabinetId);
         cabinetCursor.moveToFirst();
-        setTitle("редактирование кабинета \"" +
+        setTitle("парты в \"" +
                 cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)) +
                 "\"");
         cabinetCursor.close();
@@ -131,6 +132,102 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             stateText.setText("");
         }
 
+//---инициализируем кнопки zoom---
+        final ZoomControls zoomControls = (ZoomControls) findViewById(R.id.cabinet_redactor_zoom_controls);
+        //приближение
+        zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //--изменяем размер--
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+
+
+                //проверяем можем ли изменять
+                int last = (int) db.getInterfaceSizeBySettingsProfileId(1);
+                if (last < 96) {
+                    db.setSettingsProfileParameters(
+                            1,
+                            "default",
+                            last + 3
+                    );
+                    db.close();
+
+                    //активируем другую если приближать можно
+                    zoomControls.setIsZoomOutEnabled(true);
+
+
+                    //выводим все
+                    multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
+                    for (int i = 0; i < deskCoordinatesList.size(); i++) {
+                        //создаем новые параметры
+                        RelativeLayout.LayoutParams deskLayoutParams =
+                                new RelativeLayout.LayoutParams(
+                                        (int) pxFromDp(2000 * multiplier),
+                                        (int) pxFromDp(1000 * multiplier)
+                                );
+                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+                        deskLayoutParams.leftMargin = (int) pxFromDp(
+                                deskCoordinatesList.get(i).x * 25 * multiplier
+                        );
+                        deskLayoutParams.topMargin = (int) pxFromDp(
+                                deskCoordinatesList.get(i).y * 25 * multiplier
+                        );
+                        //и присваиваем из партам
+                        deskCoordinatesList.get(i).desk.setLayoutParams(deskLayoutParams);
+                    }
+                } else {//деактивируем кнопку если приближать нельзя
+                    zoomControls.setIsZoomInEnabled(false);
+                }
+            }
+        });
+        //отдаление
+        zoomControls.setOnZoomOutClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //изменяем размер
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                //проверяем можем ли изменять
+                int last = (int) db.getInterfaceSizeBySettingsProfileId(1);
+                if (last > 5) {
+                    db.setSettingsProfileParameters(
+                            1,
+                            "default",
+                            (int) db.getInterfaceSizeBySettingsProfileId(1) - 3
+                    );
+                    db.close();
+
+                    //активируем другую если приближать можно
+                    zoomControls.setIsZoomInEnabled(true);
+
+                    //выводим все
+                    multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
+                    for (int i = 0; i < deskCoordinatesList.size(); i++) {
+                        //создаем новые параметры
+                        RelativeLayout.LayoutParams deskLayoutParams =
+                                new RelativeLayout.LayoutParams(
+                                        (int) pxFromDp(2000 * multiplier),
+                                        (int) pxFromDp(1000 * multiplier)
+                                );
+                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+                        deskLayoutParams.leftMargin = (int) pxFromDp(
+                                deskCoordinatesList.get(i).x * 25 * multiplier
+                        );
+                        deskLayoutParams.topMargin = (int) pxFromDp(
+                                deskCoordinatesList.get(i).y * 25 * multiplier
+                        );
+                        //и присваиваем из партам
+                        deskCoordinatesList.get(i).desk.setLayoutParams(deskLayoutParams);
+                    }
+                } else {//деактивируем кнопку если отдалять нельзя
+                    zoomControls.setIsZoomOutEnabled(false);
+                }
+            }
+        });
+
 
 //        //красная точка
 //        relativeLayout = new RelativeLayout(this);
@@ -147,6 +244,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         //out.addView(relativeLayout);
 
     }
+
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {

@@ -18,6 +18,7 @@ import com.learning.texnar13.teachersprogect.LearnersAndGradesOut.EditLearnerDia
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 
 import java.text.SimpleDateFormat;
 
@@ -41,6 +42,9 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
     //---созданные---
     //поле вывода
     LinearLayout list;
+
+    //тост выводящийся после сохранения оценок
+    Toast toast;
 
     //id учеников
 //    long[] learnersIdArray;
@@ -102,16 +106,14 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
                 //сохранить оценки
                 for (int i = 0; i < learnersGrades.length; i++) {
                     if (learnersGrades[i].grades[0] != 0) {
-                        db.createGrade(learnersGrades[i].learnerId, learnersGrades[i].grades[0], lessonId, lessonTime);
+                        db.createGrade(learnersGrades[i].learnerId, learnersGrades[i].grades[0], lessonId, getIntent().getStringExtra(LessonActivity.LESSON_TIME));
                     }
                     if (learnersGrades[i].grades[1] != 0) {
-                        db.createGrade(learnersGrades[i].learnerId, learnersGrades[i].grades[1], lessonId, lessonTime);
+                        db.createGrade(learnersGrades[i].learnerId, learnersGrades[i].grades[1], lessonId, getIntent().getStringExtra(LessonActivity.LESSON_TIME));
                     }
                     if (learnersGrades[i].grades[2] != 0) {
-                        db.createGrade(learnersGrades[i].learnerId, learnersGrades[i].grades[2], lessonId, lessonTime);
+                        db.createGrade(learnersGrades[i].learnerId, learnersGrades[i].grades[2], lessonId, getIntent().getStringExtra(LessonActivity.LESSON_TIME));
                     }
-                    //тост выводящийся после сохранения оценок
-                    Toast toast = Toast.makeText(getApplicationContext(), "все оценки успешно сохранены!", Toast.LENGTH_SHORT);
                     toast.show();
                 }
                 db.close();
@@ -133,6 +135,10 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
         setContentView(R.layout.activity_lesson_list);
         //поле вывода данных
         list = (LinearLayout) findViewById(R.id.activity_lesson_list);
+
+
+        toast = Toast.makeText(getApplicationContext(), "все оценки успешно сохранены!", Toast.LENGTH_SHORT);
+
 
         // проверка на заполнение
         if (attitudeId == -1) {

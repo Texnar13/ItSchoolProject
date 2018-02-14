@@ -15,10 +15,12 @@ import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.ScheduleMonthActivity;
 import com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
+import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.learnersClassesOut.LearnersClassesOutActivity;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.settings.SettingsActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -111,7 +113,11 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                     Toast toast = Toast.makeText(this, "на текущий момент уроков не запланировано", Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    intent.putExtra(LessonActivity.LESSON_TIME, dateFormat.format(new Date()));
+
                     intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, attitudeId);
+
                     startActivity(intent);
                 }
             }

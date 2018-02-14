@@ -60,4 +60,9 @@
         </RelativeLayout>
 
     </LinearLayout>
+
+    <ZoomControls
+        android:id="@+id/cabinet_redactor_zoom_controls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

@@ -25,6 +25,8 @@ import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.lessonList.LessonListActivity;
 
+import java.util.Calendar;
+
 //todo
     /*итак, надо полностью пределать урок,
     * onCreate(),
@@ -44,6 +46,7 @@ public class LessonActivity extends AppCompatActivity {
     //----------------данные----------------
     //--константы--
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
+    public static final String LESSON_TIME = "startTime";
     //--переменные--
     float multiplier = 2;
     RelativeLayout room;
@@ -98,6 +101,7 @@ public class LessonActivity extends AppCompatActivity {
                 intent.putExtra(LessonListActivity.FIRST_LIST_GRADES, grades1);
                 intent.putExtra(LessonListActivity.SECOND_LIST_GRADES, grades2);
                 intent.putExtra(LessonListActivity.THIRD_LIST_GRADES, grades3);
+                intent.putExtra(LESSON_TIME, getIntent().getStringExtra(LESSON_TIME));
                 startActivity(intent);
 
                 //обнуляем данные
@@ -222,7 +226,7 @@ public class LessonActivity extends AppCompatActivity {
 //поле вывода, класс
         room = (RelativeLayout) findViewById(R.id.room_layout);
 //кнопки зума
-        ZoomControls zoomControls = (ZoomControls) findViewById(R.id.lesson_zoom_buttons);
+        final ZoomControls zoomControls = (ZoomControls) findViewById(R.id.lesson_zoom_buttons);
 
         // увеличение
         zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
@@ -238,8 +242,15 @@ public class LessonActivity extends AppCompatActivity {
                             last + 3
                     );
                     db.close();
+
+                    //активируем другую если приближать можно
+                    zoomControls.setIsZoomOutEnabled(true);
+
+
                     //выводим все
                     outDecks();
+                } else {//деактивируем кнопку если приближать нельзя
+                    zoomControls.setIsZoomInEnabled(false);
                 }
             }
         });
@@ -258,8 +269,14 @@ public class LessonActivity extends AppCompatActivity {
                             (int) db.getInterfaceSizeBySettingsProfileId(1) - 3
                     );
                     db.close();
+
+                    //активируем другую если приближать можно
+                    zoomControls.setIsZoomInEnabled(true);
+
                     //выводим все
                     outDecks();
+                } else {//деактивируем кнопку если отдалять нельзя
+                    zoomControls.setIsZoomOutEnabled(false);
                 }
             }
         });

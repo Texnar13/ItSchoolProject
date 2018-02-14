@@ -21,6 +21,7 @@ import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -308,10 +309,12 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_START_TIME, lessonStandardTimePeriods[i].calendarStartTime.getTime().getTime());
                     intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_END_TIME, lessonStandardTimePeriods[i].calendarEndTime.getTime().getTime());
 
-
+                    //парсим дату
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     //начать урок
                     final Intent intentForStartLesson = new Intent(this, LessonActivity.class);
                     intentForStartLesson.putExtra(LessonActivity.LESSON_ATTITUDE_ID, lessonAttitudeId);
+                    intentForStartLesson.putExtra(LessonActivity.LESSON_TIME, dateFormat.format(lessonStandardTimePeriods[i].calendarStartTime.getTime()));
 
                     //редактировать рассадку
                     final Toast toastSeatingRedactor = Toast.makeText(this, "Вы не можете начать урок пока не рассадите учеников!", Toast.LENGTH_LONG);

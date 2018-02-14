@@ -288,6 +288,25 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
 //----вывод данных при старте----
         getLearnersFromDB();
+
+        //инициализируем массив
+        grades = new GradeUnit
+                [learnersId.size()]
+                [viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)]
+                [9]
+                [3];
+        //[ученик][день][урок][оценка]
+
+        for (int i = 0; i < grades.length; i++) {
+            for (int j = 0; j < grades[i].length; j++) {
+                for (int k = 0; k < grades[i][j].length; k++) {
+                    for (int l = 0; l < grades[i][j][k].length; l++) {
+                        grades[i][j][k][l] = new GradeUnit();
+                    }
+                }
+            }
+        }
+
         updateTable();
         db.close();
     }
@@ -349,6 +368,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     case 0:
                         //вывод оценок
                         outGradesInTable();
+                        //удаляем прогресс бар
+                        gradesRoom.removeView(progressBar);
+                        break;
+                        //если получение оценок прервано то не выводим их
+                    case 1:
                         //удаляем прогресс бар
                         gradesRoom.removeView(progressBar);
                         break;
@@ -416,8 +440,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 if (!flag) {
                                     //если была команда закрыть поток без подгрузки
                                     //удаляем прогресс бар
-                                    //выводим оценки после загрузки
-                                    handler.sendEmptyMessage(0);
+                                    //не выводим оценки после загрузки
+                                    handler.sendEmptyMessage(1);
                                     //закрываем
                                     return;
                                 }
