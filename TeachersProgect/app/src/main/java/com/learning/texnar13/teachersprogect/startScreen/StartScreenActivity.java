@@ -1,7 +1,10 @@
 package com.learning.texnar13.teachersprogect.startScreen;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,6 +19,7 @@ import com.learning.texnar13.teachersprogect.ScheduleMonthActivity;
 import com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.learnersClassesOut.CreateLearnersClassDialogFragment;
 import com.learning.texnar13.teachersprogect.learnersClassesOut.LearnersClassesOutActivity;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.settings.SettingsActivity;
@@ -24,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class StartScreenActivity extends AppCompatActivity implements View.OnClickListener {
+public class StartScreenActivity extends AppCompatActivity implements View.OnClickListener, RateInterface {
 
     //текущий урок
     RelativeLayout relButtonNow;
@@ -36,6 +40,65 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     RelativeLayout relButtonClasses;
     // настройки
     RelativeLayout relButtonSettings;
+
+    //--константы--
+
+    //счетчик заходов в приложение для оценки в sharedPreferences
+    static final String ENTERS_COUNT = "entersCount";
+    //оценено?
+    static final String IS_RATE = "isRate";
+
+    //показывалась ли подсказка при входе?
+    static final String IS_START_HELP = "isStartHelp";
+
+//-----------------------------------метод диалога--------------------------------------------------
+
+    //диалог оценить
+    @Override
+    public void rate(int rateId) {
+
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        //начинаем редактировать
+        SharedPreferences.Editor ed = sharedPreferences.edit();
+        switch (rateId) {
+            case 0://оценить
+                ed.putBoolean(IS_RATE, true);
+                ed.putInt(ENTERS_COUNT, 0);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("market://details?id=com.learning.texnar13.teachersprogect"));
+                if (!isActivityStarted(intent)) {
+                    intent.setData(Uri
+                            .parse("https://play.google.com/store/apps/details?id=com.learning.texnar13.teachersprogect"));
+                    if (!isActivityStarted(intent)) {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Could not open Android market, please check if the market app installed or not. Try again later",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+            case 1://перенести на потом
+                ed.putInt(ENTERS_COUNT, 1);
+                break;
+            case 2://не оценивать
+                ed.putBoolean(IS_RATE, true);
+                ed.putInt(ENTERS_COUNT, 2);
+                break;
+        }
+        //завершаем редактирование сохраненных параметров
+        ed.commit();
+    }
+
+    private boolean isActivityStarted(Intent aIntent) {
+        try {
+            startActivity(aIntent);
+            return true;
+        } catch (ActivityNotFoundException e) {
+            return false;
+        }
+    }
+
 
 //-------------------------------меню сверху--------------------------------------------------------
 
@@ -64,17 +127,22 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     }
 
 
+//----------------------------------------при создании----------------------------------------------
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_screen);
+
+        //находим все кнопки
         relButtonNow = (RelativeLayout) findViewById(R.id.start_screen_button_now);
         relButtonSchedule = (RelativeLayout) findViewById(R.id.start_screen_button_schedule);
         relButtonCabinets = (RelativeLayout) findViewById(R.id.start_screen_button_my_cabinets);
         relButtonClasses = (RelativeLayout) findViewById(R.id.start_screen_button_my_classes);
         relButtonSettings = (RelativeLayout) findViewById(R.id.start_screen_button_reload);
 
+        //назначаем кликеры
         relButtonNow.setOnClickListener(this);
         relButtonSchedule.setOnClickListener(this);
         relButtonCabinets.setOnClickListener(this);
@@ -82,7 +150,41 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         relButtonSettings.setOnClickListener(this);
 
         //setTitle("помощник учителя");
+
+        //------сохраненные параметры------
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        //начинаем редактировать
+        SharedPreferences.Editor ed = sharedPreferences.edit();
+
+//----при первом заходе открывается подсказка----
+        if (!sharedPreferences.getBoolean(IS_START_HELP, false)) {
+            ed.putBoolean(IS_START_HELP, true);
+            Intent intent = new Intent(getApplicationContext(), StartScreenHelp.class);
+            startActivity(intent);
+        }
+
+
+//----счетчик "оцените нас"----
+        // через пять заходов в приложение открывает диалог 'оцените'
+        if (!sharedPreferences.getBoolean(IS_RATE, false)) {
+            ed.putInt(ENTERS_COUNT, sharedPreferences.getInt(ENTERS_COUNT, 0) + 1);
+            if (sharedPreferences.getInt(ENTERS_COUNT, 0) == 3) {
+                //на всякий случай обнуляем счетчик
+                ed.putInt(ENTERS_COUNT, 1);
+                ed.putBoolean(IS_RATE, false);
+                //создать диалог
+                StartScreenRateUsDialog startScreenRateUsDialog = new StartScreenRateUsDialog();
+                //показать диалог
+                startScreenRateUsDialog.show(getFragmentManager(), "rateDialog");
+
+            }
+        }
+        //завершаем редактирование сохраненных параметров
+        ed.commit();
+
     }
+
+//----------------------------------------при запуске-----------------------------------------------
 
     @Override
     protected void onStart() {
@@ -161,4 +263,6 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         //finish();
         super.onBackPressed();
     }
+
+
 }

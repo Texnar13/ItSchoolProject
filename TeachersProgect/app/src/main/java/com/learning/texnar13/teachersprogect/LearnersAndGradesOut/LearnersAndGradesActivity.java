@@ -276,6 +276,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                flag = false;
                 changingSubjectPosition = i;
                 updateTable();
             }
@@ -489,7 +490,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     } else {
                                         //нет оценки
                                         grades[i][j][k][l] = new GradeUnit(
-                                                learnersId.get(i),//todo здесь ошибка indexOutOfBounds
+                                                learnersId.get(i),
                                                 -1,
                                                 0,
                                                 subjectsId[changingSubjectPosition],
@@ -672,7 +673,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     //по оценкам за этот день
                     for (int l = 0; l < 3; l++) {
                         //[ученик][день][урок][оценка]
-                        if (grades[k][i][j][l].grade//todo здесь ошибка java.lang.NullPointerException//(возникает когда они слишком часто нажимают на смену месяца при большом количестве дней)
+                        if (grades[k][i][j][l].grade//todo здесь ошибка java.lang.NullPointerException
                                 != 0) {
                             flag = true;
                             break out;

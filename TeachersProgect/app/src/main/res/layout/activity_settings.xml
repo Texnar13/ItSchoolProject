@@ -4,19 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#faf6ff"
+    android:orientation="vertical"
     tools:context="com.learning.texnar13.teachersprogect.settings.SettingsActivity">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,17 +58,30 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:background="#dad5de"
-                    android:layout_gravity="center"
                     android:id="@+id/activity_settings_remove_data_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginLeft="20dp"
+                    android:layout_gravity="center"
                     android:layout_marginEnd="20dp"
+                    android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:layout_marginStart="20dp"
+                    android:background="#dad5de"
                     android:text="удалить все данные" />
             </LinearLayout>
+
+            <Button
+                android:textColor="#ffb300"
+                android:id="@+id/settings_rate_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/settings_rate_us_shape"
+                android:text="оцените наше приложение!" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

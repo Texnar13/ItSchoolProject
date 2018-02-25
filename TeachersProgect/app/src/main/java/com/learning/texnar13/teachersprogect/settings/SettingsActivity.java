@@ -1,9 +1,11 @@
 package com.learning.texnar13.teachersprogect.settings;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -20,89 +22,92 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class SettingsActivity extends AppCompatActivity implements SettingsRemoveInterface{
+public class SettingsActivity extends AppCompatActivity implements SettingsRemoveInterface {
 
 //-----------------------------------метод для диалога----------------------------------------------
 
     @Override
     public void settingsRemove() {
         DataBaseOpenHelper dbOpenHelper = new DataBaseOpenHelper(getApplicationContext());
-                dbOpenHelper.restartTable();
+        dbOpenHelper.restartTable();
 
-                dbOpenHelper.createClass("1\"A\"");
-                long classId = dbOpenHelper.createClass("2\"A\"");
+        dbOpenHelper.createClass("1\"A\"");
+        long classId = dbOpenHelper.createClass("2\"A\"");
 
-                long lerner1Id = dbOpenHelper.createLearner("Зинченко", "Сократ", classId);
-                long lerner2Id = dbOpenHelper.createLearner("Шумякин", "Феофан", classId);
-                long lerner3Id = dbOpenHelper.createLearner("Рябец", "Валентин", classId);
-                long lerner4Id = dbOpenHelper.createLearner("Гроша", "Любава", classId);
-                long lerner5Id = dbOpenHelper.createLearner("Авдонина", "Алиса", classId);
-
-
-                long cabinetId = dbOpenHelper.createCabinet("406");
-
-                ArrayList<Long> places = new ArrayList<>();
-                {
-                    long desk1Id = dbOpenHelper.createDesk(2, 160, 200, cabinetId);//1
-                    places.add(dbOpenHelper.createPlace(desk1Id, 1));
-                    places.add(dbOpenHelper.createPlace(desk1Id, 2));
-                }
-                {
-                    long desk2Id = dbOpenHelper.createDesk(2, 40, 200, cabinetId);//2
-                    places.add(dbOpenHelper.createPlace(desk2Id, 1));
-                    places.add(dbOpenHelper.createPlace(desk2Id, 2));
-                }
-                {
-                    long desk3Id = dbOpenHelper.createDesk(2, 160, 120, cabinetId);//3
-                    places.add(dbOpenHelper.createPlace(desk3Id, 1));
-                    places.add(dbOpenHelper.createPlace(desk3Id, 2));
-                }
-                {
-                    long desk4Id = dbOpenHelper.createDesk(2, 40, 120, cabinetId);//4
-                    places.add(dbOpenHelper.createPlace(desk4Id, 1));
-                    places.add(dbOpenHelper.createPlace(desk4Id, 2));
-                }
-                {
-                    long desk5Id = dbOpenHelper.createDesk(2, 160, 40, cabinetId);//5
-                    places.add(dbOpenHelper.createPlace(desk5Id, 1));
-                    places.add(dbOpenHelper.createPlace(desk5Id, 2));
-                }
-                {
-                    long desk6Id = dbOpenHelper.createDesk(2, 40, 40, cabinetId);//6
-                    places.add(dbOpenHelper.createPlace(desk6Id, 1));
-                    places.add(dbOpenHelper.createPlace(desk6Id, 2));
-                }
-                //   |6|  |5|   |    |  |  |  |
-                //   |4|  |3|   |    | 4|  |  |
-                //   |2|  |1|   |    |35|  |21|
-                //       [-]
+        long lerner1Id = dbOpenHelper.createLearner("Зинченко", "Сократ", classId);
+        long lerner2Id = dbOpenHelper.createLearner("Шумякин", "Феофан", classId);
+        long lerner3Id = dbOpenHelper.createLearner("Рябец", "Валентин", classId);
+        long lerner4Id = dbOpenHelper.createLearner("Гроша", "Любава", classId);
+        long lerner5Id = dbOpenHelper.createLearner("Авдонина", "Алиса", classId);
 
 
-                long lessonId = dbOpenHelper.createSubject("физика", classId
-                        //, cabinetId
-                );
-                Date startLessonTime = new GregorianCalendar(2017, 10, 17, 8, 30).getTime();//1502343000000 --10 августа
-                Date endLessonTime = new GregorianCalendar(2017, 10, 17, 9, 15).getTime();//на 7 месяц  1502345700000
-                dbOpenHelper.setLessonTimeAndCabinet(lessonId, cabinetId, startLessonTime, endLessonTime, SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER);
+        long cabinetId = dbOpenHelper.createCabinet("406");
 
-                //создание настроек после удаления таблицы
-                //db.createNewSettingsProfileWithId1("default", 50);
+        ArrayList<Long> places = new ArrayList<>();
+        {
+            long desk1Id = dbOpenHelper.createDesk(2, 160, 200, cabinetId);//1
+            places.add(dbOpenHelper.createPlace(desk1Id, 1));
+            places.add(dbOpenHelper.createPlace(desk1Id, 2));
+        }
+        {
+            long desk2Id = dbOpenHelper.createDesk(2, 40, 200, cabinetId);//2
+            places.add(dbOpenHelper.createPlace(desk2Id, 1));
+            places.add(dbOpenHelper.createPlace(desk2Id, 2));
+        }
+        {
+            long desk3Id = dbOpenHelper.createDesk(2, 160, 120, cabinetId);//3
+            places.add(dbOpenHelper.createPlace(desk3Id, 1));
+            places.add(dbOpenHelper.createPlace(desk3Id, 2));
+        }
+        {
+            long desk4Id = dbOpenHelper.createDesk(2, 40, 120, cabinetId);//4
+            places.add(dbOpenHelper.createPlace(desk4Id, 1));
+            places.add(dbOpenHelper.createPlace(desk4Id, 2));
+        }
+        {
+            long desk5Id = dbOpenHelper.createDesk(2, 160, 40, cabinetId);//5
+            places.add(dbOpenHelper.createPlace(desk5Id, 1));
+            places.add(dbOpenHelper.createPlace(desk5Id, 2));
+        }
+        {
+            long desk6Id = dbOpenHelper.createDesk(2, 40, 40, cabinetId);//6
+            places.add(dbOpenHelper.createPlace(desk6Id, 1));
+            places.add(dbOpenHelper.createPlace(desk6Id, 2));
+        }
+        //   |6|  |5|   |    |  |  |  |
+        //   |4|  |3|   |    | 4|  |  |
+        //   |2|  |1|   |    |35|  |21|
+        //       [-]
 
-                dbOpenHelper.setLearnerOnPlace(//lessonId,
-                        lerner1Id, places.get(1));
-                dbOpenHelper.setLearnerOnPlace(//lessonId,
-                        lerner2Id, places.get(0));
-                dbOpenHelper.setLearnerOnPlace(//lessonId,
-                        lerner3Id, places.get(2));
-                dbOpenHelper.setLearnerOnPlace(//lessonId,
-                        lerner4Id, places.get(7));
-                dbOpenHelper.setLearnerOnPlace(//lessonId,
-                        lerner5Id, places.get(3));
-                dbOpenHelper.close();
 
-                Toast toast = Toast.makeText(this,"Данные удалены успешно!", Toast.LENGTH_LONG);
-                toast.show();
+        long lessonId = dbOpenHelper.createSubject("физика", classId
+                //, cabinetId
+        );
+        Date startLessonTime = new GregorianCalendar(2017, 10, 17, 8, 30).getTime();//1502343000000 --10 августа
+        Date endLessonTime = new GregorianCalendar(2017, 10, 17, 9, 15).getTime();//на 7 месяц  1502345700000
+        dbOpenHelper.setLessonTimeAndCabinet(lessonId, cabinetId, startLessonTime, endLessonTime, SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER);
+
+        //создание настроек после удаления таблицы
+        //db.createNewSettingsProfileWithId1("default", 50);
+
+        dbOpenHelper.setLearnerOnPlace(//lessonId,
+                lerner1Id, places.get(1));
+        dbOpenHelper.setLearnerOnPlace(//lessonId,
+                lerner2Id, places.get(0));
+        dbOpenHelper.setLearnerOnPlace(//lessonId,
+                lerner3Id, places.get(2));
+        dbOpenHelper.setLearnerOnPlace(//lessonId,
+                lerner4Id, places.get(7));
+        dbOpenHelper.setLearnerOnPlace(//lessonId,
+                lerner5Id, places.get(3));
+        dbOpenHelper.close();
+
+        Toast toast = Toast.makeText(this, "Данные удалены успешно!", Toast.LENGTH_LONG);
+        toast.show();
     }
+
+
+//-----------------------------------------создание экрана------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +129,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
         sizeShowLayOut.addView(room, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
 
-        if (db.getInterfaceSizeBySettingsProfileId(1) == -1){
+        if (db.getInterfaceSizeBySettingsProfileId(1) == -1) {
             db.createNewSettingsProfileWithId1("default", 50);//TODO Skipped 49 frames!  The application may be doing too much work on its main thread.
         }
         sizeSeekBar.setProgress((int) db.getInterfaceSizeBySettingsProfileId(1));
@@ -162,10 +167,41 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
                 SettingsRemoveDataDialogFragment removeDialog =
                         new SettingsRemoveDataDialogFragment();
                 // запускаем
-                removeDialog.show(getFragmentManager(),"removeSettingsDialog");
+                removeDialog.show(getFragmentManager(), "removeSettingsDialog");
+            }
+        });
+
+        //оцените нас
+        Button rateUsButton = (Button) findViewById(R.id.settings_rate_button);
+        rateUsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("market://details?id=com.learning.texnar13.teachersprogect"));
+                if (!isActivityStarted(intent)) {
+                    intent.setData(Uri
+                            .parse("https://play.google.com/store/apps/details?id=com.learning.texnar13.teachersprogect"));
+                    if (!isActivityStarted(intent)) {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Could not open Android market, please check if the market app installed or not. Try again later",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
     }
+
+    private boolean isActivityStarted(Intent aIntent) {
+        try {
+            startActivity(aIntent);
+            return true;
+        } catch (ActivityNotFoundException e) {
+            return false;
+        }
+    }
+
+//----------------------------------------обновление парт-------------------------------------------
 
     private void updateShowRoom(RelativeLayout room, float multiplier) {
         room.removeAllViews();
@@ -197,6 +233,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
 
         //room.setLayoutParams(new LinearLayout.LayoutParams());
     }
+
+
+//---------------------------------------технические методы-----------------------------------------
 
     private float pxFromDp(float dp) {
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
