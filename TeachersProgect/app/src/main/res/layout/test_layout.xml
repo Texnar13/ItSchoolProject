@@ -29,7 +29,14 @@
             android:layout_marginLeft="64dp"
             android:layout_marginStart="64dp"
             android:layout_marginTop="168dp"
-            android:background="#53181818">
+            android:background="#00ffffff">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </RelativeLayout>
+
             <ImageView
                 android:layout_width="600dp"
                 android:layout_height="600dp"

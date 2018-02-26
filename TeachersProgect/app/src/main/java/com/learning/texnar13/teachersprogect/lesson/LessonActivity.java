@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
@@ -25,10 +24,7 @@ import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.lessonList.LessonListActivity;
 
-import java.util.Calendar;
-
-//todo
-    /*итак, надо полностью пределать урок,
+    /*
     * onCreate(),
     * подгружаются все ученики, id кабинета, класса, предмета, зав. урок-время
     * создаются массивы с оценками(или подгружаются;)),

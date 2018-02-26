@@ -13,8 +13,10 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -76,6 +78,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     //---создание ученика---
     @Override
     public void createLearner(String lastName, String name, long classId) {
+        //останавливаем поток загрузки данных
+        flag = false;
         //создание ученика вызываемое диалогом CreateLearnerDialogFragment
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         db.createLearner(lastName, name, classId);
@@ -91,6 +95,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     //---переименование ученика---
     @Override
     public void editLearner(String lastName, String name, long learnerId) {
+        //останавливаем поток загрузки данных
+        flag = false;
         //редактирование ученика вызываемое диалогом EditLearnerDialogFragment
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         ArrayList<Long> learnersId = new ArrayList<>();
@@ -108,6 +114,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     //---удаление ученика---
     @Override
     public void removeLearner(long learnerId) {
+        //останавливаем поток загрузки данных
+        flag = false;
         //редактирование ученика вызываемое диалогом EditLearnerDialogFragment
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         ArrayList<Long> learnersId = new ArrayList<>();
@@ -122,7 +130,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         db.close();
     }
 
-    //---редактирование ученика---
+    //---редактирование оценки ученика---
     @Override
     public void editGrade(long[] gradesId, long learnersId, int[] grades, long subjectsId, String[] dates) {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
@@ -278,7 +286,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 flag = false;
                 changingSubjectPosition = i;
-                updateTable();
+                updateTable();//todo эта штука выполняестся при старте, надо что-то делать
             }
 
             @Override
@@ -316,6 +324,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 //===========получаем учеников из базы===========
 
     void getLearnersFromDB() {
+        Log.i("TeachersApp","LearnersAndGradesActivity - getLearnersFromDB");
         //чистим массивы от предыдущих значений
         learnersId = new ArrayList<>();
         learnersTitles = new ArrayList<>();
@@ -343,17 +352,136 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         db.close();
     }
 
+    //вывод имен учеников в таблицу
+    void updateTable() {
+        Log.i("TeachersApp","LearnersAndGradesActivity - updateTable");
+        //чистка
+        //имена
+        learnersNamesTable.removeAllViews();
+
+
+//таблицы
+//-шапка
+//--имена
+        //заголовок ученика
+        TableRow headNameRaw = new TableRow(this);
+        //рамка
+        LinearLayout headNameOut = new LinearLayout(this);
+        headNameOut.setBackgroundColor(Color.BLACK);//parseColor("#1f5b85")
+        //текст заголовка ученика
+        TextView headName = new TextView(this);
+        headName.setMinWidth((int) pxFromDp(140));
+        headName.setText("  Ф.И.  ");
+        headName.setTextSize(20);
+        headName.setBackgroundColor(Color.WHITE);//светло синий"#bed7e9"Color.parseColor()
+        headName.setGravity(Gravity.START);
+        headName.setTextColor(Color.BLACK);//тёмно синий parseColor("#1f5b85")
+        //отступы рамки
+        LinearLayout.LayoutParams headNameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        headNameParams.setMargins(0, 0, 0, (int) pxFromDp(2));
+        //текст в рамку
+        headNameOut.addView(headName, headNameParams);
+        //рамку в строку
+        headNameRaw.addView(headNameOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
+        //строку в таблицу
+        learnersNamesTable.addView(headNameRaw, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
+
+//-тело таблицы
+        for (int i = 0; i < learnersTitles.size(); i++) {//пробегаемся по ученикам
+//--строка с учеником
+            TableRow learner = new TableRow(this);
+            //рамка
+            LinearLayout learnerNameOut = new LinearLayout(this);
+            learnerNameOut.setBackgroundColor(Color.BLACK);//parseColor("#1f5b85")
+            //контейнер для текста
+            LinearLayout dateContainer = new LinearLayout(this);
+            dateContainer.setBackgroundColor(Color.WHITE);
+            //текст ученика
+            TextView learnerName = new TextView(this);
+            learnerName.setTextSize(20);
+            learnerName.setTextColor(Color.BLACK);//parseColor("#1f5b85")
+            learnerName.setBackgroundColor(Color.WHITE);//"#bed7e9"
+            learnerName.setGravity(Gravity.BOTTOM);
+            learnerName.setText(learnersTitles.get(i));
+            //отступы контейнера в рамке
+            LinearLayout.LayoutParams learnerNameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            learnerNameParams.setMargins((int) pxFromDp(10), 0, (int) pxFromDp(10), 0);
+            //текст в контейнер
+            dateContainer.addView(learnerName, learnerNameParams);
+            //отступы рамки
+            LinearLayout.LayoutParams dateContainerParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            dateContainerParams.setMargins(0, 0, 0, (int) pxFromDp(2));
+            //контейнер в рамку
+            learnerNameOut.addView(dateContainer, dateContainerParams);
+            //рамку в строку
+            learner.addView(learnerNameOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
+            //действия при нажатии на имя ученика
+            final int finalI = i;
+            learnerNameOut.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    //диалог
+                    EditLearnerDialogFragment editDialog = new EditLearnerDialogFragment();
+                    //-данные для диалога-
+                    //получаем из бд
+                    DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                    Cursor learnerCursor = db.getLearner(learnersId.get(finalI));
+                    learnerCursor.moveToFirst();
+                    //создаем обьект с данными
+                    Bundle args = new Bundle();
+                    args.putLong("learnerId", learnersId.get(finalI));
+                    args.putString("name", learnerCursor.getString(
+                            learnerCursor.getColumnIndex(
+                                    SchoolContract.TableLearners.COLUMN_FIRST_NAME)
+                    ));
+                    args.putString("lastName", learnerCursor.getString(
+                            learnerCursor.getColumnIndex(
+                                    SchoolContract.TableLearners.COLUMN_SECOND_NAME)
+                    ));
+                    //данные диалогу
+                    editDialog.setArguments(args);
+                    //показать диалог
+                    editDialog.show(getFragmentManager(), "editLearnerDialog");
+                    learnerCursor.close();
+                    db.close();
+                    return true;
+                }
+            });
+
+            //добавляем строку в таблицу
+            learnersNamesTable.addView(learner, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
+        }
+        getGradesFromDB();
+    }
+
+
 //===========получаем оценки из базы===========
 
     void getGradesFromDB() {
+        Log.i("TeachersApp","LearnersAndGradesActivity - getGradesFromDB");
 //----вывод оценок перед загрузкой данных, чтобы таблица не была пустая----
         //outGradesInTable();
 
-//----выводим прогресс бар----
-        //область с таблицей, нужна для прогресс бара
+//--------всякие штуки для загрузки--------
+//область с таблицей, нужна для прогресс бара
         gradesRoom = (RelativeLayout) findViewById(R.id.learners_and_grades_table_relative);
+//----выводим прогресс бар----
+
         final ProgressBar progressBar = new ProgressBar(getApplicationContext());
         gradesRoom.addView(progressBar, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+//----закрашиваем серым----
+        //создаем экран, который поставим спереди
+        final RelativeLayout forwardScreen = new RelativeLayout(this);
+        forwardScreen.setLayoutParams(new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT));
+        forwardScreen.setBackgroundColor(Color.parseColor("#68505050"));
+        //forwardScreen.setBackgroundColor(Color.RED);
+        gradesRoom.addView(forwardScreen,RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+
+
+
 //----разрешаем подгрузку данных----
         flag = true;
 
@@ -371,11 +499,13 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         outGradesInTable();
                         //удаляем прогресс бар
                         gradesRoom.removeView(progressBar);
+                        gradesRoom.removeView(forwardScreen);
                         break;
-                        //если получение оценок прервано то не выводим их
+                    //если получение оценок прервано то не выводим их
                     case 1:
                         //удаляем прогресс бар
                         gradesRoom.removeView(progressBar);
+                        gradesRoom.removeView(forwardScreen);
                         break;
                 }
             }
@@ -467,7 +597,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
                                         learnersId.get(i),//todo здесь ошибка java.lang.ArrayIndexOutOfBoundsException
                                         subjectsId[changingSubjectPosition],
-
                                         outHelpStartCalendar,
                                         outHelpEndCalendar
                                 );
@@ -534,106 +663,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         progressThread.start();
     }
 
-    //вывод имен учеников в таблицу
-    void updateTable() {
-        //чистка
-        //имена
-        learnersNamesTable.removeAllViews();
-//таблицы
-//-шапка
-//--имена
-        //заголовок ученика
-        TableRow headNameRaw = new TableRow(this);
-        //рамка
-        LinearLayout headNameOut = new LinearLayout(this);
-        headNameOut.setBackgroundColor(Color.BLACK);//parseColor("#1f5b85")
-        //текст заголовка ученика
-        TextView headName = new TextView(this);
-        headName.setText("Ф.И.");
-        headName.setTextSize(20);
-        headName.setBackgroundColor(Color.WHITE);//светло синий"#bed7e9"Color.parseColor()
-        headName.setGravity(Gravity.CENTER);
-        headName.setTextColor(Color.BLACK);//тёмно синий parseColor("#1f5b85")
-        //отступы рамки
-        LinearLayout.LayoutParams headNameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        headNameParams.setMargins(0, 0, 0, (int) pxFromDp(2));
-        //текст в рамку
-        headNameOut.addView(headName, headNameParams);
-        //рамку в строку
-        headNameRaw.addView(headNameOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
-        //строку в таблицу
-        learnersNamesTable.addView(headNameRaw, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
 
-//-тело таблицы
-        for (int i = 0; i < learnersTitles.size(); i++) {//пробегаемся по ученикам
-//--строка с учеником
-            TableRow learner = new TableRow(this);
-            //рамка
-            LinearLayout learnerNameOut = new LinearLayout(this);
-            learnerNameOut.setBackgroundColor(Color.BLACK);//parseColor("#1f5b85")
-            //контейнер для текста
-            LinearLayout dateContainer = new LinearLayout(this);
-            dateContainer.setBackgroundColor(Color.WHITE);
-            //текст ученика
-            TextView learnerName = new TextView(this);
-            learnerName.setTextSize(20);
-            learnerName.setTextColor(Color.BLACK);//parseColor("#1f5b85")
-            learnerName.setBackgroundColor(Color.WHITE);//"#bed7e9"
-            learnerName.setGravity(Gravity.BOTTOM);
-            learnerName.setText(learnersTitles.get(i));
-            //отступы контейнера в рамке
-            LinearLayout.LayoutParams learnerNameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            learnerNameParams.setMargins((int) pxFromDp(10), 0, (int) pxFromDp(10), 0);
-            //текст в контейнер
-            dateContainer.addView(learnerName, learnerNameParams);
-            //отступы рамки
-            LinearLayout.LayoutParams dateContainerParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            dateContainerParams.setMargins(0, 0, 0, (int) pxFromDp(2));
-            //контейнер в рамку
-            learnerNameOut.addView(dateContainer, dateContainerParams);
-            //рамку в строку
-            learner.addView(learnerNameOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
-            //действия при нажатии на имя ученика
-            final int finalI = i;
-            learnerNameOut.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    //диалог
-                    EditLearnerDialogFragment editDialog = new EditLearnerDialogFragment();
-                    //-данные для диалога-
-                    //получаем из бд
-                    DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                    Cursor learnerCursor = db.getLearner(learnersId.get(finalI));
-                    learnerCursor.moveToFirst();
-                    //создаем обьект с данными
-                    Bundle args = new Bundle();
-                    args.putLong("learnerId", learnersId.get(finalI));
-                    args.putString("name", learnerCursor.getString(
-                            learnerCursor.getColumnIndex(
-                                    SchoolContract.TableLearners.COLUMN_FIRST_NAME)
-                    ));
-                    args.putString("lastName", learnerCursor.getString(
-                            learnerCursor.getColumnIndex(
-                                    SchoolContract.TableLearners.COLUMN_SECOND_NAME)
-                    ));
-                    //данные диалогу
-                    editDialog.setArguments(args);
-                    //показать диалог
-                    editDialog.show(getFragmentManager(), "editLearnerDialog");
-                    learnerCursor.close();
-                    db.close();
-                    return true;
-                }
-            });
+//===========вывод оценок в таблицу===========
 
-            //добавляем строку в таблицу
-            learnersNamesTable.addView(learner, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
-        }
-        getGradesFromDB();
-    }
-
-    //===========вывод оценок в таблицу===========
     void outGradesInTable() {
+        Log.i("TeachersApp","LearnersAndGradesActivity - outGradesInTable");
         // в таблице дни раскрашиваются в шахматном порядке
 //если первый столбец в дне то выводим иначе если нет оценок, то не выводим
 
@@ -800,85 +834,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             }
 
         }
-
-////---тело
-//        //пробегаемся по ученикам
-//        for (int i = 0; i < grades.length; i++) {
-//            //новая строка
-//            TableRow learnerGrades = new TableRow(this);
-//
-//            GregorianCalendar gradesOutCalendar = viewCalendar;
-//            gradesOutCalendar.set(Calendar.DAY_OF_MONTH, 1);
-//            gradesOutCalendar.set(Calendar.HOUR_OF_DAY, 0);
-//            gradesOutCalendar.set(Calendar.MINUTE, 0);
-//            gradesOutCalendar.set(Calendar.SECOND, 0);
-//
-//            // и по датам
-//            for (int j = 0; j < grades[i].length; j++) {
-//                //рамка
-//                LinearLayout dateOut = new LinearLayout(this);
-//                dateOut.setBackgroundColor(Color.BLACK);
-//                //текст
-//                TextView learnerGrade = new TextView(this);
-//                learnerGrade.setTextColor(Color.BLACK);
-//                learnerGrade.setTextSize(20);
-//                learnerGrade.setBackgroundColor(Color.WHITE);
-//                learnerGrade.setGravity(Gravity.CENTER);
-//                //по урокам в дне
-//                for (int k = 0; k < grades[i][j].length; k++) {
-//                    //по оценкам в уроке
-//                    for (int l = 0; l < grades[i][j][k].length; l++) {
-//                        switch (
-//                                grades[i][j][k][l]) {
-//                            case 0:
-//
-//                                break;
-//                            case -2:
-//                                if (!learnerGrade.getText().toString().equals("")) {
-//                                    learnerGrade.setText(learnerGrade.getText().toString() + "Н ");
-//                                } else
-//                                    learnerGrade.setText(learnerGrade.getText().toString() + " Н ");
-//                                break;
-//                            default:
-//                                if (!learnerGrade.getText().toString().equals("")) {
-//                                    learnerGrade.setText(learnerGrade.getText().toString() + grades[i][j][k][l] + " ");
-//                                } else
-//                                    learnerGrade.setText(learnerGrade.getText().toString() + " " + grades[i][j][k][l] + " ");
-//                        }
-//                    }
-//
-//                }
-//                if (learnerGrade.getText().toString().equals("")) {
-//                    learnerGrade.setText(" - ");
-//                }
-//
-//                //отступы рамки
-//                LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-//                textParams.setMargins(0, 0, 0, (int) pxFromDp(2));
-//                //текст в рамку
-//                dateOut.addView(learnerGrade, textParams);
-//
-////                //при нажатии на оценку
-////                dateOut.setOnClickListener(new View.OnClickListener() {
-////                    @Override
-////                    public void onClick(View view) {
-////                        //вызываем диалог по ее изменению
-////                        EditGradeDialogFragment editGrade = new EditGradeDialogFragment();
-////                        //параметры
-////                        Bundle bundle = new Bundle();
-////                        bundle.putIntArray(EditGradeDialogFragment.GRADES, );
-////                        //bundle.putLongArray(EditGradeDialogFragment.GRADES_ID, );
-////                        editGrade.show(getFragmentManager(),"EditGrade");
-////                    }
-////                });
-//
-//
-//                //добавляем всё в строку
-//                learnerGrades.addView(dateOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
-//            }
-//            //добавляем строку в таблицу
-//            learnersGradesTable.addView(learnerGrades, TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
-        //}
+//----очищаем фон от серого после загрузки----
+        //findViewById(R.id.learners_and_grades_table_grades_forward_screen)
+        //        .setBackgroundColor(Color.parseColor("#00FFFFFF"));
     }
 
 //===========при закрытии активности===========

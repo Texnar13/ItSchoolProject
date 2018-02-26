@@ -81,7 +81,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:background="@drawable/settings_rate_us_shape"
-                android:text="оцените наше приложение!" />
+                android:text="оцените наше приложение :)" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

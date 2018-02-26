@@ -134,17 +134,21 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <TableLayout
-                            android:id="@+id/learners_and_grades_table_names"
-                            android:layout_width="wrap_content"
+                        <HorizontalScrollView
+                            android:background="#000000"
+                            android:layout_width="140dp"
                             android:layout_height="match_parent">
 
-                        </TableLayout>
+                            <TableLayout
+                                android:id="@+id/learners_and_grades_table_names"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent">
+                            </TableLayout>
+                        </HorizontalScrollView>
 
                         <HorizontalScrollView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent">
-
 
                             <RelativeLayout
                                 android:id="@+id/learners_and_grades_table_relative"
