@@ -37,7 +37,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface {
+public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface,UpdateTableInterface {
 
 //--получаем из intent--
 
@@ -90,6 +90,16 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         currentCalendar.setTime(new Date());
         updateTable();
         db.close();
+    }
+
+    @Override
+    public void updateAll() {
+        //останавливаем поток загрузки данных
+        flag = false;
+        //обновляем список учеников
+        getLearnersFromDB();
+        //обновляем таблицу
+        updateTable();
     }
 
     //---переименование ученика---
@@ -235,6 +245,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //останавливаем подгрузку данных, чтобы не мешали
+                flag = false;
                 //--создаем диалог--
                 CreateLearnerDialogFragment createLearnerDialog = new CreateLearnerDialogFragment();
                 //передаем параметры
@@ -420,6 +432,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             learnerNameOut.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
+                    //останавливаем поток загрузки данных
+                    flag = false;
                     //диалог
                     EditLearnerDialogFragment editDialog = new EditLearnerDialogFragment();
                     //-данные для диалога-
@@ -806,6 +820,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         dateOut.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                //останавливаем подгрузку данных, чтобы не мешали
+                                //flag = false;//TODO надо остановить подгрузку данных, чтобы при переоценивании новых не получить ошибку, надо придумать как это сделать, может через метод?
                                 //вызываем диалог по ее изменению
                                 EditGradeDialogFragment editGrade = new EditGradeDialogFragment();
                                 //параметры

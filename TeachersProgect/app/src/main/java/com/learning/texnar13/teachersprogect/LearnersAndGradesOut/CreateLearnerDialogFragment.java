@@ -17,6 +17,7 @@ import com.learning.texnar13.teachersprogect.R;
 public class CreateLearnerDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Log.i("TeachersApp","CreateLearnerDialogFragment - onCreateDialog");
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //заголовок
@@ -86,14 +87,31 @@ public class CreateLearnerDialogFragment extends DialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
+        Log.i("TeachersApp","CreateLearnerDialogFragment - onDismiss");
     }
 
+
+    //закрытие диалога при помощи кнопки назад или нажатия вне окна диалога
     @Override
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
+        Log.i("TeachersApp","CreateLearnerDialogFragment - onCancel");
+        try {
+            //вызываем в активности метод по обновлению таблицы
+            ((UpdateTableInterface) getActivity()).updateAll();
+        } catch (java.lang.ClassCastException e) {
+            //в вызвающей активности должен быть имплементирован класс UpdateTableInterface
+            e.printStackTrace();
+            Log.i(
+                    "TeachersApp",
+                    "CreateLearnerDialogFragment: you must implements UpdateTableInterface in your activity"
+            );
+        }
     }
 }
 
 interface CreateLearnerInterface {
     void createLearner(String lastName, String name, long classId);
 }
+
+

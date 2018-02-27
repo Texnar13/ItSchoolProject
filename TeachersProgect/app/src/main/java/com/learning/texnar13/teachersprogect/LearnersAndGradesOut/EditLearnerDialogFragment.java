@@ -131,6 +131,7 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
     @Override
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
+        //смотри CreateLearnerDialogFragment
     }
 }
 
