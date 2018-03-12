@@ -3,10 +3,11 @@
     android:id="@android:id/text1"
     style="?android:attr/spinnerItemStyle"
     android:singleLine="true"
-    android:textColor="#1f5b85"
+    android:textColor="#000000"
     android:textSize="20sp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:ellipsize="marquee"
     android:background="#ffffff"
     android:textAlignment="inherit"/>
+<!--"#1f5b85"-->

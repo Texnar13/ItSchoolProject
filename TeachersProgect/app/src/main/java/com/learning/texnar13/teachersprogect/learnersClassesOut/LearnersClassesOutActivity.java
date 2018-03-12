@@ -109,7 +109,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 //                        .setAction("Action", null).show();
             }
         });
-        fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#bed7e9")));
+        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryBlue)));
 
         //--------экран со списком---------
         //создание
@@ -161,21 +161,21 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 //------контейнер----
             //создаем LinearLayout
             LinearLayout container = new LinearLayout(this);
-            container.setBackgroundColor(Color.parseColor("#bed7e9"));
+            container.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
 
             //параметры контейнера(т.к. элемент находится в LinearLayout то и параметры используем его)
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,//ш
                     ViewGroup.LayoutParams.WRAP_CONTENT//в
             );
-            containerParams.setMargins(2, 2, 2, 3);
+            containerParams.setMargins((int)pxFromDp(4), (int)pxFromDp(4), (int)pxFromDp(4), (int)pxFromDp(0));
 
 //------текст------
             //создаём текст
             TextView item = new TextView(this);
             item.setGravity(Gravity.CENTER);
             item.setTextSize(25);
-            item.setTextColor(Color.parseColor("#1f5b85"));
+            item.setTextColor(Color.WHITE);
 
             //параметры пункта(т.к. элемент находится в LinearLayout то и параметры используем его)
             LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
@@ -266,7 +266,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
         TextView helpText1 = new TextView(this);
         helpText1.setGravity(Gravity.CENTER);
         helpText1.setTextSize(20);
-        helpText1.setTextColor(Color.GRAY);
+        helpText1.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
         helpText1.setText("Чтобы создать класс, нажмите \"+\" и введите его название. ");
         //добавляем
         container.addView(
@@ -280,7 +280,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
         TextView helpText2 = new TextView(this);
         helpText2.setGravity(Gravity.CENTER);
         helpText2.setTextSize(20);
-        helpText2.setTextColor(Color.GRAY);
+        helpText2.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
         helpText2.setText("Чтобы посмотреть список учеников и их оценки, нажмите на нужный вам класс.");
         //добавляем
         container.addView(
@@ -294,7 +294,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
         TextView helpText3 = new TextView(this);
         helpText3.setGravity(Gravity.CENTER);
         helpText3.setTextSize(20);
-        helpText3.setTextColor(Color.GRAY);
+        helpText3.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
         helpText3.setText("Чтобы переименовать или удалить класс с учениками, нажмите на него и удерживайте.");
         //добавляем
         container.addView(

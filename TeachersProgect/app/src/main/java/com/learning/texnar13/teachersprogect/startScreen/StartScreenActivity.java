@@ -163,6 +163,16 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
             startActivity(intent);
         }
 
+//-----ну и еще один костылек------------TODO удалить
+        if(!sharedPreferences.getBoolean("a", false)){
+
+            ed.putInt(ENTERS_COUNT, 1);
+            ed.putBoolean(IS_RATE, false);
+            ed.putBoolean("a",true);
+        }
+
+
+
 
 //----счетчик "оцените нас"----
         // через пять заходов в приложение открывает диалог 'оцените'

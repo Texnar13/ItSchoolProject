@@ -135,7 +135,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
 //                        .setAction("Action", null).show();
             }
         });
-        fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f5ce9d")));
+        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryOrange)));
 
         //--------экран со списком---------
         //создание
@@ -187,21 +187,21 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
 //------контейнер----
             //создаем LinearLayout
             LinearLayout container = new LinearLayout(this);
-            container.setBackgroundColor(Color.parseColor("#f5ce9d"));
+            container.setBackgroundResource(R.drawable.start_screen_3_2_yellow_spot);
 
             //параметры контейнера(т.к. элемент находится в LinearLayout то и параметры используем его)
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,//ш
                     ViewGroup.LayoutParams.WRAP_CONTENT//в
             );
-            containerParams.setMargins(2, 2, 2, 3);
+            containerParams.setMargins((int)pxFromDp(4), (int)pxFromDp(4), (int)pxFromDp(4), (int)pxFromDp(0));
 
 //------текст------
             //создаём текст
             TextView item = new TextView(this);
             item.setGravity(Gravity.CENTER);
             item.setTextSize(25);
-            item.setTextColor(Color.parseColor("#88591d"));
+            item.setTextColor(Color.WHITE);
 
             //параметры пункта(т.к. элемент находится в LinearLayout то и параметры используем его)
             LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
@@ -293,7 +293,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         TextView helpText1 = new TextView(this);
         helpText1.setGravity(Gravity.CENTER);
         helpText1.setTextSize(20);
-        helpText1.setTextColor(Color.GRAY);
+        helpText1.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
         helpText1.setText("Чтобы создать кабинет, нажмите \"+\" и введите его название. ");
         //добавляем
         container.addView(
@@ -307,7 +307,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         TextView helpText2 = new TextView(this);
         helpText2.setGravity(Gravity.CENTER);
         helpText2.setTextSize(20);
-        helpText2.setTextColor(Color.GRAY);
+        helpText2.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
         helpText2.setText("Чтобы расставить парты, нажмите на нужный вам кабинет.");
         //добавляем
         container.addView(
@@ -321,7 +321,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         TextView helpText3 = new TextView(this);
         helpText3.setGravity(Gravity.CENTER);
         helpText3.setTextSize(20);
-        helpText3.setTextColor(Color.GRAY);
+        helpText3.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
         helpText3.setText("Чтобы переименовать или удалить кабинет, нажмите на него и удерживайте.");
         //добавляем
         container.addView(

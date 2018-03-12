@@ -379,7 +379,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         TableRow headNameRaw = new TableRow(this);
         //рамка
         LinearLayout headNameOut = new LinearLayout(this);
-        headNameOut.setBackgroundColor(Color.BLACK);//parseColor("#1f5b85")
+        headNameOut.setBackgroundColor(Color.LTGRAY);//parseColor("#1f5b85")
         //текст заголовка ученика
         TextView headName = new TextView(this);
         headName.setMinWidth((int) pxFromDp(140));
@@ -404,7 +404,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             TableRow learner = new TableRow(this);
             //рамка
             LinearLayout learnerNameOut = new LinearLayout(this);
-            learnerNameOut.setBackgroundColor(Color.BLACK);//parseColor("#1f5b85")
+            learnerNameOut.setBackgroundColor(Color.LTGRAY);//parseColor("#1f5b85")
             //контейнер для текста
             LinearLayout dateContainer = new LinearLayout(this);
             dateContainer.setBackgroundColor(Color.WHITE);
@@ -609,7 +609,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 );
                                 //получаем оценки по времени и предмету
                                 Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
-                                        learnersId.get(i),//todo здесь ошибка java.lang.ArrayIndexOutOfBoundsException
+                                        learnersId.get(i),//todo !!!!!!!!!!!! здесь все еще есть ошибка !!!!!!!!!!!!!!! здесь ошибка java.lang.ArrayIndexOutOfBoundsException
                                         subjectsId[changingSubjectPosition],
                                         outHelpStartCalendar,
                                         outHelpEndCalendar
@@ -721,7 +721,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     //по оценкам за этот день
                     for (int l = 0; l < 3; l++) {
                         //[ученик][день][урок][оценка]
-                        if (grades[k][i][j][l].grade//todo здесь ошибка java.lang.NullPointerException
+                        if (grades[k][i][j][l].grade//to-do здесь ошибка java.lang.NullPointerException
                                 != 0) {
                             flag = true;
                             break out;
@@ -733,7 +733,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 //---шапка
                     //рамка
                     LinearLayout headDateOut = new LinearLayout(this);
-                    headDateOut.setBackgroundColor(Color.BLACK);
+                    headDateOut.setBackgroundColor(Color.LTGRAY);
                     //текст заголовка ученика
                     TextView headDate = new TextView(this);
 
@@ -741,7 +741,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     if (i % 2 == 0) {
                         headDate.setBackgroundColor(Color.WHITE);
                     } else {
-                        headDate.setBackgroundColor(Color.parseColor("#bed7e9"));
+                        headDate.setBackgroundColor(Color.WHITE);
+                        //headDate.setBackgroundColor(Color.parseColor("#bed7e9"));
                     }
                     headDate.setGravity(Gravity.CENTER);
                     if (j != 0) {
@@ -763,7 +764,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     for (int k = 0; k < grades.length; k++) {
                         //рамка
                         LinearLayout dateOut = new LinearLayout(this);
-                        dateOut.setBackgroundColor(Color.BLACK);
+                        dateOut.setBackgroundColor(Color.LTGRAY);
                         //текст
                         TextView learnerGrade = new TextView(this);
                         learnerGrade.setTextColor(Color.BLACK);
@@ -821,7 +822,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                             @Override
                             public void onClick(View view) {
                                 //останавливаем подгрузку данных, чтобы не мешали
-                                //flag = false;//TODO надо остановить подгрузку данных, чтобы при переоценивании новых не получить ошибку, надо придумать как это сделать, может через метод?
+                                //flag = false;//TO=DO надо остановить подгрузку данных, чтобы при переоценивании новых не получить ошибку, надо придумать как это сделать, может через метод?
                                 //вызываем диалог по ее изменению
                                 EditGradeDialogFragment editGrade = new EditGradeDialogFragment();
                                 //параметры

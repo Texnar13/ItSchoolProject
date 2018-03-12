@@ -9,12 +9,16 @@ import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -41,7 +45,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         gestureOverlayView.setGestureColor(Color.TRANSPARENT);//делаем невидимым
         gestureOverlayView.setUncertainGestureColor(Color.TRANSPARENT);
 
-        setTitle("Календарь");
+        setTitle("КАЛЕНДАРЬ");
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//вертикальная ориентация
 
         gestureLib = GestureLibraries.fromRawResource(this, R.raw.gestures);
@@ -60,8 +64,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         ImageView next = (ImageView) findViewById(R.id.schedule_month_button_next);
         final TextView dateText = (TextView) findViewById(R.id.schedule_month_date_text);
 
-        final String months[] = {"Янв.", "Фев.", "Мар.", "Апр.", "Май", "Июнь", "Июль",
-                "Авг.", "Сен.", "Окт.", "Ноя.", "Дек."};
+        final String months[] = {"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
+                "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
         Date date = new Date();//получаем текущую дату
         final Calendar currentCalendar = new GregorianCalendar();//календарь
         currentCalendar.setTime(date);
@@ -153,54 +157,6 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
     }
 
-    /*
-4213-24213/com.learning.texnar13.teachersprogect I/DBOpenHelper: getSubjectAndTimeCabinetAttitudesIdByTimePeriod periodStart=1627333200000 periodEnd=1627419599000 answer=
-09-03 17:17:49.864 24213-24213/com.learning.texnar13.teachersprogect I/DBOpenHelper: getSubjectAndTimeCabinetAttitudesIdByTimePeriod periodStart=1627419600000 periodEnd=1627505999000 answer=
-09-03 17:17:49.864 24213-24213/com.learning.texnar13.teachersprogect W/SQLiteLog: (28) failed to open "/data/user/0/com.learning.texnar13.teachersprogect/databases/school-journal" with flag (131072) and mode_t (1b0) due to error (24)
-09-03 17:17:49.864 24213-24213/com.learning.texnar13.teachersprogect E/SQLiteLog: (14) cannot open file at line 31517 of [2ef4f3a5b1]
-09-03 17:17:49.864 24213-24213/com.learning.texnar13.teachersprogect E/SQLiteLog: (14) os_unix.c:31517: (24) open(/data/user/0/com.learning.texnar13.teachersprogect/databases/school-journal) -
-09-03 17:17:49.864 24213-24213/com.learning.texnar13.teachersprogect W/SQLiteLog: (28) failed to open "/data/user/0/com.learning.texnar13.teachersprogect/databases/school-journal" with flag (131074) and mode_t (1b0) due to error (24)
-09-03 17:17:49.864 24213-24213/com.learning.texnar13.teachersprogect W/SQLiteLog: (28) failed to open "/data/user/0/com.learning.texnar13.teachersprogect/databases/school-journal" with flag (131072) and mode_t (1b0) due to error (24)
-09-03 17:17:49.864 24213-24213/com.learning.texnar13.teachersprogect E/SQLiteLog: (14) cannot open file at line 31517 of [2ef4f3a5b1]
-09-03 17:17:49.864 24213-24213/com.learning.texnar13.teachersprogect E/SQLiteLog: (14) os_unix.c:31517: (24) open(/data/user/0/com.learning.texnar13.teachersprogect/databases/school-journal) -
-09-03 17:17:49.864 24213-24213/com.learning.texnar13.teachersprogect E/SQLiteLog: (2062) statement aborts at 15: [SELECT * FROM lessonsAnd WHERE lessonDateBegin >= ? AND lessonDateBegin <= ?] unable to open database file
-09-03 17:17:49.874 24213-24213/com.learning.texnar13.teachersprogect E/SQLiteQuery: exception: unable to open database file (code 2062)
-                                                                                    #################################################################
-                                                                                    Error Code : 2062 (SQLITE_CANTOPEN_EMFILE)
-                                                                                    Caused By : Application has opened two many files. Maximum of available file descriptors in one process is 1024 in default.
-                                                                                    	(unable to open database file (code 2062))
-                                                                                    #################################################################; query: SELECT * FROM lessonsAnd WHERE lessonDateBegin >= ? AND lessonDateBegin <= ?
-09-03 17:17:49.884 24213-24213/com.learning.texnar13.teachersprogect E/AndroidRuntime: FATAL EXCEPTION: main
-                                                                                       Process: com.learning.texnar13.teachersprogect, PID: 24213
-                                                                                       android.database.sqlite.SQLiteCantOpenDatabaseException: unable to open database file (code 2062)
-                                                                                       #################################################################
-                                                                                       Error Code : 2062 (SQLITE_CANTOPEN_EMFILE)
-                                                                                       Caused By : Application has opened two many files. Maximum of available file descriptors in one process is 1024 in default.
-                                                                                       	(unable to open database file (code 2062))
-                                                                                       #################################################################
-                                                                                           at android.database.sqlite.SQLiteConnection.nativeExecuteForCursorWindow(Native Method)
-                                                                                           at android.database.sqlite.SQLiteConnection.executeForCursorWindow(SQLiteConnection.java:980)
-                                                                                           at android.database.sqlite.SQLiteSession.executeForCursorWindow(SQLiteSession.java:836)
-                                                                                           at android.database.sqlite.SQLiteQuery.fillWindow(SQLiteQuery.java:62)
-                                                                                           at android.database.sqlite.SQLiteCursor.fillWindow(SQLiteCursor.java:143)
-                                                                                           at android.database.sqlite.SQLiteCursor.getCount(SQLiteCursor.java:132)
-                                                                                           at android.database.AbstractCursor.moveToPosition(AbstractCursor.java:219)
-                                                                                           at android.database.AbstractCursor.moveToNext(AbstractCursor.java:268)
-                                                                                           at com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper.getSubjectAndTimeCabinetAttitudesIdByTimePeriod(DataBaseOpenHelper.java:603)
-                                                                                           at com.learning.texnar13.teachersprogect.ScheduleMonthActivity.outMonth(ScheduleMonthActivity.java:212)
-                                                                                           at com.learning.texnar13.teachersprogect.ScheduleMonthActivity$2.onClick(ScheduleMonthActivity.java:68)
-                                                                                           at android.view.View.performClick(View.java:5702)
-                                                                                           at android.widget.TextView.performClick(TextView.java:10887)
-                                                                                           at android.view.View$PerformClick.run(View.java:22546)
-                                                                                           at android.os.Handler.handleCallback(Handler.java:739)
-                                                                                           at android.os.Handler.dispatchMessage(Handler.java:95)
-                                                                                           at android.os.Looper.loop(Looper.java:158)
-                                                                                           at android.app.ActivityThread.main(ActivityThread.java:7237)
-                                                                                           at java.lang.reflect.Method.invoke(Native Method)
-                                                                                           at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:1230)
-                                                                                           at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1120)
-*/
-
     //месяц: 0 - 11
     void outMonth(final Calendar viewCalendar, Calendar currentCalendar, LinearLayout linearOut) {
         //на вход отображаемая дата, сегодняшний день, окно вывода
@@ -231,12 +187,24 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         }
         int countOfDays = monthCapacity[viewCalendar.get(Calendar.MONTH)];
         //создаем 7 tableRow и помещаем их в таблицу (1 на день недели и 6 на календарь)
-        //linearOut.setWeightSum(1f);
+
+//------размеры окна-------
+        int rectangleSize = 0;
+        {
+            Display display = getWindowManager().getDefaultDisplay();
+            DisplayMetrics metricsB = new DisplayMetrics();
+            display.getMetrics(metricsB);
+
+            rectangleSize = metricsB.widthPixels / 7;
+        }
+
+        linearOut.setLayoutParams(new LinearLayout.LayoutParams(rectangleSize * 7, rectangleSize * 7));
+
         LinearLayout weekLinearRows[] = new LinearLayout[7];
         for (int i = 0; i < weekLinearRows.length; i++) {
             weekLinearRows[i] = new LinearLayout(this);
             //weekTableRows[i].setWeight(1);
-            weekLinearRows[i].setBackgroundColor(Color.LTGRAY);
+            weekLinearRows[i].setBackgroundColor(getResources().getColor(R.color.colorBackGround));
             weekLinearRows[i].setGravity(LinearLayout.VERTICAL);
             weekLinearRows[i].setWeightSum(7f);
             if (i == 0) {
@@ -263,7 +231,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             day.setTextSize(15);
             day.setTextColor(Color.BLACK);
             day.setGravity(Gravity.CENTER);
-            day.setBackgroundColor(Color.WHITE);//Color.LTGRAY"#e4ea7e""#fbffb9""#fdffdf"
+            day.setBackgroundColor(getResources().getColor(R.color.colorBackGround));//Color.LTGRAY"#e4ea7e""#fbffb9""#fdffdf"
             weekLinearRows[0].addView(
                     day,
                     new LinearLayout.LayoutParams(
@@ -271,7 +239,6 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                             LinearLayout.LayoutParams.MATCH_PARENT, 1f)
             );
         }
-        //Log.i("TeachersApp", "" + (25/7));
 //todo убрать одинаковые записи
 
         {
@@ -281,22 +248,51 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             boolean flag = false; //начат ли вывод дней месяца
             for (int i = 0; i < 6 * 7; i++) {
 
+
+                //---текст---//на заднюю часть текста можно постоавить drawable
                 TextView day = new TextView(this);
                 day.setTextSize(20);
                 day.setTextColor(Color.BLACK);
-                if (weekDay == 5 || weekDay == 6) {
-                    day.setBackgroundColor(Color.parseColor("#ebffd6"));//"#fbffb9"#fdffdf
-                } else
-                    //day.setBackgroundColor(Color.WHITE);
-                    day.setBackgroundColor(Color.WHITE);//"#fdffdf"parseColor()
                 day.setGravity(Gravity.CENTER);
-                LinearLayout linearLayout = new LinearLayout(this);
-                linearLayout.setGravity(Gravity.CENTER);
+
                 LinearLayout.LayoutParams dayParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT
                 );
-                dayParams.setMargins((int) pxFromDp(0.5f), (int) pxFromDp(1.3f), (int) pxFromDp(0.5f), (int) pxFromDp(1.3f));
+                dayParams.gravity = Gravity.CENTER;
+                day.setLayoutParams(dayParams);
+
+
+                //---контейнер в контейнере---ему можно поставить фон и еще им можно отредактировать размер границы клеток
+                LinearLayout textContainer = new LinearLayout(this);
+                textContainer.setGravity(Gravity.CENTER);
+                textContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
+                if (weekDay == 5 || weekDay == 6) {
+                    textContainer.setBackgroundColor(Color.parseColor("#ebffd6"));//"#fbffb9"#fdffdf
+                } else {
+                    textContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGround));//"#fdffdf"parseColor()
+                }
+
+                LinearLayout.LayoutParams textContainerParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                );
+                textContainerParams.gravity = Gravity.CENTER;
+                textContainerParams.setMargins((int) pxFromDp(0.5f), (int) pxFromDp(1.3f), (int) pxFromDp(0.5f), (int) pxFromDp(1.3f));
+
+
+                //---контейнер в таблице---  цвет границ клеток
+                LinearLayout linearLayout = new LinearLayout(this);
+                linearLayout.setGravity(Gravity.CENTER);
+
+                LinearLayout.LayoutParams linearLayoutParams =
+                        new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                1F
+                        );
+                linearLayoutParams.gravity = Gravity.CENTER;
+
 
                 if (weekDay == dayOfWeek) {
                     flag = true;
@@ -335,25 +331,37 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                         db.close();
                         if (lessonsAttitudesId.size() != 0) {
                             day.setTextSize(30);
-                            day.setTextColor(Color.parseColor("#469500"));
+                            day.setTextColor(getResources().getColor(R.color.colorPrimary));//"#469500"
                         }
                     }
-                    //выделяем текущую дату
+//----------выделяем текущую дату------------
                     int currDay = currentCalendar.get(Calendar.DATE);
                     if (viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
-                            viewCalendar.get(Calendar.MONTH) ==
-                                    currentCalendar.get(Calendar.MONTH) &&
+                            viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH) &&
                             dayForIntent == currDay) {
-                        linearLayout.setBackgroundColor(Color.RED);
-                        dayParams.setMargins((int) pxFromDp(2.08f), (int) pxFromDp(2.08f), (int) pxFromDp(2.08f), (int) pxFromDp(2.08f));
+
+                        LinearLayout.LayoutParams tempP = new LinearLayout.LayoutParams(
+                                (int) (rectangleSize / 1.2F),
+                                (int) (rectangleSize / 1.2F)
+                        );
+                        tempP.gravity = Gravity.CENTER;
+                        day.setGravity(Gravity.CENTER);
+                        day.setLayoutParams(tempP);
+
+                        //добавляем красный круг
+                        day.setBackgroundResource(R.drawable.calendar_current_day_circle);
+                        //dayParams.setMargins((int) pxFromDp(2.08f), (int) pxFromDp(2.08f), (int) pxFromDp(2.08f), (int) pxFromDp(2.08f));
                     }
                     monthDay++;
                 }
-
-                linearLayout.addView(day, dayParams);//250
-                weekLinearRows[weekOfMonth].addView(linearLayout,
-                        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.MATCH_PARENT, 1f));//260
+//--------все в таблицу--------
+                //текст в контейнер
+                textContainer.addView(day);
+                //контейнер в контейнер
+                linearLayout.addView(textContainer, textContainerParams);//250
+                //верхний контейнер в строку
+                weekLinearRows[weekOfMonth].addView(linearLayout, linearLayoutParams
+                );//260
 
                 if (weekDay == 6) {
                     weekOfMonth++;
@@ -363,136 +371,6 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 }
             }
         }
-//        //выводим клетки
-//        int j = 0;//счетчик дней недели
-//        int n = 1;//счетчик дней месяца
-//        // первая неделя
-//        for (int i = 0; i < 7; i++) {
-//            if (i < dayOfWeek) {//до дня недели
-//                //пустая
-//                TextView day = new TextView(this);
-//                day.setTextSize(20);
-//                day.setTextColor(Color.BLACK);
-//                day.setBackgroundColor(Color.WHITE);
-//                day.setGravity(Gravity.CENTER);
-//                LinearLayout linearLayout = new LinearLayout(this);
-//                linearLayout.setGravity(Gravity.CENTER);
-//                linearLayout.addView(day, new LinearLayout.LayoutParams(250, 250));
-//                weekTableRows[j].addView(linearLayout, new TableRow.LayoutParams(260, 260));
-//            } else {//после
-//                //вывод n
-//                TextView day = new TextView(this);
-//                final int dayForIntent = n;
-//                day.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        goToScheduleDayActivity(dayForIntent, viewCalendar.get(Calendar.MONTH), viewCalendar.get(Calendar.YEAR));
-//                    }
-//                });
-//                day.setText(n + "");
-//                {
-//                    DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-//                    ArrayList<Long> lessonsAttitudesId = db.getSubjectAndTimeCabinetAttitudesIdByTimePeriod(new GregorianCalendar(viewCalendar.get(Calendar.YEAR),
-//                                    viewCalendar.get(Calendar.MONTH), n, 0, 0, 0),
-//                            new GregorianCalendar(viewCalendar.get(Calendar.YEAR),
-//                                    viewCalendar.get(Calendar.MONTH), n, 23, 59, 59));
-//                    if (lessonsAttitudesId.size() == 0) {
-//                        day.setTextSize(20);
-//                    } else {
-//                        day.setTextSize(30);
-//                    }
-//                    day.setTextColor(Color.BLACK);
-//                }
-//                day.setTextColor(Color.BLACK);
-//                day.setBackgroundColor(Color.WHITE);
-//                day.setGravity(Gravity.CENTER);
-//                LinearLayout linearLayout = new LinearLayout(this);
-//                linearLayout.setGravity(Gravity.CENTER);
-//                //выделяем текущую дату
-//                if (viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
-//                        viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH) &&
-//                        n == currentCalendar.get(Calendar.DATE)) {
-//                    linearLayout.setBackgroundColor(Color.RED);
-//                    linearLayout.addView(day, new LinearLayout.LayoutParams(230, 230));
-//                } else {
-//                    linearLayout.addView(day, new LinearLayout.LayoutParams(250, 250));
-//                }
-//                weekTableRows[j].addView(linearLayout, new TableRow.LayoutParams(260, 260));
-//                n++;
-//            }
-//            if (j == 6) {
-//                j = 0;
-//            } else {
-//                j++;
-//            }
-//        }
-//        //расчитываем количество колонок не считая первую неделю
-//        int countOfWeeks;
-//        if ((countOfDays - (7 - dayOfWeek)) % 7 > 0) {
-//            countOfWeeks = ((countOfDays - (7 - dayOfWeek)) - ((countOfDays - (7 - dayOfWeek)) % 7)) / 7 + 1;
-//        } else {
-//            countOfWeeks = (countOfDays - (7 - dayOfWeek)) / 7;
-//        }
-//        //выводим оставшиеся дни
-//        for (int i = 0; i < countOfWeeks * 7; i++) {
-//            if (n > countOfDays) {//если уже напечатали все дни
-//                //пустая
-//                TextView day = new TextView(this);
-//                day.setTextSize(20);
-//                day.setTextColor(Color.BLACK);
-//                day.setBackgroundColor(Color.WHITE);
-//                day.setGravity(Gravity.CENTER);
-//                LinearLayout linearLayout = new LinearLayout(this);
-//                linearLayout.setGravity(Gravity.CENTER);
-//                linearLayout.addView(day, new LinearLayout.LayoutParams(250, 250));
-//                weekTableRows[j].addView(linearLayout, new TableRow.LayoutParams(260, 260));
-//            } else {
-//                //вывод n
-//                TextView day = new TextView(this);
-//                final int dayForIntent = n;
-//                day.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        goToScheduleDayActivity(dayForIntent, viewCalendar.get(Calendar.MONTH), viewCalendar.get(Calendar.YEAR));
-//                    }
-//                });
-//                day.setText(n + "");
-//                {
-//                    DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-//                    ArrayList<Long> lessonsAttitudesId = db.getSubjectAndTimeCabinetAttitudesIdByTimePeriod(new GregorianCalendar(viewCalendar.get(Calendar.YEAR),
-//                                    viewCalendar.get(Calendar.MONTH), n, 0, 0, 0),
-//                            new GregorianCalendar(viewCalendar.get(Calendar.YEAR),
-//                                    viewCalendar.get(Calendar.MONTH), n, 23, 59, 59));
-//                    if (lessonsAttitudesId.size() == 0) {
-//                        day.setTextSize(20);
-//                    } else {
-//                        day.setTextSize(30);
-//                    }
-//                    day.setTextColor(Color.BLACK);
-//                }
-//                day.setBackgroundColor(Color.WHITE);
-//                day.setGravity(Gravity.CENTER);
-//                LinearLayout linearLayout = new LinearLayout(this);
-//                linearLayout.setGravity(Gravity.CENTER);
-//                //выделяем текущую дату
-//                if (viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
-//                        viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH) &&
-//                        currentCalendar.get(Calendar.DATE) == n) {
-//                    linearLayout.setBackgroundColor(Color.RED);
-//                    linearLayout.addView(day, new LinearLayout.LayoutParams(230, 230));
-//                } else {
-//                    linearLayout.addView(day, new LinearLayout.LayoutParams(250, 250));
-//                }
-//
-//                weekTableRows[j].addView(linearLayout, new TableRow.LayoutParams(260, 260));
-//                n++;
-//            }
-//            if (j == 6) {
-//                j = 0;
-//            } else {
-//                j++;
-//            }
-//        }
     }
 
     float pxFromDp(float dp) {

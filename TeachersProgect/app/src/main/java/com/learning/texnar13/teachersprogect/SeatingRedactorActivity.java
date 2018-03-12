@@ -192,6 +192,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
             //создание парты
             RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);
             tempRelativeLayoutDesk.setBackgroundColor(Color.LTGRAY);
+            tempRelativeLayoutDesk.setBackgroundResource(R.drawable.desk);
             //настраиваем параметры под конкретную парту
             tempRelativeLayoutDeskParams = new RelativeLayout.LayoutParams(
                     (int) dpFromPx(1000 * deskUnit.countOfPlaces * multiplier),
@@ -221,7 +222,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                 //создание места
                 final LinearLayout tempPlaceLayout = new LinearLayout(this);
                 tempPlaceLayout.setOrientation(LinearLayout.VERTICAL);
-                tempPlaceLayout.setBackgroundColor(Color.parseColor("#e4ea7e"));
+                //tempPlaceLayout.setBackgroundColor(Color.parseColor("#e4ea7e"));
                 //настраиваем параметры под конкретное место
                 tempRelativeLayoutPlaceParams = new RelativeLayout.LayoutParams(
                         (int) dpFromPx((1000 - 50) * multiplier),

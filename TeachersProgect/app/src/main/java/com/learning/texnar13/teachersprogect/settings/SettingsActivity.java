@@ -114,7 +114,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        setTitle("Настройки");
+        setTitle("НАСТРОЙКИ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
 
 
@@ -213,7 +213,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
 
         for (int i = 0; i < 4; i++) {
             tables[i] = new RelativeLayout(this);
-            tables[i].setBackgroundColor(Color.parseColor("#dad5de"));
+            tables[i].setBackground(getResources().getDrawable(R.drawable.desk));
             tablesParams[i] = new RelativeLayout.LayoutParams(
                     (int) pxFromDp(2000 * multiplier), (int) pxFromDp(1000 * multiplier));
 

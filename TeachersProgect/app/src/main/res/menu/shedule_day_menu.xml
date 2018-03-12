@@ -6,7 +6,7 @@
         android:id="@+id/shedule_day_menu_item_help"
         android:checkable="false"
         android:enabled="true"
-        android:title="помощь"
+        android:title=" ? "
         android:visible="true"
         app:showAsAction="ifRoom|withText" />
 </menu>

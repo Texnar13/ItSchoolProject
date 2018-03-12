@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -87,7 +89,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
         Spinner classSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_class_spinner);
         Spinner cabinetSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_cabinet_spinner);
         seatingStateText = (TextView) findViewById(R.id.activity_lesson_redactor_seating_state);
-        Button editSeatingButton = (Button) findViewById(R.id.activity_lesson_redactor_seating_redactor_button);
+        TextView editSeatingButton = (TextView) findViewById(R.id.activity_lesson_redactor_seating_redactor_button);
         //урок
         lessonNameSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_lesson_name_spinner);
         //время
@@ -95,20 +97,22 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
         CheckBox timeCheckBox = (CheckBox) findViewById(R.id.activity_lesson_redactor_time_check_box);
         Spinner lessonRepeatSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_lesson_repeat_spinner);
         //общие
-        TextView title = (TextView) findViewById(R.id.activity_lesson_redactor_title);
         LinearLayout buttonsOut = (LinearLayout) findViewById(R.id.activity_lesson_redactor_buttons_out);
-        Button removeButton = (Button) findViewById(R.id.activity_lesson_redactor_remove_button);
-        Button backButton = (Button) findViewById(R.id.activity_lesson_redactor_back_button);
-        Button saveButton = (Button) findViewById(R.id.activity_lesson_redactor_save_button);
+        TextView removeButton = (TextView) findViewById(R.id.activity_lesson_redactor_remove_button);
+        TextView backButton = (TextView) findViewById(R.id.activity_lesson_redactor_back_button);
+        TextView saveButton = (TextView) findViewById(R.id.activity_lesson_redactor_save_button);
 
 
         lessonTime = new LessonTimePeriod(new GregorianCalendar(), new GregorianCalendar());
         if (attitudeId == -1) {
-            title.setText("Создание урока");
+
+            //заголовок
+            setTitle("Создание урока");
             lessonTime.calendarStartTime.setTime(new Date(getIntent().getLongExtra(LESSON_START_TIME, 1)));
             lessonTime.calendarEndTime.setTime(new Date(getIntent().getLongExtra(LESSON_END_TIME, 1)));
         } else {
-            title.setText("Редактирование урока");
+
+            setTitle("Редактирование урока");
 
             Cursor attitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(attitudeId);
             attitudeCursor.moveToFirst();
@@ -378,7 +382,55 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
             LinearLayout.LayoutParams spinnerTimeParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             spinnerTimeParams.gravity = Gravity.CENTER;
 
-            timeOut.addView(spinner, spinnerTimeParams);
+
+/*          <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <Spinner
+                    android:id="@+id/activity_lesson_redactor_lesson_repeat_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginEnd="18dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginStart="18dp"
+                    android:background="@drawable/spinner_background" />
+            </LinearLayout>
+*/
+            //контейнер для спиннера и подчеркивания
+            LinearLayout timeContainer = new LinearLayout(this);
+            timeContainer.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams timeContainerParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            timeContainerParams.gravity = Gravity.CENTER;
+
+            //спиннер в контейнер
+            timeContainer.addView(spinner, spinnerTimeParams);
+
+            //подчеркивание под спиннером
+            LinearLayout line = new LinearLayout(this);
+            line.setBackground(getResources().getDrawable(R.drawable.spinner_background));
+            LinearLayout.LayoutParams lineParams = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    (int) pxFromDp(2)
+            );
+            lineParams.setMargins((int) pxFromDp(18),0,(int) pxFromDp(18),0);
+            timeContainer.addView(line, lineParams);
+
+            //добавляем все в timeOut
+            timeOut.addView(timeContainer, timeContainerParams);
+
         } else {
             //своё время
 
@@ -400,11 +452,11 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         ArrayList<Long> arrayList = db.getNotPutLearnersIdByCabinetIdAndClassId(classCabinet.cabinetId, classCabinet.classId);
         if (arrayList.size() == 0) {
-            seatingStateText.setText("Ученики рассажены в этом кабинете!");
+            seatingStateText.setText("Ученики рассажены в этом кабинете.");
             seatingStateText.setTextColor(Color.parseColor("#469500"));
         } else {
             seatingStateText.setText("Ученики не рассажены!");
-            seatingStateText.setTextColor(Color.parseColor("#ff7700"));
+            seatingStateText.setTextColor(getResources().getColor(R.color.colorAccentRed));
         }
     }
 
@@ -473,7 +525,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
                     args.putStringArray("stringOnlyLessons", stringOnlyLessons);
                     args.putLongArray("lessonsId", lessonsId);
                     args.putLongArray("lessonsId", lessonsId);
-                    args.putInt("position",position);
+                    args.putInt("position", position);
                     //диалог по удалению
                     RemoveDialogFragment removeDialog = new RemoveDialogFragment();
                     removeDialog.setArguments(args);
@@ -485,7 +537,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
                     //данные для диалога
                     Bundle args = new Bundle();
                     args.putStringArray("stringLessons", stringLessons);
-                    args.putInt("position",position);
+                    args.putInt("position", position);
                     //диалог по созданию нового предмета
                     LessonNameDialogFragment lessonNameDialogFragment = new LessonNameDialogFragment();
                     lessonNameDialogFragment.setArguments(args);
@@ -529,9 +581,6 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
                     .setPositiveButton("удалить", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            dismiss();
-
-
                             long[] lessonsId = getArguments().getLongArray("lessonsId");
                             ArrayList<Long> deleteList = new ArrayList<Long>(mSelectedItems.size());
                             for (int itemPoz : mSelectedItems) {
@@ -540,6 +589,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
                             (new DataBaseOpenHelper(getActivity().getApplicationContext())).deleteSubjects(deleteList);
                             handler.sendEmptyMessage(0);
                             //availableLessonsOut(classViewId, 0);
+                            dismiss();
                         }
                     })
                     .setNegativeButton("отмена", new DialogInterface.OnClickListener() {
@@ -596,17 +646,23 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
 
     @Override//обратная связь от диалога
     public void lessonNameDialogMethod(int code, int position, String classNameText) {
-        if( code==1){
+        if (code == 1) {
             (new DataBaseOpenHelper(this)).createSubject(classNameText, classCabinetId.classId);
             availableLessonsOut(classCabinetId.classId, position);
-        } else{
+        } else {
             availableLessonsOut(classCabinetId.classId, position);
         }
 
     }
+
+//------технические методы------
+    private float pxFromDp(float px) {
+        return px * getApplicationContext().getResources().getDisplayMetrics().density;
+    }
 }
 
 interface LessonNameDialogInterface {//обратная связь от диалога
+
     void lessonNameDialogMethod(int code, int position, String classNameText);
 }
 
@@ -634,7 +690,7 @@ class CustomAdapter extends ArrayAdapter {
         //if (flag || isFirstElementVisible) {
         TextView tv = (TextView) convertView;
         tv.setGravity(Gravity.CENTER);
-        tv.setBackgroundColor(Color.parseColor("#e4ea7e"));//светло салатовый
+        tv.setBackgroundColor(getContext().getResources().getColor(R.color.colorBackGround));//светло салатовый
         //tv.setBackgroundColor(Color.WHITE);//светло салатовый
         tv.setText(objects[position]);
         //}

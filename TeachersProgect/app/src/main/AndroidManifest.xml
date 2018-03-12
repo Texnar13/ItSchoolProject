@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.learning.texnar13.teachersprogect"
-    android:versionCode="30"
-    android:versionName="super1.732">
+    android:versionCode="31"
+    android:versionName="super1.733">
 
     <application
         android:allowBackup="true"

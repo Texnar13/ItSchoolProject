@@ -187,7 +187,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         Cursor cabinetCursor = db.getCabinets(cabinetId);
         cabinetCursor.moveToFirst();
-        setTitle("парты в \"" +
+        setTitle("Парты в \"" +
                 cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)) +
                 "\"");
         cabinetCursor.close();
@@ -213,7 +213,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             deskLayoutParams.leftMargin = (int) pxFromDp(deskX * 25 * multiplier);
             deskLayoutParams.topMargin = (int) pxFromDp(deskY * 25 * multiplier);
             deskLayout.setLayoutParams(deskLayoutParams);
-            deskLayout.setBackgroundColor(Color.parseColor("#f1bd7d"));
+            //ставим парте Drawable
+            deskLayout.setBackground(getResources().getDrawable(R.drawable.start_screen_3_2_yellow_spot));
             out.addView(deskLayout);
         }
         desksCursor.close();
@@ -493,7 +494,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         newDeskLayoutParams.leftMargin = (int) (metricsB.widthPixels / 2 - pxFromDp(500 * numberOfPlaces * multiplier));
         newDeskLayoutParams.topMargin = (int) (metricsB.heightPixels / 2 - pxFromDp(500 * multiplier));
         newDeskLayout.setLayoutParams(newDeskLayoutParams);
-        newDeskLayout.setBackgroundColor(Color.parseColor("#f1bd7d"));
+        //ставим парте Drawable
+        newDeskLayout.setBackground(getResources().getDrawable(R.drawable.start_screen_3_2_yellow_spot));
 
         deskCoordinatesList.add(new CabinetRedactorPoint(deskId, newDeskLayout, (int) (dpFromPx(metricsB.widthPixels / 2 - pxFromDp(500 * numberOfPlaces * multiplier)) / (25 * multiplier)), (int) (dpFromPx(metricsB.heightPixels / 2 - pxFromDp(500 * multiplier)) / (25 * multiplier)), numberOfPlaces));
 
@@ -528,7 +530,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         newDeskLayoutParams.leftMargin = (int) (metricsB.widthPixels / 2 - pxFromDp(500 * numberOfPlaces * multiplier));
         newDeskLayoutParams.topMargin = (int) (metricsB.heightPixels / 2 - pxFromDp(500 * multiplier));
         newDeskLayout.setLayoutParams(newDeskLayoutParams);
-        newDeskLayout.setBackgroundColor(Color.parseColor("#f1bd7d"));
+        //ставим парте Drawable
+        newDeskLayout.setBackground(getResources().getDrawable(R.drawable.start_screen_3_2_yellow_spot));
 
         deskCoordinatesList.add(new CabinetRedactorPoint(deskId, newDeskLayout, (int) (dpFromPx(metricsB.widthPixels / 2 - pxFromDp(500 * numberOfPlaces * multiplier)) / (25 * multiplier)), (int) (dpFromPx(metricsB.heightPixels / 2 - pxFromDp(500 * multiplier)) / (25 * multiplier)), numberOfPlaces));
 

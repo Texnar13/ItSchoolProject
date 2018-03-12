@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
+    android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
@@ -10,8 +10,8 @@
     tools:context="com.learning.texnar13.teachersprogect.ScheduleDayActivity">
 
 
-    <RelativeLayout
-
+    <!--RelativeLayout
+        android:background="#efeaea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
@@ -49,7 +49,7 @@
             app:srcCompat="@drawable/calendar_right_arrow"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
-    </RelativeLayout>
+    </RelativeLayout-->
 
     <HorizontalScrollView
         android:layout_width="match_parent"

@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:background="#f3e4d2">
+        android:background="@color/colorBackGround">
 
         <TextView
             android:id="@+id/cabinet_redactor_state_text"
@@ -55,7 +55,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_centerInParent="true"
-                android:background="#f5ce9d"
+                android:background="@drawable/cabinet_redactor_add_desk_button"
                 app:srcCompat="@drawable/ic_input_add" />
         </RelativeLayout>
 

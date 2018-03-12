@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#faf6ff"
+    android:background="@color/colorBackGround"
     android:orientation="vertical"
     tools:context="com.learning.texnar13.teachersprogect.settings.SettingsActivity">
 
@@ -51,6 +51,7 @@
             </LinearLayout>
 
             <LinearLayout
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
@@ -58,6 +59,8 @@
                 android:orientation="vertical">
 
                 <Button
+                    android:textColor="@color/colorPrimary"
+                    android:background="@drawable/button_lite_blue"
                     android:id="@+id/activity_settings_remove_data_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -66,12 +69,11 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:background="#dad5de"
                     android:text="удалить все данные" />
             </LinearLayout>
 
             <Button
-                android:textColor="#ffb300"
+                android:textColor="@color/colorAccentRed"
                 android:id="@+id/settings_rate_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -80,7 +82,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
-                android:background="@drawable/settings_rate_us_shape"
+                android:background="@drawable/button_lite_red"
                 android:text="оцените наше приложение :)" />
         </LinearLayout>
     </ScrollView>
