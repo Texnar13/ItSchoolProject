@@ -194,10 +194,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
 //----переключение даты----
         //константы
-        final String[] monthsNames = {
-                "ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ",
-                "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"
-        };
+        final String[] monthsNames = getResources().getStringArray(R.array.months_names);
         //изменяющийся календарь
         if (viewCalendar == null) {//если зашли в активность а не переворачивали экран ставим тек дату
             viewCalendar = new GregorianCalendar();
@@ -266,8 +263,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //название класса
         Cursor classCursor = db.getClasses(classId);
         classCursor.moveToFirst();
-        getSupportActionBar().setTitle("Ученики в классе " +
-                classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
+        getSupportActionBar().setTitle(R.string.title_activity_learners_and_grades);
+        getSupportActionBar().setTitle(
+                getSupportActionBar().getTitle() +" "+
+                        classCursor.getString(
+                                classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)
+                        )
+        );
+
         classCursor.close();
 
 //----спинер с предметами----
@@ -379,18 +382,18 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         TableRow headNameRaw = new TableRow(this);
         //рамка
         LinearLayout headNameOut = new LinearLayout(this);
-        headNameOut.setBackgroundColor(Color.LTGRAY);//parseColor("#1f5b85")
+        headNameOut.setBackgroundColor(getResources().getColor(R.color.colorBackGroundDark));//parseColor("#1f5b85")
         //текст заголовка ученика
         TextView headName = new TextView(this);
         headName.setMinWidth((int) pxFromDp(140));
         headName.setText("  Ф.И.  ");
         headName.setTextSize(20);
-        headName.setBackgroundColor(Color.WHITE);//светло синий"#bed7e9"Color.parseColor()
+        headName.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));//светло синий"#bed7e9"Color.parseColor()Color.WHITE
         headName.setGravity(Gravity.START);
         headName.setTextColor(Color.BLACK);//тёмно синий parseColor("#1f5b85")
         //отступы рамки
         LinearLayout.LayoutParams headNameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        headNameParams.setMargins(0, 0, 0, (int) pxFromDp(2));
+        headNameParams.setMargins(0, 0, 0, (int) pxFromDp(1));
         //текст в рамку
         headNameOut.addView(headName, headNameParams);
         //рамку в строку
@@ -404,15 +407,15 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             TableRow learner = new TableRow(this);
             //рамка
             LinearLayout learnerNameOut = new LinearLayout(this);
-            learnerNameOut.setBackgroundColor(Color.LTGRAY);//parseColor("#1f5b85")
+            learnerNameOut.setBackgroundColor(getResources().getColor(R.color.colorBackGroundDark));//parseColor("#1f5b85")
             //контейнер для текста
             LinearLayout dateContainer = new LinearLayout(this);
-            dateContainer.setBackgroundColor(Color.WHITE);
+            dateContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGround));//Color.WHITE
             //текст ученика
             TextView learnerName = new TextView(this);
             learnerName.setTextSize(20);
             learnerName.setTextColor(Color.BLACK);//parseColor("#1f5b85")
-            learnerName.setBackgroundColor(Color.WHITE);//"#bed7e9"
+            learnerName.setBackgroundColor(getResources().getColor(R.color.colorBackGround));//"#bed7e9"//Color.WHITE
             learnerName.setGravity(Gravity.BOTTOM);
             learnerName.setText(learnersTitles.get(i));
             //отступы контейнера в рамке
@@ -422,7 +425,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             dateContainer.addView(learnerName, learnerNameParams);
             //отступы рамки
             LinearLayout.LayoutParams dateContainerParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            dateContainerParams.setMargins(0, 0, 0, (int) pxFromDp(2));
+            dateContainerParams.setMargins(0, 0, 0, (int) pxFromDp(1));
             //контейнер в рамку
             learnerNameOut.addView(dateContainer, dateContainerParams);
             //рамку в строку
@@ -721,7 +724,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     //по оценкам за этот день
                     for (int l = 0; l < 3; l++) {
                         //[ученик][день][урок][оценка]
-                        if (grades[k][i][j][l].grade//to-do здесь ошибка java.lang.NullPointerException
+                        if (grades[k][i][j][l].grade//todo здесь ошибка java.lang.NullPointerException
                                 != 0) {
                             flag = true;
                             break out;
@@ -733,20 +736,20 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 //---шапка
                     //рамка
                     LinearLayout headDateOut = new LinearLayout(this);
-                    headDateOut.setBackgroundColor(Color.LTGRAY);
+                    headDateOut.setBackgroundColor(getResources().getColor(R.color.colorBackGroundDark));
                     //текст заголовка ученика
                     TextView headDate = new TextView(this);
 
                     headDate.setTextSize(20);
                     if (i % 2 == 0) {
-                        headDate.setBackgroundColor(Color.WHITE);
+                        headDate.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));//Color.WHITE
                     } else {
-                        headDate.setBackgroundColor(Color.WHITE);
+                        headDate.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));
                         //headDate.setBackgroundColor(Color.parseColor("#bed7e9"));
                     }
                     headDate.setGravity(Gravity.CENTER);
                     if (j != 0) {
-                        headDate.setTextColor(Color.GRAY);
+                        headDate.setTextColor(Color.WHITE);
                         headDate.setText(" " + (j + 1) + " ");
                     } else {
                         headDate.setTextColor(Color.BLACK);
@@ -754,7 +757,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     }
                     //отступы рамки
                     LinearLayout.LayoutParams headDateParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                    headDateParams.setMargins(0, 0, 0, (int) pxFromDp(2));
+                    headDateParams.setMargins(0, 0, 0, (int) pxFromDp(1));
                     //текст в рамку
                     headDateOut.addView(headDate, headDateParams);
                     //рамку в строку
@@ -764,12 +767,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     for (int k = 0; k < grades.length; k++) {
                         //рамка
                         LinearLayout dateOut = new LinearLayout(this);
-                        dateOut.setBackgroundColor(Color.LTGRAY);
+                        dateOut.setBackgroundColor(getResources().getColor(R.color.colorBackGroundDark));
                         //текст
                         TextView learnerGrade = new TextView(this);
                         learnerGrade.setTextColor(Color.BLACK);
                         learnerGrade.setTextSize(20);
-                        learnerGrade.setBackgroundColor(Color.WHITE);
+                        learnerGrade.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
                         learnerGrade.setGravity(Gravity.CENTER);
                         //по оценкам в уроке
                         for (int l = 0; l < grades[k][i][j].length; l++) {
@@ -799,7 +802,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         //параметры текста
                         LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         //отступы рамки
-                        textParams.setMargins(0, 0, 0, (int) pxFromDp(2));
+                        textParams.setMargins((int) pxFromDp(1), 0, 0, (int) pxFromDp(1));
                         //текст в рамку
                         dateOut.addView(learnerGrade, textParams);
                         //добавляем всё в строку

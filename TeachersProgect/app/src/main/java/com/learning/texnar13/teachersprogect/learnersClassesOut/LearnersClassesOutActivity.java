@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.LearnersAndGradesOut.LearnersAndGradesActivity;
@@ -88,8 +87,8 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 //        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.test_lay);
 //        relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams((int) getApplicationContext().getResources().getDisplayMetrics().heightPixels, getApplicationContext().getResources().getDisplayMetrics().heightPixels));
 
-        //------заголовок--------
-        setTitle("Мои классы");
+//        //------заголовок--------
+//        setTitle("Мои классы");
 
         //кнопка назад
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -267,7 +266,8 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
         helpText1.setGravity(Gravity.CENTER);
         helpText1.setTextSize(20);
         helpText1.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
-        helpText1.setText("Чтобы создать класс, нажмите \"+\" и введите его название. ");
+        //helpText1.setText("Чтобы создать класс, нажмите \"+\" и введите его название. ");
+        helpText1.setText(R.string.learners_classes_out_activity_text_help);
         //добавляем
         container.addView(
                 helpText1,
@@ -275,33 +275,33 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
 
-        //---2 текст---
-        //создаем
-        TextView helpText2 = new TextView(this);
-        helpText2.setGravity(Gravity.CENTER);
-        helpText2.setTextSize(20);
-        helpText2.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
-        helpText2.setText("Чтобы посмотреть список учеников и их оценки, нажмите на нужный вам класс.");
-        //добавляем
-        container.addView(
-                helpText2,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-
-        //---3 текст---
-        //создаем
-        TextView helpText3 = new TextView(this);
-        helpText3.setGravity(Gravity.CENTER);
-        helpText3.setTextSize(20);
-        helpText3.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
-        helpText3.setText("Чтобы переименовать или удалить класс с учениками, нажмите на него и удерживайте.");
-        //добавляем
-        container.addView(
-                helpText3,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
+//        //---2 текст---
+//        //создаем
+//        TextView helpText2 = new TextView(this);
+//        helpText2.setGravity(Gravity.CENTER);
+//        helpText2.setTextSize(20);
+//        helpText2.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
+//        helpText2.setText("Чтобы посмотреть список учеников и их оценки, нажмите на нужный вам класс.");
+//        //добавляем
+//        container.addView(
+//                helpText2,
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//        );
+//
+//        //---3 текст---
+//        //создаем
+//        TextView helpText3 = new TextView(this);
+//        helpText3.setGravity(Gravity.CENTER);
+//        helpText3.setTextSize(20);
+//        helpText3.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
+//        helpText3.setText("Чтобы переименовать или удалить класс с учениками, нажмите на него и удерживайте.");
+//        //добавляем
+//        container.addView(
+//                helpText3,
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//        );
 
         //---выводим контейнер в экран---
         room.addView(container, containerParams);

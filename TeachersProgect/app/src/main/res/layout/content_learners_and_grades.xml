@@ -109,7 +109,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:gravity="center"
-                    android:text="Предмет"
+                    android:text="@string/learners_and_grades_out_activity_title_subject"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#000000" />
 
@@ -132,7 +132,7 @@
                         android:layout_marginLeft="18dp"
                         android:layout_marginRight="18dp"
                         android:layout_marginStart="18dp"
-                        android:background="@drawable/spinner_background" />
+                        android:background="@drawable/line_gray" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -158,7 +158,8 @@
                             <TableLayout
                                 android:id="@+id/learners_and_grades_table_names"
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"></TableLayout>
+                                android:layout_height="match_parent">
+                            </TableLayout>
                         </HorizontalScrollView>
 
                         <HorizontalScrollView
@@ -184,8 +185,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:textColor="@color/colorBackGroundDark"
                         android:gravity="center"
-                        android:text="Здесь выводится список ваших учеников и их оценки по датам(серым обозначены номера уроков). Кнопка '+' добавит ученика, долгоге нажатие на его имя, откроет окно, где можно переименовать или удалить ученика. Сверху можно выбрать дисциплину в которой ставились оценки, и месяц за который выводятся оценки."
+                        android:text="@string/learners_and_grades_out_activity_text_help"
                         android:textSize="10pt">
 
                     </TextView>

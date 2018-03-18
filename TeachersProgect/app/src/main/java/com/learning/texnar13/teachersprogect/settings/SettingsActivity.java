@@ -2,7 +2,6 @@ package com.learning.texnar13.teachersprogect.settings;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -102,7 +101,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
                 lerner5Id, places.get(3));
         dbOpenHelper.close();
 
-        Toast toast = Toast.makeText(this, "Данные удалены успешно!", Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(this, R.string.settings_activity_toast_data_delete_success, Toast.LENGTH_LONG);
         toast.show();
     }
 
@@ -114,7 +113,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        setTitle("НАСТРОЙКИ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
 
 

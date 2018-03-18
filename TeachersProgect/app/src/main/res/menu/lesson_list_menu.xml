@@ -8,7 +8,7 @@
         android:checkable="true"
 
         app:showAsAction="always|withText"
-        android:title="@string/lesson_list_menu_save_text">
+        android:title="@string/lesson_list_activity_menu_text_save">
 
     </item>
 </menu>

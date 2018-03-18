@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,12 +13,16 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -28,18 +31,14 @@
                     android:layout_marginBottom="20dp"
                     android:layout_marginTop="20dp"
                     android:gravity="center"
-                    android:text="НАСТРОЙКА РАЗМЕРА ПАРТ"
+                    android:text="@string/settings_activity_title_desk_size"
                     android:textColor="#000000"
                     android:textSize="18dp" />
 
                 <SeekBar
                     android:id="@+id/activity_settings_seekBar"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginStart="20dp" />
+                    android:layout_height="30dp" />
 
                 <LinearLayout
                     android:id="@+id/activity_settings_size_show_layout"
@@ -55,35 +54,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical">
-
-                <Button
-                    android:textColor="@color/colorPrimary"
-                    android:background="@drawable/button_lite_blue"
-                    android:id="@+id/activity_settings_remove_data_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginStart="20dp"
-                    android:text="удалить все данные" />
-            </LinearLayout>
-
-            <Button
-                android:textColor="@color/colorAccentRed"
-                android:id="@+id/settings_rate_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginEnd="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
-                android:background="@drawable/button_lite_red"
-                android:text="оцените наше приложение :)" />
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/activity_settings_remove_data_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/button_lite_blue"
+                    android:text="@string/settings_activity_button_remove_data"
+                    android:textColor="@color/colorPrimary" />
+            </LinearLayout>
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/settings_rate_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/button_lite_red"
+                    android:text="@string/settings_activity_button_rate_us"
+                    android:textColor="@color/colorAccentRed" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

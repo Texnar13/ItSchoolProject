@@ -6,7 +6,7 @@
         android:id="@+id/start_screen_menu_item_help"
         android:checkable="false"
         android:enabled="true"
-        android:title="помощь"
+        android:title="@string/start_screen_activity_menu_text_help"
         android:visible="true"
         app:showAsAction="ifRoom|withText" />
 </menu>

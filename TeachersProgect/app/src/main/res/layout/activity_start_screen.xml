@@ -5,6 +5,7 @@
     android:id="@+id/activity_start_screen_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackGround"
     tools:context="com.learning.texnar13.teachersprogect.startScreen.StartScreenActivity">
 
 
@@ -28,38 +29,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 app:srcCompat="@drawable/start_screen_3_1_blue_spot" />
 
             <TextView
-                android:layout_marginLeft="7dp"
-                android:layout_marginStart="7dp"
                 android:id="@+id/start_screen_text_view_my_learners"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignLeft="@+id/start_screen_image_view_my_learners_background"
                 android:layout_alignStart="@+id/start_screen_image_view_my_learners_background"
+                android:layout_marginLeft="7dp"
+                android:layout_marginStart="7dp"
                 android:layout_toLeftOf="@+id/start_screen_image_view_my_learners"
                 android:layout_toStartOf="@+id/start_screen_image_view_my_learners"
                 android:gravity="center_vertical"
-                android:text="мои ученики"
+                android:text="@string/start_screen_activity_title_my_learners"
+                android:textAllCaps="true"
                 android:textColor="#ffffff"
-                android:textSize="29sp" />
+                android:textSize="@dimen/text_title_size" />
 
             <ImageView
-                android:adjustViewBounds="true"
                 android:id="@+id/start_screen_image_view_my_learners"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginEnd="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginEnd="14dp"
+                android:layout_marginRight="14dp"
+                android:adjustViewBounds="true"
                 android:scaleType="fitEnd"
                 app:srcCompat="@drawable/start_screen_3_1_girl" />
 
@@ -69,39 +71,47 @@
             android:id="@+id/start_screen_button_my_cabinets"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="0dp"
             android:layout_weight="1">
 
             <ImageView
-
+                android:id="@+id/start_screen_image_view_my_cabinets_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:scaleType="fitXY"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
                 app:srcCompat="@drawable/start_screen_3_2_yellow_spot" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+            <ImageView
+                android:id="@+id/start_screen_image_view_my_cabinets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitEnd"
+                app:srcCompat="@drawable/start_screen_3_2_cabinet" />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/_3_my_cabinets_text" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/start_screen_text_view_my_cabinets"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="7dp"
+                android:layout_marginRight="7dp"
+                android:layout_alignEnd="@+id/start_screen_image_view_my_cabinets_background"
+                android:layout_alignRight="@+id/start_screen_image_view_my_cabinets_background"
+                android:layout_toEndOf="@+id/start_screen_image_view_my_cabinets"
+                android:layout_toRightOf="@+id/start_screen_image_view_my_cabinets"
+                android:gravity="center_vertical|right"
+                android:text="@string/start_screen_activity_title_my_cabinets"
+                android:textAllCaps="true"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/text_title_size" />
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -111,36 +121,45 @@
             android:layout_weight="1">
 
             <ImageView
-
+                android:id="@+id/start_screen_image_view_my_schedule_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:scaleType="fitXY"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
                 app:srcCompat="@drawable/start_screen_3_3_green_spot" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/start_screen_text_view_my_schedule"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:scaleType="fitXY">
+                android:layout_alignLeft="@+id/start_screen_image_view_my_schedule_background"
+                android:layout_alignStart="@+id/start_screen_image_view_my_schedule_background"
+                android:layout_marginLeft="7dp"
+                android:layout_marginStart="7dp"
+                android:layout_toLeftOf="@+id/start_screen_image_view_my_schedule"
+                android:layout_toStartOf="@+id/start_screen_image_view_my_schedule"
+                android:gravity="center_vertical"
+                android:text="@string/start_screen_activity_title_my_schedule"
+                android:textAllCaps="true"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/text_title_size" />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/_2_my_schedule_text" />
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/start_screen_image_view_my_schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="14dp"
+                android:layout_marginRight="14dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitEnd"
+                app:srcCompat="@drawable/start_screen_3_3_calendar" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -150,35 +169,45 @@
             android:layout_weight="1">
 
             <ImageView
-
+                android:id="@+id/start_screen_image_view_current_lesson_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:scaleType="fitXY"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
                 app:srcCompat="@drawable/start_screen_3_4_pink_spot" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+            <ImageView
+                android:id="@+id/start_screen_image_view_current_lesson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitEnd"
+                app:srcCompat="@drawable/start_screen_3_4_book" />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/start_screen_2_4_current_lesson_text" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/start_screen_text_view_current_lesson"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="7dp"
+                android:layout_marginRight="7dp"
+                android:layout_alignEnd="@+id/start_screen_image_view_current_lesson_background"
+                android:layout_alignRight="@+id/start_screen_image_view_current_lesson_background"
+                android:layout_toEndOf="@+id/start_screen_image_view_current_lesson"
+                android:layout_toRightOf="@+id/start_screen_image_view_current_lesson"
+                android:gravity="center_vertical|right"
+                android:text="@string/start_screen_activity_title_current_lesson"
+                android:textAllCaps="true"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/text_title_size" />
+
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -188,38 +217,45 @@
             android:layout_weight="1">
 
             <ImageView
-
+                android:id="@+id/start_screen_image_view_settings_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:scaleType="fitXY"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
                 app:srcCompat="@drawable/start_screen_3_5_magenta_spot" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/start_screen_text_view_settings"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_alignLeft="@+id/start_screen_image_view_settings_background"
+                android:layout_alignStart="@+id/start_screen_image_view_settings_background"
+                android:layout_marginLeft="7dp"
+                android:layout_marginStart="7dp"
+                android:layout_toLeftOf="@+id/start_screen_image_view_settings"
+                android:layout_toStartOf="@+id/start_screen_image_view_settings"
+                android:gravity="center_vertical"
+                android:text="@string/start_screen_activity_title_settings"
+                android:textAllCaps="true"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/text_title_size" />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginStart="20dp"
-
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/_5_settings_text" />
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/start_screen_image_view_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="14dp"
+                android:layout_marginRight="14dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitEnd"
+                app:srcCompat="@drawable/start_screen_3_5_settings" />
         </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>

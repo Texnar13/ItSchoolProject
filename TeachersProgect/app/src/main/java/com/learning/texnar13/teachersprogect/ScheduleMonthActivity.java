@@ -45,7 +45,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         gestureOverlayView.setGestureColor(Color.TRANSPARENT);//делаем невидимым
         gestureOverlayView.setUncertainGestureColor(Color.TRANSPARENT);
 
-        setTitle("КАЛЕНДАРЬ");
+//        setTitle("КАЛЕНДАРЬ");
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//вертикальная ориентация
 
         gestureLib = GestureLibraries.fromRawResource(this, R.raw.gestures);
@@ -64,8 +64,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         ImageView next = (ImageView) findViewById(R.id.schedule_month_button_next);
         final TextView dateText = (TextView) findViewById(R.id.schedule_month_date_text);
 
-        final String months[] = {"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
-                "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
+        final String months[] = getResources().getStringArray(R.array.months_names);
         Date date = new Date();//получаем текущую дату
         final Calendar currentCalendar = new GregorianCalendar();//календарь
         currentCalendar.setTime(date);
@@ -224,10 +223,11 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         }
 
         //выводим ряд дни недели
-        String week[] = {"ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"};
+        String week[] = getResources().getStringArray(R.array.schedule_month_activity_week_days_short_array);
         for (int i = 0; i < 7; i++) {
             TextView day = new TextView(this);
             day.setText(week[i]);
+            day.setAllCaps(true);
             day.setTextSize(15);
             day.setTextColor(Color.BLACK);
             day.setGravity(Gravity.CENTER);
@@ -268,7 +268,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 textContainer.setGravity(Gravity.CENTER);
                 textContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
                 if (weekDay == 5 || weekDay == 6) {
-                    textContainer.setBackgroundColor(Color.parseColor("#ebffd6"));//"#fbffb9"#fdffdf
+                    textContainer.setBackgroundResource(R.drawable.button_gray);
+                    //textContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGroundDark));//"#fbffb9"#fdffdf"#ebffd6"
                 } else {
                     textContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGround));//"#fdffdf"parseColor()
                 }

@@ -1,6 +1,5 @@
 package com.learning.texnar13.teachersprogect;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +18,6 @@ import android.widget.ZoomControls;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
-import com.learning.texnar13.teachersprogect.startScreen.StartScreenHelp;
 
 import java.util.ArrayList;
 
@@ -29,18 +27,24 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     // ID редактируемого обьекта
     public static final String EDITED_OBJECT_ID = "id";
     // шаг клетки
-    static final float GIRD_SPACING = 60F;
+    static float girdSpacing = 60F;
 
     //--переменные--
-    // шаг клетки
+    // выравнивание
     boolean isGird = true;
+    // вывод сетки
+    boolean isGirdLines = false;
 
 
     ArrayList<CabinetRedactorPoint> deskCoordinatesList = new ArrayList<>();
     float multiplier = 0;//множитель
     long checkedDeskId;
+    ImageView instrumentalImageBackground;
     ImageView instrumentalImage;
+    //слой с партами
     RelativeLayout out;
+    //слой позади out, например для сетки
+    RelativeLayout outBackground;
     long cabinetId;
     TextView stateText;
 
@@ -76,19 +80,44 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 return true;
             }
         });
+        //чекбокс сетки
+        menu.findItem(R.id.cabinet_redactor_menu_gird_lines).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                //если чекбокс нажат
+                if (menuItem.isChecked()) {
+                    //убираем галочку
+                    isGirdLines = false;
+                    menuItem.setChecked(false);
+                    //убираем сетку
+                    outLines();
+                } else {
+                    //ставим галочку
+                    menuItem.setChecked(true);
+                    isGirdLines = true;
+                    //возвращаем подведение парт
+                    outLines();
+                }
+                return true;
+            }
+        });
         return super.onPrepareOptionsMenu(menu);
     }
 
+//---------------создание экрана---------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cabinet_redactor);
         out = (RelativeLayout) findViewById(R.id.redactor_out);
+        outBackground = (RelativeLayout) findViewById(R.id.redactor_out_background);
 
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         //коэффициент размера интерфейса
         multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
+        //по коэффициенту расчитываем ширину сетки
+        girdSpacing = 600 * multiplier;
 
         Log.i("TeachersApp", "" + multiplier);
         //кнопка назад в actionBar
@@ -133,52 +162,13 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 //        * -----------------------------------------------------------------------
 //        */
 
-////----------------вывод сетки---------------
-//
-//        int x = 0;
-//        int y = 0;
-//        DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
-//        //пробежка по x
-//        while (x < displaymetrics.widthPixels) {
-//            //вывод вертикальной полосы
-//            x = x + (int) GIRD_SPACING;
-//            final RelativeLayout verticalLine = new RelativeLayout(this);
-//            RelativeLayout.LayoutParams verticalLineLayoutParams = new RelativeLayout.LayoutParams(
-//                    3,
-//                    displaymetrics.heightPixels
-//            );
-//            verticalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-//            verticalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//            verticalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-//            //deskLayout.setRotation(60);
-//            verticalLineLayoutParams.leftMargin = x;
-//            verticalLineLayoutParams.topMargin = 0;
-//            verticalLine.setLayoutParams(verticalLineLayoutParams);
-//            verticalLine.setBackgroundColor(Color.LTGRAY);
-//            out.addView(verticalLine);
-//        }
-//        //пробежка по y
-//        while (y < displaymetrics.heightPixels) {
-//            //вывод горизонтальной полосы
-//            y = y + (int) GIRD_SPACING;
-//            final RelativeLayout horizontalLine = new RelativeLayout(this);
-//            RelativeLayout.LayoutParams horizontalLineLayoutParams = new RelativeLayout.LayoutParams(
-//                    displaymetrics.heightPixels,
-//                    3
-//            );
-//            horizontalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-//            horizontalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//            horizontalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-//            //deskLayout.setRotation(60);
-//            horizontalLineLayoutParams.leftMargin = 0;
-//            horizontalLineLayoutParams.topMargin = y;
-//            horizontalLine.setLayoutParams(horizontalLineLayoutParams);
-//            horizontalLine.setBackgroundColor(Color.LTGRAY);
-//            out.addView(horizontalLine);
-//
-//
-//        }
 
+//todo сделать ее вывод из доп меню
+//---вывод сетки---
+        outLines();
+
+
+//---------------загружаем данные из бд---------------
 
         //какой view появился позже тот и отображаться будет выше
 
@@ -187,15 +177,18 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         Cursor cabinetCursor = db.getCabinets(cabinetId);
         cabinetCursor.moveToFirst();
-        setTitle("Парты в \"" +
-                cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)) +
-                "\"");
+        setTitle(getTitle() + " " +
+                cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)));
         cabinetCursor.close();
 
+//---------------ВЫВОД ПАРТ---------------
 
         instrumentalImage = (ImageView) findViewById(R.id.activity_cabinet_redactor_instrumental_image);
-        instrumentalImage.setOnClickListener(this);
-        instrumentalImage.setOnLongClickListener(this);
+
+        instrumentalImageBackground = (ImageView) findViewById(R.id.activity_cabinet_redactor_instrumental_image_background);
+        instrumentalImageBackground.setOnClickListener(this);
+        instrumentalImageBackground.setOnLongClickListener(this);
+
 
         Cursor desksCursor = db.getDesksByCabinetId(cabinetId);//курсор с партами
         while (desksCursor.moveToNext()) {//начальный вывод парт
@@ -221,15 +214,14 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         //текст в центре
         stateText = (TextView) findViewById(R.id.cabinet_redactor_state_text);
-        stateText.setText("Добавьте парту нажатием на '+', и поставьте ее так как она стоит в кабинете (Долгое нажатие добавит одноместную). Для удаления нажмите на парту и перетащите ее к появившемуся красному крестику");
         //если парт нет, то показываем текст
         if (deskCoordinatesList.size() == 0) {
-            stateText.setText("Добавьте парту нажатием на '+', и поставьте ее так как она стоит в кабинете (Долгое нажатие добавит одноместную). Для удаления нажмите на парту и перетащите ее к появившемуся красному крестику");
+            stateText.setText(R.string.cabinet_redactor_activity_text_help);
         } else {
             stateText.setText("");
         }
 
-//---инициализируем кнопки zoom---
+//----------инициализируем кнопки zoom-----------
         final ZoomControls zoomControls = (ZoomControls) findViewById(R.id.cabinet_redactor_zoom_controls);
         //приближение
         zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
@@ -241,11 +233,11 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
                 //проверяем можем ли изменять
                 int last = (int) db.getInterfaceSizeBySettingsProfileId(1);
-                if (last < 96) {
+                if (last < 95) {
                     db.setSettingsProfileParameters(
                             1,
                             "default",
-                            last + 3
+                            last + 4
                     );
                     db.close();
 
@@ -274,6 +266,9 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         //и присваиваем из партам
                         deskCoordinatesList.get(i).desk.setLayoutParams(deskLayoutParams);
                     }
+                    girdSpacing = 600 * multiplier;
+                    //---перевывод сетки---
+                    outLines();
                 } else {//деактивируем кнопку если приближать нельзя
                     zoomControls.setIsZoomInEnabled(false);
                 }
@@ -287,11 +282,11 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                 //проверяем можем ли изменять
                 int last = (int) db.getInterfaceSizeBySettingsProfileId(1);
-                if (last > 5) {
+                if (last > 6) {
                     db.setSettingsProfileParameters(
                             1,
                             "default",
-                            (int) db.getInterfaceSizeBySettingsProfileId(1) - 3
+                            (int) db.getInterfaceSizeBySettingsProfileId(1) - 4
                     );
                     db.close();
 
@@ -319,6 +314,9 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         //и присваиваем из партам
                         deskCoordinatesList.get(i).desk.setLayoutParams(deskLayoutParams);
                     }
+                    girdSpacing = 600 * multiplier;
+                    //---перевывод сетки---
+                    outLines();
                 } else {//деактивируем кнопку если отдалять нельзя
                     zoomControls.setIsZoomOutEnabled(false);
                 }
@@ -347,11 +345,10 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     public boolean onTouch(View view, MotionEvent motionEvent) {
         //если парт нет, то показываем текст
         if (deskCoordinatesList.size() == 0) {
-            stateText.setText("Добавьте парту нажатием на '+', и поставьте ее так как она стоит в кабинете (Долгое нажатие добавит одноместную). Для удаления нажмите на парту и перетащите ее к появившемуся красному крестику");
+            stateText.setText(R.string.cabinets_out_activity_text_help);
         } else {
             stateText.setText("");
         }
-
 
 
         switch (motionEvent.getAction()) {
@@ -363,7 +360,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                             (motionEvent.getY() >= pxFromDp(deskCoordinatesList.get(i).y * 25 * multiplier)) &&
                             (motionEvent.getY() <= pxFromDp((deskCoordinatesList.get(i).y * 25 + 1000) * multiplier))) {
 
-                        instrumentalImage.setImageResource(R.drawable.ic_delete);
+                        instrumentalImage.setImageResource(R.drawable.ic_menu_delete_standart);
 
                         checkedDeskId = deskCoordinatesList.get(i).deskId;
                         //новые параметры парты
@@ -393,7 +390,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                             db.deleteDesk(deskCoordinatesList.get(i).deskId);
                             out.removeView(deskCoordinatesList.get(i).desk);
                             deskCoordinatesList.remove(i);
-                            instrumentalImage.setImageResource(R.drawable.ic_input_add);
+                            instrumentalImage.setImageResource(R.drawable.ic_white_plus);
                         } else {
                             //новые параметры парты
                             RelativeLayout.LayoutParams deskLayoutParams = new RelativeLayout.LayoutParams((int) pxFromDp(1000 * deskCoordinatesList.get(i).numberOfPlaces * multiplier), (int) pxFromDp(1000 * multiplier));
@@ -416,7 +413,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     //находим нажатую парту по id
                     if (deskCoordinatesList.get(i).deskId == checkedDeskId) {
                         //ставим изображение в плюс
-                        instrumentalImage.setImageResource(R.drawable.ic_input_add);
+                        instrumentalImage.setImageResource(R.drawable.ic_white_plus);
 
                         //расчитываем новые координаты
                         //              координата     -          расстояние до центра пальца
@@ -427,16 +424,16 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         if (isGird) {//на до ли отнимать/прибавлять
                             // смотрим куда ближе отнимать или прибавлять
                             //x
-                            if ((x % GIRD_SPACING) < GIRD_SPACING / 2) {
-                                x = x - (x % GIRD_SPACING);
+                            if ((x % girdSpacing) < girdSpacing / 2) {
+                                x = x - (x % girdSpacing);
                             } else {
-                                x = x + GIRD_SPACING - (x % GIRD_SPACING);
+                                x = x + girdSpacing - (x % girdSpacing);
                             }
                             //y
-                            if ((y % GIRD_SPACING) < GIRD_SPACING / 2) {
-                                y = y - (y % GIRD_SPACING);
+                            if ((y % girdSpacing) < girdSpacing / 2) {
+                                y = y - (y % girdSpacing);
                             } else {
-                                y = y + GIRD_SPACING - (y % GIRD_SPACING);
+                                y = y + girdSpacing - (y % girdSpacing);
                             }
                         }
 
@@ -467,6 +464,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         }
         return true;
     }
+
+//---------------нажатие на +---------------
 
     @Override
     public void onClick(View view) {
@@ -541,6 +540,57 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         return true;
     }
 
+//---------------вывод сетки---------------
+
+    void outLines() {
+        outBackground.removeAllViews();
+        //выводится ли полоски
+        if (isGirdLines) {
+            float x = 0;
+            float y = 0;
+            DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
+            //пробежка по x
+            while (x < displaymetrics.widthPixels) {
+                //вывод вертикальной полосы
+                x = x + girdSpacing;
+                final RelativeLayout verticalLine = new RelativeLayout(this);
+                RelativeLayout.LayoutParams verticalLineLayoutParams = new RelativeLayout.LayoutParams(
+                        3,
+                        displaymetrics.heightPixels
+                );
+                verticalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                verticalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                verticalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+                //deskLayout.setRotation(60);
+                verticalLineLayoutParams.leftMargin = (int) x;
+                verticalLineLayoutParams.topMargin = 0;
+                verticalLine.setLayoutParams(verticalLineLayoutParams);
+                verticalLine.setBackgroundColor(Color.LTGRAY);
+                outBackground.addView(verticalLine);
+            }
+            //пробежка по y
+            while (y < displaymetrics.heightPixels) {
+                //вывод горизонтальной полосы
+                y = y + girdSpacing;
+                final RelativeLayout horizontalLine = new RelativeLayout(this);
+                RelativeLayout.LayoutParams horizontalLineLayoutParams = new RelativeLayout.LayoutParams(
+                        displaymetrics.heightPixels,
+                        3
+                );
+                horizontalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                horizontalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                horizontalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+                //deskLayout.setRotation(60);
+                horizontalLineLayoutParams.leftMargin = 0;
+                horizontalLineLayoutParams.topMargin = (int) y;
+                horizontalLine.setLayoutParams(horizontalLineLayoutParams);
+                horizontalLine.setBackgroundColor(Color.LTGRAY);
+                outBackground.addView(horizontalLine);
+
+            }
+        }
+    }
+//---------------функциональные клавиши---------------
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -553,6 +603,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 return super.onOptionsItemSelected(item);
         }
     }
+
+//---------------системные методы---------------
 
     private float pxFromDp(float px) {
         return px * getApplicationContext().getResources().getDisplayMetrics().density;

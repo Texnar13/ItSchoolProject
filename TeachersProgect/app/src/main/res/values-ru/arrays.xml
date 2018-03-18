@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="months_names">
+        <item>ЯНВАРЬ</item>
+        <item>ФЕВРАЛЬ</item>
+        <item>МАРТ</item>
+        <item>АПРЕЛЬ</item>
+        <item>МАЙ</item>
+        <item>ИЮНЬ</item>
+        <item>ИЮЛЬ</item>
+        <item>АВГУСТ</item>
+        <item>СЕНТЯБРЬ</item>
+        <item>ОКТЯБРЬ</item>
+        <item>НОЯБРЬ</item>
+        <item>ДЕКАБРЬ</item>
+    </string-array>
+    <string-array name="months_names_low_case">
+        <item>января</item>        
+        <item>Февраля</item>
+        <item>марта</item>        
+        <item>апреля</item>       
+        <item>мая</item>        
+        <item>июня</item>        
+        <item>июля</item>        
+        <item>августа</item>       
+        <item>сентября</item>        
+        <item>октября</item>        
+        <item>ноября</item>        
+        <item>декабря</item>
+    </string-array>
+
+    <!-- активность календаря на день-->
+    <!-- шапка таблицы -->
+    <string-array name="schedule_day_activity_table_titles_array">
+        <item>№</item>
+        <item>Время</item>
+        <item>Предмет</item>
+        <item>Класс</item>
+        <item>Каб</item>
+        <item>Дополнительно</item>
+    </string-array>
+
+    <!-- активность календаря на месяц-->
+    <!-- шапка таблицы -->
+    <string-array name="schedule_month_activity_week_days_short_array">
+        <item>пн</item>
+        <item>вт</item>
+        <item>ср</item>
+        <item>чт</item>
+        <item>пт</item>
+        <item>сб</item>
+        <item>вс</item>
+    </string-array>
+</resources>

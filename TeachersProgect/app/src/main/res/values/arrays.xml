@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="months_names">
+        <item>JANUARY</item>        
+        <item>FEBRUARY</item>
+        <item>MARCH</item>        
+        <item>APRIL</item>       
+        <item>MAY</item>        
+        <item>JUNE</item>        
+        <item>JULY</item>        
+        <item>AUGUST</item>       
+        <item>SEPTEMBER</item>        
+        <item>OCTOBER</item>        
+        <item>NOVEMBER</item>        
+        <item>DECEMBER</item>
+    </string-array>
+
+    <string-array name="months_names_low_case">
+        <item>january</item>        
+        <item>february</item>
+        <item>march</item>        
+        <item>april</item>       
+        <item>may</item>        
+        <item>june</item>        
+        <item>july</item>        
+        <item>august</item>       
+        <item>september</item>        
+        <item>october</item>        
+        <item>november</item>        
+        <item>december</item>
+    </string-array>
+
+    <!-- активность календаря на день-->
+    <!-- шапка таблицы -->
+    <string-array name="schedule_day_activity_table_titles_array">
+        <item>№</item>
+        <item>Time</item>
+        <item>Subject</item>
+        <item>Class</item>
+        <item>Cab</item>
+        <item>Additional</item>
+    </string-array>
+
+    <!-- активность календаря на месяц-->
+    <!-- шапка таблицы -->
+    <string-array name="schedule_month_activity_week_days_short_array">
+        <item>mo</item>
+        <item>tu</item>
+        <item>we</item>
+        <item>th</item>
+        <item>fr</item>
+        <item>sa</item>
+        <item>su</item>
+    </string-array>
+
+</resources>

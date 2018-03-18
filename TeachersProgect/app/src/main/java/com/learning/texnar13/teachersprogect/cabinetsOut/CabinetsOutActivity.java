@@ -114,9 +114,6 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         Toolbar toolbar = (Toolbar) findViewById(R.id.cabinets_out_toolbar);
         setSupportActionBar(toolbar);
 
-        //------заголовок--------
-        setTitle("Мои кабинеты");
-
         //кнопка назад
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -294,7 +291,8 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         helpText1.setGravity(Gravity.CENTER);
         helpText1.setTextSize(20);
         helpText1.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
-        helpText1.setText("Чтобы создать кабинет, нажмите \"+\" и введите его название. ");
+        //helpText1.setText("Чтобы создать кабинет, нажмите \"+\" и введите его название. ");
+        helpText1.setText(R.string.cabinets_out_activity_text_help);
         //добавляем
         container.addView(
                 helpText1,
@@ -302,33 +300,33 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
 
-        //---2 текст---
-        //создаем
-        TextView helpText2 = new TextView(this);
-        helpText2.setGravity(Gravity.CENTER);
-        helpText2.setTextSize(20);
-        helpText2.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
-        helpText2.setText("Чтобы расставить парты, нажмите на нужный вам кабинет.");
-        //добавляем
-        container.addView(
-                helpText2,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-
-        //---3 текст---
-        //создаем
-        TextView helpText3 = new TextView(this);
-        helpText3.setGravity(Gravity.CENTER);
-        helpText3.setTextSize(20);
-        helpText3.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
-        helpText3.setText("Чтобы переименовать или удалить кабинет, нажмите на него и удерживайте.");
-        //добавляем
-        container.addView(
-                helpText3,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
+//        //---2 текст---
+//        //создаем
+//        TextView helpText2 = new TextView(this);
+//        helpText2.setGravity(Gravity.CENTER);
+//        helpText2.setTextSize(20);
+//        helpText2.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
+//        helpText2.setText("Чтобы расставить парты, нажмите на нужный вам кабинет.");
+//        //добавляем
+//        container.addView(
+//                helpText2,
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//        );
+//
+//        //---3 текст---
+//        //создаем
+//        TextView helpText3 = new TextView(this);
+//        helpText3.setGravity(Gravity.CENTER);
+//        helpText3.setTextSize(20);
+//        helpText3.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
+//        helpText3.setText("Чтобы переименовать или удалить кабинет, нажмите на него и удерживайте.");
+//        //добавляем
+//        container.addView(
+//                helpText3,
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//        );
 
         //---выводим контейнер в экран---
         room.addView(container, containerParams);

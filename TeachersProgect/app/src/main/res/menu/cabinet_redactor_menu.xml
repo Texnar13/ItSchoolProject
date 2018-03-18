@@ -4,9 +4,18 @@
     <item
         app:showAsAction="never"
         android:id="@+id/cabinet_redactor_menu_gird"
-        android:title="выравнивание парт"
+        android:title="@string/cabinet_redactor_activity_menu_text_gird"
         android:checkable="true"
         android:checked="true">
+
+    </item>
+
+    <item
+        app:showAsAction="never"
+        android:id="@+id/cabinet_redactor_menu_gird_lines"
+        android:title="@string/cabinet_redactor_activity_menu_text_gird_lines"
+        android:checkable="true"
+        android:checked="false">
 
     </item>
 </menu>

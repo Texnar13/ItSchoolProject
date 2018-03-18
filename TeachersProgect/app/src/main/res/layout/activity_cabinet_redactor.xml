@@ -13,25 +13,34 @@
     tools:context="com.learning.texnar13.teachersprogect.CabinetRedactorActivity">
 
     <RelativeLayout
-        android:id="@+id/redactor_out"
+        android:id="@+id/redactor_out_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:background="@color/colorBackGround">
-
-        <TextView
-            android:id="@+id/cabinet_redactor_state_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="50dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginStart="50dp"
-            android:text="---"
-            android:textSize="10pt" />
     </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/redactor_out"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:gravity="center"
+                android:id="@+id/cabinet_redactor_state_text"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorBackGroundDark"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginStart="50dp"
+                android:text="---"
+                android:textSize="10pt" />
+        </RelativeLayout>
+
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -51,12 +60,17 @@
             android:layout_weight="1">
 
             <ImageView
-                android:id="@+id/activity_cabinet_redactor_instrumental_image"
+                android:id="@+id/activity_cabinet_redactor_instrumental_image_background"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/cabinet_redactor_add_desk_button"
-                app:srcCompat="@drawable/ic_input_add" />
+                android:background="@drawable/cabinet_redactor_add_desk_button" />
+            <ImageView
+                android:id="@+id/activity_cabinet_redactor_instrumental_image"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                app:srcCompat="@drawable/ic_white_plus" />
         </RelativeLayout>
 
     </LinearLayout>

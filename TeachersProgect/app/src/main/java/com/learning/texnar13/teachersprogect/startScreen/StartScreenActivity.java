@@ -156,23 +156,14 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         //начинаем редактировать
         SharedPreferences.Editor ed = sharedPreferences.edit();
 
+        //todo перенести все подсеты в создание самого класса, а то при перевороте срабатывают
+
 //----при первом заходе открывается подсказка----
-        if (!sharedPreferences.getBoolean(IS_START_HELP, false)) {
-            ed.putBoolean(IS_START_HELP, true);
-            Intent intent = new Intent(getApplicationContext(), StartScreenHelp.class);
-            startActivity(intent);
-        }
-
-//-----ну и еще один костылек------------TODO удалить
-        if(!sharedPreferences.getBoolean("a", false)){
-
-            ed.putInt(ENTERS_COUNT, 1);
-            ed.putBoolean(IS_RATE, false);
-            ed.putBoolean("a",true);
-        }
-
-
-
+//        if (!sharedPreferences.getBoolean(IS_START_HELP, false)) {
+//            ed.putBoolean(IS_START_HELP, true);
+//            Intent intent = new Intent(getApplicationContext(), StartScreenHelp.class);
+//            startActivity(intent);
+//        }
 
 //----счетчик "оцените нас"----
         // через пять заходов в приложение открывает диалог 'оцените'
@@ -222,7 +213,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 DataBaseOpenHelper db = new DataBaseOpenHelper(this);
                 long attitudeId = db.getSubjectAndTimeCabinetAttitudeIdByTime(currentCalendar);
                 if (attitudeId == -1) {
-                    Toast toast = Toast.makeText(this, "на текущий момент уроков не запланировано", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(this, R.string.start_screen_activity_toast_no_lessons, Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

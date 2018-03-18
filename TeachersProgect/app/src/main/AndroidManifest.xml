@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.learning.texnar13.teachersprogect"
-    android:versionCode="31"
-    android:versionName="super1.733">
+    android:versionCode="32"
+    android:versionName="super1.900">
 
     <application
         android:allowBackup="true"
@@ -20,16 +20,25 @@
         <activity
             android:name=".lesson.LessonActivity"
             android:label="@string/title_activity_lesson" />
-        <activity android:name=".CabinetRedactorActivity" />
-        <activity android:name=".lesson.lessonList.LessonListActivity" />
+        <activity
+            android:name=".CabinetRedactorActivity"
+            android:label="@string/title_activity_cabinet_redactor" />
+        <activity
+            android:name=".lesson.lessonList.LessonListActivity"
+            android:label="@string/title_activity_lesson_list" />
         <activity android:name=".SeatingRedactorActivity" />
-        <activity android:name=".ScheduleMonthActivity" />
-        <activity android:name=".ScheduleDayActivity" />
+        <activity
+            android:name=".ScheduleMonthActivity"
+            android:label="@string/title_activity_schedule_month" />
+        <activity
+            android:name=".ScheduleDayActivity"
+            android:label="@string/title_activity_schedule_day" />
         <activity android:name=".LessonRedactorActivity" />
-        <activity android:name=".settings.SettingsActivity" />
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/title_activity_settings" />
         <activity
             android:name=".LearnersAndGradesOut.LearnersAndGradesActivity"
-            android:label="@string/title_activity_learners_and_grades"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".LearnersAndGradesOut.LearnersAndGradesHelp" />
         <activity android:name=".lesson.LessonHelp" />

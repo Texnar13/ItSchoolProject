@@ -9,6 +9,6 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="название"/>
+        android:hint="@string/lesson_redactor_activity_dialog_hint_subject_name"/>
 
 </LinearLayout>

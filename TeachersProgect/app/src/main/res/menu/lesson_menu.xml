@@ -6,22 +6,22 @@
     <!--android:icon="@drawable/ic_menu_mark"-->
     <item
         android:id="@+id/lesson_menu_end_lesson"
-        android:title="закончить"
+        android:title="@string/lesson_activity_menu_text_end_lesson"
         app:showAsAction="withText">
     </item>
     <item
         android:id="@+id/lesson_menu_edit_seating"
-        android:title="посадить учеников"
+        android:title="@string/lesson_activity_menu_text_learners"
         app:showAsAction="withText">
     </item>
     <item
         android:id="@+id/lesson_menu_edit_tables"
-        android:title="расставить парты"
+        android:title="@string/lesson_activity_menu_text_desks"
         app:showAsAction="withText">
     </item>
     <item
     android:id="@+id/lesson_menu_help"
-    android:title="помощь"
+    android:title="@string/lesson_activity_menu_text_help"
     app:showAsAction="withText|ifRoom">
 </item>
 </menu>

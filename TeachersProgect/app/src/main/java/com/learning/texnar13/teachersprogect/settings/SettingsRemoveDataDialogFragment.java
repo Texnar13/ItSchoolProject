@@ -26,7 +26,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //заголовок
-        builder.setTitle("Вы точно хотите удалить все данные приложения?");
+        builder.setTitle(R.string.settings_activity_dialog_title);
 
 //----layout диалога----
 
@@ -44,7 +44,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         final TextView numberText = new TextView(getActivity());
         numberText.setGravity(Gravity.CENTER);
         numberText.setTextColor(Color.BLACK);
-        numberText.setText("Для подтверждения введите число  " + n);
+        numberText.setText(getResources().getString(R.string.settings_activity_dialog_text)+" " + n);
         numberText.setTextSize(20);
         //добавляем текстовое поле
         linearLayout.addView(numberText);
@@ -52,7 +52,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         //текстовое поле для числа
         final EditText editNumber = new EditText(getActivity());
         editNumber.setTextColor(Color.BLACK);
-        editNumber.setHint("число");
+        editNumber.setHint(getResources().getString(R.string.settings_activity_dialog_hint_number));
         editNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
         editNumber.setHintTextColor(Color.GRAY);
         //добавляем текстовое поле
@@ -60,7 +60,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
 
 //----кнопки согласия/отмены----
 
-        builder.setPositiveButton("удалить", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getResources().getString(R.string.settings_activity_dialog_button_remove), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 try {
@@ -71,7 +71,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
                     }else{
                         //пишем пользователю о его ошибке
                         Toast toast = Toast.makeText(getActivity().getApplicationContext()
-                                ,"вы ввели неправильное число, данные не удалены",Toast.LENGTH_SHORT);
+                                ,getResources().getString(R.string.settings_activity_toast_data_delete_falture),Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 } catch (java.lang.ClassCastException e) {
@@ -84,7 +84,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
                 }
             }
         });
-        builder.setNegativeButton("отмена", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getResources().getString(R.string.settings_activity_dialog_button_cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
             }

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -111,11 +113,11 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         classCursor.moveToFirst();
         Cursor cabinetCursor = db.getCabinets(cabinetId);
         cabinetCursor.moveToFirst();
-        setTitle("рассадка \"" +
+        setTitle(getResources().getString(R.string.title_activity_seating_redactor_first) + " " +
                 classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)) +
-                "\" в кабинете \"" +
-                cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)) +
-                "\"");
+                " " + getResources().getString(R.string.title_activity_seating_redactor_second) + " " +
+                cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME))
+        );
         classCursor.close();
         cabinetCursor.close();
 
@@ -183,6 +185,8 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         drawDesks(db);
     }
 
+
+    //------------вывести парты------------
     private void drawDesks(final DataBaseOpenHelper db) {
         RelativeLayout room = (RelativeLayout) findViewById(R.id.seating_redactor_room);
         room.removeAllViews();
@@ -192,18 +196,18 @@ public class SeatingRedactorActivity extends AppCompatActivity {
             //создание парты
             RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);
             tempRelativeLayoutDesk.setBackgroundColor(Color.LTGRAY);
-            tempRelativeLayoutDesk.setBackgroundResource(R.drawable.desk);
+            tempRelativeLayoutDesk.setBackgroundResource(R.drawable.start_screen_3_3_green_spot);
             //настраиваем параметры под конкретную парту
             tempRelativeLayoutDeskParams = new RelativeLayout.LayoutParams(
-                    (int) dpFromPx(1000 * deskUnit.countOfPlaces * multiplier),
-                    (int) dpFromPx(1000 * multiplier));//размеры проставляются далее индивидуально
+                    (int) pxFromDp(1000 * deskUnit.countOfPlaces * multiplier),
+                    (int) pxFromDp(1000 * multiplier));//размеры проставляются далее индивидуально
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             tempRelativeLayoutDeskParams.leftMargin =
-                    (int) dpFromPx(deskUnit.x * 25 * multiplier);
+                    (int) pxFromDp(deskUnit.x * 25 * multiplier);
             tempRelativeLayoutDeskParams.topMargin =
-                    (int) dpFromPx(deskUnit.y * 25 * multiplier);
+                    (int) pxFromDp(deskUnit.y * 25 * multiplier);
             Log.i("TeachersApp", "SeatingRedactorActivity - draw - view desk:" + deskUnit.id);
 
             for (final PlaceUnit placeUnit : deskUnit.placesList) {//проходим по местам на парте
@@ -225,13 +229,13 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                 //tempPlaceLayout.setBackgroundColor(Color.parseColor("#e4ea7e"));
                 //настраиваем параметры под конкретное место
                 tempRelativeLayoutPlaceParams = new RelativeLayout.LayoutParams(
-                        (int) dpFromPx((1000 - 50) * multiplier),
-                        (int) dpFromPx((1000 - 50) * multiplier));
+                        (int) pxFromDp((1000 - 50) * multiplier),
+                        (int) pxFromDp((1000 - 50) * multiplier));
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-                tempRelativeLayoutPlaceParams.leftMargin = (int) dpFromPx((25 + (1000 * (placeUnit.ordinalNumber - 1))) * multiplier);
-                tempRelativeLayoutPlaceParams.topMargin = (int) dpFromPx(25 * multiplier);
+                tempRelativeLayoutPlaceParams.leftMargin = (int) pxFromDp((25 + (1000 * (placeUnit.ordinalNumber - 1))) * multiplier);
+                tempRelativeLayoutPlaceParams.topMargin = (int) pxFromDp(25 * multiplier);
                 Log.i("TeachersApp", "SeatingRedactorActivity - draw view place:" + placeUnit.id);
                 //садим ученика на место
                 if (learnerId != -1) {//если id ученика не равно -1 то выводим ученика иначе кнопку добавить ученика
@@ -326,18 +330,47 @@ public class SeatingRedactorActivity extends AppCompatActivity {
             //добавление парты в комнату
             room.addView(tempRelativeLayoutDesk, tempRelativeLayoutDeskParams);
         }
-        room.setLayoutParams(new LinearLayout.LayoutParams(
-                (maxDeskX + (int) dpFromPx(3000 * multiplier)),
-                (maxDeskY + (int) dpFromPx(2250 * multiplier))
-        ));
+
+//--------размеры комнаты по самой дальней парте-------
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                (maxDeskX + (int) pxFromDp(3000 * multiplier)),
+                (maxDeskY + (int) pxFromDp(3000 * multiplier))
+        );
+        //получаем размеры заголовка активности
+//        Rect rectangle = new Rect();
+//        Window window = getWindow();
+//        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+//        int statusBarHeight = rectangle.top;
+//        int contentViewTop =
+//                window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
+//        int titleBarHeight = contentViewTop - statusBarHeight;
+//
+//        Log.e("*** Elenasys :: ", "StatusBar Height= " + statusBarHeight + " , TitleBar Height = " + titleBarHeight);
+//
+//        Log.e("REM", "maxDeskY = " + (maxDeskY + (int) pxFromDp(3000 * multiplier)) + " getResources= " + (getResources().getDisplayMetrics().heightPixels)); //- (int) pxFromDp(72)));
+        //если ширина экрана всетаки больше
+        if (getResources().getDisplayMetrics().widthPixels >= maxDeskX + (int) (pxFromDp(3000) * multiplier)) {
+            layoutParams.width = getResources().getDisplayMetrics().widthPixels;
+        }
+        //если высота экрана всетаки больше
+        if (getResources().getDisplayMetrics().heightPixels - (int) pxFromDp(72) >= maxDeskY + (int) (pxFromDp(3000) * multiplier)) {
+            layoutParams.height = getResources().getDisplayMetrics().heightPixels - (int) pxFromDp(72);
+        }
+        room.setLayoutParams(layoutParams);
+
+
         //room.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));//(w, h)320*7 = 2240
         //room.setLayoutParams(new FrameLayout.LayoutParams(1000, 2000));//(w, h)320*7 = 2240
         //room.setLayoutParams(new FrameLayout.LayoutParams(1120, 1120));//(w, h)320*7 = 2240
         Log.i("TeachersProject", "" + (maxDeskX + (int) dpFromPx((2000 + 1000) * multiplier)) + "" + (maxDeskY + (int) dpFromPx((2000 + 1000) * multiplier)));
     }
 
+    private float pxFromDp(float dp) {
+        return dp * getApplicationContext().getResources().getDisplayMetrics().density;
+    }
+
     private float dpFromPx(float px) {
-        return px * getApplicationContext().getResources().getDisplayMetrics().density;
+        return px / getApplicationContext().getResources().getDisplayMetrics().density;
 
     }
 

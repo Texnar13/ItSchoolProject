@@ -26,7 +26,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:gravity="center"
-                android:text="Класс"
+                android:text="@string/lesson_redactor_activity_title_class"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <LinearLayout
@@ -49,7 +49,7 @@
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="18dp"
                     android:layout_marginStart="18dp"
-                    android:background="@drawable/spinner_background" />
+                    android:background="@drawable/line_gray" />
             </LinearLayout>
 
         </LinearLayout>
@@ -67,7 +67,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:gravity="center"
-                android:text="Предмет"
+                android:text="@string/lesson_redactor_activity_title_subject"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <LinearLayout
@@ -90,7 +90,7 @@
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="18dp"
                     android:layout_marginStart="18dp"
-                    android:background="@drawable/spinner_background" />
+                    android:background="@drawable/line_gray" />
             </LinearLayout>
 
         </LinearLayout>
@@ -107,7 +107,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:gravity="center"
-                android:text="Кабинет"
+                android:text="@string/lesson_redactor_activity_title_cabinet"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <LinearLayout
@@ -130,7 +130,7 @@
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="18dp"
                     android:layout_marginStart="18dp"
-                    android:background="@drawable/spinner_background" />
+                    android:background="@drawable/line_gray" />
             </LinearLayout>
         </LinearLayout>
 
@@ -152,7 +152,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:gravity="center"
-                    android:text="Время"
+                    android:text="@string/lesson_redactor_activity_title_time"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
 
@@ -189,7 +189,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:gravity="center"
-                android:text="Повторять урок"
+                android:text="@string/lesson_redactor_activity_title_repeat"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <LinearLayout
@@ -212,7 +212,7 @@
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="18dp"
                     android:layout_marginStart="18dp"
-                    android:background="@drawable/spinner_background" />
+                    android:background="@drawable/line_gray" />
             </LinearLayout>
 
         </LinearLayout>
@@ -247,7 +247,7 @@
             android:layout_weight="1.5"
             android:background="@drawable/button_lite_blue"
             android:gravity="center"
-            android:text="редактировать рассадку"
+            android:text="@string/lesson_redactor_activity_button_edit_seating"
             android:textColor="@color/colorPrimary" />
 
         <LinearLayout
@@ -271,7 +271,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/button_lite_red"
                 android:gravity="center"
-                android:text="удалить урок"
+                android:text="@string/lesson_redactor_activity_button_remove"
                 android:textColor="@color/colorAccentRed" />
 
             <TextView
@@ -288,7 +288,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/button_lite_gray"
                 android:gravity="center"
-                android:text="отмена"
+                android:text="@string/lesson_redactor_activity_button_cancel"
                 android:textColor="#7e7e7e" />
 
             <TextView
@@ -306,8 +306,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/button_gray"
                 android:gravity="center"
-                android:text="сохранить"
-                android:textColor="#404040" />
+                android:text="@string/lesson_redactor_activity_button_save"
+                android:textColor="#000000" />
 
 
         </LinearLayout>

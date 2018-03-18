@@ -56,7 +56,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
         menu.findItem(R.id.shedule_day_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Toast toast = Toast.makeText(getApplicationContext(),"В разработке ¯\\_(ツ)_/¯",Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(),R.string.schedule_day_activity_toast_develop ,Toast.LENGTH_LONG);
                 toast.show();
 
                 return true;
@@ -72,7 +72,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_day);
 
-        setTitle("Расписание на день");
+        //setTitle("Расписание на день");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
 
         day = getIntent().getIntExtra(INTENT_DAY, -1);
@@ -88,8 +88,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
 //        final TextView dateText = (TextView) findViewById(R.id.schedule_day_date_text);
         final TableLayout table = (TableLayout) findViewById(R.id.schedule_day_table);
 
-        final String months[] = {"января", "Февраля", "марта", "апреля", "мая", "июня", "июля",
-                "августа", "сентября", "октября", "ноября", "декабря"};
+        final String months[] = getResources().getStringArray(R.array.months_names_low_case);
         final int monthCapacity[];
         if (year % 4 == 0 &&
                 year % 100 != 0 ||
@@ -101,7 +100,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         }
 //        dateText.setText(day + " " + months[month]);
-        setTitle("Расписание на " +day + " " + months[month]);
+        setTitle(getTitle()+" " +day + " " + months[month]);
 //        dateText.setGravity(Gravity.CENTER);
 
         final Calendar calendar = new GregorianCalendar(year, month, day);
@@ -156,7 +155,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
         table.removeAllViews();
-        String tableHeadStrings[] = {"№", "Время", "Предмет", "Класс", "Каб", "Дополнительно"};
+        String tableHeadStrings[] = getResources().getStringArray(R.array.schedule_day_activity_table_titles_array);
 
         //шапка таблицы
         {
@@ -171,7 +170,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 tableHeadTexts[i].setTextColor(Color.BLACK);
                 tableHeadTexts[i].setGravity(Gravity.CENTER);
 //цвет заголовка
-                tableHeadTexts[i].setBackgroundColor(getResources().getColor(R.color.colorBackGround));
+                tableHeadTexts[i].setBackgroundColor(getResources().getColor(R.color.colorPrimaryGreen));
                 //tableHeadTexts[i].setBackgroundColor(Color.parseColor("#e4ea7e"));
                 //параметры для клеток
                 RelativeLayout.LayoutParams tableRelativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
@@ -326,7 +325,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     intentForStartLesson.putExtra(LessonActivity.LESSON_TIME, dateFormat.format(lessonStandardTimePeriods[i].calendarStartTime.getTime()));
 
                     //редактировать рассадку
-                    final Toast toastSeatingRedactor = Toast.makeText(this, "Вы не можете начать урок пока не рассадите учеников!", Toast.LENGTH_LONG);
+                    final Toast toastSeatingRedactor = Toast.makeText(this, R.string.schedule_day_activity_toast_learners, Toast.LENGTH_LONG);
                     final Intent intentForStartSeatingRedactor = new Intent(this, SeatingRedactorActivity.class);
                     intentForStartSeatingRedactor.putExtra(SeatingRedactorActivity.CABINET_ID, lessonCabinetId);
                     intentForStartSeatingRedactor.putExtra(SeatingRedactorActivity.CLASS_ID, lessonClassId);
@@ -385,11 +384,11 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
                 } else if (j == 5) {//параметры для доп.
                     if (lessonAttitudeId == -1) {
-                        bodyText.setText("  нет урока, добавить?  ");
+                        bodyText.setText("  "+getString(R.string.schedule_day_activity_table_additional_title_empty)+"  ");
                     } else if (!isLessonReady) {
-                        bodyText.setText("  рассадите учеников!  ");
+                        bodyText.setText("  "+getString(R.string.schedule_day_activity_table_additional_title_learners)+"  ");
                     } else {
-                        bodyText.setText("  готово, начать урок?  ");
+                        bodyText.setText("  "+getString(R.string.schedule_day_activity_table_additional_title_ready)+"  ");
                     }
 
                 }
@@ -399,7 +398,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 //ищем текущий
                 RelativeLayout relativeLayout = new RelativeLayout(this);
                 if (calendar.getTime().getTime() >= lessonStandardTimePeriods[i].calendarStartTime.getTime().getTime() && calendar.getTime().getTime() <= lessonStandardTimePeriods[i].calendarEndTime.getTime().getTime()) {
-                    relativeLayout.setBackgroundColor(getResources().getColor(R.color.colorAccentRed));
+                    relativeLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryGreen));
                     bodyParams.bottomMargin = (int) pxFromDp(2f);//5
                     bodyParams.topMargin = (int) pxFromDp(2f);
                 } else

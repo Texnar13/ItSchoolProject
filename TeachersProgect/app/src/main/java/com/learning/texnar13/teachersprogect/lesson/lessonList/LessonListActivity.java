@@ -1,6 +1,5 @@
 package com.learning.texnar13.teachersprogect.lesson.lessonList;
 
-import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.learning.texnar13.teachersprogect.LearnersAndGradesOut.EditLearnerDialogFragment;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -247,8 +245,8 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
 
     @Override
     protected void onStart() {
-        //заголовок
-        setTitle("Итоги урока");
+//        //заголовок
+//        setTitle("Итоги урока");
 
 //---------------------------------------вывод оценок-----------------------------------------------
 
@@ -265,14 +263,14 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
 //----текстовое поле с именем ученика----
             //создаем
             TextView textViewWithName = new TextView(getApplicationContext());
-            textViewWithName.setGravity(Gravity.CENTER_HORIZONTAL);
-            textViewWithName.setTextColor(Color.GRAY);
+            textViewWithName.setGravity(Gravity.LEFT);
+            textViewWithName.setTextColor(Color.BLACK);
 
             //раскрашиваем
             if (flag) {
-                textViewWithName.setBackgroundColor(Color.parseColor("#fbe2e7"));
+                //textViewWithName.setBackgroundColor(Color.parseColor("#fbe2e7"));
             }
-            textViewWithName.setTextSize(30F);
+            textViewWithName.setTextSize(22F);
 //---достаем имя ученика---
             Cursor currentLearner = db.getLearner(learnersGrades[i].learnerId);
             currentLearner.moveToFirst();
@@ -285,14 +283,16 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
                     ))
             );
             currentLearner.close();
+            LinearLayout.LayoutParams textViewWithNameParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    1F
+            );
+            textViewWithNameParams.leftMargin = (int)pxFromDp(10);
 //----помещаем текст с именем ученика в контейнер----
             tempLayout.addView(
-                    textViewWithName,
-                    new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            1F
-                    )
+                    textViewWithName,textViewWithNameParams
+
             );
 
 //--------пробегаемся по его оценкам--------
@@ -301,19 +301,19 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
             for (int j = 0; j < learnersGrades[i].grades.length; j++) {
                 //создаем текстовое поле с оценкой
                 TextView textViewWisGrade = new TextView(getApplicationContext());
-                textViewWisGrade.setTextColor(Color.GRAY);
+                textViewWisGrade.setTextColor(Color.BLACK);
 
                 //добавляем текстовое поле в массив
                 learnersGrades[i].view[j] = textViewWisGrade;
 
                 //раскрашиваем
                 if (!flag) {
-                    textViewWisGrade.setBackgroundColor(Color.parseColor("#fbe2e7"));
+                    //textViewWisGrade.setBackgroundColor(Color.parseColor("#fbe2e7"));
                     flag = true;
                 } else {
                     flag = false;
                 }
-                textViewWisGrade.setTextSize(30F);
+                textViewWisGrade.setTextSize(20F);
                 textViewWisGrade.setGravity(Gravity.CENTER_HORIZONTAL);
 //----ставим в поле оценку----
                 if (learnersGrades[i].grades[j] == 0) {
@@ -344,6 +344,9 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
                 });
 
 
+
+
+
 //-------помещаем текст с оценкой в контейнер-------
                 tempLayout.addView(
                         textViewWisGrade,
@@ -354,16 +357,23 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
                         )
                 );
             }
+
 //-------помещаем контейнер в список-------
             list.addView(tempLayout);
+//---подчеркивание---
+            LinearLayout linearLayout = new LinearLayout(this);
+            linearLayout.setBackgroundResource(R.drawable.line_gray);
+
+            list.addView(linearLayout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int)pxFromDp(2)));
         }
 
 //-------подсказка textView в низу-------
         //текст
         TextView textView = new TextView(this);
         textView.setTextColor(Color.GRAY);
-        textView.setTextSize(20);
-        textView.setText("Здесь выводятся результаты урока. Чтобы изменить оценку нажмите на нее. Для сохранения оценок нажмите кнопку сохранить вверху. Если не хотите сохранять оценки нажмите кнопку назад.");
+        textView.setGravity(Gravity.CENTER);
+        textView.setTextSize(20F);
+        textView.setText(R.string.lesson_list_activity_text_help);
         //параметры
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
