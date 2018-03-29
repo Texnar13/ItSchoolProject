@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -154,6 +155,51 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
 
             }
         });
+
+        //максимальный ответ
+        //поле ввода
+        final EditText maxEdit = (EditText) findViewById(R.id.activity_settings_max_grade_editText);
+
+        maxEdit.setText("" + db.getSettingsMaxGrade(1));
+
+        //кнопка  сохранения
+        Button saveButton = (Button) findViewById(R.id.activity_settings_max_grade_save_button);
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (maxEdit.getText().toString().equals("")) {
+                    maxEdit.setText("1");
+                    Toast.makeText(getApplicationContext(), getString(R.string.settings_activity_toast_grade_no_entered), Toast.LENGTH_SHORT).show();
+                } else {
+                    if (maxEdit.getText().toString().length() <= 6) {
+                        if (Integer.valueOf(maxEdit.getText().toString()) > 100) {
+                            maxEdit.setText("100");
+                            Toast.makeText(getApplicationContext(), getString(R.string.settings_activity_toast_grade_too_match), Toast.LENGTH_SHORT).show();
+                            db.setSettingsMaxGrade(1, Integer.valueOf(maxEdit.getText().toString()));
+                        } else {
+                            if (Integer.valueOf(maxEdit.getText().toString()) < 1) {
+                                maxEdit.setText("1");
+                                Toast.makeText(getApplicationContext(), getString(R.string.settings_activity_toast_grade_too_min), Toast.LENGTH_SHORT).show();
+                                db.setSettingsMaxGrade(1, Integer.valueOf(maxEdit.getText().toString()));
+                            } else {
+                            Toast.makeText(getApplicationContext(), getString(R.string.settings_activity_toast_grade_saved)+" " + Integer.valueOf(maxEdit.getText().toString()), Toast.LENGTH_SHORT).show();
+                            db.setSettingsMaxGrade(1, Integer.valueOf(maxEdit.getText().toString()));
+                        }}
+                    }else{
+                        maxEdit.setText("100");
+                        Toast.makeText(getApplicationContext(), getString(R.string.settings_activity_toast_grade_too_match), Toast.LENGTH_SHORT).show();
+                        db.setSettingsMaxGrade(1, Integer.valueOf(maxEdit.getText().toString()));
+                    }
+                }
+            }
+        });
+// не введена оценка
+// введено слишком большое значение (должно быть не более 100)
+// введено слишком маленькое значение (должно быть не менее 1)
+// сохранено
+//
+//
 
 
         //удаление данных

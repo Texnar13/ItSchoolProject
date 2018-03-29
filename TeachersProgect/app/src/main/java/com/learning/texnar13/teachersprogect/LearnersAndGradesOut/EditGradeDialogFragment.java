@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.R;
+import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 
 public class EditGradeDialogFragment extends DialogFragment {//входные данные оценка, id оценки
 
@@ -82,7 +83,15 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
 
 //---spinner-ы с выбором оценки---
         //массив с текстами оценок
-        String gradesText[] = {"Н", "нет оценки", "1", "2", "3", "4", "5"};
+        DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity());
+
+        String gradesText[] = new String[db.getSettingsMaxGrade(1)+2];
+
+        gradesText[0] = getString(R.string.learners_and_grades_out_activity_title_grade_n);
+        gradesText[1] = getString(R.string.learners_and_grades_out_activity_title_grade_no_answers);
+        for (int i = 2; i < gradesText.length; i++) {
+            gradesText[i] = ""+(i-1);
+        }
         //адаптер
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 getActivity().getApplicationContext(),

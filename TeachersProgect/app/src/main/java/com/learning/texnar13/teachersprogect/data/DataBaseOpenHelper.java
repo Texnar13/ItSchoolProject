@@ -20,7 +20,7 @@ import java.util.GregorianCalendar;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 10;
+    private static final int DB_VERSION = 11;
 
     /*
         final TextView textView = (TextView) findViewById(R.id.myTextView);
@@ -103,6 +103,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             //настройки
             String sql = "CREATE TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + "( " + SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME + " VARCHAR, " +
+                    SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER + " INTEGER DEFAULT 5, " +
                     SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE + " INTEGER ); ";
             db.execSQL(sql);
 
@@ -151,7 +152,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE ); " +
                     "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); ";
             db.execSQL(sql);
-            //уроки
+            //предмет
             sql = "CREATE TABLE " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " ( " + SchoolContract.TableSubjects.KEY_SUBJECT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableSubjects.COLUMN_NAME + " VARCHAR, " +
                     SchoolContract.TableSubjects.KEY_CLASS_ID + " INTEGER, " +
@@ -333,6 +334,9 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
                 db.execSQL("PRAGMA foreign_keys = ON");
             }
+            if (oldVersion < 11) {
+                db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER + " INTEGER DEFAULT 5;");//колонка для максимальной оценки
+            }
         }
         //db.close();
     }
@@ -370,6 +374,31 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + temp + " profileId= " + profileId + " profileName= " + profileName + " interfaceSize= " + interfaceSize);
         //db.close();
         return temp;
+    }
+
+    public int setSettingsMaxGrade(long profileId, int maxGrade) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER, maxGrade);
+        int temp = db.update(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, values, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId});
+        Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + temp + " profileId= " + profileId + " maxGrade= " + maxGrade);
+        //db.close();
+        return temp;
+    }
+
+    public int getSettingsMaxGrade(long profileId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId}, null, null, null);
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return -1;
+        }
+        cursor.moveToFirst();
+        int answer = cursor.getInt(cursor.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER));
+        cursor.close();
+        Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + answer + " profileId= " + profileId);
+        //db.close();
+        return answer;
     }
 
     public long getInterfaceSizeBySettingsProfileId(long profileId) {
@@ -477,10 +506,15 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public Cursor getLearnersByClassId(long classId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {classId + ""};
-        Cursor cursor = db.query(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, null, SchoolContract.TableLearners.KEY_CLASS_ID + " = ?", selectionArgs, null, null, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " WHERE (" + SchoolContract.TableLearners.KEY_CLASS_ID + "= " + classId + ") ORDER BY " + SchoolContract.TableLearners.COLUMN_SECOND_NAME + " ASC, " + SchoolContract.TableLearners.COLUMN_FIRST_NAME + " ASC;", null);
+        //новая с сортировкой по фамилии и имени
+        //= db.query(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, null, SchoolContract.TableLearners.KEY_CLASS_ID + " = ?", selectionArgs, null, null, SchoolContract.TableLearners.COLUMN_SECOND_NAME);
         Log.i("DBOpenHelper", "getLearnersByClassId classId=" + classId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
+
+    //SELECT all FROM table1 ORDER BY sex ASC, sal DESC;
+
 
     public long getLearnerIdByClassIdAndPlaceId(long classId, long placeId) {//todo КОСТЫЛИЩЕЕЕЕ!!!!111 во всех отношениях
         SQLiteDatabase db = this.getReadableDatabase();

@@ -574,7 +574,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 y = y + girdSpacing;
                 final RelativeLayout horizontalLine = new RelativeLayout(this);
                 RelativeLayout.LayoutParams horizontalLineLayoutParams = new RelativeLayout.LayoutParams(
-                        displaymetrics.heightPixels,
+                        displaymetrics.widthPixels,
                         3
                 );
                 horizontalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);

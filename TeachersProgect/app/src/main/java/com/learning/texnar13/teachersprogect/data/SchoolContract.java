@@ -15,6 +15,7 @@ public final class SchoolContract {
         public static final String KEY_SETTINGS_PROFILE_ID = BaseColumns._ID;
         public static final String COLUMN_PROFILE_NAME = "profileName";
         public static final String COLUMN_INTERFACE_SIZE = "interfaceSize";
+        public static final String COLUMN_MAX_ANSWER = "maxAnswer";
     }
 
     public static final class TableCabinets {
@@ -68,7 +69,6 @@ public final class SchoolContract {
         public static final String KEY_SUBJECT_ID = "subjectId";//rename to subject
         public static final String KEY_LEARNER_ID = "learnerId";
         //constants:
-
     }
 
     public static final class TableSubjects {
@@ -83,8 +83,8 @@ public final class SchoolContract {
         public static final String KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID = BaseColumns._ID;
         public static final String KEY_SUBJECT_ID = "subjectId";//rename to subjectId
         public static final String KEY_CABINET_ID = "cabinetId";
-        public static final String COLUMN_DATE_BEGIN = "lessonDateBegin";//todo timestamp
-        public static final String COLUMN_DATE_END = "lessonDateEnd";//todo timestamp
+        public static final String COLUMN_DATE_BEGIN = "lessonDateBegin";
+        public static final String COLUMN_DATE_END = "lessonDateEnd";
         public static final String COLUMN_REPEAT = "repeat";
         //constants:
 

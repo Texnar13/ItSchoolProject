@@ -61,6 +61,55 @@
                 android:layout_marginTop="20dp"
                 android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="@string/settings_activity_title_max_answer"
+                    android:textColor="#000000"
+                    android:textSize="18dp" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/activity_settings_max_grade_editText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/settings_activity_hint_max_answer"
+                        android:inputType="number" />
+
+                    <Button
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:id="@+id/activity_settings_max_grade_save_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_gray"
+                        android:textColor="@color/colorBackGround"
+                        android:text="@string/settings_activity_button_save_data" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:orientation="vertical">
+
                 <Button
                     android:id="@+id/activity_settings_remove_data_button"
                     android:layout_width="match_parent"

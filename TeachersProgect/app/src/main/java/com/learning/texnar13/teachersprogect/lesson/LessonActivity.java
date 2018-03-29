@@ -47,6 +47,8 @@ public class LessonActivity extends AppCompatActivity {
     float multiplier = 2;
     RelativeLayout room;
     //--загружаемые из бд данные--
+    //максимальная оценка
+    static long maxAnswersCount = 6;
     //id
     static long lessonAttitudeId = -2;
     static long subjectId;
@@ -382,6 +384,8 @@ public class LessonActivity extends AppCompatActivity {
 
         //база данных
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        //максимальная оценка
+        maxAnswersCount = db.getSettingsMaxGrade(1);
         //размер парт
         multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
         //курсор с партами
@@ -446,8 +450,20 @@ public class LessonActivity extends AppCompatActivity {
 //---контейнер
 //-----оценки
 //-----контейнер ученика
-//-------имя ученика
 //-------картинка ученика
+//-------имя ученика
+
+//
+// новый вариант
+// -место
+//---контейнер
+//-----оценки
+//-----контейнер ученика
+//-------контейнер картинки
+//---------картинка ученика
+//---------контейнер текста
+//-----------главный текст
+//-------имя ученика
 
 
 //-----контейнер-----
@@ -471,6 +487,7 @@ public class LessonActivity extends AppCompatActivity {
                 placeParams.addRule(RelativeLayout.ALIGN_PARENT_START);
 
 //-----текст оценок-----
+
                 //текст с оценками
                 final TextView grade1Text = new TextView(this);
                 grade1Text.setTextColor(Color.WHITE);
@@ -484,15 +501,16 @@ public class LessonActivity extends AppCompatActivity {
 
                 //параметры текста
                 RelativeLayout.LayoutParams grade1TextParams = new RelativeLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
                 );
                 grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_START);
                 grade1TextParams.setMargins((int) pxFromDp(25 * multiplier), 0, 0, 0);
 
-                RelativeLayout.LayoutParams grade2TextParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                RelativeLayout.LayoutParams grade2TextParams = new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                );
                 grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_END);
@@ -547,7 +565,21 @@ public class LessonActivity extends AppCompatActivity {
                         grade1Text.setText("" + learnersAndGrades[learnerPosition].getRawGrade(0));
                     }
 
+
+//------------контейнер картинки------------
+                    //создаем layout контейнер
+                    RelativeLayout imageContainer = new RelativeLayout(this);
+                    //ставим размеры
+                    LinearLayout.LayoutParams imageContainerParams = new LinearLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT,
+                            RelativeLayout.LayoutParams.MATCH_PARENT,
+                            0.75F
+                    );
+                    learnerContainer.addView(imageContainer, imageContainerParams);
+
+
 //------------картинка ученика------------
+
                     //создаем картинку
                     final ImageView tempLernerImage = new ImageView(this);
                     //ставим ей изображение по оценке(из памяти)
@@ -558,21 +590,24 @@ public class LessonActivity extends AppCompatActivity {
                         case 0:
                             tempLernerImage.setImageResource(R.drawable.learner_gray);
                             break;
-                        case 1:
-                            tempLernerImage.setImageResource(R.drawable.learner_red);
-                            break;
-                        case 2:
-                            tempLernerImage.setImageResource(R.drawable.learner_orange);
-                            break;
-                        case 3:
-                            tempLernerImage.setImageResource(R.drawable.learner_yellow);
-                            break;
-                        case 4:
-                            tempLernerImage.setImageResource(R.drawable.learner_lime);
-                            break;
-                        case 5:
-                            tempLernerImage.setImageResource(R.drawable.learner_green);
-                            break;
+
+                        default:
+                            tempLernerImage.setImageResource(R.drawable.learner_active);
+//                        case 1:
+//                            tempLernerImage.setImageResource(R.drawable.learner_red);
+//                            break;
+//                        case 2:
+//                            tempLernerImage.setImageResource(R.drawable.learner_orange);
+//                            break;
+//                        case 3:
+//                            tempLernerImage.setImageResource(R.drawable.learner_yellow);
+//                            break;
+//                        case 4:
+//                            tempLernerImage.setImageResource(R.drawable.learner_lime);
+//                            break;
+//                        case 5:
+//                            tempLernerImage.setImageResource(R.drawable.learner_green);
+//                            break;
                     }
                     //параметры картинки
                     LinearLayout.LayoutParams tempLernerImageParams = new LinearLayout.LayoutParams(
@@ -582,7 +617,38 @@ public class LessonActivity extends AppCompatActivity {
                     );
 
                     //добавляем картинку в контейнер
-                    learnerContainer.addView(tempLernerImage, tempLernerImageParams);
+                    imageContainer.addView(tempLernerImage, tempLernerImageParams);
+
+//---------------контейнер главного текста---------------
+
+                    //создаем layout с контейнером
+                    LinearLayout bigTextContainer = new LinearLayout(this);
+                    //ставим размеры
+                    RelativeLayout.LayoutParams bigTextContainerParams = new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT,
+                            RelativeLayout.LayoutParams.MATCH_PARENT
+                    );
+                    bigTextContainer.setGravity(Gravity.CENTER_HORIZONTAL);
+                    imageContainer.addView(bigTextContainer, bigTextContainerParams);
+
+//---------------главный текст---------------
+                    final TextView bigText = new TextView(this);
+                    bigText.setTextColor(Color.WHITE);
+                    bigText.setTextSize(340 * multiplier);
+                    if (learnersAndGrades[learnerPosition].getGrade() > 0) {
+                        bigText.setText("" + learnersAndGrades[learnerPosition].getGrade());
+                    } else
+                        bigText.setText("");
+                    bigText.setGravity(Gravity.BOTTOM);
+                    //параметры текста
+                    LinearLayout.LayoutParams bigTextParams = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    );
+                    bigTextParams.gravity = Gravity.BOTTOM;
+
+                    bigTextContainer.addView(bigText, bigTextParams);
+
 //---------------текст ученика---------------
                     //создание текста
                     TextView tempLearnerText = new TextView(this);
@@ -613,7 +679,7 @@ public class LessonActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             if (learnersAndGrades[learnerPosition].grade[0] != -2)
-                                if (learnersAndGrades[learnerPosition].getGrade() != 5) {
+                                if (learnersAndGrades[learnerPosition].getGrade() != maxAnswersCount) {
                                     learnersAndGrades[learnerPosition].setGrade(
                                             (byte) (1 + learnersAndGrades[learnerPosition].getGrade())
                                     );
@@ -625,25 +691,33 @@ public class LessonActivity extends AppCompatActivity {
                                 case -2:
                                     tempLernerImage.setImageResource(R.drawable.learner_white);
                                     break;
+
+                                default:
+                                    tempLernerImage.setImageResource(R.drawable.learner_active);
 //                                case 0:
 //                                    tempLernerImage.setImageResource(R.drawable.learner_gray);
 //                                    break;
-                                case 1:
-                                    tempLernerImage.setImageResource(R.drawable.learner_red);
-                                    break;
-                                case 2:
-                                    tempLernerImage.setImageResource(R.drawable.learner_orange);
-                                    break;
-                                case 3:
-                                    tempLernerImage.setImageResource(R.drawable.learner_yellow);
-                                    break;
-                                case 4:
-                                    tempLernerImage.setImageResource(R.drawable.learner_lime);
-                                    break;
-                                case 5:
-                                    tempLernerImage.setImageResource(R.drawable.learner_green);
-                                    break;
+
+//                                case 1:
+//                                    tempLernerImage.setImageResource(R.drawable.learner_red);
+//                                    break;
+//                                case 2:
+//                                    tempLernerImage.setImageResource(R.drawable.learner_orange);
+//                                    break;
+//                                case 3:
+//                                    tempLernerImage.setImageResource(R.drawable.learner_yellow);
+//                                    break;
+//                                case 4:
+//                                    tempLernerImage.setImageResource(R.drawable.learner_lime);
+//                                    break;
+//                                case 5:
+//                                    tempLernerImage.setImageResource(R.drawable.learner_green);
+//                                    break;
                             }
+                            if (learnersAndGrades[learnerPosition].getGrade() > 0) {
+                                bigText.setText("" + learnersAndGrades[learnerPosition].getGrade());
+                            } else
+                                bigText.setText("");
                         }
                     });
 
@@ -651,81 +725,121 @@ public class LessonActivity extends AppCompatActivity {
                         @Override
                         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
 
+                            //отсутствует
                             if (learnersAndGrades[learnerPosition].getGrade() != -2 && learnersAndGrades[learnerPosition].getGradesCount() < 1) {
                                 contextMenu.add(0, -2, 0, R.string.lesson_activity_context_menu_text_no_learner).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
                                         tempLernerImage.setImageResource(R.drawable.learner_white);
                                         learnersAndGrades[learnerPosition].setGrade((byte) -2);
+                                        bigText.setText("");
                                         return true;
                                     }
                                 });
                             }
+                            //нет оценки
                             if (learnersAndGrades[learnerPosition].getGrade() != 0) {
                                 contextMenu.add(0, 0, 0, R.string.lesson_activity_context_menu_text_no_answers).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
                                         tempLernerImage.setImageResource(R.drawable.learner_gray);
                                         learnersAndGrades[learnerPosition].setGrade((byte) 0);
+                                        bigText.setText("");
                                         return true;
                                     }
                                 });
                             }
-                            if (learnersAndGrades[learnerPosition].getGrade() != 1) {
-                                contextMenu.add(0, 1, 0, "1").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            //вычесть 1
+                            if (learnersAndGrades[learnerPosition].getGrade() > 0) {
+                                contextMenu.add(0, 1, 0, R.string.lesson_activity_context_menu_text_delete_answer).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_red);
-                                        learnersAndGrades[learnerPosition].setGrade((byte) 1);
+                                        tempLernerImage.setImageResource(R.drawable.learner_active);
+                                        if (learnersAndGrades[learnerPosition].getGrade() == 1) {
+                                            learnersAndGrades[learnerPosition].setGrade(
+                                                    (byte) (maxAnswersCount)
+                                            );
+                                        } else
+                                            learnersAndGrades[learnerPosition].setGrade(
+                                                    (byte) (learnersAndGrades[learnerPosition].getGrade() - 1)
+                                            );
+                                        bigText.setText("" + learnersAndGrades[learnerPosition].getGrade());
                                         return true;
                                     }
                                 });
                             }
-                            if (learnersAndGrades[learnerPosition].getGrade() != 2) {
-                                contextMenu.add(0, 2, 0, "2").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            //прибавить 1
+                            if (learnersAndGrades[learnerPosition].getGrade() != maxAnswersCount && learnersAndGrades[learnerPosition].getGrade() >= 0) {
+                                contextMenu.add(0, 2, 0, R.string.lesson_activity_context_menu_text_add_answer).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_orange);
-                                        learnersAndGrades[learnerPosition].setGrade((byte) 2);
+                                        tempLernerImage.setImageResource(R.drawable.learner_active);
+                                        learnersAndGrades[learnerPosition].setGrade(
+                                                (byte) (learnersAndGrades[learnerPosition].getGrade() + 1)
+                                        );
+                                        bigText.setText("" + learnersAndGrades[learnerPosition].getGrade());
                                         return true;
                                     }
                                 });
                             }
-                            if (learnersAndGrades[learnerPosition].getGrade() != 3) {
-                                contextMenu.add(0, 3, 0, "3").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_yellow);
-                                        learnersAndGrades[learnerPosition].setGrade((byte) 3);
-                                        return true;
-                                    }
-                                });
-                            }
-                            if (learnersAndGrades[learnerPosition].getGrade() != 4) {
-                                contextMenu.add(0, 4, 0, "4").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_lime);
-                                        learnersAndGrades[learnerPosition].setGrade((byte) 4);
-                                        return true;
-                                    }
-                                });
-                            }
-                            if (learnersAndGrades[learnerPosition].getGrade() != 5) {
-                                contextMenu.add(0, 5, 0, "5").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_green);
-                                        learnersAndGrades[learnerPosition].setGrade((byte) 5);
-                                        return true;
-                                    }
-                                });
-                            }
+
+
+//                            if (learnersAndGrades[learnerPosition].getGrade() != 1) {
+//                                contextMenu.add(0, 1, 0, "1").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                                    @Override
+//                                    public boolean onMenuItemClick(MenuItem menuItem) {
+//                                        tempLernerImage.setImageResource(R.drawable.learner_red);
+//                                        learnersAndGrades[learnerPosition].setGrade((byte) 1);
+//                                        return true;
+//                                    }
+//                                });
+//                            }
+//                            if (learnersAndGrades[learnerPosition].getGrade() != 2) {
+//                                contextMenu.add(0, 2, 0, "2").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                                    @Override
+//                                    public boolean onMenuItemClick(MenuItem menuItem) {
+//                                        tempLernerImage.setImageResource(R.drawable.learner_orange);
+//                                        learnersAndGrades[learnerPosition].setGrade((byte) 2);
+//                                        return true;
+//                                    }
+//                                });
+//                            }
+//                            if (learnersAndGrades[learnerPosition].getGrade() != 3) {
+//                                contextMenu.add(0, 3, 0, "3").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                                    @Override
+//                                    public boolean onMenuItemClick(MenuItem menuItem) {
+//                                        tempLernerImage.setImageResource(R.drawable.learner_yellow);
+//                                        learnersAndGrades[learnerPosition].setGrade((byte) 3);
+//                                        return true;
+//                                    }
+//                                });
+//                            }
+//                            if (learnersAndGrades[learnerPosition].getGrade() != 4) {
+//                                contextMenu.add(0, 4, 0, "4").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                                    @Override
+//                                    public boolean onMenuItemClick(MenuItem menuItem) {
+//                                        tempLernerImage.setImageResource(R.drawable.learner_lime);
+//                                        learnersAndGrades[learnerPosition].setGrade((byte) 4);
+//                                        return true;
+//                                    }
+//                                });
+//                            }
+//                            if (learnersAndGrades[learnerPosition].getGrade() != 5) {
+//                                contextMenu.add(0, 5, 0, "5").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                                    @Override
+//                                    public boolean onMenuItemClick(MenuItem menuItem) {
+//                                        tempLernerImage.setImageResource(R.drawable.learner_green);
+//                                        learnersAndGrades[learnerPosition].setGrade((byte) 5);
+//                                        return true;
+//                                    }
+//                                });
+//                            }
                             if (learnersAndGrades[learnerPosition].getGradesCount() != 2 && learnersAndGrades[learnerPosition].getGrade() != 0 && learnersAndGrades[learnerPosition].getGrade() != -2) {
                                 contextMenu.add(0, 6, 0, R.string.lesson_activity_context_menu_text_new_answers).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
                                         tempLernerImage.setImageResource(R.drawable.learner_gray);
+                                        bigText.setText("");
                                         switch (learnersAndGrades[learnerPosition].getGradesCount()) {
                                             case 0:
                                                 grade1Text.setText("" + learnersAndGrades[learnerPosition].getGrade());

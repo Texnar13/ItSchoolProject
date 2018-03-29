@@ -37,6 +37,8 @@
     <string name="title_activity_learners_and_grades">students in the </string>
     <!-- тексты  -->
     <string name="learners_and_grades_out_activity_title_subject">Subject</string>
+    <string name="learners_and_grades_out_activity_title_grade_n">Abs</string>
+    <string name="learners_and_grades_out_activity_title_grade_no_answers">no answers</string>
     <!-- диалоги -->
     <string name="learners_and_grades_out_activity_dialog_title_create_learner">adding a student</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_learner">student editing</string>
@@ -82,7 +84,7 @@
     <string name="title_activity_schedule_day">Schedule for</string>
     <!-- тексты -->
     <string name="schedule_day_activity_table_additional_title_empty">no lesson, add?</string>
-    <string name="schedule_day_activity_table_additional_title_learners">Seed the learners!</string>
+    <string name="schedule_day_activity_table_additional_title_learners">Seed the students!</string>
     <string name="schedule_day_activity_table_additional_title_ready">ready, start a lesson?</string>
     <string name="schedule_day_activity_toast_learners">You can not start a lesson until you have seated the learners!</string>
     <string name="schedule_day_activity_toast_develop">"In process ¯\\_(ツ)_/¯"</string>
@@ -107,9 +109,9 @@
     <string name="schedule_day_activity_toast_subject_not_select">No subject selected!</string>
     <!-- уведомления -->
     <string name="lesson_redactor_activity_text_learners_ready">Students are seated in this cabinet</string>
-    <string name="lesson_redactor_activity_text_learners_not_ready">The learners are not seated!</string>
+    <string name="lesson_redactor_activity_text_learners_not_ready">The students are not seated!</string>
     <!-- кнопки -->
-    <string name="lesson_redactor_activity_button_edit_seating">Edit learners arrangements</string>
+    <string name="lesson_redactor_activity_button_edit_seating">Edit students arrangements</string>
     <string name="lesson_redactor_activity_button_remove">Remove lesson</string>
     <string name="lesson_redactor_activity_button_save">Save</string>
     <string name="lesson_redactor_activity_button_cancel">Cancel</string>
@@ -131,6 +133,8 @@
     <string name="lesson_activity_context_menu_text_no_learner">absent</string>
     <string name="lesson_activity_context_menu_text_no_answers">no answers</string>
     <string name="lesson_activity_context_menu_text_new_answers">new answers</string>
+    <string name="lesson_activity_context_menu_text_add_answer"> + add 1 answer</string>
+    <string name="lesson_activity_context_menu_text_delete_answer"> - remove 1 answer</string>
     <!-- меню сверху -->
     <string name="lesson_activity_menu_text_help">help</string>
     <string name="lesson_activity_menu_text_desks">arrange desks</string>
@@ -142,6 +146,10 @@
     <string name="title_activity_lesson_list">LESSONS LEARNED</string>
     <!-- меню сверху -->
     <string name="lesson_list_activity_menu_text_save">save</string>
+    <!-- диалоги -->
+    <string name="lesson_list_activity_dialog_title">Edit answer</string>
+    <string name="lesson_list_activity_dialog_button_save">save</string>
+    <string name="lesson_list_activity_dialog_button_cancel">cancel</string>
     <!-- подсказка на экране -->
     <string name="lesson_list_activity_text_help">Here are the results of the lesson. \nTo change the answer, click on it. \ nTo save the answers, click the SAVE button (above). \nIf you do not want to save answers, click the "Back" button on your device.</string>
 
@@ -149,13 +157,21 @@
     <!-- заголовок активности -->
     <string name="title_activity_settings">SETTINGS</string>
     <!-- тексты -->
+    <string name="settings_activity_hint_max_answer">MAX ANSWER</string>
     <string name="settings_activity_title_desk_size">SETTING THE SIZE OF DESKS</string>
+    <string name="settings_activity_title_max_answer">MAX ANSWERS COUNT</string>
     <!-- кнопки -->
+    <string name="settings_activity_button_save_data">save</string>
     <string name="settings_activity_button_remove_data">remove all data</string>
     <string name="settings_activity_button_rate_us">rate our app :)</string>
     <!-- уведомления -->
     <string name="settings_activity_toast_data_delete_success">Data deleted successfully!</string>
     <string name="settings_activity_toast_data_delete_falture">Was entered an incorrect number, the data is not removed</string>
+
+    <string name="settings_activity_toast_grade_no_entered">grade no entered</string>
+    <string name="settings_activity_toast_grade_saved">saved</string>
+    <string name="settings_activity_toast_grade_too_match">too large value entered (it must be no more 100)</string>
+    <string name="settings_activity_toast_grade_too_min">too small value entered (it must be greater than 1)</string>
 
     <!-- диалоги -->
     <string name="settings_activity_dialog_title">Are you sure you want to delete all application data?</string>

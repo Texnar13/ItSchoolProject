@@ -1,5 +1,8 @@
 package com.learning.texnar13.teachersprogect.LearnersAndGradesOut;
 
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -7,16 +10,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -37,7 +40,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface,UpdateTableInterface {
+public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface, UpdateTableInterface, SubjectNameLearnersDialogInterface, SubjectRemoveLearnersDialogInterface {
 
 //--получаем из intent--
 
@@ -69,6 +72,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     static RelativeLayout gradesRoom;
     //переменная разрешающая потоку работать
     boolean flag = true;
+    //предметы
+    Spinner subjectSpinner;
 
     //оценки
     static GradeUnit[][][][] grades = {};//[ученик][день][урок][оценка]
@@ -192,6 +197,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //таблица с оценками
         learnersGradesTable = (TableLayout) findViewById(R.id.learners_and_grades_table);
 
+//----находим спинер с предметами----
+        subjectSpinner = (Spinner) findViewById(R.id.learners_and_grades_activity_subject_spinner);
+
 //----переключение даты----
         //константы
         final String[] monthsNames = getResources().getStringArray(R.array.months_names);
@@ -265,7 +273,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         classCursor.moveToFirst();
         getSupportActionBar().setTitle(R.string.title_activity_learners_and_grades);
         getSupportActionBar().setTitle(
-                getSupportActionBar().getTitle() +" "+
+                getSupportActionBar().getTitle() + " " +
                         classCursor.getString(
                                 classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)
                         )
@@ -275,40 +283,42 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
 //----спинер с предметами----
         //--выводим из базы данных список предметов--
-        Cursor subjectsCursor = db.getSubjectsByClassId(classId);
-        //их id
-        subjectsId = new long[subjectsCursor.getCount()];
-        //и название
-        final String[] subjectsNames = new String[subjectsCursor.getCount()];
-        for (int i = 0; i < subjectsCursor.getCount(); i++) {
-            subjectsCursor.moveToNext();
-            subjectsId[i] = (subjectsCursor.getLong(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID)));
-            subjectsNames[i] = (subjectsCursor.getString(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME)));
-        }
-        subjectsCursor.close();
+//        Cursor subjectsCursor = db.getSubjectsByClassId(classId);
+//        //их id
+//        subjectsId = new long[subjectsCursor.getCount()];
+//        //и название
+//        final String[] subjectsNames = new String[subjectsCursor.getCount()];
+//        for (int i = 0; i < subjectsCursor.getCount(); i++) {
+//            subjectsCursor.moveToNext();
+//            subjectsId[i] = (subjectsCursor.getLong(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID)));
+//            subjectsNames[i] = (subjectsCursor.getString(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME)));
+//        }
+//        subjectsCursor.close();
+//
+//        //--создаем--
+//        subjectSpinner = (Spinner) findViewById(R.id.learners_and_grades_activity_subject_spinner);
+//        //адаптер для спиннера
+//        subjectSpinner.setAdapter(new ArrayAdapter<>(
+//                this,
+//                R.layout.spiner_dropdown_element_learners_and_grades_subjects,
+//                subjectsNames
+//        ));
+//        //при выборе пункта
+//        subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                flag = false;
+//                changingSubjectPosition = i;
+//                updateTable();//to-do эта штука выполняестся при старте, надо что-то делать
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
 
-        //--создаем--
-        Spinner subjectSpinner = (Spinner) findViewById(R.id.learners_and_grades_activity_subject_spinner);
-        //адаптер для спиннера
-        subjectSpinner.setAdapter(new ArrayAdapter<>(
-                this,
-                R.layout.spiner_dropdown_element_learners_and_grades_subjects,
-                subjectsNames
-        ));
-        //при выборе пункта
-        subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                flag = false;
-                changingSubjectPosition = i;
-                updateTable();//todo эта штука выполняестся при старте, надо что-то делать
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        availableLessonsOut(classId, 0);
 
 //----вывод данных при старте----
         getLearnersFromDB();
@@ -335,11 +345,274 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         db.close();
     }
 
+//==============================вывод предметов========================================
+
+    void availableLessonsOut(final long classViewId, final int position) {
+
+        final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        Cursor cursor = db.getSubjectsByClassId(classViewId);
+        final int count = cursor.getCount();
+        final String[] stringLessons;
+        if (count == 0) {
+            stringLessons = new String[cursor.getCount() + 1];
+        } else {
+            stringLessons = new String[cursor.getCount() + 2];
+        }
+        final String[] stringOnlyLessons = new String[cursor.getCount()];
+        subjectsId = new long[cursor.getCount()];
+        //Log.i("TeachersApp", "LessonRedactorActivity - " + stringLessons.length);
+        for (int i = 0; i < stringLessons.length - 2; i++) {
+            cursor.moveToNext();
+            subjectsId[i] = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID));
+            stringLessons[i] = cursor.getString(cursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME));
+            stringOnlyLessons[i] = stringLessons[i];
+        }
+
+        if (count == 0) {
+            stringLessons[stringLessons.length - 1] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_create_subject);
+        } else {
+            stringLessons[stringLessons.length - 1] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_remove_subject);
+            stringLessons[stringLessons.length - 2] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_create_subject);
+        }
+        cursor.close();
+        db.close();
+
+        final String[] finalStringLessons = stringLessons;
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                R.layout.spiner_dropdown_element_learners_and_grades_subjects,
+                stringLessons
+        );
+        //adapter.setDropDownViewResource(R.layout.spiner_dropdown_element_learners_and_grades_subjects);
+        subjectSpinner.setAdapter(adapter);
+        subjectSpinner.setSelection(position, false);
+        subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                Log.i("TeachersApp", "LessonRedactorActivity - availableLessonsOut onItemSelected " + pos);
+                if (count != 0 && finalStringLessons.length - 1 == pos) {
+                    Log.i("TeachersApp", "LessonRedactorActivity - remove lesson");
+                    //данные передаваемые в диалог
+                    Bundle args = new Bundle();
+                    args.putStringArray("stringOnlyLessons", stringOnlyLessons);
+                    args.putLongArray("lessonsId", subjectsId);
+                    args.putInt("position", position);
+                    //диалог по удалению
+                    RemoveLearnerSubjectDialogFragment removeDialog = new RemoveLearnerSubjectDialogFragment();
+                    removeDialog.setArguments(args);
+                    removeDialog.show(getFragmentManager(), "removeLessons");
+
+                } else if ((count != 0 && stringLessons.length - 2 == pos) || (count == 0 && finalStringLessons.length - 1 == pos)) {
+                    //диалог создания предмета
+                    Log.i("TeachersApp", "LessonRedactorActivity - new lesson");
+                    //данные для диалога
+                    Bundle args = new Bundle();
+                    args.putStringArray("stringLessons", stringLessons);
+                    args.putInt("position", position);
+                    //диалог по созданию нового предмета
+                    SubjectNameLearnersDialogFragment lessonNameDialogFragment = new SubjectNameLearnersDialogFragment();
+                    lessonNameDialogFragment.setArguments(args);
+                    lessonNameDialogFragment.show(getFragmentManager(), "createSubject");
+                } else if (pos != 0) {
+                    Log.i("TeachersApp", "LessonRedactorActivity - chosen lesson id = " + subjectsId[pos - 1]);
+                    //останавливаем загрузку оценок
+                    flag = false;
+                    changingSubjectPosition = pos;
+                    updateTable();
+                } else {
+                    Log.i("TeachersApp", "LessonRedactorActivity - no lesson selected");
+                    //останавливаем загрузку оценок
+                    flag = false;
+                    changingSubjectPosition = 0;
+                    updateTable();
+                }
+
+//                // Set adapter flag that something has been chosen
+//                adapter.flag = true;
+            }
+        });
+        //spinner.setSelection(2);//элемент по умолчанию
+    }
+
+//---------------------удаление предметов-----------------
+
+    public static class RemoveLearnerSubjectDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final ArrayList<Integer> mSelectedItems = new ArrayList<>();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(getResources().getString(R.string.lesson_redactor_activity_dialog_title_remove_subjects))
+                    .setMultiChoiceItems(getArguments().getStringArray("stringOnlyLessons"), null,
+                            new DialogInterface.OnMultiChoiceClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which,
+                                                    boolean isChecked) {
+                                    if (isChecked) {
+                                        // If the user checked the item, add it to the selected items
+                                        mSelectedItems.add(which);
+                                    } else if (mSelectedItems.contains(which)) {
+                                        // Else, if the item is already in the array, remove it
+                                        mSelectedItems.remove(Integer.valueOf(which));
+                                    }
+                                }
+                            })
+                    // Set the action buttons
+                    .setPositiveButton(getResources().getString(R.string.lesson_redactor_activity_dialog_button_remove), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            long[] lessonsId = getArguments().getLongArray("lessonsId");
+                            ArrayList<Long> deleteList = new ArrayList<>(mSelectedItems.size());
+                            for (int itemPoz : mSelectedItems) {
+                                deleteList.add(lessonsId[itemPoz]);
+                            }
+
+                            //возвращаем все в активность
+                            ((SubjectRemoveLearnersDialogInterface) getActivity())
+                                    .RemoveSubjectDialogMethod(
+                                            0,
+                                            0,
+                                            deleteList
+                                    );
+                            dismiss();
+                        }
+                    })
+                    .setNegativeButton(getResources().getString(R.string.lesson_redactor_activity_dialog_button_cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            //возвращаем все в активность
+                            ((SubjectRemoveLearnersDialogInterface) getActivity())
+                                    .RemoveSubjectDialogMethod(
+                                            1,
+                                            getArguments().getInt("position"),
+                                            new ArrayList<Long>()
+                                    );
+                            dismiss();
+                        }
+                    });
+
+            return builder.create();
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            super.onCancel(dialog);
+            ((SubjectRemoveLearnersDialogInterface) getActivity())
+                    .RemoveSubjectDialogMethod(
+                            1,
+                            getArguments().getInt("position"),
+                            new ArrayList<Long>()
+                    );
+        }
+    }
+
+//---------------------интерфейс удаления предметов-----------------
+
+    @Override
+    public void RemoveSubjectDialogMethod(int code, int position, ArrayList<Long> deleteList) {
+        if (code == 0) {
+            //останавливаем загрузку оценок
+            flag = false;
+            //удаляем
+            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+            db.deleteSubjects(deleteList);
+            db.close();
+            //выводим
+            availableLessonsOut(classId, position);
+        } else {
+            availableLessonsOut(classId, position);
+        }
+    }
+
+//---------------------создание предметов-----------------
+
+    public static class SubjectNameLearnersDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            LinearLayout out = (LinearLayout) getActivity().getLayoutInflater().inflate(R.layout.activity_lesson_redactor_dialog_lesson_name, null);
+            final EditText lessonNameEditText = (EditText) out.findViewById(R.id.activity_lesson_redactor_dialog_lesson_name_edit_text);
+
+            builder.setTitle(getResources().getString(R.string.lesson_redactor_activity_dialog_title_add_subject));
+            builder.setView(out)
+                    .setPositiveButton(getResources().getString(R.string.lesson_redactor_activity_dialog_button_add), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            int poz;
+
+                            poz = getArguments().getStringArray("stringLessons").length - 2;
+                            ((SubjectNameLearnersDialogInterface) getActivity())
+                                    .lessonNameDialogMethod(
+                                            1,
+                                            poz,
+                                            lessonNameEditText.getText().toString()
+                                    );
+
+                            dismiss();
+                        }
+                    })
+                    .setNegativeButton(getResources().getString(R.string.lesson_redactor_activity_dialog_button_cancel), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            int poz;
+                            //если предметов нет то диалог появляется снова и снова
+                            if (getArguments().getStringArray("stringLessons").length == 2) {
+                                poz = getArguments().getStringArray("stringLessons").length - 2;
+                            } else
+                                //иначе переводит на последний
+                                poz = getArguments().getStringArray("stringLessons").length - 3;
+                            ((SubjectNameLearnersDialogInterface) getActivity())
+                                    .lessonNameDialogMethod(
+                                            0,
+                                            poz,
+                                            ""
+                                    );
+                            dismiss();
+                        }
+                    });
+
+            return builder.create();
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            int poz;
+            if (getArguments().getStringArray("stringLessons").length == 2) {
+                poz = getArguments().getStringArray("stringLessons").length - 2;
+            } else
+                //иначе переводит на последний
+                poz = getArguments().getStringArray("stringLessons").length - 3;
+            ((SubjectNameLearnersDialogInterface) getActivity())
+                    .lessonNameDialogMethod(
+                            0,
+                            poz,
+                            ""
+                    );
+            super.onCancel(dialog);
+        }
+    }
+
+//--------обратная связь от диалога-------
+
+    @Override
+    public void lessonNameDialogMethod(int code, int position, String classNameText) {
+        if (code == 1) {
+            (new DataBaseOpenHelper(this)).createSubject(classNameText, classId);
+            availableLessonsOut(classId, position);
+        } else {
+            availableLessonsOut(classId, position);
+        }
+
+    }
+
 
 //===========получаем учеников из базы===========
 
     void getLearnersFromDB() {
-        Log.i("TeachersApp","LearnersAndGradesActivity - getLearnersFromDB");
+        Log.i("TeachersApp", "LearnersAndGradesActivity - getLearnersFromDB");
         //чистим массивы от предыдущих значений
         learnersId = new ArrayList<>();
         learnersTitles = new ArrayList<>();
@@ -369,7 +642,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     //вывод имен учеников в таблицу
     void updateTable() {
-        Log.i("TeachersApp","LearnersAndGradesActivity - updateTable");
+        Log.e("TeachersApp", "LearnersAndGradesActivity - updateTable");
         //чистка
         //имена
         learnersNamesTable.removeAllViews();
@@ -475,7 +748,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 //===========получаем оценки из базы===========
 
     void getGradesFromDB() {
-        Log.i("TeachersApp","LearnersAndGradesActivity - getGradesFromDB");
+        Log.i("TeachersApp", "LearnersAndGradesActivity - getGradesFromDB");
 //----вывод оценок перед загрузкой данных, чтобы таблица не была пустая----
         //outGradesInTable();
 
@@ -494,9 +767,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 RelativeLayout.LayoutParams.MATCH_PARENT));
         forwardScreen.setBackgroundColor(Color.parseColor("#68505050"));
         //forwardScreen.setBackgroundColor(Color.RED);
-        gradesRoom.addView(forwardScreen,RelativeLayout.LayoutParams.MATCH_PARENT,
+        gradesRoom.addView(forwardScreen, RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT);
-
 
 
 //----разрешаем подгрузку данных----
@@ -535,10 +807,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         Thread progressThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.e("TeachersApp", "StartLoadThread");
                 //для перевода даты в пустые оценки
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 //-- заполняем бд
                 //чистим массив от предыдущих значений
+
                 grades = new GradeUnit
                         [learnersId.size()]
                         [viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)]
@@ -546,11 +820,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         [3];
                 //[ученик][день][урок][оценка]
                 // и инициализируем его()
-                for (int i = 0; i < grades.length; i++) {
-                    for (int j = 0; j < grades[i].length; j++) {
-                        for (int k = 0; k < grades[i][j].length; k++) {
-                            for (int l = 0; l < grades[i][j][k].length; l++) {
-                                grades[i][j][k][l] = new GradeUnit();
+                for (int g = 0; g < grades.length; g++) {
+                    for (int j = 0; j < grades[g].length; j++) {
+                        for (int k = 0; k < grades[g][j].length; k++) {
+                            for (int l = 0; l < grades[g][j][k].length; l++) {
+                                grades[g][j][k][l] = new GradeUnit();
                             }
                         }
                     }
@@ -610,6 +884,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 outHelpEndCalendar.set(Calendar.MINUTE,
                                         SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][1]
                                 );
+                                //Log.e("TeachersApp","lear = "+learnersId.size()+" i="+i+"  =="+learnersId.get(i));
+                                //Log.e("TeachersApp","subjectsId = "+subjectsId.length+" changingSubjectPosition="+changingSubjectPosition+"  =="+subjectsId[changingSubjectPosition]);
                                 //получаем оценки по времени и предмету
                                 Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
                                         learnersId.get(i),//todo !!!!!!!!!!!! здесь все еще есть ошибка !!!!!!!!!!!!!!! здесь ошибка java.lang.ArrayIndexOutOfBoundsException
@@ -634,6 +910,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                                 ))
                                         );
                                     } else {
+//                                        Log.e("TeachersApp","i="+i+" j="+j+" k="+k+" l="+l+" ");
+//                                        Log.e("TeachersApp",""+grades[i][j][k].length);
+//                                        Log.e("TeachersApp",""+grades[i][j].length);
+//                                        Log.e("TeachersApp",""+grades[i].length);
+//                                        Log.e("TeachersApp",""+grades.length);
                                         //нет оценки
                                         grades[i][j][k][l] = new GradeUnit(
                                                 learnersId.get(i),
@@ -684,7 +965,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 //===========вывод оценок в таблицу===========
 
     void outGradesInTable() {
-        Log.i("TeachersApp","LearnersAndGradesActivity - outGradesInTable");
+        Log.i("TeachersApp", "LearnersAndGradesActivity - outGradesInTable");
         // в таблице дни раскрашиваются в шахматном порядке
 //если первый столбец в дне то выводим иначе если нет оценок, то не выводим
 
@@ -888,6 +1169,16 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
 
+}
+
+interface SubjectNameLearnersDialogInterface {//обратная связь от диалога
+
+    void lessonNameDialogMethod(int code, int position, String classNameText);
+}
+
+interface SubjectRemoveLearnersDialogInterface {//обратная связь от диалога
+
+    void RemoveSubjectDialogMethod(int code, int position, ArrayList<Long> deleteList);
 }
 
 class GradeUnit {
