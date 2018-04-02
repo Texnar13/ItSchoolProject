@@ -385,7 +385,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         );
         //adapter.setDropDownViewResource(R.layout.spiner_dropdown_element_learners_and_grades_subjects);
         subjectSpinner.setAdapter(adapter);
-        subjectSpinner.setSelection(position, false);
         subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -435,6 +434,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 //                adapter.flag = true;
             }
         });
+        subjectSpinner.setSelection(position, false);
         //spinner.setSelection(2);//элемент по умолчанию
     }
 

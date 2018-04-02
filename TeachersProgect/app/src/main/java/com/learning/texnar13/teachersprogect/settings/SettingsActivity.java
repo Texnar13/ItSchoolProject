@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -19,13 +20,15 @@ import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class SettingsActivity extends AppCompatActivity implements SettingsRemoveInterface {
+public class SettingsActivity extends AppCompatActivity implements SettingsRemoveInterface, EditTimeDialogFragmentInterface {
 
 //-----------------------------------метод для диалога----------------------------------------------
 
+    //удаление настроек
     @Override
     public void settingsRemove() {
         DataBaseOpenHelper dbOpenHelper = new DataBaseOpenHelper(getApplicationContext());
@@ -106,6 +109,21 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
         toast.show();
     }
 
+    //редактирование времени
+    @Override
+    public void editTime(int [][] time) {
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        int answer = db.setSettingsTime(1, time);
+        db.close();
+        if(answer == 1){
+            Toast toast = Toast.makeText(this,R.string.settings_activity_toast_time_sucsesfuly_saved,Toast.LENGTH_LONG);
+            toast.show();
+        }else{
+            Toast toast = Toast.makeText(this,R.string.settings_activity_toast_time_no_saved,Toast.LENGTH_LONG);
+            toast.show();
+        }
+    }
+
 
 //-----------------------------------------создание экрана------------------------------------------
 
@@ -116,8 +134,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
 
-
-        //изменение размера
+//----------изменение размера------------
 
         final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
@@ -156,7 +173,8 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
             }
         });
 
-        //максимальный ответ
+//-------------максимальный ответ-------------
+
         //поле ввода
         final EditText maxEdit = (EditText) findViewById(R.id.activity_settings_max_grade_editText);
 
@@ -183,10 +201,11 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
                                 Toast.makeText(getApplicationContext(), getString(R.string.settings_activity_toast_grade_too_min), Toast.LENGTH_SHORT).show();
                                 db.setSettingsMaxGrade(1, Integer.valueOf(maxEdit.getText().toString()));
                             } else {
-                            Toast.makeText(getApplicationContext(), getString(R.string.settings_activity_toast_grade_saved)+" " + Integer.valueOf(maxEdit.getText().toString()), Toast.LENGTH_SHORT).show();
-                            db.setSettingsMaxGrade(1, Integer.valueOf(maxEdit.getText().toString()));
-                        }}
-                    }else{
+                                Toast.makeText(getApplicationContext(), getString(R.string.settings_activity_toast_grade_saved) + " " + Integer.valueOf(maxEdit.getText().toString()), Toast.LENGTH_SHORT).show();
+                                db.setSettingsMaxGrade(1, Integer.valueOf(maxEdit.getText().toString()));
+                            }
+                        }
+                    } else {
                         maxEdit.setText("100");
                         Toast.makeText(getApplicationContext(), getString(R.string.settings_activity_toast_grade_too_match), Toast.LENGTH_SHORT).show();
                         db.setSettingsMaxGrade(1, Integer.valueOf(maxEdit.getText().toString()));
@@ -194,15 +213,53 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
                 }
             }
         });
-// не введена оценка
-// введено слишком большое значение (должно быть не более 100)
-// введено слишком маленькое значение (должно быть не менее 1)
-// сохранено
-//
-//
 
 
-        //удаление данных
+//--------------изменить время-----------
+
+        //кнопка  изменения
+        Button editTimeButton = (Button) findViewById(R.id.activity_settings_edit_time_button);
+        //слушатель
+        editTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                int [][] arrays = db.getSettingsTime(1);
+                db.close();
+                Log.e("TeachersApp", "*********"+ Arrays.toString(arrays));
+
+                int [] arr0 = arrays[0];
+                int [] arr1 = arrays[1];
+                int [] arr2 = arrays[2];
+                int [] arr3 = arrays[3];
+                int [] arr4 = arrays[4];
+                int [] arr5 = arrays[5];
+                int [] arr6 = arrays[6];
+                int [] arr7 = arrays[7];
+                int [] arr8 = arrays[8];
+
+                //диалог
+                EditTimeDialogFragment editTimeDialogFragment = new EditTimeDialogFragment();
+                //данные
+                Bundle args = new Bundle();
+                args.putIntArray("arr0",arr0);
+                args.putIntArray("arr1",arr1);
+                args.putIntArray("arr2",arr2);
+                args.putIntArray("arr3",arr3);
+                args.putIntArray("arr4",arr4);
+                args.putIntArray("arr5",arr5);
+                args.putIntArray("arr6",arr6);
+                args.putIntArray("arr7",arr7);
+                args.putIntArray("arr8",arr8);
+                editTimeDialogFragment.setArguments(args);
+                editTimeDialogFragment.show(getFragmentManager(), "editTime");
+
+            }
+        });
+
+
+//--------------удаление данных-----------
+
         Button removeDataButton = (Button) findViewById(R.id.activity_settings_remove_data_button);
         removeDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,7 +272,8 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
             }
         });
 
-        //оцените нас
+//--------------оцените нас-----------------
+
         Button rateUsButton = (Button) findViewById(R.id.settings_rate_button);
         rateUsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,6 +294,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
         });
     }
 
+    //для кнопки оцените нас
     private boolean isActivityStarted(Intent aIntent) {
         try {
             startActivity(aIntent);

@@ -1,0 +1,18 @@
+<resources>
+
+    <!--values-sw600dp  7.0”  tablet 1024x600 mdpi -->
+    <dimen name="activity_horizontal_margin">0dp</dimen>
+    <dimen name="activity_vertical_margin">0dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!--размеры текста-->
+    <dimen name="text_title_size">56sp</dimen>
+    <dimen name="text_subtitle_size">40sp</dimen>
+    <dimen name="text_simple_size">20sp</dimen>
+
+    <!--главный экран-->
+    <dimen name="start_screen_button_margins">24dp</dimen>
+    <dimen name="start_screen_text_margins">21dp</dimen>
+    <dimen name="start_screen_image_margins">42dp</dimen>
+
+</resources>

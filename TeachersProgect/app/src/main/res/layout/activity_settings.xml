@@ -72,9 +72,9 @@
                     android:textSize="18dp" />
 
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <EditText
                         android:id="@+id/activity_settings_max_grade_editText"
@@ -85,18 +85,34 @@
                         android:inputType="number" />
 
                     <Button
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginStart="20dp"
                         android:id="@+id/activity_settings_max_grade_save_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
                         android:background="@drawable/button_gray"
-                        android:textColor="@color/colorBackGround"
-                        android:text="@string/settings_activity_button_save_data" />
-
-
+                        android:text="@string/settings_activity_button_save_data"
+                        android:textColor="@color/colorBackGround" />
                 </LinearLayout>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/activity_settings_edit_time_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_gray"
+                    android:text="@string/settings_activity_button_edit_time"
+                    android:textColor="@color/colorBackGround" />
             </LinearLayout>
 
             <LinearLayout

@@ -7,6 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.FieldPosition;
@@ -18,9 +22,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static com.learning.texnar13.teachersprogect.data.SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES;
+
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 11;
+    private static final int DB_VERSION = 12;
 
     /*
         final TextView textView = (TextView) findViewById(R.id.myTextView);
@@ -104,6 +110,52 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             String sql = "CREATE TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + "( " + SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME + " VARCHAR, " +
                     SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER + " INTEGER DEFAULT 5, " +
+                    SchoolContract.TableSettingsData.COLUMN_TIME + " TEXT DEFAULT " +
+                    "'{\"" + SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_HOUR_NAME + "\":" +
+                    //часы начала
+                    "[\"" + STANDARD_LESSONS_TIMES[0][0][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[1][0][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[2][0][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[3][0][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[4][0][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[5][0][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[6][0][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[7][0][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[8][0][0] + "\"]," +
+                    //минуты начала
+                    "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_MINUTE_NAME + "\":" +
+                    "[\"" + STANDARD_LESSONS_TIMES[0][0][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[1][0][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[2][0][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[3][0][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[4][0][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[5][0][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[6][0][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[7][0][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[8][0][1] + "\"]," +
+                    //часы конца
+                    "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_HOUR_NAME + "\":" +
+                    "[\"" + STANDARD_LESSONS_TIMES[0][1][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[1][1][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[2][1][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[3][1][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[4][1][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[5][1][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[6][1][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[7][1][0] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[8][1][0] + "\"]," +
+                    //минуты конца
+                    "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_MINUTE_NAME + "\":" +
+                    "[\"" + STANDARD_LESSONS_TIMES[0][1][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[1][1][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[2][1][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[3][1][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[4][1][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[5][1][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[6][1][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[7][1][1] + "\"," +
+                    "\"" + STANDARD_LESSONS_TIMES[8][1][1] + "\"]" +
+                    "}'," +
                     SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE + " INTEGER ); ";
             db.execSQL(sql);
 
@@ -334,12 +386,64 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
                 db.execSQL("PRAGMA foreign_keys = ON");
             }
+            //колонка для максимальной оценки
             if (oldVersion < 11) {
-                db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER + " INTEGER DEFAULT 5;");//колонка для максимальной оценки
+                db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER + " INTEGER DEFAULT 5;");
+            }
+            //колонка для максимальной оценки
+            if (oldVersion < 12) {
+                db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_TIME + " TEXT DEFAULT " +
+                        "'{\"" + SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_HOUR_NAME + "\":" +
+                        //часы начала
+                        "[\"" + STANDARD_LESSONS_TIMES[0][0][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[1][0][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[2][0][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[3][0][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[4][0][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[5][0][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[6][0][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[7][0][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[8][0][0] + "\"]," +
+                        //минуты начала
+                        "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_MINUTE_NAME + "\":" +
+                        "[\"" + STANDARD_LESSONS_TIMES[0][0][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[1][0][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[2][0][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[3][0][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[4][0][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[5][0][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[6][0][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[7][0][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[8][0][1] + "\"]," +
+                        //часы конца
+                        "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_HOUR_NAME + "\":" +
+                        "[\"" + STANDARD_LESSONS_TIMES[0][1][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[1][1][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[2][1][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[3][1][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[4][1][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[5][1][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[6][1][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[7][1][0] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[8][1][0] + "\"]," +
+                        //минуты конца
+                        "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_MINUTE_NAME + "\":" +
+                        "[\"" + STANDARD_LESSONS_TIMES[0][1][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[1][1][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[2][1][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[3][1][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[4][1][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[5][1][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[6][1][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[7][1][1] + "\"," +
+                        "\"" + STANDARD_LESSONS_TIMES[8][1][1] + "\"]" +
+                        "}';");
             }
         }
         //db.close();
     }
+
+//----------------------------------------методы доступа--------------------------------------------
 
     //настройки
     public long createNewSettingsProfileWithId1(String profileName, int interfaceSize) {
@@ -397,6 +501,179 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         int answer = cursor.getInt(cursor.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER));
         cursor.close();
         Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + answer + " profileId= " + profileId);
+        //db.close();
+        return answer;
+    }
+
+    //необходимо переделать уроки (подогнать их под новое время)
+    public void setNewTimeForLessons(int[][] lastTime, int[][] newTime) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        SimpleDateFormat timeDateFormat = new SimpleDateFormat("HH:mm:ss");
+
+        for (int i = 0; i < lastTime.length; i++) {
+            //предыдущее время в календарях
+            GregorianCalendar lastStart = new GregorianCalendar(
+                    0, 0, 0, lastTime[i][0], lastTime[i][1]
+            );
+            GregorianCalendar lastEnd = new GregorianCalendar(
+                    0, 0, 0, lastTime[i][2], lastTime[i][3]
+            );
+            //новое время в календарях
+            GregorianCalendar newStart = new GregorianCalendar(
+                    0, 0, 0, newTime[i][0], newTime[i][1]
+            );
+            GregorianCalendar newEnd = new GregorianCalendar(
+                    0, 0, 0, newTime[i][2], newTime[i][3]
+            );
+
+            //парсим его в текст вида '00:00:00'
+            String lastStartText = timeDateFormat.format(lastStart.getTime());
+            String lastEndText = timeDateFormat.format(lastEnd.getTime());
+            String newStartText = timeDateFormat.format(newStart.getTime());
+            String newEndText = timeDateFormat.format(newEnd.getTime());
+
+//            //проверяем если время совпадает, то меняем его на новое
+//            db.rawQuery("UPDATE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " " +
+//                            "SET " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + "))||(\"" + newStartText + "\"))," +
+//                            " " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + "))||(\"" + newEndText + "\"))" +
+//                            " WHERE (time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") == \"" + lastStartText + "\" " +
+//                            "AND time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + ") == \"" + lastEndText + "\");",
+//                    new String[]{}
+//            );
+
+//            //проверяем если время совпадает, то меняем его на новое
+//            db.update(SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE,SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + "))||(\"" + newStartText + "\"))," +
+//                    " " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + "))||(\"" + newEndText + "\"))", "(time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") == \"" + lastStartText + "\" " +
+//                            "AND time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + ") == \"" + lastEndText + "\")",new ContentValues());
+
+
+            db.execSQL("UPDATE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " " +
+                            "SET " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + "))||(\" " + newStartText + "\"))," +
+                            " " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + "))||(\" " + newEndText + "\"))" +
+                            " WHERE (time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") == \"" + lastStartText + "\" " +
+                            "AND time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + ") == \"" + lastEndText + "\");"
+            );
+//            db.rawQuery("UPDATE tab1le " +
+//                            "SET column1 = ((date(column1))||('newStart'))," +
+//                            " column2 = ((date(column2))||('newEnd'))" +
+//                            " WHERE (time(column1) = 'lastStart' " +
+//                            "AND time(column2) = 'lastEnd');",
+//                    new String[]{}
+//            );
+
+
+        }
+    }
+
+
+    public int setSettingsTime(long profileId, int[][] time) {//{{hh,mm,hh,mm},{hh,mm,hh,mm},...}
+        SQLiteDatabase db = this.getWritableDatabase();
+
+//перед переделыванием расписания необходимо переделать уроки (подогнать их под новое время)
+        setNewTimeForLessons(getSettingsTime(profileId), time);
+
+//переделываем расписание
+        //парсим в json для проверки
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(
+                    "{\"" + SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_HOUR_NAME + "\":" +
+                            //часы начала
+                            "[\"" + time[0][0] + "\"," +
+                            "\"" + time[1][0] + "\"," +
+                            "\"" + time[2][0] + "\"," +
+                            "\"" + time[3][0] + "\"," +
+                            "\"" + time[4][0] + "\"," +
+                            "\"" + time[5][0] + "\"," +
+                            "\"" + time[6][0] + "\"," +
+                            "\"" + time[7][0] + "\"," +
+                            "\"" + time[8][0] + "\"]," +
+                            //минуты начала
+                            "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_MINUTE_NAME + "\":" +
+                            "[\"" + time[0][1] + "\"," +
+                            "\"" + time[1][1] + "\"," +
+                            "\"" + time[2][1] + "\"," +
+                            "\"" + time[3][1] + "\"," +
+                            "\"" + time[4][1] + "\"," +
+                            "\"" + time[5][1] + "\"," +
+                            "\"" + time[6][1] + "\"," +
+                            "\"" + time[7][1] + "\"," +
+                            "\"" + time[8][1] + "\"]," +
+                            //часы конца
+                            "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_HOUR_NAME + "\":" +
+                            "[\"" + time[0][2] + "\"," +
+                            "\"" + time[1][2] + "\"," +
+                            "\"" + time[2][2] + "\"," +
+                            "\"" + time[3][2] + "\"," +
+                            "\"" + time[4][2] + "\"," +
+                            "\"" + time[5][2] + "\"," +
+                            "\"" + time[6][2] + "\"," +
+                            "\"" + time[7][2] + "\"," +
+                            "\"" + time[8][2] + "\"]," +
+                            //минуты конца
+                            "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_MINUTE_NAME + "\":" +
+                            "[\"" + time[0][3] + "\"," +
+                            "\"" + time[1][3] + "\"," +
+                            "\"" + time[2][3] + "\"," +
+                            "\"" + time[3][3] + "\"," +
+                            "\"" + time[4][3] + "\"," +
+                            "\"" + time[5][3] + "\"," +
+                            "\"" + time[6][3] + "\"," +
+                            "\"" + time[7][3] + "\"," +
+                            "\"" + time[8][3] + "\"]" +
+                            "}");
+        } catch (JSONException e) {
+            Log.e("TeachersApp", "setSettingsTime-error-JSONParse", e);
+            return -1;
+        }
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableSettingsData.COLUMN_TIME, jsonObject.toString());
+        int temp = db.update(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, values, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId});
+
+        Log.i("DBOpenHelper", "setSettingsTime return = " + temp + " profileId= " + profileId + " time= " + Arrays.toString(time));
+        //db.close();
+        return temp;
+    }
+
+    public int[][] getSettingsTime(long profileId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId}, null, null, null);
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return new int[][]{};
+        }
+        int[][] answer = new int[9][4];
+        cursor.moveToFirst();
+
+        JSONObject json;
+        JSONArray beginHour;
+        JSONArray beginMinute;
+        JSONArray endHour;
+        JSONArray endMinute;
+        try {
+            Log.e("TeachersApp", "" + Arrays.toString(cursor.getColumnNames()));
+            json = new JSONObject(
+                    cursor.getString(cursor.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_TIME))
+            );
+
+            beginHour = json.getJSONArray(SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_HOUR_NAME);
+            beginMinute = json.getJSONArray(SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_MINUTE_NAME);
+            endHour = json.getJSONArray(SchoolContract.TableSettingsData.COLUMN_TIME_END_HOUR_NAME);
+            endMinute = json.getJSONArray(SchoolContract.TableSettingsData.COLUMN_TIME_END_MINUTE_NAME);
+
+            for (int i = 0; i < 9; i++) {
+                answer[i][0] = beginHour.getInt(i);
+                answer[i][1] = beginMinute.getInt(i);
+                answer[i][2] = endHour.getInt(i);
+                answer[i][3] = endMinute.getInt(i);
+            }
+        } catch (JSONException e) {
+            Log.e("TeachersApp", "getSettingsTime-error-JSONParse", e);
+            answer = new int[][]{};
+        }
+
+        cursor.close();
+        Log.i("DBOpenHelper", "getSettingsTime return = " + Arrays.toString(answer) + " profileId= " + profileId);
         //db.close();
         return answer;
     }

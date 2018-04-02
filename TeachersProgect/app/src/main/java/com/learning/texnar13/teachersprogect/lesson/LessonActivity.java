@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ZoomControls;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
@@ -24,18 +26,18 @@ import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.lessonList.LessonListActivity;
 
-    /*
-    * onCreate(),
-    * подгружаются все ученики, id кабинета, класса, предмета, зав. урок-время
-    * создаются массивы с оценками(или подгружаются;)),
-    *
-    * эти поля должны быть статичными, и с проверкой на существование(для переворота)
-    * при переходе удалить
-    *
-    * OnStart(),
-    * выводятся парты и ученики
-    *
-    * */
+/*
+ * onCreate(),
+ * подгружаются все ученики, id кабинета, класса, предмета, зав. урок-время
+ * создаются массивы с оценками(или подгружаются;)),
+ *
+ * эти поля должны быть статичными, и с проверкой на существование(для переворота)
+ * при переходе удалить
+ *
+ * OnStart(),
+ * выводятся парты и ученики
+ *
+ * */
 
 public class LessonActivity extends AppCompatActivity {
 
@@ -186,6 +188,15 @@ public class LessonActivity extends AppCompatActivity {
             subjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID
             ));
+//
+            //Todo какой урок открыт
+//            Toast toast = Toast.makeText(this,""+attitudeCursor.getString(attitudeCursor.getColumnIndex(
+//                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN
+//            ))+" "+attitudeCursor.getString(attitudeCursor.getColumnIndex(
+//                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END
+//            )),Toast.LENGTH_LONG);
+//            toast.show();
+//
             //закончили работать с зависимостью
             attitudeCursor.close();
 
@@ -280,13 +291,13 @@ public class LessonActivity extends AppCompatActivity {
         });
 
 
-/*
-    * подгружаются все ученики, id кабинета, класса, предмета, зав. урок-время
-    * создаются массивы с оценками(или подгружаются;)),
-    *
-    * эти поля должны быть статичными, и с проверкой на существование(для переворота)
-    * при переходе (окончании урока) удалить
-    */
+        /*
+         * подгружаются все ученики, id кабинета, класса, предмета, зав. урок-время
+         * создаются массивы с оценками(или подгружаются;)),
+         *
+         * эти поля должны быть статичными, и с проверкой на существование(для переворота)
+         * при переходе (окончании урока) удалить
+         */
 
         //3 это класс урока
 //        * вывод учеников, парт и мест, по нажатию на ученика открывается доп.меню*
@@ -591,8 +602,32 @@ public class LessonActivity extends AppCompatActivity {
                             tempLernerImage.setImageResource(R.drawable.learner_gray);
                             break;
 
+
                         default:
-                            tempLernerImage.setImageResource(R.drawable.learner_active);
+                            //5
+                            if (((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) <= 1) {
+                                tempLernerImage.setImageResource(R.drawable.lesson_learner_5_green);
+                            }
+                            //4
+                            if (((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) <= 0.8) {
+                                tempLernerImage.setImageResource(R.drawable.lesson_learner_4_lime);
+                            }
+                            //3
+                            if (((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) <= 0.6) {
+                                tempLernerImage.setImageResource(R.drawable.lesson_learner_3_yellow);
+                            }
+                            //2
+                            if (((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) <= 0.4) {
+                                tempLernerImage.setImageResource(R.drawable.lesson_learner_2_orange);
+                            }
+                            //1
+                            if (((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) <= 0.2) {
+                                tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
+                            }
+
+                            //tempLernerImage.setImageResource(R.drawable.learner_active);
+
+
 //                        case 1:
 //                            tempLernerImage.setImageResource(R.drawable.learner_red);
 //                            break;
@@ -693,7 +728,31 @@ public class LessonActivity extends AppCompatActivity {
                                     break;
 
                                 default:
-                                    tempLernerImage.setImageResource(R.drawable.learner_active);
+                                    //5
+                                    if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 100) {
+                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_5_green);
+                                    }
+                                    //4
+                                    if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 80) {
+                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_4_lime);
+                                    }
+                                    //3
+                                    if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 60) {
+                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_3_yellow);
+                                    }
+                                    //2
+                                    if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 41) {
+                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_2_orange);
+                                    }
+                                    //1
+                                    if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 20) {
+                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
+                                    }
+
+
+
+                                    //tempLernerImage.setImageResource(R.drawable.learner_active);
+
 //                                case 0:
 //                                    tempLernerImage.setImageResource(R.drawable.learner_gray);
 //                                    break;
@@ -754,7 +813,6 @@ public class LessonActivity extends AppCompatActivity {
                                 contextMenu.add(0, 1, 0, R.string.lesson_activity_context_menu_text_delete_answer).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_active);
                                         if (learnersAndGrades[learnerPosition].getGrade() == 1) {
                                             learnersAndGrades[learnerPosition].setGrade(
                                                     (byte) (maxAnswersCount)
@@ -763,6 +821,28 @@ public class LessonActivity extends AppCompatActivity {
                                             learnersAndGrades[learnerPosition].setGrade(
                                                     (byte) (learnersAndGrades[learnerPosition].getGrade() - 1)
                                             );
+                                        //ставим картинку
+                                        //5
+                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 100) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_5_green);
+                                        }
+                                        //4
+                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 80) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_4_lime);
+                                        }
+                                        //3
+                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 60) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_3_yellow);
+                                        }
+                                        //2
+                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 41) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_2_orange);
+                                        }
+                                        //1
+                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 20) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
+                                        }
+                                        //ставим текст
                                         bigText.setText("" + learnersAndGrades[learnerPosition].getGrade());
                                         return true;
                                     }
@@ -773,13 +853,34 @@ public class LessonActivity extends AppCompatActivity {
                                 contextMenu.add(0, 2, 0, R.string.lesson_activity_context_menu_text_add_answer).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_active);
                                         learnersAndGrades[learnerPosition].setGrade(
                                                 (byte) (learnersAndGrades[learnerPosition].getGrade() + 1)
                                         );
                                         bigText.setText("" + learnersAndGrades[learnerPosition].getGrade());
+                                        //ставим картинку
+                                        //5
+                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 100) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_5_green);
+                                        }
+                                        //4
+                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 80) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_4_lime);
+                                        }
+                                        //3
+                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 60) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_3_yellow);
+                                        }
+                                        //2
+                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 41) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_2_orange);
+                                        }
+                                        //1
+                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 20) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
+                                        }
+                                        //ставим текст
                                         return true;
-                                    }
+                                }
                                 });
                             }
 
@@ -834,6 +935,9 @@ public class LessonActivity extends AppCompatActivity {
 //                                    }
 //                                });
 //                            }
+
+
+                            //новая оценка
                             if (learnersAndGrades[learnerPosition].getGradesCount() != 2 && learnersAndGrades[learnerPosition].getGrade() != 0 && learnersAndGrades[learnerPosition].getGrade() != -2) {
                                 contextMenu.add(0, 6, 0, R.string.lesson_activity_context_menu_text_new_answers).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override

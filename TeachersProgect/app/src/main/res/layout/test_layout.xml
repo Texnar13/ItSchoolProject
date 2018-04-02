@@ -5,6 +5,91 @@
     android:background="@color/colorBackGround"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/Base.TextAppearance.AppCompat.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1."
+            android:textSize="@dimen/text_subtitle_size" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="2"
+                android:gravity="end"
+                android:hint="час"
+                android:inputType="numberDecimal"
+                android:text="" />
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=" : "
+                android:textSize="@dimen/text_subtitle_size" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="2"
+                android:gravity="left"
+                android:hint="мин"
+                android:inputType="numberDecimal"
+                android:text="" />
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=" -- "
+                android:textSize="@dimen/text_subtitle_size" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="2"
+                android:gravity="end"
+                android:hint="час"
+                android:inputType="numberDecimal"
+                android:text="00" />
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=" : "
+                android:textSize="@dimen/text_subtitle_size" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="2"
+                android:gravity="left"
+                android:hint="мин"
+                android:inputType="numberDecimal"
+                android:text="00" />
+        </LinearLayout>
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="100dp"
         android:layout_height="50dp"
@@ -50,19 +135,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.75">
+
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/learner_gray" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_horizontal">
 
                         <TextView
-                            android:layout_gravity="bottom"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
                             android:text="10"
                             android:textAllCaps="true"
                             android:textColor="#22fff2"
@@ -165,8 +252,7 @@
             android:layout_marginLeft="64dp"
             android:layout_marginStart="64dp"
             android:layout_marginTop="168dp"
-            android:background="#00ffffff"
-            android:id="@+id/relativeLayout">
+            android:background="#00ffffff">
 
             <RelativeLayout
                 android:layout_width="match_parent"

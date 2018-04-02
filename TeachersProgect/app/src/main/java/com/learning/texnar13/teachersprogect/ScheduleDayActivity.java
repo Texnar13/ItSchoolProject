@@ -38,6 +38,9 @@ public class ScheduleDayActivity extends AppCompatActivity {
     int month = -1;
     int year = -1;
 
+    //время уроков из бд
+    int[][] lessonsTime;
+
     static LessonTimePeriod[] lessonStandardTimePeriods = new LessonTimePeriod[9];
 
 //-------------------------------меню сверху--------------------------------------------------------
@@ -56,7 +59,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
         menu.findItem(R.id.shedule_day_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Toast toast = Toast.makeText(getApplicationContext(),R.string.schedule_day_activity_toast_develop ,Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(), R.string.schedule_day_activity_toast_develop, Toast.LENGTH_LONG);
                 toast.show();
 
                 return true;
@@ -64,7 +67,6 @@ public class ScheduleDayActivity extends AppCompatActivity {
         });
         return super.onPrepareOptionsMenu(menu);
     }
-
 
 
     @Override
@@ -100,7 +102,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         }
 //        dateText.setText(day + " " + months[month]);
-        setTitle(getTitle()+" " +day + " " + months[month]);
+        setTitle(getTitle() + " " + day + " " + months[month]);
 //        dateText.setGravity(Gravity.CENTER);
 
         final Calendar calendar = new GregorianCalendar(year, month, day);
@@ -195,41 +197,30 @@ public class ScheduleDayActivity extends AppCompatActivity {
             table.addView(head);
         }
 
+        lessonsTime = db.getSettingsTime(1);
 
         //тело таблицы
-        String timePeriodsString[] = {"8:30-9:15", "9:30-10:15", "10:30-11:15", "11:30-12:15", "12:25-13:10", "13:30-14:15", "14:25-15:10", "15:20-16:05", "внеурочное время"};
+        String timePeriodsString[] = {
+                "" + lessonsTime[0][0] + ":" + lessonsTime[0][1] + "-" + lessonsTime[0][2] + ":" + lessonsTime[0][3],
+                lessonsTime[1][0] + ":" + lessonsTime[1][1] + "-" + lessonsTime[1][2] + ":" + lessonsTime[1][3],
+                lessonsTime[2][0] + ":" + lessonsTime[2][1] + "-" + lessonsTime[2][2] + ":" + lessonsTime[2][3],
+                lessonsTime[3][0] + ":" + lessonsTime[3][1] + "-" + lessonsTime[3][2] + ":" + lessonsTime[3][3],
+                lessonsTime[4][0] + ":" + lessonsTime[4][1] + "-" + lessonsTime[4][2] + ":" + lessonsTime[4][3],
+                lessonsTime[5][0] + ":" + lessonsTime[5][1] + "-" + lessonsTime[5][2] + ":" + lessonsTime[5][3],
+                lessonsTime[6][0] + ":" + lessonsTime[6][1] + "-" + lessonsTime[6][2] + ":" + lessonsTime[6][3],
+                lessonsTime[7][0] + ":" + lessonsTime[7][1] + "-" + lessonsTime[7][2] + ":" + lessonsTime[7][3],
+                "внеурочное время"
+        };
 
-        lessonStandardTimePeriods[0] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 8, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 9, 15));
-        lessonStandardTimePeriods[1] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 9, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 10, 15));
-        lessonStandardTimePeriods[2] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 10, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 11, 15));
-        lessonStandardTimePeriods[3] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 11, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 12, 15));
-        lessonStandardTimePeriods[4] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 12, 25), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 13, 10));
-        lessonStandardTimePeriods[5] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 13, 30), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 14, 15));
-        lessonStandardTimePeriods[6] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 14, 25), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 15, 10));
-        lessonStandardTimePeriods[7] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 15, 20), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 16, 5));
-        lessonStandardTimePeriods[8] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 16, 6), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 23, 59));
-
-
-//        Calendar calendarStartTime[] = {
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 8, 30),
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 9, 30),
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 10, 30),
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 11, 30),
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 12, 25),
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 13, 30),
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 14, 25),
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 15, 20)
-//        };
-//        Calendar calendarEndTime[] = {
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 9, 15),
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 10, 15),
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 11, 15),
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 12, 15),
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 13, 10),
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 14, 15),
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 15, 10),
-//                new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), 16, 5)
-//        };
+        lessonStandardTimePeriods[0] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[0][0], lessonsTime[0][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[0][2], lessonsTime[0][3]));
+        lessonStandardTimePeriods[1] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[1][0], lessonsTime[1][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[1][2], lessonsTime[1][3]));
+        lessonStandardTimePeriods[2] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[2][0], lessonsTime[2][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[2][2], lessonsTime[2][3]));
+        lessonStandardTimePeriods[3] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[3][0], lessonsTime[3][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[3][2], lessonsTime[3][3]));
+        lessonStandardTimePeriods[4] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[4][0], lessonsTime[4][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[4][2], lessonsTime[4][3]));
+        lessonStandardTimePeriods[5] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[5][0], lessonsTime[5][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[5][2], lessonsTime[5][3]));
+        lessonStandardTimePeriods[6] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[6][0], lessonsTime[6][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[6][2], lessonsTime[6][3]));
+        lessonStandardTimePeriods[7] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[7][0], lessonsTime[7][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[7][2], lessonsTime[7][3]));
+        lessonStandardTimePeriods[8] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[8][0], lessonsTime[8][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[8][2], lessonsTime[8][3]));
 
         TableRow tableRows[] = new TableRow[9];//строки таблицы
         for (int i = 0; i < tableRows.length; i++) {
@@ -384,11 +375,11 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
                 } else if (j == 5) {//параметры для доп.
                     if (lessonAttitudeId == -1) {
-                        bodyText.setText("  "+getString(R.string.schedule_day_activity_table_additional_title_empty)+"  ");
+                        bodyText.setText("  " + getString(R.string.schedule_day_activity_table_additional_title_empty) + "  ");
                     } else if (!isLessonReady) {
-                        bodyText.setText("  "+getString(R.string.schedule_day_activity_table_additional_title_learners)+"  ");
+                        bodyText.setText("  " + getString(R.string.schedule_day_activity_table_additional_title_learners) + "  ");
                     } else {
-                        bodyText.setText("  "+getString(R.string.schedule_day_activity_table_additional_title_ready)+"  ");
+                        bodyText.setText("  " + getString(R.string.schedule_day_activity_table_additional_title_ready) + "  ");
                     }
 
                 }
