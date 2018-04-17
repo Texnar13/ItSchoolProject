@@ -2,20 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        app:showAsAction="never"
         android:id="@+id/cabinet_redactor_menu_gird"
-        android:title="@string/cabinet_redactor_activity_menu_text_gird"
         android:checkable="true"
-        android:checked="true">
-
+        android:checked="true"
+        android:title="@string/cabinet_redactor_activity_menu_text_gird"
+        app:showAsAction="never">
     </item>
 
     <item
-        app:showAsAction="never"
         android:id="@+id/cabinet_redactor_menu_gird_lines"
-        android:title="@string/cabinet_redactor_activity_menu_text_gird_lines"
         android:checkable="true"
-        android:checked="false">
+        android:checked="false"
+        android:title="@string/cabinet_redactor_activity_menu_text_gird_lines"
+        app:showAsAction="never">
 
     </item>
 </menu>

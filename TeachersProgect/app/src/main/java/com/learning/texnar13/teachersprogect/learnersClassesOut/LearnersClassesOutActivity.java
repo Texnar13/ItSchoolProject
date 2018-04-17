@@ -6,8 +6,10 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -173,7 +175,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
             //создаём текст
             TextView item = new TextView(this);
             item.setGravity(Gravity.CENTER);
-            item.setTextSize(25);
+            item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_title_size));
             item.setTextColor(Color.WHITE);
 
             //параметры пункта(т.к. элемент находится в LinearLayout то и параметры используем его)
@@ -264,9 +266,8 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
         //создаем
         TextView helpText1 = new TextView(this);
         helpText1.setGravity(Gravity.CENTER);
-        helpText1.setTextSize(20);
+        helpText1.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         helpText1.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
-        //helpText1.setText("Чтобы создать класс, нажмите \"+\" и введите его название. ");
         helpText1.setText(R.string.learners_classes_out_activity_text_help);
         //добавляем
         container.addView(
@@ -274,34 +275,6 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-
-//        //---2 текст---
-//        //создаем
-//        TextView helpText2 = new TextView(this);
-//        helpText2.setGravity(Gravity.CENTER);
-//        helpText2.setTextSize(20);
-//        helpText2.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
-//        helpText2.setText("Чтобы посмотреть список учеников и их оценки, нажмите на нужный вам класс.");
-//        //добавляем
-//        container.addView(
-//                helpText2,
-//                LinearLayout.LayoutParams.MATCH_PARENT,
-//                LinearLayout.LayoutParams.WRAP_CONTENT
-//        );
-//
-//        //---3 текст---
-//        //создаем
-//        TextView helpText3 = new TextView(this);
-//        helpText3.setGravity(Gravity.CENTER);
-//        helpText3.setTextSize(20);
-//        helpText3.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
-//        helpText3.setText("Чтобы переименовать или удалить класс с учениками, нажмите на него и удерживайте.");
-//        //добавляем
-//        container.addView(
-//                helpText3,
-//                LinearLayout.LayoutParams.MATCH_PARENT,
-//                LinearLayout.LayoutParams.WRAP_CONTENT
-//        );
 
         //---выводим контейнер в экран---
         room.addView(container, containerParams);

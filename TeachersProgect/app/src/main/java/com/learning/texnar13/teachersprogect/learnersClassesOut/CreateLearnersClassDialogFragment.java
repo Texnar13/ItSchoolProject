@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -43,7 +44,7 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
         TextView title = new TextView(getActivity());
         title.setText(R.string.learners_classes_out_activity_dialog_title_create_class);
         title.setTextColor(Color.BLACK);
-        title.setTextSize(20);
+        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         title.setAllCaps(true);
         title.setGravity(Gravity.CENTER);
 
@@ -60,7 +61,7 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
         final EditText editName = new EditText(getActivity());
         editName.setTextColor(Color.BLACK);
         editName.setHint(R.string.learners_classes_out_activity_dialog_hint_class_name);
-        //editName.setSingleLine(true);
+        editName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         editName.setInputType(InputType.TYPE_CLASS_TEXT);
         editName.setHintTextColor(Color.GRAY);
 
@@ -88,9 +89,10 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
         Button neutralButton = new Button(getActivity());
         neutralButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
         neutralButton.setText(R.string.learners_classes_out_activity_dialog_button_cancel);
+        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         neutralButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         neutralButtonParams.weight = 1;
@@ -100,9 +102,10 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
         Button positiveButton = new Button(getActivity());
         positiveButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
         positiveButton.setText(R.string.learners_classes_out_activity_dialog_button_add);
+        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         positiveButtonParams.weight = 1;

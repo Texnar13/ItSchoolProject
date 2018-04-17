@@ -24,9 +24,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class SettingsActivity extends AppCompatActivity implements SettingsRemoveInterface, EditTimeDialogFragmentInterface {
+public class SettingsActivity extends AppCompatActivity implements SettingsRemoveInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface {
 
-//-----------------------------------метод для диалога----------------------------------------------
+
+//-----------------------------------методы диалогов----------------------------------------------
 
     //удаление настроек
     @Override
@@ -111,17 +112,33 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
 
     //редактирование времени
     @Override
-    public void editTime(int [][] time) {
+    public void editTime(int[][] time) {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         int answer = db.setSettingsTime(1, time);
         db.close();
-        if(answer == 1){
-            Toast toast = Toast.makeText(this,R.string.settings_activity_toast_time_sucsesfuly_saved,Toast.LENGTH_LONG);
+        if (answer == 1) {
+            Toast toast = Toast.makeText(this, R.string.settings_activity_toast_time_successfully_saved, Toast.LENGTH_LONG);
             toast.show();
-        }else{
-            Toast toast = Toast.makeText(this,R.string.settings_activity_toast_time_no_saved,Toast.LENGTH_LONG);
+        } else {
+            Toast toast = Toast.makeText(this, R.string.settings_activity_toast_time_no_saved, Toast.LENGTH_LONG);
             toast.show();
         }
+    }
+
+    //смена локали
+    @Override
+    public void editLocale(String newLocale) {
+        //извлекаем язык
+        String lang = newLocale;//здесь просто получение строки из диалога (а в нем из бд) ..default..en..ru..
+        //новая локализация в бд
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        db.setSettingsLocale(1, lang);
+
+
+        //Toast toast = Toast.makeText(getApplicationContext(),"0000", Toast.LENGTH_LONG);неработает
+        // и перезапуск
+        System.exit(0);
+
     }
 
 
@@ -224,33 +241,33 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
             @Override
             public void onClick(View view) {
                 DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                int [][] arrays = db.getSettingsTime(1);
+                int[][] arrays = db.getSettingsTime(1);
                 db.close();
-                Log.e("TeachersApp", "*********"+ Arrays.toString(arrays));
+                Log.e("TeachersApp", "*********" + Arrays.toString(arrays));
 
-                int [] arr0 = arrays[0];
-                int [] arr1 = arrays[1];
-                int [] arr2 = arrays[2];
-                int [] arr3 = arrays[3];
-                int [] arr4 = arrays[4];
-                int [] arr5 = arrays[5];
-                int [] arr6 = arrays[6];
-                int [] arr7 = arrays[7];
-                int [] arr8 = arrays[8];
+                int[] arr0 = arrays[0];
+                int[] arr1 = arrays[1];
+                int[] arr2 = arrays[2];
+                int[] arr3 = arrays[3];
+                int[] arr4 = arrays[4];
+                int[] arr5 = arrays[5];
+                int[] arr6 = arrays[6];
+                int[] arr7 = arrays[7];
+                int[] arr8 = arrays[8];
 
                 //диалог
                 EditTimeDialogFragment editTimeDialogFragment = new EditTimeDialogFragment();
                 //данные
                 Bundle args = new Bundle();
-                args.putIntArray("arr0",arr0);
-                args.putIntArray("arr1",arr1);
-                args.putIntArray("arr2",arr2);
-                args.putIntArray("arr3",arr3);
-                args.putIntArray("arr4",arr4);
-                args.putIntArray("arr5",arr5);
-                args.putIntArray("arr6",arr6);
-                args.putIntArray("arr7",arr7);
-                args.putIntArray("arr8",arr8);
+                args.putIntArray("arr0", arr0);
+                args.putIntArray("arr1", arr1);
+                args.putIntArray("arr2", arr2);
+                args.putIntArray("arr3", arr3);
+                args.putIntArray("arr4", arr4);
+                args.putIntArray("arr5", arr5);
+                args.putIntArray("arr6", arr6);
+                args.putIntArray("arr7", arr7);
+                args.putIntArray("arr8", arr8);
                 editTimeDialogFragment.setArguments(args);
                 editTimeDialogFragment.show(getFragmentManager(), "editTime");
 
@@ -292,7 +309,28 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
                 }
             }
         });
+
+//--------------настройка локализации-----------------
+
+        Button EditLocaleButton = (Button) findViewById(R.id.activity_settings_edit_locale_button);
+        EditLocaleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //текущая локаль из бд
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+
+                Bundle args = new Bundle();
+                args.putString("locale", db.getSettingsLocale(1));
+                //создаем диалог
+                EditLocaleDialogFragment localeDialog =
+                        new EditLocaleDialogFragment();
+                localeDialog.setArguments(args);
+                // запускаем
+                localeDialog.show(getFragmentManager(), "editLocaleDialog");
+            }
+        });
     }
+
 
     //для кнопки оцените нас
     private boolean isActivityStarted(Intent aIntent) {
@@ -309,14 +347,14 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
     private void updateShowRoom(RelativeLayout room, float multiplier) {
         room.removeAllViews();
 
-        multiplier = multiplier / 1000;
+        multiplier = multiplier / 1000 * getResources().getInteger(R.integer.desks_screen_multiplier);
 
         RelativeLayout[] tables = new RelativeLayout[4];
         RelativeLayout.LayoutParams[] tablesParams = new RelativeLayout.LayoutParams[4];
 
         for (int i = 0; i < 4; i++) {
             tables[i] = new RelativeLayout(this);
-            tables[i].setBackground(getResources().getDrawable(R.drawable.desk));
+            tables[i].setBackground(getResources().getDrawable(R.drawable.settings_desk));
             tablesParams[i] = new RelativeLayout.LayoutParams(
                     (int) pxFromDp(2000 * multiplier), (int) pxFromDp(1000 * multiplier));
 

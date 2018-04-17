@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 
+import java.lang.reflect.TypeVariable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -84,6 +86,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
             Log.wtf("TeachersApp", "wtf intent: ScheduleDayActivity day = " + day + " month = " + month + " year = " + year);
             finish();
         }
+//-----кнопки вперед назад------
 
 //        ImageView previous = (ImageView) findViewById(R.id.schedule_day_button_previous);
 //        ImageView next = (ImageView) findViewById(R.id.schedule_day_button_next);
@@ -168,7 +171,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 tableHeadTexts[i] = new TextView(this);
                 tableHeadTexts[i].setAllCaps(true);
                 tableHeadTexts[i].setText("  " + tableHeadStrings[i] + "  ");
-                tableHeadTexts[i].setTextSize(20);
+                tableHeadTexts[i].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                 tableHeadTexts[i].setTextColor(Color.BLACK);
                 tableHeadTexts[i].setGravity(Gravity.CENTER);
 //цвет заголовка
@@ -183,14 +186,14 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_START);
                 tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 tableRelativeParams.rightMargin = 0;//(int) pxFromDp(1f);//10
-                tableRelativeParams.bottomMargin = (int) pxFromDp(1f);//10
+                tableRelativeParams.bottomMargin = (int) pxFromDp(1f * getResources().getInteger(R.integer.desks_screen_multiplier));//10
                 tableRelativeParams.leftMargin = 0;
-                tableRelativeParams.topMargin = (int) pxFromDp(1f);
+                tableRelativeParams.topMargin = (int) pxFromDp(1f * getResources().getInteger(R.integer.desks_screen_multiplier));
                 //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
                 RelativeLayout relativeLayout = new RelativeLayout(this);
                 relativeLayout.setBackgroundColor(Color.LTGRAY);//"#fdffdf"
                 relativeLayout.addView(tableHeadTexts[i], tableRelativeParams);
-                head.addView(relativeLayout, RelativeLayout.LayoutParams.MATCH_PARENT, (int) pxFromDp(50f));
+                head.addView(relativeLayout, RelativeLayout.LayoutParams.MATCH_PARENT, (int) pxFromDp(50f * getResources().getInteger(R.integer.desks_screen_multiplier)));
 
                 head.setBackgroundColor(Color.RED);//красный только на время отладки
             }
@@ -201,15 +204,15 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
         //тело таблицы
         String timePeriodsString[] = {
-                "" + lessonsTime[0][0] + ":" + lessonsTime[0][1] + "-" + lessonsTime[0][2] + ":" + lessonsTime[0][3],
-                lessonsTime[1][0] + ":" + lessonsTime[1][1] + "-" + lessonsTime[1][2] + ":" + lessonsTime[1][3],
-                lessonsTime[2][0] + ":" + lessonsTime[2][1] + "-" + lessonsTime[2][2] + ":" + lessonsTime[2][3],
-                lessonsTime[3][0] + ":" + lessonsTime[3][1] + "-" + lessonsTime[3][2] + ":" + lessonsTime[3][3],
-                lessonsTime[4][0] + ":" + lessonsTime[4][1] + "-" + lessonsTime[4][2] + ":" + lessonsTime[4][3],
-                lessonsTime[5][0] + ":" + lessonsTime[5][1] + "-" + lessonsTime[5][2] + ":" + lessonsTime[5][3],
-                lessonsTime[6][0] + ":" + lessonsTime[6][1] + "-" + lessonsTime[6][2] + ":" + lessonsTime[6][3],
-                lessonsTime[7][0] + ":" + lessonsTime[7][1] + "-" + lessonsTime[7][2] + ":" + lessonsTime[7][3],
-                "внеурочное время"
+                "" + lessonsTime[0][0] + ":" + lessonsTime[0][1] + "—" + lessonsTime[0][2] + ":" + lessonsTime[0][3],
+                lessonsTime[1][0] + ":" + lessonsTime[1][1] + "—" + lessonsTime[1][2] + ":" + lessonsTime[1][3],
+                lessonsTime[2][0] + ":" + lessonsTime[2][1] + "—" + lessonsTime[2][2] + ":" + lessonsTime[2][3],
+                lessonsTime[3][0] + ":" + lessonsTime[3][1] + "—" + lessonsTime[3][2] + ":" + lessonsTime[3][3],
+                lessonsTime[4][0] + ":" + lessonsTime[4][1] + "—" + lessonsTime[4][2] + ":" + lessonsTime[4][3],
+                lessonsTime[5][0] + ":" + lessonsTime[5][1] + "—" + lessonsTime[5][2] + ":" + lessonsTime[5][3],
+                lessonsTime[6][0] + ":" + lessonsTime[6][1] + "—" + lessonsTime[6][2] + ":" + lessonsTime[6][3],
+                lessonsTime[7][0] + ":" + lessonsTime[7][1] + "—" + lessonsTime[7][2] + ":" + lessonsTime[7][3],
+                getResources().getString(R.string.schedule_day_activity_table_time_string_no_working_time)
         };
 
         lessonStandardTimePeriods[0] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[0][0], lessonsTime[0][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[0][2], lessonsTime[0][3]));
@@ -282,7 +285,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
             for (int j = 0; j < tableHeadStrings.length; j++) {
                 //параметры TextView
                 TextView bodyText = new TextView(this);
-                bodyText.setTextSize(20);
+                bodyText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                 bodyText.setGravity(Gravity.CENTER);
                 if (lessonAttitudeId == -1) {
                     bodyText.setTextColor(Color.GRAY);
@@ -390,12 +393,12 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 RelativeLayout relativeLayout = new RelativeLayout(this);
                 if (calendar.getTime().getTime() >= lessonStandardTimePeriods[i].calendarStartTime.getTime().getTime() && calendar.getTime().getTime() <= lessonStandardTimePeriods[i].calendarEndTime.getTime().getTime()) {
                     relativeLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryGreen));
-                    bodyParams.bottomMargin = (int) pxFromDp(2f);//5
-                    bodyParams.topMargin = (int) pxFromDp(2f);
+                    bodyParams.bottomMargin = (int) pxFromDp(2f * getResources().getInteger(R.integer.desks_screen_multiplier));//5
+                    bodyParams.topMargin = (int) pxFromDp(2f * getResources().getInteger(R.integer.desks_screen_multiplier));
                 } else
                     relativeLayout.setBackgroundColor(Color.WHITE);//"#fdffdf"
                 relativeLayout.addView(bodyText, bodyParams);
-                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, (int) pxFromDp(50f));//200
+                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, (int) pxFromDp(50f * getResources().getInteger(R.integer.desks_screen_multiplier)));//200
             }
 //цвет ряда"#efeaea"
             //добавляем в таблицу ряд

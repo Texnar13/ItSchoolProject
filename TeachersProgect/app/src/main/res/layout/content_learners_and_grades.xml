@@ -78,7 +78,7 @@
                         android:layout_centerVertical="true"
                         android:text="TextView"
                         android:textColor="#000000"
-                        android:textSize="20sp" />
+                        android:textSize="@dimen/text_subtitle_size" />
 
                     <ImageView
                         android:id="@+id/learners_and_grades_activity_button_next"
@@ -111,11 +111,12 @@
                     android:gravity="center"
                     android:text="@string/learners_and_grades_out_activity_title_subject"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:textSize="@dimen/text_subtitle_size" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <Spinner
@@ -151,16 +152,41 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <HorizontalScrollView
-                            android:layout_width="140dp"
-                            android:layout_height="match_parent">
+                        <LinearLayout
+                            android:layout_width="@dimen/learners_and_grades_out_name_margin"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
-                            <TableLayout
-                                android:id="@+id/learners_and_grades_table_names"
-                                android:layout_width="wrap_content"
+                            <RelativeLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent">
-                            </TableLayout>
-                        </HorizontalScrollView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@color/colorPrimaryBlue"
+                                    android:textSize="@dimen/text_subtitle_size" />
+
+                                <HorizontalScrollView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <RelativeLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+
+                                        <TableLayout
+                                            android:id="@+id/learners_and_grades_table_names"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                        </TableLayout>
+                                    </RelativeLayout>
+                                </HorizontalScrollView>
+                            </RelativeLayout>
+
+                        </LinearLayout>
 
                         <HorizontalScrollView
                             android:layout_width="wrap_content"
@@ -185,10 +211,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textColor="@color/colorBackGroundDark"
                         android:gravity="center"
                         android:text="@string/learners_and_grades_out_activity_text_help"
-                        android:textSize="10pt">
+                        android:textColor="@color/colorBackGroundDark"
+                        android:textSize="@dimen/text_simple_size">
 
                     </TextView>
                 </LinearLayout>

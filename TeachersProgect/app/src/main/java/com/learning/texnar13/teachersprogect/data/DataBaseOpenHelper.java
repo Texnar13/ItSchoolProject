@@ -26,7 +26,7 @@ import static com.learning.texnar13.teachersprogect.data.SchoolContract.TableSub
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 12;
+    private static final int DB_VERSION = 13;
 
     /*
         final TextView textView = (TextView) findViewById(R.id.myTextView);
@@ -109,6 +109,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             //настройки
             String sql = "CREATE TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + "( " + SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME + " VARCHAR, " +
+                    SchoolContract.TableSettingsData.COLUMN_LOCALE + " TEXT DEFAULT " + SchoolContract.TableSettingsData.COLUMN_LOCALE_DEFAULT_CODE + ", " +
                     SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER + " INTEGER DEFAULT 5, " +
                     SchoolContract.TableSettingsData.COLUMN_TIME + " TEXT DEFAULT " +
                     "'{\"" + SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_HOUR_NAME + "\":" +
@@ -439,6 +440,10 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         "\"" + STANDARD_LESSONS_TIMES[8][1][1] + "\"]" +
                         "}';");
             }
+            //колонка для локализации
+            if (oldVersion < 13) {
+                db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_LOCALE + " TEXT DEFAULT " + SchoolContract.TableSettingsData.COLUMN_LOCALE_DEFAULT_CODE + ";");
+            }
         }
         //db.close();
     }
@@ -478,6 +483,29 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + temp + " profileId= " + profileId + " profileName= " + profileName + " interfaceSize= " + interfaceSize);
         //db.close();
         return temp;
+    }
+
+    public int setSettingsLocale(long profileId, String locale) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableSettingsData.COLUMN_LOCALE, locale);
+        int temp = db.update(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, values, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId});
+        Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + temp + " profileId= " + profileId + " locale= " + locale);
+        return temp;
+    }
+
+    public String getSettingsLocale(long profileId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId}, null, null, null);
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return SchoolContract.TableSettingsData.COLUMN_LOCALE_DEFAULT_CODE;
+        }
+        cursor.moveToFirst();
+        String answer = cursor.getString(cursor.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_LOCALE));
+        cursor.close();
+        Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + answer + " profileId= " + profileId);
+        return answer;
     }
 
     public int setSettingsMaxGrade(long profileId, int maxGrade) {
@@ -532,35 +560,12 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             String newStartText = timeDateFormat.format(newStart.getTime());
             String newEndText = timeDateFormat.format(newEnd.getTime());
 
-//            //проверяем если время совпадает, то меняем его на новое
-//            db.rawQuery("UPDATE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " " +
-//                            "SET " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + "))||(\"" + newStartText + "\"))," +
-//                            " " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + "))||(\"" + newEndText + "\"))" +
-//                            " WHERE (time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") == \"" + lastStartText + "\" " +
-//                            "AND time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + ") == \"" + lastEndText + "\");",
-//                    new String[]{}
-//            );
-
-//            //проверяем если время совпадает, то меняем его на новое
-//            db.update(SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE,SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + "))||(\"" + newStartText + "\"))," +
-//                    " " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + "))||(\"" + newEndText + "\"))", "(time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") == \"" + lastStartText + "\" " +
-//                            "AND time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + ") == \"" + lastEndText + "\")",new ContentValues());
-
-
             db.execSQL("UPDATE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " " +
-                            "SET " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + "))||(\" " + newStartText + "\"))," +
-                            " " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + "))||(\" " + newEndText + "\"))" +
-                            " WHERE (time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") == \"" + lastStartText + "\" " +
-                            "AND time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + ") == \"" + lastEndText + "\");"
+                    "SET " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + "))||(\" " + newStartText + "\"))," +
+                    " " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + "))||(\" " + newEndText + "\"))" +
+                    " WHERE (time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") == \"" + lastStartText + "\" " +
+                    "AND time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + ") == \"" + lastEndText + "\");"
             );
-//            db.rawQuery("UPDATE tab1le " +
-//                            "SET column1 = ((date(column1))||('newStart'))," +
-//                            " column2 = ((date(column2))||('newEnd'))" +
-//                            " WHERE (time(column1) = 'lastStart' " +
-//                            "AND time(column2) = 'lastEnd');",
-//                    new String[]{}
-//            );
-
 
         }
     }

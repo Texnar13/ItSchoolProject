@@ -6,12 +6,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ZoomControls;
@@ -115,7 +118,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         //коэффициент размера интерфейса
-        multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
+        multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f * getResources().getInteger(R.integer.desks_screen_multiplier);
         //по коэффициенту расчитываем ширину сетки
         girdSpacing = 600 * multiplier;
 
@@ -246,7 +249,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
 
                     //выводим все
-                    multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
+                    multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f * getResources().getInteger(R.integer.desks_screen_multiplier);
                     for (int i = 0; i < deskCoordinatesList.size(); i++) {
                         //создаем новые параметры
                         RelativeLayout.LayoutParams deskLayoutParams =
@@ -294,7 +297,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     zoomControls.setIsZoomInEnabled(true);
 
                     //выводим все
-                    multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
+                    multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f * getResources().getInteger(R.integer.desks_screen_multiplier);
                     for (int i = 0; i < deskCoordinatesList.size(); i++) {
                         //создаем новые параметры
                         RelativeLayout.LayoutParams deskLayoutParams =
@@ -380,11 +383,11 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 for (int i = 0; i < deskCoordinatesList.size(); i++) {
                     if (deskCoordinatesList.get(i).deskId == checkedDeskId) {
                         //если палец находится в пределах крестика то удаляем парту
-                        if ((motionEvent.getX() >= out.getWidth() / 2 - 25 * getApplicationContext().getResources().getDisplayMetrics().density) &&
-                                (motionEvent.getX() <= out.getWidth() / 2 + 25 * getApplicationContext().getResources().getDisplayMetrics().density) &&
-                                (motionEvent.getY() >= out.getHeight() - 50 * getApplicationContext().getResources().getDisplayMetrics().density) &&
+                        if ((motionEvent.getX() >= out.getWidth() / 2 - pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier)) / 2) &&
+                                (motionEvent.getX() <= out.getWidth() / 2 + pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier)) / 2) &&
+                                (motionEvent.getY() >= out.getHeight() - pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier))) &&
                                 (motionEvent.getY() <= out.getHeight())) {
-                            Log.i("TeachersApp", "yay!");
+                            Log.i("TeachersApp", "удалена парта");
                             //удаляем парту
                             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
                             db.deleteDesk(deskCoordinatesList.get(i).deskId);

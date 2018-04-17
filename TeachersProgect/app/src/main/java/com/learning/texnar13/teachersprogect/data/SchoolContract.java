@@ -14,6 +14,8 @@ public final class SchoolContract {
         public static final String NAME_TABLE_SETTINGS = "settingsData";
         public static final String KEY_SETTINGS_PROFILE_ID = BaseColumns._ID;
         public static final String COLUMN_PROFILE_NAME = "profileName";
+        public static final String COLUMN_LOCALE = "locale";
+        public static final String COLUMN_LOCALE_DEFAULT_CODE = "defaultLocale";
         public static final String COLUMN_INTERFACE_SIZE = "interfaceSize";
         public static final String COLUMN_MAX_ANSWER = "maxAnswer";
         public static final String COLUMN_TIME = "time";

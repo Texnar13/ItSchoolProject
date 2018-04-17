@@ -27,7 +27,8 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="Здравствуйте!" />
+                android:text="@string/start_screen_activity_help_text_1"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -38,7 +39,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="Наше приложение «Помощник учителя» является заменой бумажному «ежедневнику учителя», только его возможности куда шире. Давайте кратко ознакомимся с ним." />
+                android:text="@string/start_screen_activity_help_text_2"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -49,7 +51,32 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="(В дальнейшем на этот экран можно будет попасть через кнопку «помощь» в главном меню)" />
+                android:text="@string/start_screen_activity_help_text_3"
+                android:textSize="@dimen/text_simple_size" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/start_screen_activity_help_text_4"
+                android:textSize="@dimen/text_simple_size" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:selectAllOnFocus="true"
+                android:text="@string/start_screen_activity_help_text_5"
+                android:textIsSelectable="true"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 style="?android:listSeparatorTextViewStyle"
@@ -61,8 +88,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="8dp"
-                android:text="«Мои ученики»"
-                android:textColor="#494949" />
+                android:text="@string/start_screen_activity_help_text_6"
+                android:textColor="#494949"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -73,7 +101,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="В разделе «Мои ученики», вы можете добавлять и редактировать классы с вашими учениками. Там же вы можете смотреть оценки, которые вы им поставили за урок." />
+                android:text="@string/start_screen_activity_help_text_7"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 style="?android:listSeparatorTextViewStyle"
@@ -85,8 +114,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="8dp"
-                android:text="«Мои кабинеты» "
-                android:textColor="#494949" />
+                android:text="@string/start_screen_activity_help_text_8"
+                android:textColor="#494949"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -97,8 +127,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="В этом разделе вы можете работать с функцией «виртуальные классы».
-Вы можете создавать кабинеты и сами расставлять в них парты. " />
+                android:text="@string/start_screen_activity_help_text_9"
+                android:textSize="@dimen/text_simple_size" />
+
 
             <TextView
                 style="?android:listSeparatorTextViewStyle"
@@ -110,8 +141,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="8dp"
-                android:text="«Мое расписание»"
-                android:textColor="#494949" />
+                android:text="@string/start_screen_activity_help_text_10"
+                android:textColor="#494949"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -122,7 +154,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="В разделе «Мое расписание», вы можете составить свое электронное расписание, которое всегда под рукой." />
+                android:text="@string/start_screen_activity_help_text_11"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -133,7 +166,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="! Перед тем, как добавить урок, необходимо добавить класс с учениками  в разделе «Мои ученики» и добавить ваши кабинеты в разделе «Мои кабинеты»!" />
+                android:text="@string/start_screen_activity_help_text_12"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 style="?android:starStyle"
@@ -145,7 +179,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="Как пользоваться этим разделом?" />
+                android:text="@string/start_screen_activity_help_text_13"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -156,7 +191,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
-                android:text="В этом семестре у вас по понедельникам 3-им уроком математика у 7 «Б» класса в 45 кабинете" />
+                android:text="@string/start_screen_activity_help_text_14"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -167,7 +203,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="Что нужно сделать:" />
+                android:text="@string/start_screen_activity_help_text_15"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -178,7 +215,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
-                android:text="1. Нажмите на ближайший понедельник (у нас это 5 января)" />
+                android:text="@string/start_screen_activity_help_text_16"
+                android:textSize="@dimen/text_simple_size" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -199,7 +237,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
-                android:text="Перед вами появится расписание уроков на день" />
+                android:text="@string/start_screen_activity_help_text_17"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -210,7 +249,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
-                android:text="2. Нажмите на соответствующий урок — третий" />
+                android:text="@string/start_screen_activity_help_text_18"
+                android:textSize="@dimen/text_simple_size" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -232,7 +272,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
-                android:text="Перед вами появится меню «создание урока»." />
+                android:text="@string/start_screen_activity_help_text_19"
+                android:textSize="@dimen/text_simple_size" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -254,7 +295,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
-                android:text="3. Выберите уже созданные класс - 7 «б» и  кабинет 45. И создайте для этого класса предмет математика." />
+                android:text="@string/start_screen_activity_help_text_20"
+                android:textSize="@dimen/text_simple_size" />
 
 
             <TextView
@@ -266,7 +308,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
-                android:text="Если вы еще не создали список учеников и кабинеты, вы можете это сделать в разделах «Мои ученики» и «Мои кабинеты»." />
+                android:text="@string/start_screen_activity_help_text_21"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -277,20 +320,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
-                android:text="4. Задайте, будет ли этот урок повторяться:
-Например, если урок проходит каждую неделю, выбираем в пункте «Повторять урок»: еженедельно." />
-
-
-            <!--ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:adjustViewBounds="true"
-                app:srcCompat="@drawable/start_screen_help_12" /-->
+                android:text="@string/start_screen_activity_help_text_22"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -301,7 +332,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
-                android:text="Если урок повторяется несколько раз в неделю то достаточно создать такой же на другой день недели." />
+                android:text="@string/start_screen_activity_help_text_23"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -312,7 +344,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
-                android:text="5. После этого нажав на урок в расписании вы можете начать его" />
+                android:text="@string/start_screen_activity_help_text_24"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -323,7 +356,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
-                android:text="P.S.  Если вам необходимо отредактировать уже существующий урок, нажмите на него и удерживайте." />
+                android:text="@string/start_screen_activity_help_text_25"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 style="?android:listSeparatorTextViewStyle"
@@ -335,19 +369,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="8dp"
-                android:text="Как рассадить учеников?"
-                android:textColor="#494949" />
-
-
-            <!--ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                app:srcCompat="@drawable/start_screen_help_13" /-->
+                android:text="@string/start_screen_activity_help_text_26"
+                android:textColor="#494949"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -358,7 +382,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="В разделе «Мое расписание» в меню «Создание урока», вы можете редактировать рассадку учеников за партами (кнопка рассадить учеников)." />
+                android:text="@string/start_screen_activity_help_text_27"
+                android:textSize="@dimen/text_simple_size" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -379,7 +404,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text=" То есть вы можете посадить детей за парты так, как они сидят в действительности и тогда ставить оценки или баллы будет проще простого – вам не придется никого выискивать в списке, вам просто надо будет ткнуть пальцем в Васю Иванова, сидящего за второй партой." />
+                android:text="@string/start_screen_activity_help_text_28"
+                android:textSize="@dimen/text_simple_size" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -401,8 +427,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="Также это можно сделать на самом уроке выбрав сверху в меню пункт рассадить учеников" />
-
+                android:text="@string/start_screen_activity_help_text_29"
+                android:textSize="@dimen/text_simple_size" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -425,8 +451,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="8dp"
-                android:text="Как расставить парты?"
-                android:textColor="#494949" />
+                android:text="@string/start_screen_activity_help_text_30"
+                android:textColor="#494949"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 style="?android:listSeparatorTextViewStyle"
@@ -438,18 +465,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="8dp"
-                android:text="«Текущий урок»"
-                android:textColor="#494949" />
-
-            <!--ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                app:srcCompat="@drawable/start_screen_help_1" /-->
+                android:text="@string/start_screen_activity_help_text_31"
+                android:textColor="#494949"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -460,7 +478,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="Если вы только начали пользоваться приложением, то заметите, что при нажатии на раздел «Текущий урок», ничего не происходит. Все очень просто. Этот раздел напрямую связан с вашим расписанием. Если у вас в расписании на текущее время назначен урок, то при нажатии на эту кнопку, Помощник учителя найдет его." />
+                android:text="@string/start_screen_activity_help_text_32"
+                android:textSize="@dimen/text_simple_size" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -482,8 +501,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="На уроке уроке вы можете ставить оценки (которые позже можете посмотреть в разделе «Мои ученики»), можете просто касанием фиксировать, сколько раз и какой ученик ответил.
-Вам не понадобится ничего запоминать, не нужна будет ни ручка, ни бумага." />
+                android:text="@string/start_screen_activity_help_text_33"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 style="?android:listSeparatorTextViewStyle"
@@ -495,9 +514,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="8dp"
-                android:text="«Настройки»"
-                android:textColor="#494949" />
-
+                android:text="@string/start_screen_activity_help_text_34"
+                android:textColor="#494949"
+                android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -508,8 +527,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="В разделе «Настройки» вы можете отрегулировать величину парт в зависимости от величины экрана вашего устройства.
-            Там же вы можете удалить все данные, добавленные вами в приложение (у нас есть защита от случайного удаления, так что не беспокойтесь)." />
+                android:text="@string/start_screen_activity_help_text_35"
+                android:textSize="@dimen/text_simple_size" />
 
         </LinearLayout>
     </ScrollView>

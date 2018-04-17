@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -44,7 +45,7 @@ public class EditCabinetDialogFragment extends DialogFragment {
         TextView title = new TextView(getActivity());
         title.setText(R.string.cabinets_out_activity_dialog_title_edit_cabinet);
         title.setTextColor(Color.BLACK);
-        title.setTextSize(20);
+        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         title.setAllCaps(true);
         title.setGravity(Gravity.CENTER);
 
@@ -61,6 +62,7 @@ public class EditCabinetDialogFragment extends DialogFragment {
         final EditText editName = new EditText(getActivity());
         editName.setTextColor(Color.BLACK);
         editName.setHint(R.string.cabinets_out_activity_dialog_hint_cabinet_name);
+        editName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         editName.setInputType(InputType.TYPE_CLASS_TEXT);
         editName.setHintTextColor(Color.GRAY);
         try {//входные данные предыдущее имя
@@ -94,9 +96,10 @@ public class EditCabinetDialogFragment extends DialogFragment {
         Button neutralButton = new Button(getActivity());
         neutralButton.setBackgroundResource(R.drawable.start_screen_3_2_yellow_spot);
         neutralButton.setText(R.string.cabinets_out_activity_dialog_button_cancel);
+        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         neutralButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         neutralButtonParams.weight = 1;
@@ -106,9 +109,10 @@ public class EditCabinetDialogFragment extends DialogFragment {
         Button negativeButton = new Button(getActivity());
         negativeButton.setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
         negativeButton.setText(R.string.cabinets_out_activity_dialog_button_delete);
+        negativeButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         negativeButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams negativeButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         negativeButtonParams.weight = 1;
@@ -118,9 +122,10 @@ public class EditCabinetDialogFragment extends DialogFragment {
         Button positiveButton = new Button(getActivity());
         positiveButton.setBackgroundResource(R.drawable.start_screen_3_2_yellow_spot);
         positiveButton.setText(R.string.cabinets_out_activity_dialog_button_save);
+        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         positiveButtonParams.weight = 1;

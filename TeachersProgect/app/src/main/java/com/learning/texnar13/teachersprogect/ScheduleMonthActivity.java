@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -228,7 +229,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             TextView day = new TextView(this);
             day.setText(week[i]);
             day.setAllCaps(true);
-            day.setTextSize(15);
+            day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
             day.setTextColor(Color.BLACK);
             day.setGravity(Gravity.CENTER);
             day.setBackgroundColor(getResources().getColor(R.color.colorBackGround));//Color.LTGRAY"#e4ea7e""#fbffb9""#fdffdf"
@@ -251,7 +252,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
                 //---текст---//на заднюю часть текста можно постоавить drawable
                 TextView day = new TextView(this);
-                day.setTextSize(20);
+                day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                 day.setTextColor(Color.BLACK);
                 day.setGravity(Gravity.CENTER);
 
@@ -279,7 +280,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                         LinearLayout.LayoutParams.MATCH_PARENT
                 );
                 textContainerParams.gravity = Gravity.CENTER;
-                textContainerParams.setMargins((int) pxFromDp(0.5f), (int) pxFromDp(1.3f), (int) pxFromDp(0.5f), (int) pxFromDp(1.3f));
+                textContainerParams.setMargins((int) pxFromDp(1.3f * getResources().getInteger(R.integer.desks_screen_multiplier)), (int) pxFromDp(1.3f * getResources().getInteger(R.integer.desks_screen_multiplier)), (int) pxFromDp(1.3f * getResources().getInteger(R.integer.desks_screen_multiplier)), (int) pxFromDp(1.3f * getResources().getInteger(R.integer.desks_screen_multiplier)));
 
 
                 //---контейнер в таблице---  цвет границ клеток
@@ -331,7 +332,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                         );
                         db.close();
                         if (lessonsAttitudesId.size() != 0) {
-                            day.setTextSize(30);
+                            day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_title_size));
                             day.setTextColor(getResources().getColor(R.color.colorPrimary));//"#469500"
                         }
                     }
@@ -350,9 +351,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                         day.setLayoutParams(tempP);
 
                         //добавляем красный круг
-                        day.setBackgroundResource(R.drawable.calendar_current_day_circle);
-                        //dayParams.setMargins((int) pxFromDp(2.08f), (int) pxFromDp(2.08f), (int) pxFromDp(2.08f), (int) pxFromDp(2.08f));
-                    }
+                        day.setBackgroundResource(R.drawable.calendar_current_day_circle); }
                     monthDay++;
                 }
 //--------все в таблицу--------

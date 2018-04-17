@@ -33,7 +33,7 @@
                     android:gravity="center"
                     android:text="@string/settings_activity_title_desk_size"
                     android:textColor="#000000"
-                    android:textSize="18dp" />
+                    android:textSize="@dimen/text_subtitle_size" />
 
                 <SeekBar
                     android:id="@+id/activity_settings_seekBar"
@@ -69,9 +69,9 @@
                     android:gravity="center"
                     android:text="@string/settings_activity_title_max_answer"
                     android:textColor="#000000"
-                    android:textSize="18dp" />
+                    android:textSize="@dimen/text_subtitle_size" />
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -80,20 +80,25 @@
                         android:id="@+id/activity_settings_max_grade_editText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
+                        android:layout_toStartOf="@+id/activity_settings_max_grade_save_button"
+                        android:layout_toLeftOf="@+id/activity_settings_max_grade_save_button"
                         android:hint="@string/settings_activity_hint_max_answer"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:textSize="@dimen/text_simple_size" />
 
                     <Button
                         android:id="@+id/activity_settings_max_grade_save_button"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/my_buttons_height_size"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
                         android:layout_marginLeft="20dp"
                         android:layout_marginStart="20dp"
                         android:background="@drawable/button_gray"
                         android:text="@string/settings_activity_button_save_data"
-                        android:textColor="@color/colorBackGround" />
-                </LinearLayout>
+                        android:textColor="@color/colorBackGround"
+                        android:textSize="@dimen/text_simple_size" />
+                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -109,14 +114,34 @@
                 <Button
                     android:id="@+id/activity_settings_edit_time_button"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/my_buttons_height_size"
                     android:background="@drawable/button_gray"
                     android:text="@string/settings_activity_button_edit_time"
-                    android:textColor="@color/colorBackGround" />
+                    android:textColor="@color/colorBackGround"
+                    android:textSize="@dimen/text_simple_size" />
             </LinearLayout>
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:orientation="vertical">
 
+                <Button
+                    android:id="@+id/activity_settings_edit_locale_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/my_buttons_height_size"
+                    android:background="@drawable/button_gray"
+                    android:text="@string/settings_activity_button_edit_locale"
+                    android:textColor="@color/colorBackGround"
+                    android:textSize="@dimen/text_simple_size" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
@@ -129,15 +154,15 @@
                 <Button
                     android:id="@+id/activity_settings_remove_data_button"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/my_buttons_height_size"
                     android:layout_gravity="center"
                     android:background="@drawable/button_lite_blue"
                     android:text="@string/settings_activity_button_remove_data"
-                    android:textColor="@color/colorPrimary" />
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_simple_size" />
             </LinearLayout>
 
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
@@ -150,11 +175,12 @@
                 <Button
                     android:id="@+id/settings_rate_button"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/my_buttons_height_size"
                     android:layout_gravity="center"
                     android:background="@drawable/button_lite_red"
                     android:text="@string/settings_activity_button_rate_us"
-                    android:textColor="@color/colorAccentRed" />
+                    android:textColor="@color/colorAccentRed"
+                    android:textSize="@dimen/text_simple_size" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

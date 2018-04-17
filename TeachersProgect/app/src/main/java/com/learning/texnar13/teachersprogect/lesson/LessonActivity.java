@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
@@ -16,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ZoomControls;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
@@ -398,7 +396,7 @@ public class LessonActivity extends AppCompatActivity {
         //максимальная оценка
         maxAnswersCount = db.getSettingsMaxGrade(1);
         //размер парт
-        multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
+        multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f * getResources().getInteger(R.integer.desks_screen_multiplier);
         //курсор с партами
         desksCursor = db.getDesksByCabinetId(cabinetId);
         //размеры экрана по парте
@@ -596,32 +594,32 @@ public class LessonActivity extends AppCompatActivity {
                     //ставим ей изображение по оценке(из памяти)
                     switch ((int) learnersAndGrades[learnerPosition].getGrade()) {
                         case -2:
-                            tempLernerImage.setImageResource(R.drawable.learner_white);
+                            tempLernerImage.setImageResource(R.drawable.lesson_learner_abs_white);
                             break;
                         case 0:
-                            tempLernerImage.setImageResource(R.drawable.learner_gray);
+                            tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
                             break;
 
 
                         default:
                             //5
-                            if (((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) <= 1) {
+                            if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
                                 tempLernerImage.setImageResource(R.drawable.lesson_learner_5_green);
                             }
                             //4
-                            if (((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) <= 0.8) {
+                            if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
                                 tempLernerImage.setImageResource(R.drawable.lesson_learner_4_lime);
                             }
                             //3
-                            if (((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) <= 0.6) {
+                            if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
                                 tempLernerImage.setImageResource(R.drawable.lesson_learner_3_yellow);
                             }
                             //2
-                            if (((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) <= 0.4) {
+                            if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
                                 tempLernerImage.setImageResource(R.drawable.lesson_learner_2_orange);
                             }
                             //1
-                            if (((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) <= 0.2) {
+                            if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
                                 tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
                             }
 
@@ -724,31 +722,30 @@ public class LessonActivity extends AppCompatActivity {
 
                             switch ((int) learnersAndGrades[learnerPosition].getGrade()) {
                                 case -2:
-                                    tempLernerImage.setImageResource(R.drawable.learner_white);
+                                    tempLernerImage.setImageResource(R.drawable.lesson_learner_abs_white);
                                     break;
 
                                 default:
                                     //5
-                                    if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 100) {
+                                    if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
                                         tempLernerImage.setImageResource(R.drawable.lesson_learner_5_green);
                                     }
                                     //4
-                                    if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 80) {
+                                    if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
                                         tempLernerImage.setImageResource(R.drawable.lesson_learner_4_lime);
                                     }
                                     //3
-                                    if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 60) {
+                                    if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
                                         tempLernerImage.setImageResource(R.drawable.lesson_learner_3_yellow);
                                     }
                                     //2
-                                    if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 41) {
+                                    if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
                                         tempLernerImage.setImageResource(R.drawable.lesson_learner_2_orange);
                                     }
                                     //1
-                                    if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 20) {
+                                    if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
                                         tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
                                     }
-
 
 
                                     //tempLernerImage.setImageResource(R.drawable.learner_active);
@@ -789,7 +786,7 @@ public class LessonActivity extends AppCompatActivity {
                                 contextMenu.add(0, -2, 0, R.string.lesson_activity_context_menu_text_no_learner).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_white);
+                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_abs_white);
                                         learnersAndGrades[learnerPosition].setGrade((byte) -2);
                                         bigText.setText("");
                                         return true;
@@ -801,7 +798,7 @@ public class LessonActivity extends AppCompatActivity {
                                 contextMenu.add(0, 0, 0, R.string.lesson_activity_context_menu_text_no_answers).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_gray);
+                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
                                         learnersAndGrades[learnerPosition].setGrade((byte) 0);
                                         bigText.setText("");
                                         return true;
@@ -823,23 +820,23 @@ public class LessonActivity extends AppCompatActivity {
                                             );
                                         //ставим картинку
                                         //5
-                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 100) {
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
                                             tempLernerImage.setImageResource(R.drawable.lesson_learner_5_green);
                                         }
                                         //4
-                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 80) {
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
                                             tempLernerImage.setImageResource(R.drawable.lesson_learner_4_lime);
                                         }
                                         //3
-                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 60) {
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
                                             tempLernerImage.setImageResource(R.drawable.lesson_learner_3_yellow);
                                         }
                                         //2
-                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 41) {
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
                                             tempLernerImage.setImageResource(R.drawable.lesson_learner_2_orange);
                                         }
                                         //1
-                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 20) {
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
                                             tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
                                         }
                                         //ставим текст
@@ -859,91 +856,87 @@ public class LessonActivity extends AppCompatActivity {
                                         bigText.setText("" + learnersAndGrades[learnerPosition].getGrade());
                                         //ставим картинку
                                         //5
-                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 100) {
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
                                             tempLernerImage.setImageResource(R.drawable.lesson_learner_5_green);
                                         }
                                         //4
-                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 80) {
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
                                             tempLernerImage.setImageResource(R.drawable.lesson_learner_4_lime);
                                         }
                                         //3
-                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 60) {
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
                                             tempLernerImage.setImageResource(R.drawable.lesson_learner_3_yellow);
                                         }
                                         //2
-                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 41) {
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
                                             tempLernerImage.setImageResource(R.drawable.lesson_learner_2_orange);
                                         }
                                         //1
-                                        if ((int)(((float)learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount)*100F) <= 20) {
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
                                             tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
                                         }
                                         //ставим текст
                                         return true;
-                                }
+                                    }
                                 });
                             }
-
-
-//                            if (learnersAndGrades[learnerPosition].getGrade() != 1) {
-//                                contextMenu.add(0, 1, 0, "1").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//                                    @Override
-//                                    public boolean onMenuItemClick(MenuItem menuItem) {
-//                                        tempLernerImage.setImageResource(R.drawable.learner_red);
-//                                        learnersAndGrades[learnerPosition].setGrade((byte) 1);
-//                                        return true;
-//                                    }
-//                                });
-//                            }
-//                            if (learnersAndGrades[learnerPosition].getGrade() != 2) {
-//                                contextMenu.add(0, 2, 0, "2").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//                                    @Override
-//                                    public boolean onMenuItemClick(MenuItem menuItem) {
-//                                        tempLernerImage.setImageResource(R.drawable.learner_orange);
-//                                        learnersAndGrades[learnerPosition].setGrade((byte) 2);
-//                                        return true;
-//                                    }
-//                                });
-//                            }
-//                            if (learnersAndGrades[learnerPosition].getGrade() != 3) {
-//                                contextMenu.add(0, 3, 0, "3").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//                                    @Override
-//                                    public boolean onMenuItemClick(MenuItem menuItem) {
-//                                        tempLernerImage.setImageResource(R.drawable.learner_yellow);
-//                                        learnersAndGrades[learnerPosition].setGrade((byte) 3);
-//                                        return true;
-//                                    }
-//                                });
-//                            }
-//                            if (learnersAndGrades[learnerPosition].getGrade() != 4) {
-//                                contextMenu.add(0, 4, 0, "4").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//                                    @Override
-//                                    public boolean onMenuItemClick(MenuItem menuItem) {
-//                                        tempLernerImage.setImageResource(R.drawable.learner_lime);
-//                                        learnersAndGrades[learnerPosition].setGrade((byte) 4);
-//                                        return true;
-//                                    }
-//                                });
-//                            }
-//                            if (learnersAndGrades[learnerPosition].getGrade() != 5) {
-//                                contextMenu.add(0, 5, 0, "5").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//                                    @Override
-//                                    public boolean onMenuItemClick(MenuItem menuItem) {
-//                                        tempLernerImage.setImageResource(R.drawable.learner_green);
-//                                        learnersAndGrades[learnerPosition].setGrade((byte) 5);
-//                                        return true;
-//                                    }
-//                                });
-//                            }
-
-
-                            //новая оценка
-                            if (learnersAndGrades[learnerPosition].getGradesCount() != 2 && learnersAndGrades[learnerPosition].getGrade() != 0 && learnersAndGrades[learnerPosition].getGrade() != -2) {
-                                contextMenu.add(0, 6, 0, R.string.lesson_activity_context_menu_text_new_answers).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            //предыдущая оценка
+                            if (learnersAndGrades[learnerPosition].getGradesCount() != 0 && learnersAndGrades[learnerPosition].getGrade() != -2) {
+                                contextMenu.add(0, 6, 0, R.string.lesson_activity_context_menu_text_last_answers).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.learner_gray);
+                                        //обнуляем текущую
+                                        learnersAndGrades[learnerPosition].setGrade((byte) 0);
+                                        //берем предыдущую
+                                        learnersAndGrades[learnerPosition].lastGrade();
+
+                                        bigText.setText("" + learnersAndGrades[learnerPosition].getGrade());
+
+                                        //ставим картинку
+                                        //5
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_5_green);
+                                        }
+                                        //4
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_4_lime);
+                                        }
+                                        //3
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_3_yellow);
+                                        }
+                                        //2
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_2_orange);
+                                        }
+                                        //1
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
+                                        }
+                                        //1
+                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) == 0) {
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
+                                        }
+                                        switch (learnersAndGrades[learnerPosition].getGradesCount()) {
+                                            case 0:
+                                                grade1Text.setText("");
+                                                break;
+                                            case 1:
+                                                grade2Text.setText("");
+                                                break;
+                                        }
+                                        return true;
+                                    }
+                                });
+                            }
+                            //новая оценка
+                            if (learnersAndGrades[learnerPosition].getGradesCount() != 2 && learnersAndGrades[learnerPosition].getGrade() != 0 && learnersAndGrades[learnerPosition].getGrade() != -2) {
+                                contextMenu.add(0, 7, 0, R.string.lesson_activity_context_menu_text_new_answers).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
                                         bigText.setText("");
+
                                         switch (learnersAndGrades[learnerPosition].getGradesCount()) {
                                             case 0:
                                                 grade1Text.setText("" + learnersAndGrades[learnerPosition].getGrade());
@@ -1047,6 +1040,13 @@ class LearnerAndGrade {
         return grade[gradesCount];
     }
 
+    byte getLastGrade() {
+        if (gradesCount == 0) {
+            return -1;
+        } else
+            return grade[gradesCount - 1];
+    }
+
     byte getRawGrade(int i) {
         if (i >= 0 && i <= 2) {
             return grade[i];
@@ -1061,6 +1061,11 @@ class LearnerAndGrade {
     void nextGrade() {
         if (gradesCount != 2) {
             gradesCount++;
+        }
+    }
+    void lastGrade() {
+        if (gradesCount != 0) {
+            gradesCount--;
         }
     }
 

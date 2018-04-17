@@ -5,17 +5,62 @@
     <!-- название приложения -->
     <string name="app_name">Teacher\'s assistant</string>
 
+
     <!-- активность главный экран -->
     <!-- меню сверху -->
-    <string name="start_screen_activity_menu_text_help">помощь</string>
+    <string name="start_screen_activity_menu_text_help">подсказка</string>
     <!-- тексты кнопок -->
     <string name="start_screen_activity_title_my_learners">мои ученики</string>
     <string name="start_screen_activity_title_my_cabinets">мои кабинеты</string>
     <string name="start_screen_activity_title_my_schedule">мое расписание</string>
     <string name="start_screen_activity_title_current_lesson">текущий урок</string>
     <string name="start_screen_activity_title_settings">настройки</string>
+    <!-- диалог -->
+    <string name="start_screen_activity_dialog_title_rate">Пожалуйста оцените наше приложение)</string>
+    <string name="start_screen_activity_dialog_button_rate_now">оценить!</string>
+    <string name="start_screen_activity_dialog_button_later">позже</string>
     <!-- тост -->
     <string name="start_screen_activity_toast_no_lessons">на текущий момент уроков не запланировано</string>
+
+
+    <!-- активность помощь главного экрана -->
+    <!-- текст -->
+    <string name="start_screen_activity_help_text_1">Здравствуйте!</string>
+    <string name="start_screen_activity_help_text_2">Наше приложение «Помощник учителя» является заменой бумажному «ежедневнику учителя», только его возможности куда шире. Давайте кратко ознакомимся с ним.</string>
+    <string name="start_screen_activity_help_text_3">(В дальнейшем на этот экран можно будет попасть через кнопку «помощь» в главном меню)</string>
+    <string name="start_screen_activity_help_text_4">Если возникла какая-то проблема пишите:</string>
+    <string name="start_screen_activity_help_text_5">ivanmarch@gmail.com</string>
+    <string name="start_screen_activity_help_text_6">«Мои ученики»</string>
+    <string name="start_screen_activity_help_text_7">В разделе «Мои ученики», вы можете добавлять и редактировать классы с вашими учениками. Там же вы можете смотреть ответы, которые вы им поставили за урок.</string>
+    <string name="start_screen_activity_help_text_8">«Мои кабинеты»</string>
+    <string name="start_screen_activity_help_text_9">В этом разделе вы можете работать с функцией «виртуальные классы». Вы можете создавать кабинеты и сами расставлять в них парты. </string>
+    <string name="start_screen_activity_help_text_10">«Мое расписание»</string>
+    <string name="start_screen_activity_help_text_11">В разделе «Мое расписание», вы можете составить свое электронное расписание, которое всегда под рукой.</string>
+    <string name="start_screen_activity_help_text_12">! Перед тем, как добавить урок, необходимо добавить класс с учениками  в разделе «Мои ученики» и добавить ваши кабинеты в разделе «Мои кабинеты»!</string>
+    <string name="start_screen_activity_help_text_13">Как пользоваться этим разделом?</string>
+    <string name="start_screen_activity_help_text_14">В этом семестре у вас по понедельникам 3-им уроком математика у 7 «Б» класса в 45 кабинете</string>
+    <string name="start_screen_activity_help_text_15">Что нужно сделать:</string>
+    <string name="start_screen_activity_help_text_16">1. Нажмите на ближайший понедельник (у нас это 5 января)</string>
+    <string name="start_screen_activity_help_text_17">Перед вами появится расписание уроков на день</string>
+    <string name="start_screen_activity_help_text_18">2. Нажмите на соответствующий урок — третий</string>
+    <string name="start_screen_activity_help_text_19">Перед вами появится меню «создание урока».</string>
+    <string name="start_screen_activity_help_text_20">3. Выберите уже созданные класс - 7 «б» и  кабинет 45. И создайте для этого класса предмет математика.</string>
+    <string name="start_screen_activity_help_text_21">Если вы еще не создали список учеников и кабинеты, вы можете это сделать в разделах «Мои ученики» и «Мои кабинеты».</string>
+    <string name="start_screen_activity_help_text_22">4. Задайте, будет ли этот урок повторяться: Например, если урок проходит каждую неделю, выбираем в пункте «Повторять урок»: еженедельно.</string>
+    <string name="start_screen_activity_help_text_23">Если урок повторяется несколько раз в неделю то достаточно создать такой же на другой день недели.</string>
+    <string name="start_screen_activity_help_text_24">5. После этого нажав на урок в расписании вы можете начать его</string>
+    <string name="start_screen_activity_help_text_25">P.S.  Если вам необходимо отредактировать уже существующий урок, нажмите на него и удерживайте.</string>
+    <string name="start_screen_activity_help_text_26">Как рассадить учеников?</string>
+    <string name="start_screen_activity_help_text_27">В разделе «Мое расписание» в меню «Создание урока», вы можете редактировать рассадку учеников за партами (кнопка рассадить учеников).</string>
+    <string name="start_screen_activity_help_text_28"> То есть вы можете посадить детей за парты так, как они сидят в действительности и тогда ставить ответы или баллы будет проще простого – вам не придется никого выискивать в списке, вам просто надо будет ткнуть пальцем в Васю Иванова, сидящего за второй партой.</string>
+    <string name="start_screen_activity_help_text_29">Также это можно сделать на самом уроке выбрав сверху в меню пункт рассадить учеников</string>
+    <string name="start_screen_activity_help_text_30">Как расставить парты?</string>
+    <string name="start_screen_activity_help_text_31">«Текущий урок»</string>
+    <string name="start_screen_activity_help_text_32">Если вы только начали пользоваться приложением, то заметите, что при нажатии на раздел «Текущий урок», ничего не происходит. Все очень просто. Этот раздел напрямую связан с вашим расписанием. Если у вас в расписании на текущее время назначен урок, то при нажатии на эту кнопку, Помощник учителя найдет его.</string>
+    <string name="start_screen_activity_help_text_33">На уроке вы можете ставить ответы (которые позже можете посмотреть в разделе «Мои ученики»), можете просто касанием фиксировать, сколько раз и какой ученик ответил. Вам не понадобится ничего запоминать, не нужна будет ни ручка, ни бумага.</string>
+    <string name="start_screen_activity_help_text_34">«Настройки»</string>
+    <string name="start_screen_activity_help_text_35">В разделе «Настройки» вы можете отрегулировать величину парт в зависимости от величины экрана вашего устройства. Там же вы можете удалить все данные, добавленные вами в приложение (у нас есть защита от случайного удаления, так что не беспокойтесь).</string>
+
 
     <!-- активность списка классов-->
     <!-- заголовок активности -->
@@ -30,6 +75,7 @@
     <string name="learners_classes_out_activity_dialog_button_cancel">отмена</string>
     <!-- подсказка на экране -->
     <string name="learners_classes_out_activity_text_help">Чтобы создать класс, нажмите + и введите его название.\nЧтобы посмотреть список учеников и их ответы, нажмите на нужный вам класс.\nЧтобы переименовать или удалить класс с учениками, нажмите на него и удерживайте.</string>
+
 
     <!-- активность списка учеников-->
     <!-- тексты  -->
@@ -51,6 +97,7 @@
     <!-- подсказка на экране -->
     <string name="learners_and_grades_out_activity_text_help">Это ваш электронный журнал: список учеников и их ответы по датам.\nВыберите предмет и месяц.\nБелая цифра рядом с датой - это номер урока(1-ый, 2-ой и.т.д.), который вы провели в этот день (предшествующая цифра).\nНажмите на +, так вы добавите ученика.\nУдерживайте имя ученика - откроется меню, где можно его удалить или переименовать.</string>
 
+
     <!-- активность списка кабинетов -->
     <!-- заголовок активности -->
     <string name="title_activity_cabinets_out">МОИ КАБИНЕТЫ</string>
@@ -65,6 +112,7 @@
     <!-- подсказка на экране -->
     <string name="cabinets_out_activity_text_help">Чтобы создать кабинет, нажмите + и введите его название. \nЧтобы расставить парты, нажмите на нужный вам кабинет. \nЧтобы переименовать или удалить кабинет, нажмите на него и удерживайте.</string>
 
+
     <!-- активность редактор кабинетов -->
     <!-- заголовок активности -->
     <string name="title_activity_cabinet_redactor">Парты в</string>
@@ -74,19 +122,25 @@
     <!-- подсказка на экране -->
     <string name="cabinet_redactor_activity_text_help">Нажмите на +, чтобы добавить парту.\nПередвиньте ее так как она стоит в кабинете,\nУдерживайте +, чтобы добавить одноместную парту.\nЧтобы удалить парту, перетащите ее к корзине, появившейся на месте +.</string>
 
+
     <!-- активность календаря на месяц-->
     <!-- заголовок активности -->
     <string name="title_activity_schedule_month">РАСПИСАНИЕ</string>
+
 
     <!-- активность календаря на день-->
     <!-- заголовок активности -->
     <string name="title_activity_schedule_day">Расписание на </string>
     <!-- тексты -->
+    <string name="schedule_day_activity_table_time_string_no_working_time">внеурочное время</string>
+
     <string name="schedule_day_activity_table_additional_title_empty">нет урока, добавить?</string>
     <string name="schedule_day_activity_table_additional_title_learners">рассадите учеников!</string>
     <string name="schedule_day_activity_table_additional_title_ready">готово, начать урок?</string>
+    <!-- уведомления -->
     <string name="schedule_day_activity_toast_learners">Вы не можете начать урок пока не рассадите учеников!</string>
     <string name="schedule_day_activity_toast_develop">"В разработке ¯\\_(ツ)_/¯"</string>
+
 
 
     <!-- активность редактора уроков-->
@@ -105,8 +159,9 @@
     <string name="lesson_redactor_activity_title_subject">Предмет</string>
     <string name="lesson_redactor_activity_title_cabinet">Кабинет</string>
     <string name="lesson_redactor_activity_title_time">Время</string>
+    <string name="lesson_redactor_activity_spinner_title_lesson">урок</string>
     <string name="lesson_redactor_activity_title_repeat">Повторять урок</string>
-    <string name="schedule_day_activity_toast_subject_not_select">Не выбран урок!</string>
+    <string name="lesson_redactor_activity_toast_subject_not_select">Не выбран урок!</string>
     <!-- уведомления -->
     <string name="lesson_redactor_activity_text_learners_ready">Ученики рассажены в этом кабинете.</string>
     <string name="lesson_redactor_activity_text_learners_not_ready">Ученики не рассажены!</string>
@@ -123,15 +178,18 @@
     <string name="lesson_redactor_activity_dialog_title_add_subject">Добавление предмета</string>
     <string name="lesson_redactor_activity_dialog_hint_subject_name">НАЗВАНИЕ</string>
 
+
     <!-- активность редактора рассадки-->
     <!-- заголовок активности -->
     <string name="title_activity_seating_redactor_first">Рассадка </string>
     <string name="title_activity_seating_redactor_second"> в кабинете </string>
 
+
     <!-- активность урока-->
     <!-- контекстное меню -->
     <string name="lesson_activity_context_menu_text_no_learner">отсутствует</string>
     <string name="lesson_activity_context_menu_text_no_answers">нет ответов</string>
+    <string name="lesson_activity_context_menu_text_last_answers">предыдущие ответы</string>
     <string name="lesson_activity_context_menu_text_new_answers">новые ответы</string>
     <string name="lesson_activity_context_menu_text_add_answer"> + добавить 1 ответ</string>
     <string name="lesson_activity_context_menu_text_delete_answer"> - удалить 1 ответ</string>
@@ -141,17 +199,41 @@
     <string name="lesson_activity_menu_text_learners">посадить учеников</string>
     <string name="lesson_activity_menu_text_end_lesson">закончить</string>
 
+
+    <!-- активность  помощи на уроке-->
+    <!-- текст -->
+    <string name="lesson_activity_help_text_1">Описание экрана</string>
+    <string name="lesson_activity_help_text_2">1 Кнопка возврата к расписанию</string>
+    <string name="lesson_activity_help_text_3">2 Название урока</string>
+    <string name="lesson_activity_help_text_4">3 Закончить урок и перейти к сохранению оценок</string>
+    <string name="lesson_activity_help_text_5">4 Меню с подсказкой</string>
+    <string name="lesson_activity_help_text_6">5 Парта с учеником</string>
+    <string name="lesson_activity_help_text_7">6 Фамилия ученика</string>
+    <string name="lesson_activity_help_text_8">Добавление баллов</string>
+    <string name="lesson_activity_help_text_9">При нажатии на ученика ему зачисляется один ответ (их может быть не больше пяти)</string>
+    <string name="lesson_activity_help_text_10">Редактирование оценки</string>
+    <string name="lesson_activity_help_text_11">После долгого нажатия на ученика появляется диалоговое окно:</string>
+    <string name="lesson_activity_help_text_12">1 Пункт «Отсутствует» отметит выбранного ученика как отсутствующего:)</string>
+    <string name="lesson_activity_help_text_13">Во 2 и 3 пунктах можно выбрать оценку (любую кроме уже выбранной)</string>
+    <string name="lesson_activity_help_text_14">4 Пункт «Новая оценка» запоминает поставленную оценку (если оценки нет, пункт не отображается), и позволяет поставить новую (максимум их три):</string>
+    <string name="lesson_activity_help_text_15">Дальше оценки можно ставить как обычно:</string>
+    <string name="lesson_activity_help_text_16">После сохранения оценок (кнопка «закончить»), их можно посмотреть в пункте «Мои ученики» -> «класс»</string>
+
+
     <!-- активность окончания урока-->
     <!-- заголовок активности -->
     <string name="title_activity_lesson_list">ИТОГИ УРОКА</string>
     <!-- меню сверху -->
     <string name="lesson_list_activity_menu_text_save">сохранить</string>
+    <!-- уведомления -->
+    <string name="lesson_list_activity_menu_toast_grades_saved">Все ответы успешно сохранены!</string>
     <!-- диалоги -->
     <string name="lesson_list_activity_dialog_title">Редактировать ответы</string>
     <string name="lesson_list_activity_dialog_button_save">сохранить</string>
     <string name="lesson_list_activity_dialog_button_cancel">отмена</string>
     <!-- подсказка на экране -->
     <string name="lesson_list_activity_text_help">Здесь выводятся результаты урока. \nЧтобы изменить ответы, нажмите на них. \nЧтобы сохранить ответы, нажмите кнопку СОХРАНИТЬ (вверху). \nЕсли не хотите сохранять ответы, нажмите кнопку "Назад" на вашем устройстве.</string>
+
 
     <!-- активность настроек-->
     <!-- заголовок активности -->
@@ -165,6 +247,7 @@
     <string name="settings_activity_button_edit_time">редактировать сетку расписания</string>
     <string name="settings_activity_button_remove_data">удалить все данные</string>
     <string name="settings_activity_button_rate_us">оцените наше приложение :)</string>
+    <string name="settings_activity_button_edit_locale">Язык</string>
     <!-- уведомления -->
     <string name="settings_activity_toast_data_delete_success">Данные удалены успешно!</string>
     <string name="settings_activity_toast_data_delete_falture">было введено неправильное число, данные не удалены</string>
@@ -174,7 +257,7 @@
     <string name="settings_activity_toast_grade_too_match">введено слишком большое значение (должно быть не более 100)</string>
     <string name="settings_activity_toast_grade_too_min">введено слишком маленькое значение (должно быть не менее 1)</string>
 
-    <string name="settings_activity_toast_time_sucsesfuly_saved">время сохранено</string>
+    <string name="settings_activity_toast_time_successfully_saved">время сохранено</string>
     <string name="settings_activity_toast_time_no_saved">ошибка, время не сохранено</string>
 
     <!-- диалоги -->
@@ -187,5 +270,6 @@
     <string name="settings_activity_dialog_edit_time_title">Время уроков</string>
     <string name="settings_activity_dialog_hint_hour">ЧАС</string>
     <string name="settings_activity_dialog_hint_minute">МИН</string>
+    <string name="settings_activity_dialog_edit_locale_title">Выберите язык:</string>
 
 </resources>

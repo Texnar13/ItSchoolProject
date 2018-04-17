@@ -61,14 +61,14 @@
 
             <ImageView
                 android:id="@+id/activity_cabinet_redactor_instrumental_image_background"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/cabinet_redactor_button_add_size"
+                android:layout_height="@dimen/cabinet_redactor_button_add_size"
                 android:layout_centerInParent="true"
                 android:background="@drawable/cabinet_redactor_add_desk_button" />
             <ImageView
                 android:id="@+id/activity_cabinet_redactor_instrumental_image"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="@dimen/cabinet_redactor_button_add_image_size"
+                android:layout_height="@dimen/cabinet_redactor_button_add_image_size"
                 android:layout_centerInParent="true"
                 app:srcCompat="@drawable/ic_white_plus" />
         </RelativeLayout>

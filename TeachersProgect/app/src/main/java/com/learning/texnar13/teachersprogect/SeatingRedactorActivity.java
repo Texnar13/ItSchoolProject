@@ -4,20 +4,17 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,33 +30,33 @@ import java.util.ArrayList;
 //класс с редактором рассадки учеников принимает на вход id урока
 //todo если возникнет надобность - никаких изменений с бд до соранения лучше не делать, чтобы можно было отменить изменения
 /*
-* выводим уже рассаженных учеников
-*    _________________________________
-*   |                             сохр|
-*   |_________________________________|
-*   |                                 |
-*   |    _______         _______      |
-*   |   | + |имя|       |имя|имя|     |
-*   |   |___|фам|       |фам|фам|     |
-*   |    _______         _______      |
-*   |   |имя|имя|       |имя| + |     |
-*   |   |фам|фам|       |фам|___|     |
-*   |    _______         _______      |
-*   |   | + |имя|       | + | + |     |
-*   |   |___|фам|       |___|___|     |
-*   |    _______         _______      |
-*   |   | + | + |       | + | + |     |
-*   |   |___|___|       |___|___|     |
-*   |                                 |
-*   |                                 |
-*   |                                 |
-*   |                                 |
-*   |_________________________________|
-* по нажатию на + открывается список с нерассаженными учениками,
-* из которого по нажатию выбираем ученика, которого хотим посадить на это место
-*
-* при сохранении добавляем / удаляем зависимости ученик-место
-* */
+ * выводим уже рассаженных учеников
+ *    _________________________________
+ *   |                             сохр|
+ *   |_________________________________|
+ *   |                                 |
+ *   |    _______         _______      |
+ *   |   | + |имя|       |имя|имя|     |
+ *   |   |___|фам|       |фам|фам|     |
+ *   |    _______         _______      |
+ *   |   |имя|имя|       |имя| + |     |
+ *   |   |фам|фам|       |фам|___|     |
+ *   |    _______         _______      |
+ *   |   | + |имя|       | + | + |     |
+ *   |   |___|фам|       |___|___|     |
+ *   |    _______         _______      |
+ *   |   | + | + |       | + | + |     |
+ *   |   |___|___|       |___|___|     |
+ *   |                                 |
+ *   |                                 |
+ *   |                                 |
+ *   |                                 |
+ *   |_________________________________|
+ * по нажатию на + открывается список с нерассаженными учениками,
+ * из которого по нажатию выбираем ученика, которого хотим посадить на это место
+ *
+ * при сохранении добавляем / удаляем зависимости ученик-место
+ * */
 public class SeatingRedactorActivity extends AppCompatActivity {
 
     //константы
@@ -96,7 +93,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
 
         //----инициализация переменных----
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f;
+        multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f * getResources().getInteger(R.integer.desks_screen_multiplier);
         classId = getIntent().getLongExtra(CLASS_ID, -1);
         cabinetId = getIntent().getLongExtra(CABINET_ID, -1);
         if (classId == -1 || cabinetId == -1) {
@@ -245,7 +242,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                     //создание картинки ученика
                     final ImageView tempLernerImage = new ImageView(this);
                     final LinearLayout.LayoutParams tempLernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F);
-                    tempLernerImage.setImageResource(R.drawable.learner_gray);//по умолчанию серая картинка
+                    tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);//по умолчанию серая картинка
 
                     //создание текста ученика
                     final TextView tempLearnerText = new TextView(this);
@@ -288,7 +285,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                     //создание кнопки добавить ученика
                     final ImageView tempImageAdd = new ImageView(getApplicationContext());
                     final LinearLayout.LayoutParams tempImageAddParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                    tempImageAdd.setImageResource(R.drawable.standart_ic_menu_add);
+                    tempImageAdd.setImageResource(R.drawable.ic_menu_add_standart);
                     tempImageAdd.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -365,6 +362,8 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         Log.i("TeachersProject", "" + (maxDeskX + (int) dpFromPx((2000 + 1000) * multiplier)) + "" + (maxDeskY + (int) dpFromPx((2000 + 1000) * multiplier)));
     }
 
+    //---------------системные методы---------------
+
     private float pxFromDp(float dp) {
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
@@ -393,6 +392,8 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         }
     }
 
+//----------------диалог выбора ученика-----------------
+
     public static class ChooseLearnerDialogFragment extends DialogFragment {//диалог по выбору не распределенного ученика
 
         long cabinetId;
@@ -419,19 +420,66 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                 learnersNames[i] = learnerTempCursor.getString(learnerTempCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) + " " + learnerTempCursor.getString(learnerTempCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME));
                 learnerTempCursor.close();
             }
-            builder.setItems(learnersNames, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {//лист с именами
-                    Cursor learnerTempCursor = db.getLearner(learnersId.get(which));//получаем выбранного ученика
-                    learnerTempCursor.moveToFirst();
-                    //посылаем id выбранного ученика
-                    SeatingRedactorActivity.handler.sendEmptyMessage((int)
-                            learnerTempCursor.getLong(learnerTempCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)));
-                    learnerTempCursor.close();
-                    dismiss();
-                }
-                // The 'which' argument contains the index position
-                // of the selected item
-            });
+            //--------ставим диалогу список в виде view--------
+            ScrollView scroll = new ScrollView(getActivity());
+
+            //контейнер список
+            LinearLayout linearLayout = new LinearLayout(getActivity());
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            linearLayout.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
+            linearLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+            scroll.addView(linearLayout);
+
+            for (int i = 0; i < learnersNames.length; i++) {
+                //пункт списка
+                LinearLayout item = new LinearLayout(getActivity());
+                item.setOrientation(LinearLayout.VERTICAL);
+                item.setGravity(Gravity.CENTER);
+                LinearLayout.LayoutParams itemParams =
+                        new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                (int) (pxFromDp(40) * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))
+                        );
+                itemParams.setMargins(
+                        (int) (pxFromDp(20 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
+                        (int) (pxFromDp(10 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
+                        (int) (pxFromDp(20 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
+                        (int) (pxFromDp(10 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier)))
+                );
+                linearLayout.addView(item, itemParams);
+                //текст в нем
+                TextView text = new TextView(getActivity());
+                text.setText(learnersNames[i]);
+                text.setTextColor(Color.BLACK);
+                text.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                item.addView(text);
+
+                //нажатие на пункт списка
+                final int number = i;
+                item.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Cursor learnerTempCursor = db.getLearner(learnersId.get(number));//получаем выбранного ученика
+                        learnerTempCursor.moveToFirst();
+                        //посылаем id выбранного ученика
+                        SeatingRedactorActivity.handler.sendEmptyMessage((int)
+                                learnerTempCursor.getLong(learnerTempCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)));
+                        learnerTempCursor.close();
+                        dismiss();
+                    }
+                });
+            }
+            builder.setView(scroll);
+//            builder.setItems(learnersNames, new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int which) {//лист с именами
+//
+//                }
+//                // The 'which' argument contains the index position
+//                // of the selected item
+//            });
             // Create the AlertDialog object and return it
             return builder.create();
         }
@@ -442,6 +490,13 @@ public class SeatingRedactorActivity extends AppCompatActivity {
             super.onDismiss(dialog);
             SeatingRedactorActivity.handler.sendEmptyMessage(-1);
         }
+
+        //---------------системные методы(здесь свои)---------------
+
+        private float pxFromDp(float dp) {
+            return dp * getActivity().getResources().getDisplayMetrics().density;
+        }
+
 
     }
 

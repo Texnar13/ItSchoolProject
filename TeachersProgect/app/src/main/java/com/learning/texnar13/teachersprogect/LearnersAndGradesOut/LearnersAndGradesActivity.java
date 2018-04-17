@@ -13,17 +13,23 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -443,58 +449,185 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     public static class RemoveLearnerSubjectDialogFragment extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final ArrayList<Integer> mSelectedItems = new ArrayList<>();
+
+            //начинаем строить диалог
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(getResources().getString(R.string.lesson_redactor_activity_dialog_title_remove_subjects))
-                    .setMultiChoiceItems(getArguments().getStringArray("stringOnlyLessons"), null,
-                            new DialogInterface.OnMultiChoiceClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which,
-                                                    boolean isChecked) {
-                                    if (isChecked) {
-                                        // If the user checked the item, add it to the selected items
-                                        mSelectedItems.add(which);
-                                    } else if (mSelectedItems.contains(which)) {
-                                        // Else, if the item is already in the array, remove it
-                                        mSelectedItems.remove(Integer.valueOf(which));
-                                    }
-                                }
-                            })
-                    // Set the action buttons
-                    .setPositiveButton(getResources().getString(R.string.lesson_redactor_activity_dialog_button_remove), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            long[] lessonsId = getArguments().getLongArray("lessonsId");
-                            ArrayList<Long> deleteList = new ArrayList<>(mSelectedItems.size());
-                            for (int itemPoz : mSelectedItems) {
-                                deleteList.add(lessonsId[itemPoz]);
+
+            //layout диалога
+            LinearLayout out = (LinearLayout) getActivity().getLayoutInflater().inflate(R.layout.activity_lesson_redactor_dialog_lesson_name, null);
+            builder.setView(out);
+
+            //--LinearLayout в layout файле--
+            LinearLayout linearLayout = (LinearLayout) out.findViewById(R.id.create_lesson_dialog_fragment_linear_layout);
+            linearLayout.setBackgroundResource(R.color.colorBackGround);
+            linearLayout.setGravity(Gravity.CENTER);
+            LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            linearLayoutParams.setMargins((int) pxFromDp(10), (int) pxFromDp(15), (int) pxFromDp(10), (int) pxFromDp(15));
+            linearLayout.setLayoutParams(linearLayoutParams);
+
+//--заголовок--
+            TextView title = new TextView(getActivity());
+            title.setText(R.string.lesson_redactor_activity_dialog_title_remove_subjects);
+            title.setTextColor(Color.BLACK);
+            title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            title.setAllCaps(true);
+            title.setGravity(Gravity.CENTER);
+
+            LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            titleParams.setMargins((int) pxFromDp(15), (int) pxFromDp(15), (int) pxFromDp(15), 0);
+
+            linearLayout.addView(title, titleParams);
+
+//--список выбранных предметов--
+            final ArrayList<Integer> mSelectedItems = new ArrayList<>();
+            //--------ставим диалогу список в виде view--------
+            //список названий
+            String[] subjectNames = getArguments().getStringArray("stringOnlyLessons");
+
+            //контейнеры для прокрутки
+            ScrollView scrollView = new ScrollView(getActivity());
+            linearLayout.addView(scrollView,new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1F));
+            LinearLayout linear = new LinearLayout(getActivity());
+            linear.setOrientation(LinearLayout.VERTICAL);
+            scrollView.addView(linear);
+
+
+            for (int i = 0; i < subjectNames.length; i++) {
+//--------пункт списка--------
+                //контейнер
+                LinearLayout item = new LinearLayout(getActivity());
+                item.setOrientation(LinearLayout.HORIZONTAL);
+                item.setGravity(Gravity.LEFT);
+                LinearLayout.LayoutParams itemParams =
+                        new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                (int) (pxFromDp(40) * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))
+                        );
+                itemParams.setMargins(
+                        (int) (pxFromDp(20 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
+                        (int) (pxFromDp(10 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
+                        (int) (pxFromDp(20 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
+                        (int) (pxFromDp(10 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier)))
+                );
+                linear.addView(item, itemParams);
+
+                //чекбокс
+                final CheckBox checkBox = new CheckBox(getActivity());
+                checkBox.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                checkBox.setChecked(false);
+                item.addView(checkBox);
+
+                //текст в нем
+                TextView text = new TextView(getActivity());
+                text.setText(subjectNames[i]);
+                text.setTextColor(Color.BLACK);
+                text.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                item.addView(text);
+
+                //нажатие на пункт списка
+                final int number = i;
+                item.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (checkBox.isChecked()) {
+                            checkBox.setChecked(false);
+                            if (mSelectedItems.contains(number)) {
+                                // Else, if the item is already in the array, remove it
+                                mSelectedItems.remove(Integer.valueOf(number));
                             }
-
-                            //возвращаем все в активность
-                            ((SubjectRemoveLearnersDialogInterface) getActivity())
-                                    .RemoveSubjectDialogMethod(
-                                            0,
-                                            0,
-                                            deleteList
-                                    );
-                            dismiss();
+                        } else {
+                            // If the user checked the item, add it to the selected items
+                            checkBox.setChecked(true);
+                            mSelectedItems.add(number);
                         }
-                    })
-                    .setNegativeButton(getResources().getString(R.string.lesson_redactor_activity_dialog_button_cancel), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            //возвращаем все в активность
-                            ((SubjectRemoveLearnersDialogInterface) getActivity())
-                                    .RemoveSubjectDialogMethod(
-                                            1,
-                                            getArguments().getInt("position"),
-                                            new ArrayList<Long>()
-                                    );
-                            dismiss();
-                        }
-                    });
+                    }
+                });
+            }
 
+//--кнопки согласия/отмены--
+            //контейнер для них
+            LinearLayout container = new LinearLayout(getActivity());
+            container.setOrientation(LinearLayout.HORIZONTAL);
+
+            //кнопка отмены
+            Button neutralButton = new Button(getActivity());
+            neutralButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
+            neutralButton.setText(R.string.lesson_redactor_activity_dialog_button_cancel);
+            neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+            neutralButton.setTextColor(Color.WHITE);
+            LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+            );
+            neutralButtonParams.weight = 1;
+            neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
+
+            //кнопка согласия
+            Button positiveButton = new Button(getActivity());
+            positiveButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
+            positiveButton.setText(R.string.lesson_redactor_activity_dialog_button_remove);
+            positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+            positiveButton.setTextColor(Color.WHITE);
+            LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+            );
+            positiveButtonParams.weight = 1;
+            positiveButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
+
+
+            //кнопки в контейнер
+            container.addView(neutralButton, neutralButtonParams);
+            container.addView(positiveButton, positiveButtonParams);
+
+            //контейнер в диалог
+            linearLayout.addView(container);
+
+
+            //при нажатии...
+            //согласие
+            positiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    long[] lessonsId = getArguments().getLongArray("lessonsId");
+                    ArrayList<Long> deleteList = new ArrayList<>(mSelectedItems.size());
+                    for (int itemPoz : mSelectedItems) {
+                        deleteList.add(lessonsId[itemPoz]);
+                    }
+                    //возвращаем все в активность
+                    ((SubjectRemoveLearnersDialogInterface) getActivity())
+                            .RemoveSubjectDialogMethod(
+                                    0,
+                                    0,
+                                    deleteList
+                            );
+
+                    dismiss();
+                }
+            });
+
+            //отмена
+            neutralButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //возвращаем все в активность
+                    ((SubjectRemoveLearnersDialogInterface) getActivity())
+                            .RemoveSubjectDialogMethod(
+                                    1,
+                                    getArguments().getInt("position"),
+                                    new ArrayList<Long>()
+                            );
+                    dismiss();
+                }
+            });
             return builder.create();
+
         }
 
         @Override
@@ -506,6 +639,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                             getArguments().getInt("position"),
                             new ArrayList<Long>()
                     );
+        }
+
+        //---------форматы----------
+
+        private float pxFromDp(float px) {
+            return px * getActivity().getResources().getDisplayMetrics().density;
         }
     }
 
@@ -527,52 +666,148 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         }
     }
 
-//---------------------создание предметов-----------------
+//---------------------диалог по созданию предметов-----------------
 
     public static class SubjectNameLearnersDialogFragment extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+            //начинаем строить диалог
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+            //layout диалога
             LinearLayout out = (LinearLayout) getActivity().getLayoutInflater().inflate(R.layout.activity_lesson_redactor_dialog_lesson_name, null);
-            final EditText lessonNameEditText = (EditText) out.findViewById(R.id.activity_lesson_redactor_dialog_lesson_name_edit_text);
+            builder.setView(out);
 
-            builder.setTitle(getResources().getString(R.string.lesson_redactor_activity_dialog_title_add_subject));
-            builder.setView(out)
-                    .setPositiveButton(getResources().getString(R.string.lesson_redactor_activity_dialog_button_add), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            int poz;
+            //--LinearLayout в layout файле--
+            LinearLayout linearLayout = (LinearLayout) out.findViewById(R.id.create_lesson_dialog_fragment_linear_layout);
+            linearLayout.setBackgroundResource(R.color.colorBackGround);
+            linearLayout.setGravity(Gravity.CENTER);
+            LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            linearLayoutParams.setMargins((int) pxFromDp(10), (int) pxFromDp(15), (int) pxFromDp(10), (int) pxFromDp(15));
+            linearLayout.setLayoutParams(linearLayoutParams);
 
-                            poz = getArguments().getStringArray("stringLessons").length - 2;
-                            ((SubjectNameLearnersDialogInterface) getActivity())
-                                    .lessonNameDialogMethod(
-                                            1,
-                                            poz,
-                                            lessonNameEditText.getText().toString()
-                                    );
+//--заголовок--
+            TextView title = new TextView(getActivity());
+            title.setText(R.string.lesson_redactor_activity_dialog_title_add_subject);
+            title.setTextColor(Color.BLACK);
+            title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            title.setAllCaps(true);
+            title.setGravity(Gravity.CENTER);
 
-                            dismiss();
-                        }
-                    })
-                    .setNegativeButton(getResources().getString(R.string.lesson_redactor_activity_dialog_button_cancel), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            int poz;
-                            //если предметов нет то диалог появляется снова и снова
-                            if (getArguments().getStringArray("stringLessons").length == 2) {
-                                poz = getArguments().getStringArray("stringLessons").length - 2;
-                            } else
-                                //иначе переводит на последний
-                                poz = getArguments().getStringArray("stringLessons").length - 3;
-                            ((SubjectNameLearnersDialogInterface) getActivity())
-                                    .lessonNameDialogMethod(
-                                            0,
-                                            poz,
-                                            ""
-                                    );
-                            dismiss();
-                        }
-                    });
+            LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            titleParams.setMargins((int) pxFromDp(15), (int) pxFromDp(15), (int) pxFromDp(15), 0);
+
+            linearLayout.addView(title, titleParams);
+
+
+//--текстовое поле имени--
+            final EditText editName = new EditText(getActivity());
+            editName.setTextColor(Color.BLACK);
+            editName.setHint(R.string.lesson_redactor_activity_dialog_hint_subject_name);
+            editName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+            editName.setInputType(InputType.TYPE_CLASS_TEXT);
+            editName.setHintTextColor(Color.GRAY);
+
+            LinearLayout editNameContainer = new LinearLayout(getActivity());
+            LinearLayout.LayoutParams editNameContainerParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+            );
+            editNameContainerParams.setMargins((int) pxFromDp(25), 0, (int) pxFromDp(25), 0);
+            //добавляем текстовое поле
+            editNameContainer.addView(
+                    editName,
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT
+                    ));
+            linearLayout.addView(editNameContainer, editNameContainerParams);
+
+//--кнопки согласия/отмены--
+            //контейнер для них
+            LinearLayout container = new LinearLayout(getActivity());
+            container.setOrientation(LinearLayout.HORIZONTAL);
+
+            //кнопка отмены
+            Button neutralButton = new Button(getActivity());
+            neutralButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
+            neutralButton.setText(R.string.lesson_redactor_activity_dialog_button_cancel);
+            neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+            neutralButton.setTextColor(Color.WHITE);
+            LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+            );
+            neutralButtonParams.weight = 1;
+            neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
+
+            //кнопка согласия
+            Button positiveButton = new Button(getActivity());
+            positiveButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
+            positiveButton.setText(R.string.lesson_redactor_activity_dialog_button_add);
+            positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+            positiveButton.setTextColor(Color.WHITE);
+            LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+            );
+            positiveButtonParams.weight = 1;
+            positiveButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
+
+
+            //кнопки в контейнер
+            container.addView(neutralButton, neutralButtonParams);
+            container.addView(positiveButton, positiveButtonParams);
+
+            //контейнер в диалог
+            linearLayout.addView(container);
+
+
+            //при нажатии...
+            //согласие
+            positiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int poz;
+
+                    poz = getArguments().getStringArray("stringLessons").length - 2;
+                    ((SubjectNameLearnersDialogInterface) getActivity())
+                            .lessonNameDialogMethod(
+                                    1,
+                                    poz,
+                                    editName.getText().toString()
+                            );
+
+                    dismiss();
+                }
+            });
+
+            //отмена
+            neutralButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int poz;
+                    //если предметов нет то диалог появляется снова и снова
+                    if (getArguments().getStringArray("stringLessons").length == 2) {
+                        poz = getArguments().getStringArray("stringLessons").length - 2;
+                    } else
+                        //иначе переводит на последний
+                        poz = getArguments().getStringArray("stringLessons").length - 3;
+                    ((SubjectNameLearnersDialogInterface) getActivity())
+                            .lessonNameDialogMethod(
+                                    0,
+                                    poz,
+                                    ""
+                            );
+                    dismiss();
+                }
+            });
 
             return builder.create();
         }
@@ -592,6 +827,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                             ""
                     );
             super.onCancel(dialog);
+        }
+
+        //---------форматы----------
+
+        private float pxFromDp(float px) {
+            return px * getActivity().getResources().getDisplayMetrics().density;
         }
     }
 
@@ -660,7 +901,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         TextView headName = new TextView(this);
         headName.setMinWidth((int) pxFromDp(140));
         headName.setText("  Ф.И.  ");
-        headName.setTextSize(20);
+        headName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         headName.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));//светло синий"#bed7e9"Color.parseColor()Color.WHITE
         headName.setGravity(Gravity.START);
         headName.setTextColor(Color.BLACK);//тёмно синий parseColor("#1f5b85")
@@ -686,7 +927,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             dateContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGround));//Color.WHITE
             //текст ученика
             TextView learnerName = new TextView(this);
-            learnerName.setTextSize(20);
+            learnerName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             learnerName.setTextColor(Color.BLACK);//parseColor("#1f5b85")
             learnerName.setBackgroundColor(getResources().getColor(R.color.colorBackGround));//"#bed7e9"//Color.WHITE
             learnerName.setGravity(Gravity.BOTTOM);
@@ -1021,7 +1262,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     //текст заголовка ученика
                     TextView headDate = new TextView(this);
 
-                    headDate.setTextSize(20);
+                    headDate.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                     if (i % 2 == 0) {
                         headDate.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));//Color.WHITE
                     } else {
@@ -1052,7 +1293,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         //текст
                         TextView learnerGrade = new TextView(this);
                         learnerGrade.setTextColor(Color.BLACK);
-                        learnerGrade.setTextSize(20);
+                        learnerGrade.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                         learnerGrade.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
                         learnerGrade.setGravity(Gravity.CENTER);
                         //по оценкам в уроке

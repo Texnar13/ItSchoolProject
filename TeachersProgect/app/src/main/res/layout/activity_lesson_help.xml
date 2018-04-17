@@ -32,8 +32,10 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
                     android:gravity="center"
-                    android:text="Описание экрана"
-                    android:textSize="14pt" />
+                    android:text="@string/lesson_activity_help_text_1"
+                    android:textColor="#000000"
+                    style="?android:listSeparatorTextViewStyle"
+                    android:textSize="@dimen/text_simple_size" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -51,8 +53,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="1 Кнопка возврата к расписанию"
-                    android:textSize="8pt" />
+                    android:text="@string/lesson_activity_help_text_2"
+                    android:textSize="@dimen/text_simple_size" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -62,8 +64,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="2 Название урока"
-                    android:textSize="8pt" />
+                    android:text="@string/lesson_activity_help_text_3"
+                    android:textSize="@dimen/text_simple_size" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -73,8 +75,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="3 Закончить урок и перейти к сохранению оценок"
-                    android:textSize="8pt" />
+                    android:text="@string/lesson_activity_help_text_4"
+                    android:textSize="@dimen/text_simple_size" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -84,8 +86,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="4 Меню с подсказкой"
-                    android:textSize="8pt" />
+                    android:text="@string/lesson_activity_help_text_5"
+                    android:textSize="@dimen/text_simple_size" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -95,8 +97,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="5 Парта с учеником"
-                    android:textSize="8pt" />
+                    android:text="@string/lesson_activity_help_text_6"
+                    android:textSize="@dimen/text_simple_size" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -106,8 +108,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="6 Фамилия ученика"
-                    android:textSize="8pt" />
+                    android:text="@string/lesson_activity_help_text_7"
+                    android:textSize="@dimen/text_simple_size" />
 
             </LinearLayout>
 
@@ -126,8 +128,10 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
                     android:gravity="center"
-                    android:text="Добавление баллов"
-                    android:textSize="14pt" />
+                    android:text="@string/lesson_activity_help_text_8"
+                    android:textColor="#000000"
+                    style="?android:listSeparatorTextViewStyle"
+                    android:textSize="@dimen/text_simple_size" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -144,8 +148,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="При нажатии на ученика ему зачисляется один ответ (их может быть не больше пяти)"
-                    android:textSize="8pt" />
+                    android:text="@string/lesson_activity_help_text_9"
+                    android:textSize="@dimen/text_simple_size" />
 
             </LinearLayout>
 
@@ -164,8 +168,10 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
                     android:gravity="center"
-                    android:text="Редактирование оценки"
-                    android:textSize="14pt" />
+                    android:text="@string/lesson_activity_help_text_10"
+                    android:textColor="#000000"
+                    style="?android:listSeparatorTextViewStyle"
+                    android:textSize="@dimen/text_simple_size" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -175,8 +181,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="После долгого нажатия на ученика появляется диалоговое окно:"
-                    android:textSize="8pt" />
+                    android:text="@string/lesson_activity_help_text_11"
+                    android:textSize="@dimen/text_simple_size" />
 
 
                 <ImageView
@@ -194,8 +200,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="1 Пункт 'Отсутствует' отметит выбранного ученика как отсутствующего:)"
-                    android:textSize="8pt" />
+                    android:text="@string/lesson_activity_help_text_12"
+                    android:textSize="@dimen/text_simple_size" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -211,8 +217,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="Во 2 и 3 пунктах можно выбрать оценку (любую кроме уже выбранной) "
-                    android:textSize="8pt" />
+                    android:text="@string/lesson_activity_help_text_13"
+                    android:textSize="@dimen/text_simple_size" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -222,8 +228,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="4 Пункт 'Новая оценка' запоминает поставленную оценку (если оценки нет, пункт не отображается), и позволяет поставить новую (максимум их три):"
-                    android:textSize="8pt" />
+                    android:text="@string/lesson_activity_help_text_14"
+                    android:textSize="@dimen/text_simple_size" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -239,8 +245,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="Дальше оценки можно ставить как обычно:"
-                    android:textSize="8pt" />
+                    android:text="@string/lesson_activity_help_text_15"
+                    android:textSize="@dimen/text_simple_size" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -256,8 +262,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="После сохранения оценок (кнопка 'закончить'), их можно посмотреть в пункте 'Мои ученики' -> 'класс'"
-                    android:textSize="8pt" />
+                    android:text="@string/lesson_activity_help_text_16"
+                    android:textSize="@dimen/text_simple_size" />
 
                 <ImageView
                     android:layout_width="match_parent"

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -135,7 +136,7 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
         list = (LinearLayout) findViewById(R.id.activity_lesson_list);
 
 
-        toast = Toast.makeText(getApplicationContext(), "все оценки успешно сохранены!", Toast.LENGTH_SHORT);
+        toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.lesson_list_activity_menu_toast_grades_saved), Toast.LENGTH_SHORT);
 
 
         // проверка на заполнение
@@ -270,7 +271,7 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
             if (flag) {
                 //textViewWithName.setBackgroundColor(Color.parseColor("#fbe2e7"));
             }
-            textViewWithName.setTextSize(22F);
+            textViewWithName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
 //---достаем имя ученика---
             Cursor currentLearner = db.getLearner(learnersGrades[i].learnerId);
             currentLearner.moveToFirst();
@@ -313,7 +314,7 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
                 } else {
                     flag = false;
                 }
-                textViewWisGrade.setTextSize(20F);
+                textViewWisGrade.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                 textViewWisGrade.setGravity(Gravity.CENTER_HORIZONTAL);
 //----ставим в поле оценку----
                 if (learnersGrades[i].grades[j] == 0) {
@@ -322,7 +323,7 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
                     if (learnersGrades[i].grades[j] != -2) {
                         textViewWisGrade.setText(Long.toString(learnersGrades[i].grades[j]));
                     } else {
-                        textViewWisGrade.setText("Н");
+                        textViewWisGrade.setText(getResources().getString(R.string.learners_and_grades_out_activity_title_grade_n));
                     }
                 }
 //-------задаем действие при нажатии на оценку-------
@@ -372,7 +373,7 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
         TextView textView = new TextView(this);
         textView.setTextColor(Color.GRAY);
         textView.setGravity(Gravity.CENTER);
-        textView.setTextSize(20F);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         textView.setText(R.string.lesson_list_activity_text_help);
         //параметры
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(

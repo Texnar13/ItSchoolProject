@@ -27,7 +27,8 @@
                 android:layout_marginStart="10dp"
                 android:gravity="center"
                 android:text="@string/lesson_redactor_activity_title_class"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="@dimen/text_subtitle_size" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -68,7 +69,8 @@
                 android:layout_marginStart="10dp"
                 android:gravity="center"
                 android:text="@string/lesson_redactor_activity_title_subject"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="@dimen/text_subtitle_size" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -108,7 +110,8 @@
                 android:layout_marginStart="10dp"
                 android:gravity="center"
                 android:text="@string/lesson_redactor_activity_title_cabinet"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="@dimen/text_subtitle_size" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -153,7 +156,8 @@
                     android:layout_marginStart="10dp"
                     android:gravity="center"
                     android:text="@string/lesson_redactor_activity_title_time"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/text_subtitle_size" />
 
 
                 <LinearLayout
@@ -190,6 +194,7 @@
                 android:layout_marginStart="10dp"
                 android:gravity="center"
                 android:text="@string/lesson_redactor_activity_title_repeat"
+                android:textSize="@dimen/text_subtitle_size"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <LinearLayout
@@ -221,14 +226,10 @@
             android:id="@+id/activity_lesson_redactor_seating_state"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/activity_lesson_redactor_seating_redactor_button"
-            android:layout_toStartOf="@+id/activity_lesson_redactor_seating_redactor_button"
             android:layout_weight="2"
             android:gravity="center"
             android:text="TextView"
+            android:textSize="@dimen/text_subtitle_size"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
 
@@ -248,6 +249,7 @@
             android:background="@drawable/button_lite_blue"
             android:gravity="center"
             android:text="@string/lesson_redactor_activity_button_edit_seating"
+            android:textSize="@dimen/text_simple_size"
             android:textColor="@color/colorPrimary" />
 
         <LinearLayout
@@ -272,6 +274,7 @@
                 android:background="@drawable/button_lite_red"
                 android:gravity="center"
                 android:text="@string/lesson_redactor_activity_button_remove"
+                android:textSize="@dimen/text_simple_size"
                 android:textColor="@color/colorAccentRed" />
 
             <TextView
@@ -289,6 +292,7 @@
                 android:background="@drawable/button_lite_gray"
                 android:gravity="center"
                 android:text="@string/lesson_redactor_activity_button_cancel"
+                android:textSize="@dimen/text_simple_size"
                 android:textColor="#7e7e7e" />
 
             <TextView
@@ -307,6 +311,7 @@
                 android:background="@drawable/button_gray"
                 android:gravity="center"
                 android:text="@string/lesson_redactor_activity_button_save"
+                android:textSize="@dimen/text_simple_size"
                 android:textColor="#000000" />
 
 

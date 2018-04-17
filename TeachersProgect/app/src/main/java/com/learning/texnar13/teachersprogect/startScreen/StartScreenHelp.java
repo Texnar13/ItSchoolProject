@@ -13,7 +13,7 @@ public class StartScreenHelp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_screen_help);
         //заголовок
-        setTitle("подсказка");
+        setTitle(R.string.start_screen_activity_menu_text_help);
         //кнопка назад
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

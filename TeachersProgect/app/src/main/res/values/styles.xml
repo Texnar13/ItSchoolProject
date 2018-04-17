@@ -15,4 +15,12 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- тема для текстов в выпадающем меню -->
+    <style name="MenuTextStyle" parent="@android:style/Widget.TextView"> >
+        <item name="android:textColor">#A85E4F</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>

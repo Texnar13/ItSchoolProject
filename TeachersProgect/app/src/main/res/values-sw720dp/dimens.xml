@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- values-sw600dp  7.0”  tablet 1024x600 mdpi -->
+    <!-- values-sw720dp  10.1” tablet 1280x800 mdpi -->
     <dimen name="activity_horizontal_margin">0dp</dimen>
     <dimen name="activity_vertical_margin">0dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
@@ -27,6 +28,5 @@
     <!--редактор кабинета-->
     <dimen name="cabinet_redactor_button_add_size">100dp</dimen>
     <dimen name="cabinet_redactor_button_add_image_size">60dp</dimen>
-
 
 </resources>

@@ -8,6 +8,9 @@ import com.learning.texnar13.teachersprogect.R;
 
 public class LearnersAndGradesHelp extends AppCompatActivity {
 
+    //TODO удали меня
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
