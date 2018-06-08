@@ -249,36 +249,37 @@ public class EditTimeDialogFragment extends DialogFragment {
 
                 for (int i = 0; i < time.length; i++) {
                     for (int j = 0; j < time[0].length; j++) {
-                        //слишком большое по длинне
-                        if (fields[i][j].getText().toString().length() > 2) {
-                            flag = false;
-                            fields[i][j].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
-                        } else
-                            //слишком маленькое по длинне
-                            if (fields[i][j].getText().toString().length() == 0) {
+                        //----проверяем отдельную клетку----
+                        if (!(fields[i][j].getText().toString().length() > 2) && //не слишком большое по длинне
+                                !(fields[i][j].getText().toString().length() == 0)//не слишком маленькое по длинне
+                                ) {
+                            if (((Integer.parseInt(fields[i][j].getText().toString()) > 23) && (j % 2 == 0)) ||//не слишком большое численно
+                                    ((Integer.parseInt(fields[i][j].getText().toString()) > 59) && (j % 2 == 1)) ||
+                                    (Integer.parseInt(fields[i][j].getText().toString()) < 0)//не слишком маленькое численно
+                                    ) {
                                 flag = false;
                                 fields[i][j].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
-                            } else
-                                //слишком большое
-                                if (((Integer.parseInt(fields[i][j].getText().toString()) > 23) && (j % 2 == 0)) || ((Integer.parseInt(fields[i][j].getText().toString()) > 59) && (j % 2 == 1))) {
-                                    flag = false;
-                                    fields[i][j].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
-                                } else
-                                    //слишком маленькое
-                                    if (Integer.parseInt(fields[i][j].getText().toString()) < 0) {
-                                        flag = false;
-                                        fields[i][j].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
-                                    //если время начала больше времени конца
-                                    } else if (j == 3 &&((Integer.parseInt(fields[i][0].getText().toString()) > Integer.parseInt(fields[i][2].getText().toString())) || ((Integer.parseInt(fields[i][0].getText().toString()) == Integer.parseInt(fields[i][2].getText().toString())) && (Integer.parseInt(fields[i][1].getText().toString()) >= Integer.parseInt(fields[i][3].getText().toString()))))) {
-                                        flag = false;
-                                        fields[i][0].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
-                                        fields[i][1].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
-                                        fields[i][2].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
-                                        fields[i][3].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
-                                    } else {
-                                        time[i][j] = Integer.parseInt(fields[i][j].getText().toString());
-                                        fields[i][j].setBackgroundColor(Color.TRANSPARENT);
-                                    }
+                            }
+                        } else {
+                            flag = false;
+                            fields[i][j].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
+                        }
+                    }
+                    //----проверяем сразу ряд----
+                    if (flag) {
+                        //если время начала больше времени конца
+                        if (((Integer.parseInt(fields[i][0].getText().toString()) > Integer.parseInt(fields[i][2].getText().toString())) || ((Integer.parseInt(fields[i][0].getText().toString()) == Integer.parseInt(fields[i][2].getText().toString())) && (Integer.parseInt(fields[i][1].getText().toString()) >= Integer.parseInt(fields[i][3].getText().toString()))))) {
+                            flag = false;
+                            fields[i][0].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
+                            fields[i][1].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
+                            fields[i][2].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
+                            fields[i][3].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
+                        }else {
+                            time[i][0] = Integer.parseInt(fields[i][0].getText().toString());
+                            time[i][1] = Integer.parseInt(fields[i][1].getText().toString());
+                            time[i][2] = Integer.parseInt(fields[i][2].getText().toString());
+                            time[i][3] = Integer.parseInt(fields[i][3].getText().toString());
+                        }
                     }
                 }
                 if (flag) {

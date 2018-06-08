@@ -3,9 +3,9 @@
     <!-- локализация -->
     <!-- названия языков -->
     <string-array name="locale_names">
-        <item>default</item>
-        <item>русский</item>        
-        <item>english</item>
+        <item>Auto-detection</item>
+        <item>Русский</item>
+        <item>English</item>
     </string-array>
     <!-- коды -->
     <string-array name="locale_code">
@@ -59,13 +59,13 @@
     <!-- активность календаря на месяц-->
     <!-- шапка таблицы -->
     <string-array name="schedule_month_activity_week_days_short_array">
-        <item>mo</item>
-        <item>tu</item>
-        <item>we</item>
-        <item>th</item>
-        <item>fr</item>
-        <item>sa</item>
-        <item>su</item>
+        <item>mon</item>
+        <item>tue</item>
+        <item>wed</item>
+        <item>thu</item>
+        <item>fri</item>
+        <item>sat</item>
+        <item>sun</item>
     </string-array>
 
 </resources>

@@ -692,6 +692,9 @@ public class LessonActivity extends AppCompatActivity {
                     tempLearnerText.setTextColor(Color.WHITE);
                     tempLearnerText.setAllCaps(true);
                     tempLearnerText.setText(
+                            (learnerCursor.getString(learnerCursor.getColumnIndex(
+                                    SchoolContract.TableLearners.COLUMN_FIRST_NAME
+                            ))).charAt(0)+" "+
                             learnerCursor.getString(learnerCursor.getColumnIndex(
                                     SchoolContract.TableLearners.COLUMN_SECOND_NAME
                             ))

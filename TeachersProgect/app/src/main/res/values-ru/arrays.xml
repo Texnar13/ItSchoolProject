@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- локализация -->
+    <!-- названия языков -->
+    <string-array name="locale_names">
+        <item>Автоопределение</item>
+        <item>Русский</item>
+        <item>English</item>
+    </string-array>
+
     <string-array name="months_names">
         <item>ЯНВАРЬ</item>
         <item>ФЕВРАЛЬ</item>

@@ -492,7 +492,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
             //контейнеры для прокрутки
             ScrollView scrollView = new ScrollView(getActivity());
-            linearLayout.addView(scrollView,new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1F));
+            linearLayout.addView(scrollView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1F));
             LinearLayout linear = new LinearLayout(getActivity());
             linear.setOrientation(LinearLayout.VERTICAL);
             scrollView.addView(linear);
@@ -900,7 +900,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //текст заголовка ученика
         TextView headName = new TextView(this);
         headName.setMinWidth((int) pxFromDp(140));
-        headName.setText("  Ф.И.  ");
+        headName.setText("  "+getResources().getString(R.string.learners_and_grades_out_activity_title_table_names)+"  ");
         headName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         headName.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));//светло синий"#bed7e9"Color.parseColor()Color.WHITE
         headName.setGravity(Gravity.START);
@@ -1108,7 +1108,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     //закрываем
                                     return;
                                 }
-
 
                                 //--время--
                                 //начало урока

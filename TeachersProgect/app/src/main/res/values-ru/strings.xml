@@ -80,6 +80,7 @@
     <!-- активность списка учеников-->
     <!-- тексты  -->
     <string name="learners_and_grades_out_activity_title_subject">Предмет</string>
+    <string name="learners_and_grades_out_activity_title_table_names">Ф.И.</string>
     <string name="learners_and_grades_out_activity_title_grade_n">Н</string>
     <string name="learners_and_grades_out_activity_title_grade_no_answers">нет ответов</string>
     <!-- заголовок активности -->

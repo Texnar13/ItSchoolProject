@@ -83,6 +83,7 @@
     <string name="title_activity_learners_and_grades">students in the </string>
     <!-- тексты  -->
     <string name="learners_and_grades_out_activity_title_subject">Subject</string>
+    <string name="learners_and_grades_out_activity_title_table_names">Name</string>
     <string name="learners_and_grades_out_activity_title_grade_n">Abs</string>
     <string name="learners_and_grades_out_activity_title_grade_no_answers">no answers</string>
     <!-- диалоги -->
@@ -205,17 +206,23 @@
     <string name="lesson_activity_help_text_1">Screen description </string>   
     <string name="lesson_activity_help_text_2">1 Back to schedule button </string>    
     <string name="lesson_activity_help_text_3">2 Lesson title </string>    
-    <string name="lesson_activity_help_text_4">3 Finish the lesson and proceed to save the estimates </string>    
+    <string name="lesson_activity_help_text_4">3 Finish the lesson and proceed to save the estimates </string>
+        
     <string name="lesson_activity_help_text_5">4 Menus with a hint </string>    
     <string name="lesson_activity_help_text_6">5 Part with student </string>    
     <string name="lesson_activity_help_text_7">6 Student\'s name </string>    
     <string name="lesson_activity_help_text_8">Adding points </string>    
-    <string name="lesson_activity_help_text_9">When you click on the student, he is credited with one answer (there can be no more than five) </string>   
+    <string name="lesson_activity_help_text_9">When you click on the student, he is credited with one answer (there can be no more than five) </string>
+       
     <string name="lesson_activity_help_text_10">Edit the score </string>    
-    <string name="lesson_activity_help_text_11">After a long click on the student, a dialog box appears: </string>    
-    <string name="lesson_activity_help_text_12">1 The «Missing» item marks the selected student as missing:) </string>    
-    <string name="lesson_activity_help_text_13">In points 2 and 3 you can choose an estimate (any other than the one already selected) </string>    
-    <string name="lesson_activity_help_text_14">4 The «New score» item remembers the rating (if there is no estimate, the item is not displayed), and allows you to put a new one (maximum three): </string>   
+    <string name="lesson_activity_help_text_11">After a long click on the student, a dialog box appears: </string>
+        
+    <string name="lesson_activity_help_text_12">1 The «Missing» item marks the selected student as missing:) </string>
+        
+    <string name="lesson_activity_help_text_13">In points 2 and 3 you can choose an estimate (any other than the one already selected) </string>
+        
+    <string name="lesson_activity_help_text_14">4 The «New score» item remembers the rating (if there is no estimate, the item is not displayed), and allows you to put a new one (maximum three): </string>
+       
     <string name="lesson_activity_help_text_15">You can put further estimates as usual: </string>  
     <string name="lesson_activity_help_text_16">After saving the ratings (the «finish» button), you can see them in the «My pupils» -> «class» </string>
 
@@ -241,10 +248,10 @@
     <!-- тексты -->
     <string name="settings_activity_hint_max_answer">MAX ANSWER</string>
     <string name="settings_activity_title_desk_size">SETTING THE SIZE OF DESKS</string>
-    <string name="settings_activity_title_max_answer">MAX ANSWERS COUNT</string>
+    <string name="settings_activity_title_max_answer">MAXIMUM NUMBER OF ANSWERS</string>
     <!-- кнопки -->
     <string name="settings_activity_button_save_data">save</string>
-    <string name="settings_activity_button_edit_time">edit time lessons</string>
+    <string name="settings_activity_button_edit_time">edit lessons time</string>
     <string name="settings_activity_button_remove_data">remove all data</string>
     <string name="settings_activity_button_rate_us">rate our app :)</string>
     <string name="settings_activity_button_edit_locale">Language</string>
@@ -269,6 +276,6 @@
     <string name="settings_activity_dialog_edit_time_title">Change time lessons</string>
     <string name="settings_activity_dialog_hint_hour">HOUR</string>
     <string name="settings_activity_dialog_hint_minute">MIN</string>
-    <string name="settings_activity_dialog_edit_locale_title">Chose language:</string>
+    <string name="settings_activity_dialog_edit_locale_title">Choose language:</string>
 
 </resources>
