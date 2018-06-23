@@ -900,7 +900,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //текст заголовка ученика
         TextView headName = new TextView(this);
         headName.setMinWidth((int) pxFromDp(140));
-        headName.setText("  "+getResources().getString(R.string.learners_and_grades_out_activity_title_table_names)+"  ");
+        headName.setText("  " + getResources().getString(R.string.learners_and_grades_out_activity_title_table_names) + "  ");
         headName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         headName.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));//светло синий"#bed7e9"Color.parseColor()Color.WHITE
         headName.setGravity(Gravity.START);
@@ -1071,6 +1071,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     }
                 }
 
+
                 //изменяющися календари для вывода
                 GregorianCalendar outHelpStartCalendar = new GregorianCalendar(
                         viewCalendar.get(Calendar.YEAR),
@@ -1090,6 +1091,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 );
                 if (subjectsId.length != 0) {
                     DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                    //получаем время уроков из бд
+                    int [][] timeOfLessons = db.getSettingsTime(1);
+
                     //обновляем массивы свежими данными
                     // по ученикам
                     for (int i = 0; i < learnersId.size(); i++) {
@@ -1097,74 +1101,85 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         for (int j = 0; j < viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH); j++) {
                             outHelpStartCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
                             outHelpEndCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
-                            //по урокам
-                            for (int k = 0; k < 9; k++) {
-                                //проверяем переменную потока
-                                if (!flag) {
-                                    //если была команда закрыть поток без подгрузки
-                                    //удаляем прогресс бар
-                                    //не выводим оценки после загрузки
-                                    handler.sendEmptyMessage(1);
-                                    //закрываем
-                                    return;
-                                }
+                            //сначала проверяем весь день целиком
+                            //--время--
+                            //начало
+                            outHelpStartCalendar.set(Calendar.HOUR_OF_DAY, 0);
+                            outHelpStartCalendar.set(Calendar.MINUTE, 0);
+                            //конец урока
+                            outHelpEndCalendar.set(Calendar.HOUR_OF_DAY, 23);
+                            outHelpEndCalendar.set(Calendar.MINUTE, 59);
 
-                                //--время--
-                                //начало урока
-                                outHelpStartCalendar.set(Calendar.HOUR_OF_DAY,
-                                        SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][0][0]
-                                );
-                                outHelpStartCalendar.set(Calendar.MINUTE,
-                                        SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][0][1]
-                                );
-                                //конец урока
-                                outHelpEndCalendar.set(Calendar.HOUR_OF_DAY,
-                                        SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][0]
-                                );
-                                outHelpEndCalendar.set(Calendar.MINUTE,
-                                        SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES[k][1][1]
-                                );
-                                //Log.e("TeachersApp","lear = "+learnersId.size()+" i="+i+"  =="+learnersId.get(i));
-                                //Log.e("TeachersApp","subjectsId = "+subjectsId.length+" changingSubjectPosition="+changingSubjectPosition+"  =="+subjectsId[changingSubjectPosition]);
-                                //получаем оценки по времени и предмету
-                                Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
-                                        learnersId.get(i),//todo !!!!!!!!!!!! здесь все еще есть ошибка !!!!!!!!!!!!!!! здесь ошибка java.lang.ArrayIndexOutOfBoundsException
-                                        subjectsId[changingSubjectPosition],
-                                        outHelpStartCalendar,
-                                        outHelpEndCalendar
-                                );
-                                //по оценкам
-                                for (int l = 0; l < 3; l++) {
-                                    if (gradesLessonCursor.moveToPosition(l)) {
-                                        //есть оценка
-                                        grades[i][j][k][l] = new GradeUnit(learnersId.get(i),
-                                                gradesLessonCursor.getLong(gradesLessonCursor.getColumnIndex(
-                                                        SchoolContract.TableLearnersGrades.KEY_GRADE_ID
-                                                )),
-                                                gradesLessonCursor.getInt(gradesLessonCursor.getColumnIndex(
-                                                        SchoolContract.TableLearnersGrades.COLUMN_GRADE
-                                                )),
-                                                subjectsId[changingSubjectPosition],
-                                                gradesLessonCursor.getString(gradesLessonCursor.getColumnIndex(
-                                                        SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP
-                                                ))
-                                        );
-                                    } else {
-//                                        Log.e("TeachersApp","i="+i+" j="+j+" k="+k+" l="+l+" ");
-//                                        Log.e("TeachersApp",""+grades[i][j][k].length);
-//                                        Log.e("TeachersApp",""+grades[i][j].length);
-//                                        Log.e("TeachersApp",""+grades[i].length);
-//                                        Log.e("TeachersApp",""+grades.length);
-                                        //нет оценки
-                                        grades[i][j][k][l] = new GradeUnit(
-                                                learnersId.get(i),
-                                                -1,
-                                                0,
-                                                subjectsId[changingSubjectPosition],
-                                                dateFormat.format(outHelpStartCalendar.getTime())
-                                        );
+                            Cursor tDay = db.getGradesByLearnerIdSubjectAndTimePeriod(
+                                    learnersId.get(i),
+                                    subjectsId[changingSubjectPosition],
+                                    outHelpStartCalendar,
+                                    outHelpEndCalendar
+                            );//может посчитать их здесь, а потом если вывели все оценки то остальные выводим уже с прочерками без проверки
+
+                            if (tDay.getCount() != 0) {
+
+                                //по урокам
+                                for (int k = 0; k < 9; k++) {
+                                    //проверяем переменную потока
+                                    if (!flag) {
+                                        //если была команда закрыть поток без подгрузки
+                                        //удаляем прогресс бар
+                                        //не выводим оценки после загрузки
+                                        handler.sendEmptyMessage(1);
+                                        //закрываем
+                                        return;
                                     }
-                                }
+
+                                    //--время--
+                                    //начало урока
+                                    outHelpStartCalendar.set(Calendar.HOUR_OF_DAY,
+                                            timeOfLessons[k][0]
+                                    );
+                                    outHelpStartCalendar.set(Calendar.MINUTE,
+                                            timeOfLessons[k][1]
+                                    );
+                                    //конец урока
+                                    outHelpEndCalendar.set(Calendar.HOUR_OF_DAY,
+                                            timeOfLessons[k][2]
+                                    );
+                                    outHelpEndCalendar.set(Calendar.MINUTE,
+                                            timeOfLessons[k][3]
+                                    );
+                                    //получаем оценки по времени и предмету
+                                    Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
+                                            learnersId.get(i),//todo !!!!!!!!!!!! здесь все еще есть ошибка !!!!!!!!!!!!!!! здесь ошибка java.lang.ArrayIndexOutOfBoundsException
+                                            subjectsId[changingSubjectPosition],
+                                            outHelpStartCalendar,
+                                            outHelpEndCalendar
+                                    );
+                                    //по оценкам
+                                    for (int l = 0; l < 3; l++) {
+                                        if (gradesLessonCursor.moveToPosition(l)) {
+                                            //есть оценка
+                                            grades[i][j][k][l] = new GradeUnit(learnersId.get(i),
+                                                    gradesLessonCursor.getLong(gradesLessonCursor.getColumnIndex(
+                                                            SchoolContract.TableLearnersGrades.KEY_GRADE_ID
+                                                    )),
+                                                    gradesLessonCursor.getInt(gradesLessonCursor.getColumnIndex(
+                                                            SchoolContract.TableLearnersGrades.COLUMN_GRADE
+                                                    )),
+                                                    subjectsId[changingSubjectPosition],
+                                                    gradesLessonCursor.getString(gradesLessonCursor.getColumnIndex(
+                                                            SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP
+                                                    ))
+                                            );
+                                        } else {
+                                            //нет оценки
+                                            grades[i][j][k][l] = new GradeUnit(
+                                                    learnersId.get(i),
+                                                    -1,
+                                                    0,
+                                                    subjectsId[changingSubjectPosition],
+                                                    dateFormat.format(outHelpStartCalendar.getTime())
+                                            );
+                                        }
+                                    }
 //                                int n;
 //                                if (gradesLessonCursor.getCount() <= 3) {
 //                                    n = gradesLessonCursor.getCount();
@@ -1186,13 +1201,48 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 //                                            ))
 //                                    );
 //                                }
-                                gradesLessonCursor.close();
+                                    gradesLessonCursor.close();
+                                }
+                            } else {
+                                //по урокам
+                                for (int k = 0; k < 9; k++) {
+                                    //проверяем переменную потока
+                                    if (!flag) {
+                                        //если была команда закрыть поток без подгрузки
+                                        //удаляем прогресс бар
+                                        //не выводим оценки после загрузки
+                                        handler.sendEmptyMessage(1);
+                                        //закрываем
+                                        return;
+                                    }
+
+                                    //--время--
+                                    //начало урока
+                                    outHelpStartCalendar.set(Calendar.HOUR_OF_DAY,
+                                            timeOfLessons[k][0]
+                                    );
+                                    outHelpStartCalendar.set(Calendar.MINUTE,
+                                            timeOfLessons[k][1]
+                                    );
+                                    //по оценкам
+                                    for (int l = 0; l < 3; l++) {
+                                        //нет оценки
+                                        grades[i][j][k][l] = new GradeUnit(
+                                                learnersId.get(i),
+                                                -1,
+                                                0,
+                                                subjectsId[changingSubjectPosition],
+                                                dateFormat.format(outHelpStartCalendar.getTime())
+                                        );
+
+                                    }
+                                }
                             }
+                            tDay.close();
                         }
                     }
                     db.close();
                 }
-
                 //выводим оценки после загрузки
                 handler.sendEmptyMessage(0);
             }

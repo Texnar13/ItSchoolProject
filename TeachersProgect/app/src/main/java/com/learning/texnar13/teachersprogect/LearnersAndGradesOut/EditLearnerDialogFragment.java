@@ -66,7 +66,7 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
         editName.setHint(R.string.learners_and_grades_out_activity_dialog_hint_learner_name);
         editName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         //editName.setSingleLine(true);
-        editName.setInputType(InputType.TYPE_CLASS_TEXT);
+        editName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         editName.setHintTextColor(Color.GRAY);
         try {//входные данные предыдущее имя
             editName.setText(getArguments().getString("name"));
@@ -97,7 +97,7 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
         editLastName.setHint(R.string.learners_and_grades_out_activity_dialog_hint_learner_second_name);
         editLastName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         //editName.setSingleLine(true);
-        editLastName.setInputType(InputType.TYPE_CLASS_TEXT);
+        editLastName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         editLastName.setHintTextColor(Color.GRAY);
         try {//входные данные предыдущая фамилия
             editLastName.setText(getArguments().getString("lastName"));

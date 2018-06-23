@@ -22,9 +22,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import static com.learning.texnar13.teachersprogect.data.SchoolContract.TableSubjectAndTimeCabinetAttitude.STANDARD_LESSONS_TIMES;
-
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
+    private final boolean IS_DEBUG = false;
 
     private static final int DB_VERSION = 13;
 
@@ -54,7 +53,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                 SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
 
-                Log.i("App","-----------");//<= >= = <>
+                if(IS_DEBUG)Log.i("App","-----------");//<= >= = <>
                 Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM time WHERE time_column <>\"2017-12-12 12:12:12\"", null);
                 //select * from t where dt_system between strftime('%Y.%m.%d %H:%M:%S', 'now', '-1 day') and ---- SELECT date FROM test WHERE
                 textView.setText("" + cursor.getCount());//"time_column = '2017-12-12 12:12:12'" -- time_column = strftime('%Y-%m-%dT%H:%M:%S', '2017-12-12T12:12:12')
@@ -88,7 +87,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     }
 
     private void updateDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.i("DBOpenHelper", "updateDatabase old=" + oldVersion + " new=" + newVersion);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "updateDatabase old=" + oldVersion + " new=" + newVersion);
 
         if (oldVersion < 1) {//то приложение либо новое, либо удаляются данные
 
@@ -109,54 +108,66 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             //настройки
             String sql = "CREATE TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + "( " + SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME + " VARCHAR, " +
-                    SchoolContract.TableSettingsData.COLUMN_LOCALE + " TEXT DEFAULT " + SchoolContract.TableSettingsData.COLUMN_LOCALE_DEFAULT_CODE + ", " +
+                    SchoolContract.TableSettingsData.COLUMN_LOCALE + " TEXT DEFAULT '" + SchoolContract.TableSettingsData.COLUMN_LOCALE_DEFAULT_CODE + "', " +
                     SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER + " INTEGER DEFAULT 5, " +
                     SchoolContract.TableSettingsData.COLUMN_TIME + " TEXT DEFAULT " +
                     "'{\"" + SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_HOUR_NAME + "\":" +
                     //часы начала
-                    "[\"" + STANDARD_LESSONS_TIMES[0][0][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[1][0][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[2][0][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[3][0][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[4][0][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[5][0][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[6][0][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[7][0][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[8][0][0] + "\"]," +
+                    "[\"8\",\"9\",\"10\",\"11\",\"12\",\"13\",\"14\",\"15\",\"16\"]," +
                     //минуты начала
                     "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_MINUTE_NAME + "\":" +
-                    "[\"" + STANDARD_LESSONS_TIMES[0][0][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[1][0][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[2][0][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[3][0][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[4][0][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[5][0][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[6][0][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[7][0][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[8][0][1] + "\"]," +
+                    "[\"30\",\"30\",\"30\",\"30\",\"25\",\"30\",\"25\",\"20\",\"6\"]," +
                     //часы конца
                     "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_HOUR_NAME + "\":" +
-                    "[\"" + STANDARD_LESSONS_TIMES[0][1][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[1][1][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[2][1][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[3][1][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[4][1][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[5][1][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[6][1][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[7][1][0] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[8][1][0] + "\"]," +
+                    "[\"9\",\"10\",\"11\",\"12\",\"13\",\"14\",\"15\",\"16\",\"23\"],"+
                     //минуты конца
                     "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_MINUTE_NAME + "\":" +
-                    "[\"" + STANDARD_LESSONS_TIMES[0][1][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[1][1][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[2][1][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[3][1][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[4][1][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[5][1][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[6][1][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[7][1][1] + "\"," +
-                    "\"" + STANDARD_LESSONS_TIMES[8][1][1] + "\"]" +
+                    "[\"15\",\"15\",\"15\",\"15\",\"10\",\"15\",\"10\",\"5\",\"59\"]" +
                     "}'," +
+                    //часы начала
+//                    "[\"" + STANDARD_LESSONS_TIMES[0][0][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[1][0][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[2][0][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[3][0][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[4][0][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[5][0][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[6][0][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[7][0][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[8][0][0] + "\"]," +
+//                    //минуты начала
+//                    "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_MINUTE_NAME + "\":" +
+//                    "[\"" + STANDARD_LESSONS_TIMES[0][0][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[1][0][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[2][0][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[3][0][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[4][0][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[5][0][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[6][0][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[7][0][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[8][0][1] + "\"]," +
+//                    //часы конца
+//                    "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_HOUR_NAME + "\":" +
+//                    "[\"" + STANDARD_LESSONS_TIMES[0][1][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[1][1][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[2][1][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[3][1][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[4][1][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[5][1][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[6][1][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[7][1][0] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[8][1][0] + "\"]," +
+//                    //минуты конца
+//                    "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_MINUTE_NAME + "\":" +
+//                    "[\"" + STANDARD_LESSONS_TIMES[0][1][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[1][1][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[2][1][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[3][1][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[4][1][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[5][1][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[6][1][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[7][1][1] + "\"," +
+//                    "\"" + STANDARD_LESSONS_TIMES[8][1][1] + "\"]" +
+//                    "}'," +
                     SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE + " INTEGER ); ";
             db.execSQL(sql);
 
@@ -202,7 +213,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
                     SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " INTEGER, " +
                     SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TIMESTRING DEFAULT \"0000-00-00 00:00:00\", " +
-                    "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE ); " +
+                    "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE, " +
                     "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); ";
             db.execSQL(sql);
             //предмет
@@ -339,7 +350,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
                         SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TEXT DEFAULT '0000-00-00 00:00:00', " +
                         "lessonId INTEGER, " +
-                        "FOREIGN KEY(lessonId) REFERENCES lessons ( _id ) ON DELETE CASCADE ); " +
+                        "FOREIGN KEY(lessonId) REFERENCES lessons ( _id ) ON DELETE CASCADE, " +
                         "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); ";
                 db.execSQL(sql);
                 db.execSQL("PRAGMA foreign_keys = ON");
@@ -381,7 +392,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
                         SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " INTEGER, " +
                         SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TEXT DEFAULT '0000-00-00 00:00:00', " +
-                        "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE ); " +
+                        "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE, " +
                         "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); ";
                 db.execSQL(sql);
 
@@ -396,53 +407,21 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_TIME + " TEXT DEFAULT " +
                         "'{\"" + SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_HOUR_NAME + "\":" +
                         //часы начала
-                        "[\"" + STANDARD_LESSONS_TIMES[0][0][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[1][0][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[2][0][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[3][0][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[4][0][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[5][0][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[6][0][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[7][0][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[8][0][0] + "\"]," +
+                        "[\"8\",\"9\",\"10\",\"11\",\"12\",\"13\",\"14\",\"15\",\"16\"]," +
                         //минуты начала
                         "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_MINUTE_NAME + "\":" +
-                        "[\"" + STANDARD_LESSONS_TIMES[0][0][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[1][0][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[2][0][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[3][0][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[4][0][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[5][0][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[6][0][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[7][0][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[8][0][1] + "\"]," +
+                        "[\"30\",\"30\",\"30\",\"30\",\"25\",\"30\",\"25\",\"20\",\"6\"]," +
                         //часы конца
                         "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_HOUR_NAME + "\":" +
-                        "[\"" + STANDARD_LESSONS_TIMES[0][1][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[1][1][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[2][1][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[3][1][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[4][1][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[5][1][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[6][1][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[7][1][0] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[8][1][0] + "\"]," +
+                        "[\"9\",\"10\",\"11\",\"12\",\"13\",\"14\",\"15\",\"16\",\"23\"],"+
                         //минуты конца
                         "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_MINUTE_NAME + "\":" +
-                        "[\"" + STANDARD_LESSONS_TIMES[0][1][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[1][1][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[2][1][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[3][1][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[4][1][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[5][1][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[6][1][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[7][1][1] + "\"," +
-                        "\"" + STANDARD_LESSONS_TIMES[8][1][1] + "\"]" +
+                        "[\"15\",\"15\",\"15\",\"15\",\"10\",\"15\",\"10\",\"5\",\"59\"]" +
                         "}';");
             }
             //колонка для локализации
             if (oldVersion < 13) {
-                db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_LOCALE + " TEXT DEFAULT " + SchoolContract.TableSettingsData.COLUMN_LOCALE_DEFAULT_CODE + ";");
+                db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_LOCALE + " TEXT DEFAULT '" + SchoolContract.TableSettingsData.COLUMN_LOCALE_DEFAULT_CODE + "';");
             }
         }
         //db.close();
@@ -458,7 +437,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         values.put(SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME, profileName);
         values.put(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE, interfaceSize);
         long temp = db.insert(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, values);//-1 = ошибка ввода
-        Log.i("DBOpenHelper", "createSettingsProfile returnId = " + temp + " profileName= " + profileName + " interfaceSize= " + interfaceSize);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "createSettingsProfile returnId = " + temp + " profileName= " + profileName + " interfaceSize= " + interfaceSize);
         //db.close();
         return temp;
     }
@@ -469,7 +448,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         values.put(SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME, profileName);
         values.put(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE, interfaceSize);
         long temp = db.insert(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, values);//-1 = ошибка ввода
-        Log.i("DBOpenHelper", "createSettingsProfile returnId = " + temp + " profileName= " + profileName + " interfaceSize= " + interfaceSize);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "createSettingsProfile returnId = " + temp + " profileName= " + profileName + " interfaceSize= " + interfaceSize);
         //db.close();
         return temp;
     }
@@ -480,7 +459,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         values.put(SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME, profileName);
         values.put(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE, interfaceSize);
         int temp = db.update(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, values, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId});
-        Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + temp + " profileId= " + profileId + " profileName= " + profileName + " interfaceSize= " + interfaceSize);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + temp + " profileId= " + profileId + " profileName= " + profileName + " interfaceSize= " + interfaceSize);
         //db.close();
         return temp;
     }
@@ -490,7 +469,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableSettingsData.COLUMN_LOCALE, locale);
         int temp = db.update(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, values, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId});
-        Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + temp + " profileId= " + profileId + " locale= " + locale);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + temp + " profileId= " + profileId + " locale= " + locale);
         return temp;
     }
 
@@ -504,7 +483,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         cursor.moveToFirst();
         String answer = cursor.getString(cursor.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_LOCALE));
         cursor.close();
-        Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + answer + " profileId= " + profileId);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + answer + " profileId= " + profileId);
         return answer;
     }
 
@@ -513,7 +492,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER, maxGrade);
         int temp = db.update(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, values, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId});
-        Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + temp + " profileId= " + profileId + " maxGrade= " + maxGrade);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + temp + " profileId= " + profileId + " maxGrade= " + maxGrade);
         //db.close();
         return temp;
     }
@@ -528,7 +507,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         cursor.moveToFirst();
         int answer = cursor.getInt(cursor.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER));
         cursor.close();
-        Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + answer + " profileId= " + profileId);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "setSettingsProfileParameters return = " + answer + " profileId= " + profileId);
         //db.close();
         return answer;
     }
@@ -628,14 +607,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             "\"" + time[8][3] + "\"]" +
                             "}");
         } catch (JSONException e) {
-            Log.e("TeachersApp", "setSettingsTime-error-JSONParse", e);
+            if(IS_DEBUG)Log.e("TeachersApp", "setSettingsTime-error-JSONParse", e);
             return -1;
         }
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableSettingsData.COLUMN_TIME, jsonObject.toString());
         int temp = db.update(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, values, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId});
 
-        Log.i("DBOpenHelper", "setSettingsTime return = " + temp + " profileId= " + profileId + " time= " + Arrays.toString(time));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "setSettingsTime return = " + temp + " profileId= " + profileId + " time= " + Arrays.toString(time));
         //db.close();
         return temp;
     }
@@ -656,7 +635,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         JSONArray endHour;
         JSONArray endMinute;
         try {
-            Log.e("TeachersApp", "" + Arrays.toString(cursor.getColumnNames()));
+            if(IS_DEBUG)Log.e("TeachersApp", "" + Arrays.toString(cursor.getColumnNames()));
             json = new JSONObject(
                     cursor.getString(cursor.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_TIME))
             );
@@ -673,12 +652,12 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 answer[i][3] = endMinute.getInt(i);
             }
         } catch (JSONException e) {
-            Log.e("TeachersApp", "getSettingsTime-error-JSONParse", e);
+            if(IS_DEBUG)Log.e("TeachersApp", "getSettingsTime-error-JSONParse", e);
             answer = new int[][]{};
         }
 
         cursor.close();
-        Log.i("DBOpenHelper", "getSettingsTime return = " + Arrays.toString(answer) + " profileId= " + profileId);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getSettingsTime return = " + Arrays.toString(answer) + " profileId= " + profileId);
         //db.close();
         return answer;
     }
@@ -694,7 +673,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         } else {
             answer = -1;
         }
-        Log.i("DBOpenHelper", "getInterfaceSizeBySettingsProfileId profileId=" + profileId + " return=" + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getInterfaceSizeBySettingsProfileId profileId=" + profileId + " return=" + answer);
         cursor.close();
         //db.close();
         return answer;
@@ -704,7 +683,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {id + ""};
         Cursor cursor = db.query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", selectionArgs, null, null, null);
-        Log.i("DBOpenHelper", "getInterfaceSizeBySettingsProfileId profileId=" + id + " return=" + cursor);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getInterfaceSizeBySettingsProfileId profileId=" + id + " return=" + cursor);
         return cursor;
     }
 
@@ -720,7 +699,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableClasses.COLUMN_CLASS_NAME, name);
         long temp = db.insert(SchoolContract.TableClasses.NAME_TABLE_CLASSES, null, values);//-1 = ошибка ввода
-        Log.i("DBOpenHelper", "createClass returnId = " + temp + " name= " + name);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "createClass returnId = " + temp + " name= " + name);
         //db.close();
         return temp;
     }
@@ -728,7 +707,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public Cursor getClasses() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(SchoolContract.TableClasses.NAME_TABLE_CLASSES, null, null, null, null, null, null);
-        Log.i("DBOpenHelper", "getClasses " + cursor + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getClasses " + cursor + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -736,7 +715,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {classId + ""};
         Cursor cursor = db.query(SchoolContract.TableClasses.NAME_TABLE_CLASSES, null, SchoolContract.TableClasses.KEY_CLASS_ID + " = ?", selectionArgs, null, null, null);
-        Log.i("DBOpenHelper", "getClasses " + cursor + "id=" + classId + "number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getClasses " + cursor + "id=" + classId + "number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -752,7 +731,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             if (db.update(SchoolContract.TableClasses.NAME_TABLE_CLASSES, contentName, SchoolContract.TableClasses.KEY_CLASS_ID + " = ?", new String[]{"" + classId.get(i)}) == 1)
                 answer++;
         }
-        Log.i("DBOpenHelper", "setClassesNames name = " + name + " id= " + stringClassId + " return = " + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "setClassesNames name = " + name + " id= " + stringClassId + " return = " + answer);
         //db.close();
         return answer;
     }
@@ -766,7 +745,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             if (db.delete(SchoolContract.TableClasses.NAME_TABLE_CLASSES, SchoolContract.TableClasses.KEY_CLASS_ID + " = ?", new String[]{"" + classesId.get(i)}) == 1)
                 answer++;
         }
-        Log.i("DBOpenHelper", "deleteClasses id= " + stringClassId + " return = " + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "deleteClasses id= " + stringClassId + " return = " + answer);
         //db.close();
         return answer;
     }
@@ -781,7 +760,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         values.put(SchoolContract.TableLearners.KEY_CLASS_ID, class_id);
         long temp = db.insert(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, null, values);//-1 = ошибка ввода
         //db.close();
-        Log.i("DBOpenHelper", "createLearner returnId= " + temp + " secondName= " + secondName + " name= " + name + " class_id= " + class_id);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "createLearner returnId= " + temp + " secondName= " + secondName + " name= " + name + " class_id= " + class_id);
         return temp;
     }
 
@@ -791,7 +770,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " WHERE (" + SchoolContract.TableLearners.KEY_CLASS_ID + "= " + classId + ") ORDER BY " + SchoolContract.TableLearners.COLUMN_SECOND_NAME + " ASC, " + SchoolContract.TableLearners.COLUMN_FIRST_NAME + " ASC;", null);
         //новая с сортировкой по фамилии и имени
         //= db.query(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, null, SchoolContract.TableLearners.KEY_CLASS_ID + " = ?", selectionArgs, null, null, SchoolContract.TableLearners.COLUMN_SECOND_NAME);
-        Log.i("DBOpenHelper", "getLearnersByClassId classId=" + classId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getLearnersByClassId classId=" + classId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -818,7 +797,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             }
             cursor.close();
         }
-        Log.i("DBOpenHelper", "getLearnerIdByClassIdAndPlaceId classId=" + classId + " placeId=" + placeId + " answer=" + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getLearnerIdByClassIdAndPlaceId classId=" + classId + " placeId=" + placeId + " answer=" + answer);
         //db.close();
         return answer;
     }
@@ -827,7 +806,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {learnerId + ""};
         Cursor cursor = db.query(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, null, SchoolContract.TableLearners.KEY_LEARNER_ID + " = ?", selectionArgs, null, null, null);
-        Log.i("DBOpenHelper", "getLearner learnerId=" + learnerId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getLearner learnerId=" + learnerId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -873,7 +852,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 answer.add(learnersId.get(i));//запоминаем не рассаженного ученика
             }
         }
-        Log.i("DBOpenHelper", "getNotPutLearnersIdByCabinetIdAndClassId cabinetId=" + cabinetId + " classId=" + classId + " return=" + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getNotPutLearnersIdByCabinetIdAndClassId cabinetId=" + cabinetId + " classId=" + classId + " return=" + answer);
         return answer;
     }
 
@@ -889,7 +868,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             if (db.update(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, contentName, SchoolContract.TableLearners.KEY_LEARNER_ID + " = ?", new String[]{"" + learnersId.get(i)}) == 1)
                 answer++;
         }
-        Log.i("DBOpenHelper", "setLearnerNameAndLastName name= " + name + " lastName= " + lastName + " id= " + stringLearnersId + " return = " + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "setLearnerNameAndLastName name= " + name + " lastName= " + lastName + " id= " + stringLearnersId + " return = " + answer);
         //db.close();
         return answer;
     }
@@ -903,7 +882,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             if (db.delete(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, SchoolContract.TableLearners.KEY_LEARNER_ID + " = ?", new String[]{"" + learnersId.get(i)}) == 1)
                 answer++;
         }
-        Log.i("DBOpenHelper", "deleteLearners id= " + stringClassId + " return = " + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "deleteLearners id= " + stringClassId + " return = " + answer);
         //db.close();
         return answer;
     }
@@ -916,14 +895,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         values.put(SchoolContract.TableCabinets.COLUMN_NAME, name);
         long temp = db.insert(SchoolContract.TableCabinets.NAME_TABLE_CABINETS, null, values);//-1 = ошибка ввода
         //db.close();
-        Log.i("DBOpenHelper", "createCabinet returnId = " + temp + " name= " + name);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "createCabinet returnId = " + temp + " name= " + name);
         return temp;
     }
 
     public Cursor getCabinets() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(SchoolContract.TableCabinets.NAME_TABLE_CABINETS, null, null, null, null, null, null);
-        Log.i("DBOpenHelper", "getCabinets " + cursor + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getCabinets " + cursor + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -931,7 +910,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {cabinetId + ""};
         Cursor cursor = db.query(SchoolContract.TableCabinets.NAME_TABLE_CABINETS, null, SchoolContract.TableCabinets.KEY_CABINET_ID + " = ?", selectionArgs, null, null, null);
-        Log.i("DBOpenHelper", "getCabinets " + cursor + "id=" + cabinetId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getCabinets " + cursor + "id=" + cabinetId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -946,7 +925,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             if (db.update(SchoolContract.TableCabinets.NAME_TABLE_CABINETS, contentName, SchoolContract.TableCabinets.KEY_CABINET_ID + " = ?", new String[]{"" + cabinetId.get(i)}) == 1)
                 answer++;
         }
-        Log.i("DBOpenHelper", "setCabinetName name= " + name + " id= " + stringCabinetsId + " return = " + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "setCabinetName name= " + name + " id= " + stringCabinetsId + " return = " + answer);
         //db.close();
         return answer;
     }
@@ -960,7 +939,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             if (db.delete(SchoolContract.TableCabinets.NAME_TABLE_CABINETS, SchoolContract.TableCabinets.KEY_CABINET_ID + " = ?", new String[]{"" + cabinetsId.get(i)}) == 1)
                 answer++;
         }
-        Log.i("DBOpenHelper", "deleteCabinets id= " + stringClassId + " return = " + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "deleteCabinets id= " + stringClassId + " return = " + answer);
         //db.close();
         return answer;
     }
@@ -976,7 +955,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         values.put(SchoolContract.TableDesks.KEY_CABINET_ID, cabinet_id);
         long temp = db.insert(SchoolContract.TableDesks.NAME_TABLE_DESKS, null, values);//-1 = ошибка ввода
         //db.close();
-        Log.i("DBOpenHelper", "createDesk returnId = " + temp + " numberOfPlaces= " + numberOfPlaces + " x= " + x + " y= " + y + " cabinet_id= " + cabinet_id);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "createDesk returnId = " + temp + " numberOfPlaces= " + numberOfPlaces + " x= " + x + " y= " + y + " cabinet_id= " + cabinet_id);
         return temp;
     }
 
@@ -989,7 +968,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         if (db.update(SchoolContract.TableDesks.NAME_TABLE_DESKS, content, SchoolContract.TableDesks.KEY_DESK_ID + " = ?", new String[]{"" + deskId}) == 1)
             answer++;
 
-        Log.i("DBOpenHelper", "setDeskCoordinates id= " + deskId + " x= " + x + " y= " + y + " return = " + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "setDeskCoordinates id= " + deskId + " x= " + x + " y= " + y + " return = " + answer);
         //db.close();
         return answer;
     }
@@ -997,14 +976,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public Cursor getDesksByCabinetId(long cabinetId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(SchoolContract.TableDesks.NAME_TABLE_DESKS, null, SchoolContract.TableDesks.KEY_CABINET_ID + " = ?", new String[]{cabinetId + ""}, null, null, null);//выяснил, не работает проверка в методе query
-        Log.i("DBOpenHelper", "getDesksByCabinetId cabinetId=" + cabinetId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getDesksByCabinetId cabinetId=" + cabinetId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
     public int deleteDesk(long deskId) {
         SQLiteDatabase db = this.getReadableDatabase();
         int answer = db.delete(SchoolContract.TableDesks.NAME_TABLE_DESKS, SchoolContract.TableDesks.KEY_DESK_ID + " = ?", new String[]{"" + deskId});
-        Log.i("DBOpenHelper", "deleteDesk id= " + deskId + " return = " + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "deleteDesk id= " + deskId + " return = " + answer);
         //db.close();
         return answer;
     }
@@ -1018,14 +997,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         values.put(SchoolContract.TablePlaces.COLUMN_ORDINAL, ordinal);
         long temp = db.insert(SchoolContract.TablePlaces.NAME_TABLE_PLACES, null, values);//-1 = ошибка ввода
         //db.close();
-        Log.i("DBOpenHelper", "createPlace returnId = " + temp + " desk_id= " + deskId);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "createPlace returnId = " + temp + " desk_id= " + deskId);
         return temp;
     }
 
     public Cursor getPlacesByDeskId(long deskId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(SchoolContract.TablePlaces.NAME_TABLE_PLACES, null, SchoolContract.TablePlaces.KEY_DESK_ID + " =?", new String[]{deskId + ""}, null, null, null);
-        Log.i("DBOpenHelper", "getPlacesByDeskId deskId=" + deskId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getPlacesByDeskId deskId=" + deskId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -1038,14 +1017,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         values.put(SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID, placeId);
         long temp = db.insert(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES, null, values);//-1 = ошибка ввода
         //db.close();
-        Log.i("DBOpenHelper", "setLearnerOnPlace returnId = " + temp + " learnerId= " + learnerId + " placeId= " + placeId);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "setLearnerOnPlace returnId = " + temp + " learnerId= " + learnerId + " placeId= " + placeId);
         return temp;
     }
 
     public Cursor getAttitudeByLearnerIdAndPlaceId(Long learnerId, Long placeId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES, null, SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID + " = ? AND " + SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID + " = ?", new String[]{Long.toString(learnerId), Long.toString(placeId)}, null, null, null);
-        Log.i("DBOpenHelper", "getAttitudeByLearnerIdAndPlaceId learnerId=" + learnerId + " placeId=" + placeId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames())
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getAttitudeByLearnerIdAndPlaceId learnerId=" + learnerId + " placeId=" + placeId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames())
         );
         return cursor;
     }
@@ -1053,7 +1032,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public long deleteAttitudeByLearnerIdAndPlaceId(long learnerId, long placeId) {
         SQLiteDatabase db = this.getReadableDatabase();
         int answer = db.delete(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES, SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID + " = ? and " + SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID + " = ?", new String[]{Long.toString(learnerId), Long.toString(placeId)});
-        Log.i("DBOpenHelper", "deleteAttitudeByLearnerIdAndPlaceId learnerId=" + learnerId + " placeId=" + placeId + " return = " + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "deleteAttitudeByLearnerIdAndPlaceId learnerId=" + learnerId + " placeId=" + placeId + " return = " + answer);
         //db.close();
         return answer;
     }
@@ -1069,7 +1048,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         values.put(SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP, date);
         long temp = db.insert(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, values);//-1 = ошибка ввода
         //db.close();
-        Log.i("DBOpenHelper", "createGrade returnId = " + temp + " learnerId= " + learnerId + " grade= " + grade + " subjectId= " + subjectId + " date= " + date);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "createGrade returnId = " + temp + " learnerId= " + learnerId + " grade= " + grade + " subjectId= " + subjectId + " date= " + date);
         return temp;
     }
 
@@ -1077,7 +1056,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {gradeId + ""};
         Cursor cursor = db.query(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " = ?", selectionArgs, null, null, null);
-        Log.i("DBOpenHelper", "getGrade gradeId=" + gradeId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getGrade gradeId=" + gradeId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -1087,7 +1066,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//%Y-%m-%d %H:%M:%S
         //запрашиваем оценки ученика по уроку находящиеся между startTime и endTime
         Cursor cursor = db.query(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " = ? AND " + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " = ? AND " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " BETWEEN \"" + dateFormat.format(startTame.getTime()) + "\" AND \"" + dateFormat.format(endTime.getTime()) + "\"", new String[]{Long.toString(learnerId), Long.toString(subjectId)}, null, null, null);
-        Log.i("DBOpenHelper", "" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " = ? AND " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " BETWEEN \"" + dateFormat.format(startTame.getTime()) + "\" AND \"" + dateFormat.format(endTime.getTime()) + "\"" + "getGradesByLearnerIdAndTimePeriod learnerId=" + learnerId + " subjectId=" + subjectId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " = ? AND " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " BETWEEN \"" + dateFormat.format(startTame.getTime()) + "\" AND \"" + dateFormat.format(endTime.getTime()) + "\"" + "getGradesByLearnerIdAndTimePeriod learnerId=" + learnerId + " subjectId=" + subjectId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -1097,7 +1076,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         values.put(SchoolContract.TableLearnersGrades.COLUMN_GRADE, grade);
         long temp = db.update(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, values, SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " = ?", new String[]{Long.toString(gradeId)});//-1 = ошибка ввода
         //db.close();
-        Log.i("DBOpenHelper", "editGrade returnId = " + temp + " grade= " + grade + " gradeId= " + gradeId);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "editGrade returnId = " + temp + " grade= " + grade + " gradeId= " + gradeId);
         return temp;
     }
 
@@ -1105,7 +1084,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         long temp = db.delete(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " = ?", new String[]{Long.toString(gradeId)});//-1 = ошибка ввода
         //db.close();
-        Log.i("DBOpenHelper", "removeGrade returnId = " + temp + " gradeId= " + gradeId);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "removeGrade returnId = " + temp + " gradeId= " + gradeId);
         return temp;
     }
 
@@ -1120,7 +1099,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         //values.put(SchoolContract.TableSubjects.KEY_CABINET_ID, cabinetId);
         long temp = db.insert(SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS, null, values);//-1 = ошибка ввода
         //db.close();
-        Log.i("DBOpenHelper", "createSubject returnId = " + temp + " name= " + name +
+        if(IS_DEBUG)Log.i("DBOpenHelper", "createSubject returnId = " + temp + " name= " + name +
                         " classId=" + classId
                 //+ " cabinetId=" + cabinetId
         );
@@ -1143,7 +1122,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {subjectId + ""};
         Cursor cursor = db.query(SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS, null, SchoolContract.TableSubjects.KEY_SUBJECT_ID + " = ?", selectionArgs, null, null, null);
-        Log.i("DBOpenHelper", "getSubjectById " + cursor + " id=" + subjectId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getSubjectById " + cursor + " id=" + subjectId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -1161,7 +1140,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
         }
         Cursor cursor = db.query(SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS, null, selection.toString(), selectionArgs, null, null, null);
-        Log.i("DBOpenHelper", "getSubjectById  id=" + Arrays.toString(selectionArgs) + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getSubjectById  id=" + Arrays.toString(selectionArgs) + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -1169,7 +1148,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {classId + ""};
         Cursor cursor = db.query(SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS, null, SchoolContract.TableSubjects.KEY_CLASS_ID + " = ?", selectionArgs, null, null, null);
-        Log.i("DBOpenHelper", "getSubjectsByClassId " + cursor + " classId=" + classId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getSubjectsByClassId " + cursor + " classId=" + classId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -1182,7 +1161,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             if (db.delete(SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS, SchoolContract.TableSubjects.KEY_SUBJECT_ID + " = ?", new String[]{"" + subjectsId.get(i)}) == 1)
                 answer++;
         }
-        Log.i("DBOpenHelper", "deleteSubjects id= " + stringSubjectsId + " return = " + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "deleteSubjects id= " + stringSubjectsId + " return = " + answer);
         //db.close();
         return answer;
     }
@@ -1200,7 +1179,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END, simpleDateFormat.format(endTime));
         contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT, repeatPeriod);
         long answer = db.insert(SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE, null, contentValues);
-        Log.i("DBOpenHelper", "setLessonTime subjectId= " + subjectId + " cabinetId= " + cabinetId + " startTime= " + simpleDateFormat.format(startTime) + " endTime= " + simpleDateFormat.format(endTime) + " repeatPeriod= " + repeatPeriod + " return = " + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "setLessonTime subjectId= " + subjectId + " cabinetId= " + cabinetId + " startTime= " + simpleDateFormat.format(startTime) + " endTime= " + simpleDateFormat.format(endTime) + " repeatPeriod= " + repeatPeriod + " return = " + answer);
         //db.close();
         return answer;
     }
@@ -1217,7 +1196,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT, repeatPeriod);
         int answer = db.update(SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE, contentValues, SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " = ?", new String[]{Long.toString(attitudeId)});
         //db.close();
-        Log.i("DBOpenHelper", "editLessonTimeAndCabinet attitudeId= " + attitudeId + " subjectId= " + subjectId + " cabinetId= " + cabinetId + " startTime= " + simpleDateFormat.format(startTime) + " endTime= " + simpleDateFormat.format(endTime) + " return = " + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "editLessonTimeAndCabinet attitudeId= " + attitudeId + " subjectId= " + subjectId + " cabinetId= " + cabinetId + " startTime= " + simpleDateFormat.format(startTime) + " endTime= " + simpleDateFormat.format(endTime) + " return = " + answer);
         return answer;
     }
 
@@ -1225,7 +1204,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {attitudeId + ""};
         Cursor cursor = db.query(SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE, null, SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " = ?", selectionArgs, null, null, null);
-        Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudeById " + " id=" + attitudeId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudeById " + " id=" + attitudeId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
     }
 
@@ -1251,7 +1230,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             answer.add(id);
         }
         cursor.close();
-        Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudesIdByTimePeriod periodStart=" + periodStart.getTime().getTime() + " periodEnd=" + periodEnd.getTime().getTime() + " answer=" + stringSubjectAndTimeCabinetAttitudesId);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudesIdByTimePeriod periodStart=" + periodStart.getTime().getTime() + " periodEnd=" + periodEnd.getTime().getTime() + " answer=" + stringSubjectAndTimeCabinetAttitudesId);
         //db.close();
         return answer;
     }
@@ -1269,17 +1248,17 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY + ") AND (strftime(\"%w\"," + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") == \"" + (time.get(Calendar.DAY_OF_WEEK) - 1) + "\") AND (time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") <= \"" + timeDateFormat.format(time.getTime()) + "\") AND (strftime(\"%w\", " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + ") == \"" + (time.get(Calendar.DAY_OF_WEEK) - 1) + "\") AND (time( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + ") >= \"" + timeDateFormat.format(time.getTime()) + "\")))"
                 , null);
         long answer;
-        Log.i("TeachersApp", "" + cursor.getCount());
+        if(IS_DEBUG)Log.i("TeachersApp", "" + cursor.getCount());
         if (cursor.getCount() != 0) {
             cursor.moveToFirst();
             answer = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID));
             cursor.close();
-            Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudesIdByTimePeriod time=" + time.getTime().getTime() + " answer=" + answer);
+            if(IS_DEBUG)Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudesIdByTimePeriod time=" + time.getTime().getTime() + " answer=" + answer);
             //db.close();
             return answer;
         } else {
             cursor.close();
-            Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudesIdByTimePeriod time=" + time.getTime().getTime() + " answer=" + (-1));
+            if(IS_DEBUG)Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudesIdByTimePeriod time=" + time.getTime().getTime() + " answer=" + (-1));
             //db.close();
             return -1;
         }
@@ -1288,7 +1267,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public int deleteSubjectAndTimeCabinetAttitude(long attitudeId) {
         SQLiteDatabase db = this.getReadableDatabase();
         int answer = db.delete(SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE, SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " = ?", new String[]{"" + attitudeId});
-        Log.i("DBOpenHelper", "deleteSubjectAndTimeCabinetAttitude attitudeId= " + attitudeId + " return = " + answer);
+        if(IS_DEBUG)Log.i("DBOpenHelper", "deleteSubjectAndTimeCabinetAttitude attitudeId= " + attitudeId + " return = " + answer);
         //db.close();
         return answer;
     }

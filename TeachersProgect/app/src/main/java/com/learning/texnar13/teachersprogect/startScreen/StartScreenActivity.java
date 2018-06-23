@@ -26,6 +26,7 @@ import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.settings.SettingsActivity;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -48,9 +49,6 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     static final String ENTERS_COUNT = "entersCount";
     //оценено?
     static final String IS_RATE = "isRate";
-
-    //показывалась ли подсказка при входе?
-    static final String IS_START_HELP = "isStartHelp";
 
 //-----------------------------------метод диалога--------------------------------------------------
 
@@ -157,14 +155,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         //начинаем редактировать
         SharedPreferences.Editor ed = sharedPreferences.edit();
 
-        //todo перенести все подсеты в создание самого класса, а то при перевороте срабатывают
-
-//----при первом заходе открывается подсказка----
-//        if (!sharedPreferences.getBoolean(IS_START_HELP, false)) {
-//            ed.putBoolean(IS_START_HELP, true);
-//            Intent intent = new Intent(getApplicationContext(), StartScreenHelp.class);
-//            startActivity(intent);
-//        }
+        //todo перенести все подсчеты в создание самого класса, а то при перевороте срабатывают
 
 //----счетчик "оцените нас"----
         // через пять заходов в приложение открывает диалог 'оцените'
@@ -217,9 +208,20 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                     Toast toast = Toast.makeText(this, R.string.start_screen_activity_toast_no_lessons, Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    intent.putExtra(LessonActivity.LESSON_TIME, dateFormat.format(new Date()));
-
+                    //получаем предмет
+                    Cursor attitude = db.getSubjectAndTimeCabinetAttitudeById(attitudeId);
+                    attitude.moveToFirst();
+                    //берем его время
+                    String dBTime = attitude.getString(attitude.getColumnIndex(
+                            SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN
+                    ));
+                    attitude.close();
+                    //получаем текущий месяц и год
+                    SimpleDateFormat nowDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String nowDate = nowDateFormat.format(new Date());
+                    //соединяем и отправляем
+                    intent.putExtra(LessonActivity.LESSON_TIME, nowDate + dBTime.substring(10,19));
+                    //отправляем id
                     intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, attitudeId);
 
                     startActivity(intent);

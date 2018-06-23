@@ -43,6 +43,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
     //время уроков из бд
     int[][] lessonsTime;
 
+    //время уроков с сегодняшней датой и временем из бд
     static LessonTimePeriod[] lessonStandardTimePeriods = new LessonTimePeriod[9];
 
 //-------------------------------меню сверху--------------------------------------------------------
@@ -214,6 +215,13 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 lessonsTime[7][0] + ":" + lessonsTime[7][1] + "—" + lessonsTime[7][2] + ":" + lessonsTime[7][3],
                 getResources().getString(R.string.schedule_day_activity_table_time_string_no_working_time)
         };
+
+        //Todo на заметку, замени когда будешь пересобирать
+        //получаем текущий месяц и год
+        //SimpleDateFormat nowDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        //nowDateFormat.format(new Date());
+        //
+
 
         lessonStandardTimePeriods[0] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[0][0], lessonsTime[0][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[0][2], lessonsTime[0][3]));
         lessonStandardTimePeriods[1] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[1][0], lessonsTime[1][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[1][2], lessonsTime[1][3]));

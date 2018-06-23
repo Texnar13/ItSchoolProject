@@ -64,7 +64,7 @@ public class CreateLearnerDialogFragment extends DialogFragment {
         editName.setHint(R.string.learners_and_grades_out_activity_dialog_hint_learner_name);
         editName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         //editName.setSingleLine(true);
-        editName.setInputType(InputType.TYPE_CLASS_TEXT);
+        editName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         editName.setHintTextColor(Color.GRAY);
 
         LinearLayout editNameContainer = new LinearLayout(getActivity());
@@ -89,7 +89,7 @@ public class CreateLearnerDialogFragment extends DialogFragment {
         editLastName.setHint(R.string.learners_and_grades_out_activity_dialog_hint_learner_second_name);
         editLastName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         //editName.setSingleLine(true);
-        editLastName.setInputType(InputType.TYPE_CLASS_TEXT);
+        editLastName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         editLastName.setHintTextColor(Color.GRAY);
 
         LinearLayout editLastNameContainer = new LinearLayout(getActivity());
