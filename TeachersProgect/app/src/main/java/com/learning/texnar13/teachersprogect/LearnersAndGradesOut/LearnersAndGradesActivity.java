@@ -82,7 +82,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     Spinner subjectSpinner;
 
     //оценки
-    static GradeUnit[][][][] grades = {};//[ученик][день][урок][оценка]
+    //static GradeUnit[][][][] grades = {};//[ученик][день][урок][оценка]
+    static NewGradeUnit[][][] allGrades = {};//[ученик][день][урок]
 
 //===========методы работы с диалогом============
 
@@ -99,7 +100,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //обновляем таблицу
         GregorianCalendar currentCalendar = new GregorianCalendar();
         currentCalendar.setTime(new Date());
-        updateTable();
+        outLearnersNamesInTable();
+        getGradesFromDB();
         db.close();
     }
 
@@ -110,7 +112,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //обновляем список учеников
         getLearnersFromDB();
         //обновляем таблицу
-        updateTable();
+        outLearnersNamesInTable();
+        getGradesFromDB();
     }
 
     //---переименование ученика---
@@ -128,7 +131,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //обновляем таблицу
         GregorianCalendar currentCalendar = new GregorianCalendar();
         currentCalendar.setTime(new Date());
-        updateTable();
+        outLearnersNamesInTable();
+        getGradesFromDB();
         db.close();
     }
 
@@ -147,11 +151,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //обновляем таблицу
         GregorianCalendar currentCalendar = new GregorianCalendar();
         currentCalendar.setTime(new Date());
-        updateTable();
+        outLearnersNamesInTable();
+        getGradesFromDB();
         db.close();
     }
 
-    //---редактирование оценки ученика---
+    //---TODO редактирование оценки ученика---
     @Override
     public void editGrade(long[] gradesId, long learnersId, int[] grades, long subjectsId, String[] dates) {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
@@ -168,7 +173,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 }
             }
         }
-        updateTable();
+        getGradesFromDB();
         Toast toast = Toast.makeText(this, "оценки сохранены", Toast.LENGTH_SHORT);
         toast.show();
 
@@ -232,7 +237,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) - 1);
                 }
                 dateText.setText(monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR));
-                updateTable();
+                //outLearnersNamesInTable();
+                getGradesFromDB();
             }
         });
 //кнопка вперёд
@@ -247,7 +253,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) + 1);
                 }
                 dateText.setText(monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR));
-                updateTable();
+                //outLearnersNamesInTable();
+                getGradesFromDB();
             }
         });
 
@@ -287,67 +294,27 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
         classCursor.close();
 
-//----спинер с предметами----
-        //--выводим из базы данных список предметов--
-//        Cursor subjectsCursor = db.getSubjectsByClassId(classId);
-//        //их id
-//        subjectsId = new long[subjectsCursor.getCount()];
-//        //и название
-//        final String[] subjectsNames = new String[subjectsCursor.getCount()];
-//        for (int i = 0; i < subjectsCursor.getCount(); i++) {
-//            subjectsCursor.moveToNext();
-//            subjectsId[i] = (subjectsCursor.getLong(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID)));
-//            subjectsNames[i] = (subjectsCursor.getString(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME)));
-//        }
-//        subjectsCursor.close();
-//
-//        //--создаем--
-//        subjectSpinner = (Spinner) findViewById(R.id.learners_and_grades_activity_subject_spinner);
-//        //адаптер для спиннера
-//        subjectSpinner.setAdapter(new ArrayAdapter<>(
-//                this,
-//                R.layout.spiner_dropdown_element_learners_and_grades_subjects,
-//                subjectsNames
-//        ));
-//        //при выборе пункта
-//        subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                flag = false;
-//                changingSubjectPosition = i;
-//                updateTable();//to-do эта штука выполняестся при старте, надо что-то делать
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//            }
-//        });
-
-        availableLessonsOut(classId, 0);
-
 //----вывод данных при старте----
+        availableLessonsOut(classId, 0);
         getLearnersFromDB();
 
-        //инициализируем массив
-        grades = new GradeUnit
-                [learnersId.size()]
-                [viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)]
-                [9]
-                [3];
-        //[ученик][день][урок][оценка]
+//        //инициализируем массив
+//        allGrades = new NewGradeUnit
+//                [learnersId.size()]
+//                [viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)]
+//                [9];
+//        //[ученик][день][урок]
+//
+//        for (int i = 0; i < allGrades.length; i++) {
+//            for (int j = 0; j < allGrades[i].length; j++) {
+//                for (int k = 0; k < allGrades[i][j].length; k++) {
+//                    allGrades[i][j][k] = new NewGradeUnit();
+//                }
+//            }
+//        }
 
-        for (int i = 0; i < grades.length; i++) {
-            for (int j = 0; j < grades[i].length; j++) {
-                for (int k = 0; k < grades[i][j].length; k++) {
-                    for (int l = 0; l < grades[i][j][k].length; l++) {
-                        grades[i][j][k][l] = new GradeUnit();
-                    }
-                }
-            }
-        }
-
-        updateTable();
+        outLearnersNamesInTable();
+        getGradesFromDB();
         db.close();
     }
 
@@ -427,21 +394,19 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     //останавливаем загрузку оценок
                     flag = false;
                     changingSubjectPosition = pos;
-                    updateTable();
+                    outLearnersNamesInTable();
+                    getGradesFromDB();
                 } else {
                     Log.i("TeachersApp", "LessonRedactorActivity - no lesson selected");
                     //останавливаем загрузку оценок
                     flag = false;
                     changingSubjectPosition = 0;
-                    updateTable();
+                    outLearnersNamesInTable();
+                    getGradesFromDB();
                 }
-
-//                // Set adapter flag that something has been chosen
-//                adapter.flag = true;
             }
         });
         subjectSpinner.setSelection(position, false);
-        //spinner.setSelection(2);//элемент по умолчанию
     }
 
 //---------------------удаление предметов-----------------
@@ -882,12 +847,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     }
 
     //вывод имен учеников в таблицу
-    void updateTable() {
+    void outLearnersNamesInTable() {
         Log.e("TeachersApp", "LearnersAndGradesActivity - updateTable");
         //чистка
         //имена
         learnersNamesTable.removeAllViews();
-
 
 //таблицы
 //-шапка
@@ -982,16 +946,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             //добавляем строку в таблицу
             learnersNamesTable.addView(learner, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
         }
-        getGradesFromDB();
     }
-
 
 //===========получаем оценки из базы===========
 
     void getGradesFromDB() {
         Log.i("TeachersApp", "LearnersAndGradesActivity - getGradesFromDB");
-//----вывод оценок перед загрузкой данных, чтобы таблица не была пустая----
-        //outGradesInTable();
 
 //--------всякие штуки для загрузки--------
 //область с таблицей, нужна для прогресс бара
@@ -1048,29 +1008,25 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         Thread progressThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.e("TeachersApp", "StartLoadThread");
+                Log.i("TeachersApp", "StartGradesLoadThread");
                 //для перевода даты в пустые оценки
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 //-- заполняем бд
                 //чистим массив от предыдущих значений
 
-                grades = new GradeUnit
+                allGrades = new NewGradeUnit
                         [learnersId.size()]
                         [viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)]
-                        [9]
-                        [3];
+                        [9];
                 //[ученик][день][урок][оценка]
                 // и инициализируем его()
-                for (int g = 0; g < grades.length; g++) {
-                    for (int j = 0; j < grades[g].length; j++) {
-                        for (int k = 0; k < grades[g][j].length; k++) {
-                            for (int l = 0; l < grades[g][j][k].length; l++) {
-                                grades[g][j][k][l] = new GradeUnit();
-                            }
+                for (int g = 0; g < allGrades.length; g++) {
+                    for (int j = 0; j < allGrades[g].length; j++) {
+                        for (int k = 0; k < allGrades[g][j].length; k++) {
+                            allGrades[g][j][k] = new NewGradeUnit();
                         }
                     }
                 }
-
 
                 //изменяющися календари для вывода
                 GregorianCalendar outHelpStartCalendar = new GregorianCalendar(
@@ -1092,7 +1048,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 if (subjectsId.length != 0) {
                     DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                     //получаем время уроков из бд
-                    int [][] timeOfLessons = db.getSettingsTime(1);
+                    int[][] timeOfLessons = db.getSettingsTime(1);
 
                     //обновляем массивы свежими данными
                     // по ученикам
@@ -1154,53 +1110,37 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                             outHelpEndCalendar
                                     );
                                     //по оценкам
+
+                                    //выбираем массивы оценок из курсора
+                                    int grade[] = new int[3];
+                                    long gradesId[] = new long[3];
+                                    String timeS = "";
                                     for (int l = 0; l < 3; l++) {
                                         if (gradesLessonCursor.moveToPosition(l)) {
                                             //есть оценка
-                                            grades[i][j][k][l] = new GradeUnit(learnersId.get(i),
-                                                    gradesLessonCursor.getLong(gradesLessonCursor.getColumnIndex(
-                                                            SchoolContract.TableLearnersGrades.KEY_GRADE_ID
-                                                    )),
-                                                    gradesLessonCursor.getInt(gradesLessonCursor.getColumnIndex(
-                                                            SchoolContract.TableLearnersGrades.COLUMN_GRADE
-                                                    )),
-                                                    subjectsId[changingSubjectPosition],
-                                                    gradesLessonCursor.getString(gradesLessonCursor.getColumnIndex(
-                                                            SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP
-                                                    ))
-                                            );
+                                            grade[l] = gradesLessonCursor.getInt(gradesLessonCursor.getColumnIndex(
+                                                    SchoolContract.TableLearnersGrades.COLUMN_GRADE
+                                            ));
+                                            gradesId[l] = gradesLessonCursor.getLong(gradesLessonCursor.getColumnIndex(
+                                                    SchoolContract.TableLearnersGrades.KEY_GRADE_ID
+                                            ));
+                                            timeS = gradesLessonCursor.getString(gradesLessonCursor.getColumnIndex(
+                                                    SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP
+                                            ));
                                         } else {
                                             //нет оценки
-                                            grades[i][j][k][l] = new GradeUnit(
-                                                    learnersId.get(i),
-                                                    -1,
-                                                    0,
-                                                    subjectsId[changingSubjectPosition],
-                                                    dateFormat.format(outHelpStartCalendar.getTime())
-                                            );
+                                            grade[l] = 0;
+                                            gradesId[l] = -1;
                                         }
                                     }
-//                                int n;
-//                                if (gradesLessonCursor.getCount() <= 3) {
-//                                    n = gradesLessonCursor.getCount();
-//                                } else n = 3;
-//                                for (int l = 0; l < n; l++) {
-//
-//                                    gradesLessonCursor.moveToPosition(l);
-//                                    //выводим наконец оценку
-//                                    grades[i][j][k][l] = new GradeUnit(learnersId.get(i),
-//                                            gradesLessonCursor.getLong(gradesLessonCursor.getColumnIndex(
-//                                                    SchoolContract.TableLearnersGrades.KEY_GRADE_ID
-//                                            )),
-//                                            gradesLessonCursor.getInt(gradesLessonCursor.getColumnIndex(
-//                                                    SchoolContract.TableLearnersGrades.COLUMN_GRADE
-//                                            )),
-//                                            subjectsId[changingSubjectPosition],
-//                                            gradesLessonCursor.getString(gradesLessonCursor.getColumnIndex(
-//                                                    SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP
-//                                            ))
-//                                    );
-//                                }
+
+                                    allGrades[i][j][k] = new NewGradeUnit(learnersId.get(i),
+                                            gradesId,
+                                            grade,
+                                            subjectsId[changingSubjectPosition],
+                                            timeS
+                                    );
+
                                     gradesLessonCursor.close();
                                 }
                             } else {
@@ -1227,10 +1167,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     //по оценкам
                                     for (int l = 0; l < 3; l++) {
                                         //нет оценки
-                                        grades[i][j][k][l] = new GradeUnit(
+                                        allGrades[i][j][k] = new NewGradeUnit(
                                                 learnersId.get(i),
-                                                -1,
-                                                0,
+                                                new long[]{-1, -1, -1},
+                                                new int[]{0, 0, 0},
                                                 subjectsId[changingSubjectPosition],
                                                 dateFormat.format(outHelpStartCalendar.getTime())
                                         );
@@ -1268,8 +1208,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         learnersGradesTable.addView(headGrades, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
         //строки с учениками
-        TableRow[] learnerTableRows = new TableRow[grades.length];
-        for (int i = 0; i < grades.length; i++) {
+        TableRow[] learnerTableRows = new TableRow[allGrades.length];
+        for (int i = 0; i < allGrades.length; i++) {
             //новая строка
             learnerTableRows[i] = new TableRow(this);
 
@@ -1291,18 +1231,18 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 boolean flag = false;
                 //по ученикам
                 out:
-                for (int k = 0; k < grades.length; k++) {
+                for (int k = 0; k < allGrades.length; k++) {
                     //по оценкам за этот день
                     for (int l = 0; l < 3; l++) {
                         //[ученик][день][урок][оценка]
-                        if (grades[k][i][j][l].grade//todo здесь ошибка java.lang.NullPointerException
+                        if (allGrades[k][i][j].grades[l]//todo здесь ошибка java.lang.NullPointerException
                                 != 0) {
                             flag = true;
                             break out;
                         }
                     }
                 }
-                //выводим новый столбец
+                //выводим новый столбец урока (может быть несколько за день)
                 if (j == 0 || flag) {
 //---шапка
                     //рамка
@@ -1335,40 +1275,43 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     headGrades.addView(headDateOut, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 //---тело
                     //по ученикам
-                    for (int k = 0; k < grades.length; k++) {
+                    for (int k = 0; k < allGrades.length; k++) {
                         //рамка
                         LinearLayout dateOut = new LinearLayout(this);
                         dateOut.setBackgroundColor(getResources().getColor(R.color.colorBackGroundDark));
-                        //текст
+                        //текст todo ttttt
                         TextView learnerGrade = new TextView(this);
                         learnerGrade.setTextColor(Color.BLACK);
                         learnerGrade.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                         learnerGrade.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
                         learnerGrade.setGravity(Gravity.CENTER);
-                        //по оценкам в уроке
-                        for (int l = 0; l < grades[k][i][j].length; l++) {
-                            switch (
-                                    grades[k][i][j][l].grade) {
-                                case 0:
+                        //добавляем ссылку на view к оценкам
+                        allGrades[k][i][j].textView = learnerGrade;
 
-                                    break;
-                                case -2:
-                                    if (!learnerGrade.getText().toString().equals("")) {
-                                        learnerGrade.setText(learnerGrade.getText().toString() + "Н ");
-                                    } else
-                                        learnerGrade.setText(learnerGrade.getText().toString() + " Н ");
-                                    break;
-                                default:
-                                    if (!learnerGrade.getText().toString().equals("")) {
-                                        learnerGrade.setText(learnerGrade.getText().toString() + grades[k][i][j][l].grade + " ");
-                                    } else
-                                        learnerGrade.setText(learnerGrade.getText().toString() + " " + grades[k][i][j][l].grade + " ");
-                            }
-                        }
-
-                        if (learnerGrade.getText().toString().equals("")) {
-                            learnerGrade.setText(" - ");
-                        }
+                        //ставим текст
+                        allGrades[k][i][j].doText();
+//                        //по оценкам в уроке
+//                        for (int l = 0; l < allGrades[k][i][j].grades.length; l++) {
+//                            switch (allGrades[k][i][j].grades[l]) {
+//                                case 0:
+//                                    break;
+//                                case -2:
+//                                    if (!learnerGrade.getText().toString().equals("")) {
+//                                        learnerGrade.setText(learnerGrade.getText().toString() + "Н ");
+//                                    } else
+//                                        learnerGrade.setText(learnerGrade.getText().toString() + " Н ");
+//                                    break;
+//                                default:
+//                                    if (!learnerGrade.getText().toString().equals("")) {
+//                                        learnerGrade.setText(learnerGrade.getText().toString() + allGrades[k][i][j].grades[l] + " ");
+//                                    } else
+//                                        learnerGrade.setText(learnerGrade.getText().toString() + " " + allGrades[k][i][j].grades[l] + " ");
+//                            }
+//                        }
+//
+//                        if (learnerGrade.getText().toString().equals("")) {
+//                            learnerGrade.setText(" - ");
+//                        }
 
                         //параметры текста
                         LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -1379,17 +1322,17 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         //добавляем всё в строку
                         learnerTableRows[k].addView(dateOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
 
-                        final int[] arrayGrade = new int[grades[k][i][j].length];
-                        final long[] arrayGradeId = new long[grades[k][i][j].length];
-                        final long finalLearnerId = grades[k][i][j][0].learnerId;
-                        final long finalSubjectId = grades[k][i][j][0].subjectId;
-                        final String finalDate[] = new String[grades[k][i][j].length];
+                        final int[] arrayGrade = new int[allGrades[k][i][j].grades.length];
+                        final long[] arrayGradeId = new long[allGrades[k][i][j].grades.length];
+                        final long finalLearnerId = allGrades[k][i][j].learnerId;
+                        final long finalSubjectId = allGrades[k][i][j].subjectId;
+                        final String finalDate[] = new String[allGrades[k][i][j].grades.length];
 
 
                         for (int l = 0; l < arrayGrade.length; l++) {
-                            arrayGrade[l] = grades[k][i][j][l].grade;
-                            arrayGradeId[l] = grades[k][i][j][l].id;
-                            finalDate[l] = grades[k][i][j][l].date;
+                            arrayGrade[l] = allGrades[k][i][j].grades[l];
+                            arrayGradeId[l] = allGrades[k][i][j].gradeId[l];
+                            finalDate[l] = allGrades[k][i][j].date;
                         }
                         //при нажатии на оценку
                         dateOut.setOnClickListener(new View.OnClickListener() {
@@ -1459,6 +1402,62 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
 
+
+    class NewGradeUnit {//оценки на уроке
+        long learnerId = -1;//id ученика
+        long subjectId = -1;// предмет
+        String date;//время оценки(урока)
+        long[] gradeId = {-1, -1, -1};
+        int[] grades = {0, 0, 0};
+
+        TextView textView;//поле в таблице
+
+        NewGradeUnit(long learnerId, long[] gradesId, int[] grades, long subjectId, String date) {
+            this.learnerId = learnerId;
+            this.gradeId = gradesId;
+            this.grades = grades;
+            this.subjectId = subjectId;
+            this.date = date;
+        }
+
+        NewGradeUnit() {
+        }
+
+        void doText() {
+            StringBuffer s = new StringBuffer();
+            for (int i = 0; i < grades.length; i++) {
+                switch (grades[i]) {
+                    case -1://ошибка
+                        break;
+                    case 0://нет оценки
+                        break;
+                    case -2://н
+                        if (!s.toString().equals("")) {
+                            s.append(getResources().getString(R.string.learners_and_grades_out_activity_title_grade_n));
+                            s.append(" ");
+                        } else {
+                            s.append(" ");
+                            s.append(getResources()
+                                    .getString(R.string.learners_and_grades_out_activity_title_grade_n));
+                            s.append(" ");
+                        }
+                        break;
+                    default://оценка
+                        if (!s.toString().equals("")) {
+                            s.append(grades[i] + " ");
+                        } else
+                            s.append(" " + grades[i] + " ");
+                        break;
+                }
+            }
+            if (s.length() == 0) {
+                s.append(" - ");
+            }
+            textView.setText(s);
+        }
+
+    }
+
 }
 
 interface SubjectNameLearnersDialogInterface {//обратная связь от диалога
@@ -1471,23 +1470,24 @@ interface SubjectRemoveLearnersDialogInterface {//обратная связь о
     void RemoveSubjectDialogMethod(int code, int position, ArrayList<Long> deleteList);
 }
 
-class GradeUnit {
-    long learnerId = -1;
-    long id = -1;
-    int grade = 0;
-    long subjectId = -1;
-    String date;
+//class GradeUnit {
+//    long learnerId = -1;
+//    long id = -1;
+//    int grade = 0;
+//    long subjectId = -1;
+//    String date;
+//
+//
+//    GradeUnit(long learnerId, long id, int grade, long subjectId, String date) {
+//        this.learnerId = learnerId;
+//        this.id = id;
+//        this.grade = grade;
+//        this.subjectId = subjectId;
+//        this.date = date;
+//    }
+//
+//    GradeUnit() {
+//
+//    }
+//}
 
-
-    GradeUnit(long learnerId, long id, int grade, long subjectId, String date) {
-        this.learnerId = learnerId;
-        this.id = id;
-        this.grade = grade;
-        this.subjectId = subjectId;
-        this.date = date;
-    }
-
-    GradeUnit() {
-
-    }
-}

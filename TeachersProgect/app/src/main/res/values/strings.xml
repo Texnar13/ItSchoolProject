@@ -84,7 +84,7 @@
     <!-- тексты  -->
     <string name="learners_and_grades_out_activity_title_subject">Subject</string>
     <string name="learners_and_grades_out_activity_title_table_names">Name</string>
-    <string name="learners_and_grades_out_activity_title_grade_n">Abs</string>
+    <string name="learners_and_grades_out_activity_title_grade_n">abs</string>
     <string name="learners_and_grades_out_activity_title_grade_no_answers">no answers</string>
     <!-- диалоги -->
     <string name="learners_and_grades_out_activity_dialog_title_create_learner">adding a student</string>

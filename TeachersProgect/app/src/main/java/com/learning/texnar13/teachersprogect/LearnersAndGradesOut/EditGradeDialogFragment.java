@@ -184,10 +184,10 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
                     for (int j = 0; j < spinners.length; j++) {
 
                         switch (spinners[j].getSelectedItemPosition()) {
-                            case 0:
+                            case 0://нулевая позиция - н
                                 finalGrades[j] = -2;
                                 break;
-                            default:
+                            default://остальные оценки
                                 finalGrades[j] = spinners[j].getSelectedItemPosition() - 1;
                                 break;
                         }
