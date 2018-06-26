@@ -97,6 +97,9 @@
     <string name="learners_and_grades_out_activity_dialog_button_cancel">отмена</string>
     <!-- подсказка на экране -->
     <string name="learners_and_grades_out_activity_text_help">Это ваш электронный журнал: список учеников и их ответы по датам.\nВыберите предмет и месяц.\nБелая цифра рядом с датой - это номер урока(1-ый, 2-ой и.т.д.), который вы провели в этот день (предшествующая цифра).\nНажмите на +, так вы добавите ученика.\nУдерживайте имя ученика - откроется меню, где можно его удалить или переименовать.</string>
+    <!-- уведомления -->
+    <string name="learners_and_grades_out_activity_toast_grades_saved">ответы сохранены</string>
+    <string name="learners_and_grades_out_activity_toast_grades_not_saved">ошибка, ответы не сохраны</string>
 
 
     <!-- активность списка кабинетов -->

@@ -158,25 +158,38 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     //---TODO редактирование оценки ученика---
     @Override
-    public void editGrade(long[] gradesId, long learnersId, int[] grades, long subjectsId, String[] dates) {
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        for (int i = 0; i < gradesId.length; i++) {
-            if (gradesId[i] == -1) {//если оценки нет то создаем ее
-                if (grades[i] != 0) {
-                    db.createGrade(learnersId, grades[i], subjectsId, dates[i]);
-                }
-            } else {//если есть
-                if (grades[i] == 0) {//удаляем
-                    db.removeGrade(gradesId[i]);
-                } else {//или меняем
-                    db.editGrade(gradesId[i], grades[i]);
-                }
-            }
-        }
-        getGradesFromDB();
-        Toast toast = Toast.makeText(this, "оценки сохранены", Toast.LENGTH_SHORT);
-        toast.show();
+    public void editGrade(int[] grades, int[] indexes) {
+        if (indexes.length == 3) {
 
+            //сохраняем оценки в массив
+            allGrades[indexes[0]][indexes[1]][indexes[2]].grades = grades;
+            //ставим оценки во view
+            allGrades[indexes[0]][indexes[1]][indexes[2]].doText();
+
+            //сохраняем оценки в бд
+            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+            for (int i = 0; i < grades.length; i++) {
+                //если оценка новая
+                if (allGrades[indexes[0]][indexes[1]][indexes[2]].gradeId[i] == -1) {
+                    db.createGrade(
+                            allGrades[indexes[0]][indexes[1]][indexes[2]].learnerId,
+                            allGrades[indexes[0]][indexes[1]][indexes[2]].grades[i],
+                            allGrades[indexes[0]][indexes[1]][indexes[2]].subjectId,
+                            allGrades[indexes[0]][indexes[1]][indexes[2]].date
+                    );
+                } else
+                    db.editGrade(
+                            allGrades[indexes[0]][indexes[1]][indexes[2]].gradeId[i],
+                            allGrades[indexes[0]][indexes[1]][indexes[2]].grades[i]
+                    );
+            }
+
+            Toast toast = Toast.makeText(this, R.string.learners_and_grades_out_activity_toast_grades_saved, Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            Toast toast = Toast.makeText(this, R.string.learners_and_grades_out_activity_toast_grades_not_saved, Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
 
@@ -365,9 +378,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                Log.i("TeachersApp", "LessonRedactorActivity - availableLessonsOut onItemSelected " + pos);
+                Log.w("TeachersApp", "LessonRedactorActivity - availableLessonsOut onItemSelected " + pos);
                 if (count != 0 && finalStringLessons.length - 1 == pos) {
-                    Log.i("TeachersApp", "LessonRedactorActivity - remove lesson");
+                    Log.w("TeachersApp", "LessonRedactorActivity - remove lesson");
                     //данные передаваемые в диалог
                     Bundle args = new Bundle();
                     args.putStringArray("stringOnlyLessons", stringOnlyLessons);
@@ -380,7 +393,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                 } else if ((count != 0 && stringLessons.length - 2 == pos) || (count == 0 && finalStringLessons.length - 1 == pos)) {
                     //диалог создания предмета
-                    Log.i("TeachersApp", "LessonRedactorActivity - new lesson");
+                    Log.w("TeachersApp", "LessonRedactorActivity - new lesson");
                     //данные для диалога
                     Bundle args = new Bundle();
                     args.putStringArray("stringLessons", stringLessons);
@@ -390,14 +403,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     lessonNameDialogFragment.setArguments(args);
                     lessonNameDialogFragment.show(getFragmentManager(), "createSubject");
                 } else if (pos != 0) {
-                    Log.i("TeachersApp", "LessonRedactorActivity - chosen lesson id = " + subjectsId[pos - 1]);
+                    Log.w("TeachersApp", "LessonRedactorActivity - chosen lesson id = " + subjectsId[pos - 1]);
                     //останавливаем загрузку оценок
                     flag = false;
                     changingSubjectPosition = pos;
                     outLearnersNamesInTable();
                     getGradesFromDB();
                 } else {
-                    Log.i("TeachersApp", "LessonRedactorActivity - no lesson selected");
+                    Log.w("TeachersApp", "LessonRedactorActivity - no lesson selected");
                     //останавливаем загрузку оценок
                     flag = false;
                     changingSubjectPosition = 0;
@@ -848,7 +861,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     //вывод имен учеников в таблицу
     void outLearnersNamesInTable() {
-        Log.e("TeachersApp", "LearnersAndGradesActivity - updateTable");
+        Log.i("TeachersApp", "LearnersAndGradesActivity - updateTable");
         //чистка
         //имена
         learnersNamesTable.removeAllViews();
@@ -1279,7 +1292,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         //рамка
                         LinearLayout dateOut = new LinearLayout(this);
                         dateOut.setBackgroundColor(getResources().getColor(R.color.colorBackGroundDark));
-                        //текст todo ttttt
+                        //текст
                         TextView learnerGrade = new TextView(this);
                         learnerGrade.setTextColor(Color.BLACK);
                         learnerGrade.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -1290,28 +1303,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                         //ставим текст
                         allGrades[k][i][j].doText();
-//                        //по оценкам в уроке
-//                        for (int l = 0; l < allGrades[k][i][j].grades.length; l++) {
-//                            switch (allGrades[k][i][j].grades[l]) {
-//                                case 0:
-//                                    break;
-//                                case -2:
-//                                    if (!learnerGrade.getText().toString().equals("")) {
-//                                        learnerGrade.setText(learnerGrade.getText().toString() + "Н ");
-//                                    } else
-//                                        learnerGrade.setText(learnerGrade.getText().toString() + " Н ");
-//                                    break;
-//                                default:
-//                                    if (!learnerGrade.getText().toString().equals("")) {
-//                                        learnerGrade.setText(learnerGrade.getText().toString() + allGrades[k][i][j].grades[l] + " ");
-//                                    } else
-//                                        learnerGrade.setText(learnerGrade.getText().toString() + " " + allGrades[k][i][j].grades[l] + " ");
-//                            }
-//                        }
-//
-//                        if (learnerGrade.getText().toString().equals("")) {
-//                            learnerGrade.setText(" - ");
-//                        }
 
                         //параметры текста
                         LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -1323,16 +1314,13 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         learnerTableRows[k].addView(dateOut, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
 
                         final int[] arrayGrade = new int[allGrades[k][i][j].grades.length];
-                        final long[] arrayGradeId = new long[allGrades[k][i][j].grades.length];
-                        final long finalLearnerId = allGrades[k][i][j].learnerId;
-                        final long finalSubjectId = allGrades[k][i][j].subjectId;
-                        final String finalDate[] = new String[allGrades[k][i][j].grades.length];
+                        final int finalK = k;
+                        final int finalI = i;
+                        final int finalJ = j;
 
 
                         for (int l = 0; l < arrayGrade.length; l++) {
                             arrayGrade[l] = allGrades[k][i][j].grades[l];
-                            arrayGradeId[l] = allGrades[k][i][j].gradeId[l];
-                            finalDate[l] = allGrades[k][i][j].date;
                         }
                         //при нажатии на оценку
                         dateOut.setOnClickListener(new View.OnClickListener() {
@@ -1344,18 +1332,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 EditGradeDialogFragment editGrade = new EditGradeDialogFragment();
                                 //параметры
                                 Bundle bundle = new Bundle();
-                                // id оценки
-                                bundle.putLongArray(EditGradeDialogFragment.GRADES_ID, arrayGradeId);
-                                // id ученика
-                                bundle.putLong(EditGradeDialogFragment.LEARNER_ID, finalLearnerId);
-                                // оценка
+                                // оценки
                                 bundle.putIntArray(EditGradeDialogFragment.GRADES, arrayGrade);
-                                // id предмета
-                                bundle.putLong(EditGradeDialogFragment.SUBJECT_ID, finalSubjectId);
-                                // дата
-                                bundle.putStringArray(EditGradeDialogFragment.DATE, finalDate);
-
-                                Log.e("" + finalDate[0] + " " + finalSubjectId, "---");
+                                // номер ученика, номер дня, номер урока
+                                bundle.putIntArray(EditGradeDialogFragment.INDEXES, new int[]{finalK, finalI, finalJ});
 
                                 editGrade.setArguments(bundle);
                                 editGrade.show(getFragmentManager(), "EditGrade");

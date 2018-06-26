@@ -98,6 +98,9 @@
     <string name="learners_and_grades_out_activity_dialog_button_cancel">cancel</string>
     <!-- подсказка на экране -->
     <string name="learners_and_grades_out_activity_text_help">This is your e-zine: a list of students and their answers by dates. \nSelect the subject and month. \nThe white number next to the date is the lesson number (1st, 2nd, etc.) that you spent in this day (the previous digit). \nClick on +, so you add the student. \nHold the name of the student - a menu will open where you can delete it or rename it.</string>
+    <!-- уведомления -->
+    <string name="learners_and_grades_out_activity_toast_grades_saved">answers saved</string>
+    <string name="learners_and_grades_out_activity_toast_grades_not_saved">error, the answers not saved</string>
 
 
     <!-- активность списка кабинетов -->
