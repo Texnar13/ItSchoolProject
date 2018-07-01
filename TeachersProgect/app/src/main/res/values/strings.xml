@@ -19,6 +19,10 @@
     <string name="start_screen_activity_dialog_title_rate">Please rate our app)</string>
     <string name="start_screen_activity_dialog_button_rate_now">rate!</string>
     <string name="start_screen_activity_dialog_button_later">later</string>
+
+    <string name="start_screen_activity_dialog_whats_new_title">In this update \n(1.990):</string>
+    <string name="start_screen_activity_dialog_whats_new_text">later</string>
+    <string name="start_screen_activity_dialog_whats_new_button_ok">ok</string>
     <!-- тост -->
     <string name="start_screen_activity_toast_no_lessons">At the moment there are no lessons planned</string>
 
@@ -58,7 +62,7 @@
     <string name="start_screen_activity_help_text_30">How to set up desks?</string>
     <string name="start_screen_activity_help_text_31">«Current lesson»</string>
     <string name="start_screen_activity_help_text_32">If you just started using the application, you\'ll notice that when you click on the «Current lesson» section, nothing happens, it\'s very simple, this section is directly related to your schedule .If you have a scheduled lesson scheduled for the current time, Clicking on this button, the Teacher's Assistant will find it. </string>
-    <string name="start_screen_activity_help_text_33">In the lesson you can put the answers (which you can see later in the section «My pupils» ), you can simply record how many times and what student answered.You will not need to remember anything, you will not need a pen or paper. </string>
+    <string name="start_screen_activity_help_text_33">In the lesson you can put the answers (which you can see later in the section «My students» ), you can simply record how many times and what student answered.You will not need to remember anything, you will not need a pen or paper. </string>
     <string name="start_screen_activity_help_text_34">«Settings»</string>
     <string name="start_screen_activity_help_text_35">In the «Settings» section you can adjust the value of the desks depending on the size of the screen of your device. In the same place, you can delete all the data you added to the application (we have protection against accidental deletion, so do not worry). </string>
 
@@ -86,6 +90,8 @@
     <string name="learners_and_grades_out_activity_title_table_names">Name</string>
     <string name="learners_and_grades_out_activity_title_grade_n">abs</string>
     <string name="learners_and_grades_out_activity_title_grade_no_answers">no answers</string>
+    <!-- меню сверху -->
+    <string name="learners_and_grades_out_activity_menu_title_statistics">statistics</string>
     <!-- диалоги -->
     <string name="learners_and_grades_out_activity_dialog_title_create_learner">adding a student</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_learner">student editing</string>
@@ -169,6 +175,9 @@
     <!-- уведомления -->
     <string name="lesson_redactor_activity_text_learners_ready">Students are seated in this cabinet</string>
     <string name="lesson_redactor_activity_text_learners_not_ready">The students are not seated!</string>
+
+    <string name="lesson_redactor_activity_toast_text_subject_not_chosen">subject not chosen, you can create class in «My students», then create subject in created class</string>
+    <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">cabinet not chosen, you can create it in «My cabinets»</string>
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">Edit students arrangements</string>
     <string name="lesson_redactor_activity_button_remove">Remove lesson</string>
@@ -227,7 +236,7 @@
     <string name="lesson_activity_help_text_14">4 The «New score» item remembers the rating (if there is no estimate, the item is not displayed), and allows you to put a new one (maximum three): </string>
        
     <string name="lesson_activity_help_text_15">You can put further estimates as usual: </string>  
-    <string name="lesson_activity_help_text_16">After saving the ratings (the «finish» button), you can see them in the «My pupils» -> «class» </string>
+    <string name="lesson_activity_help_text_16">After saving the ratings (the «finish» button), you can see them in the «My students» -> «class» </string>
 
 
     <!-- активность окончания урока-->

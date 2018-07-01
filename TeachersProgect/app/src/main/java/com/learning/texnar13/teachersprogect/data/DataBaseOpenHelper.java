@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
-    private final boolean IS_DEBUG = false;
+    private final boolean IS_DEBUG = true;
 
     private static final int DB_VERSION = 13;
 
@@ -516,7 +516,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public void setNewTimeForLessons(int[][] lastTime, int[][] newTime) {
         SQLiteDatabase db = this.getWritableDatabase();
         SimpleDateFormat timeDateFormat = new SimpleDateFormat("HH:mm:ss");
-
+        if(IS_DEBUG)Log.i("DBOpenHelper", "setNewTimeForLessons lastTime= " + Arrays.toString(lastTime)+"; newTime= "+Arrays.toString(newTime));
         for (int i = 0; i < lastTime.length; i++) {
             //предыдущее время в календарях
             GregorianCalendar lastStart = new GregorianCalendar(
@@ -549,12 +549,41 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         }
     }
 
+    //переделать оценки (подогнать их под новое время)
+    public void setNewTimeForGrades(int[][] lastTime, int[][] newTime) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        SimpleDateFormat timeDateFormat = new SimpleDateFormat("HH:mm:ss");
+
+        for (int i = 0; i < lastTime.length; i++) {
+            //предыдущее время в календарях
+            GregorianCalendar lastStart = new GregorianCalendar(
+                    0, 0, 0, lastTime[i][0], lastTime[i][1]
+            );
+            //новое время в календарях
+            GregorianCalendar newStart = new GregorianCalendar(
+                    0, 0, 0, newTime[i][0], newTime[i][1]
+            );
+
+            //парсим его в текст вида '00:00:00'
+            String lastStartText = timeDateFormat.format(lastStart.getTime());
+            String newStartText = timeDateFormat.format(newStart.getTime());
+
+            db.execSQL("UPDATE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " " +
+                    "SET " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " = ((date(" + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + "))||(\" " + newStartText + "\"))"+
+                    " WHERE (time(" + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + ") == \"" + lastStartText + "\");"
+            );
+
+        }
+    }
+
 
     public int setSettingsTime(long profileId, int[][] time) {//{{hh,mm,hh,mm},{hh,mm,hh,mm},...}
         SQLiteDatabase db = this.getWritableDatabase();
 
 //перед переделыванием расписания необходимо переделать уроки (подогнать их под новое время)
         setNewTimeForLessons(getSettingsTime(profileId), time);
+//и оценки
+        setNewTimeForGrades(getSettingsTime(profileId), time);
 
 //переделываем расписание
         //парсим в json для проверки

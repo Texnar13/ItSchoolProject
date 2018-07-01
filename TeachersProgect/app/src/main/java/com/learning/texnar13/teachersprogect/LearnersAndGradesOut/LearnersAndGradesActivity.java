@@ -17,6 +17,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface, UpdateTableInterface, SubjectNameLearnersDialogInterface, SubjectRemoveLearnersDialogInterface {
+public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface, AllowUserEditGradesInterface, UpdateTableInterface, SubjectNameLearnersDialogInterface, SubjectRemoveLearnersDialogInterface {
 
 //--получаем из intent--
 
@@ -76,14 +77,45 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     TableLayout learnersGradesTable;
     //используется для вывода прогресс бара, содержит в себе таблицу с учениками
     static RelativeLayout gradesRoom;
-    //переменная разрешающая потоку работать
-    boolean flag = true;
     //предметы
     Spinner subjectSpinner;
 
+//-переменные блокираторы
+
+    //переменная разрешающая потоку загрузки оценок работать
+    boolean flag = true;
+    //переменная разрешающая взаимодействие с оценками(например диалоги), от одновременных касаний
+    boolean canEditGrades = true;
+    //переменная разрешающая диалог изменения учеников(кроме создания)
+    boolean canEditLearners = true;
+
     //оценки
-    //static GradeUnit[][][][] grades = {};//[ученик][день][урок][оценка]
     static NewGradeUnit[][][] allGrades = {};//[ученик][день][урок]
+
+//=====================меню======================
+
+    //раздуваем наше меню
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.learners_and_grades_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    //назначаем функции меню
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        //кнопка статистики
+        menu.findItem(R.id.learners_and_grades_menu_statistics).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent intent = new Intent(LearnersAndGradesActivity.this, LearnersGradesStatisticsActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
+        return super.onPrepareOptionsMenu(menu);
+    }
+
 
 //===========методы работы с диалогом============
 
@@ -156,7 +188,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         db.close();
     }
 
-    //---TODO редактирование оценки ученика---
+    //---редактирование оценки ученика---
     @Override
     public void editGrade(int[] grades, int[] indexes) {
         if (indexes.length == 3) {
@@ -171,18 +203,26 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             for (int i = 0; i < grades.length; i++) {
                 //если оценка новая
                 if (allGrades[indexes[0]][indexes[1]][indexes[2]].gradeId[i] == -1) {
-                    db.createGrade(
-                            allGrades[indexes[0]][indexes[1]][indexes[2]].learnerId,
-                            allGrades[indexes[0]][indexes[1]][indexes[2]].grades[i],
-                            allGrades[indexes[0]][indexes[1]][indexes[2]].subjectId,
-                            allGrades[indexes[0]][indexes[1]][indexes[2]].date
-                    );
-                } else
+                    if (allGrades[indexes[0]][indexes[1]][indexes[2]].grades[i] != 0) {
+                        db.createGrade(
+                                allGrades[indexes[0]][indexes[1]][indexes[2]].learnerId,
+                                allGrades[indexes[0]][indexes[1]][indexes[2]].grades[i],
+                                allGrades[indexes[0]][indexes[1]][indexes[2]].subjectId,
+                                allGrades[indexes[0]][indexes[1]][indexes[2]].date
+                        );
+                    }
+                } else if (allGrades[indexes[0]][indexes[1]][indexes[2]].grades[i] != 0) {
                     db.editGrade(
                             allGrades[indexes[0]][indexes[1]][indexes[2]].gradeId[i],
                             allGrades[indexes[0]][indexes[1]][indexes[2]].grades[i]
                     );
+                } else {
+                    db.removeGrade(allGrades[indexes[0]][indexes[1]][indexes[2]].gradeId[i]);
+                }
             }
+
+            //разрешаем пользователю менять оценки
+            canEditGrades = true;
 
             Toast toast = Toast.makeText(this, R.string.learners_and_grades_out_activity_toast_grades_saved, Toast.LENGTH_SHORT);
             toast.show();
@@ -192,6 +232,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         }
     }
 
+    //разрешаем пользователю изменять оценки
+    @Override
+    public void allowUserEditGrades() {
+        canEditGrades = true;
+    }
 
 //===========старт активности===========
 
@@ -363,13 +408,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         cursor.close();
         db.close();
 
-        final String[] finalStringLessons = stringLessons;
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 R.layout.spiner_dropdown_element_learners_and_grades_subjects,
                 stringLessons
         );
-        //adapter.setDropDownViewResource(R.layout.spiner_dropdown_element_learners_and_grades_subjects);
         subjectSpinner.setAdapter(adapter);
         subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -379,7 +422,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 Log.w("TeachersApp", "LessonRedactorActivity - availableLessonsOut onItemSelected " + pos);
-                if (count != 0 && finalStringLessons.length - 1 == pos) {
+                if (count != 0 && stringLessons.length - 1 == pos) {
                     Log.w("TeachersApp", "LessonRedactorActivity - remove lesson");
                     //данные передаваемые в диалог
                     Bundle args = new Bundle();
@@ -391,7 +434,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     removeDialog.setArguments(args);
                     removeDialog.show(getFragmentManager(), "removeLessons");
 
-                } else if ((count != 0 && stringLessons.length - 2 == pos) || (count == 0 && finalStringLessons.length - 1 == pos)) {
+                } else if ((count != 0 && stringLessons.length - 2 == pos) || (count == 0 && stringLessons.length - 1 == pos)) {
                     //диалог создания предмета
                     Log.w("TeachersApp", "LessonRedactorActivity - new lesson");
                     //данные для диалога
@@ -688,7 +731,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             final EditText editName = new EditText(getActivity());
             editName.setTextColor(Color.BLACK);
             editName.setHint(R.string.lesson_redactor_activity_dialog_hint_subject_name);
-            editName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+            editName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             editName.setInputType(InputType.TYPE_CLASS_TEXT);
             editName.setHintTextColor(Color.GRAY);
 
@@ -832,6 +875,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     void getLearnersFromDB() {
         Log.i("TeachersApp", "LearnersAndGradesActivity - getLearnersFromDB");
+        //запрещаем пользователю редактировать учеников
+        canEditLearners = false;
         //чистим массивы от предыдущих значений
         learnersId = new ArrayList<>();
         learnersTitles = new ArrayList<>();
@@ -926,32 +971,35 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             learnerNameOut.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    //останавливаем поток загрузки данных
-                    flag = false;
-                    //диалог
-                    EditLearnerDialogFragment editDialog = new EditLearnerDialogFragment();
-                    //-данные для диалога-
-                    //получаем из бд
-                    DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                    Cursor learnerCursor = db.getLearner(learnersId.get(finalI));
-                    learnerCursor.moveToFirst();
-                    //создаем обьект с данными
-                    Bundle args = new Bundle();
-                    args.putLong("learnerId", learnersId.get(finalI));
-                    args.putString("name", learnerCursor.getString(
-                            learnerCursor.getColumnIndex(
-                                    SchoolContract.TableLearners.COLUMN_FIRST_NAME)
-                    ));
-                    args.putString("lastName", learnerCursor.getString(
-                            learnerCursor.getColumnIndex(
-                                    SchoolContract.TableLearners.COLUMN_SECOND_NAME)
-                    ));
-                    //данные диалогу
-                    editDialog.setArguments(args);
-                    //показать диалог
-                    editDialog.show(getFragmentManager(), "editLearnerDialog");
-                    learnerCursor.close();
-                    db.close();
+                    if (canEditLearners) {
+                        canEditLearners = false;
+                        //останавливаем поток загрузки данных
+                        flag = false;
+                        //диалог
+                        EditLearnerDialogFragment editDialog = new EditLearnerDialogFragment();
+                        //-данные для диалога-
+                        //получаем из бд
+                        DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                        Cursor learnerCursor = db.getLearner(learnersId.get(finalI));
+                        learnerCursor.moveToFirst();
+                        //создаем обьект с данными
+                        Bundle args = new Bundle();
+                        args.putLong("learnerId", learnersId.get(finalI));
+                        args.putString("name", learnerCursor.getString(
+                                learnerCursor.getColumnIndex(
+                                        SchoolContract.TableLearners.COLUMN_FIRST_NAME)
+                        ));
+                        args.putString("lastName", learnerCursor.getString(
+                                learnerCursor.getColumnIndex(
+                                        SchoolContract.TableLearners.COLUMN_SECOND_NAME)
+                        ));
+                        //данные диалогу
+                        editDialog.setArguments(args);
+                        //показать диалог
+                        editDialog.show(getFragmentManager(), "editLearnerDialog");
+                        learnerCursor.close();
+                        db.close();
+                    }
                     return true;
                 }
             });
@@ -959,6 +1007,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             //добавляем строку в таблицу
             learnersNamesTable.addView(learner, TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
         }
+        //разрешаем редактировать учеников, когда все вывели
+        canEditLearners = true;
     }
 
 //===========получаем оценки из базы===========
@@ -985,8 +1035,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 RelativeLayout.LayoutParams.MATCH_PARENT);
 
 
-//----разрешаем подгрузку данных----
+//----возобновляем, начинаем подгрузку данных----
         flag = true;
+//----запрещаем изменение оценок----
+        canEditGrades = false;
 
 //----------делаем всё в потоке-----------
 
@@ -1328,17 +1380,21 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                             public void onClick(View view) {
                                 //останавливаем подгрузку данных, чтобы не мешали
                                 //flag = false;//TO=DO надо остановить подгрузку данных, чтобы при переоценивании новых не получить ошибку, надо придумать как это сделать, может через метод?
-                                //вызываем диалог по ее изменению
-                                EditGradeDialogFragment editGrade = new EditGradeDialogFragment();
-                                //параметры
-                                Bundle bundle = new Bundle();
-                                // оценки
-                                bundle.putIntArray(EditGradeDialogFragment.GRADES, arrayGrade);
-                                // номер ученика, номер дня, номер урока
-                                bundle.putIntArray(EditGradeDialogFragment.INDEXES, new int[]{finalK, finalI, finalJ});
-
-                                editGrade.setArguments(bundle);
-                                editGrade.show(getFragmentManager(), "EditGrade");
+                                if (canEditGrades) {
+                                    //чтобы не было нескольких вызовов одновременно
+                                    canEditGrades = false;
+                                    //вызываем диалог по ее изменению
+                                    EditGradeDialogFragment editGrade = new EditGradeDialogFragment();
+                                    //параметры
+                                    Bundle bundle = new Bundle();
+                                    // оценки
+                                    bundle.putIntArray(EditGradeDialogFragment.GRADES, arrayGrade);
+                                    // номер ученика, номер дня, номер урока
+                                    bundle.putIntArray(EditGradeDialogFragment.INDEXES, new int[]{finalK, finalI, finalJ});
+                                    //запускаем
+                                    editGrade.setArguments(bundle);
+                                    editGrade.show(getFragmentManager(), "EditGrade");
+                                }
                             }
                         });
 
@@ -1348,6 +1404,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             }
 
         }
+//----разрешаем изменение оценок----
+        canEditGrades = true;
 //----очищаем фон от серого после загрузки----
         //findViewById(R.id.learners_and_grades_table_grades_forward_screen)
         //        .setBackgroundColor(Color.parseColor("#00FFFFFF"));
@@ -1449,25 +1507,4 @@ interface SubjectRemoveLearnersDialogInterface {//обратная связь о
 
     void RemoveSubjectDialogMethod(int code, int position, ArrayList<Long> deleteList);
 }
-
-//class GradeUnit {
-//    long learnerId = -1;
-//    long id = -1;
-//    int grade = 0;
-//    long subjectId = -1;
-//    String date;
-//
-//
-//    GradeUnit(long learnerId, long id, int grade, long subjectId, String date) {
-//        this.learnerId = learnerId;
-//        this.id = id;
-//        this.grade = grade;
-//        this.subjectId = subjectId;
-//        this.date = date;
-//    }
-//
-//    GradeUnit() {
-//
-//    }
-//}
 

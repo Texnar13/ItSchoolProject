@@ -19,6 +19,10 @@
     <string name="start_screen_activity_dialog_title_rate">Пожалуйста оцените наше приложение)</string>
     <string name="start_screen_activity_dialog_button_rate_now">оценить!</string>
     <string name="start_screen_activity_dialog_button_later">позже</string>
+
+    <string name="start_screen_activity_dialog_whats_new_title">В этом обновлении \n(1.990):</string>
+    <string name="start_screen_activity_dialog_whats_new_text">позже</string>
+    <string name="start_screen_activity_dialog_whats_new_button_ok">понятно</string>
     <!-- тост -->
     <string name="start_screen_activity_toast_no_lessons">на текущий момент уроков не запланировано</string>
 
@@ -78,13 +82,15 @@
 
 
     <!-- активность списка учеников-->
+    <!-- заголовок активности -->
+    <string name="title_activity_learners_and_grades">Ученики в классе </string>
     <!-- тексты  -->
     <string name="learners_and_grades_out_activity_title_subject">Предмет</string>
     <string name="learners_and_grades_out_activity_title_table_names">Ф.И.</string>
     <string name="learners_and_grades_out_activity_title_grade_n">Н</string>
     <string name="learners_and_grades_out_activity_title_grade_no_answers">нет ответов</string>
-    <!-- заголовок активности -->
-    <string name="title_activity_learners_and_grades">Ученики в классе </string>
+    <!-- меню сверху -->
+    <string name="learners_and_grades_out_activity_menu_title_statistics">статистика</string>
     <!-- диалоги -->
     <string name="learners_and_grades_out_activity_dialog_title_create_learner">добавление ученика</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_learner">редактирование ученика</string>
@@ -169,6 +175,9 @@
     <!-- уведомления -->
     <string name="lesson_redactor_activity_text_learners_ready">Ученики рассажены в этом кабинете.</string>
     <string name="lesson_redactor_activity_text_learners_not_ready">Ученики не рассажены!</string>
+
+    <string name="lesson_redactor_activity_toast_text_subject_not_chosen">не выбран предмет, вы можете создать класс в разделе «МОИ УЧЕНИКИ», затем зайдите в него и создайте предмет</string>
+    <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">не выбран кабинет, вы можете создать его в разделе «МОИ КАБИНЕТЫ»</string>
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">Редактировать рассадку</string>
     <string name="lesson_redactor_activity_button_remove">Удалить урок</string>
@@ -248,7 +257,7 @@
     <string name="settings_activity_title_max_answer">МАКСИМАЛЬНОЕ ЧИСЛО ОТВЕТОВ</string>
     <!-- кнопки -->
     <string name="settings_activity_button_save_data">сохранить</string>
-    <string name="settings_activity_button_edit_time">редактировать сетку расписания</string>
+    <string name="settings_activity_button_edit_time">редактировать время уроков</string>
     <string name="settings_activity_button_remove_data">удалить все данные</string>
     <string name="settings_activity_button_rate_us">оцените наше приложение :)</string>
     <string name="settings_activity_button_edit_locale">Язык</string>

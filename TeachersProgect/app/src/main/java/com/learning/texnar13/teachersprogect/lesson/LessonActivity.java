@@ -27,7 +27,7 @@ import com.learning.texnar13.teachersprogect.lesson.lessonList.LessonListActivit
 /*
  * onCreate(),
  * подгружаются все ученики, id кабинета, класса, предмета, зав. урок-время
- * создаются массивы с оценками(или подгружаются;)),
+ * создаются массивы с оценками//todo (или подгружаются;)),
  *
  * эти поля должны быть статичными, и с проверкой на существование(для переворота)
  * при переходе удалить
@@ -46,7 +46,7 @@ public class LessonActivity extends AppCompatActivity {
     //--переменные--
     float multiplier = 2;
     RelativeLayout room;
-    //--загружаемые из бд данные--
+    //--загружаемые из бд поля--
     //максимальная оценка
     static long maxAnswersCount = 6;
     //id
@@ -58,13 +58,6 @@ public class LessonActivity extends AppCompatActivity {
     static String lessonName = "";
     //массивы
     static LearnerAndGrade[] learnersAndGrades;
-
-
-//    static ArrayList<LearnerAndGrade> gradeArrayList = new ArrayList<>();//массив с оценками за этот урок;
-
-//    static long lessonAttitudeId;
-//    static long lessonId;
-//
 
 //------------------------------------подготовка меню-----------------------------------------------
 
@@ -134,7 +127,7 @@ public class LessonActivity extends AppCompatActivity {
                 //намерение перехода на редактор кабинета
                 Intent intent = new Intent(getApplicationContext(), CabinetRedactorActivity.class);
                 //кладем id в intent
-                intent.putExtra(CabinetRedactorActivity.EDITED_OBJECT_ID, cabinetId);
+                intent.putExtra(CabinetRedactorActivity.EDITED_CABINET_ID, cabinetId);
                 //переходим
                 startActivity(intent);
                 return true;
@@ -161,10 +154,9 @@ public class LessonActivity extends AppCompatActivity {
         //кнопка назад в actionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //проверка, есть ли уже данные, если нет, то достаем их
-        if (lessonAttitudeId == -2) {
-
 //-------------------------------загружаем статичные поля из бд-------------------------------------
+        //проверка, загружены ли уже данные, если нет, то достаем их
+        if (lessonAttitudeId == -2) {
             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
             // ---заполняем---
@@ -363,12 +355,7 @@ public class LessonActivity extends AppCompatActivity {
 //        *
 //        *
 //        * нажимаем сохранить и сохраняем в таблицу ученик-оценка
-//        *
-//        *
-//        *
-//        *
-//        *
-//        *
+
     }
 
 //------------------------------------запуск экрана-------------------------------------------------
@@ -694,10 +681,10 @@ public class LessonActivity extends AppCompatActivity {
                     tempLearnerText.setText(
                             (learnerCursor.getString(learnerCursor.getColumnIndex(
                                     SchoolContract.TableLearners.COLUMN_FIRST_NAME
-                            ))).charAt(0)+" "+
-                            learnerCursor.getString(learnerCursor.getColumnIndex(
-                                    SchoolContract.TableLearners.COLUMN_SECOND_NAME
-                            ))
+                            ))).charAt(0) + " " +
+                                    learnerCursor.getString(learnerCursor.getColumnIndex(
+                                            SchoolContract.TableLearners.COLUMN_SECOND_NAME
+                                    ))
                     );
 
                     //параметры текста
@@ -1010,19 +997,13 @@ public class LessonActivity extends AppCompatActivity {
         learnersClassId = 0;
         cabinetId = 0;
         lessonName = null;
-        LearnerAndGrade[] learnersAndGrades = null;
-
+        learnersAndGrades = null;
         super.onBackPressed();
     }
 
 
     private float pxFromDp(float dp) {
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
-    }
-
-    private float dpFromPx(float px) {
-        return px / getApplicationContext().getResources().getDisplayMetrics().density;
-
     }
 
 }
@@ -1066,6 +1047,7 @@ class LearnerAndGrade {
             gradesCount++;
         }
     }
+
     void lastGrade() {
         if (gradesCount != 0) {
             gradesCount--;
@@ -1076,3 +1058,107 @@ class LearnerAndGrade {
         return gradesCount;
     }
 }
+
+/*
+    static final int NONE = 0;
+    static final int ZOOM = 2;
+    int mode = NONE;
+    //середина касания пальцев
+    PointF startMid = new PointF();
+    //текущая позиия
+    PointF nowMid = new PointF();
+    //изначальное растояние между пальцам
+    float oldDist = 1f;
+    //начальные параметры обьекта
+    int widthOld = 1;
+    int heightOld = 1;
+    int xOld = 1;
+    int yOld = 1;
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN:
+                //если поставлен второй палец,назначаем новые координаты
+                if (event.getPointerCount() == 2) {
+                    //начальные размеры обьекта
+                    widthOld = myRectangle.getWidth();
+                    heightOld = myRectangle.getHeight();
+                    //начальные координаты обьекта
+                    xOld = (int) myRectangle.getX();
+                    yOld = (int) myRectangle.getY();
+                    //находим изначальное растояние между пальцами
+                    oldDist = spacing(event);
+                    if (oldDist > 10f) {
+                        findMidPoint(startMid, event);
+                        findMidPoint(nowMid, event);
+                        mode = ZOOM;
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (mode == ZOOM) {
+                    //новое расстояние между пальцами
+                    float newDist = spacing(event);
+                    //находим коэффициент разницы между изначальным и новым расстоянием
+                    float scale = newDist / oldDist;
+
+                    if (newDist > 10f) {//слишком маленькое расстояние между пальцами
+                        if (scale > 0.01f &&//слишком маленький коэффициент
+                                (widthOld * scale > 10f && heightOld * scale > 10f) &&//слишком маленький размер
+                                (widthOld * scale < 1500f && heightOld * scale < 1500f)//слишком большой размер
+                                ) {
+                            //-----трансформация размера-----
+                            rectParams.width = (int) (widthOld * scale);
+                            rectParams.height = (int) (heightOld * scale);
+                            myRectangle.setLayoutParams(rectParams);
+
+                            //-----трансформация координаты-----
+                            //текущая середина пальцев
+                            findMidPoint(nowMid, event);
+                            //-перемещение обьекта-
+                            // относительно центра зуммирования и перемещение пальцев в процессе зума
+                            //ставим обьекту координаты
+                            myRectangle.setX(((xOld - startMid.x) * scale) + nowMid.x);
+                            myRectangle.setY(((yOld - startMid.y) * scale) + nowMid.y);
+                        } else {
+                            //если не можем использовать изменение размера,
+                            // тогда просто перемещаем
+                            //берем прошлую середину
+                            float lastX = nowMid.x;
+                            float lastY = nowMid.y;
+                            // и текущую
+                            findMidPoint(nowMid, event);
+                            //и сравниваем их
+                            myRectangle.setX(myRectangle.getX() + nowMid.x - lastX);
+                            myRectangle.setY(myRectangle.getY() + nowMid.y - lastY);
+                        }
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_POINTER_UP:
+                //один палец - ничего
+                if (event.getPointerCount() - 1 < 2) {
+                    mode = NONE;
+                }
+                break;
+        }
+        return true;
+    }
+
+    //******************* Расстояние между первым и вторым пальцами из event
+    private float spacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
+    //************* координата середины между первым и вторым пальцами из event
+    private void findMidPoint(PointF point, MotionEvent event) {
+        float x = event.getX(0) + event.getX(1);
+        float y = event.getY(0) + event.getY(1);
+        point.set(x / 2, y / 2);
+    }
+    */

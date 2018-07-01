@@ -4,21 +4,17 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
 import com.learning.texnar13.teachersprogect.R;
@@ -228,7 +224,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
                     //переходим на редактирование этого кабинета
                     Intent intent = new Intent(getApplicationContext(), CabinetRedactorActivity.class);
                     //передаём id выбранного кабинета
-                    intent.putExtra(CabinetRedactorActivity.EDITED_OBJECT_ID, finalId);
+                    intent.putExtra(CabinetRedactorActivity.EDITED_CABINET_ID, finalId);
                     startActivity(intent);
                 }
             });
@@ -270,8 +266,6 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         //-...
         //-контейнер
         //--текст
-        //--текст
-        //--текст
         //-контейнер
         //экран
 
@@ -303,7 +297,6 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
 
         //---выводим контейнер в экран---
         room.addView(container, containerParams);
-
     }
 
 //------системные кнопки--------
@@ -314,20 +307,104 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
             case android.R.id.home://кнопка назад в actionBar
                 onBackPressed();
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
 
     }
 
-    //---------форматы----------
+//---------форматы----------
 
     private float pxFromDp(float px) {
         return px * getApplicationContext().getResources().getDisplayMetrics().density;
     }
-
-    private float dpFromPx(float px) {
-        return px / getApplicationContext().getResources().getDisplayMetrics().density;
-    }
 }
+
+/*
+    // We can be in one of these 3 states
+    static final int NONE = 0;
+    static final int ZOOM = 2;
+    int mode = NONE;
+    //середина касания пальцев
+    PointF startMid = new PointF();
+    //изначальное растояние между пальцам
+    float oldDist = 1f;
+    //начальные параметры обьекта
+    int widthOld = 1;
+    int heightOld = 1;
+    int xOld = 1;
+    int yOld = 1;
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN:
+                //если поставлен второй палец,назначаем новые координаты
+                if (event.getPointerCount() == 2) {
+                    //начальные размеры обьекта
+                    widthOld = myRectangle.getWidth();
+                    heightOld = myRectangle.getHeight();
+                    //начальные координаты обьекта
+                    xOld = (int) myRectangle.getX();
+                    yOld = (int) myRectangle.getY();
+                    //находим изначальное растояние между пальцами
+                    oldDist = spacing(event);
+                    if (oldDist > 10f) {
+                        findMidPoint(startMid, event);
+                        mode = ZOOM;
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (mode == ZOOM) {
+                    //новое расстояние между пальцами
+                    float newDist = spacing(event);
+                    //находим коэффициент разницы между изначальным и новым расстоянием
+                    float scale = newDist / oldDist;
+
+                    if (newDist > 10f &&//слишком маленькое расстояние между пальцами
+                            scale > 0.01f &&//слишком маленький коэффициент
+                            (widthOld * scale > 10f && heightOld * scale > 10f) &&//слишком маленький размер
+                            (widthOld * scale < 1500f && heightOld * scale < 1500f)//слишком большой размер
+                            ) {
+                        //-----трансформация размера-----
+                        rectParams.width = (int) (widthOld * scale);
+                        rectParams.height = (int) (heightOld * scale);
+                        myRectangle.setLayoutParams(rectParams);
+
+                        //-----трансформация координаты-----
+                        //текущая середина пальцев
+                        PointF nowMid = new PointF();
+                        findMidPoint(nowMid, event);
+                        //-перемещение обьекта-
+                        // относительно центра зуммирования и перемещение пальцев в процессе зума
+                        //ставим обьекту координаты
+                        myRectangle.setX(((xOld - startMid.x) * scale) + nowMid.x);
+                        myRectangle.setY(((yOld - startMid.y) * scale) + nowMid.y);
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_POINTER_UP:
+
+                mode = NONE;
+
+                break;
+        }
+        return true;
+    }
+
+    //******************* Расстояние между первым и вторым пальцами из event
+    private float spacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
+    //************* координата середины между первым и вторым пальцами из event
+    private void findMidPoint(PointF point, MotionEvent event) {
+        float x = event.getX(0) + event.getX(1);
+        float y = event.getY(0) + event.getY(1);
+        point.set(x / 2, y / 2);
+    }
+    */

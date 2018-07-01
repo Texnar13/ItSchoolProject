@@ -2,19 +2,17 @@ package com.learning.texnar13.teachersprogect;
 
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ZoomControls;
@@ -26,9 +24,14 @@ import java.util.ArrayList;
 
 public class CabinetRedactorActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener, View.OnLongClickListener {
 
+    public static final String TAG = "TeachersApp";
+    static final int MY_SETTINGS_PROFILE_ID = 1;
+    static final String MY_SETTINGS_PROFILE_NAME = "default";
+
+
     //--константы--
     // ID редактируемого обьекта
-    public static final String EDITED_OBJECT_ID = "id";
+    public static final String EDITED_CABINET_ID = "id";
     // шаг клетки
     static float girdSpacing = 60F;
 
@@ -40,7 +43,11 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
 
     ArrayList<CabinetRedactorPoint> deskCoordinatesList = new ArrayList<>();
-    float multiplier = 0;//множитель
+    //нулевые координаты
+    static float zeroX = 0;
+    static float zeroY = 0;
+    //множитель
+    float multiplier = 0;
     long checkedDeskId;
     ImageView instrumentalImageBackground;
     ImageView instrumentalImage;
@@ -54,7 +61,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
 //-------------------------------меню сверху--------------------------------------------------------
 
-    //раздуваем неаше меню
+    //раздуваем наше меню
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.cabinet_redactor_menu, menu);
@@ -126,7 +133,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         //кнопка назад в actionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //TODO 2 это редактор кабинетов, пока понадобятся только двухместные парты,
+        //2 это редактор кабинетов
 //        /* выводим все парты находящиеся в этом кабинете
 //        * при нажатии на картинку "плюс" в центре экрана появляется парта,
 //        * которую перетаскиванием можно установить на нужное место
@@ -165,8 +172,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 //        * -----------------------------------------------------------------------
 //        */
 
-
-//todo сделать ее вывод из доп меню
 //---вывод сетки---
         outLines();
 
@@ -175,7 +180,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         //какой view появился позже тот и отображаться будет выше
 
-        cabinetId = getIntent().getLongExtra(EDITED_OBJECT_ID, 1);//получаем id кабинета
+        cabinetId = getIntent().getLongExtra(EDITED_CABINET_ID, 1);//получаем id кабинета
         Log.i("TeachersApp", "CabinetRedactorActivity - onCreate editedObjectId = " + cabinetId);
 
         Cursor cabinetCursor = db.getCabinets(cabinetId);
@@ -195,12 +200,16 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         Cursor desksCursor = db.getDesksByCabinetId(cabinetId);//курсор с партами
         while (desksCursor.moveToNext()) {//начальный вывод парт
+            //добываем данные из бд
             long deskId = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID));
             long deskX = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X));
             long deskY = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y));
             int numberOfPlaces = desksCursor.getInt(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES));
+            //наша парта
             final RelativeLayout deskLayout = new RelativeLayout(this);
-            deskCoordinatesList.add(new CabinetRedactorPoint(deskId, deskLayout, deskX, deskY, numberOfPlaces));
+            //ставим парте Drawable
+            deskLayout.setBackground(getResources().getDrawable(R.drawable.start_screen_3_2_yellow_spot));
+            //ее параметры
             RelativeLayout.LayoutParams deskLayoutParams = new RelativeLayout.LayoutParams((int) pxFromDp(1000 * numberOfPlaces * multiplier), (int) pxFromDp(1000 * multiplier));
             deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -208,10 +217,13 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             //deskLayout.setRotation(60);
             deskLayoutParams.leftMargin = (int) pxFromDp(deskX * 25 * multiplier);
             deskLayoutParams.topMargin = (int) pxFromDp(deskY * 25 * multiplier);
+            //ставим параметры
             deskLayout.setLayoutParams(deskLayoutParams);
-            //ставим парте Drawable
-            deskLayout.setBackground(getResources().getDrawable(R.drawable.start_screen_3_2_yellow_spot));
+            //выводим парту
             out.addView(deskLayout);
+            //добавлем парту и данные в массив
+            deskCoordinatesList.add(new CabinetRedactorPoint(deskId, deskLayout, deskX, deskY, numberOfPlaces));
+
         }
         desksCursor.close();
 
@@ -246,7 +258,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
                     //активируем другую если приближать можно
                     zoomControls.setIsZoomOutEnabled(true);
-
 
                     //выводим все
                     multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f * getResources().getInteger(R.integer.desks_screen_multiplier);
@@ -326,23 +337,28 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             }
         });
 
-
-//        //красная точка
-//        relativeLayout = new RelativeLayout(this);
-//        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(8, 4);//фиксированный размер
-//        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-//        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-//        layoutParams.leftMargin = 50;
-//        layoutParams.topMargin = 50;
-
-        //relativeLayout.setLayoutParams(layoutParams);
         out.setOnTouchListener(this);
-        //relativeLayout.setBackgroundColor(Color.RED);
-        //out.addView(relativeLayout);
 
     }
 
+
+    //переменные zoom
+    static final int NONE = 0;
+    static final int DRAG = 1;
+    static final int ZOOM = 2;
+    int mode = NONE;
+    //середина касания пальцев
+    PointF startMid = new PointF();
+    //текущая середина
+    PointF nowMid = new PointF();
+    //изначальное растояние между пальцам
+    float oldDist = 1f;
+
+    //начальные параметры обьекта
+    float[] widthOld = {};
+    float[] heightOld = {};
+    float[] xOld = {};
+    float[] yOld = {};
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -353,11 +369,34 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             stateText.setText("");
         }
 
+        //-действие
+        //=состояние
+        // комментарий
 
-        switch (motionEvent.getAction()) {
+        //первое нажатие
+        //  =перемещение=
+        //  -ищем парту и омечаем-
+        //нажатие
+        //  -заканчиваем перемещение, сохраняем-
+        //  =zoom=
+        //  -инициализируем зум-
+        //движение
+        //  -при перемещении меняем-
+        //  -при зуме зумим-
+        //отпускание
+        //   если есть прекращаем зум, не начиная касания
+        //  =none=
+        //последнее отпускание
+        //  -если есть завершаем перемещение-
+        //  =none=
+
+
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {//todo разобраться с & MotionEvent.ACTION_MASK(что это?)
             case MotionEvent.ACTION_DOWN:
+                //режим перемещения
+                mode = DRAG;
 
-                for (int i = 0; i < deskCoordinatesList.size(); i++) {
+                for (int i = deskCoordinatesList.size() - 1; i >= 0; i--) {
                     if ((motionEvent.getX() >= pxFromDp(deskCoordinatesList.get(i).x * 25 * multiplier)) &&
                             (motionEvent.getX() <= pxFromDp((deskCoordinatesList.get(i).x * 25 + 1000 * deskCoordinatesList.get(i).numberOfPlaces) * multiplier)) &&
                             (motionEvent.getY() >= pxFromDp(deskCoordinatesList.get(i).y * 25 * multiplier)) &&
@@ -367,112 +406,249 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
                         checkedDeskId = deskCoordinatesList.get(i).deskId;
                         //новые параметры парты
-                        RelativeLayout.LayoutParams deskLayoutParams = new RelativeLayout.LayoutParams((int) pxFromDp(1000 * deskCoordinatesList.get(i).numberOfPlaces * multiplier), (int) pxFromDp(1000 * multiplier));
-                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-
                         //совмещаем точку нажатия и центр(-40;-20) парты
-                        deskLayoutParams.leftMargin = (int) (motionEvent.getX() - pxFromDp(500 * deskCoordinatesList.get(i).numberOfPlaces * multiplier));
-                        deskLayoutParams.topMargin = (int) (motionEvent.getY() - pxFromDp(500 * multiplier));
-                        deskCoordinatesList.get(i).desk.setLayoutParams(deskLayoutParams);
+                        ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin =
+                                (int) (motionEvent.getX() - pxFromDp(500 * deskCoordinatesList.get(i).numberOfPlaces * multiplier));
+                        ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin =
+                                (int) (motionEvent.getY() - pxFromDp(500 * multiplier));
+                        //самую последнюю парту и выходим
+                        break;
                     }
                 }
+                Log.i(TAG, "MotionEvent.ACTION_DOWN count:" + motionEvent.getPointerCount() + " mode:" + mode);
                 break;
-            case MotionEvent.ACTION_MOVE://старые + новая - x нажатия
-                for (int i = 0; i < deskCoordinatesList.size(); i++) {
-                    if (deskCoordinatesList.get(i).deskId == checkedDeskId) {
-                        //если палец находится в пределах крестика то удаляем парту
-                        if ((motionEvent.getX() >= out.getWidth() / 2 - pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier)) / 2) &&
-                                (motionEvent.getX() <= out.getWidth() / 2 + pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier)) / 2) &&
-                                (motionEvent.getY() >= out.getHeight() - pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier))) &&
-                                (motionEvent.getY() <= out.getHeight())) {
-                            Log.i("TeachersApp", "удалена парта");
-                            //удаляем парту
-                            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-                            db.deleteDesk(deskCoordinatesList.get(i).deskId);
-                            out.removeView(deskCoordinatesList.get(i).desk);
-                            deskCoordinatesList.remove(i);
+
+            case MotionEvent.ACTION_POINTER_DOWN:
+                //если поставлен второй палец на остальные не реагируем
+                if (motionEvent.getPointerCount() == 2) {
+                    //будем зумить, прекращаем перемещение
+                    //---отпускаем парту---
+                    for (int i = 0; i < deskCoordinatesList.size(); i++) {
+                        //находим нажатую парту по id
+                        if (deskCoordinatesList.get(i).deskId == checkedDeskId) {
+                            //ставим изображение в плюс
                             instrumentalImage.setImageResource(R.drawable.ic_white_plus);
+
+                            //расчитываем новые координаты
+                            //              координата     -          расстояние до центра пальца
+                            float x = ((motionEvent.getX() - pxFromDp(500 * deskCoordinatesList.get(i).numberOfPlaces * multiplier)));
+                            float y = ((motionEvent.getY() - pxFromDp(500 * multiplier)));
+
+                            //отступ от границы клетки
+                            if (isGird) {//на до ли отнимать/прибавлять
+                                // смотрим куда ближе отнимать или прибавлять
+                                //x
+                                if ((x % girdSpacing) < girdSpacing / 2) {
+                                    x = x - (x % girdSpacing);
+                                } else {
+                                    x = x + girdSpacing - (x % girdSpacing);
+                                }
+                                //y
+                                if ((y % girdSpacing) < girdSpacing / 2) {
+                                    y = y - (y % girdSpacing);
+                                } else {
+                                    y = y + girdSpacing - (y % girdSpacing);
+                                }
+                            }
+
+                            //новые координаты в список
+                            deskCoordinatesList.get(i).x = (long) (x / pxFromDp(25 * multiplier));
+                            deskCoordinatesList.get(i).y = (long) (y / pxFromDp(25 * multiplier));
+                            //новые координаты в бд
+                            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+                            db.setDeskCoordinates(deskCoordinatesList.get(i).deskId,
+                                    deskCoordinatesList.get(i).x,
+                                    deskCoordinatesList.get(i).y
+                            );
+                            //новые координаты парте
+                            ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin = (int) pxFromDp((deskCoordinatesList.get(i).x * 25 * multiplier));
+                            ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin = (int) pxFromDp((deskCoordinatesList.get(i).y * 25 * multiplier));
+                        }
+                    }
+                    Log.i("TeachersApp", "X = " + motionEvent.getX() +
+                            " ; Y = " + motionEvent.getY() + " ;");
+                    checkedDeskId = -1;
+
+                    //начинаем zoom
+                    //находим изначальное растояние между пальцами
+                    oldDist = spacing(motionEvent);
+                    if (oldDist > 10f) {
+                        findMidPoint(startMid, motionEvent);
+                        findMidPoint(nowMid, motionEvent);
+                        mode = ZOOM;
+                    }
+                    widthOld = new float[deskCoordinatesList.size()];
+                    heightOld = new float[deskCoordinatesList.size()];
+                    xOld = new float[deskCoordinatesList.size()];
+                    yOld = new float[deskCoordinatesList.size()];
+                    for (int i = 0; i < deskCoordinatesList.size(); i++) {
+                        //начальные размеры обьекта
+                        widthOld[i] = deskCoordinatesList.get(i).desk.getWidth();
+                        heightOld[i] = deskCoordinatesList.get(i).desk.getHeight();
+                        //начальные координаты обьекта
+                        xOld[i] = (int) deskCoordinatesList.get(i).desk.getX();
+                        yOld[i] = (int) deskCoordinatesList.get(i).desk.getY();
+                    }
+                }
+                Log.i(TAG, "MotionEvent.ACTION_POINTER_DOWN count:" + motionEvent.getPointerCount() + " mode:" + mode);
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                if (mode == DRAG) {//перемещаем парту
+                    //старые + новая - x нажатия
+                    for (int i = 0; i < deskCoordinatesList.size(); i++) {
+                        if (deskCoordinatesList.get(i).deskId == checkedDeskId) {
+                            //если палец находится в пределах крестика то удаляем парту
+                            if ((motionEvent.getX() >= out.getWidth() / 2 - pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier)) / 2) &&
+                                    (motionEvent.getX() <= out.getWidth() / 2 + pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier)) / 2) &&
+                                    (motionEvent.getY() >= out.getHeight() - pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier))) &&
+                                    (motionEvent.getY() <= out.getHeight())) {
+                                Log.i("TeachersApp", "удалена парта");
+                                //удаляем парту
+                                DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+                                db.deleteDesk(deskCoordinatesList.get(i).deskId);
+                                out.removeView(deskCoordinatesList.get(i).desk);
+                                deskCoordinatesList.remove(i);
+                                instrumentalImage.setImageResource(R.drawable.ic_white_plus);
+                            } else {
+                                //новые параметры парты
+                                ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin = (int) (motionEvent.getX() - pxFromDp(500 * deskCoordinatesList.get(i).numberOfPlaces * multiplier));
+                                ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin = (int) (motionEvent.getY() - pxFromDp(500 * multiplier));
+                            }
+                        }
+                    }
+                } else if (mode == ZOOM) {//зумим
+                    //новое расстояние между пальцами
+                    float newDist = spacing(motionEvent);
+                    //находим коэффициент разницы между изначальным и новым расстоянием
+                    float scale = newDist / oldDist;
+
+                    if (newDist > 10f) {//слишком маленькое расстояние между пальцами
+                        if (scale > 0.01f &&//слишком маленький коэффициент
+                                (multiplier * 1000f / getResources().getInteger(R.integer.desks_screen_multiplier) * scale >= 3f) &&//слишком маленький размер
+                                (multiplier * 1000f / getResources().getInteger(R.integer.desks_screen_multiplier) * scale <= 100f)//слишком большой размер
+                                ) {// TODO оси координат,что происходит при работе зума как перемещения
+
+                            for (int i = 0; i < deskCoordinatesList.size(); i++) {
+
+                                //-----трансформация размера-----
+                                deskCoordinatesList.get(i).desk.getLayoutParams().width = (int) (widthOld[i] * scale);
+                                deskCoordinatesList.get(i).desk.getLayoutParams().height = (int) (heightOld[i] * scale);
+                                //-----трансформация координаты-----
+                                //текущая середина пальцев
+                                findMidPoint(nowMid, motionEvent);
+                                //-перемещение обьекта-
+                                // относительно центра зуммирования и перемещение пальцев в процессе зума
+                                //ставим обьекту координаты
+                                deskCoordinatesList.get(i).desk.setX(((xOld[i] - startMid.x) * scale) + nowMid.x);
+                                deskCoordinatesList.get(i).desk.setY(((yOld[i] - startMid.y) * scale) + nowMid.y);
+                            }
+                            multiplier = multiplier * 1000f * scale
+                                    / getResources().getInteger(R.integer.desks_screen_multiplier);
                         } else {
-                            //новые параметры парты
-                            RelativeLayout.LayoutParams deskLayoutParams = new RelativeLayout.LayoutParams((int) pxFromDp(1000 * deskCoordinatesList.get(i).numberOfPlaces * multiplier), (int) pxFromDp(1000 * multiplier));
-                            deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                            deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                            deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-
-                            deskLayoutParams.leftMargin = (int) (motionEvent.getX() - pxFromDp(500 * deskCoordinatesList.get(i).numberOfPlaces * multiplier));
-                            deskLayoutParams.topMargin = (int) (motionEvent.getY() - pxFromDp(500 * multiplier));
-                            deskCoordinatesList.get(i).desk.setLayoutParams(deskLayoutParams);
+                            //если не можем использовать изменение размера,
+                            // тогда просто перемещаем
+                            //берем прошлую середину
+                            float lastX = nowMid.x;
+                            float lastY = nowMid.y;
+                            // и текущую
+                            findMidPoint(nowMid, motionEvent);
+                            for (int i = 0; i < deskCoordinatesList.size(); i++) {
+                                //и сравниваем их
+                                deskCoordinatesList.get(i).desk.setX(deskCoordinatesList.get(i).desk.getX() + nowMid.x - lastX);
+                                deskCoordinatesList.get(i).desk.setY(deskCoordinatesList.get(i).desk.getY() + nowMid.y - lastY);
+                                //перемещаем оси координат относительно того как передвинулись обьекты
+                            }
                         }
                     }
                 }
+                Log.e(TAG, "MotionEvent.ACTION_MOVE count:" + motionEvent.getPointerCount() + " mode:" + mode);
                 break;
 
-//---отпускаем парту---
+            case MotionEvent.ACTION_POINTER_UP: {
+                DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+                db.setSettingsProfileParameters(MY_SETTINGS_PROFILE_ID, MY_SETTINGS_PROFILE_NAME, (int) (multiplier * 1000f / getResources().getInteger(R.integer.desks_screen_multiplier)));
+                mode = NONE;
+                Log.i(TAG, "MotionEvent.ACTION_POINTER_UP count:" + motionEvent.getPointerCount() + " mode:" + mode);
+                break;
+            }
+
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                for (int i = 0; i < deskCoordinatesList.size(); i++) {
-                    //находим нажатую парту по id
-                    if (deskCoordinatesList.get(i).deskId == checkedDeskId) {
-                        //ставим изображение в плюс
-                        instrumentalImage.setImageResource(R.drawable.ic_white_plus);
+                if (mode == DRAG) {
+                    //---отпускаем парту---
+                    for (int i = 0; i < deskCoordinatesList.size(); i++) {
+                        //находим нажатую парту по id
+                        if (deskCoordinatesList.get(i).deskId == checkedDeskId) {
+                            //ставим изображение в плюс
+                            instrumentalImage.setImageResource(R.drawable.ic_white_plus);
 
-                        //расчитываем новые координаты
-                        //              координата     -          расстояние до центра пальца
-                        float x = ((motionEvent.getX() - pxFromDp(500 * deskCoordinatesList.get(i).numberOfPlaces * multiplier)));
-                        float y = ((motionEvent.getY() - pxFromDp(500 * multiplier)));
+                            //расчитываем новые координаты
+                            //              координата     -          расстояние до центра пальца
+                            float x = ((motionEvent.getX() - pxFromDp(500 * deskCoordinatesList.get(i).numberOfPlaces * multiplier)));
+                            float y = ((motionEvent.getY() - pxFromDp(500 * multiplier)));
 
-                        //отступ от границы клетки
-                        if (isGird) {//на до ли отнимать/прибавлять
-                            // смотрим куда ближе отнимать или прибавлять
-                            //x
-                            if ((x % girdSpacing) < girdSpacing / 2) {
-                                x = x - (x % girdSpacing);
-                            } else {
-                                x = x + girdSpacing - (x % girdSpacing);
+                            //отступ от границы клетки
+                            if (isGird) {//на до ли отнимать/прибавлять
+                                // смотрим куда ближе отнимать или прибавлять
+                                //x
+                                if ((x % girdSpacing) < girdSpacing / 2) {
+                                    x = x - (x % girdSpacing);
+                                } else {
+                                    x = x + girdSpacing - (x % girdSpacing);
+                                }
+                                //y
+                                if ((y % girdSpacing) < girdSpacing / 2) {
+                                    y = y - (y % girdSpacing);
+                                } else {
+                                    y = y + girdSpacing - (y % girdSpacing);
+                                }
                             }
-                            //y
-                            if ((y % girdSpacing) < girdSpacing / 2) {
-                                y = y - (y % girdSpacing);
-                            } else {
-                                y = y + girdSpacing - (y % girdSpacing);
-                            }
+
+                            //новые координаты в список
+                            deskCoordinatesList.get(i).x = (long) (x / pxFromDp(25 * multiplier));
+                            deskCoordinatesList.get(i).y = (long) (y / pxFromDp(25 * multiplier));
+                            //новые координаты в бд
+                            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+                            db.setDeskCoordinates(deskCoordinatesList.get(i).deskId,
+                                    deskCoordinatesList.get(i).x,
+                                    deskCoordinatesList.get(i).y
+                            );
+                            //новые координаты парте
+                            ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin = (int) pxFromDp((deskCoordinatesList.get(i).x * 25 * multiplier));
+                            ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin = (int) pxFromDp((deskCoordinatesList.get(i).y * 25 * multiplier));
                         }
-
-                        //новые координаты в список
-                        deskCoordinatesList.get(i).x = (long) (x / pxFromDp(25 * multiplier));
-                        deskCoordinatesList.get(i).y = (long) (y / pxFromDp(25 * multiplier));
-                        //новые координаты в бд
-                        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-                        db.setDeskCoordinates(deskCoordinatesList.get(i).deskId,
-                                deskCoordinatesList.get(i).x,
-                                deskCoordinatesList.get(i).y
-                        );
-                        //новые координаты парте
-                        RelativeLayout.LayoutParams deskLayoutParams = new RelativeLayout.LayoutParams((int) pxFromDp(1000 * deskCoordinatesList.get(i).numberOfPlaces * multiplier), (int) pxFromDp(1000 * multiplier));
-                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-
-                        deskLayoutParams.leftMargin = (int) pxFromDp((deskCoordinatesList.get(i).x * 25 * multiplier));
-                        deskLayoutParams.topMargin = (int) pxFromDp((deskCoordinatesList.get(i).y * 25 * multiplier));
-                        deskCoordinatesList.get(i).desk.setLayoutParams(deskLayoutParams);
                     }
+                    Log.i("TeachersApp", "X = " + motionEvent.getX() +
+                            " ; Y = " + motionEvent.getY() + " ;");
+                    checkedDeskId = -1;
                 }
-                Log.i("TeachersApp", "X = " + motionEvent.getX() +
-                        " ; Y = " + motionEvent.getY() + " ;");
-                checkedDeskId = -1;
+                mode = NONE;
+                Log.i(TAG, "MotionEvent.ACTION_UP count:" + motionEvent.getPointerCount() + " mode:" + mode);
                 break;
+
+            case MotionEvent.ACTION_CANCEL:
         }
         return true;
     }
 
-//---------------нажатие на +---------------
+    // ---- Расстояние между первым и вторым пальцами из event ----
+    private float spacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
+    // ---- координата середины между первым и вторым пальцами из event ----
+    private void findMidPoint(PointF point, MotionEvent event) {
+        float x = event.getX(0) + event.getX(1);
+        float y = event.getY(0) + event.getY(1);
+        point.set(x / 2, y / 2);
+    }
+
+// --------------- нажатие на + ---------------
 
     @Override
     public void onClick(View view) {
-        //todo места к парте
         // узнаем размеры экрана из класса Display
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics metricsB = new DisplayMetrics();
@@ -635,3 +811,126 @@ class CabinetRedactorPoint {
         this.numberOfPlaces = numberOfPlaces;
     }
 }
+
+/*
+
+    //переменные zoom
+    static final int NONE = 0;
+    static final int ZOOM = 2;
+    int mode = NONE;
+    //середина касания пальцев
+    PointF startMid = new PointF();
+    //текущая середина
+    PointF nowMid = new PointF();
+    //изначальное растояние между пальцам
+    float oldDist = 1f;
+    //начальные параметры обьекта
+    int widthOld = 1;
+    int heightOld = 1;
+    int xOld = 1;
+    int yOld = 1;
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN:
+                //если поставлен второй палец,назначаем новые координаты
+                if (event.getPointerCount() == 2) {
+                    //начальные размеры обьекта
+                    widthOld = myRectangle.getWidth();
+                    heightOld = myRectangle.getHeight();
+                    //начальные координаты обьекта
+                    xOld = (int) myRectangle.getX();
+                    yOld = (int) myRectangle.getY();
+                    //находим изначальное растояние между пальцами
+                    oldDist = spacing(event);
+                    if (oldDist > 10f) {
+                        findMidPoint(startMid, event);
+                        findMidPoint(nowMid, event);
+                        mode = ZOOM;
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (mode == ZOOM) {
+                    //новое расстояние между пальцами
+                    float newDist = spacing(event);
+                    //находим коэффициент разницы между изначальным и новым расстоянием
+                    float scale = newDist / oldDist;
+
+                    if (newDist > 10f) {//слишком маленькое расстояние между пальцами
+                        if (scale > 0.01f &&//слишком маленький коэффициент
+                                (widthOld * scale > 10f && heightOld * scale > 10f) &&//слишком маленький размер
+                                (widthOld * scale < 1500f && heightOld * scale < 1500f)//слишком большой размер
+                                ) {
+                            //-----трансформация размера-----
+                            rectParams.width = (int) (widthOld * scale);
+                            rectParams.height = (int) (heightOld * scale);
+                            myRectangle.setLayoutParams(rectParams);
+
+                            //-----трансформация координаты-----
+                            //текущая середина пальцев
+                            findMidPoint(nowMid, event);
+                            //-перемещение обьекта-
+                            // относительно центра зуммирования и перемещение пальцев в процессе зума
+                            //ставим обьекту координаты
+                            myRectangle.setX(((xOld - startMid.x) * scale) + nowMid.x);
+                            myRectangle.setY(((yOld - startMid.y) * scale) + nowMid.y);
+                        } else {
+                            //если не можем использовать изменение размера,
+                            // тогда просто перемещаем
+                            //берем прошлую середину
+                            float lastX = nowMid.x;
+                            float lastY = nowMid.y;
+                            // и текущую
+                            findMidPoint(nowMid, event);
+                            //и сравниваем их
+                            myRectangle.setX(myRectangle.getX() + nowMid.x - lastX);
+                            myRectangle.setY(myRectangle.getY() + nowMid.y - lastY);
+                        }
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_POINTER_UP:
+                //больше двух - ничего не меняется
+                //если пальцев осталось два переназначаем начальные координаты
+                if (event.getPointerCount() - 1 == 2) {
+                    //начальные размеры обьекта
+                    widthOld = myRectangle.getWidth();
+                    heightOld = myRectangle.getHeight();
+                    //начальные координаты обьекта
+                    xOld = (int) myRectangle.getX();
+                    yOld = (int) myRectangle.getY();
+                    //находим изначальное растояние между пальцами
+                    oldDist = spacing(event);
+                    if (oldDist > 10f) {
+                        findMidPoint(startMid, event);
+                        mode = ZOOM;
+                    }
+                }
+                //один палец - ничего
+                if (event.getPointerCount() - 1 < 2) {
+                    mode = NONE;
+                }
+                break;
+        }
+        return true;
+    }
+
+    //******************* Расстояние между первым и вторым пальцами из event
+    private float spacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
+    //************* координата середины между первым и вторым пальцами из event
+    private void findMidPoint(PointF point, MotionEvent event) {
+        float x = event.getX(0) + event.getX(1);
+        float y = event.getY(0) + event.getY(1);
+        point.set(x / 2, y / 2);
+    }
+
+    */

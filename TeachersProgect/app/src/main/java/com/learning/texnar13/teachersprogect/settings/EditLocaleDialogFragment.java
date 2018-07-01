@@ -98,13 +98,13 @@ public class EditLocaleDialogFragment extends DialogFragment {
 //--список языков--
         //--------ставим диалогу список в виде view--------
         //названия и коды из констант
-        String [] localeNames = getResources().getStringArray(R.array.locale_names);
-        final String [] localeСodes = getResources().getStringArray(R.array.locale_code);
+        String[] localeNames = getResources().getStringArray(R.array.locale_names);
+        final String[] localeСodes = getResources().getStringArray(R.array.locale_code);
         String lastLocale = getArguments().getString("locale");
         //номер прошлой локали
         int lastLocaleNumber = 0;
         for (int i = 0; i < localeСodes.length; i++) {
-            if(localeСodes[i].equals(lastLocale)){
+            if (localeСodes[i].equals(lastLocale)) {
                 lastLocaleNumber = i;
             }
 
@@ -123,7 +123,7 @@ public class EditLocaleDialogFragment extends DialogFragment {
 //--------пункт списка--------
             //контейнер
             LinearLayout item = new LinearLayout(getActivity());
-            if(lastLocaleNumber == i){
+            if (lastLocaleNumber == i) {
                 item.setBackgroundColor(getResources().getColor(R.color.colorBackGroundDark));
             }
             item.setOrientation(LinearLayout.HORIZONTAL);
@@ -152,7 +152,7 @@ public class EditLocaleDialogFragment extends DialogFragment {
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((EditLocaleDialogFragmentInterface)getActivity()).editLocale(localeСodes[number]);
+                    ((EditLocaleDialogFragmentInterface) getActivity()).editLocale(localeСodes[number]);
                     dismiss();
                 }
             });

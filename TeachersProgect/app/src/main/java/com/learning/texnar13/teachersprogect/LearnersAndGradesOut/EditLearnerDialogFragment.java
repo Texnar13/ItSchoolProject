@@ -210,6 +210,18 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
             @Override
             public void onClick(View view) {
                 dismiss();
+                Log.i("TeachersApp", "EditLearnerDialogFragment - dismiss(neutralButton)");
+                try {
+                    //вызываем в активности метод по обновлению таблицы
+                    ((UpdateTableInterface) getActivity()).updateAll();
+                } catch (java.lang.ClassCastException e) {
+                    //в вызвающей активности должен быть имплементирован класс UpdateTableInterface
+                    e.printStackTrace();
+                    Log.i(
+                            "TeachersApp",
+                            "CreateLearnerDialogFragment: you must implements UpdateTableInterface in your activity"
+                    );
+                }
             }
         });
 
@@ -252,7 +264,18 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
     @Override
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
-        //смотри CreateLearnerDialogFragment
+        Log.i("TeachersApp", "EditLearnerDialogFragment - onCancel");
+        try {
+            //вызываем в активности метод по обновлению таблицы
+            ((UpdateTableInterface) getActivity()).updateAll();
+        } catch (java.lang.ClassCastException e) {
+            //в вызвающей активности должен быть имплементирован класс UpdateTableInterface
+            e.printStackTrace();
+            Log.i(
+                    "TeachersApp",
+                    "CreateLearnerDialogFragment: you must implements UpdateTableInterface in your activity"
+            );
+        }
     }
 
     //---------форматы----------

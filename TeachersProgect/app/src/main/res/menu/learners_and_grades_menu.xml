@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/learners_and_grades_menu_help"
-        android:checkable="true"
-        android:title="помощь"
-        app:showAsAction="always|withText">
-
+        android:id="@+id/learners_and_grades_menu_statistics"
+        android:checkable="false"
+        android:enabled="true"
+        android:title="@string/learners_and_grades_out_activity_menu_title_statistics"
+        android:visible="true"
+        app:showAsAction="never|withText">
     </item>
-
 </menu>

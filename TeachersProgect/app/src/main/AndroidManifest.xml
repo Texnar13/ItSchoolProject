@@ -74,7 +74,8 @@
             android:configChanges="locale"
             android:label="@string/title_activity_learners_classes_out"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".TestActivity"></activity>
+        <activity android:name=".TestActivity" />
+        <activity android:name=".LearnersAndGradesOut.LearnersGradesStatisticsActivity"></activity>
     </application>
 
 </manifest>

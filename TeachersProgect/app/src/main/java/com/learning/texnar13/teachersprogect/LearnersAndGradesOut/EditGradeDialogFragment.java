@@ -40,7 +40,6 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
         builder.setView(dialogLayout);
 
 
-
         //--LinearLayout в layout файле--
         LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.edit_learner_dialog_fragment_linear_layout);
         linearLayout.setBackgroundResource(R.color.colorBackGround);
@@ -82,12 +81,12 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
         //массив с текстами оценок
         DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity());
 
-        String gradesText[] = new String[db.getSettingsMaxGrade(1)+2];
+        String gradesText[] = new String[db.getSettingsMaxGrade(1) + 2];
 
         gradesText[0] = getString(R.string.learners_and_grades_out_activity_title_grade_n);
         gradesText[1] = getString(R.string.learners_and_grades_out_activity_title_grade_no_answers);
         for (int i = 2; i < gradesText.length; i++) {
-            gradesText[i] = ""+(i-1);
+            gradesText[i] = "" + (i - 1);
         }
         //адаптер
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
@@ -217,9 +216,19 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
             @Override
             public void onClick(View view) {
                 dismiss();
+                try {
+                    //вызываем в активности метод разрешения изменения оценок
+                    ((AllowUserEditGradesInterface) getActivity()).allowUserEditGrades();
+                } catch (java.lang.ClassCastException e) {
+                    //в вызвающей активности должен быть имплементирован класс AllowUserEditGradesInterface
+                    e.printStackTrace();
+                    Log.i(
+                            "TeachersApp",
+                            "EditGradeDialogFragment: you must implements AllowUserEditGradesInterface in your activity"
+                    );
+                }
             }
         });
-
         return builder.create();
     }
 
@@ -231,7 +240,17 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
     @Override
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
-
+        try {
+            //вызываем в активности метод разрешения изменения оценок
+            ((AllowUserEditGradesInterface) getActivity()).allowUserEditGrades();
+        } catch (java.lang.ClassCastException e) {
+            //в вызвающей активности должен быть имплементирован класс AllowUserEditGradesInterface
+            e.printStackTrace();
+            Log.i(
+                    "TeachersApp",
+                    "EditGradeDialogFragment: you must implements AllowUserEditGradesInterface in your activity"
+            );
+        }
     }
 
     //---------форматы----------
@@ -243,4 +262,8 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
 
 interface EditGradeDialogInterface {
     void editGrade(int[] grades, int[] indexes);
+}
+
+interface AllowUserEditGradesInterface {
+    void allowUserEditGrades();
 }

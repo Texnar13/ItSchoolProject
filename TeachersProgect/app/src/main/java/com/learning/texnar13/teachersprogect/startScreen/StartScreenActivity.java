@@ -1,5 +1,6 @@
 package com.learning.texnar13.teachersprogect.startScreen;
 
+import android.app.DialogFragment;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,12 +44,15 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     // настройки
     RelativeLayout relButtonSettings;
 
-    //--константы--
+//--константы--
 
     //счетчик заходов в приложение для оценки в sharedPreferences
     static final String ENTERS_COUNT = "entersCount";
     //оценено?
     static final String IS_RATE = "isRate";
+    //версия
+    static final String WHATS_NEW = "whatsNew";
+    static final int NOW_VERSION = 39;
 
 //-----------------------------------метод диалога--------------------------------------------------
 
@@ -115,7 +119,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         menu.findItem(R.id.start_screen_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(getApplicationContext(), StartScreenHelp.class);
+                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
                 startActivity(intent);
 //                Toast toast = Toast.makeText(getApplicationContext(),"В разработке ¯\\_(ツ)_/¯",Toast.LENGTH_LONG);
 //                toast.show();
@@ -150,30 +154,50 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
         //setTitle("помощник учителя");
 
-        //------сохраненные параметры------
+//------сохраненные параметры------
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         //начинаем редактировать
-        SharedPreferences.Editor ed = sharedPreferences.edit();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
 
         //todo перенести все подсчеты в создание самого класса, а то при перевороте срабатывают
 
 //----счетчик "оцените нас"----
         // через пять заходов в приложение открывает диалог 'оцените'
         if (!sharedPreferences.getBoolean(IS_RATE, false)) {
-            ed.putInt(ENTERS_COUNT, sharedPreferences.getInt(ENTERS_COUNT, 0) + 1);
-            if (sharedPreferences.getInt(ENTERS_COUNT, 0) == 3) {
+            editor.putInt(ENTERS_COUNT, sharedPreferences.getInt(ENTERS_COUNT, 0) + 1);
+            if (sharedPreferences.getInt(ENTERS_COUNT, 0) == 5) {
                 //на всякий случай обнуляем счетчик
-                ed.putInt(ENTERS_COUNT, 1);
-                ed.putBoolean(IS_RATE, false);
+                editor.putInt(ENTERS_COUNT, 1);
+                editor.putBoolean(IS_RATE, false);
                 //создать диалог
                 StartScreenRateUsDialog startScreenRateUsDialog = new StartScreenRateUsDialog();
                 //показать диалог
-                startScreenRateUsDialog.show(getFragmentManager(), "rateDialog");
+                startScreenRateUsDialog.show(getFragmentManager(), IS_RATE);
 
             }
         }
+
+//        WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
+//        dialogFragment.show(getFragmentManager(), WHATS_NEW);
+//----диалог что нового----
+        if (sharedPreferences.contains(WHATS_NEW)) {
+            //уже создано
+            if (sharedPreferences.getInt(WHATS_NEW, -1) < NOW_VERSION) {
+                //если версия старая
+                editor.putInt(WHATS_NEW, NOW_VERSION);
+                //диалог что нового
+                WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
+                dialogFragment.show(getFragmentManager(), WHATS_NEW);
+            }
+        } else {
+            //еще не созданно
+            editor.putInt(WHATS_NEW, NOW_VERSION);
+            //начальный диалог...
+
+        }
+
         //завершаем редактирование сохраненных параметров
-        ed.commit();
+        editor.commit();
 
     }
 
@@ -220,7 +244,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                     SimpleDateFormat nowDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     String nowDate = nowDateFormat.format(new Date());
                     //соединяем и отправляем
-                    intent.putExtra(LessonActivity.LESSON_TIME, nowDate + dBTime.substring(10,19));
+                    intent.putExtra(LessonActivity.LESSON_TIME, nowDate + dBTime.substring(10, 19));
                     //отправляем id
                     intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, attitudeId);
 

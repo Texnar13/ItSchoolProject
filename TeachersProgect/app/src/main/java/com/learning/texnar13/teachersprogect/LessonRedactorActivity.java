@@ -49,8 +49,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
 
     //id главной зависимости
     long attitudeId = -1;
-
-    //класс-кабинет
+    //индикатор состояния рассадки
     TextView seatingStateText;
     //выбранные класс и кабинет
     final ClassCabinet classCabinetId = new ClassCabinet(-1, -1);//todo предусмотреть вариант если уроков вобще нет или у принимаемого урока не стандартное время. проверка нет ли на этом времени урока.
@@ -91,7 +90,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
 
 
         //класс-кабинет
-        Spinner classSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_class_spinner);
+        final Spinner classSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_class_spinner);
         Spinner cabinetSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_cabinet_spinner);
         seatingStateText = (TextView) findViewById(R.id.activity_lesson_redactor_seating_state);
         TextView editSeatingButton = (TextView) findViewById(R.id.activity_lesson_redactor_seating_redactor_button);
@@ -175,9 +174,9 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
             }
             classesCursor.close();
 
-            final CustomAdapter adapter = new CustomAdapter(this, R.layout.spiner_dropdown_element_lesson_redactor, stringClasses);
-            adapter.setDropDownViewResource(R.layout.spiner_dropdown_element_lesson_redactor);
-            classSpinner.setAdapter(adapter);
+            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,R.layout.spiner_dropdown_element_lesson_redactor,stringClasses);
+            arrayAdapter.setDropDownViewResource(R.layout.spiner_dropdown_element_lesson_redactor);
+            classSpinner.setAdapter(arrayAdapter);
             classSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -190,8 +189,6 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
                     //classSpinner.setSelection(pos);
                     classCabinetId.classId = classesId[pos];
                     seatingTextUpdate(classCabinetId);
-                    // Set adapter flag that something has been chosen
-                    adapter.flag = true;
                 }
             });
 
@@ -213,8 +210,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
             }
             cabinetsCursor.close();
 
-            final CustomAdapter adapter = new CustomAdapter(this, R.layout.spiner_dropdown_element_lesson_redactor, stringCabinets);
-            adapter.setDropDownViewResource(R.layout.spiner_dropdown_element_lesson_redactor);
+            final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spiner_dropdown_element_lesson_redactor, stringCabinets);
             cabinetSpinner.setAdapter(adapter);
             cabinetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -226,9 +222,6 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
                     Log.i("TeachersApp", "LessonRedactorActivity - cabinet spinner onItemSelected " + pos + "id =" + cabinetsId[pos]);
                     classCabinetId.cabinetId = cabinetsId[pos];
                     seatingTextUpdate(classCabinetId);
-
-                    // Set adapter flag that something has been chosen
-                    adapter.flag = true;
                 }
             });
 
@@ -240,12 +233,9 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
         }
 
         {//назначение повторений
-            final CustomAdapter adapter = new CustomAdapter(this, R.layout.spiner_dropdown_element_lesson_redactor, repeatPeriodsNames);
-
-            adapter.setDropDownViewResource(R.layout.spiner_dropdown_element_lesson_redactor);
-            lessonRepeatSpinner
-                    .setAdapter(
-                            adapter);
+            final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spiner_dropdown_element_lesson_redactor, repeatPeriodsNames);
+            lessonRepeatSpinner.setAdapter(
+                    adapter);
             lessonRepeatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -287,18 +277,23 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
             @Override
             public void onClick(View view) {
                 if (!isTmeYours) {//по формату вывода
-                    if (chosenLessonId != -1) {//единственный пункт который может быть не выбран
-                        if (finalAttitudeId == -1) {//создание
-                            Log.i("TeachersApp", "LessonRedactorActivity - create lesson chosenLessonId =" + chosenLessonId + " cabinetId =" + classCabinetId.cabinetId + " calendarStartTime =" + lessonTime.calendarStartTime.getTime().getTime() + " calendarEndTime =" + lessonTime.calendarEndTime.getTime().getTime());
-                            db.setLessonTimeAndCabinet(chosenLessonId, classCabinetId.cabinetId, lessonTime.calendarStartTime.getTime(), lessonTime.calendarEndTime.getTime(), repeat);
-                            finish();
-                        } else {//или изменение
-                            Log.i("TeachersApp", "LessonRedactorActivity - edit lesson chosenLessonId =" + chosenLessonId + " cabinetId =" + classCabinetId.cabinetId + " calendarStartTime =" + lessonTime.calendarStartTime.getTime().getTime() + " calendarEndTime =" + lessonTime.calendarEndTime.getTime().getTime());
-                            db.editLessonTimeAndCabinet(finalAttitudeId, chosenLessonId, classCabinetId.cabinetId, lessonTime.calendarStartTime.getTime(), lessonTime.calendarEndTime.getTime(), repeat);
-                            finish();
+                    if (classCabinetId.cabinetId != -1) {//выбран ли кабинет
+                        if (chosenLessonId != -1) {//выбран ли предмет
+                            if (finalAttitudeId == -1) {//создание
+                                Log.i("TeachersApp", "LessonRedactorActivity - create lesson chosenLessonId =" + chosenLessonId + " cabinetId =" + classCabinetId.cabinetId + " calendarStartTime =" + lessonTime.calendarStartTime.getTime().getTime() + " calendarEndTime =" + lessonTime.calendarEndTime.getTime().getTime());
+                                db.setLessonTimeAndCabinet(chosenLessonId, classCabinetId.cabinetId, lessonTime.calendarStartTime.getTime(), lessonTime.calendarEndTime.getTime(), repeat);
+                                finish();
+                            } else {//или изменение
+                                Log.i("TeachersApp", "LessonRedactorActivity - edit lesson chosenLessonId =" + chosenLessonId + " cabinetId =" + classCabinetId.cabinetId + " calendarStartTime =" + lessonTime.calendarStartTime.getTime().getTime() + " calendarEndTime =" + lessonTime.calendarEndTime.getTime().getTime());
+                                db.editLessonTimeAndCabinet(finalAttitudeId, chosenLessonId, classCabinetId.cabinetId, lessonTime.calendarStartTime.getTime(), lessonTime.calendarEndTime.getTime(), repeat);
+                                finish();
+                            }
+                        } else {
+                            Toast toast = Toast.makeText(getApplicationContext(), R.string.lesson_redactor_activity_toast_text_subject_not_chosen, Toast.LENGTH_LONG);
+                            toast.show();
                         }
                     } else {
-                        Toast toast = Toast.makeText(getApplicationContext(), "не выбран предмет!", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getApplicationContext(), R.string.lesson_redactor_activity_toast_text_cabinet_not_chosen, Toast.LENGTH_LONG);
                         toast.show();
                     }
                 }
@@ -345,7 +340,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
             }
 
 
-            final CustomAdapter adapter = new CustomAdapter(this, R.layout.spiner_dropdown_element_lesson_redactor, textTime);
+            final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spiner_dropdown_element_lesson_redactor, textTime);
             adapter.setDropDownViewResource(R.layout.spiner_dropdown_element_lesson_redactor);
             spinner.setAdapter(adapter);
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -382,30 +377,6 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
             LinearLayout.LayoutParams spinnerTimeParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             spinnerTimeParams.gravity = Gravity.CENTER;
 
-
-/*          <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical">
-
-                <Spinner
-                    android:id="@+id/activity_lesson_redactor_lesson_repeat_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginStart="20dp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="18dp"
-                    android:layout_marginStart="18dp"
-                    android:background="@drawable/line_gray" />
-            </LinearLayout>
-*/
             //контейнер для спиннера и подчеркивания
             LinearLayout timeContainer = new LinearLayout(this);
             timeContainer.setOrientation(LinearLayout.VERTICAL);
@@ -494,7 +465,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
         db.close();
 
         final String[] finalStringLessons = stringLessons;
-        final CustomAdapter adapter = new CustomAdapter(this, R.layout.spiner_dropdown_element_lesson_redactor, stringLessons);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spiner_dropdown_element_lesson_redactor, stringLessons);
         adapter.setDropDownViewResource(R.layout.spiner_dropdown_element_lesson_redactor);
         lessonNameSpinner.setAdapter(adapter);
         lessonNameSpinner.setSelection(position, false);
@@ -549,9 +520,6 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
                     Log.i("TeachersApp", "LessonRedactorActivity - no lesson selected");
                     chosenLessonId = -1;
                 }
-
-                // Set adapter flag that something has been chosen
-                adapter.flag = true;
             }
         });
         //spinner.setSelection(2);//элемент по умолчанию
@@ -929,37 +897,36 @@ interface LessonNameDialogInterface {//обратная связь от диал
     void lessonNameDialogMethod(int code, int position, String classNameText);
 }
 
-class CustomAdapter extends ArrayAdapter {
-    private Context context;
-    private int textViewResourceId;
-    private String[] objects;
-    //private boolean isFirstElementVisible;
-    boolean flag = false;
-
-    CustomAdapter(Context context, int textViewResourceId, String[] objects //,boolean isFirstElementVisible
-    ) {
-        super(context, textViewResourceId, objects);
-        this.context = context;
-        this.textViewResourceId = textViewResourceId;
-        this.objects = objects;
-        //this.isFirstElementVisible = isFirstElementVisible;
-    }
-
-    @NonNull
-    @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        if (convertView == null)
-            convertView = View.inflate(context, textViewResourceId, null);
-        //if (flag || isFirstElementVisible) {
-        TextView tv = (TextView) convertView;
-        tv.setGravity(Gravity.CENTER);
-        tv.setBackgroundColor(getContext().getResources().getColor(R.color.colorBackGround));//светло салатовый
-        //tv.setBackgroundColor(Color.WHITE);//светло салатовый
-        tv.setText(objects[position]);
-        //}
-        return convertView;
-    }
-}
+//class CustomAdapter extends ArrayAdapter {
+//    private Context context;
+//    private int textViewResourceId;
+//    private String[] objects;
+//    //private boolean isFirstElementVisible;
+//
+//    CustomAdapter(Context context, int textViewResourceId, String[] objects //,boolean isFirstElementVisible
+//    ) {
+//        super(context, textViewResourceId, objects);
+//        this.context = context;
+//        this.textViewResourceId = textViewResourceId;
+//        this.objects = objects;
+//        //this.isFirstElementVisible = isFirstElementVisible;
+//    }
+//
+//    @NonNull
+//    @Override
+//    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+//        if (convertView == null)
+//            convertView = View.inflate(context, textViewResourceId, null);
+//        //if (flag || isFirstElementVisible) {
+//        TextView tv = (TextView) convertView;
+//        tv.setGravity(Gravity.CENTER);
+//        tv.setBackgroundColor(getContext().getResources().getColor(R.color.colorBackGround));//светло салатовый
+//        //tv.setBackgroundColor(Color.WHITE);//светло салатовый
+//        tv.setText(objects[position]);
+//        //}
+//        return convertView;
+//    }
+//}
 
 
 
