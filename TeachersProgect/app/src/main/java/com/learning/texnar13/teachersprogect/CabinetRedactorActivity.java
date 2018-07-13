@@ -33,7 +33,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     // ID редактируемого обьекта
     public static final String EDITED_CABINET_ID = "id";
     // шаг клетки
-    static float girdSpacing = 60F;
+    static float girdSpacing = 40F;
 
     //--переменные--
     // выравнивание
@@ -43,9 +43,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
 
     ArrayList<CabinetRedactorPoint> deskCoordinatesList = new ArrayList<>();
-    //нулевые координаты
-    static float zeroX = 0;
-    static float zeroY = 0;
     //множитель
     float multiplier = 0;
     long checkedDeskId;
@@ -125,11 +122,11 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         //коэффициент размера интерфейса
-        multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f * getResources().getInteger(R.integer.desks_screen_multiplier);
+        multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 40f * getResources().getInteger(R.integer.desks_screen_multiplier);
         //по коэффициенту расчитываем ширину сетки
-        girdSpacing = 600 * multiplier;
+        girdSpacing = 40 * multiplier;
 
-        Log.i("TeachersApp", "" + multiplier);
+        Log.i("TeachersApp", "multiplier = " + multiplier);
         //кнопка назад в actionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -210,13 +207,13 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             //ставим парте Drawable
             deskLayout.setBackground(getResources().getDrawable(R.drawable.start_screen_3_2_yellow_spot));
             //ее параметры
-            RelativeLayout.LayoutParams deskLayoutParams = new RelativeLayout.LayoutParams((int) pxFromDp(1000 * numberOfPlaces * multiplier), (int) pxFromDp(1000 * multiplier));
+            RelativeLayout.LayoutParams deskLayoutParams = new RelativeLayout.LayoutParams((int) pxFromDp(40 * numberOfPlaces * multiplier), (int) pxFromDp(40 * multiplier));
             deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             //deskLayout.setRotation(60);
-            deskLayoutParams.leftMargin = (int) pxFromDp(deskX * 25 * multiplier);
-            deskLayoutParams.topMargin = (int) pxFromDp(deskY * 25 * multiplier);
+            deskLayoutParams.leftMargin = (int) pxFromDp(deskX * multiplier);
+            deskLayoutParams.topMargin = (int) pxFromDp(deskY * multiplier);
             //ставим параметры
             deskLayout.setLayoutParams(deskLayoutParams);
             //выводим парту
@@ -260,27 +257,27 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     zoomControls.setIsZoomOutEnabled(true);
 
                     //выводим все
-                    multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f * getResources().getInteger(R.integer.desks_screen_multiplier);
+                    multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 40f * getResources().getInteger(R.integer.desks_screen_multiplier);
                     for (int i = 0; i < deskCoordinatesList.size(); i++) {
                         //создаем новые параметры
                         RelativeLayout.LayoutParams deskLayoutParams =
                                 new RelativeLayout.LayoutParams(
-                                        (int) pxFromDp(1000 * deskCoordinatesList.get(i).numberOfPlaces * multiplier),
-                                        (int) pxFromDp(1000 * multiplier)
+                                        (int) pxFromDp(40 * deskCoordinatesList.get(i).numberOfPlaces * multiplier),
+                                        (int) pxFromDp(40 * multiplier)
                                 );
                         deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                         deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                         deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
                         deskLayoutParams.leftMargin = (int) pxFromDp(
-                                deskCoordinatesList.get(i).x * 25 * multiplier
+                                deskCoordinatesList.get(i).x * multiplier
                         );
                         deskLayoutParams.topMargin = (int) pxFromDp(
-                                deskCoordinatesList.get(i).y * 25 * multiplier
+                                deskCoordinatesList.get(i).y * multiplier
                         );
                         //и присваиваем из партам
                         deskCoordinatesList.get(i).desk.setLayoutParams(deskLayoutParams);
                     }
-                    girdSpacing = 600 * multiplier;
+                    girdSpacing = 40 * multiplier;
                     //---перевывод сетки---
                     outLines();
                 } else {//деактивируем кнопку если приближать нельзя
@@ -308,27 +305,27 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     zoomControls.setIsZoomInEnabled(true);
 
                     //выводим все
-                    multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f * getResources().getInteger(R.integer.desks_screen_multiplier);
+                    multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 40f * getResources().getInteger(R.integer.desks_screen_multiplier);
                     for (int i = 0; i < deskCoordinatesList.size(); i++) {
                         //создаем новые параметры
                         RelativeLayout.LayoutParams deskLayoutParams =
                                 new RelativeLayout.LayoutParams(
-                                        (int) pxFromDp(1000 * deskCoordinatesList.get(i).numberOfPlaces * multiplier),
-                                        (int) pxFromDp(1000 * multiplier)
+                                        (int) pxFromDp(40 * deskCoordinatesList.get(i).numberOfPlaces * multiplier),
+                                        (int) pxFromDp(40 * multiplier)
                                 );
                         deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                         deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                         deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
                         deskLayoutParams.leftMargin = (int) pxFromDp(
-                                deskCoordinatesList.get(i).x * 25 * multiplier
+                                deskCoordinatesList.get(i).x * multiplier
                         );
                         deskLayoutParams.topMargin = (int) pxFromDp(
-                                deskCoordinatesList.get(i).y * 25 * multiplier
+                                deskCoordinatesList.get(i).y * multiplier
                         );
                         //и присваиваем из партам
                         deskCoordinatesList.get(i).desk.setLayoutParams(deskLayoutParams);
                     }
-                    girdSpacing = 600 * multiplier;
+                    girdSpacing = 40 * multiplier;
                     //---перевывод сетки---
                     outLines();
                 } else {//деактивируем кнопку если отдалять нельзя
@@ -353,6 +350,19 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     PointF nowMid = new PointF();
     //изначальное растояние между пальцам
     float oldDist = 1f;
+
+    //+при зуме происходит смещение осей, и их растягивание (за растягивание отвечаем переменная multiplier)+
+    //нулевые координаты (используются только для view при перемещении двумя пальцами координаты для бд не меняются)
+    //меняются координаты и идет смещение касания
+    //начальные
+    float startZeroX = 0;
+    float startZeroY = 0;
+    //текущие
+    float zeroX = 0;
+    float zeroY = 0;
+    //изначальный множитель
+    float startMultiplier = multiplier;
+
 
     //начальные параметры обьекта
     float[] widthOld = {};
@@ -395,12 +405,16 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             case MotionEvent.ACTION_DOWN:
                 //режим перемещения
                 mode = DRAG;
+                //стартовое смещение координат
+                startZeroX = zeroX;
+                startZeroY = zeroY;
 
+                // находим нажатую парту
                 for (int i = deskCoordinatesList.size() - 1; i >= 0; i--) {
-                    if ((motionEvent.getX() >= pxFromDp(deskCoordinatesList.get(i).x * 25 * multiplier)) &&
-                            (motionEvent.getX() <= pxFromDp((deskCoordinatesList.get(i).x * 25 + 1000 * deskCoordinatesList.get(i).numberOfPlaces) * multiplier)) &&
-                            (motionEvent.getY() >= pxFromDp(deskCoordinatesList.get(i).y * 25 * multiplier)) &&
-                            (motionEvent.getY() <= pxFromDp((deskCoordinatesList.get(i).y * 25 + 1000) * multiplier))) {
+                    if ((motionEvent.getX() >= pxFromDp(deskCoordinatesList.get(i).x * multiplier)) &&
+                            (motionEvent.getX() <= pxFromDp((deskCoordinatesList.get(i).x + 40 * deskCoordinatesList.get(i).numberOfPlaces) * multiplier)) &&
+                            (motionEvent.getY() >= pxFromDp(deskCoordinatesList.get(i).y * multiplier)) &&
+                            (motionEvent.getY() <= pxFromDp((deskCoordinatesList.get(i).y + 40) * multiplier))) {
 
                         instrumentalImage.setImageResource(R.drawable.ic_menu_delete_standart);
 
@@ -408,9 +422,9 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         //новые параметры парты
                         //совмещаем точку нажатия и центр(-40;-20) парты
                         ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin =
-                                (int) (motionEvent.getX() - pxFromDp(500 * deskCoordinatesList.get(i).numberOfPlaces * multiplier));
+                                (int) (motionEvent.getX() - pxFromDp(20 * deskCoordinatesList.get(i).numberOfPlaces * multiplier));
                         ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin =
-                                (int) (motionEvent.getY() - pxFromDp(500 * multiplier));
+                                (int) (motionEvent.getY() - pxFromDp(20 * multiplier));
                         //самую последнюю парту и выходим
                         break;
                     }
@@ -418,7 +432,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 Log.i(TAG, "MotionEvent.ACTION_DOWN count:" + motionEvent.getPointerCount() + " mode:" + mode);
                 break;
 
-            case MotionEvent.ACTION_POINTER_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN://todo проверить
                 //если поставлен второй палец на остальные не реагируем
                 if (motionEvent.getPointerCount() == 2) {
                     //будем зумить, прекращаем перемещение
@@ -431,8 +445,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
                             //расчитываем новые координаты
                             //              координата     -          расстояние до центра пальца
-                            float x = ((motionEvent.getX() - pxFromDp(500 * deskCoordinatesList.get(i).numberOfPlaces * multiplier)));
-                            float y = ((motionEvent.getY() - pxFromDp(500 * multiplier)));
+                            float x = ((motionEvent.getX() - zeroX - pxFromDp(20 * deskCoordinatesList.get(i).numberOfPlaces * multiplier)));
+                            float y = ((motionEvent.getY() - zeroY - pxFromDp(20 * multiplier)));
 
                             //отступ от границы клетки
                             if (isGird) {//на до ли отнимать/прибавлять
@@ -452,8 +466,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                             }
 
                             //новые координаты в список
-                            deskCoordinatesList.get(i).x = (long) (x / pxFromDp(25 * multiplier));
-                            deskCoordinatesList.get(i).y = (long) (y / pxFromDp(25 * multiplier));
+                            deskCoordinatesList.get(i).x = (long) (x / pxFromDp(multiplier));//todo множитель экранов
+                            deskCoordinatesList.get(i).y = (long) (y / pxFromDp(multiplier));
                             //новые координаты в бд
                             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
                             db.setDeskCoordinates(deskCoordinatesList.get(i).deskId,
@@ -461,22 +475,27 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                                     deskCoordinatesList.get(i).y
                             );
                             //новые координаты парте
-                            ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin = (int) pxFromDp((deskCoordinatesList.get(i).x * 25 * multiplier));
-                            ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin = (int) pxFromDp((deskCoordinatesList.get(i).y * 25 * multiplier));
+                            ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin = (int) pxFromDp((deskCoordinatesList.get(i).x * multiplier));
+                            ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin = (int) pxFromDp((deskCoordinatesList.get(i).y * multiplier));
                         }
                     }
-                    Log.i("TeachersApp", "X = " + motionEvent.getX() +
-                            " ; Y = " + motionEvent.getY() + " ;");
+                    Log.i("TeachersApp", "X = " + (motionEvent.getX() - zeroX) +
+                            " ; Y = " + (motionEvent.getY() - zeroY) + " ;");
                     checkedDeskId = -1;
 
-                    //начинаем zoom
+                    //---------начинаем zoom-----------
                     //находим изначальное растояние между пальцами
                     oldDist = spacing(motionEvent);
                     if (oldDist > 10f) {
+                        //начальная середина между пальцами
                         findMidPoint(startMid, motionEvent);
+                        //текущая середина между пальцами(будем искать в процессе)
                         findMidPoint(nowMid, motionEvent);
+                        //начальный множитель
+                        startMultiplier = multiplier;
                         mode = ZOOM;
                     }
+                    //стартовые параметры обьекта
                     widthOld = new float[deskCoordinatesList.size()];
                     heightOld = new float[deskCoordinatesList.size()];
                     xOld = new float[deskCoordinatesList.size()];
@@ -486,8 +505,10 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         widthOld[i] = deskCoordinatesList.get(i).desk.getWidth();
                         heightOld[i] = deskCoordinatesList.get(i).desk.getHeight();
                         //начальные координаты обьекта
-                        xOld[i] = (int) deskCoordinatesList.get(i).desk.getX();
-                        yOld[i] = (int) deskCoordinatesList.get(i).desk.getY();
+                        xOld[i] =
+                                ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin;
+                        yOld[i] =
+                                ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin;
                     }
                 }
                 Log.i(TAG, "MotionEvent.ACTION_POINTER_DOWN count:" + motionEvent.getPointerCount() + " mode:" + mode);
@@ -495,14 +516,13 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
             case MotionEvent.ACTION_MOVE:
                 if (mode == DRAG) {//перемещаем парту
-                    //старые + новая - x нажатия
                     for (int i = 0; i < deskCoordinatesList.size(); i++) {
                         if (deskCoordinatesList.get(i).deskId == checkedDeskId) {
                             //если палец находится в пределах крестика то удаляем парту
-                            if ((motionEvent.getX() >= out.getWidth() / 2 - pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier)) / 2) &&
-                                    (motionEvent.getX() <= out.getWidth() / 2 + pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier)) / 2) &&
-                                    (motionEvent.getY() >= out.getHeight() - pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier))) &&
-                                    (motionEvent.getY() <= out.getHeight())) {
+                            if ((motionEvent.getX() - zeroX >= out.getWidth() / 2 - pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier)) / 2) &&
+                                    (motionEvent.getX() - zeroX <= out.getWidth() / 2 + pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier)) / 2) &&
+                                    (motionEvent.getY() - zeroY >= out.getHeight() - pxFromDp(50 * getResources().getInteger(R.integer.desks_screen_multiplier))) &&
+                                    (motionEvent.getY() - zeroY <= out.getHeight())) {
                                 Log.i("TeachersApp", "удалена парта");
                                 //удаляем парту
                                 DataBaseOpenHelper db = new DataBaseOpenHelper(this);
@@ -510,10 +530,10 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                                 out.removeView(deskCoordinatesList.get(i).desk);
                                 deskCoordinatesList.remove(i);
                                 instrumentalImage.setImageResource(R.drawable.ic_white_plus);
-                            } else {
+                            } else {//todo а здесь все сохраняется в координату?(не проверил)
                                 //новые параметры парты
-                                ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin = (int) (motionEvent.getX() - pxFromDp(500 * deskCoordinatesList.get(i).numberOfPlaces * multiplier));
-                                ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin = (int) (motionEvent.getY() - pxFromDp(500 * multiplier));
+                                ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin = (int) (motionEvent.getX() - pxFromDp(20 * deskCoordinatesList.get(i).numberOfPlaces * multiplier));// todo удалил zeroX
+                                ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin = (int) (motionEvent.getY() - pxFromDp(20 * multiplier));//
                             }
                         }
                     }
@@ -522,58 +542,98 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     float newDist = spacing(motionEvent);
                     //находим коэффициент разницы между изначальным и новым расстоянием
                     float scale = newDist / oldDist;
+                    //прошлая середина между пальцами
+                    float lastX = nowMid.x;
+                    float lastY = nowMid.y;
+                    // и текущая
+                    findMidPoint(nowMid, motionEvent);
 
                     if (newDist > 10f) {//слишком маленькое расстояние между пальцами
                         if (scale > 0.01f &&//слишком маленький коэффициент
-                                (multiplier * 1000f / getResources().getInteger(R.integer.desks_screen_multiplier) * scale >= 3f) &&//слишком маленький размер
-                                (multiplier * 1000f / getResources().getInteger(R.integer.desks_screen_multiplier) * scale <= 100f)//слишком большой размер
+                                (startMultiplier * 40f / getResources().getInteger(R.integer.desks_screen_multiplier) * scale >= 3f) &&//слишком маленький размер
+                                (startMultiplier * 40f / getResources().getInteger(R.integer.desks_screen_multiplier) * scale <= 100f)//слишком большой размер
                                 ) {// TODO оси координат,что происходит при работе зума как перемещения
+                            //--перемещение осей при зуме
+
+                            //переназначаем центр осей на зуме
+                            zeroX = ((startZeroX - startMid.x) * scale) + nowMid.x;
+                            zeroY = ((startZeroY - startMid.y) * scale) + nowMid.y;
+                            //назначаем растяжение осей меняя множитель
+                            multiplier = startMultiplier * scale;
 
                             for (int i = 0; i < deskCoordinatesList.size(); i++) {
 
                                 //-----трансформация размера-----
                                 deskCoordinatesList.get(i).desk.getLayoutParams().width = (int) (widthOld[i] * scale);
                                 deskCoordinatesList.get(i).desk.getLayoutParams().height = (int) (heightOld[i] * scale);
+
                                 //-----трансформация координаты-----
-                                //текущая середина пальцев
-                                findMidPoint(nowMid, motionEvent);
+
                                 //-перемещение обьекта-
                                 // относительно центра зуммирования и перемещение пальцев в процессе зума
                                 //ставим обьекту координаты
-                                deskCoordinatesList.get(i).desk.setX(((xOld[i] - startMid.x) * scale) + nowMid.x);
-                                deskCoordinatesList.get(i).desk.setY(((yOld[i] - startMid.y) * scale) + nowMid.y);
+                                ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin = (int) (((xOld[i] - startMid.x) * scale) + nowMid.x);
+                                ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin = (int) (((yOld[i] - startMid.y) * scale) + nowMid.y);
+
+                                //массива координат (координаты форматированы под бд)
+                                deskCoordinatesList.get(i).x = (long) (dpFromPx(
+                                        ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin
+                                ) / multiplier
+                                );
+                                deskCoordinatesList.get(i).y = (long) (dpFromPx(
+                                        ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin
+                                ) / multiplier);
                             }
-                            multiplier = multiplier * 1000f * scale
-                                    / getResources().getInteger(R.integer.desks_screen_multiplier);
-                        } else {
+                        } else {//todo проверить
                             //если не можем использовать изменение размера,
                             // тогда просто перемещаем
-                            //берем прошлую середину
-                            float lastX = nowMid.x;
-                            float lastY = nowMid.y;
-                            // и текущую
-                            findMidPoint(nowMid, motionEvent);
                             for (int i = 0; i < deskCoordinatesList.size(); i++) {
                                 //и сравниваем их
-                                deskCoordinatesList.get(i).desk.setX(deskCoordinatesList.get(i).desk.getX() + nowMid.x - lastX);
-                                deskCoordinatesList.get(i).desk.setY(deskCoordinatesList.get(i).desk.getY() + nowMid.y - lastY);
-                                //перемещаем оси координат относительно того как передвинулись обьекты
+                                ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin = (int) (
+                                        ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin
+                                                + nowMid.x - lastX
+                                );//todo zeroX
+                                ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin = (int) (
+                                        ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin
+                                                + nowMid.x - lastY
+                                );
+
                             }
+                            //переназначаем центр осей
+                            zeroX = zeroX + nowMid.x - lastX;
+                            zeroY = zeroY + nowMid.y - lastY;
                         }
+                        //Log.e(TAG, "zeroX= "+zeroX+" zeroY= "+zeroY);
                     }
                 }
-                Log.e(TAG, "MotionEvent.ACTION_MOVE count:" + motionEvent.getPointerCount() + " mode:" + mode);
+                Log.i(TAG, "MotionEvent.ACTION_MOVE count:" + motionEvent.getPointerCount() + " mode:" + mode);
+                Log.i(TAG, "MotionEvent.ACTION_MOVE zeroX:" + zeroX + "  zeroY:" + zeroY);
                 break;
 
             case MotionEvent.ACTION_POINTER_UP: {
+//                //--
+//                for (int i = 0; i < deskCoordinatesList.size(); i++) {
+//                    RelativeLayout deskGhost = new RelativeLayout(this);
+//                    deskGhost.setBackground(getResources().getDrawable(R.drawable.start_screen_3_5_magenta_spot));
+//                    RelativeLayout.LayoutParams layParams = new RelativeLayout.LayoutParams(
+//                            100, 100
+//                    );
+//                    layParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+//                    layParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//                    layParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//                    layParams.leftMargin = (int) pxFromDp(deskCoordinatesList.get(i).x * multiplier);
+//                    layParams.topMargin = (int) pxFromDp(deskCoordinatesList.get(i).y * multiplier);
+//                    out.addView(deskGhost, layParams);
+//                }
+//                //--
                 DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-                db.setSettingsProfileParameters(MY_SETTINGS_PROFILE_ID, MY_SETTINGS_PROFILE_NAME, (int) (multiplier * 1000f / getResources().getInteger(R.integer.desks_screen_multiplier)));
+                db.setSettingsProfileParameters(MY_SETTINGS_PROFILE_ID, MY_SETTINGS_PROFILE_NAME, (int) (multiplier * 40f / getResources().getInteger(R.integer.desks_screen_multiplier)));
                 mode = NONE;
                 Log.i(TAG, "MotionEvent.ACTION_POINTER_UP count:" + motionEvent.getPointerCount() + " mode:" + mode);
                 break;
             }
 
-            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_UP://todo при выводе парты при отпускании и сетка
                 if (mode == DRAG) {
                     //---отпускаем парту---
                     for (int i = 0; i < deskCoordinatesList.size(); i++) {
@@ -584,8 +644,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
                             //расчитываем новые координаты
                             //              координата     -          расстояние до центра пальца
-                            float x = ((motionEvent.getX() - pxFromDp(500 * deskCoordinatesList.get(i).numberOfPlaces * multiplier)));
-                            float y = ((motionEvent.getY() - pxFromDp(500 * multiplier)));
+                            float x = ((motionEvent.getX() - zeroX - pxFromDp(20 * deskCoordinatesList.get(i).numberOfPlaces * multiplier)));
+                            float y = ((motionEvent.getY() - zeroY - pxFromDp(20 * multiplier)));
 
                             //отступ от границы клетки
                             if (isGird) {//на до ли отнимать/прибавлять
@@ -601,12 +661,12 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                                     y = y - (y % girdSpacing);
                                 } else {
                                     y = y + girdSpacing - (y % girdSpacing);
-                                }
+                                }//todo проверить все ли правильно с отступом
                             }
 
                             //новые координаты в список
-                            deskCoordinatesList.get(i).x = (long) (x / pxFromDp(25 * multiplier));
-                            deskCoordinatesList.get(i).y = (long) (y / pxFromDp(25 * multiplier));
+                            deskCoordinatesList.get(i).x = (long) (x / pxFromDp(multiplier));
+                            deskCoordinatesList.get(i).y = (long) (y / pxFromDp(multiplier));
                             //новые координаты в бд
                             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
                             db.setDeskCoordinates(deskCoordinatesList.get(i).deskId,
@@ -614,12 +674,12 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                                     deskCoordinatesList.get(i).y
                             );
                             //новые координаты парте
-                            ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin = (int) pxFromDp((deskCoordinatesList.get(i).x * 25 * multiplier));
-                            ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin = (int) pxFromDp((deskCoordinatesList.get(i).y * 25 * multiplier));
+                            ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).leftMargin = (int) pxFromDp((deskCoordinatesList.get(i).x * multiplier));
+                            ((RelativeLayout.LayoutParams) deskCoordinatesList.get(i).desk.getLayoutParams()).topMargin = (int) pxFromDp((deskCoordinatesList.get(i).y * multiplier));
                         }
                     }
-                    Log.i("TeachersApp", "X = " + motionEvent.getX() +
-                            " ; Y = " + motionEvent.getY() + " ;");
+                    Log.i("TeachersApp", "X = " + (motionEvent.getX() - zeroX) +
+                            " ; Y = " + (motionEvent.getY() - zeroY) + " ;");
                     checkedDeskId = -1;
                 }
                 mode = NONE;
@@ -657,7 +717,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         int numberOfPlaces = 2;
 
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        long deskId = db.createDesk(numberOfPlaces, (int) (dpFromPx(metricsB.widthPixels / 2) / (25 * multiplier)), (int) (dpFromPx(metricsB.heightPixels / 2) / (25 * multiplier)), cabinetId);
+        long deskId = db.createDesk(numberOfPlaces, (int) (dpFromPx(metricsB.widthPixels / 2) / multiplier), (int) (dpFromPx(metricsB.heightPixels / 2) / multiplier), cabinetId);
 
         for (int i = 0; i < numberOfPlaces; i++) {
             db.createPlace(deskId, i + 1);
@@ -665,17 +725,17 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         RelativeLayout newDeskLayout = new RelativeLayout(this);
 
-        RelativeLayout.LayoutParams newDeskLayoutParams = new RelativeLayout.LayoutParams((int) pxFromDp(1000 * numberOfPlaces * multiplier), (int) pxFromDp(1000 * multiplier));
+        RelativeLayout.LayoutParams newDeskLayoutParams = new RelativeLayout.LayoutParams((int) pxFromDp(40 * numberOfPlaces * multiplier), (int) pxFromDp(40 * multiplier));
         newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-        newDeskLayoutParams.leftMargin = (int) (metricsB.widthPixels / 2 - pxFromDp(500 * numberOfPlaces * multiplier));
-        newDeskLayoutParams.topMargin = (int) (metricsB.heightPixels / 2 - pxFromDp(500 * multiplier));
+        newDeskLayoutParams.leftMargin = (int) (metricsB.widthPixels / 2 - pxFromDp(20 * numberOfPlaces * multiplier));
+        newDeskLayoutParams.topMargin = (int) (metricsB.heightPixels / 2 - pxFromDp(20 * multiplier));
         newDeskLayout.setLayoutParams(newDeskLayoutParams);
         //ставим парте Drawable
         newDeskLayout.setBackground(getResources().getDrawable(R.drawable.start_screen_3_2_yellow_spot));
 
-        deskCoordinatesList.add(new CabinetRedactorPoint(deskId, newDeskLayout, (int) (dpFromPx(metricsB.widthPixels / 2 - pxFromDp(500 * numberOfPlaces * multiplier)) / (25 * multiplier)), (int) (dpFromPx(metricsB.heightPixels / 2 - pxFromDp(500 * multiplier)) / (25 * multiplier)), numberOfPlaces));
+        deskCoordinatesList.add(new CabinetRedactorPoint(deskId, newDeskLayout, (int) (dpFromPx(metricsB.widthPixels / 2 - pxFromDp(20 * numberOfPlaces * multiplier)) / (multiplier)), (int) (dpFromPx(metricsB.heightPixels / 2 - pxFromDp(20 * multiplier)) / (multiplier)), numberOfPlaces));
 
         out.addView(newDeskLayout);
         //появилась парта, удаляем текст
@@ -693,7 +753,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         int numberOfPlaces = 1;
 
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        long deskId = db.createDesk(numberOfPlaces, (int) (dpFromPx(metricsB.widthPixels / 2) / (25 * multiplier)), (int) (dpFromPx(metricsB.heightPixels / 2) / (25 * multiplier)), cabinetId);
+        long deskId = db.createDesk(numberOfPlaces, (int) (dpFromPx(metricsB.widthPixels / 2) / (multiplier)), (int) (dpFromPx(metricsB.heightPixels / 2) / (multiplier)), cabinetId);
 
         for (int i = 0; i < numberOfPlaces; i++) {
             db.createPlace(deskId, i + 1);
@@ -701,22 +761,30 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
         RelativeLayout newDeskLayout = new RelativeLayout(this);
 
-        RelativeLayout.LayoutParams newDeskLayoutParams = new RelativeLayout.LayoutParams((int) pxFromDp(1000 * numberOfPlaces * multiplier), (int) pxFromDp(1000 * multiplier));
+        RelativeLayout.LayoutParams newDeskLayoutParams = new RelativeLayout.LayoutParams((int) pxFromDp(40 * numberOfPlaces * multiplier), (int) pxFromDp(40 * multiplier));
         newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-        newDeskLayoutParams.leftMargin = (int) (metricsB.widthPixels / 2 - pxFromDp(500 * numberOfPlaces * multiplier));
-        newDeskLayoutParams.topMargin = (int) (metricsB.heightPixels / 2 - pxFromDp(500 * multiplier));
+        newDeskLayoutParams.leftMargin = (int) (metricsB.widthPixels / 2 - pxFromDp(20 * numberOfPlaces * multiplier));
+        newDeskLayoutParams.topMargin = (int) (metricsB.heightPixels / 2 - pxFromDp(20 * multiplier));
         newDeskLayout.setLayoutParams(newDeskLayoutParams);
         //ставим парте Drawable
         newDeskLayout.setBackground(getResources().getDrawable(R.drawable.start_screen_3_2_yellow_spot));
 
-        deskCoordinatesList.add(new CabinetRedactorPoint(deskId, newDeskLayout, (int) (dpFromPx(metricsB.widthPixels / 2 - pxFromDp(500 * numberOfPlaces * multiplier)) / (25 * multiplier)), (int) (dpFromPx(metricsB.heightPixels / 2 - pxFromDp(500 * multiplier)) / (25 * multiplier)), numberOfPlaces));
+        deskCoordinatesList.add(new CabinetRedactorPoint(deskId, newDeskLayout, (int) (dpFromPx(metricsB.widthPixels / 2 - pxFromDp(20 * numberOfPlaces * multiplier)) / (multiplier)), (int) (dpFromPx(metricsB.heightPixels / 2 - pxFromDp(20 * multiplier)) / (multiplier)), numberOfPlaces));
 
         out.addView(newDeskLayout);
         //появилась парта, удаляем текст
         stateText.setText("");
         return true;
+    }
+
+    @Override
+    public void onPause() {//todo  переделать в более серьезный метод
+        //чистим данные перед выходом
+        zeroX = 0;
+        zeroY = 0;
+        super.onPause();
     }
 
 //---------------вывод сетки---------------
@@ -783,7 +851,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         }
     }
 
-//---------------системные методы---------------
+    //---------------системные методы---------------
 
     private float pxFromDp(float px) {
         return px * getApplicationContext().getResources().getDisplayMetrics().density;
