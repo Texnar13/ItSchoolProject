@@ -126,8 +126,10 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
             Cursor lessonCursor = db.getSubjectById(chosenLessonId);
             lessonCursor.moveToFirst();
 
-            lessonTime.calendarStartTime.setTime(new Date(attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN))));
-            lessonTime.calendarEndTime.setTime(new Date(attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END))));
+            lessonTime.calendarStartTime.setTime(new Date(getIntent().getLongExtra(LESSON_START_TIME, 1)));
+            lessonTime.calendarEndTime.setTime(new Date(getIntent().getLongExtra(LESSON_END_TIME, 1)));
+//            lessonTime.calendarStartTime.setTime(new Date(attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN))));//todo почему это не работает, а работают строки выше?
+//            lessonTime.calendarEndTime.setTime(new Date(attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END))));
 
             repeat = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT));
 
@@ -174,7 +176,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
             }
             classesCursor.close();
 
-            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,R.layout.spiner_dropdown_element_lesson_redactor,stringClasses);
+            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.spiner_dropdown_element_lesson_redactor, stringClasses);
             arrayAdapter.setDropDownViewResource(R.layout.spiner_dropdown_element_lesson_redactor);
             classSpinner.setAdapter(arrayAdapter);
             classSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -191,6 +193,12 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
                     seatingTextUpdate(classCabinetId);
                 }
             });
+
+//            if (classCabinetId.classId != -1) {//todo надо перебрать этот класс, вынести отдельные диалоги
+//                //выводим уроки
+//                availableLessonsOut(classCabinetId.classId, 0);
+//
+//            }
 
             for (int i = 0; i < classesId.length; i++) {//ставим текущий класс в спиннер
                 if (classesId[i] == classCabinetId.classId) {
@@ -839,33 +847,6 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
                 }
             });
             return builder.create();
-
-//           builder.setPositiveButton(getResources().getString(R.string.lesson_redactor_activity_dialog_button_add), new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int id) {
-//                            ((LessonNameDialogInterface) getActivity())
-//                                    .lessonNameDialogMethod(
-//                                            1,
-//                                            getArguments().getStringArray("stringLessons").length - 2,
-//                                            lessonNameEditText.getText().toString()
-//                                    );
-//
-//                            dismiss();
-//                        }
-//                    })
-//                    .setNegativeButton(getResources().getString(R.string.lesson_redactor_activity_dialog_button_cancel), new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int id) {
-//                            ((LessonNameDialogInterface) getActivity())
-//                                    .lessonNameDialogMethod(
-//                                            0,
-//                                            getArguments().getInt("position"),
-//                                            ""
-//                                    );
-//                            dismiss();
-//                        }
-//                    });
-
-            //return builder.create();
         }
 
         //---------форматы----------
@@ -892,41 +873,10 @@ public class LessonRedactorActivity extends AppCompatActivity implements LessonN
     }
 }
 
-interface LessonNameDialogInterface {//обратная связь от диалога
-
+//обратная связь от диалога
+interface LessonNameDialogInterface {
     void lessonNameDialogMethod(int code, int position, String classNameText);
 }
-
-//class CustomAdapter extends ArrayAdapter {
-//    private Context context;
-//    private int textViewResourceId;
-//    private String[] objects;
-//    //private boolean isFirstElementVisible;
-//
-//    CustomAdapter(Context context, int textViewResourceId, String[] objects //,boolean isFirstElementVisible
-//    ) {
-//        super(context, textViewResourceId, objects);
-//        this.context = context;
-//        this.textViewResourceId = textViewResourceId;
-//        this.objects = objects;
-//        //this.isFirstElementVisible = isFirstElementVisible;
-//    }
-//
-//    @NonNull
-//    @Override
-//    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-//        if (convertView == null)
-//            convertView = View.inflate(context, textViewResourceId, null);
-//        //if (flag || isFirstElementVisible) {
-//        TextView tv = (TextView) convertView;
-//        tv.setGravity(Gravity.CENTER);
-//        tv.setBackgroundColor(getContext().getResources().getColor(R.color.colorBackGround));//светло салатовый
-//        //tv.setBackgroundColor(Color.WHITE);//светло салатовый
-//        tv.setText(objects[position]);
-//        //}
-//        return convertView;
-//    }
-//}
 
 
 

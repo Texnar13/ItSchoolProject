@@ -20,8 +20,12 @@
     <string name="start_screen_activity_dialog_button_rate_now">оценить!</string>
     <string name="start_screen_activity_dialog_button_later">позже</string>
 
-    <string name="start_screen_activity_dialog_whats_new_title">В этом обновлении \n(1.990):</string>
-    <string name="start_screen_activity_dialog_whats_new_text">позже</string>
+    <string name="start_screen_activity_dialog_whats_new_title">Что нового:</string>
+    <string name="start_screen_activity_dialog_whats_new_text">
+        \-\-  Ускорена простановка оценок, в «моих учениках»\n
+        \-\-  исправлены некоторые ошибки(с выставлением оценок по текущему уроку, вылет при изменении времени уроков, и т.д.)\n
+        \-\-  в разделе расстановки парт добавлен зум двумя пальцами(экспериментально)
+    </string>
     <string name="start_screen_activity_dialog_whats_new_button_ok">понятно</string>
     <!-- тост -->
     <string name="start_screen_activity_toast_no_lessons">на текущий момент уроков не запланировано</string>
@@ -106,6 +110,7 @@
     <!-- уведомления -->
     <string name="learners_and_grades_out_activity_toast_grades_saved">ответы сохранены</string>
     <string name="learners_and_grades_out_activity_toast_grades_not_saved">ошибка, ответы не сохраны</string>
+    <string name="learners_and_grades_out_activity_toast_in_develop">в разработке, скоро будет готово</string>
 
 
     <!-- активность списка кабинетов -->

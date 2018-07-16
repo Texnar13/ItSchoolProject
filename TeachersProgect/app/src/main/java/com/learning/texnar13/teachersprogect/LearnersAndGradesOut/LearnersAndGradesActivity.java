@@ -108,8 +108,15 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         menu.findItem(R.id.learners_and_grades_menu_statistics).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(LearnersAndGradesActivity.this, LearnersGradesStatisticsActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(LearnersAndGradesActivity.this, LearnersGradesStatisticsActivity.class);
+//                startActivity(intent);
+
+                Toast toast = Toast.makeText(
+                        getApplicationContext(),
+                        R.string.learners_and_grades_out_activity_toast_in_develop,
+                        Toast.LENGTH_SHORT
+                );
+                toast.show();
                 return true;
             }
         });

@@ -20,8 +20,11 @@
     <string name="start_screen_activity_dialog_button_rate_now">rate!</string>
     <string name="start_screen_activity_dialog_button_later">later</string>
 
-    <string name="start_screen_activity_dialog_whats_new_title">In this update \n(1.990):</string>
-    <string name="start_screen_activity_dialog_whats_new_text">later</string>
+    <string name="start_screen_activity_dialog_whats_new_title">What\'s new:</string>
+    <string name="start_screen_activity_dialog_whats_new_text">
+        \-\- Speeding up the ratings, in \ "my students \" \ n
+         \-\- Some bugs fixed \ n
+         \-\- In section arrangement of desks added zoom with two fingers (experimental)</string>
     <string name="start_screen_activity_dialog_whats_new_button_ok">ok</string>
     <!-- тост -->
     <string name="start_screen_activity_toast_no_lessons">At the moment there are no lessons planned</string>
@@ -107,6 +110,7 @@
     <!-- уведомления -->
     <string name="learners_and_grades_out_activity_toast_grades_saved">answers saved</string>
     <string name="learners_and_grades_out_activity_toast_grades_not_saved">error, the answers not saved</string>
+    <string name="learners_and_grades_out_activity_toast_in_develop">in development, will soon be ready</string>
 
 
     <!-- активность списка кабинетов -->

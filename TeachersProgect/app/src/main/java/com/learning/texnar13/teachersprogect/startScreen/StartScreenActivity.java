@@ -119,7 +119,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         menu.findItem(R.id.start_screen_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                Intent intent = new Intent(getApplicationContext(), StartScreenHelp.class);
                 startActivity(intent);
 //                Toast toast = Toast.makeText(getApplicationContext(),"В разработке ¯\\_(ツ)_/¯",Toast.LENGTH_LONG);
 //                toast.show();
@@ -180,20 +180,23 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 //        WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
 //        dialogFragment.show(getFragmentManager(), WHATS_NEW);
 //----диалог что нового----
+        //если уже создано
         if (sharedPreferences.contains(WHATS_NEW)) {
-            //уже создано
+            //если версия старая
             if (sharedPreferences.getInt(WHATS_NEW, -1) < NOW_VERSION) {
-                //если версия старая
+                //меняем версию
                 editor.putInt(WHATS_NEW, NOW_VERSION);
-                //диалог что нового
+                //показываем диалог что нового
                 WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
                 dialogFragment.show(getFragmentManager(), WHATS_NEW);
             }
         } else {
-            //еще не созданно
+            //если еще не созданно
+            //создаем переменную с версией
             editor.putInt(WHATS_NEW, NOW_VERSION);
             //начальный диалог...
-
+            WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
+            dialogFragment.show(getFragmentManager(), WHATS_NEW);
         }
 
         //завершаем редактирование сохраненных параметров

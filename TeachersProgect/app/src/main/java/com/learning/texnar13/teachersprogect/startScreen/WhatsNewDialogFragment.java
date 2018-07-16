@@ -8,8 +8,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.R;
@@ -28,6 +30,13 @@ public class WhatsNewDialogFragment extends DialogFragment {
         builder.setView(dialogView);
 //---контейнер---
         LinearLayout dialogLinearLayout = (LinearLayout) dialogView.findViewById(R.id.dialog_fragment_layout_start_screen_whats_new_linear_layout);
+// --- scroll ---
+        ScrollView scrollView = new ScrollView(getActivity());
+        dialogLinearLayout.addView(scrollView);
+// --- контейнер в нем ---
+        LinearLayout scrollLayout = new LinearLayout(getActivity());
+        scrollLayout.setOrientation(LinearLayout.VERTICAL);
+        scrollView.addView(scrollLayout);
 //---заголовок---
         TextView title = new TextView(getActivity());
         title.setTextColor(Color.BLACK);
@@ -36,16 +45,24 @@ public class WhatsNewDialogFragment extends DialogFragment {
                 TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimension(R.dimen.text_title_size)
         );
-        dialogLinearLayout.addView(title);
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        titleParams.setMargins((int)pxFromDp(15),(int)pxFromDp(15),(int)pxFromDp(15),(int)pxFromDp(0));
+        scrollLayout.addView(title,titleParams);
 //---текст---
         TextView text = new TextView(getActivity());
-        text.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
+        text.setTextColor(Color.BLACK);
         text.setText(R.string.start_screen_activity_dialog_whats_new_text);
         text.setTextSize(
                 TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimension(R.dimen.text_subtitle_size)
         );
-        dialogLinearLayout.addView(text);
+        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        textParams.setMargins((int)pxFromDp(30),(int)pxFromDp(15),(int)pxFromDp(30),(int)pxFromDp(15));
+        scrollLayout.addView(text,textParams);
 //---кнопка выхода---
         //контейнер для нее
         LinearLayout container = new LinearLayout(getActivity());
@@ -65,7 +82,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
         //кнопки в контейнер
         container.addView(button, buttonParams);
         //контейнер в диалог
-        dialogLinearLayout.addView(container);
+        scrollLayout.addView(container);
         //при нажатии...
         button.setOnClickListener(new View.OnClickListener() {
             @Override

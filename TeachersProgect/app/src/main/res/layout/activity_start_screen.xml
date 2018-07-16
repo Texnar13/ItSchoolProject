@@ -62,7 +62,7 @@
                 android:layout_marginRight="@dimen/start_screen_image_margins"
                 android:adjustViewBounds="true"
                 android:scaleType="fitEnd"
-                app:srcCompat="@drawable/start_screen_3_1_girl" />
+                app:srcCompat="@drawable/start_screen_3_1_girl_vector" />
 
         </RelativeLayout>
 
@@ -156,7 +156,7 @@
                 android:layout_marginRight="@dimen/start_screen_image_margins"
                 android:adjustViewBounds="true"
                 android:scaleType="fitEnd"
-                app:srcCompat="@drawable/start_screen_3_3_calendar" />
+                app:srcCompat="@drawable/start_screen_3_3_calendar_vector" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -185,7 +185,7 @@
                 android:layout_marginStart="@dimen/start_screen_image_margins"
                 android:adjustViewBounds="true"
                 android:scaleType="fitEnd"
-                app:srcCompat="@drawable/start_screen_3_4_book" />
+                app:srcCompat="@drawable/start_screen_3_4_book_vector" />
 
             <TextView
                 android:id="@+id/start_screen_text_view_current_lesson"
@@ -251,7 +251,7 @@
                 android:layout_marginRight="@dimen/start_screen_image_margins"
                 android:adjustViewBounds="true"
                 android:scaleType="fitEnd"
-                app:srcCompat="@drawable/start_screen_3_5_settings" />
+                app:srcCompat="@drawable/start_screen_3_5_settings_vector" />
         </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>
