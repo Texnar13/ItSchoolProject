@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.learning.texnar13.teachersprogect.LessonRedactorActivity">
+    tools:context="com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity">
 
 
     <LinearLayout
@@ -172,11 +172,11 @@
 
             </LinearLayout>
 
-            <CheckBox
+            <!--CheckBox
                 android:id="@+id/activity_lesson_redactor_time_check_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="своё время" />
+                android:text="своё время" /-->
 
         </LinearLayout>
 

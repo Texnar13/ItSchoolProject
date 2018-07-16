@@ -44,7 +44,7 @@
             android:configChanges="locale"
             android:label="@string/title_activity_schedule_day" />
         <activity
-            android:name=".LessonRedactorActivity"
+            android:name=".lessonRedactor.LessonRedactorActivity"
             android:configChanges="locale" />
         <activity
             android:name=".settings.SettingsActivity"
