@@ -92,7 +92,7 @@
                 android:layout_marginStart="@dimen/start_screen_image_margins"
                 android:adjustViewBounds="true"
                 android:scaleType="fitEnd"
-                app:srcCompat="@drawable/start_screen_3_2_cabinet" />
+                app:srcCompat="@drawable/start_screen_3_2_cabinet_vector" />
 
             <TextView
                 android:id="@+id/start_screen_text_view_my_cabinets"

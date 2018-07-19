@@ -16,7 +16,8 @@ import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.R;
 
-public class LessonNameDialogFragment extends DialogFragment {
+//------------диалог создания пердмета------------
+public class CreateSubjectDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //начинаем строить диалог
@@ -122,7 +123,7 @@ public class LessonNameDialogFragment extends DialogFragment {
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((LessonNameDialogInterface) getActivity())
+                ((SubjectNameDialogInterface) getActivity())
                         .lessonNameDialogMethod(
                                 1,
                                 getArguments().getStringArray("stringLessons").length - 2,
@@ -137,10 +138,10 @@ public class LessonNameDialogFragment extends DialogFragment {
         neutralButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((LessonNameDialogInterface) getActivity())
+                ((SubjectNameDialogInterface) getActivity())
                         .lessonNameDialogMethod(
                                 0,
-                                getArguments().getInt("position"),
+                                0,
                                 ""
                         );
                 dismiss();
@@ -157,6 +158,6 @@ public class LessonNameDialogFragment extends DialogFragment {
 }
 
 //обратная связь от диалога
-interface LessonNameDialogInterface {
+interface SubjectNameDialogInterface {
     void lessonNameDialogMethod(int code, int position, String classNameText);
 }

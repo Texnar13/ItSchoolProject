@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -16,11 +17,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.R;
-import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 
 import java.util.ArrayList;
 
-public class RemoveDialogFragment extends DialogFragment {
+// ------------- диалог удаления предметов -------------
+public class RemoveSubjectDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //начинаем строить диалог
@@ -77,11 +78,11 @@ public class RemoveDialogFragment extends DialogFragment {
             LinearLayout item = new LinearLayout(getActivity());
             item.setOrientation(LinearLayout.HORIZONTAL);
             item.setGravity(Gravity.LEFT);
-            LinearLayout.LayoutParams itemParams =
-                    new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            (int) (pxFromDp(40) * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))
-                    );
+            item.setGravity(Gravity.START);
+            LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    (int) (pxFromDp(40) * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))
+            );
             itemParams.setMargins(
                     (int) (pxFromDp(20 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
                     (int) (pxFromDp(10 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
@@ -168,14 +169,29 @@ public class RemoveDialogFragment extends DialogFragment {
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                long[] lessonsId = getArguments().getLongArray("lessonsId");
-                ArrayList<Long> deleteList = new ArrayList<Long>(mSelectedItems.size());
-                for (int itemPoz : mSelectedItems) {
-                    deleteList.add(lessonsId[itemPoz]);
+                try {
+                    //список для удаления
+                    long[] lessonsId = getArguments().getLongArray("lessonsId");
+                    ArrayList<Long> deleteList = new ArrayList<>(mSelectedItems.size());
+                    for (int itemPoz : mSelectedItems) {
+                        deleteList.add(lessonsId[itemPoz]);
+                    }
+                    //вызываем в активности метод по удалению предмета
+                    ((RemoveSubjectDialogFragmentInterface) getActivity()).removeSubjects(
+                            0, deleteList
+                    );
+                } catch (java.lang.ClassCastException e) {
+                    //в вызвающей активности должен быть имплементирован класс RemoveSubjectDialogFragmentInterface
+                    e.printStackTrace();
+                    Log.i(
+                            "TeachersApp",
+                            "RemoveSubjectDialogFragment: you must implements RemoveSubjectDialogFragmentInterface in your activity"
+                    );
+                } catch (NullPointerException e) {
+                    // вызвающая активность должна передать аргумент
+                    e.printStackTrace();
+                    Log.i("TeachersApp", "you must give bundle argument \"lessonsId\"");
                 }
-                (new DataBaseOpenHelper(getActivity().getApplicationContext())).deleteSubjects(deleteList);
-                handler.sendEmptyMessage(0);
-
                 dismiss();
             }
         });
@@ -184,8 +200,22 @@ public class RemoveDialogFragment extends DialogFragment {
         neutralButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    //список для удаления(пустой)
+                    ArrayList<Long> deleteList = new ArrayList<>();
+                    //вызываем в активности метод по удалению предмета
+                    ((RemoveSubjectDialogFragmentInterface) getActivity()).removeSubjects(
+                            1, deleteList
+                    );
+                } catch (java.lang.ClassCastException e) {
+                    //в вызвающей активности должен быть имплементирован класс RemoveSubjectDialogFragmentInterface
+                    e.printStackTrace();
+                    Log.i(
+                            "TeachersApp",
+                            "RemoveSubjectDialogFragment: you must implements RemoveSubjectDialogFragmentInterface in your activity"
+                    );
+                }
                 dismiss();
-                handler.sendEmptyMessage(1);
             }
         });
         return builder.create();
@@ -196,7 +226,8 @@ public class RemoveDialogFragment extends DialogFragment {
     private float pxFromDp(float px) {
         return px * getActivity().getResources().getDisplayMetrics().density;
     }
+}
 
-
-
+interface RemoveSubjectDialogFragmentInterface {
+    void removeSubjects(int message, ArrayList<Long> deleteList);
 }

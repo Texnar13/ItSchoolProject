@@ -59,38 +59,6 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
 
         linearLayout.addView(title, titleParams);
 
-
-//--текстовое поле имени--
-        final EditText editName = new EditText(getActivity());
-        editName.setTextColor(Color.BLACK);
-        editName.setHint(R.string.learners_and_grades_out_activity_dialog_hint_learner_name);
-        editName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-        //editName.setSingleLine(true);
-        editName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-        editName.setHintTextColor(Color.GRAY);
-        try {//входные данные предыдущее имя
-            editName.setText(getArguments().getString("name"));
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            Log.i("TeachersApp","you must give bundle argument \"name\"");
-        }
-
-        LinearLayout editNameContainer = new LinearLayout(getActivity());
-        LinearLayout.LayoutParams editNameContainerParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        editNameContainerParams.setMargins((int) pxFromDp(25), 0, (int) pxFromDp(25), 0);
-        //добавляем текстовое поле
-        editNameContainer.addView(
-                editName,
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT
-                ));
-        linearLayout.addView(editNameContainer, editNameContainerParams);
-
-
 //--текстовое поле фамилии--
         final EditText editLastName = new EditText(getActivity());
         editLastName.setTextColor(Color.BLACK);
@@ -121,6 +89,35 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
                 ));
         linearLayout.addView(editLastNameContainer, editLastNameContainerParams);
 
+//--текстовое поле имени--
+        final EditText editName = new EditText(getActivity());
+        editName.setTextColor(Color.BLACK);
+        editName.setHint(R.string.learners_and_grades_out_activity_dialog_hint_learner_name);
+        editName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        //editName.setSingleLine(true);
+        editName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        editName.setHintTextColor(Color.GRAY);
+        try {//входные данные предыдущее имя
+            editName.setText(getArguments().getString("name"));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Log.i("TeachersApp","you must give bundle argument \"name\"");
+        }
+
+        LinearLayout editNameContainer = new LinearLayout(getActivity());
+        LinearLayout.LayoutParams editNameContainerParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        editNameContainerParams.setMargins((int) pxFromDp(25), 0, (int) pxFromDp(25), 0);
+        //добавляем текстовое поле
+        editNameContainer.addView(
+                editName,
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                ));
+        linearLayout.addView(editNameContainer, editNameContainerParams);
 
 //--кнопки согласия/отмены--
         //контейнер для них

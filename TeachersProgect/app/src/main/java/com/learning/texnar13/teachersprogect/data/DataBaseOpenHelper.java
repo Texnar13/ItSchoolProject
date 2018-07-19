@@ -648,7 +648,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return temp;
     }
 
-    public int[][] getSettingsTime(long profileId) {
+    public int[][] getSettingsTime(long profileId) {//return урок[[hh],[mm],[hh],[mm]],
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId}, null, null, null);
         if (cursor.getCount() == 0) {

@@ -142,44 +142,43 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:gravity="center"
+                android:text="@string/lesson_redactor_activity_title_time"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="@dimen/text_subtitle_size" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:id="@+id/activity_lesson_redactor_time_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:orientation="vertical">
 
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center"
-                    android:text="Время"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textSize="@dimen/text_subtitle_size" />
-
-
-                <LinearLayout
-                    android:id="@+id/activity_lesson_redactor_time_layout"
+                <Spinner
+                    android:id="@+id/activity_lesson_redactor_time_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginStart="20dp"
-                    android:orientation="horizontal">
+                    android:layout_marginStart="20dp" />
 
-                </LinearLayout>
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginEnd="18dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginStart="18dp"
+                    android:background="@drawable/line_gray" />
             </LinearLayout>
-
-            <CheckBox
-                android:id="@+id/activity_lesson_redactor_time_check_box"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="своё время"
-                android:textSize="@dimen/text_subtitle_size" />
-
         </LinearLayout>
 
         <LinearLayout

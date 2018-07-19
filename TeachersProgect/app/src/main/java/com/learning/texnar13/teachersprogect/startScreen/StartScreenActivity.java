@@ -195,8 +195,6 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
             //создаем переменную с версией
             editor.putInt(WHATS_NEW, NOW_VERSION);
             //начальный диалог...
-            WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
-            dialogFragment.show(getFragmentManager(), WHATS_NEW);
         }
 
         //завершаем редактирование сохраненных параметров
