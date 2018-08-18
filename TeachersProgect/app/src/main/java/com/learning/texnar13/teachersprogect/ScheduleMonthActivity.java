@@ -189,7 +189,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         //создаем 7 tableRow и помещаем их в таблицу (1 на день недели и 6 на календарь)
 
 //------размеры окна-------
-        int rectangleSize = 0;
+        int rectangleSize;
         {
             Display display = getWindowManager().getDefaultDisplay();
             DisplayMetrics metricsB = new DisplayMetrics();
@@ -250,7 +250,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             for (int i = 0; i < 6 * 7; i++) {
 
 
-                //---текст---//на заднюю часть текста можно постоавить drawable
+                //---текст---//на заднюю часть текста можно поставить drawable
                 TextView day = new TextView(this);
                 day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                 day.setTextColor(Color.BLACK);
@@ -268,11 +268,13 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 LinearLayout textContainer = new LinearLayout(this);
                 textContainer.setGravity(Gravity.CENTER);
                 textContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
-                if (weekDay == 5 || weekDay == 6) {
+                if ((weekDay == 5 || weekDay == 6)
+                        // если не шестая неделя или (в последней неделе есть дни не дополнившие неделю до конца и полных недель пять)
+                        && (weekOfMonth != 6 || (((dayOfWeek + countOfDays) % 7 > 0) && (dayOfWeek + countOfDays) / 7 == 5))// если заполняемых недель шесть то последние две клетки не выводим
+                        ) {
                     textContainer.setBackgroundResource(R.drawable.button_gray);
-                    //textContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGroundDark));//"#fbffb9"#fdffdf"#ebffd6"
                 } else {
-                    textContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGround));//"#fdffdf"parseColor()
+                    textContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
                 }
 
                 LinearLayout.LayoutParams textContainerParams = new LinearLayout.LayoutParams(
@@ -294,7 +296,6 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                                 1F
                         );
                 linearLayoutParams.gravity = Gravity.CENTER;
-
 
                 if (weekDay == dayOfWeek) {
                     flag = true;
@@ -351,7 +352,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                         day.setLayoutParams(tempP);
 
                         //добавляем красный круг
-                        day.setBackgroundResource(R.drawable.calendar_current_day_circle); }
+                        day.setBackgroundResource(R.drawable.calendar_current_day_circle);
+                    }
                     monthDay++;
                 }
 //--------все в таблицу--------

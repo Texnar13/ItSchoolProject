@@ -105,12 +105,43 @@
     <string name="learners_and_grades_out_activity_dialog_button_save">save</string>
     <string name="learners_and_grades_out_activity_dialog_button_delete">remove</string>
     <string name="learners_and_grades_out_activity_dialog_button_cancel">cancel</string>
+    <!-- уведомления диалогов todo -->
+    <string name="learners_and_grades_out_activity_dialog_toast_no_name">Не введено имя</string>
+    <string name="learners_and_grades_out_activity_dialog_toast_no_last_name">Не введена фамилия</string>
     <!-- подсказка на экране -->
     <string name="learners_and_grades_out_activity_text_help">This is your e-zine: a list of students and their answers by dates. \nSelect the subject and month. \nThe white number next to the date is the lesson number (1st, 2nd, etc.) that you spent in this day (the previous digit). \nClick on +, so you add the student. \nHold the name of the student - a menu will open where you can delete it or rename it.</string>
     <!-- уведомления -->
-    <string name="learners_and_grades_out_activity_toast_grades_saved">answers saved</string>
-    <string name="learners_and_grades_out_activity_toast_grades_not_saved">error, the answers not saved</string>
-    <string name="learners_and_grades_out_activity_toast_in_develop">in development, will soon be ready</string>
+    <string name="learners_and_grades_out_activity_toast_grades_saved">Answers saved</string>
+    <string name="learners_and_grades_out_activity_toast_grades_not_saved">Error! The answers not saved</string>
+
+
+    <!-- активность списка статистик todo -->
+    <!-- заголовок активности -->
+    <string name="title_activity_learners_and_grades_statistics">Статистика за период</string>
+    <!-- тексты -->
+    <string name="learners_and_grades_statistics_activity_title_column_learner_name">Ф.И.</string>
+    <string name="learners_and_grades_statistics_activity_title_column_grade">СР.</string>
+    <string name="learners_and_grades_statistics_activity_title_column_absent">ПРОПУСКИ</string>
+    <string name="learners_and_grades_statistics_activity_hint_date_day">ДЕНЬ</string>
+    <string name="learners_and_grades_statistics_activity_hint_date_month">МЕСЯЦ</string>
+    <string name="learners_and_grades_statistics_activity_hint_date_year">ГОД</string>
+    <string name="learners_and_grades_statistics_activity_spinner_text_add">+ Добавить период времени</string>
+    <string name="learners_and_grades_statistics_activity_spinner_text_remove">- Удалить периоды времени</string>
+    <!-- диалог -->
+    <string name="learners_and_grades_statistics_activity_dialog_title_add_statistic">Создать учебный период</string>
+    <string name="learners_and_grades_statistics_activity_dialog_title_remove_statistic">Удалить временной промежуток</string>
+    <string name="learners_and_grades_statistics_activity_dialog_title_edit_statistic">Редактировать временной промежуток</string>
+    <string name="learners_and_grades_statistics_activity_dialog_text_time_before">С:</string>
+    <string name="learners_and_grades_statistics_activity_dialog_text_time_after">ДО:</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_name">Название профиля</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_year">год</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_month">месяц</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_day">день</string>
+    <string name="learners_and_grades_statistics_activity_dialog_button_cancel">Отмена</string>
+    <string name="learners_and_grades_statistics_activity_dialog_button_save">Сохранить</string>
+    <string name="learners_and_grades_statistics_activity_dialog_button_delete">Удалить</string>
+    <!-- подсказка на экране -->
+    <string name="learners_and_grades_statistics_activity_text_help">Подсказка подсказка подсказка подсказка подсказка \n подсказка подсказка подсказка подсказка.</string>
 
 
     <!-- активность списка кабинетов -->
@@ -179,9 +210,8 @@
     <!-- уведомления -->
     <string name="lesson_redactor_activity_text_learners_ready">Students are seated in this cabinet</string>
     <string name="lesson_redactor_activity_text_learners_not_ready">The students are not seated!</string>
-
-    <string name="lesson_redactor_activity_toast_text_subject_not_chosen">subject not chosen, you can create class in «My students», then create subject in created class</string>
-    <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">cabinet not chosen, you can create it in «My cabinets»</string>
+    <string name="lesson_redactor_activity_toast_text_subject_not_chosen">Subject not chosen, you can create class in «My students», then create subject in created class</string>
+    <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">Cabinet not chosen, you can create it in «My cabinets»</string>
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">Edit students arrangements</string>
     <string name="lesson_redactor_activity_button_remove">Remove lesson</string>
@@ -218,29 +248,25 @@
 
 
     <!-- активность  помощи на уроке-->
+    <!-- заголовок -->
+    <string name="lesson_help_activity_title">HELP</string>
     <!-- текст -->
-    <string name="lesson_activity_help_text_1">Screen description </string>   
-    <string name="lesson_activity_help_text_2">1 Back to schedule button </string>    
-    <string name="lesson_activity_help_text_3">2 Lesson title </string>    
-    <string name="lesson_activity_help_text_4">3 Finish the lesson and proceed to save the estimates </string>
-        
-    <string name="lesson_activity_help_text_5">4 Menus with a hint </string>    
-    <string name="lesson_activity_help_text_6">5 Part with student </string>    
-    <string name="lesson_activity_help_text_7">6 Student\'s name </string>    
-    <string name="lesson_activity_help_text_8">Adding points </string>    
-    <string name="lesson_activity_help_text_9">When you click on the student, he is credited with one answer (there can be no more than five) </string>
-       
-    <string name="lesson_activity_help_text_10">Edit the score </string>    
-    <string name="lesson_activity_help_text_11">After a long click on the student, a dialog box appears: </string>
-        
-    <string name="lesson_activity_help_text_12">1 The «Missing» item marks the selected student as missing:) </string>
-        
-    <string name="lesson_activity_help_text_13">In points 2 and 3 you can choose an estimate (any other than the one already selected) </string>
-        
-    <string name="lesson_activity_help_text_14">4 The «New score» item remembers the rating (if there is no estimate, the item is not displayed), and allows you to put a new one (maximum three): </string>
-       
-    <string name="lesson_activity_help_text_15">You can put further estimates as usual: </string>  
-    <string name="lesson_activity_help_text_16">After saving the ratings (the «finish» button), you can see them in the «My students» -> «class» </string>
+    <string name="lesson_help_activity_text_1">Screen description </string>   
+    <string name="lesson_help_activity_text_2">1 Back to schedule button </string>    
+    <string name="lesson_help_activity_text_3">2 Lesson title </string>    
+    <string name="lesson_help_activity_text_4">3 Finish the lesson and proceed to save the estimates </string>
+    <string name="lesson_help_activity_text_5">4 Menus with a hint </string>    
+    <string name="lesson_help_activity_text_6">5 Part with student </string>    
+    <string name="lesson_help_activity_text_7">6 Student\'s name </string>    
+    <string name="lesson_help_activity_text_8">Adding points </string>    
+    <string name="lesson_help_activity_text_9">When you click on the student, he is credited with one answer (there can be no more than five) </string> 
+    <string name="lesson_help_activity_text_10">Edit the score </string>    
+    <string name="lesson_help_activity_text_11">After a long click on the student, a dialog box appears: </string>    
+    <string name="lesson_help_activity_text_12">1 The «Missing» item marks the selected student as missing:) </string>    
+    <string name="lesson_help_activity_text_13">In points 2 and 3 you can choose an estimate (any other than the one already selected) </string>    
+    <string name="lesson_help_activity_text_14">4 The «New score» item remembers the rating (if there is no estimate, the item is not displayed), and allows you to put a new one (maximum three): </string>   
+    <string name="lesson_help_activity_text_15">You can put further estimates as usual: </string>  
+    <string name="lesson_help_activity_text_16">After saving the ratings (the «finish» button), you can see them in the «My students» -> «class» </string>
 
 
     <!-- активность окончания урока-->
@@ -274,14 +300,12 @@
     <!-- уведомления -->
     <string name="settings_activity_toast_data_delete_success">Data deleted successfully!</string>
     <string name="settings_activity_toast_data_delete_falture">Was entered an incorrect number, the data is not removed</string>
-    <string name="settings_activity_toast_grade_no_entered">grade no entered</string>
-    <string name="settings_activity_toast_grade_saved">saved</string>
-    <string name="settings_activity_toast_grade_too_match">too large value entered (it must be no more 100)</string>
-    <string name="settings_activity_toast_grade_too_min">too small value entered (it must be greater than 1)</string>
-
-    <string name="settings_activity_toast_time_successfully_saved">time parameters saved</string>
-    <string name="settings_activity_toast_time_no_saved">error, time parameters not saved</string>
-
+    <string name="settings_activity_toast_grade_no_entered">Grade no entered</string>
+    <string name="settings_activity_toast_grade_saved">Saved</string>
+    <string name="settings_activity_toast_grade_too_match">Too large value entered (it must be no more 100)</string>
+    <string name="settings_activity_toast_grade_too_min">Too small value entered (it must be greater than 1)</string>
+    <string name="settings_activity_toast_time_successfully_saved">Time parameters saved</string>
+    <string name="settings_activity_toast_time_no_saved">Error, time parameters not saved</string>
     <!-- диалоги -->
     <string name="settings_activity_dialog_title">Are you sure you want to delete all application data?</string>
     <string name="settings_activity_dialog_text">Enter the number to confirm</string>

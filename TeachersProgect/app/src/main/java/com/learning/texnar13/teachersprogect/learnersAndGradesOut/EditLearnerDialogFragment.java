@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.LearnersAndGradesOut;
+package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

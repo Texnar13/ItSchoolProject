@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.LearnersAndGradesOut;
+package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.R;
 
@@ -157,6 +158,15 @@ public class CreateLearnerDialogFragment extends DialogFragment {
                             editName.getText().toString(),
                             getArguments().getLong("classId")
                     );
+                    // -- если поля пустые, то выводим сообщение --
+                    // пустое имя
+                    if (editName.getText().toString().length() == 0) {
+                        Toast.makeText(getActivity(), R.string.learners_and_grades_out_activity_dialog_toast_no_name, Toast.LENGTH_SHORT).show();
+                    }
+                    // пустая фамилия
+                    if (editLastName.getText().toString().length() == 0) {
+                        Toast.makeText(getActivity(), R.string.learners_and_grades_out_activity_dialog_toast_no_last_name, Toast.LENGTH_SHORT).show();
+                    }
                 } catch (java.lang.ClassCastException e) {
                     //в вызвающей активности должен быть имплементирован класс CreateLearnerInterface
                     e.printStackTrace();

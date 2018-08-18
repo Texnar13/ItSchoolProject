@@ -13,7 +13,7 @@ public class LessonHelp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_help);
         //заголовок
-        setTitle("подсказка");
+        setTitle(R.string.lesson_help_activity_title);
         //кнопка назад
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

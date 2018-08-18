@@ -678,14 +678,25 @@ public class LessonActivity extends AppCompatActivity {
                     tempLearnerText.setGravity(Gravity.TOP);
                     tempLearnerText.setTextColor(Color.WHITE);
                     tempLearnerText.setAllCaps(true);
-                    tempLearnerText.setText(
-                            (learnerCursor.getString(learnerCursor.getColumnIndex(
-                                    SchoolContract.TableLearners.COLUMN_FIRST_NAME
-                            ))).charAt(0) + " " +
-                                    learnerCursor.getString(learnerCursor.getColumnIndex(
-                                            SchoolContract.TableLearners.COLUMN_SECOND_NAME
-                                    ))
-                    );
+                    // проверяем не пустое ли имя
+                    if ((learnerCursor.getString(learnerCursor.getColumnIndex(
+                            SchoolContract.TableLearners.COLUMN_FIRST_NAME
+                    ))).length() == 0) {
+                        tempLearnerText.setText(
+                                learnerCursor.getString(learnerCursor.getColumnIndex(
+                                        SchoolContract.TableLearners.COLUMN_SECOND_NAME
+                                ))
+                        );
+
+                    } else
+                        tempLearnerText.setText(
+                                (learnerCursor.getString(learnerCursor.getColumnIndex(
+                                        SchoolContract.TableLearners.COLUMN_FIRST_NAME
+                                ))).charAt(0) + " " +
+                                        learnerCursor.getString(learnerCursor.getColumnIndex(
+                                                SchoolContract.TableLearners.COLUMN_SECOND_NAME
+                                        ))
+                        );
 
                     //параметры текста
                     LinearLayout.LayoutParams tempLearnerTextParams = new LinearLayout.LayoutParams(

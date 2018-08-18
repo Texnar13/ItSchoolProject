@@ -136,7 +136,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
             Cursor subjectCursor = db.getSubjectById(chosenSubjectId);
             subjectCursor.moveToFirst();
             // -- id класса(получаем из предмета) --
-            classId = subjectCursor.getLong(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));//todo
+            classId = subjectCursor.getLong(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
             // выбираем переданный предмет в спиннере(-1 говорит об этом методу)
             subjectPosition = -1;
             // -- id кабинета --
@@ -263,8 +263,8 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         classesCursor.close();
         db.close();
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.spiner_dropdown_element_lesson_redactor, stringClasses);
-        arrayAdapter.setDropDownViewResource(R.layout.spiner_dropdown_element_lesson_redactor);
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_lesson_redactor, stringClasses);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_element_lesson_redactor);
         classSpinner.setAdapter(arrayAdapter);
         classSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -306,7 +306,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         cabinetsCursor.close();
         db.close();
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spiner_dropdown_element_lesson_redactor, stringCabinets);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_lesson_redactor, stringCabinets);
         cabinetSpinner.setAdapter(adapter);
         cabinetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -367,8 +367,8 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         db.close();
 
         // адаптер для спиннера
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spiner_dropdown_element_lesson_redactor, stringLessons);
-        adapter.setDropDownViewResource(R.layout.spiner_dropdown_element_lesson_redactor);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_lesson_redactor, stringLessons);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_lesson_redactor);
         subjectSpinner.setAdapter(adapter);
         // позиция
         if (subjectPosition == -1) {
@@ -440,8 +440,8 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         }
 
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spiner_dropdown_element_lesson_redactor, textTime);
-        adapter.setDropDownViewResource(R.layout.spiner_dropdown_element_lesson_redactor);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_lesson_redactor, textTime);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_lesson_redactor);
         timeSpinner.setAdapter(adapter);
         timeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -487,7 +487,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
 
     // -- спиннер повторов --
     void outRepeats() {
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spiner_dropdown_element_lesson_redactor, repeatPeriodsNames);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_lesson_redactor, repeatPeriodsNames);
         lessonRepeatSpinner.setAdapter(
                 adapter);
         lessonRepeatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -528,7 +528,8 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         ArrayList<Long> arrayList = db.getNotPutLearnersIdByCabinetIdAndClassId(cabinetId, classId);
         if (arrayList.size() == 0) {
-            seatingStateText.setText(R.string.lesson_redactor_activity_text_learners_ready);
+            //seatingStateText.setText(R.string.lesson_redactor_activity_text_learners_ready);
+            seatingStateText.setText("");
             seatingStateText.setTextColor(Color.parseColor("#469500"));
         } else {
             seatingStateText.setText(R.string.lesson_redactor_activity_text_learners_not_ready);

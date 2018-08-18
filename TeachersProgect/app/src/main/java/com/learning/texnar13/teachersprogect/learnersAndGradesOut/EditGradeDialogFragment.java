@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.LearnersAndGradesOut;
+package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -6,14 +6,12 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -91,7 +89,7 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
         //адаптер
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 getActivity().getApplicationContext(),
-                R.layout.spiner_dropdown_element_learners_and_grades_subjects,
+                R.layout.spinner_dropdown_element_learners_and_grades_answers,
                 gradesText
         );
         //массив со спиннерами
@@ -192,6 +190,9 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
                             finalGrades,
                             getArguments().getIntArray(INDEXES)
                     );
+
+                    // убираем с текста краску
+                    ((EditGradeDialogInterface) getActivity()).returnSimpleColorForText(getArguments().getIntArray(INDEXES));
                 } catch (java.lang.ClassCastException e) {
                     //в вызвающей активности должен быть имплементирован класс EditGradeDialogInterface
                     e.printStackTrace();
@@ -219,6 +220,8 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
                 try {
                     //вызываем в активности метод разрешения изменения оценок
                     ((AllowUserEditGradesInterface) getActivity()).allowUserEditGrades();
+                    // убираем с текста краску
+                    ((EditGradeDialogInterface) getActivity()).returnSimpleColorForText(getArguments().getIntArray(INDEXES));
                 } catch (java.lang.ClassCastException e) {
                     //в вызвающей активности должен быть имплементирован класс AllowUserEditGradesInterface
                     e.printStackTrace();
@@ -243,6 +246,8 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
         try {
             //вызываем в активности метод разрешения изменения оценок
             ((AllowUserEditGradesInterface) getActivity()).allowUserEditGrades();
+            // убираем с текста краску
+            ((EditGradeDialogInterface) getActivity()).returnSimpleColorForText(getArguments().getIntArray(INDEXES));
         } catch (java.lang.ClassCastException e) {
             //в вызвающей активности должен быть имплементирован класс AllowUserEditGradesInterface
             e.printStackTrace();
@@ -262,6 +267,8 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
 
 interface EditGradeDialogInterface {
     void editGrade(int[] grades, int[] indexes);
+
+    void returnSimpleColorForText(int[] indexes);
 }
 
 interface AllowUserEditGradesInterface {

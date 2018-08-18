@@ -90,7 +90,7 @@ public class CreateCabinetDialogFragment extends DialogFragment {
         Button neutralButton = new Button(getActivity());
         neutralButton.setBackgroundResource(R.drawable.start_screen_3_2_yellow_spot);
         neutralButton.setText(R.string.cabinets_out_activity_dialog_button_cancel);
-        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         neutralButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -103,7 +103,7 @@ public class CreateCabinetDialogFragment extends DialogFragment {
         Button positiveButton = new Button(getActivity());
         positiveButton.setBackgroundResource(R.drawable.start_screen_3_2_yellow_spot);
         positiveButton.setText(R.string.cabinets_out_activity_dialog_button_add);
-        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -150,30 +150,6 @@ public class CreateCabinetDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
-
-//        builder.setPositiveButton("добавление", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                try {
-//                    //вызываем в активности метод по созданию кабинета и передаем ей имя
-//                    ((com.learning.texnar13.teachersprogect.cabinetsOut.CreateCabinetInterface) getActivity()).createCabinet(
-//                            editName.getText().toString()
-//                    );
-//                } catch (java.lang.ClassCastException e) {
-//                    //в вызвающей активности должен быть имплементирован класс CreateCabinetInterface
-//                    e.printStackTrace();
-//                    Log.i(
-//                            "TeachersApp",
-//                            "CreateCabinetDialogFragment: you must implements CreateCabinetInterface in your activity"
-//                    );
-//                }
-//            }
-//        });
-//        builder.setNegativeButton("отмена", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//            }
-//        });
 
         return builder.create();
     }

@@ -290,10 +290,10 @@
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/button_lite_gray"
+                android:background="@drawable/start_screen_3_4_pink_spot"
                 android:gravity="center"
                 android:text="@string/lesson_redactor_activity_button_cancel"
-                android:textColor="#7e7e7e"
+                android:textColor="#ffffff"
                 android:textSize="@dimen/text_simple_size" />
 
             <TextView
@@ -309,10 +309,10 @@
                 android:layout_marginStart="3dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/button_gray"
+                android:background="@drawable/start_screen_3_3_green_spot"
                 android:gravity="center"
                 android:text="@string/lesson_redactor_activity_button_save"
-                android:textColor="#000000"
+                android:textColor="#ffffff"
                 android:textSize="@dimen/text_simple_size" />
 
 

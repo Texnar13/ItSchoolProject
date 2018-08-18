@@ -96,7 +96,7 @@ public class EditCabinetDialogFragment extends DialogFragment {
         Button neutralButton = new Button(getActivity());
         neutralButton.setBackgroundResource(R.drawable.start_screen_3_2_yellow_spot);
         neutralButton.setText(R.string.cabinets_out_activity_dialog_button_cancel);
-        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         neutralButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -109,7 +109,7 @@ public class EditCabinetDialogFragment extends DialogFragment {
         Button negativeButton = new Button(getActivity());
         negativeButton.setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
         negativeButton.setText(R.string.cabinets_out_activity_dialog_button_delete);
-        negativeButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        negativeButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         negativeButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams negativeButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -122,7 +122,7 @@ public class EditCabinetDialogFragment extends DialogFragment {
         Button positiveButton = new Button(getActivity());
         positiveButton.setBackgroundResource(R.drawable.start_screen_3_2_yellow_spot);
         positiveButton.setText(R.string.cabinets_out_activity_dialog_button_save);
-        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,

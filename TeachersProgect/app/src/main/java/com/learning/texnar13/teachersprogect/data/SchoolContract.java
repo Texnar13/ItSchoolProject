@@ -26,6 +26,14 @@ public final class SchoolContract {
         public static final String COLUMN_TIME_END_MINUTE_NAME = "endMinute";
     }
 
+    public static final class TableStatisticsProfiles {
+        public static final String NAME_TABLE_STATISTICS_PROFILES = "statisticsProfiles";
+        public static final String KEY_STATISTICS_PROFILE_ID = BaseColumns._ID;
+        public static final String COLUMN_PROFILE_NAME = "profileName";
+        public static final String COLUMN_START_PERIOD_TIME = "startTime";
+        public static final String COLUMN_END_PERIOD_TIME = "endTime";
+    }
+
     public static final class TableCabinets {
         public static final String NAME_TABLE_CABINETS = "cabinets";
         public static final String KEY_CABINET_ID = BaseColumns._ID;
@@ -112,7 +120,7 @@ public final class SchoolContract {
         public static final int CONSTANT_REPEAT_NEVER = 0;
         public static final int CONSTANT_REPEAT_DAILY = 1;
         public static final int CONSTANT_REPEAT_WEEKLY = 2;
-        public static final int CONSTANT_REPEAT_ON_WORKING_DAYS = 3;
+        public static final int CONSTANT_REPEAT_ON_WORKING_DAYS = 3;//todo CONSTANT_REPEAT_ON_WORKING_DAYS
         public static final int CONSTANT_REPEAT_MONTHLY = 4;
     }
 }

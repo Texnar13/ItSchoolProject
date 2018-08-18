@@ -8,7 +8,7 @@
 
     <!-- активность главный экран -->
     <!-- меню сверху -->
-    <string name="start_screen_activity_menu_text_help">подсказка</string>
+    <string name="start_screen_activity_menu_text_help">ПОМОЩЬ</string>
     <!-- тексты кнопок -->
     <string name="start_screen_activity_title_my_learners">мои ученики</string>
     <string name="start_screen_activity_title_my_cabinets">мои кабинеты</string>
@@ -16,7 +16,7 @@
     <string name="start_screen_activity_title_current_lesson">текущий урок</string>
     <string name="start_screen_activity_title_settings">настройки</string>
     <!-- диалог -->
-    <string name="start_screen_activity_dialog_title_rate">Пожалуйста оцените наше приложение)</string>
+    <string name="start_screen_activity_dialog_title_rate">Пожалуйста, оцените наше приложение)</string>
     <string name="start_screen_activity_dialog_button_rate_now">оценить!</string>
     <string name="start_screen_activity_dialog_button_later">позже</string>
 
@@ -27,8 +27,8 @@
         \-\-  в разделе расстановки парт добавлен зум двумя пальцами(экспериментально)
     </string>
     <string name="start_screen_activity_dialog_whats_new_button_ok">понятно</string>
-    <!-- тост -->
-    <string name="start_screen_activity_toast_no_lessons">на текущий момент уроков не запланировано</string>
+    <!-- уведомления -->
+    <string name="start_screen_activity_toast_no_lessons">На текущий момент уроков не запланировано</string>
 
 
     <!-- активность помощь главного экрана -->
@@ -90,11 +90,11 @@
     <string name="title_activity_learners_and_grades">Ученики в классе </string>
     <!-- тексты  -->
     <string name="learners_and_grades_out_activity_title_subject">Предмет</string>
-    <string name="learners_and_grades_out_activity_title_table_names">Ф.И.</string>
+    <string name="learners_and_grades_out_activity_title_table_names">ИМЯ</string>
     <string name="learners_and_grades_out_activity_title_grade_n">Н</string>
-    <string name="learners_and_grades_out_activity_title_grade_no_answers">нет ответов</string>
+    <string name="learners_and_grades_out_activity_title_grade_no_answers">---</string>
     <!-- меню сверху -->
-    <string name="learners_and_grades_out_activity_menu_title_statistics">статистика</string>
+    <string name="learners_and_grades_out_activity_menu_title_statistics">статистика по предмету</string>
     <!-- диалоги -->
     <string name="learners_and_grades_out_activity_dialog_title_create_learner">добавление ученика</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_learner">редактирование ученика</string>
@@ -105,12 +105,43 @@
     <string name="learners_and_grades_out_activity_dialog_button_save">сохранить</string>
     <string name="learners_and_grades_out_activity_dialog_button_delete">удалить</string>
     <string name="learners_and_grades_out_activity_dialog_button_cancel">отмена</string>
+    <!-- уведомления диалогов -->
+    <string name="learners_and_grades_out_activity_dialog_toast_no_name">Не введено имя</string>
+    <string name="learners_and_grades_out_activity_dialog_toast_no_last_name">Не введена фамилия</string>
     <!-- подсказка на экране -->
     <string name="learners_and_grades_out_activity_text_help">Это ваш электронный журнал: список учеников и их ответы по датам.\nВыберите предмет и месяц.\nБелая цифра рядом с датой - это номер урока(1-ый, 2-ой и.т.д.), который вы провели в этот день (предшествующая цифра).\nНажмите на +, так вы добавите ученика.\nУдерживайте имя ученика - откроется меню, где можно его удалить или переименовать.</string>
     <!-- уведомления -->
-    <string name="learners_and_grades_out_activity_toast_grades_saved">ответы сохранены</string>
-    <string name="learners_and_grades_out_activity_toast_grades_not_saved">ошибка, ответы не сохраны</string>
-    <string name="learners_and_grades_out_activity_toast_in_develop">в разработке, скоро будет готово</string>
+    <string name="learners_and_grades_out_activity_toast_grades_saved">Ответы сохранены</string>
+    <string name="learners_and_grades_out_activity_toast_grades_not_saved">Ошибка! Ответы не сохраны</string>
+
+
+    <!-- активность списка статистик -->
+    <!-- заголовок активности -->
+    <string name="title_activity_learners_and_grades_statistics">Статистика за период</string>
+    <!-- тексты -->
+    <string name="learners_and_grades_statistics_activity_title_column_learner_name">ИМЯ</string>
+    <string name="learners_and_grades_statistics_activity_title_column_grade">СР.</string>
+    <string name="learners_and_grades_statistics_activity_title_column_absent">ПРОПУСКИ</string>
+    <string name="learners_and_grades_statistics_activity_hint_date_day">ДЕНЬ</string>
+    <string name="learners_and_grades_statistics_activity_hint_date_month">МЕСЯЦ</string>
+    <string name="learners_and_grades_statistics_activity_hint_date_year">ГОД</string>
+    <string name="learners_and_grades_statistics_activity_spinner_text_add">+ Добавить период времени</string>
+    <string name="learners_and_grades_statistics_activity_spinner_text_remove">- Удалить периоды времени</string>
+    <!-- диалог -->
+    <string name="learners_and_grades_statistics_activity_dialog_title_add_statistic">Создать учебный период</string>
+    <string name="learners_and_grades_statistics_activity_dialog_title_remove_statistic">Удалить временной промежуток</string>
+    <string name="learners_and_grades_statistics_activity_dialog_title_edit_statistic">Редактировать временной промежуток</string>
+    <string name="learners_and_grades_statistics_activity_dialog_text_time_before">С:</string>
+    <string name="learners_and_grades_statistics_activity_dialog_text_time_after">ДО:</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_name">Название профиля</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_year">год</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_month">месяц</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_day">день</string>
+    <string name="learners_and_grades_statistics_activity_dialog_button_cancel">Отмена</string>
+    <string name="learners_and_grades_statistics_activity_dialog_button_save">Сохранить</string>
+    <string name="learners_and_grades_statistics_activity_dialog_button_delete">Удалить</string>
+    <!-- подсказка на экране -->
+    <string name="learners_and_grades_statistics_activity_text_help">Здесь вы можете посмотреть итоговый средний результат по ответам и количество пропусков ваших учеников за определенный период, который вы можете ввести в поля сверху.</string>
 
 
     <!-- активность списка кабинетов -->
@@ -181,8 +212,8 @@
     <string name="lesson_redactor_activity_text_learners_ready">Ученики рассажены в этом кабинете.</string>
     <string name="lesson_redactor_activity_text_learners_not_ready">Ученики не рассажены!</string>
 
-    <string name="lesson_redactor_activity_toast_text_subject_not_chosen">не выбран предмет, вы можете создать класс в разделе «МОИ УЧЕНИКИ», затем зайдите в него и создайте предмет</string>
-    <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">не выбран кабинет, вы можете создать его в разделе «МОИ КАБИНЕТЫ»</string>
+    <string name="lesson_redactor_activity_toast_text_subject_not_chosen">Не выбран предмет, вы можете создать класс в разделе «МОИ УЧЕНИКИ», затем зайдите в него и создайте предмет</string>
+    <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">Не выбран кабинет, вы можете создать его в разделе «МОИ КАБИНЕТЫ»</string>
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">Редактировать рассадку</string>
     <string name="lesson_redactor_activity_button_remove">Удалить урок</string>
@@ -219,23 +250,25 @@
 
 
     <!-- активность  помощи на уроке-->
+    <!-- заголовок -->
+    <string name="lesson_help_activity_title">ПОМОЩЬ</string>
     <!-- текст -->
-    <string name="lesson_activity_help_text_1">Описание экрана</string>
-    <string name="lesson_activity_help_text_2">1 Кнопка возврата к расписанию</string>
-    <string name="lesson_activity_help_text_3">2 Название урока</string>
-    <string name="lesson_activity_help_text_4">3 Закончить урок и перейти к сохранению оценок</string>
-    <string name="lesson_activity_help_text_5">4 Меню с подсказкой</string>
-    <string name="lesson_activity_help_text_6">5 Парта с учеником</string>
-    <string name="lesson_activity_help_text_7">6 Фамилия ученика</string>
-    <string name="lesson_activity_help_text_8">Добавление баллов</string>
-    <string name="lesson_activity_help_text_9">При нажатии на ученика ему зачисляется один ответ (их может быть не больше пяти)</string>
-    <string name="lesson_activity_help_text_10">Редактирование оценки</string>
-    <string name="lesson_activity_help_text_11">После долгого нажатия на ученика появляется диалоговое окно:</string>
-    <string name="lesson_activity_help_text_12">1 Пункт «Отсутствует» отметит выбранного ученика как отсутствующего:)</string>
-    <string name="lesson_activity_help_text_13">Во 2 и 3 пунктах можно выбрать оценку (любую кроме уже выбранной)</string>
-    <string name="lesson_activity_help_text_14">4 Пункт «Новая оценка» запоминает поставленную оценку (если оценки нет, пункт не отображается), и позволяет поставить новую (максимум их три):</string>
-    <string name="lesson_activity_help_text_15">Дальше оценки можно ставить как обычно:</string>
-    <string name="lesson_activity_help_text_16">После сохранения оценок (кнопка «закончить»), их можно посмотреть в пункте «Мои ученики» -> «класс»</string>
+    <string name="lesson_help_activity_text_1">Описание экрана</string>
+    <string name="lesson_help_activity_text_2">1 Кнопка возврата к расписанию</string>
+    <string name="lesson_help_activity_text_3">2 Название урока</string>
+    <string name="lesson_help_activity_text_4">3 Закончить урок и перейти к сохранению оценок</string>
+    <string name="lesson_help_activity_text_5">4 Меню с подсказкой</string>
+    <string name="lesson_help_activity_text_6">5 Парта с учеником</string>
+    <string name="lesson_help_activity_text_7">6 Фамилия ученика</string>
+    <string name="lesson_help_activity_text_8">Добавление баллов</string>
+    <string name="lesson_help_activity_text_9">При нажатии на ученика ему зачисляется один ответ (их может быть не больше пяти)</string>
+    <string name="lesson_help_activity_text_10">Редактирование оценки</string>
+    <string name="lesson_help_activity_text_11">После долгого нажатия на ученика появляется диалоговое окно:</string>
+    <string name="lesson_help_activity_text_12">1 Пункт «Отсутствует» отметит выбранного ученика как отсутствующего:)</string>
+    <string name="lesson_help_activity_text_13">Во 2 и 3 пунктах можно выбрать оценку (любую кроме уже выбранной)</string>
+    <string name="lesson_help_activity_text_14">4 Пункт «Новая оценка» запоминает поставленную оценку (если оценки нет, пункт не отображается), и позволяет поставить новую (максимум их три):</string>
+    <string name="lesson_help_activity_text_15">Дальше оценки можно ставить как обычно:</string>
+    <string name="lesson_help_activity_text_16">После сохранения оценок (кнопка «закончить»), их можно посмотреть в пункте «Мои ученики» -> «класс»</string>
 
 
     <!-- активность окончания урока-->
@@ -268,16 +301,13 @@
     <string name="settings_activity_button_edit_locale">Язык</string>
     <!-- уведомления -->
     <string name="settings_activity_toast_data_delete_success">Данные удалены успешно!</string>
-    <string name="settings_activity_toast_data_delete_falture">было введено неправильное число, данные не удалены</string>
-
-    <string name="settings_activity_toast_grade_no_entered">не введена оценка</string>
-    <string name="settings_activity_toast_grade_saved">сохранено</string>
-    <string name="settings_activity_toast_grade_too_match">введено слишком большое значение (должно быть не более 100)</string>
-    <string name="settings_activity_toast_grade_too_min">введено слишком маленькое значение (должно быть не менее 1)</string>
-
-    <string name="settings_activity_toast_time_successfully_saved">время сохранено</string>
-    <string name="settings_activity_toast_time_no_saved">ошибка, время не сохранено</string>
-
+    <string name="settings_activity_toast_data_delete_falture">Было введено неправильное число, данные не удалены</string>
+    <string name="settings_activity_toast_grade_no_entered">Не введена оценка</string>
+    <string name="settings_activity_toast_grade_saved">Сохранено</string>
+    <string name="settings_activity_toast_grade_too_match">Введено слишком большое значение (должно быть не более 100)</string>
+    <string name="settings_activity_toast_grade_too_min">Введено слишком маленькое значение (должно быть не менее 1)</string>
+    <string name="settings_activity_toast_time_successfully_saved">Время сохранено</string>
+    <string name="settings_activity_toast_time_no_saved">Ошибка, время не сохранено</string>
     <!-- диалоги -->
     <string name="settings_activity_dialog_title">Вы точно хотите удалить все данные приложения?</string>
     <string name="settings_activity_dialog_text">Для подтверждения введите число </string>

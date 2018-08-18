@@ -87,7 +87,7 @@ public class CreateSubjectDialogFragment extends DialogFragment {
         Button neutralButton = new Button(getActivity());
         neutralButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
         neutralButton.setText(R.string.lesson_redactor_activity_dialog_button_cancel);
-        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         neutralButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -100,7 +100,7 @@ public class CreateSubjectDialogFragment extends DialogFragment {
         Button positiveButton = new Button(getActivity());
         positiveButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
         positiveButton.setText(R.string.lesson_redactor_activity_dialog_button_add);
-        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,

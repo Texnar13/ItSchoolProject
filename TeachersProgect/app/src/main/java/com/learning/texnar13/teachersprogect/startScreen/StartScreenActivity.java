@@ -52,7 +52,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     static final String IS_RATE = "isRate";
     //версия
     static final String WHATS_NEW = "whatsNew";
-    static final int NOW_VERSION = 39;
+    static final int NOW_VERSION = 39;// todo получать автоматически
 
 //-----------------------------------метод диалога--------------------------------------------------
 
@@ -162,10 +162,10 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         //todo перенести все подсчеты в создание самого класса, а то при перевороте срабатывают
 
 //----счетчик "оцените нас"----
-        // через пять заходов в приложение открывает диалог 'оцените'
+        // через семь заходов в приложение открывает диалог 'оцените'
         if (!sharedPreferences.getBoolean(IS_RATE, false)) {
             editor.putInt(ENTERS_COUNT, sharedPreferences.getInt(ENTERS_COUNT, 0) + 1);
-            if (sharedPreferences.getInt(ENTERS_COUNT, 0) == 5) {
+            if (sharedPreferences.getInt(ENTERS_COUNT, 0) == 7) {
                 //на всякий случай обнуляем счетчик
                 editor.putInt(ENTERS_COUNT, 1);
                 editor.putBoolean(IS_RATE, false);
@@ -173,7 +173,6 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 StartScreenRateUsDialog startScreenRateUsDialog = new StartScreenRateUsDialog();
                 //показать диалог
                 startScreenRateUsDialog.show(getFragmentManager(), IS_RATE);
-
             }
         }
 
@@ -256,8 +255,6 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
             case R.id.start_screen_button_schedule://переход в список расписаний
                 intent = new Intent(this, ScheduleMonthActivity.class);
                 startActivity(intent);
-
-
                 /*
                 * существуют рассадки, то есть как ученики класса сидят в конкретном кабинете (в разных кабинетах ученики одного класса сидят по разному)
                 * если уроку присвоены класс и кабинет, но нет рассадки этого класса в этом кабинете,

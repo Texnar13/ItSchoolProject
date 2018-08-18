@@ -71,7 +71,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
         Button button = new Button(getActivity());
         button.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
         button.setText(R.string.start_screen_activity_dialog_whats_new_button_ok);
-        button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         button.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,

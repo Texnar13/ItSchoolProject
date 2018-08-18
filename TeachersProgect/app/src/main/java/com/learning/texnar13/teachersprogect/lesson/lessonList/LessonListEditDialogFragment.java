@@ -6,15 +6,12 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.InputType;
-import android.text.LoginFilter;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -79,7 +76,7 @@ public class LessonListEditDialogFragment extends DialogFragment {//входны
         //адаптер
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 getActivity().getApplicationContext(),
-                R.layout.spiner_dropdown_element_learners_and_grades_subjects,
+                R.layout.spinner_dropdown_element_learners_and_grades_subjects,
                 gradesText
         );
         //спинер
@@ -134,7 +131,7 @@ public class LessonListEditDialogFragment extends DialogFragment {//входны
         Button neutralButton = new Button(getActivity());
         neutralButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
         neutralButton.setText(R.string.lesson_list_activity_dialog_button_cancel);
-        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         neutralButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -147,7 +144,7 @@ public class LessonListEditDialogFragment extends DialogFragment {//входны
         Button positiveButton = new Button(getActivity());
         positiveButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
         positiveButton.setText(R.string.lesson_list_activity_dialog_button_save);
-        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -179,21 +176,6 @@ public class LessonListEditDialogFragment extends DialogFragment {//входны
                         case 1:
                             tempI = 0;
                             break;
-//                        case 2:
-//                            tempI = 1;
-//                            break;
-//                        case 3:
-//                            tempI = 2;
-//                            break;
-//                        case 4:
-//                            tempI = 3;
-//                            break;
-//                        case 5:
-//                            tempI = 4;
-//                            break;
-//                        case 6:
-//                            tempI = 5;
-//                            break;
                         default:
                             tempI = spinner.getSelectedItemPosition()-1;
                             break;
@@ -230,20 +212,6 @@ public class LessonListEditDialogFragment extends DialogFragment {//входны
                 dismiss();
             }
         });
-
-////----кнопка сохранения изменений----
-//        builder.setPositiveButton("сохранить", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//
-//            }
-//        });
-//        //просто выход из диалога
-//        builder.setNegativeButton("отмена", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//            }
-//        });
 
         return builder.create();
     }

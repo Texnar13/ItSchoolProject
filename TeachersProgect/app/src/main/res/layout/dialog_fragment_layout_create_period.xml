@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/create_period_dialog_fragment_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackGround"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:text="@string/learners_and_grades_statistics_activity_dialog_title_add_statistic"
+        android:textAllCaps="true"
+        android:textColor="#000000"
+        android:textSize="@dimen/text_subtitle_size" />
+
+    <EditText
+
+        android:id="@+id/create_period_dialog_fragment_edit_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginStart="25dp"
+        android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_name"
+        android:inputType="textCapSentences"
+        android:textColor="#000000"
+        android:textSize="@dimen/text_subtitle_size" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/learners_and_grades_statistics_activity_dialog_text_time_before"
+                android:textColor="#000000"
+                android:textSize="@dimen/text_subtitle_size" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|end"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/create_period_dialog_fragment_edit_start_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="2"
+                    android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_day"
+                    android:inputType="number"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/text_subtitle_size" />
+
+                <EditText
+                    android:id="@+id/create_period_dialog_fragment_edit_start_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="2"
+                    android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_month"
+                    android:inputType="number"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/text_subtitle_size" />
+
+                <EditText
+                    android:id="@+id/create_period_dialog_fragment_edit_start_year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="3"
+                    android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
+                    android:inputType="number"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/text_subtitle_size" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/learners_and_grades_statistics_activity_dialog_text_time_after"
+                android:textColor="#000000"
+                android:textSize="@dimen/text_subtitle_size" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|end"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/create_period_dialog_fragment_edit_end_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="2"
+                    android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_day"
+                    android:inputType="number"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/text_subtitle_size" />
+
+                <EditText
+                    android:id="@+id/create_period_dialog_fragment_edit_end_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="2"
+                    android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_month"
+                    android:inputType="number"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/text_subtitle_size" />
+
+                <EditText
+                    android:id="@+id/create_period_dialog_fragment_edit_end_year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="3"
+                    android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
+                    android:inputType="number"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/text_subtitle_size" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/create_period_dialog_fragment_button_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/start_screen_3_1_blue_spot"
+            android:text="@string/learners_and_grades_statistics_activity_dialog_button_cancel"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/text_simple_size" />
+
+        <Button
+            android:id="@+id/create_period_dialog_fragment_button_save"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/start_screen_3_1_blue_spot"
+            android:text="@string/learners_and_grades_statistics_activity_dialog_button_save"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/text_simple_size" />
+
+    </LinearLayout>
+</LinearLayout>

@@ -61,11 +61,11 @@ public class StartScreenRateUsDialog extends DialogFragment {
         ratingBarFive.setRating(5);
         linearLayout.addView(ratingBarFive, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        RatingBar ratingBarThree = new RatingBar(getActivity());
-        ratingBarThree.setIsIndicator(true);
-        ratingBarThree.setNumStars(5);
-        ratingBarThree.setRating(2.5F);
-        linearLayout.addView(ratingBarThree, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//        RatingBar ratingBarThree = new RatingBar(getActivity());
+//        ratingBarThree.setIsIndicator(true);
+//        ratingBarThree.setNumStars(5);
+//        ratingBarThree.setRating(2.5F);
+//        linearLayout.addView(ratingBarThree, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
 //--кнопки согласия/отмены--
         //контейнер для них
@@ -76,7 +76,7 @@ public class StartScreenRateUsDialog extends DialogFragment {
         Button neutralButton = new Button(getActivity());
         neutralButton.setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
         neutralButton.setText(R.string.start_screen_activity_dialog_button_later);
-        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         neutralButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -89,7 +89,7 @@ public class StartScreenRateUsDialog extends DialogFragment {
         Button positiveButton = new Button(getActivity());
         positiveButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
         positiveButton.setText(R.string.start_screen_activity_dialog_button_rate_now);
-        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -149,51 +149,6 @@ public class StartScreenRateUsDialog extends DialogFragment {
                 dismiss();
             }
         });
-
-
-
-
-
-
-
-//        //кнопка оценить
-//        builder.setPositiveButton("оценить!", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                try {
-//                    //вызываем в активности метод по оценке
-//                    ((RateInterface) getActivity()).rate(
-//                            0
-//                    );
-//                } catch (java.lang.ClassCastException e) {
-//                    //в вызвающей активности должен быть имплементирован класс RateInterface
-//                    e.printStackTrace();
-//                    Log.i(
-//                            "TeachersApp",
-//                            "StartScreenRateUsDialog: you must implements RateInterface in your activity"
-//                    );
-//                }
-//            }
-//        });
-//        //перенести на потом
-//        builder.setNegativeButton("позже", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                try {
-//                    //вызываем в активности метод по оценке
-//                    ((RateInterface) getActivity()).rate(
-//                            1
-//                    );
-//                } catch (java.lang.ClassCastException e) {
-//                    //в вызвающей активности должен быть имплементирован класс RateInterface
-//                    e.printStackTrace();
-//                    Log.i(
-//                            "TeachersApp",
-//                            "StartScreenRateUsDialog: you must implements RateInterface in your activity"
-//                    );
-//                }
-//            }
-//        });
 
         return builder.create();
     }

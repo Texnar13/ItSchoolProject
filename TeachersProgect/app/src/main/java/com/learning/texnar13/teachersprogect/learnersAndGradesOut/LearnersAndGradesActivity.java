@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.LearnersAndGradesOut;
+package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -37,6 +37,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.learning.texnar13.teachersprogect.learnersAndGradesOut.learnersAndGradesStatistics.LearnersGradesStatisticsActivity;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -49,6 +50,8 @@ import java.util.GregorianCalendar;
 
 public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface, AllowUserEditGradesInterface, UpdateTableInterface, SubjectNameLearnersDialogInterface, SubjectRemoveLearnersDialogInterface {
 
+
+    // todo разнести по классам диалоги! И другие исправления
 //--получаем из intent--
 
     public static final String CLASS_ID = "classId";
@@ -108,15 +111,16 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         menu.findItem(R.id.learners_and_grades_menu_statistics).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-//                Intent intent = new Intent(LearnersAndGradesActivity.this, LearnersGradesStatisticsActivity.class);
-//                startActivity(intent);
-
-                Toast toast = Toast.makeText(
-                        getApplicationContext(),
-                        R.string.learners_and_grades_out_activity_toast_in_develop,
-                        Toast.LENGTH_SHORT
-                );
-                toast.show();
+                // запускаем активность статистики
+                Intent intent = new Intent(LearnersAndGradesActivity.this, LearnersGradesStatisticsActivity.class);
+                intent.putExtra(LearnersGradesStatisticsActivity.INTENT_SUBJECT_ID, subjectsId[changingSubjectPosition]);
+                startActivity(intent);
+//                Toast toast = Toast.makeText(
+//                        getApplicationContext(),
+//                        R.string.learners_and_grades_out_activity_toast_in_develop,
+//                        Toast.LENGTH_SHORT
+//                );
+//                toast.show();
                 return true;
             }
         });
@@ -167,9 +171,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         db.setLearnerNameAndLastName(learnersId, name, lastName);
         //обновляем список учеников
         getLearnersFromDB();
-        //обновляем таблицу
+        // ставим текущее время
         GregorianCalendar currentCalendar = new GregorianCalendar();
         currentCalendar.setTime(new Date());
+        //обновляем таблицу
         outLearnersNamesInTable();
         getGradesFromDB();
         db.close();
@@ -239,6 +244,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         }
     }
 
+    @Override
+    public void returnSimpleColorForText(int[] indexes) {
+        allGrades[indexes[0]][indexes[1]][indexes[2]].textView.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
+        allGrades[indexes[0]][indexes[1]][indexes[2]].textView.setTextColor(Color.BLACK);
+    }
+
     //разрешаем пользователю изменять оценки
     @Override
     public void allowUserEditGrades() {
@@ -250,7 +261,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-//=====подготовка активности=====
+// ---------- подготовка активности ----------
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learners_and_grades);
@@ -280,7 +291,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //константы
         final String[] monthsNames = getResources().getStringArray(R.array.months_names);
         //изменяющийся календарь
-        if (viewCalendar == null) {//если зашли в активность а не переворачивали экран ставим тек дату
+        if (viewCalendar == null) {//если зашли в активность(создали) а не переворачивали экран ставим текущую дату
             viewCalendar = new GregorianCalendar();
             viewCalendar.setTime(new Date());
         }
@@ -417,7 +428,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
-                R.layout.spiner_dropdown_element_learners_and_grades_subjects,
+                R.layout.spinner_dropdown_element_learners_and_grades_subjects,
                 stringLessons
         );
         subjectSpinner.setAdapter(adapter);
@@ -1100,23 +1111,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     }
                 }
 
-                //изменяющися календари для вывода
-                GregorianCalendar outHelpStartCalendar = new GregorianCalendar(
-                        viewCalendar.get(Calendar.YEAR),
-                        viewCalendar.get(Calendar.MONTH),
-                        1,
-                        0,
-                        0,
-                        0
-                );
-                GregorianCalendar outHelpEndCalendar = new GregorianCalendar(
-                        viewCalendar.get(Calendar.YEAR),
-                        viewCalendar.get(Calendar.MONTH),
-                        1,
-                        0,
-                        0,
-                        0
-                );
+                //изменяющися строки для запросов
+                String startQestionString;
+                String endQestionString;
+
                 if (subjectsId.length != 0) {
                     DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                     //получаем время уроков из бд
@@ -1127,22 +1125,18 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     for (int i = 0; i < learnersId.size(); i++) {
                         //по дням
                         for (int j = 0; j < viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH); j++) {
-                            outHelpStartCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
-                            outHelpEndCalendar.set(Calendar.DAY_OF_MONTH, j + 1);
                             //сначала проверяем весь день целиком
                             //--время--
-                            //начало
-                            outHelpStartCalendar.set(Calendar.HOUR_OF_DAY, 0);
-                            outHelpStartCalendar.set(Calendar.MINUTE, 0);
-                            //конец урока
-                            outHelpEndCalendar.set(Calendar.HOUR_OF_DAY, 23);
-                            outHelpEndCalendar.set(Calendar.MINUTE, 59);
+
+                            startQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH)+1) + "-" + getTwoSymbols(j + 1) + " 00:00:00";
+                            endQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH)+1) + "-" + getTwoSymbols(j + 1) + " 23:59:00";
+
 
                             Cursor tDay = db.getGradesByLearnerIdSubjectAndTimePeriod(
                                     learnersId.get(i),
                                     subjectsId[changingSubjectPosition],
-                                    outHelpStartCalendar,
-                                    outHelpEndCalendar
+                                    startQestionString,
+                                    endQestionString
                             );//может посчитать их здесь, а потом если вывели все оценки то остальные выводим уже с прочерками без проверки
 
                             if (tDay.getCount() != 0) {
@@ -1160,26 +1154,16 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     }
 
                                     //--время--
-                                    //начало урока
-                                    outHelpStartCalendar.set(Calendar.HOUR_OF_DAY,
-                                            timeOfLessons[k][0]
-                                    );
-                                    outHelpStartCalendar.set(Calendar.MINUTE,
-                                            timeOfLessons[k][1]
-                                    );
-                                    //конец урока
-                                    outHelpEndCalendar.set(Calendar.HOUR_OF_DAY,
-                                            timeOfLessons[k][2]
-                                    );
-                                    outHelpEndCalendar.set(Calendar.MINUTE,
-                                            timeOfLessons[k][3]
-                                    );
+                                    // сторки для запроса
+                                    startQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH)+1) + "-" + getTwoSymbols(j + 1) + " " + getTwoSymbols(timeOfLessons[k][0]) + ":" + getTwoSymbols(timeOfLessons[k][1]) + ":00";
+                                    endQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH)+1) + "-" + getTwoSymbols(j + 1) + " " + getTwoSymbols(timeOfLessons[k][2]) + ":" + getTwoSymbols(timeOfLessons[k][3]) + ":00";
+
                                     //получаем оценки по времени и предмету
                                     Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
                                             learnersId.get(i),//todo !!!!!!!!!!!! здесь все еще есть ошибка !!!!!!!!!!!!!!! здесь ошибка java.lang.ArrayIndexOutOfBoundsException
                                             subjectsId[changingSubjectPosition],
-                                            outHelpStartCalendar,
-                                            outHelpEndCalendar
+                                            startQestionString,
+                                            endQestionString
                                     );
                                     //по оценкам
 
@@ -1229,13 +1213,15 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     }
 
                                     //--время--
-                                    //начало урока
-                                    outHelpStartCalendar.set(Calendar.HOUR_OF_DAY,
-                                            timeOfLessons[k][0]
-                                    );
-                                    outHelpStartCalendar.set(Calendar.MINUTE,
-                                            timeOfLessons[k][1]
-                                    );
+//                                    //начало урока
+//                                    outHelpStartCalendar.set(Calendar.HOUR_OF_DAY,
+//                                            timeOfLessons[k][0]
+//                                    );
+//                                    outHelpStartCalendar.set(Calendar.MINUTE,
+//                                            timeOfLessons[k][1]
+//                                    );
+                                    startQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH)+1) + "-" + getTwoSymbols(j + 1) + " " + getTwoSymbols(timeOfLessons[k][0]) + ":" + getTwoSymbols(timeOfLessons[k][1]) + ":00";
+
                                     //по оценкам
                                     for (int l = 0; l < 3; l++) {
                                         //нет оценки
@@ -1244,7 +1230,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                                 new long[]{-1, -1, -1},
                                                 new int[]{0, 0, 0},
                                                 subjectsId[changingSubjectPosition],
-                                                dateFormat.format(outHelpStartCalendar.getTime())
+                                                startQestionString
                                         );
 
                                     }
@@ -1352,7 +1338,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         LinearLayout dateOut = new LinearLayout(this);
                         dateOut.setBackgroundColor(getResources().getColor(R.color.colorBackGroundDark));
                         //текст
-                        TextView learnerGrade = new TextView(this);
+                        final TextView learnerGrade = new TextView(this);
                         learnerGrade.setTextColor(Color.BLACK);
                         learnerGrade.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                         learnerGrade.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
@@ -1388,9 +1374,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 //останавливаем подгрузку данных, чтобы не мешали
                                 //flag = false;//TO=DO надо остановить подгрузку данных, чтобы при переоценивании новых не получить ошибку, надо придумать как это сделать, может через метод?
                                 if (canEditGrades) {
-                                    //чтобы не было нескольких вызовов одновременно
+                                    // --- красим ---
+                                    learnerGrade.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));
+                                    learnerGrade.setTextColor(getResources().getColor(R.color.colorBackGround));
+                                    // --- чтобы не было нескольких вызовов одновременно ---
                                     canEditGrades = false;
-                                    //вызываем диалог по ее изменению
+                                    // --- вызываем диалог по ее изменению ---
                                     EditGradeDialogFragment editGrade = new EditGradeDialogFragment();
                                     //параметры
                                     Bundle bundle = new Bundle();
@@ -1502,6 +1491,24 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         }
 
     }
+
+    // -- метод трансформации числа в текст с двумя позициями --
+    String getTwoSymbols(int number) {
+        if (number < 10 && number >= 0) {
+            return "0" + number;
+        } else {
+            return "" + number;
+        }
+    }
+
+//    // -- метод трансформации числа в текст с четырьмя датами --
+//    String getFourSymbols(int number) {
+//        if (number < 10 && number >= 0) {
+//            return "000" + number;
+//        } else {
+//            return "" + number;
+//        }
+//    }
 
 }
 

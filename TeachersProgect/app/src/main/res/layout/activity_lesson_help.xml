@@ -32,7 +32,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
                     android:gravity="center"
-                    android:text="@string/lesson_activity_help_text_1"
+                    android:text="@string/lesson_help_activity_text_1"
                     android:textColor="#000000"
                     style="?android:listSeparatorTextViewStyle"
                     android:textSize="@dimen/text_simple_size" />
@@ -53,7 +53,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="@string/lesson_activity_help_text_2"
+                    android:text="@string/lesson_help_activity_text_2"
                     android:textSize="@dimen/text_simple_size" />
 
                 <TextView
@@ -64,7 +64,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="@string/lesson_activity_help_text_3"
+                    android:text="@string/lesson_help_activity_text_3"
                     android:textSize="@dimen/text_simple_size" />
 
                 <TextView
@@ -75,7 +75,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="@string/lesson_activity_help_text_4"
+                    android:text="@string/lesson_help_activity_text_4"
                     android:textSize="@dimen/text_simple_size" />
 
                 <TextView
@@ -86,7 +86,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="@string/lesson_activity_help_text_5"
+                    android:text="@string/lesson_help_activity_text_5"
                     android:textSize="@dimen/text_simple_size" />
 
                 <TextView
@@ -97,7 +97,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="@string/lesson_activity_help_text_6"
+                    android:text="@string/lesson_help_activity_text_6"
                     android:textSize="@dimen/text_simple_size" />
 
                 <TextView
@@ -108,7 +108,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="@string/lesson_activity_help_text_7"
+                    android:text="@string/lesson_help_activity_text_7"
                     android:textSize="@dimen/text_simple_size" />
 
             </LinearLayout>
@@ -128,7 +128,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
                     android:gravity="center"
-                    android:text="@string/lesson_activity_help_text_8"
+                    android:text="@string/lesson_help_activity_text_8"
                     android:textColor="#000000"
                     style="?android:listSeparatorTextViewStyle"
                     android:textSize="@dimen/text_simple_size" />
@@ -148,7 +148,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="@string/lesson_activity_help_text_9"
+                    android:text="@string/lesson_help_activity_text_9"
                     android:textSize="@dimen/text_simple_size" />
 
             </LinearLayout>
@@ -168,7 +168,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
                     android:gravity="center"
-                    android:text="@string/lesson_activity_help_text_10"
+                    android:text="@string/lesson_help_activity_text_10"
                     android:textColor="#000000"
                     style="?android:listSeparatorTextViewStyle"
                     android:textSize="@dimen/text_simple_size" />
@@ -181,7 +181,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="@string/lesson_activity_help_text_11"
+                    android:text="@string/lesson_help_activity_text_11"
                     android:textSize="@dimen/text_simple_size" />
 
 
@@ -200,7 +200,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="@string/lesson_activity_help_text_12"
+                    android:text="@string/lesson_help_activity_text_12"
                     android:textSize="@dimen/text_simple_size" />
 
                 <ImageView
@@ -217,7 +217,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="@string/lesson_activity_help_text_13"
+                    android:text="@string/lesson_help_activity_text_13"
                     android:textSize="@dimen/text_simple_size" />
 
                 <TextView
@@ -228,7 +228,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="@string/lesson_activity_help_text_14"
+                    android:text="@string/lesson_help_activity_text_14"
                     android:textSize="@dimen/text_simple_size" />
 
                 <ImageView
@@ -245,7 +245,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="@string/lesson_activity_help_text_15"
+                    android:text="@string/lesson_help_activity_text_15"
                     android:textSize="@dimen/text_simple_size" />
 
                 <ImageView
@@ -262,7 +262,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginStart="20dp"
-                    android:text="@string/lesson_activity_help_text_16"
+                    android:text="@string/lesson_help_activity_text_16"
                     android:textSize="@dimen/text_simple_size" />
 
                 <ImageView
