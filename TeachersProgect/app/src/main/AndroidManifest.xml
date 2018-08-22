@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.learning.texnar13.teachersprogect"
-    android:versionCode="39"
-    android:versionName="super1.990">
+    android:versionCode="40"
+    android:versionName="super2.000">
 
     <application
         android:name=".MyApplication"
@@ -72,8 +72,9 @@
             android:label="@string/title_activity_learners_classes_out"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".TestActivity" />
-        <activity android:name=".learnersAndGradesOut.learnersAndGradesStatistics.LearnersGradesStatisticsActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".learnersAndGradesOut.learnersAndGradesStatistics.LearnersGradesStatisticsActivity"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

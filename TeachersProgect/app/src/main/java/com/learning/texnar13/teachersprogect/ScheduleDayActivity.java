@@ -87,9 +87,6 @@ public class ScheduleDayActivity extends AppCompatActivity {
         }
 //-----кнопки вперед назад------
 
-//        ImageView previous = (ImageView) findViewById(R.id.schedule_day_button_previous);
-//        ImageView next = (ImageView) findViewById(R.id.schedule_day_button_next);
-//        final TextView dateText = (TextView) findViewById(R.id.schedule_day_date_text);
         final TableLayout table = (TableLayout) findViewById(R.id.schedule_day_table);
 
         final String months[] = getResources().getStringArray(R.array.months_names_low_case);

@@ -69,9 +69,8 @@
 
                 <EditText
                     android:id="@+id/create_period_dialog_fragment_edit_start_day"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/text_field_two_simple_symbols_width"
                     android:layout_height="wrap_content"
-                    android:ems="2"
                     android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_day"
                     android:inputType="number"
                     android:textColor="#000000"
@@ -79,9 +78,8 @@
 
                 <EditText
                     android:id="@+id/create_period_dialog_fragment_edit_start_month"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/text_field_two_simple_symbols_width"
                     android:layout_height="wrap_content"
-                    android:ems="2"
                     android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_month"
                     android:inputType="number"
                     android:textColor="#000000"
@@ -89,9 +87,8 @@
 
                 <EditText
                     android:id="@+id/create_period_dialog_fragment_edit_start_year"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/text_field_four_simple_symbols_width"
                     android:layout_height="wrap_content"
-                    android:ems="3"
                     android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
                     android:inputType="number"
                     android:textColor="#000000"
@@ -126,9 +123,8 @@
 
                 <EditText
                     android:id="@+id/create_period_dialog_fragment_edit_end_day"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/text_field_two_simple_symbols_width"
                     android:layout_height="wrap_content"
-                    android:ems="2"
                     android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_day"
                     android:inputType="number"
                     android:textColor="#000000"
@@ -136,9 +132,8 @@
 
                 <EditText
                     android:id="@+id/create_period_dialog_fragment_edit_end_month"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/text_field_two_simple_symbols_width"
                     android:layout_height="wrap_content"
-                    android:ems="2"
                     android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_month"
                     android:inputType="number"
                     android:textColor="#000000"
@@ -146,9 +141,8 @@
 
                 <EditText
                     android:id="@+id/create_period_dialog_fragment_edit_end_year"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/text_field_four_simple_symbols_width"
                     android:layout_height="wrap_content"
-                    android:ems="3"
                     android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
                     android:inputType="number"
                     android:textColor="#000000"
@@ -160,12 +154,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center">
 
         <Button
             android:id="@+id/create_period_dialog_fragment_button_cancel"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/my_buttons_height_size"
             android:layout_marginBottom="10dp"
             android:layout_marginEnd="5dp"
             android:layout_marginLeft="10dp"
@@ -181,7 +176,7 @@
         <Button
             android:id="@+id/create_period_dialog_fragment_button_save"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/my_buttons_height_size"
             android:layout_marginBottom="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginLeft="5dp"

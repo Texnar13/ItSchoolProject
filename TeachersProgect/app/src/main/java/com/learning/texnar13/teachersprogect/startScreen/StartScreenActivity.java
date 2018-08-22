@@ -1,6 +1,5 @@
 package com.learning.texnar13.teachersprogect.startScreen;
 
-import android.app.DialogFragment;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,17 +16,14 @@ import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.ScheduleMonthActivity;
-import com.learning.texnar13.teachersprogect.TestActivity;
 import com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
-import com.learning.texnar13.teachersprogect.learnersClassesOut.CreateLearnersClassDialogFragment;
 import com.learning.texnar13.teachersprogect.learnersClassesOut.LearnersClassesOutActivity;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.settings.SettingsActivity;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -52,7 +48,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     static final String IS_RATE = "isRate";
     //версия
     static final String WHATS_NEW = "whatsNew";
-    static final int NOW_VERSION = 39;// todo получать автоматически
+    static final int NOW_VERSION = 40;// todo получать автоматически
 
 //-----------------------------------метод диалога--------------------------------------------------
 
@@ -175,9 +171,10 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 startScreenRateUsDialog.show(getFragmentManager(), IS_RATE);
             }
         }
-
-//        WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
-//        dialogFragment.show(getFragmentManager(), WHATS_NEW);
+//        {
+//            WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
+//            dialogFragment.show(getFragmentManager(), WHATS_NEW);
+//        }
 //----диалог что нового----
         //если уже создано
         if (sharedPreferences.contains(WHATS_NEW)) {

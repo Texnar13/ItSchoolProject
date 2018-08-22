@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -24,7 +25,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class SettingsActivity extends AppCompatActivity implements SettingsRemoveInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface {
+public class SettingsActivity extends AppCompatActivity implements SettingsRemoveInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface, EditMaxAnswersDialogInterface {
+
+    Button saveButton;
 
 
 //-----------------------------------методы диалогов----------------------------------------------
@@ -141,8 +144,24 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
 
     }
 
+    // настройка максимального ответа
+    @Override
+    public void editMaxAnswer(int max) {
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        db.setSettingsMaxGrade(1, max);
+        db.close();
+        // ставим новый максимум
+        saveButton.setText(
+                String.format(
+                        getResources().getString(R.string.settings_activity_button_edit_max_answer),
+                        ""+max
+                )
+        );
+    }
+
 
 //-----------------------------------------создание экрана------------------------------------------
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +199,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (i != 0) {//избегаем деления на ноль
                     updateShowRoom(room, i);
+                    // todo почему я все еще могу сохранять если база данных закрыта
                     db.setSettingsProfileParameters(1, "default", i);
                 }
             }
@@ -192,42 +212,27 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
 
 //-------------максимальный ответ-------------
 
-        //поле ввода
-        final EditText maxEdit = (EditText) findViewById(R.id.activity_settings_max_grade_editText);
-
-        maxEdit.setText("" + db.getSettingsMaxGrade(1));
-
-        //кнопка  сохранения
-        Button saveButton = (Button) findViewById(R.id.activity_settings_max_grade_save_button);
-
+        //кнопка вызова диалога по изменению
+        saveButton = (Button) findViewById(R.id.activity_settings_edit_max_answers_count_button);
+        // ставим прошлый максимум
+        saveButton.setText(
+                String.format(
+                        getResources().getString(R.string.settings_activity_button_edit_max_answer),
+                        ""+db.getSettingsMaxGrade(1)
+                )
+        );
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (maxEdit.getText().toString().equals("")) {
-                    maxEdit.setText("1");
-                    Toast.makeText(getApplicationContext(), getString(R.string.settings_activity_toast_grade_no_entered), Toast.LENGTH_SHORT).show();
-                } else {
-                    if (maxEdit.getText().toString().length() <= 6) {
-                        if (Integer.valueOf(maxEdit.getText().toString()) > 100) {
-                            maxEdit.setText("100");
-                            Toast.makeText(getApplicationContext(), getString(R.string.settings_activity_toast_grade_too_match), Toast.LENGTH_SHORT).show();
-                            db.setSettingsMaxGrade(1, Integer.valueOf(maxEdit.getText().toString()));
-                        } else {
-                            if (Integer.valueOf(maxEdit.getText().toString()) < 1) {
-                                maxEdit.setText("1");
-                                Toast.makeText(getApplicationContext(), getString(R.string.settings_activity_toast_grade_too_min), Toast.LENGTH_SHORT).show();
-                                db.setSettingsMaxGrade(1, Integer.valueOf(maxEdit.getText().toString()));
-                            } else {
-                                Toast.makeText(getApplicationContext(), getString(R.string.settings_activity_toast_grade_saved) + " " + Integer.valueOf(maxEdit.getText().toString()), Toast.LENGTH_SHORT).show();
-                                db.setSettingsMaxGrade(1, Integer.valueOf(maxEdit.getText().toString()));
-                            }
-                        }
-                    } else {
-                        maxEdit.setText("100");
-                        Toast.makeText(getApplicationContext(), getString(R.string.settings_activity_toast_grade_too_match), Toast.LENGTH_SHORT).show();
-                        db.setSettingsMaxGrade(1, Integer.valueOf(maxEdit.getText().toString()));
-                    }
-                }
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                // аргументы
+                Bundle args = new Bundle();
+                args.putInt(EditMaxAnswersCountDialogFragment.ARGUMENT_LAST_MAX, db.getSettingsMaxGrade(1));
+                // показываем диалог
+                EditMaxAnswersCountDialogFragment editMaxAnswersCountDialogFragment = new EditMaxAnswersCountDialogFragment();
+                editMaxAnswersCountDialogFragment.setArguments(args);
+                editMaxAnswersCountDialogFragment.show(getFragmentManager(), "EditMaxAnswersDialogInterface");
+                db.close();
             }
         });
 
@@ -311,9 +316,33 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
         });
 
 //--------------настройка локализации-----------------
-
-        Button EditLocaleButton = (Button) findViewById(R.id.activity_settings_edit_locale_button);
-        EditLocaleButton.setOnClickListener(new View.OnClickListener() {
+        // находим кнопку
+        Button editLocaleButton = (Button) findViewById(R.id.activity_settings_edit_locale_button);
+        // ставим текст
+        {
+            // достаем коды языков
+            String[] localeСodes = getResources().getStringArray(R.array.locale_code);
+            // получаем текущий код локализации из бд
+            String lastLocale = db.getSettingsLocale(1);
+            // находим прошлую локализацию в списке
+            int lastLocaleNumber = 0;
+            for (int i = 0; i < localeСodes.length; i++) {
+                if (localeСodes[i].equals(lastLocale)) {
+                    lastLocaleNumber = i;
+                }
+            }
+            // достаем названия языков
+            String[] localeNames = getResources().getStringArray(R.array.locale_names);
+            // выводим название
+            editLocaleButton.setText(
+                    String.format(
+                            getResources().getString(R.string.settings_activity_button_edit_locale),
+                            localeNames[lastLocaleNumber]
+                    )
+            );
+        }
+        // ставим обработчик
+        editLocaleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //текущая локаль из бд
@@ -329,6 +358,8 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
                 localeDialog.show(getFragmentManager(), "editLocaleDialog");
             }
         });
+
+        db.close();
     }
 
 
@@ -372,7 +403,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
         tablesParams[2].setMargins((int) pxFromDp(1000 * multiplier), (int) pxFromDp(3000 * multiplier), 0, 0);
         tablesParams[3].setMargins((int) pxFromDp(4000 * multiplier), (int) pxFromDp(3000 * multiplier), 0, 0);
 
-        //room.setLayoutParams(new LinearLayout.LayoutParams());
     }
 
 
@@ -393,4 +423,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 }

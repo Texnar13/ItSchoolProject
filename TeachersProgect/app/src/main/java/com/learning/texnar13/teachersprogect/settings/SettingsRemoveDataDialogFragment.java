@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
@@ -42,7 +41,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         linearLayout.setLayoutParams(linearLayoutParams);
 //--заголовок--
         TextView title = new TextView(getActivity());
-        title.setText(getResources().getString(R.string.settings_activity_dialog_title));
+        title.setText(getResources().getString(R.string.settings_activity_dialog_delete_title));
         title.setTextColor(Color.BLACK);
         title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_title_size));
         title.setAllCaps(true);
@@ -65,7 +64,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         final TextView numberText = new TextView(getActivity());
         numberText.setGravity(Gravity.CENTER);
         numberText.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
-        numberText.setText(getResources().getString(R.string.settings_activity_dialog_text)+" " + n);
+        numberText.setText(getResources().getString(R.string.settings_activity_dialog_delete_text_confirm_delete)+" " + n);
         numberText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         //добавляем текстовое поле
         linearLayout.addView(numberText);
@@ -73,6 +72,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         //текстовое поле для числа
         final EditText editNumber = new EditText(getActivity());
         editNumber.setTextColor(Color.BLACK);
+        editNumber.setGravity(Gravity.CENTER);
         editNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         editNumber.setHint(getResources().getString(R.string.settings_activity_dialog_hint_number));
         editNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -84,6 +84,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         //контейнер для них
         LinearLayout container = new LinearLayout(getActivity());
         container.setOrientation(LinearLayout.HORIZONTAL);
+        container.setGravity(Gravity.CENTER);
         //контейнер в диалог
         linearLayout.addView(container);
 //--кнопка отмены--
@@ -94,7 +95,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         neutralButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
+                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         neutralButtonParams.weight = 1;
         neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
@@ -116,7 +117,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
+                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         positiveButtonParams.weight = 1;
         positiveButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));

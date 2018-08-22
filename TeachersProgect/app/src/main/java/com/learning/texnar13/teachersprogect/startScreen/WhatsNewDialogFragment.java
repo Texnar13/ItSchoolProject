@@ -7,9 +7,11 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -63,10 +65,13 @@ public class WhatsNewDialogFragment extends DialogFragment {
         );
         textParams.setMargins((int)pxFromDp(30),(int)pxFromDp(15),(int)pxFromDp(30),(int)pxFromDp(15));
         scrollLayout.addView(text,textParams);
+
 //---кнопка выхода---
         //контейнер для нее
         LinearLayout container = new LinearLayout(getActivity());
         container.setOrientation(LinearLayout.HORIZONTAL);
+        container.setGravity(Gravity.CENTER);
+
         //сама кнопка
         Button button = new Button(getActivity());
         button.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
@@ -75,7 +80,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
         button.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
+                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         buttonParams.weight = 1;
         buttonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));

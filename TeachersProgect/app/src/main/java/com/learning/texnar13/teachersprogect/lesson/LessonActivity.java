@@ -11,11 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.ZoomControls;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
 import com.learning.texnar13.teachersprogect.R;
@@ -225,10 +225,11 @@ public class LessonActivity extends AppCompatActivity {
 //поле вывода, класс
         room = (RelativeLayout) findViewById(R.id.room_layout);
 //кнопки зума
-        final ZoomControls zoomControls = (ZoomControls) findViewById(R.id.lesson_zoom_buttons);
+        final Button buttonZoomIn = (Button) findViewById(R.id.lesson_button_zoom_in);
+        final Button buttonZoomOut = (Button) findViewById(R.id.lesson_button_zoom_out);
 
         // увеличение
-        zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
+        buttonZoomIn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //изменяем размер
                 DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
@@ -243,19 +244,21 @@ public class LessonActivity extends AppCompatActivity {
                     db.close();
 
                     //активируем другую если приближать можно
-                    zoomControls.setIsZoomOutEnabled(true);
+                    buttonZoomOut.setEnabled(true);
+                    buttonZoomOut.setBackgroundResource(R.drawable.ic_vector_zoom_out_dark);
 
 
                     //выводим все
                     outDecks();
                 } else {//деактивируем кнопку если приближать нельзя
-                    zoomControls.setIsZoomInEnabled(false);
+                    buttonZoomIn.setEnabled(false);
+                    buttonZoomIn.setBackgroundResource(R.drawable.ic_vector_zoom_in_light);
                 }
             }
         });
 
         // уменьшение
-        zoomControls.setOnZoomOutClickListener(new View.OnClickListener() {
+        buttonZoomOut.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //изменяем размер
                 DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
@@ -270,12 +273,14 @@ public class LessonActivity extends AppCompatActivity {
                     db.close();
 
                     //активируем другую если приближать можно
-                    zoomControls.setIsZoomInEnabled(true);
+                    buttonZoomIn.setEnabled(true);
+                    buttonZoomIn.setBackgroundResource(R.drawable.ic_vector_zoom_in_dark);
 
                     //выводим все
                     outDecks();
                 } else {//деактивируем кнопку если отдалять нельзя
-                    zoomControls.setIsZoomOutEnabled(false);
+                    buttonZoomOut.setEnabled(false);
+                    buttonZoomOut.setBackgroundResource(R.drawable.ic_vector_zoom_out_light);
                 }
             }
         });

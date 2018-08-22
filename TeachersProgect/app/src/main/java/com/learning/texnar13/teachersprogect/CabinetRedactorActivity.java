@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -167,7 +168,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 //---вывод сетки---
         outLines();
 
-
 //---------------загружаем данные из бд---------------
 
         //какой view появился позже тот и отображаться будет выше
@@ -228,15 +228,14 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         }
 
 //----------инициализируем кнопки zoom-----------
-        final ZoomControls zoomControls = (ZoomControls) findViewById(R.id.cabinet_redactor_zoom_controls);
+        final Button buttonZoomOut = (Button) findViewById(R.id.cabinet_redactor_button_zoom_out);
+        final Button buttonZoomIn = (Button) findViewById(R.id.cabinet_redactor_button_zoom_in);
         //приближение
-        zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
+        buttonZoomIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //--изменяем размер--
                 DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-
-
                 //проверяем можем ли изменять
                 int last = (int) db.getInterfaceSizeBySettingsProfileId(1);
                 if (last < 95) {
@@ -246,10 +245,9 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                             last + 4
                     );
                     db.close();
-
                     //активируем другую если приближать можно
-                    zoomControls.setIsZoomOutEnabled(true);
-
+                    buttonZoomOut.setEnabled(true);
+                    buttonZoomOut.setBackgroundResource(R.drawable.ic_vector_zoom_out_dark);
                     //выводим все
                     multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 40f * getResources().getInteger(R.integer.desks_screen_multiplier);
                     for (int i = 0; i < deskCoordinatesList.size(); i++) {
@@ -261,33 +259,17 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                                 (int) pxFromDp(40 * multiplier),
                                 multiplier
                         );
-
-//                        RelativeLayout.LayoutParams deskLayoutParams =
-//                                new RelativeLayout.LayoutParams(
-//                                        (int) pxFromDp(40 * deskCoordinatesList.get(i).numberOfPlaces * multiplier),
-//                                        (int) pxFromDp(40 * multiplier)
-//                                );
-//                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-//                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//                        deskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-//                        deskLayoutParams.leftMargin = (int) pxFromDp(
-//                                pxFromDp(deskCoordinatesList.get(i).getDpX()) * multiplier
-//                        );
-//                        deskLayoutParams.topMargin = (int) pxFromDp(
-//                                pxFromDp(deskCoordinatesList.get(i).getDpY()) * multiplier
-//                        );
-//                        //и присваиваем их партам
-//                        deskCoordinatesList.get(i).desk.setLayoutParams(deskLayoutParams);
                     }
                     //---перевывод сетки---
                     outLines();
                 } else {//деактивируем кнопку если приближать нельзя
-                    zoomControls.setIsZoomInEnabled(false);
+                    buttonZoomIn.setEnabled(false);
+                    buttonZoomIn.setBackgroundResource(R.drawable.ic_vector_zoom_in_light);
                 }
             }
         });
         //отдаление
-        zoomControls.setOnZoomOutClickListener(new View.OnClickListener() {
+        buttonZoomOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //изменяем размер
@@ -301,10 +283,9 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                             (int) db.getInterfaceSizeBySettingsProfileId(1) - 4
                     );
                     db.close();
-
                     //активируем другую если приближать можно
-                    zoomControls.setIsZoomInEnabled(true);
-
+                    buttonZoomIn.setEnabled(true);
+                    buttonZoomIn.setBackgroundResource(R.drawable.ic_vector_zoom_in_dark);
                     //выводим все
                     multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 40f * getResources().getInteger(R.integer.desks_screen_multiplier);
                     for (int i = 0; i < deskCoordinatesList.size(); i++) {
@@ -321,7 +302,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     //---перевывод сетки---
                     outLines();
                 } else {//деактивируем кнопку если отдалять нельзя
-                    zoomControls.setIsZoomOutEnabled(false);
+                    buttonZoomOut.setEnabled(false);
+                    buttonZoomOut.setBackgroundResource(R.drawable.ic_vector_zoom_out_light);
                 }
             }
         });
@@ -411,7 +393,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                             (motionEvent.getY() >= pxFromDp(deskCoordinatesList.get(i).getDpY() * multiplier)) &&
                             (motionEvent.getY() <= pxFromDp((deskCoordinatesList.get(i).getDpY() + 40) * multiplier))) {
 
-                        instrumentalImage.setImageResource(R.drawable.ic_menu_delete_standart);
+                        instrumentalImage.setImageResource(R.drawable.ic_vector_basket);
 
                         checkedDeskId = deskCoordinatesList.get(i).deskId;
                         //новые параметры парты
@@ -445,7 +427,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         //находим нажатую парту по id
                         if (deskCoordinatesList.get(i).deskId == checkedDeskId) {
                             //ставим изображение в плюс
-                            instrumentalImage.setImageResource(R.drawable.ic_white_plus);
+                            instrumentalImage.setImageResource(R.drawable.ic_vector_plus);
 
                             //расчитываем новые координаты
                             //              координата     -          расстояние до центра пальца
@@ -554,7 +536,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                                 db.deleteDesk(deskCoordinatesList.get(i).deskId);
                                 out.removeView(deskCoordinatesList.get(i).desk);
                                 deskCoordinatesList.remove(i);
-                                instrumentalImage.setImageResource(R.drawable.ic_white_plus);
+                                instrumentalImage.setImageResource(R.drawable.ic_vector_plus);
                             } else {
                                 //новые параметры парты(в массив все сохраняется в конце касания)
                                 deskCoordinatesList.get(i).setDeskParams(
@@ -667,7 +649,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         //находим нажатую парту по id
                         if (deskCoordinatesList.get(i).deskId == checkedDeskId) {
                             //ставим изображение в плюс
-                            instrumentalImage.setImageResource(R.drawable.ic_white_plus);
+                            instrumentalImage.setImageResource(R.drawable.ic_vector_plus);
 
                             //расчитываем новые координаты
                             //              координата     -          расстояние до центра пальца

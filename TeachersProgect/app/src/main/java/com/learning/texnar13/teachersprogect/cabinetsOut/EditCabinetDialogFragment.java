@@ -91,6 +91,7 @@ public class EditCabinetDialogFragment extends DialogFragment {
         //контейнер для них
         LinearLayout container = new LinearLayout(getActivity());
         container.setOrientation(LinearLayout.HORIZONTAL);
+        container.setGravity(Gravity.CENTER);
 
         //кнопка отмены
         Button neutralButton = new Button(getActivity());
@@ -100,7 +101,7 @@ public class EditCabinetDialogFragment extends DialogFragment {
         neutralButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
+                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         neutralButtonParams.weight = 1;
         neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
@@ -113,7 +114,7 @@ public class EditCabinetDialogFragment extends DialogFragment {
         negativeButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams negativeButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
+                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         negativeButtonParams.weight = 1;
         negativeButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
@@ -126,7 +127,7 @@ public class EditCabinetDialogFragment extends DialogFragment {
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
+                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         positiveButtonParams.weight = 1;
         positiveButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));

@@ -19,10 +19,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_lite_gray"
                 android:orientation="vertical">
 
                 <TextView
@@ -44,12 +47,13 @@
                     android:id="@+id/activity_settings_size_show_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="20dp"
                     android:orientation="vertical">
 
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
+            <!--LinearLayout
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -99,6 +103,26 @@
                         android:textColor="@color/colorBackGround"
                         android:textSize="@dimen/text_simple_size" />
                 </RelativeLayout>
+            </LinearLayout-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/activity_settings_edit_max_answers_count_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/my_buttons_height_size"
+                    android:background="@drawable/button_gray"
+                    android:text="@string/settings_activity_button_edit_max_answer"
+                    android:textColor="@color/colorBackGround"
+                    android:textSize="@dimen/text_simple_size" />
             </LinearLayout>
 
             <LinearLayout
@@ -136,6 +160,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/my_buttons_height_size"
                     android:background="@drawable/button_gray"
+                    android:singleLine="true"
                     android:text="@string/settings_activity_button_edit_locale"
                     android:textColor="@color/colorBackGround"
                     android:textSize="@dimen/text_simple_size" />

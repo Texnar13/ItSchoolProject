@@ -7,7 +7,7 @@
         <item>Русский</item>
         <item>English</item>
     </string-array>
-    <!-- коды -->
+    <!-- коды для них в бд-->
     <string-array name="locale_code">
         <item>defaultLocale</item>        
         <item>ru</item>        

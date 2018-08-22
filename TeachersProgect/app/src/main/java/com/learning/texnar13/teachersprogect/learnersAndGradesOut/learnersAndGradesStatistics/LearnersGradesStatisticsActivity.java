@@ -461,17 +461,17 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         isTextCheckRun = false;
         // меняем тексты
         startDayEditText.setText("" + dates[chosenProfileNumber][2]);
-        startDayEditText.setBackground(getResources().getDrawable(R.drawable.button_lite_red));
+        startDayEditText.setBackgroundResource(R.drawable.button_lite_gray);
         startMonthEditText.setText("" + dates[chosenProfileNumber][1]);
-        startMonthEditText.setBackground(getResources().getDrawable(R.drawable.button_lite_red));
+        startMonthEditText.setBackgroundResource(R.drawable.button_lite_gray);
         startYearEditText.setText("" + dates[chosenProfileNumber][0]);
-        startYearEditText.setBackground(getResources().getDrawable(R.drawable.button_lite_red));
+        startYearEditText.setBackgroundResource(R.drawable.button_lite_gray);
         endDayEditText.setText("" + dates[chosenProfileNumber][5]);
-        endDayEditText.setBackground(getResources().getDrawable(R.drawable.button_lite_red));
+        endDayEditText.setBackgroundResource(R.drawable.button_lite_gray);
         endMonthEditText.setText("" + dates[chosenProfileNumber][4]);
-        endMonthEditText.setBackground(getResources().getDrawable(R.drawable.button_lite_red));
+        endMonthEditText.setBackgroundResource(R.drawable.button_lite_gray);
         endYearEditText.setText("" + dates[chosenProfileNumber][3]);
-        endYearEditText.setBackground(getResources().getDrawable(R.drawable.button_lite_red));
+        endYearEditText.setBackgroundResource(R.drawable.button_lite_gray);
         // разрешаем проверку
         isTextCheckRun = true;
     }
@@ -544,15 +544,6 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             textParams.setMargins(5, 0, 0, 5);
             learnerContainer.addView(learnerText, textParams);
         }
-        // ---  ставим контейнеру с учениками ширину так, чтобы он заполнял всё пространство ---
-        {//todo ставим контейнеру с учениками ширину так, чтобы он заполнял всё пространство
-            HorizontalScrollView horizontalScrollView = (HorizontalScrollView) findViewById(R.id.learners_grades_horizontal_names_scroll);
-            horizontalScrollView.setBackgroundColor(Color.RED);
-            Log.i(TAG, "outLearners: horizontalScrollView = " + horizontalScrollView.getWidth() + " learnersColumn = " + learnersColumn.getWidth());
-            if (horizontalScrollView.getWidth() > learnersColumn.getWidth()) {
-                learnersColumn.setMinimumWidth(horizontalScrollView.getWidth());
-            }
-        }
 
         // закрываем базу
         learnersCursor.close();
@@ -569,7 +560,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 // ---- выводим заголовок оценок ----
         // контейнер
         LinearLayout titleGradesContainer = new LinearLayout(this);
-        titleGradesContainer.setBackgroundColor(Color.GRAY);
+        titleGradesContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));
         gradesColumn.addView(titleGradesContainer,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -586,13 +577,13 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
 //        columnGradesTitleParams.setMargins(5, 5, 5, 5);
-        columnGradesTitleParams.setMargins(0, 0, 0, 0);
+        columnGradesTitleParams.setMargins((int)pxFromDp(5), 0, (int)pxFromDp(5), 0);
         titleGradesContainer.addView(columnGradesTitle, columnGradesTitleParams);
 
 // ---- выводим заголовок пропусков ----
         // контейнер
         LinearLayout titleAbsentContainer = new LinearLayout(this);
-        titleAbsentContainer.setBackgroundColor(Color.GRAY);
+        titleAbsentContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));
         absentsColumn.addView(titleAbsentContainer,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -609,7 +600,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
 //        columnAbsentTitleParams.setMargins(0, 5, 5, 5);
-        columnAbsentTitleParams.setMargins(0, 0, 0, 0);
+        columnGradesTitleParams.setMargins((int)pxFromDp(5), 0, (int)pxFromDp(5), 0);
         titleAbsentContainer.addView(columnAbsentTitle, columnAbsentTitleParams);
 
 // ---- пробегаемся по ученикам ----
@@ -791,15 +782,13 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             editStartYear.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
             isGood = false;
         } else {
-            //убираем красный
-            editStartYear.setBackground(null);
             // диапазон чисел
             if (Integer.parseInt(editStartYear.getText().toString()) < 1000 || Integer.parseInt(editStartYear.getText().toString()) > 9999) {
                 editStartYear.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
                 isGood = false;
             } else {
                 //убираем красный
-                editStartYear.setBackground(null);
+                startDayEditText.setBackgroundResource(R.drawable.button_lite_gray);
                 // год в календарь
                 startCalendar.set(GregorianCalendar.YEAR, Integer.parseInt(editStartYear.getText().toString()));
 
@@ -811,15 +800,13 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             editStartMonth.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
             isGood = false;
         } else {
-            //убираем красный
-            editStartMonth.setBackground(null);
             // диапазон чисел
             if (Integer.parseInt(editStartMonth.getText().toString()) < 1 || Integer.parseInt(editStartMonth.getText().toString()) > 12) {
                 editStartMonth.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
                 isGood = false;
             } else {
                 //убираем красный
-                editStartMonth.setBackground(null);
+                editStartMonth.setBackgroundResource(R.drawable.button_lite_gray);
                 // месяц в календарь
                 startCalendar.set(GregorianCalendar.MONTH, Integer.parseInt(editStartMonth.getText().toString()) - 1);
             }
@@ -831,15 +818,13 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             editStartDay.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
             isGood = false;
         } else {
-            //убираем красный
-            editStartDay.setBackground(null);
             // диапазон чисел
             if (Integer.parseInt(editStartDay.getText().toString()) < 1 || Integer.parseInt(editStartDay.getText().toString()) > startCalendar.getActualMaximum(GregorianCalendar.DAY_OF_MONTH)) {
                 editStartDay.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
                 isGood = false;
             } else {
                 //убираем красный
-                editStartDay.setBackground(null);
+                editStartDay.setBackgroundResource(R.drawable.button_lite_gray);
                 // день в календарь
                 startCalendar.set(GregorianCalendar.DAY_OF_MONTH, Integer.parseInt(editStartDay.getText().toString()));
             }
@@ -858,15 +843,13 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             editEndYear.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
             isGood = false;
         } else {
-            //убираем красный
-            editEndYear.setBackground(null);
             // диапазон чисел
             if (Integer.parseInt(editEndYear.getText().toString()) < 1000 || Integer.parseInt(editEndYear.getText().toString()) > 9999) {
                 editEndYear.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
                 isGood = false;
             } else {
                 //убираем красный
-                editEndYear.setBackground(null);
+                editEndYear.setBackgroundResource(R.drawable.button_lite_gray);
                 // год в календарь
                 endCalendar.set(GregorianCalendar.YEAR, Integer.parseInt(editEndYear.getText().toString()));
             }
@@ -877,15 +860,13 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             editEndMonth.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
             isGood = false;
         } else {
-            //убираем красный
-            editEndMonth.setBackground(null);
             // диапазон чисел
             if (Integer.parseInt(editEndMonth.getText().toString()) < 1 || Integer.parseInt(editEndMonth.getText().toString()) > 12) {
                 editEndMonth.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
                 isGood = false;
             } else {
                 //убираем красный
-                editEndMonth.setBackground(null);
+                editEndMonth.setBackgroundResource(R.drawable.button_lite_gray);
                 // месяц в календарь
                 endCalendar.set(GregorianCalendar.MONTH, Integer.parseInt(editEndMonth.getText().toString()) - 1);
             }
@@ -898,15 +879,13 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             editEndDay.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
             isGood = false;
         } else {
-            //убираем красный
-            editEndDay.setBackground(null);
             // диапазон чисел
             if (Integer.parseInt(editEndDay.getText().toString()) < 1 || Integer.parseInt(editEndDay.getText().toString()) > endCalendar.getActualMaximum(GregorianCalendar.DAY_OF_MONTH)) {
                 editEndDay.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
                 isGood = false;
             } else {
                 //убираем красный
-                editEndDay.setBackground(null);
+                editEndDay.setBackgroundResource(R.drawable.button_lite_gray);
                 // день в календарь
                 endCalendar.set(GregorianCalendar.DAY_OF_MONTH, Integer.parseInt(editEndDay.getText().toString()));
             }
@@ -924,12 +903,12 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                 editEndYear.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
                 isGood = false;
             } else {
-                editStartDay.setBackground(null);
-                editStartMonth.setBackground(null);
-                editStartYear.setBackground(null);
-                editEndDay.setBackground(null);
-                editEndMonth.setBackground(null);
-                editEndYear.setBackground(null);
+                editStartDay.setBackgroundResource(R.drawable.button_lite_gray);
+                editStartMonth.setBackgroundResource(R.drawable.button_lite_gray);
+                editStartYear.setBackgroundResource(R.drawable.button_lite_gray);
+                editEndDay.setBackgroundResource(R.drawable.button_lite_gray);
+                editEndMonth.setBackgroundResource(R.drawable.button_lite_gray);
+                editEndYear.setBackgroundResource(R.drawable.button_lite_gray);
             }
         }
 
@@ -937,6 +916,11 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         return isGood;
     }
 
+    //---------форматы----------
+
+    private float pxFromDp(float px) {
+        return px * getResources().getDisplayMetrics().density;
+    }
 
 // ----------- системные кнопки -------------
 

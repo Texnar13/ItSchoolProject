@@ -163,12 +163,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center">
 
             <Button
                 android:id="@+id/edit_period_dialog_fragment_button_cancel"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/my_buttons_height_size"
                 android:layout_marginBottom="10dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginLeft="10dp"
@@ -184,7 +185,7 @@
             <Button
                 android:id="@+id/edit_period_dialog_fragment_button_save"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/my_buttons_height_size"
                 android:layout_marginBottom="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginLeft="5dp"

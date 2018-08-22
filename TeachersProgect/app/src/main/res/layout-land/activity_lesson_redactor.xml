@@ -27,7 +27,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:gravity="center"
-                android:text="Класс"
+                android:text="@string/lesson_redactor_activity_title_class"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="@dimen/text_subtitle_size" />
 
@@ -69,7 +69,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:gravity="center"
-                android:text="Предмет"
+                android:text="@string/lesson_redactor_activity_title_subject"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="@dimen/text_subtitle_size" />
 
@@ -110,7 +110,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:gravity="center"
-                android:text="Кабинет"
+                android:text="@string/lesson_redactor_activity_title_cabinet"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="@dimen/text_subtitle_size" />
 
@@ -137,6 +137,7 @@
                     android:background="@drawable/line_gray" />
             </LinearLayout>
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -194,7 +195,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:gravity="center"
-                android:text="Повторять урок"
+                android:text="@string/lesson_redactor_activity_title_repeat"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="@dimen/text_subtitle_size" />
 
@@ -246,7 +247,7 @@
                 android:id="@+id/activity_lesson_redactor_remove_button"
                 style="@style/TextAppearance.AppCompat.Button"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/my_buttons_height_size"
                 android:layout_gravity="center"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="9dp"
@@ -255,7 +256,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/button_lite_red"
                 android:gravity="center"
-                android:text="удалить урок"
+                android:text="@string/lesson_redactor_activity_button_remove"
                 android:textColor="@color/colorAccentRed"
                 android:textSize="@dimen/text_simple_size" />
 
@@ -264,24 +265,24 @@
                 android:id="@+id/activity_lesson_redactor_back_button"
                 style="@style/TextAppearance.AppCompat.Button"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/my_buttons_height_size"
                 android:layout_gravity="center"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="9dp"
                 android:layout_marginStart="9dp"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/button_lite_gray"
+                android:background="@drawable/start_screen_3_4_pink_spot"
                 android:gravity="center"
-                android:text="отмена"
-                android:textColor="#7e7e7e"
+                android:text="@string/lesson_redactor_activity_button_cancel"
+                android:textColor="#ffffff"
                 android:textSize="@dimen/text_simple_size" />
 
             <TextView
                 android:id="@+id/activity_lesson_redactor_seating_redactor_button"
                 style="@style/TextAppearance.AppCompat.Button"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/my_buttons_height_size"
                 android:layout_gravity="center"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="9dp"
@@ -290,7 +291,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/button_lite_blue"
                 android:gravity="center"
-                android:text="редактировать рассадку"
+                android:text="@string/lesson_redactor_activity_button_edit_seating"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_simple_size" />
 
@@ -298,7 +299,7 @@
                 android:id="@+id/activity_lesson_redactor_save_button"
                 style="@style/TextAppearance.AppCompat.Button"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/my_buttons_height_size"
                 android:layout_gravity="center"
                 android:layout_marginBottom="5dp"
                 android:layout_marginEnd="9dp"
@@ -307,10 +308,10 @@
                 android:layout_marginStart="9dp"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/button_gray"
+                android:background="@drawable/start_screen_3_3_green_spot"
                 android:gravity="center"
-                android:text="сохранить"
-                android:textColor="#404040"
+                android:text="@string/lesson_redactor_activity_button_save"
+                android:textColor="#ffffff"
                 android:textSize="@dimen/text_simple_size" />
 
 

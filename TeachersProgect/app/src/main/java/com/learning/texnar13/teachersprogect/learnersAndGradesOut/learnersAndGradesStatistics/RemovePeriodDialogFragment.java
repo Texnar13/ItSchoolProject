@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -54,7 +55,7 @@ public class RemovePeriodDialogFragment extends DialogFragment {
 
             // контейнер
             final RelativeLayout itemContainer = new RelativeLayout(getActivity());
-
+            itemContainer.setGravity(Gravity.CENTER_VERTICAL);
             linearLayout.addView(itemContainer, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             // текст
             TextView itemText = new TextView(getActivity());
@@ -70,6 +71,7 @@ public class RemovePeriodDialogFragment extends DialogFragment {
             itemContainer.addView(itemText, itemTextParams);
             // чекбокс
             final CheckBox itemCheckBox = new CheckBox(getActivity());
+            itemCheckBox.setGravity(Gravity.CENTER);
             RelativeLayout.LayoutParams itemCheckBoxParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT

@@ -38,19 +38,16 @@
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
                     android:layout_marginTop="0dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
-                    <LinearLayout
+                    <!--LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="0dp"
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginRight="0dp"
-                        android:layout_marginStart="0dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"-->
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -60,14 +57,19 @@
                             android:textSize="@dimen/text_subtitle_size" />
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical|start"
                             android:orientation="horizontal">
 
                             <EditText
+                                android:gravity="center"
+                                android:background="@drawable/button_lite_gray"
+                                android:includeFontPadding="false"
                                 android:id="@+id/learners_grades_statistics_begin_day"
-                                android:layout_width="@dimen/text_field_month_width"
+                                android:layout_width="@dimen/text_field_two_simple_symbols_width"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_day"
                                 android:inputType="number"
@@ -76,8 +78,11 @@
                                 android:textSize="@dimen/text_subtitle_size" />
 
                             <EditText
+                                android:gravity="center"
+                                android:background="@drawable/button_lite_gray"
+                                android:includeFontPadding="false"
                                 android:id="@+id/learners_grades_statistics_begin_month"
-                                android:layout_width="@dimen/text_field_month_width"
+                                android:layout_width="@dimen/text_field_two_simple_symbols_width"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="5dp"
                                 android:layout_marginLeft="5dp"
@@ -90,8 +95,11 @@
                                 android:textSize="@dimen/text_subtitle_size" />
 
                             <EditText
+                                android:gravity="center"
+                                android:background="@drawable/button_lite_gray"
+                                android:includeFontPadding="false"
                                 android:id="@+id/learners_grades_statistics_begin_year"
-                                android:layout_width="@dimen/text_field_year_width"
+                                android:layout_width="@dimen/text_field_four_simple_symbols_width"
                                 android:layout_height="wrap_content"
                                 android:ems="3"
                                 android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
@@ -100,20 +108,18 @@
                                 android:textColor="#000000"
                                 android:textSize="@dimen/text_subtitle_size" />
                         </LinearLayout>
-                    </LinearLayout>
+                    <!--/LinearLayout-->
 
-                    <LinearLayout
+                    <!--LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="0dp"
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginRight="0dp"
-                        android:layout_marginStart="0dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"-->
 
                         <TextView
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/learners_and_grades_statistics_activity_dialog_text_time_after"
@@ -121,14 +127,19 @@
                             android:textSize="@dimen/text_subtitle_size" />
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical|start"
                             android:orientation="horizontal">
 
                             <EditText
+                                android:gravity="center"
+                                android:background="@drawable/button_lite_gray"
+                                android:includeFontPadding="false"
                                 android:id="@+id/learners_grades_statistics_end_day"
-                                android:layout_width="@dimen/text_field_month_width"
+                                android:layout_width="@dimen/text_field_two_simple_symbols_width"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_day"
                                 android:inputType="number"
@@ -137,8 +148,11 @@
                                 android:textSize="@dimen/text_subtitle_size" />
 
                             <EditText
+                                android:gravity="center"
+                                android:background="@drawable/button_lite_gray"
+                                android:includeFontPadding="false"
                                 android:id="@+id/learners_grades_statistics_end_month"
-                                android:layout_width="@dimen/text_field_month_width"
+                                android:layout_width="@dimen/text_field_two_simple_symbols_width"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="5dp"
                                 android:layout_marginLeft="5dp"
@@ -151,8 +165,11 @@
                                 android:textSize="@dimen/text_subtitle_size" />
 
                             <EditText
+                                android:gravity="center"
+                                android:background="@drawable/button_lite_gray"
+                                android:includeFontPadding="false"
                                 android:id="@+id/learners_grades_statistics_end_year"
-                                android:layout_width="@dimen/text_field_year_width"
+                                android:layout_width="@dimen/text_field_four_simple_symbols_width"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
                                 android:inputType="number"
@@ -160,7 +177,7 @@
                                 android:textColor="#000000"
                                 android:textSize="@dimen/text_subtitle_size" />
                         </LinearLayout>
-                    </LinearLayout>
+                    <!--/LinearLayout-->
                 </LinearLayout>
 
 
@@ -173,6 +190,7 @@
                 android:orientation="horizontal">
 
                 <HorizontalScrollView
+                    android:fillViewport="true"
                     android:id="@+id/learners_grades_horizontal_names_scroll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

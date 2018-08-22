@@ -84,6 +84,7 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
         //контейнер для них
         LinearLayout container = new LinearLayout(getActivity());
         container.setOrientation(LinearLayout.HORIZONTAL);
+        container.setGravity(Gravity.CENTER);
 
         //кнопка отмены
         Button neutralButton = new Button(getActivity());
@@ -93,7 +94,7 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
         neutralButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         neutralButtonParams.weight = 1;
         neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
@@ -106,7 +107,7 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         positiveButtonParams.weight = 1;
         positiveButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
@@ -149,44 +150,6 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
-
-
-//        //LinearLayout в layout файле
-//        LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.create_learners_class_dialog_fragment_linear_layout);
-//
-//        //текстовое поле имени
-//        final EditText editName = new EditText(getActivity());
-//        editName.setTextColor(Color.BLACK);
-//        editName.setHint("ИМЯ");
-//        editName.setInputType(InputType.TYPE_CLASS_TEXT);
-//        editName.setHintTextColor(Color.GRAY);
-//        //добавляем текстовое поле
-//        linearLayout.addView(editName);
-//
-//        //кнопки согласия/отмены
-//        builder.setPositiveButton("добавление", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                try {
-//                    //вызываем в активности метод по созданию класса и передаем ей имя
-//                    ((com.learning.texnar13.teachersprogect.learnersClassesOut.CreateLearnersClassDialogInterface) getActivity()).createLearnersClass(
-//                            editName.getText().toString()
-//                    );
-//                } catch (java.lang.ClassCastException e) {
-//                    //в вызвающей активности должен быть имплементирован класс CreateLearnersClassInterface
-//                    e.printStackTrace();
-//                    Log.i(
-//                            "TeachersApp",
-//                            "CreateLearnersClassDialogFragment: you must implements CreateLearnersClassInterface in your activity"
-//                    );
-//                }
-//            }
-//        });
-//        builder.setNegativeButton("отмена", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//            }
-//        });
 
         return builder.create();
     }

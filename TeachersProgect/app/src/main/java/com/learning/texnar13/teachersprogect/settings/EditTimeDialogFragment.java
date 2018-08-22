@@ -131,64 +131,60 @@ public class EditTimeDialogFragment extends DialogFragment {
 
             //----поле ввода beginHour
             fields[i][0] = new EditText(getActivity());
-            fields[i][0].setEms(2);
             fields[i][0].setGravity(Gravity.END);
             fields[i][0].setHint(getResources().getString(R.string.settings_activity_dialog_hint_hour));
             fields[i][0].setText("" + array[i][0]);
             fields[i][0].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][0].setInputType(InputType.TYPE_CLASS_NUMBER);
-            timeContainer.addView(fields[i][0]);
+            timeContainer.addView(fields[i][0], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
 
             //----:
             TextView beginPointer = new TextView(getActivity());
             beginPointer.setTextColor(Color.BLACK);
-            beginPointer.setText(" : ");
+            beginPointer.setText(R.string.settings_activity_dialog_text_time_colon);
             beginPointer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             timeContainer.addView(beginPointer);
 
             //----поле ввода beginMinute
             fields[i][1] = new EditText(getActivity());
-            fields[i][1].setEms(2);
             fields[i][1].setGravity(Gravity.START);
             fields[i][1].setHint(getResources().getString(R.string.settings_activity_dialog_hint_minute));
             fields[i][1].setText("" + array[i][1]);
             fields[i][1].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][1].setInputType(InputType.TYPE_CLASS_NUMBER);
-            timeContainer.addView(fields[i][1]);
+            timeContainer.addView(fields[i][1], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
 
             //---- --
             TextView pointerMid = new TextView(getActivity());
             pointerMid.setTextColor(Color.BLACK);
-            pointerMid.setText(" — ");
+            pointerMid.setText(R.string.settings_activity_dialog_text_time_dash);
             pointerMid.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             timeContainer.addView(pointerMid);
 
             //----поле ввода endHour
             fields[i][2] = new EditText(getActivity());
-            fields[i][2].setEms(2);
             fields[i][2].setGravity(Gravity.END);
             fields[i][2].setHint(getResources().getString(R.string.settings_activity_dialog_hint_hour));
             fields[i][2].setText("" + array[i][2]);
             fields[i][2].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][2].setInputType(InputType.TYPE_CLASS_NUMBER);
-            timeContainer.addView(fields[i][2]);
+            timeContainer.addView(fields[i][2], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
 
             //----:
             TextView endPointer = new TextView(getActivity());
             endPointer.setTextColor(Color.BLACK);
-            endPointer.setText(" : ");
+            endPointer.setText(R.string.settings_activity_dialog_text_time_colon);
             endPointer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             timeContainer.addView(endPointer);
 
             //----поле ввода endMinute
             fields[i][3] = new EditText(getActivity());
-            fields[i][3].setEms(2);
             fields[i][3].setGravity(Gravity.START);
             fields[i][3].setHint(getResources().getString(R.string.settings_activity_dialog_hint_minute));
             fields[i][3].setText("" + array[i][3]);
             fields[i][3].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][3].setInputType(InputType.TYPE_CLASS_NUMBER);
-            timeContainer.addView(fields[i][3]);
+            timeContainer.addView(fields[i][3], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
 
         }
 
@@ -214,7 +210,7 @@ public class EditTimeDialogFragment extends DialogFragment {
         neutralButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
+                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         neutralButtonParams.weight = 1;
         neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
@@ -228,7 +224,7 @@ public class EditTimeDialogFragment extends DialogFragment {
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
+                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         positiveButtonParams.weight = 1;
         positiveButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
@@ -273,7 +269,7 @@ public class EditTimeDialogFragment extends DialogFragment {
                             fields[i][1].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
                             fields[i][2].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
                             fields[i][3].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
-                        }else {
+                        } else {
                             time[i][0] = Integer.parseInt(fields[i][0].getText().toString());
                             time[i][1] = Integer.parseInt(fields[i][1].getText().toString());
                             time[i][2] = Integer.parseInt(fields[i][2].getText().toString());

@@ -6,7 +6,7 @@
     android:layout_height="@dimen/spinner_height_size"
     android:background="@color/colorBackGround"
     android:ellipsize="marquee"
-    android:gravity="center"
+    android:gravity="center_vertical"
     android:singleLine="true"
     android:textAlignment="inherit"
     android:textColor="#000000"

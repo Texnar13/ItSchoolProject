@@ -18,28 +18,30 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:background="@color/colorBackGround">
-    </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/redactor_out"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true">
 
-            <TextView
-                android:gravity="center"
-                android:id="@+id/cabinet_redactor_state_text"
-                android:layout_width="wrap_content"
-                android:textColor="@color/colorBackGroundDark"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="50dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginStart="50dp"
-                android:text="---"
-                android:textSize="10pt" />
-        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/redactor_out"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/cabinet_redactor_state_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginStart="50dp"
+            android:gravity="center"
+            android:text="@string/cabinet_redactor_activity_text_help"
+            android:textColor="@color/colorBackGroundDark"
+            android:textSize="10pt" />
+    </RelativeLayout>
 
 
     <LinearLayout
@@ -65,18 +67,32 @@
                 android:layout_height="@dimen/cabinet_redactor_button_add_size"
                 android:layout_centerInParent="true"
                 android:background="@drawable/cabinet_redactor_add_desk_button" />
+
             <ImageView
                 android:id="@+id/activity_cabinet_redactor_instrumental_image"
                 android:layout_width="@dimen/cabinet_redactor_button_add_image_size"
                 android:layout_height="@dimen/cabinet_redactor_button_add_image_size"
                 android:layout_centerInParent="true"
-                app:srcCompat="@drawable/ic_white_plus" />
+                app:srcCompat="@drawable/ic_vector_plus" />
         </RelativeLayout>
 
     </LinearLayout>
 
-    <ZoomControls
-        android:id="@+id/cabinet_redactor_zoom_controls"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/cabinet_redactor_button_zoom_in"
+        android:layout_width="@dimen/cabinet_redactor_button_add_size"
+        android:layout_height="@dimen/cabinet_redactor_button_add_size"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/ic_vector_zoom_in_dark" />
+
+    <Button
+        android:id="@+id/cabinet_redactor_button_zoom_out"
+        android:layout_width="@dimen/cabinet_redactor_button_add_size"
+        android:layout_height="@dimen/cabinet_redactor_button_add_size"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/ic_vector_zoom_out_dark" />
 </RelativeLayout>
