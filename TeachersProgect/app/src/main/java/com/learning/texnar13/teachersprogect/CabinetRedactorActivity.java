@@ -228,8 +228,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         }
 
 //----------инициализируем кнопки zoom-----------
-        final Button buttonZoomOut = (Button) findViewById(R.id.cabinet_redactor_button_zoom_out);
-        final Button buttonZoomIn = (Button) findViewById(R.id.cabinet_redactor_button_zoom_in);
+        final ImageView buttonZoomOut = (ImageView) findViewById(R.id.cabinet_redactor_button_zoom_out);
+        final ImageView buttonZoomIn = (ImageView) findViewById(R.id.cabinet_redactor_button_zoom_in);
         //приближение
         buttonZoomIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,7 +247,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     db.close();
                     //активируем другую если приближать можно
                     buttonZoomOut.setEnabled(true);
-                    buttonZoomOut.setBackgroundResource(R.drawable.ic_vector_zoom_out_dark);
+                    buttonZoomOut.setImageResource(R.drawable.ic_vector_zoom_out_dark);
                     //выводим все
                     multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 40f * getResources().getInteger(R.integer.desks_screen_multiplier);
                     for (int i = 0; i < deskCoordinatesList.size(); i++) {
@@ -264,7 +264,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     outLines();
                 } else {//деактивируем кнопку если приближать нельзя
                     buttonZoomIn.setEnabled(false);
-                    buttonZoomIn.setBackgroundResource(R.drawable.ic_vector_zoom_in_light);
+                    buttonZoomIn.setImageResource(R.drawable.ic_vector_zoom_in_light);
                 }
             }
         });
@@ -285,7 +285,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     db.close();
                     //активируем другую если приближать можно
                     buttonZoomIn.setEnabled(true);
-                    buttonZoomIn.setBackgroundResource(R.drawable.ic_vector_zoom_in_dark);
+                    buttonZoomIn.setImageResource(R.drawable.ic_vector_zoom_in_dark);
                     //выводим все
                     multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 40f * getResources().getInteger(R.integer.desks_screen_multiplier);
                     for (int i = 0; i < deskCoordinatesList.size(); i++) {
@@ -303,7 +303,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     outLines();
                 } else {//деактивируем кнопку если отдалять нельзя
                     buttonZoomOut.setEnabled(false);
-                    buttonZoomOut.setBackgroundResource(R.drawable.ic_vector_zoom_out_light);
+                    buttonZoomOut.setImageResource(R.drawable.ic_vector_zoom_out_light);
                 }
             }
         });

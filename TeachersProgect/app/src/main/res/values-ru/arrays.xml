@@ -42,8 +42,8 @@
     <string-array name="schedule_day_activity_table_titles_array">
         <item>№</item>
         <item>Время</item>
-        <item>Предмет</item>
         <item>Класс</item>
+        <item>Предмет</item>
         <item>Каб</item>
         <item>Дополнительно</item>
     </string-array>

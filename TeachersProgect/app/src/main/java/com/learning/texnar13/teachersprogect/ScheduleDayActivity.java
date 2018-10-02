@@ -158,7 +158,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
         table.removeAllViews();
         String tableHeadStrings[] = getResources().getStringArray(R.array.schedule_day_activity_table_titles_array);
 
-        //шапка таблицы
+// --------------------------- шапка таблицы ---------------------------
         {
             TextView tableHeadTexts[] = new TextView[tableHeadStrings.length];
             TableRow head = new TableRow(this);
@@ -198,7 +198,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
         lessonsTime = db.getSettingsTime(1);
 
-        //тело таблицы
+// --------------------------- тело таблицы ---------------------------
         String timePeriodsString[] = {
                 "" + lessonsTime[0][0] + ":" + lessonsTime[0][1] + "—" + lessonsTime[0][2] + ":" + lessonsTime[0][3],
                 lessonsTime[1][0] + ":" + lessonsTime[1][1] + "—" + lessonsTime[1][2] + ":" + lessonsTime[1][3],
@@ -370,11 +370,11 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 } else if (j == 1) {//параметры для времени
                     bodyText.setText("" + timePeriodsString[i] + "");
 
-                } else if (j == 2) {//параметры для названия ур
-                    bodyText.setText("  " + lessonName + "  ");
-
-                } else if (j == 3) {//параметры для класса
+                } else if (j == 2) {//параметры для класса
                     bodyText.setText("  " + lessonClass + "  ");
+
+                } else if (j == 3) {//параметры для названия предмета
+                    bodyText.setText("  " + lessonName + "  ");
 
                 } else if (j == 4) {//параметры для кабинета
                     bodyText.setText("  " + lessonCabinet + "  ");

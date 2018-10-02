@@ -225,8 +225,8 @@ public class LessonActivity extends AppCompatActivity {
 //поле вывода, класс
         room = (RelativeLayout) findViewById(R.id.room_layout);
 //кнопки зума
-        final Button buttonZoomIn = (Button) findViewById(R.id.lesson_button_zoom_in);
-        final Button buttonZoomOut = (Button) findViewById(R.id.lesson_button_zoom_out);
+        final ImageView buttonZoomIn = (ImageView) findViewById(R.id.lesson_button_zoom_in);
+        final ImageView buttonZoomOut = (ImageView) findViewById(R.id.lesson_button_zoom_out);
 
         // увеличение
         buttonZoomIn.setOnClickListener(new View.OnClickListener() {
@@ -245,14 +245,14 @@ public class LessonActivity extends AppCompatActivity {
 
                     //активируем другую если приближать можно
                     buttonZoomOut.setEnabled(true);
-                    buttonZoomOut.setBackgroundResource(R.drawable.ic_vector_zoom_out_dark);
+                    buttonZoomOut.setImageResource(R.drawable.ic_vector_zoom_out_dark);
 
 
                     //выводим все
                     outDecks();
                 } else {//деактивируем кнопку если приближать нельзя
                     buttonZoomIn.setEnabled(false);
-                    buttonZoomIn.setBackgroundResource(R.drawable.ic_vector_zoom_in_light);
+                    buttonZoomIn.setImageResource(R.drawable.ic_vector_zoom_in_light);
                 }
             }
         });
@@ -274,13 +274,13 @@ public class LessonActivity extends AppCompatActivity {
 
                     //активируем другую если приближать можно
                     buttonZoomIn.setEnabled(true);
-                    buttonZoomIn.setBackgroundResource(R.drawable.ic_vector_zoom_in_dark);
+                    buttonZoomIn.setImageResource(R.drawable.ic_vector_zoom_in_dark);
 
                     //выводим все
                     outDecks();
                 } else {//деактивируем кнопку если отдалять нельзя
                     buttonZoomOut.setEnabled(false);
-                    buttonZoomOut.setBackgroundResource(R.drawable.ic_vector_zoom_out_light);
+                    buttonZoomOut.setImageResource(R.drawable.ic_vector_zoom_out_light);
                 }
             }
         });

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.learning.texnar13.teachersprogect"
-    android:versionCode="40"
-    android:versionName="super2.000">
+    android:versionCode="42"
+    android:versionName="super2.010">
 
     <application
         android:name=".MyApplication"

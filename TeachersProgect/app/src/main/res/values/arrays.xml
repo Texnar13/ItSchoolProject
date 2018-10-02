@@ -50,8 +50,8 @@
     <string-array name="schedule_day_activity_table_titles_array">
         <item>№</item>
         <item>Time</item>
-        <item>Subject</item>
         <item>Class</item>
+        <item>Subject</item>
         <item>Cab</item>
         <item>Additional</item>
     </string-array>

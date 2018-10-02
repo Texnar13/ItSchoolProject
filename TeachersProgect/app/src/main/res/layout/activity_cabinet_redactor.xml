@@ -78,21 +78,21 @@
 
     </LinearLayout>
 
-    <Button
+    <ImageView
         android:id="@+id/cabinet_redactor_button_zoom_in"
         android:layout_width="@dimen/cabinet_redactor_button_add_size"
         android:layout_height="@dimen/cabinet_redactor_button_add_size"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/ic_vector_zoom_in_dark" />
-
-    <Button
+        app:srcCompat="@drawable/ic_vector_zoom_in_dark"
+        />
+    <ImageView
         android:id="@+id/cabinet_redactor_button_zoom_out"
         android:layout_width="@dimen/cabinet_redactor_button_add_size"
         android:layout_height="@dimen/cabinet_redactor_button_add_size"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/ic_vector_zoom_out_dark" />
+        app:srcCompat="@drawable/ic_vector_zoom_out_dark" />
 </RelativeLayout>

@@ -48,7 +48,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     static final String IS_RATE = "isRate";
     //версия
     static final String WHATS_NEW = "whatsNew";
-    static final int NOW_VERSION = 40;// todo получать автоматически
+    static final int NOW_VERSION = 42;// todo получать автоматически
 
 //-----------------------------------метод диалога--------------------------------------------------
 

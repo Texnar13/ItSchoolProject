@@ -22,10 +22,6 @@
 
     <string name="start_screen_activity_dialog_whats_new_title">What\'s new:</string>
     <string name="start_screen_activity_dialog_whats_new_text">
-        \-\-<b>Added ability to view average student grade</b>\n
-         \'MY STUDENTS\'\-> class \-> menu from the top.\n\n
-         It\'s enough just to enter two dates and a name \n (for example \'quarter\')\n\n
-         \-\-<b> Fixed application interface on tablets </b>\n\n
          \-\-<b> Minor bugs fixed </b></string>
     <string name="start_screen_activity_dialog_whats_new_button_ok">ok</string>
     <!-- тост -->

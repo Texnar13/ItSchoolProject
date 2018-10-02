@@ -22,10 +22,6 @@
 
     <string name="start_screen_activity_dialog_whats_new_title">Что нового:</string>
     <string name="start_screen_activity_dialog_whats_new_text">
-        \-\-<b>Добавлена возможность посмотреть среднюю оценку ученика</b>\n
-        \'МОИ УЧЕНИКИ\' \-> класс \-> меню сверху.\n\n
-        Достаточно просто ввести две даты и название\n (например \'четверть\') \n\n
-        \-\-<b>Исправлен интерфейс приложения на планшетах</b>\n\n
         \-\-<b>Исправлены небольшие ошибки</b>
     </string>
     <string name="start_screen_activity_dialog_whats_new_button_ok">понятно</string>
