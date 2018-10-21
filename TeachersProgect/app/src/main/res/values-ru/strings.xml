@@ -170,6 +170,9 @@
     <!-- активность календаря на месяц-->
     <!-- заголовок активности -->
     <string name="title_activity_schedule_month">РАСПИСАНИЕ</string>
+    <string name="schedule_month_activity_ad_preview_title">Рекламма</string>
+    <string name="schedule_month_activity_ad_preview_text">Я рекламма! Yf;fnbt yf vtyz vjnbdbhetn hfphf,jnxbrf gjllth;bdfnm ghjtrn</string>
+
 
 
     <!-- активность календаря на день-->

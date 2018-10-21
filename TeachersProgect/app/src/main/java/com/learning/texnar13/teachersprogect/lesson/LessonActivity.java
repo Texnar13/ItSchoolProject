@@ -919,7 +919,7 @@ public class LessonActivity extends AppCompatActivity {
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
                                             tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
                                         }
-                                        //1
+                                        //0
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) == 0) {
                                             tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
                                         }

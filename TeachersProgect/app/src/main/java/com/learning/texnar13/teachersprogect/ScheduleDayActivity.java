@@ -200,14 +200,14 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
 // --------------------------- тело таблицы ---------------------------
         String timePeriodsString[] = {
-                "" + lessonsTime[0][0] + ":" + lessonsTime[0][1] + "—" + lessonsTime[0][2] + ":" + lessonsTime[0][3],
-                lessonsTime[1][0] + ":" + lessonsTime[1][1] + "—" + lessonsTime[1][2] + ":" + lessonsTime[1][3],
-                lessonsTime[2][0] + ":" + lessonsTime[2][1] + "—" + lessonsTime[2][2] + ":" + lessonsTime[2][3],
-                lessonsTime[3][0] + ":" + lessonsTime[3][1] + "—" + lessonsTime[3][2] + ":" + lessonsTime[3][3],
-                lessonsTime[4][0] + ":" + lessonsTime[4][1] + "—" + lessonsTime[4][2] + ":" + lessonsTime[4][3],
-                lessonsTime[5][0] + ":" + lessonsTime[5][1] + "—" + lessonsTime[5][2] + ":" + lessonsTime[5][3],
-                lessonsTime[6][0] + ":" + lessonsTime[6][1] + "—" + lessonsTime[6][2] + ":" + lessonsTime[6][3],
-                lessonsTime[7][0] + ":" + lessonsTime[7][1] + "—" + lessonsTime[7][2] + ":" + lessonsTime[7][3],
+                "" + lessonsTime[0][0] + ":" + getTwoSymbols(lessonsTime[0][1]) + "—" + lessonsTime[0][2] + ":" + getTwoSymbols(lessonsTime[0][3]),
+                lessonsTime[1][0] + ":" + getTwoSymbols(lessonsTime[1][1]) + "—" + lessonsTime[1][2] + ":" + getTwoSymbols(lessonsTime[1][3]),
+                lessonsTime[2][0] + ":" + getTwoSymbols(lessonsTime[2][1]) + "—" + lessonsTime[2][2] + ":" + getTwoSymbols(lessonsTime[2][3]),
+                lessonsTime[3][0] + ":" + getTwoSymbols(lessonsTime[3][1]) + "—" + lessonsTime[3][2] + ":" + getTwoSymbols(lessonsTime[3][3]),
+                lessonsTime[4][0] + ":" + getTwoSymbols(lessonsTime[4][1]) + "—" + lessonsTime[4][2] + ":" + getTwoSymbols(lessonsTime[4][3]),
+                lessonsTime[5][0] + ":" + getTwoSymbols(lessonsTime[5][1]) + "—" + lessonsTime[5][2] + ":" + getTwoSymbols(lessonsTime[5][3]),
+                lessonsTime[6][0] + ":" + getTwoSymbols(lessonsTime[6][1]) + "—" + lessonsTime[6][2] + ":" + getTwoSymbols(lessonsTime[6][3]),
+                lessonsTime[7][0] + ":" + getTwoSymbols(lessonsTime[7][1]) + "—" + lessonsTime[7][2] + ":" + getTwoSymbols(lessonsTime[7][3]),
                 getResources().getString(R.string.schedule_day_activity_table_time_string_no_working_time)
         };
 
@@ -434,6 +434,15 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    // -- метод трансформации числа в текст с двумя позициями --
+    String getTwoSymbols(int number) {
+        if (number < 10 && number >= 0) {
+            return "0" + number;
+        } else {
+            return "" + number;
         }
     }
 }
