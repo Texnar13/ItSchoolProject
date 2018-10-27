@@ -53,8 +53,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!--LinearLayout
-
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
@@ -62,66 +61,17 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="20dp"
+                    android:textAllCaps="true"
                     android:gravity="center"
-                    android:text="@string/settings_activity_title_max_answer"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/text_subtitle_size" />
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/activity_settings_max_grade_editText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_toStartOf="@+id/activity_settings_max_grade_save_button"
-                        android:layout_toLeftOf="@+id/activity_settings_max_grade_save_button"
-                        android:hint="@string/settings_activity_hint_max_answer"
-                        android:inputType="number"
-                        android:textSize="@dimen/text_simple_size" />
-
-                    <Button
-                        android:id="@+id/activity_settings_max_grade_save_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/my_buttons_height_size"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginStart="20dp"
-                        android:background="@drawable/button_gray"
-                        android:text="@string/settings_activity_button_save_data"
-                        android:textColor="@color/colorBackGround"
-                        android:textSize="@dimen/text_simple_size" />
-                </RelativeLayout>
-            </LinearLayout-->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:orientation="vertical">
-
-                <Button
                     android:id="@+id/activity_settings_edit_max_answers_count_button"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/my_buttons_height_size"
-                    android:background="@drawable/button_gray"
+                    android:background="@drawable/button_lite_gray"
                     android:text="@string/settings_activity_button_edit_max_answer"
-                    android:textColor="@color/colorBackGround"
+                    android:textColor="#000000"
                     android:textSize="@dimen/text_simple_size" />
             </LinearLayout>
 
@@ -135,13 +85,15 @@
                 android:layout_marginStart="20dp"
                 android:orientation="vertical">
 
-                <Button
+                <TextView
+                    android:textAllCaps="true"
                     android:id="@+id/activity_settings_edit_time_button"
                     android:layout_width="match_parent"
+                    android:gravity="center"
                     android:layout_height="@dimen/my_buttons_height_size"
-                    android:background="@drawable/button_gray"
+                    android:background="@drawable/button_lite_gray"
                     android:text="@string/settings_activity_button_edit_time"
-                    android:textColor="@color/colorBackGround"
+                    android:textColor="#000000"
                     android:textSize="@dimen/text_simple_size" />
             </LinearLayout>
 
@@ -155,15 +107,50 @@
                 android:layout_marginStart="20dp"
                 android:orientation="vertical">
 
-                <Button
+                <TextView
+                    android:textAllCaps="true"
                     android:id="@+id/activity_settings_edit_locale_button"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/my_buttons_height_size"
-                    android:background="@drawable/button_gray"
+                    android:background="@drawable/button_lite_gray"
                     android:singleLine="true"
+                    android:gravity="center"
                     android:text="@string/settings_activity_button_edit_locale"
-                    android:textColor="@color/colorBackGround"
+                    android:textColor="#000000"
                     android:textSize="@dimen/text_simple_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/activity_settings_are_grades_colored_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:orientation="horizontal"
+                android:background="@drawable/button_lite_gray">
+
+                <Switch
+                    android:id="@+id/activity_settings_are_grades_colored_switch"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="center"
+                    android:layout_height="@dimen/my_buttons_height_size"
+                    android:layout_width="wrap_content" />
+
+                <TextView
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/settings_activity_title_colored_grades"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/text_simple_size"
+                    />
+
             </LinearLayout>
 
             <LinearLayout

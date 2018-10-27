@@ -25,7 +25,7 @@ import java.util.GregorianCalendar;
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
     private final boolean IS_DEBUG = true;
 
-    private static final int DB_VERSION = 14;
+    private static final int DB_VERSION = 15;
 
     /*
         final TextView textView = (TextView) findViewById(R.id.myTextView);
@@ -126,7 +126,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_MINUTE_NAME + "\":" +
                     "[\"15\",\"15\",\"15\",\"15\",\"10\",\"15\",\"10\",\"5\",\"59\"]" +
                     "}'," +
-                    SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE + " INTEGER ); ";
+                    SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE + " INTEGER, " +
+                    SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED + " INTEGER DEFAULT 0); ";
             db.execSQL(sql);
 
             //кабинет
@@ -393,6 +394,11 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         SchoolContract.TableStatisticsProfiles.COLUMN_START_PERIOD_TIME + " TEXT, " +
                         SchoolContract.TableStatisticsProfiles.COLUMN_END_PERIOD_TIME + " TEXT); ");
             }
+            if (oldVersion < 15) {// переменная отвечающая за цветные оценки
+                db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS +
+                        " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED + " INTEGER DEFAULT 0;");
+
+            }
         }
         //db.close();
     }
@@ -462,7 +468,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return answer;
     }
 
-    public int setSettingsMaxGrade(long profileId, int maxGrade) {
+    public int setSettingsMaxGrade(long profileId, int maxGrade) {// TODO: 26.10.2018 что то делать с оценками при изменении, тк если стоит оценка больше чем новый предел, пойдут сбои
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER, maxGrade);
@@ -686,6 +692,38 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             Log.i("DBOpenHelper", "getInterfaceSizeBySettingsProfileId profileId=" + profileId + " return=" + answer);
         cursor.close();
         //db.close();
+        return answer;
+    }
+
+    public long setSettingsAreTheGradesColoredByProfileId(long profileId, boolean areColored) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        if(areColored){
+            values.put(SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED, 1);
+        }else{
+            values.put(SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED, 0);
+        }
+        int temp = db.update(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, values, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId});
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "setSettingsAreTheGradesColoredByProfileId return = " + temp + " profileId= " + profileId + " areColored= " + areColored);
+
+        return temp;
+    }
+
+    public boolean getSettingsAreTheGradesColoredByProfileId(long profileId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] selectionArgs = {profileId + ""};
+        Cursor cursor = db.query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", selectionArgs, null, null, null);
+        boolean answer = false;
+        if (cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            if (cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED)) != 0) {
+                answer = true;
+            }
+        }
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "getSettingsAreTheGradesColoredByProfileId profileId=" + profileId + " return=" + answer);
+        cursor.close();
         return answer;
     }
 

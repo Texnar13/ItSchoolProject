@@ -5,7 +5,10 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -63,6 +66,8 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
     private String[] outProfilesStrings;
     private int[][] dates;
     private int chosenProfileNumber;
+    private int maxAnswersCount;
+    private boolean areTheGradesColored = false;
 
     // переменная разрешающая проверять поля дат и сохранять даты
     boolean isTextCheckRun = true;
@@ -106,6 +111,10 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 
         // ------------------------ получаем данные из бд ------------------------
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        // максимальная оценка
+        maxAnswersCount = db.getSettingsMaxGrade(1);
+        // цветные оценки
+        areTheGradesColored = db.getSettingsAreTheGradesColoredByProfileId(1);
         // курсор предмета
         Cursor subjectCursor = db.getSubjectById(subjectId);
         subjectCursor.moveToNext();
@@ -453,7 +462,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         profiles.close();
     }
 
-// ----------- вывод данных в поля -----------
+// ----------- вывод данных в поля времени -----------
 
     void outDates() {
         Log.e("TeachersApp", "outDates");
@@ -577,7 +586,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
 //        columnGradesTitleParams.setMargins(5, 5, 5, 5);
-        columnGradesTitleParams.setMargins((int)pxFromDp(5), 0, (int)pxFromDp(5), 0);
+        columnGradesTitleParams.setMargins((int) pxFromDp(5), 0, (int) pxFromDp(5), 0);
         titleGradesContainer.addView(columnGradesTitle, columnGradesTitleParams);
 
 // ---- выводим заголовок пропусков ----
@@ -600,7 +609,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
 //        columnAbsentTitleParams.setMargins(0, 5, 5, 5);
-        columnGradesTitleParams.setMargins((int)pxFromDp(5), 0, (int)pxFromDp(5), 0);
+        columnGradesTitleParams.setMargins((int) pxFromDp(5), 0, (int) pxFromDp(5), 0);
         titleAbsentContainer.addView(columnAbsentTitle, columnAbsentTitleParams);
 
 // ---- пробегаемся по ученикам ----
@@ -614,6 +623,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                     "" + dates[chosenProfileNumber][3] + "-" + getTwoSymbols(dates[chosenProfileNumber][4]) + "-" + getTwoSymbols(dates[chosenProfileNumber][5]) + " 23:59:59"
             );
 
+
             //вычисляем среднее значение и считаем 'н'
             long nCount = 0;
             float gradesSum = 0;
@@ -622,19 +632,19 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                 grades.moveToPosition(j);
                 int grade = grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_GRADE));
                 switch (grade) {
+                    case -1:
+
+                        Log.wtf(TAG, "LearnersGradesStatisticsActivity.outGrades - grade is -1!");
+                        break;
+                    case 0:
+                        break;
                     case -2:
                         nCount++;
                         break;
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
+                    default:
                         gradesSum = gradesSum + grade;
                         gradesCount++;
                         break;
-                    default:
-                        Log.wtf(TAG, "LearnersGradesStatisticsActivity.outGrades - grade is default!");
                 }
             }
 
@@ -662,10 +672,63 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             gradeText.setSingleLine(true);
             gradeText.setEms(2);
             gradeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+
+            // строка для покраски
+            SpannableStringBuilder s = new SpannableStringBuilder();
+            // цвет
+            ForegroundColorSpan style;
+            // ставим текст
             if (gradesCount == 0) {
-                gradeText.setText("-");
-            } else
-                gradeText.setText("" + (gradesSum / gradesCount));
+                // текст оценки
+                s.append("-");
+                // серый для прочерков
+                style = new ForegroundColorSpan(
+                        getResources().getColor(R.color.gradeColorGray)
+                );
+                s.setSpan(style, 0, s.length() - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            } else {
+                // текст оценки
+                s.append("" + (gradesSum / gradesCount));
+                // ---- выбираем цвет оценки ----
+                if (areTheGradesColored) {// выбраны ли цветные оценки
+                    //5
+                    if ((int) (((gradesSum / gradesCount) / (float) maxAnswersCount) * 100F) <= 100) {
+                        style = new ForegroundColorSpan(
+                                getResources().getColor(R.color.grade5Color)
+                        );
+                        s.setSpan(style, 0, s.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                    }
+                    //4
+                    if ((int) (((gradesSum / gradesCount) / (float) maxAnswersCount) * 100F) <= 80) {
+                        style = new ForegroundColorSpan(
+                                getResources().getColor(R.color.grade4Color)
+                        );
+                        s.setSpan(style, 0, s.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                    }
+                    //3
+                    if ((int) (((gradesSum / gradesCount) / (float) maxAnswersCount) * 100F) <= 60) {
+                        style = new ForegroundColorSpan(
+                                getResources().getColor(R.color.grade3Color)
+                        );
+                        s.setSpan(style, 0, s.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                    }
+                    //2
+                    if ((int) (((gradesSum / gradesCount) / (float) maxAnswersCount) * 100F) <= 41) {
+                        style = new ForegroundColorSpan(
+                                getResources().getColor(R.color.grade2Color)
+                        );
+                        s.setSpan(style, 0, s.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                    }
+                    //1
+                    if ((int) (((gradesSum / gradesCount) / (float) maxAnswersCount) * 100F) <= 20) {
+                        style = new ForegroundColorSpan(
+                                getResources().getColor(R.color.grade1Color)
+                        );
+                        s.setSpan(style, 0, s.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                    }
+                }
+            }
+            gradeText.setText(s);
             gradeText.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
             LinearLayout.LayoutParams gradeTextParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,

@@ -3,8 +3,10 @@ package com.learning.texnar13.teachersprogect.lesson;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.VectorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
@@ -153,6 +155,9 @@ public class LessonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lesson_main);
         //кнопка назад в actionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // для того, чтобы векторные изображения созданные в коде отображались нормально todo разобраться бы что это
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
 //-------------------------------загружаем статичные поля из бд-------------------------------------
         //проверка, загружены ли уже данные, если нет, то достаем их
@@ -580,9 +585,10 @@ public class LessonActivity extends AppCompatActivity {
 
 
 //------------картинка ученика------------
-
-                    //создаем картинку
+//создаем картинку
                     final ImageView tempLernerImage = new ImageView(this);
+
+
                     //ставим ей изображение по оценке(из памяти)
                     switch ((int) learnersAndGrades[learnerPosition].getGrade()) {
                         case -2:
@@ -591,48 +597,30 @@ public class LessonActivity extends AppCompatActivity {
                         case 0:
                             tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
                             break;
-
-
                         default:
                             //5
                             if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
-                                tempLernerImage.setImageResource(R.drawable.lesson_learner_5_green);
+                                tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
                             }
                             //4
                             if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
-                                tempLernerImage.setImageResource(R.drawable.lesson_learner_4_lime);
+                                tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
                             }
                             //3
                             if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
-                                tempLernerImage.setImageResource(R.drawable.lesson_learner_3_yellow);
+                                tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
                             }
                             //2
                             if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
-                                tempLernerImage.setImageResource(R.drawable.lesson_learner_2_orange);
+                                tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
                             }
                             //1
                             if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
-                                tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
+                                tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
                             }
 
                             //tempLernerImage.setImageResource(R.drawable.learner_active);
 
-
-//                        case 1:
-//                            tempLernerImage.setImageResource(R.drawable.learner_red);
-//                            break;
-//                        case 2:
-//                            tempLernerImage.setImageResource(R.drawable.learner_orange);
-//                            break;
-//                        case 3:
-//                            tempLernerImage.setImageResource(R.drawable.learner_yellow);
-//                            break;
-//                        case 4:
-//                            tempLernerImage.setImageResource(R.drawable.learner_lime);
-//                            break;
-//                        case 5:
-//                            tempLernerImage.setImageResource(R.drawable.learner_green);
-//                            break;
                     }
                     //параметры картинки
                     LinearLayout.LayoutParams tempLernerImageParams = new LinearLayout.LayoutParams(
@@ -734,23 +722,23 @@ public class LessonActivity extends AppCompatActivity {
                                 default:
                                     //5
                                     if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
-                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_5_green);
+                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
                                     }
                                     //4
                                     if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
-                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_4_lime);
+                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
                                     }
                                     //3
                                     if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
-                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_3_yellow);
+                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
                                     }
                                     //2
                                     if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
-                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_2_orange);
+                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
                                     }
                                     //1
                                     if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
-                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
+                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
                                     }
 
 
@@ -827,23 +815,23 @@ public class LessonActivity extends AppCompatActivity {
                                         //ставим картинку
                                         //5
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_5_green);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
                                         }
                                         //4
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_4_lime);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
                                         }
                                         //3
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_3_yellow);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
                                         }
                                         //2
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_2_orange);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
                                         }
                                         //1
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
                                         }
                                         //ставим текст
                                         bigText.setText("" + learnersAndGrades[learnerPosition].getGrade());
@@ -863,23 +851,23 @@ public class LessonActivity extends AppCompatActivity {
                                         //ставим картинку
                                         //5
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_5_green);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
                                         }
                                         //4
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_4_lime);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
                                         }
                                         //3
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_3_yellow);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
                                         }
                                         //2
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_2_orange);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
                                         }
                                         //1
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
                                         }
                                         //ставим текст
                                         return true;
@@ -901,23 +889,23 @@ public class LessonActivity extends AppCompatActivity {
                                         //ставим картинку
                                         //5
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_5_green);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
                                         }
                                         //4
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_4_lime);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
                                         }
                                         //3
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_3_yellow);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
                                         }
                                         //2
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_2_orange);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
                                         }
                                         //1
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_1_red);
+                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
                                         }
                                         //0
                                         if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) == 0) {

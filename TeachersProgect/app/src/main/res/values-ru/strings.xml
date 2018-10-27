@@ -21,8 +21,9 @@
     <string name="start_screen_activity_dialog_button_later">позже</string>
 
     <string name="start_screen_activity_dialog_whats_new_title">Что нового:</string>
-    <string name="start_screen_activity_dialog_whats_new_text">
-        \-\-<b>Исправлены небольшие ошибки</b>
+    <string name="start_screen_activity_dialog_whats_new_text"><b>Важное объявление:</b>\nУважаемый пользователь!\nЕсли вам нравится наше приложение, поддержите разработчиков, они тоже хотят кушать! Вскоре в нижнем углу календаря появится реклама, и за каждый клик по ней (но не несколько раз подряд) нам будет перечисляться 50 копеек. Поэтому кликайте почаще!
+Также мы вставим видео-рекламу на страницу «настройки», в самую малопосещаемую страницу. Просмотр видеоролика пересылает нам по рублю, а это уж и вовсе замечательно!\nСпасибо!\n
+ P.S. Баннер будет маленький, видео-ролик можно закрыть, но если кому-то захочется насовсем избавиться от рекламы, мы добавим функцию – отключить рекламу за 1 доллар.\n\n<b>По вашим просьбам мы раскрасили оценки, теперь их можно сделать цветными!</b>
     </string>
     <string name="start_screen_activity_dialog_whats_new_button_ok">понятно</string>
     <!-- уведомления -->
@@ -171,8 +172,7 @@
     <!-- заголовок активности -->
     <string name="title_activity_schedule_month">РАСПИСАНИЕ</string>
     <string name="schedule_month_activity_ad_preview_title">Рекламма</string>
-    <string name="schedule_month_activity_ad_preview_text">Я рекламма! Yf;fnbt yf vtyz vjnbdbhetn hfphf,jnxbrf gjllth;bdfnm ghjtrn</string>
-
+    <string name="schedule_month_activity_ad_preview_text">Если любите наше приложение, поддержите кликом по рекламе! (Скоро появится)</string>
 
 
     <!-- активность календаря на день-->
@@ -293,12 +293,13 @@
     <string name="settings_activity_hint_max_answer">ЧИСЛО ОТВЕТОВ</string>
     <string name="settings_activity_title_desk_size">НАСТРОЙКА РАЗМЕРА ПАРТ</string>
     <string name="settings_activity_title_max_answer">МАКСИМАЛЬНОЕ КОЛ-ВО ОТВЕТОВ</string>
+    <string name="settings_activity_title_colored_grades">ЦВЕТНЫЕ ОЦЕНКИ В ТАБЛИЦЕ</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">МАКСИМАЛЬНОЕ КОЛ-ВО ОТВЕТОВ: %1$s</string>
     <string name="settings_activity_button_edit_time">редактировать время уроков</string>
     <string name="settings_activity_button_remove_data">удалить все данные</string>
     <string name="settings_activity_button_rate_us">оцените наше приложение :)</string>
-    <string name="settings_activity_button_edit_locale" formatted="true">Язык - \'%1$s\'</string>
+    <string name="settings_activity_button_edit_locale" formatted="true">Язык: %1$s</string>
     <!-- уведомления -->
     <string name="settings_activity_toast_data_delete_success">Данные удалены успешно!</string>
     <string name="settings_activity_toast_data_delete_falture">Было введено неправильное число, данные не удалены</string>

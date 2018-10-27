@@ -27,17 +27,17 @@
                     android:id="@+id/learners_grades_statistics_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="5dp" />
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginTop="0dp"
+                    android:layout_marginBottom="5dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:weightSum="2">
@@ -49,65 +49,65 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal"-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/learners_and_grades_statistics_activity_dialog_text_time_before"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/text_subtitle_size" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center_vertical|start"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/learners_grades_statistics_begin_day"
+                            android:layout_width="@dimen/text_field_two_simple_symbols_width"
                             android:layout_height="wrap_content"
-                            android:text="@string/learners_and_grades_statistics_activity_dialog_text_time_before"
+                            android:background="@drawable/button_lite_gray"
+                            android:gravity="center"
+                            android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_day"
+                            android:includeFontPadding="false"
+                            android:inputType="number"
+                            android:singleLine="true"
                             android:textColor="#000000"
                             android:textSize="@dimen/text_subtitle_size" />
 
-                        <LinearLayout
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginStart="5dp"
-                            android:layout_width="wrap_content"
+                        <EditText
+                            android:id="@+id/learners_grades_statistics_begin_month"
+                            android:layout_width="@dimen/text_field_two_simple_symbols_width"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical|start"
-                            android:orientation="horizontal">
+                            android:layout_marginStart="5dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_lite_gray"
+                            android:gravity="center"
+                            android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_month"
+                            android:includeFontPadding="false"
+                            android:inputType="number"
+                            android:singleLine="true"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/text_subtitle_size" />
 
-                            <EditText
-                                android:gravity="center"
-                                android:background="@drawable/button_lite_gray"
-                                android:includeFontPadding="false"
-                                android:id="@+id/learners_grades_statistics_begin_day"
-                                android:layout_width="@dimen/text_field_two_simple_symbols_width"
-                                android:layout_height="wrap_content"
-                                android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_day"
-                                android:inputType="number"
-                                android:singleLine="true"
-                                android:textColor="#000000"
-                                android:textSize="@dimen/text_subtitle_size" />
-
-                            <EditText
-                                android:gravity="center"
-                                android:background="@drawable/button_lite_gray"
-                                android:includeFontPadding="false"
-                                android:id="@+id/learners_grades_statistics_begin_month"
-                                android:layout_width="@dimen/text_field_two_simple_symbols_width"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="5dp"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginRight="5dp"
-                                android:layout_marginStart="5dp"
-                                android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_month"
-                                android:inputType="number"
-                                android:singleLine="true"
-                                android:textColor="#000000"
-                                android:textSize="@dimen/text_subtitle_size" />
-
-                            <EditText
-                                android:gravity="center"
-                                android:background="@drawable/button_lite_gray"
-                                android:includeFontPadding="false"
-                                android:id="@+id/learners_grades_statistics_begin_year"
-                                android:layout_width="@dimen/text_field_four_simple_symbols_width"
-                                android:layout_height="wrap_content"
-                                android:ems="3"
-                                android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
-                                android:inputType="number"
-                                android:singleLine="true"
-                                android:textColor="#000000"
-                                android:textSize="@dimen/text_subtitle_size" />
-                        </LinearLayout>
+                        <EditText
+                            android:id="@+id/learners_grades_statistics_begin_year"
+                            android:layout_width="@dimen/text_field_four_simple_symbols_width"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/button_lite_gray"
+                            android:ems="3"
+                            android:gravity="center"
+                            android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
+                            android:includeFontPadding="false"
+                            android:inputType="number"
+                            android:singleLine="true"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/text_subtitle_size" />
+                    </LinearLayout>
                     <!--/LinearLayout-->
 
                     <!--LinearLayout
@@ -117,66 +117,66 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal"-->
 
-                        <TextView
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginStart="5dp"
-                            android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:text="@string/learners_and_grades_statistics_activity_dialog_text_time_after"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/text_subtitle_size" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center_vertical|start"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/learners_grades_statistics_end_day"
+                            android:layout_width="@dimen/text_field_two_simple_symbols_width"
                             android:layout_height="wrap_content"
-                            android:text="@string/learners_and_grades_statistics_activity_dialog_text_time_after"
+                            android:background="@drawable/button_lite_gray"
+                            android:gravity="center"
+                            android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_day"
+                            android:includeFontPadding="false"
+                            android:inputType="number"
+                            android:singleLine="true"
                             android:textColor="#000000"
                             android:textSize="@dimen/text_subtitle_size" />
 
-                        <LinearLayout
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginStart="5dp"
-                            android:layout_width="wrap_content"
+                        <EditText
+                            android:id="@+id/learners_grades_statistics_end_month"
+                            android:layout_width="@dimen/text_field_two_simple_symbols_width"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical|start"
-                            android:orientation="horizontal">
+                            android:layout_marginStart="5dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_lite_gray"
+                            android:gravity="center"
+                            android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_month"
+                            android:includeFontPadding="false"
+                            android:inputType="number"
+                            android:singleLine="true"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/text_subtitle_size" />
 
-                            <EditText
-                                android:gravity="center"
-                                android:background="@drawable/button_lite_gray"
-                                android:includeFontPadding="false"
-                                android:id="@+id/learners_grades_statistics_end_day"
-                                android:layout_width="@dimen/text_field_two_simple_symbols_width"
-                                android:layout_height="wrap_content"
-                                android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_day"
-                                android:inputType="number"
-                                android:singleLine="true"
-                                android:textColor="#000000"
-                                android:textSize="@dimen/text_subtitle_size" />
-
-                            <EditText
-                                android:gravity="center"
-                                android:background="@drawable/button_lite_gray"
-                                android:includeFontPadding="false"
-                                android:id="@+id/learners_grades_statistics_end_month"
-                                android:layout_width="@dimen/text_field_two_simple_symbols_width"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="5dp"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginRight="5dp"
-                                android:layout_marginStart="5dp"
-                                android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_month"
-                                android:inputType="number"
-                                android:singleLine="true"
-                                android:textColor="#000000"
-                                android:textSize="@dimen/text_subtitle_size" />
-
-                            <EditText
-                                android:gravity="center"
-                                android:background="@drawable/button_lite_gray"
-                                android:includeFontPadding="false"
-                                android:id="@+id/learners_grades_statistics_end_year"
-                                android:layout_width="@dimen/text_field_four_simple_symbols_width"
-                                android:layout_height="wrap_content"
-                                android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
-                                android:inputType="number"
-                                android:singleLine="true"
-                                android:textColor="#000000"
-                                android:textSize="@dimen/text_subtitle_size" />
-                        </LinearLayout>
+                        <EditText
+                            android:id="@+id/learners_grades_statistics_end_year"
+                            android:layout_width="@dimen/text_field_four_simple_symbols_width"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/button_lite_gray"
+                            android:gravity="center"
+                            android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
+                            android:includeFontPadding="false"
+                            android:inputType="number"
+                            android:singleLine="true"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/text_subtitle_size" />
+                    </LinearLayout>
                     <!--/LinearLayout-->
                 </LinearLayout>
 
@@ -190,14 +190,14 @@
                 android:orientation="horizontal">
 
                 <HorizontalScrollView
-                    android:fillViewport="true"
                     android:id="@+id/learners_grades_horizontal_names_scroll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toStartOf="@+id/learners_grades_statistics_grade_columns_container"
                     android:layout_toLeftOf="@+id/learners_grades_statistics_grade_columns_container"
-                    android:layout_toStartOf="@+id/learners_grades_statistics_grade_columns_container">
+                    android:fillViewport="true">
 
                     <LinearLayout
                         android:id="@+id/learners_grades_learners_table"
@@ -210,10 +210,10 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="5px"
-                            android:background="@color/colorBackGround"
+                            android:background="@color/colorPrimaryBlue"
                             android:gravity="center_vertical"
                             android:text="@string/learners_and_grades_statistics_activity_title_column_learner_name"
+                            android:textColor="#000000"
                             android:textSize="@dimen/text_subtitle_size" />
                     </LinearLayout>
                 </HorizontalScrollView>
@@ -236,11 +236,11 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="5px"
-                            android:background="@color/colorBackGround"
+                            android:background="@color/colorPrimaryBlue"
                             android:gravity="center"
                             android:singleLine="true"
                             android:text="@string/learners_and_grades_statistics_activity_title_column_grade"
+                            android:textColor="#000000"
                             android:textSize="@dimen/text_subtitle_size" />
                     </LinearLayout>
 
@@ -254,10 +254,10 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="5px"
-                            android:background="@color/colorBackGround"
+                            android:background="@color/colorPrimaryBlue"
                             android:gravity="center"
                             android:text="@string/learners_and_grades_statistics_activity_title_column_absent"
+                            android:textColor="#000000"
                             android:textSize="@dimen/text_subtitle_size" />
                     </LinearLayout>
                 </LinearLayout>

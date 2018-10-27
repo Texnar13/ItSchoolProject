@@ -14,4 +14,14 @@
     <color name="colorPrimaryGreen">#9ec747</color>
     <color name="colorPrimaryPink">#c577aa</color>
     <color name="colorPrimaryMagenta">#916eea</color>
+
+    <!-- цвета оценок -->
+    <color name="gradeColorGray">#7f7f7f</color>
+    <color name="grade1Color">#d451a7</color>
+    <color name="grade2Color">#d89325</color>
+    <color name="grade3Color">#8cb434</color>
+    <color name="grade4Color">#4a81f1</color>
+    <color name="grade5Color">#6843c7</color>
+    <color name="gradeColorWhite">#ffffff</color>
+
 </resources>

@@ -14,6 +14,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -69,6 +72,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     static long[] subjectsId;
     //выбранный урок
     static int changingSubjectPosition = 0;
+    //максимальная оценка
+    static long maxAnswersCount;
+    // цветные оценки
+    static boolean areTheGradesColored = false;
 
 //--созданные в активности--
 
@@ -355,6 +362,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 //=====работа с базой данных=====
 
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        //максимальная оценка
+        maxAnswersCount = db.getSettingsMaxGrade(1);
+        // цветные оценки
+        areTheGradesColored = db.getSettingsAreTheGradesColoredByProfileId(1);
 
 //----название класса в заголовок----
         //название класса
@@ -603,7 +614,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             neutralButton.setTextColor(Color.WHITE);
             LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
-                    (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+                    (int) getResources().getDimension(R.dimen.my_buttons_height_size)
             );
             neutralButtonParams.weight = 1;
             neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
@@ -616,7 +627,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             positiveButton.setTextColor(Color.WHITE);
             LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
-                    (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+                    (int) getResources().getDimension(R.dimen.my_buttons_height_size)
             );
             positiveButtonParams.weight = 1;
             positiveButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
@@ -783,7 +794,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             neutralButton.setTextColor(Color.WHITE);
             LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
-                    (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+                    (int) getResources().getDimension(R.dimen.my_buttons_height_size)
             );
             neutralButtonParams.weight = 1;
             neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
@@ -796,7 +807,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             positiveButton.setTextColor(Color.WHITE);
             LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
-                    (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+                    (int) getResources().getDimension(R.dimen.my_buttons_height_size)
             );
             positiveButtonParams.weight = 1;
             positiveButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
@@ -1130,8 +1141,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                             //сначала проверяем весь день целиком
                             //--время--
 
-                            startQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH)+1) + "-" + getTwoSymbols(j + 1) + " 00:00:00";
-                            endQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH)+1) + "-" + getTwoSymbols(j + 1) + " 23:59:00";
+                            startQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1) + "-" + getTwoSymbols(j + 1) + " 00:00:00";
+                            endQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1) + "-" + getTwoSymbols(j + 1) + " 23:59:00";
 
 
                             Cursor tDay = db.getGradesByLearnerIdSubjectAndTimePeriod(
@@ -1157,8 +1168,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                                     //--время--
                                     // сторки для запроса
-                                    startQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH)+1) + "-" + getTwoSymbols(j + 1) + " " + getTwoSymbols(timeOfLessons[k][0]) + ":" + getTwoSymbols(timeOfLessons[k][1]) + ":00";
-                                    endQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH)+1) + "-" + getTwoSymbols(j + 1) + " " + getTwoSymbols(timeOfLessons[k][2]) + ":" + getTwoSymbols(timeOfLessons[k][3]) + ":00";
+                                    startQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1) + "-" + getTwoSymbols(j + 1) + " " + getTwoSymbols(timeOfLessons[k][0]) + ":" + getTwoSymbols(timeOfLessons[k][1]) + ":00";
+                                    endQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1) + "-" + getTwoSymbols(j + 1) + " " + getTwoSymbols(timeOfLessons[k][2]) + ":" + getTwoSymbols(timeOfLessons[k][3]) + ":00";
 
                                     //получаем оценки по времени и предмету
                                     Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
@@ -1222,7 +1233,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 //                                    outHelpStartCalendar.set(Calendar.MINUTE,
 //                                            timeOfLessons[k][1]
 //                                    );
-                                    startQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH)+1) + "-" + getTwoSymbols(j + 1) + " " + getTwoSymbols(timeOfLessons[k][0]) + ":" + getTwoSymbols(timeOfLessons[k][1]) + ":00";
+                                    startQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1) + "-" + getTwoSymbols(j + 1) + " " + getTwoSymbols(timeOfLessons[k][0]) + ":" + getTwoSymbols(timeOfLessons[k][1]) + ":00";
 
                                     //по оценкам
                                     for (int l = 0; l < 3; l++) {
@@ -1438,6 +1449,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
 
+// ============================= Класс где храним оценку ==========================================
 
     class NewGradeUnit {//оценки на уроке
         long learnerId = -1;//id ученика
@@ -1460,7 +1472,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         }
 
         void doText() {
-            StringBuffer s = new StringBuffer();
+            SpannableStringBuilder s = new SpannableStringBuilder();
+            // серый для прочерков
+            ForegroundColorSpan style = new ForegroundColorSpan(
+                    getResources().getColor(R.color.gradeColorGray)
+            );
             for (int i = 0; i < grades.length; i++) {
                 switch (grades[i]) {
                     case -1://ошибка
@@ -1468,26 +1484,63 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     case 0://нет оценки
                         break;
                     case -2://н
-                        if (!s.toString().equals("")) {
-                            s.append(getResources().getString(R.string.learners_and_grades_out_activity_title_grade_n));
-                            s.append(" ");
-                        } else {
-                            s.append(" ");
-                            s.append(getResources()
-                                    .getString(R.string.learners_and_grades_out_activity_title_grade_n));
+                        if (s.toString().equals("")) {
                             s.append(" ");
                         }
+                        s.append(getResources()
+                                .getString(R.string.learners_and_grades_out_activity_title_grade_n));
+                        s.append(" ");
                         break;
-                    default://оценка
-                        if (!s.toString().equals("")) {
-                            s.append(grades[i] + " ");
-                        } else
-                            s.append(" " + grades[i] + " ");
-                        break;
+                    default: {//оценка
+                        // выбираем откуда начинаем красить
+                        int start = s.length();
+                        // ставим оценку
+                        if (s.toString().equals(""))
+                            s.append(" ");
+                        s.append("" + grades[i]);
+                        s.append(" ");
+                        // ---- выбираем цвет оценки ----
+                        if(areTheGradesColored){// выбраны ли цветные оценки
+                            //5
+                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 100) {
+                                style = new ForegroundColorSpan(
+                                        getResources().getColor(R.color.grade5Color)
+                                );
+                            }
+                            //4
+                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 80) {
+                                style = new ForegroundColorSpan(
+                                        getResources().getColor(R.color.grade4Color)
+                                );
+                            }
+                            //3
+                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 60) {
+                                style = new ForegroundColorSpan(
+                                        getResources().getColor(R.color.grade3Color)
+                                );
+                            }
+                            //2
+                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 41) {
+                                style = new ForegroundColorSpan(
+                                        getResources().getColor(R.color.grade2Color)
+                                );
+                            }
+                            //1
+                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 20) {
+                                style = new ForegroundColorSpan(
+                                        getResources().getColor(R.color.grade1Color)
+                                );
+                            }
+                            s.setSpan(style, start, s.length() - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                        }
+                    }
+                    break;
                 }
             }
             if (s.length() == 0) {
                 s.append(" - ");
+                s.setSpan(style, 0, s.length() - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
             }
             textView.setText(s);
         }

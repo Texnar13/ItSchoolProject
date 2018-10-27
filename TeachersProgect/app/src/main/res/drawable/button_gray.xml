@@ -3,10 +3,10 @@
     <item>
         <shape>
             <solid android:color="@color/colorBackGroundDark"/>
-            <corners android:bottomRightRadius="7dp"
-                android:bottomLeftRadius="7dip"
-                android:topLeftRadius="7dip"
-                android:topRightRadius="7dp"/>
+            <corners android:bottomRightRadius="@dimen/my_buttons_rounding_radius_size"
+                android:bottomLeftRadius="@dimen/my_buttons_rounding_radius_size"
+                android:topLeftRadius="@dimen/my_buttons_rounding_radius_size"
+                android:topRightRadius="@dimen/my_buttons_rounding_radius_size"/>
         </shape>
     </item>
 </selector>

@@ -19,6 +19,7 @@ public final class SchoolContract {
         public static final String COLUMN_INTERFACE_SIZE = "interfaceSize";
         public static final String COLUMN_MAX_ANSWER = "maxAnswer";
         public static final String COLUMN_TIME = "time";
+        public static final String COLUMN_ARE_THE_GRADES_COLORED = "areTheGradesColored";
         //массивы в json
         public static final String COLUMN_TIME_BEGIN_HOUR_NAME = "beginHour";
         public static final String COLUMN_TIME_BEGIN_MINUTE_NAME = "beginMinute";

@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.R;
@@ -27,7 +29,7 @@ import java.util.GregorianCalendar;
 
 public class SettingsActivity extends AppCompatActivity implements SettingsRemoveInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface, EditMaxAnswersDialogInterface {
 
-    Button saveButton;
+    TextView saveButton;
 
 
 //-----------------------------------методы диалогов----------------------------------------------
@@ -213,7 +215,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
 //-------------максимальный ответ-------------
 
         //кнопка вызова диалога по изменению
-        saveButton = (Button) findViewById(R.id.activity_settings_edit_max_answers_count_button);
+        saveButton = (TextView) findViewById(R.id.activity_settings_edit_max_answers_count_button);
         // ставим прошлый максимум
         saveButton.setText(
                 String.format(
@@ -240,7 +242,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
 //--------------изменить время-----------
 
         //кнопка  изменения
-        Button editTimeButton = (Button) findViewById(R.id.activity_settings_edit_time_button);
+        TextView editTimeButton = (TextView) findViewById(R.id.activity_settings_edit_time_button);
         //слушатель
         editTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -294,30 +296,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
             }
         });
 
-//--------------оцените нас-----------------
-
-        Button rateUsButton = (Button) findViewById(R.id.settings_rate_button);
-        rateUsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("market://details?id=com.learning.texnar13.teachersprogect"));
-                if (!isActivityStarted(intent)) {
-                    intent.setData(Uri
-                            .parse("https://play.google.com/store/apps/details?id=com.learning.texnar13.teachersprogect"));
-                    if (!isActivityStarted(intent)) {
-                        Toast.makeText(
-                                getApplicationContext(),
-                                "Could not open Android market, please check if the market app installed or not. Try again later",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
 //--------------настройка локализации-----------------
         // находим кнопку
-        Button editLocaleButton = (Button) findViewById(R.id.activity_settings_edit_locale_button);
+        TextView editLocaleButton = (TextView) findViewById(R.id.activity_settings_edit_locale_button);
         // ставим текст
         {
             // достаем коды языков
@@ -359,6 +340,44 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
             }
         });
 
+// ------------- цветные оценки -----------------
+
+        LinearLayout coloredGradesContainer = findViewById(R.id.activity_settings_are_grades_colored_container);
+        final Switch coloredGradesSwitch = findViewById(R.id.activity_settings_are_grades_colored_switch);
+        // нажимаем переключатель
+        coloredGradesSwitch.setChecked(db.getSettingsAreTheGradesColoredByProfileId(1));
+        // обработчик контейнеру
+        coloredGradesContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.setSettingsAreTheGradesColoredByProfileId(1,!coloredGradesSwitch.isChecked());
+                coloredGradesSwitch.setChecked(db.getSettingsAreTheGradesColoredByProfileId(1));
+            }
+        });
+        // переключатель не нажимается
+        coloredGradesSwitch.setClickable(false);
+
+//--------------оцените нас-----------------
+
+        Button rateUsButton = (Button) findViewById(R.id.settings_rate_button);
+        rateUsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("market://details?id=com.learning.texnar13.teachersprogect"));
+                if (!isActivityStarted(intent)) {
+                    intent.setData(Uri
+                            .parse("https://play.google.com/store/apps/details?id=com.learning.texnar13.teachersprogect"));
+                    if (!isActivityStarted(intent)) {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Could not open Android market, please check if the market app installed or not. Try again later",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
         db.close();
     }
 
@@ -372,6 +391,8 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
             return false;
         }
     }
+
+
 
 //----------------------------------------обновление парт-------------------------------------------
 

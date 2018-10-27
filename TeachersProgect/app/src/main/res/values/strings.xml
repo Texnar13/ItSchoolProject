@@ -21,8 +21,10 @@
     <string name="start_screen_activity_dialog_button_later">later</string>
 
     <string name="start_screen_activity_dialog_whats_new_title">What\'s new:</string>
-    <string name="start_screen_activity_dialog_whats_new_text">
-         \-\-<b> Minor bugs fixed </b></string>
+    <string name="start_screen_activity_dialog_whats_new_text"><b>Big announcement:</b>\nDear user!\nIf you like our app, please support the developers! There would soon be an advertisement, in the bottom corner of the calendar, and for each click on it (but not several times in a row) we will receive 0,008$. So click more often!
+        We will also insert a video ad on the \“settings\” page, into the least visited page. Watching the video sends us 0,01$, and that\'s not bad!\nThank!\n
+        P.S. The banner will be small, the video clip can be closed, but if someone wants to get rid of advertising for good, we will add a function - turn off advertising for 1$.\n\n<b>Also the colors of the grades were altered and the grades in the pupils table were colored.</b>
+    </string>
     <string name="start_screen_activity_dialog_whats_new_button_ok">ok</string>
     <!-- тост -->
     <string name="start_screen_activity_toast_no_lessons">At the moment there are no lessons planned</string>
@@ -171,7 +173,7 @@
     <!-- заголовок активности -->
     <string name="title_activity_schedule_month">SCHEDULE</string>
     <string name="schedule_month_activity_ad_preview_title">Ad</string>
-    <string name="schedule_month_activity_ad_preview_text">Я рекламма! Yf;fnbt yf vtyz vjnbdbhetn hfphf,jnxbrf gjllth;bdfnm ghjtrn</string>
+    <string name="schedule_month_activity_ad_preview_text">If you like our app, support by clicking on ads! \n(Coming soon)</string>
 
 
     <!-- активность календаря на день-->
@@ -296,12 +298,13 @@
     <string name="settings_activity_hint_max_answer">MAX ANSWER</string>
     <string name="settings_activity_title_desk_size">SETTING THE SIZE OF DESKS</string>
     <string name="settings_activity_title_max_answer">MAXIMUM ANSWERS COUNT</string>
+    <string name="settings_activity_title_colored_grades">COLORED GRADES IN TABLE</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">MAXIMUM COUNT ANSWERS: %1$s</string>
     <string name="settings_activity_button_edit_time">edit lessons time</string>
     <string name="settings_activity_button_remove_data">remove all data</string>
     <string name="settings_activity_button_rate_us">rate our app :)</string>
-    <string name="settings_activity_button_edit_locale" formatted="true">Language - \'%1$s\'</string>
+    <string name="settings_activity_button_edit_locale" formatted="true">Language: %1$s</string>
     <!-- уведомления -->
     <string name="settings_activity_toast_data_delete_success">Data deleted successfully!</string>
     <string name="settings_activity_toast_data_delete_falture">Was entered an incorrect number, the data is not removed</string>
