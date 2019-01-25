@@ -323,4 +323,9 @@
     <string name="settings_activity_dialog_text_time_dash">—</string>
     <string name="settings_activity_dialog_edit_locale_title">Выберите язык:</string>
 
+
+    <!-- база данных -->
+    <!-- значение по умолчанию -->
+    <string name="db_table_grade_text_first_default_value">работа на уроке</string>
+
 </resources>
