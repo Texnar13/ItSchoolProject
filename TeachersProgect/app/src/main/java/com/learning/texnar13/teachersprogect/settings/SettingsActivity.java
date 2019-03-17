@@ -1,7 +1,9 @@
 package com.learning.texnar13.teachersprogect.settings;
 
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -239,6 +241,38 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
         });
 
 
+// -------------- кнопка для изменения типов оценок -----------
+
+        TextView editGradesTypesButton = (TextView) findViewById(R.id.activity_settings_edit_grades_type_button);
+        editGradesTypesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                Cursor types = db.getGradesTypes();
+
+                // массивы из базы данных
+                long [] typesId = new long[types.getCount()];
+                String [] typesStrings = new String[types.getCount()];
+                for (int i = 0; i<types.getCount(); i++){
+                    types.moveToNext();
+
+                    typesId[i] = types.getLong(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID));
+                    typesStrings[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE));
+                }
+                // запуск диалога
+                EditGradesTypesDialogFragment typesDialogFragment = new EditGradesTypesDialogFragment();
+                // данные
+                Bundle args = new Bundle();
+                args.putLongArray(EditGradesTypesDialogFragment.ARGS_TYPES_ID_ARRAY_TAG, typesId);
+                args.putStringArray(EditGradesTypesDialogFragment.ARGS_TYPES_NAMES_ARRAY_TAG, typesStrings);
+                typesDialogFragment.setArguments(args);
+                // запуск
+                typesDialogFragment.show(getFragmentManager(),"editGradesTypesDialogFragment");
+            }
+        });
+
+
+
 //--------------изменить время-----------
 
         //кнопка  изменения
@@ -277,7 +311,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
                 args.putIntArray("arr8", arr8);
                 editTimeDialogFragment.setArguments(args);
                 editTimeDialogFragment.show(getFragmentManager(), "editTime");
-
             }
         });
 
@@ -380,7 +413,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
 
         db.close();
     }
-
 
     //для кнопки оцените нас
     private boolean isActivityStarted(Intent aIntent) {

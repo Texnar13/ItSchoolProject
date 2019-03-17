@@ -22,7 +22,7 @@ import java.util.GregorianCalendar;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
     private static final boolean IS_DEBUG = true;
-    private static final int DB_VERSION = 15;
+    private static final int DB_VERSION = 16;
     private Context context;
 
 
@@ -362,10 +362,10 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
             }
 
-            if(false && oldVersion < 16){// TODO: 09.12.18 пока реализовано только здесь
+            if( oldVersion < 16){// TODO: 09.12.18 пока реализовано только здесь
                 // -------- создаем таблицу типов оценок --------
                 db.execSQL(
-                        "CREATE TABLE " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLE +
+                        "CREATE TABLE " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES +
                                 " ( " + SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                 SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE + " TEXT);"
                 );
@@ -377,7 +377,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     ContentValues values = new ContentValues();
                     values.put(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE, name);
                     values.put(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID, 1);
-                    long temp = db.insert(SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLE,
+                    long temp = db.insert(SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES,
                             null,
                             values
                     );
@@ -386,10 +386,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         Log.i("DBOpenHelper", "createGradeTitle returnId = " + temp + " name= " +name);
                 }
 
-
-                // TODO: 09.12.18 досюда
-
-    
                 // -------- всем оценкам ставим начальный тип --------
                 // --- переделываем таблицу ---
                 db.execSQL("PRAGMA foreign_keys = OFF");
@@ -404,18 +400,18 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " INTEGER, " +
                         SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TIMESTRING DEFAULT \"0000-00-00 00:00:00\", " +
                         // начальное значение заголовка единица
-                        SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID + " INTEGER DEFAULT 1, " +
+                        SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID + " INTEGER DEFAULT 1, " +//todo not null
                         "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID +
                         ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE, " +
                         "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID +
                         ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE, " +
                         "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID +
-                        ") REFERENCES " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLE + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); "
+                        ") REFERENCES " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); "
                 );
                 //переносим значения
                 db.execSQL("INSERT INTO " +
                         SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES +
-                        " SELECT * FROM learnersGrades_old;");
+                        " SELECT *,\"1\" FROM learnersGrades_old;");// с дополнительной колонкой и значением "1"
                 //удаляем старую таблицу
                 db.execSQL("DROP TABLE IF EXISTS learnersGrades_old;");
                 // закончили переделку
@@ -425,11 +421,11 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
 
 
-                // -- выбор цвета оценок? --
+                /*// -- выбор цвета оценок? --
                 // TODO: 24.01.19 недоделал 
                 db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS +
                         " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED + " INTEGER DEFAULT 0;");
-
+                */
 
                 // -- таблица расписаний --
 
@@ -1215,8 +1211,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         values.put(SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP, date);
         long temp = db.insert(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, values);//-1 = ошибка ввода
         //db.close();
-        //if (IS_DEBUG)
-        Log.i("DBOpenHelper", "createGrade returnId = " + temp + " learnerId= " + learnerId + " grade= " + grade + " subjectId= " + subjectId + " date= " + date);
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "createGrade returnId = " + temp + " learnerId= " + learnerId + " grade= " + grade + " subjectId= " + subjectId + " date= " + date);
         return temp;
     }
 
@@ -1258,6 +1254,57 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             Log.i("DBOpenHelper", "removeGrade returnId = " + temp + " gradeId= " + gradeId);
         return temp;
     }
+
+
+    // типы оценок
+    //SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES
+    public long createGradeType(String typeName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE, typeName);
+        long temp = db.insert(SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES, null, values);//-1 = ошибка ввода
+        //db.close();
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "createGradeType returnId = " + temp + " typeName= " + typeName);
+        return temp;
+    }
+
+    public Cursor getGradesTypeById(long typeId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] selectionArgs = {typeId + ""};
+        Cursor cursor = db.query(SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES, null, SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID + " = ?", selectionArgs, null, null, null);
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "getGradesTypeById typeId=" + typeId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        return cursor;
+    }
+
+    public Cursor getGradesTypes() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES, null, null, null, null, null, null);
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "getGradesTypes " + cursor + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        return cursor;
+    }
+
+    public long editGradesType(long typeId, String newName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE, newName);
+        long temp = db.update(SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES, values, SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID + " = ?", new String[]{Long.toString(typeId)});//-1 = ошибка ввода
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "editGradesType returnId = " + temp + " newName= " + newName + " typeId= " + typeId);
+        return temp;
+    }
+
+    /* todo замена у всех изменяемых оценок__этого типа__на тип по умолчанию
+    public long removeGradesType(long gradeId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long temp = db.delete(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " = ?", new String[]{Long.toString(gradeId)});//-1 = ошибка ввода
+        //db.close();
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "removeGrade returnId = " + temp + " gradeId= " + gradeId);
+        return temp;
+    }*/
 
 
     //уроки(предметы)

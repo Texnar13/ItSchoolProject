@@ -91,7 +91,7 @@ public final class SchoolContract {
     }
 
     public static final class TableLearnersGradesTitles {
-        public static final String NAME_TABLE_LEARNERS_GRADES_TITLE = "learnersGradesTitles";
+        public static final String NAME_TABLE_LEARNERS_GRADES_TITLES = "learnersGradesTitles";
         public static final String KEY_LEARNERS_GRADES_TITLE_ID = BaseColumns._ID;
         public static final String COLUMN_LEARNERS_GRADES_TITLE = "title";
 

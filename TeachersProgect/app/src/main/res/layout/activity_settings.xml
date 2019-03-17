@@ -121,6 +121,52 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:textAllCaps="true"
+                    android:id="@+id/activity_settings_edit_grades_color_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/my_buttons_height_size"
+                    android:background="@drawable/button_lite_gray"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:text="@string/settings_activity_title_grades_color"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/text_simple_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:textAllCaps="true"
+                    android:id="@+id/activity_settings_edit_grades_type_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/my_buttons_height_size"
+                    android:background="@drawable/button_lite_gray"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:text="@string/settings_activity_title_grades_type"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/text_simple_size" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/activity_settings_are_grades_colored_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

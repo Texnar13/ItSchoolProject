@@ -293,6 +293,8 @@
     <string name="settings_activity_hint_max_answer">ЧИСЛО ОТВЕТОВ</string>
     <string name="settings_activity_title_desk_size">НАСТРОЙКА РАЗМЕРА ПАРТ</string>
     <string name="settings_activity_title_max_answer">МАКСИМАЛЬНОЕ КОЛ-ВО ОТВЕТОВ</string>
+    <string name="settings_activity_title_grades_color">НАСТРОИТЬ ЦВЕТА ОТВЕТОВ В ТАБЛИЦЕ</string>
+    <string name="settings_activity_title_grades_type">ТИПЫ ОТВЕТОВ</string>
     <string name="settings_activity_title_colored_grades">ЦВЕТНЫЕ ОЦЕНКИ В ТАБЛИЦЕ</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">МАКСИМАЛЬНОЕ КОЛ-ВО ОТВЕТОВ: %1$s</string>

@@ -298,6 +298,8 @@
     <string name="settings_activity_hint_max_answer">MAX ANSWER</string>
     <string name="settings_activity_title_desk_size">SETTING THE SIZE OF DESKS</string>
     <string name="settings_activity_title_max_answer">MAXIMUM ANSWERS COUNT</string>
+    <string name="settings_activity_title_grades_type">ANSWERS TYPES</string>
+    <string name="settings_activity_title_grades_color">ANSWERS COLOR</string>
     <string name="settings_activity_title_colored_grades">COLORED GRADES IN TABLE</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">MAXIMUM COUNT ANSWERS: %1$s</string>
