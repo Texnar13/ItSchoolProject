@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class SettingsActivity extends AppCompatActivity implements SettingsRemoveInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface, EditMaxAnswersDialogInterface {
+public class SettingsActivity extends AppCompatActivity implements EditMaxAnswersDialogInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface, EditGradesTypeDialogFragmentInterface, SettingsRemoveInterface {
 
     TextView saveButton;
 
@@ -158,9 +158,36 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
         saveButton.setText(
                 String.format(
                         getResources().getString(R.string.settings_activity_button_edit_max_answer),
-                        ""+max
+                        "" + max
                 )
         );
+    }
+
+    // -- типы оценок --
+
+    @Override
+    public long createGradesType(String name) {
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        return db.createGradeType(name);
+    }
+
+    @Override
+    public boolean editGradesType(long typeId, String newName) {
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        if (db.editGradesType(typeId, newName) >= 0) {
+            return true;
+        } else
+            return false;
+    }
+
+    @Override
+    public boolean removeGradesType(long typeId) {
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+
+        if (db.removeGradesType(typeId) >= 0) {
+            return true;
+        } else
+            return false;
     }
 
 
@@ -222,7 +249,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
         saveButton.setText(
                 String.format(
                         getResources().getString(R.string.settings_activity_button_edit_max_answer),
-                        ""+db.getSettingsMaxGrade(1)
+                        "" + db.getSettingsMaxGrade(1)
                 )
         );
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -251,9 +278,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
                 Cursor types = db.getGradesTypes();
 
                 // массивы из базы данных
-                long [] typesId = new long[types.getCount()];
-                String [] typesStrings = new String[types.getCount()];
-                for (int i = 0; i<types.getCount(); i++){
+                long[] typesId = new long[types.getCount()];
+                String[] typesStrings = new String[types.getCount()];
+                for (int i = 0; i < types.getCount(); i++) {
                     types.moveToNext();
 
                     typesId[i] = types.getLong(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID));
@@ -267,10 +294,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
                 args.putStringArray(EditGradesTypesDialogFragment.ARGS_TYPES_NAMES_ARRAY_TAG, typesStrings);
                 typesDialogFragment.setArguments(args);
                 // запуск
-                typesDialogFragment.show(getFragmentManager(),"editGradesTypesDialogFragment");
+                typesDialogFragment.show(getFragmentManager(), "editGradesTypesDialogFragment");
             }
         });
-
 
 
 //--------------изменить время-----------
@@ -284,9 +310,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
                 DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                 int[][] arrays = db.getSettingsTime(1);
                 db.close();
-                Log.e("TeachersApp", "*********" + Arrays.toString(arrays));
+                Log.e("TeachersApp", "editTimeButton*********" + Arrays.toString(arrays));
 
-                int[] arr0 = arrays[0];
+                int[] arr0 = arrays[0];// TODO error ArrayIndexOutOfBoundsException
                 int[] arr1 = arrays[1];
                 int[] arr2 = arrays[2];
                 int[] arr3 = arrays[3];
@@ -383,7 +409,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
         coloredGradesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.setSettingsAreTheGradesColoredByProfileId(1,!coloredGradesSwitch.isChecked());
+                db.setSettingsAreTheGradesColoredByProfileId(1, !coloredGradesSwitch.isChecked());
                 coloredGradesSwitch.setChecked(db.getSettingsAreTheGradesColoredByProfileId(1));
             }
         });
@@ -423,7 +449,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
             return false;
         }
     }
-
 
 
 //----------------------------------------обновление парт-------------------------------------------
@@ -476,6 +501,4 @@ public class SettingsActivity extends AppCompatActivity implements SettingsRemov
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 }

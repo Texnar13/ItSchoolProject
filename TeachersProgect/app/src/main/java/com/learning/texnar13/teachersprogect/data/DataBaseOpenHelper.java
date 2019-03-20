@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
-    private static final boolean IS_DEBUG = true;
+    private static final boolean IS_DEBUG = false;
     private static final int DB_VERSION = 16;
     private Context context;
 
@@ -362,7 +362,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
             }
 
-            if( oldVersion < 16){// TODO: 09.12.18 пока реализовано только здесь
+            if (oldVersion < 16) {// TODO: 09.12.18 пока реализовано только здесь
                 // -------- создаем таблицу типов оценок --------
                 db.execSQL(
                         "CREATE TABLE " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES +
@@ -383,7 +383,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     );
                     //-1 = ошибка ввода
                     if (IS_DEBUG)
-                        Log.i("DBOpenHelper", "createGradeTitle returnId = " + temp + " name= " +name);
+                        Log.i("DBOpenHelper", "createGradeTitle returnId = " + temp + " name= " + name);
                 }
 
                 // -------- всем оценкам ставим начальный тип --------
@@ -430,11 +430,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 // -- таблица расписаний --
 
 
-
-
             }
         }
-
 
 
         //db.close();
@@ -735,9 +732,9 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public long setSettingsAreTheGradesColoredByProfileId(long profileId, boolean areColored) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        if(areColored){
+        if (areColored) {
             values.put(SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED, 1);
-        }else{
+        } else {
             values.put(SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED, 0);
         }
         int temp = db.update(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, values, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId});
@@ -923,7 +920,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     //SELECT all FROM table1 ORDER BY sex ASC, sal DESC;
 
 
-    public long getLearnerIdByClassIdAndPlaceId(long classId, long placeId) {//todo КОСТЫЛИЩЕЕЕЕ!!!!111 во всех отношениях
+    public long getLearnerIdByClassIdAndPlaceId(long classId, long placeId) {//todo КОСТЫЛИЩЕЕЕЕ!!!!!!! во всех отношениях
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor learnersCursor = this.getLearnersByClassId(classId);
         ArrayList<Long> learnersId = new ArrayList<>(learnersCursor.getCount());//получаем по классу id учеников
@@ -1235,6 +1232,21 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    private Cursor getGradesWhereTypeIs(long gradeTypeId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
+                null, SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID + " = ?",
+                new String[]{Long.toString(gradeTypeId)},
+                null,
+                null,
+                null
+        );
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "getGradesWhereTypeIs gradeTypeId=" + gradeTypeId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
+        return cursor;
+    }
+
     public long editGrade(long gradeId, long grade) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -1243,6 +1255,17 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         //db.close();
         if (IS_DEBUG)
             Log.i("DBOpenHelper", "editGrade returnId = " + temp + " grade= " + grade + " gradeId= " + gradeId);
+        return temp;
+    }
+
+    public long editGradeType(long gradeId, long type) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID, type);
+        long temp = db.update(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, values, SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " = ?", new String[]{Long.toString(gradeId)});//-1 = ошибка ввода
+        //db.close();
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "editGradeType returnId = " + temp + " type= " + type + " gradeId= " + gradeId);
         return temp;
     }
 
@@ -1296,15 +1319,25 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return temp;
     }
 
-    /* todo замена у всех изменяемых оценок__этого типа__на тип по умолчанию
-    public long removeGradesType(long gradeId) {
+    public long removeGradesType(long gradeTypeId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        long temp = db.delete(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " = ?", new String[]{Long.toString(gradeId)});//-1 = ошибка ввода
-        //db.close();
+        // получаем все оценки у которых этот тип
+        Cursor grades = getGradesWhereTypeIs(gradeTypeId);
+        // и изменяем его на тип по умолчанию (id = 1)
+        for (int i = 0; i < grades.getCount(); i++) {
+            grades.moveToNext();
+            editGradeType(
+                    grades.getLong(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID)),
+                    1
+            );
+        }
+        // удаляем этот тип
+        long temp = db.delete(SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES, SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID + " = ?", new String[]{Long.toString(gradeTypeId)});//-1 = ошибка ввода
+
         if (IS_DEBUG)
-            Log.i("DBOpenHelper", "removeGrade returnId = " + temp + " gradeId= " + gradeId);
+            Log.i("DBOpenHelper", "removeGradesType returnId = " + temp + " gradeTypeId= " + gradeTypeId);
         return temp;
-    }*/
+    }
 
 
     //уроки(предметы)

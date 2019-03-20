@@ -50,7 +50,9 @@
             android:name=".settings.SettingsActivity"
             android:configChanges="locale"
             android:label="@string/title_activity_settings"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            />
+        <!-- android:windowSoftInputMode="adjustPan" -->
         <activity
             android:name=".learnersAndGradesOut.LearnersAndGradesActivity"
             android:configChanges="locale"

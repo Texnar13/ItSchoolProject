@@ -142,7 +142,7 @@ public class EditTimeDialogFragment extends DialogFragment {
             fields[i][0].setText("" + array[i][0]);
             fields[i][0].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][0].setInputType(InputType.TYPE_CLASS_NUMBER);
-            fields[i][0].setBackgroundResource(R.drawable.button_light_gray);
+            fields[i][0].setBackgroundResource(R.drawable.button_lite_gray);
             timeContainer.addView(fields[i][0], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
 
             //----:
@@ -159,7 +159,7 @@ public class EditTimeDialogFragment extends DialogFragment {
             fields[i][1].setText("" + getTwoSymbols(array[i][1]));
             fields[i][1].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][1].setInputType(InputType.TYPE_CLASS_NUMBER);
-            fields[i][1].setBackgroundResource(R.drawable.button_light_gray);
+            fields[i][1].setBackgroundResource(R.drawable.button_lite_gray);
             timeContainer.addView(fields[i][1], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
 
             //---- --
@@ -176,7 +176,7 @@ public class EditTimeDialogFragment extends DialogFragment {
             fields[i][2].setText("" + array[i][2]);
             fields[i][2].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][2].setInputType(InputType.TYPE_CLASS_NUMBER);
-            fields[i][2].setBackgroundResource(R.drawable.button_light_gray);
+            fields[i][2].setBackgroundResource(R.drawable.button_lite_gray);
             timeContainer.addView(fields[i][2], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
 
             //----:
@@ -193,7 +193,7 @@ public class EditTimeDialogFragment extends DialogFragment {
             fields[i][3].setText("" + getTwoSymbols(array[i][3]));
             fields[i][3].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][3].setInputType(InputType.TYPE_CLASS_NUMBER);
-            fields[i][3].setBackgroundResource(R.drawable.button_light_gray);
+            fields[i][3].setBackgroundResource(R.drawable.button_lite_gray);
             timeContainer.addView(fields[i][3], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
 
         }

@@ -253,6 +253,19 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     @Override
     public void returnSimpleColorForText(int[] indexes) {
+/*
+     Process: com.learning.texnar13.teachersprogect, PID: 6047
+    java.lang.NullPointerException: Attempt to invoke virtual method 'void android.widget.TextView.setBackgroundColor(int)' on a null object reference
+        at com.learning.texnar13.teachersprogect.learnersAndGradesOut.LearnersAndGradesActivity.returnSimpleColorForText(LearnersAndGradesActivity.java:256)
+        at com.learning.texnar13.teachersprogect.learnersAndGradesOut.EditGradeDialogFragment.onCancel(EditGradeDialogFragment.java:251)
+        at android.app.Dialog$ListenersHandler.handleMessage(Dialog.java:1536)
+        at android.os.Handler.dispatchMessage(Handler.java:102)
+        at android.os.Looper.loop(Looper.java:158)
+        at android.app.ActivityThread.main(ActivityThread.java:7237)
+        at java.lang.reflect.Method.invoke(Native Method)
+        at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:1230)
+        at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1120)
+*/
         allGrades[indexes[0]][indexes[1]][indexes[2]].textView.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
         allGrades[indexes[0]][indexes[1]][indexes[2]].textView.setTextColor(Color.BLACK);
     }
