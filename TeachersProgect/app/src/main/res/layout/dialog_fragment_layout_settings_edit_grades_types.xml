@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dialog_fragment_layout_settings_edit_grades_types_relative_out"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:background="@color/colorBackGround">
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackGround"
+
+    android:orientation="vertical">
+
 
     <TextView
         android:id="@+id/dialog_fragment_layout_settings_edit_grades_types_title"
@@ -18,12 +19,13 @@
         android:textColor="#000000"
         android:textSize="@dimen/text_title_size" /><!-- bottom0-->
 
+
     <ScrollView
+        android:id="@+id/dialog_fragment_layout_settings_edit_grades_types_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/dialog_fragment_layout_settings_edit_grades_types_cancel_button"
-        android:layout_below="@+id/dialog_fragment_layout_settings_edit_grades_types_title"
-        >
+        android:layout_above="@+id/dialog_fragment_layout_settings_edit_grades_types_cancel_button_container"
+        android:layout_below="@+id/dialog_fragment_layout_settings_edit_grades_types_title">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,7 +36,7 @@
             <LinearLayout
                 android:id="@+id/dialog_fragment_layout_settings_edit_grades_types_list_out"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -43,29 +45,37 @@
             <TextView
                 android:id="@+id/dialog_fragment_layout_settings_edit_grades_types_text_button_add"
                 android:layout_width="match_parent"
-                android:gravity="center"
-                android:textSize="@dimen/text_simple_size"
                 android:layout_height="@dimen/my_buttons_height_size"
-                android:text="+ Добавить тип оценок">
+                android:gravity="center"
+                android:text="+ Добавить тип оценок"
+                android:textSize="@dimen/text_simple_size">
 
             </TextView>
         </LinearLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/dialog_fragment_layout_settings_edit_grades_types_cancel_button"
+    <LinearLayout
+        android:id="@+id/dialog_fragment_layout_settings_edit_grades_types_cancel_button_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/my_buttons_height_size"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/start_screen_3_1_blue_spot"
-        android:text="@string/settings_activity_dialog_button_cancel"
-        android:textColor="#ffffff"
-        android:textSize="@dimen/text_simple_size" />
+        <Button
+            android:id="@+id/dialog_fragment_layout_settings_edit_grades_types_cancel_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/my_buttons_height_size"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginEnd="10dp"
+
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/start_screen_3_1_blue_spot"
+            android:text="@string/settings_activity_dialog_button_cancel"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/text_simple_size" />
+    </LinearLayout>
+
 
 </RelativeLayout>

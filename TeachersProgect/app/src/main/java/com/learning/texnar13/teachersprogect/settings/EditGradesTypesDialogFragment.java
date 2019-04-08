@@ -14,18 +14,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.R;
 
 import java.util.ArrayList;
 
+//todo если будет какая-то суперсложная ошибка, то возможно это из-за того, что я не чищу ссылки в types на view после удаления view с экрана
 public class EditGradesTypesDialogFragment extends DialogFragment {
 
     public static String ARGS_TYPES_ID_ARRAY_TAG = "typesId";
     public static String ARGS_TYPES_NAMES_ARRAY_TAG = "typesNames";
 
-    // массив с текстами записей и id
+    // массив с текстами записей, id и view-компонентами
     ArrayList<GradesTypeRecord> types = new ArrayList<>();
     //linear в скролле
     LinearLayout listOut;
@@ -66,7 +68,22 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
         }
 
 // -- выводим поля в список --
-        outTypesInLinearLayout(types, listOut);
+        outTypesInLinearLayout(listOut);
+
+        /*{
+            RelativeLayout rrr =
+                    dialogLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_grades_types_relative_out);
+
+            EditText editText = new EditText(getActivity().getApplicationContext());
+            editText.setText("yay!");
+            rrr.addView(
+                    editText,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            );
+
+        }*/
+
 
 // ---- кнопка добавления типа ----
         TextView addTextButton = dialogLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_grades_types_text_button_add);
@@ -75,30 +92,34 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 try {
-                    //вызываем в активности метод по созданию
+                    // ---- вызываем в активности метод по созданию нового типа ----
                     GradesTypeRecord newType = new GradesTypeRecord(
                             ((EditGradesTypeDialogFragmentInterface) getActivity()).createGradesType("Новый тип"),
                             "Новый тип"
                     );
-                    // добавляем тип в лист
-                    types.add(newType);
-                    // выводим тип в скролл
-                    // создаем контейнер
-                    LinearLayout newItem = new LinearLayout(getActivity());
-                    newItem.setGravity(Gravity.CENTER_VERTICAL);
-                    newItem.setOrientation(LinearLayout.VERTICAL);
-                    newItem.setBackground(getActivity().getResources().getDrawable(R.drawable.button_lite_gray));
+                    // ---- создаем контейнер ----
+                    LinearLayout newTypeContainer = new LinearLayout(getActivity());
+                    newTypeContainer.setGravity(Gravity.CENTER_VERTICAL);
+                    newTypeContainer.setOrientation(LinearLayout.VERTICAL);
+                    newTypeContainer.setBackground(getActivity().getResources().getDrawable(R.drawable.button_lite_gray));
                     // параметры контейнера
-                    LinearLayout.LayoutParams newItemParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams newTypeContainerParams = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT
                     );
-                    newItemParams.bottomMargin = 8;
-                    newItemParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
-                    listOut.addView(newItem, newItemParams);
+                    newTypeContainerParams.bottomMargin = 8;
+                    newTypeContainerParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
 
-                    // -- выводим содержимое в контейнер --
-                    outContentInTypeContainer(newItem, types.size() - 1, false);
+                    // ---- добавляем ссылку на контейнер элементу списка ----
+                    newType.typeContainer = newTypeContainer;
+
+                    // ---- добавляем тип в лист ----
+                    types.add(newType);
+                    // ---- выводим контейнер в скролл ----
+                    listOut.addView(newTypeContainer, newTypeContainerParams);
+
+                    // ---- выводим содержимое в контейнер ----
+                    outContentInTypeContainer(newType, false);
 
                 } catch (java.lang.ClassCastException e) {
                     //в вызвающей активности должен быть имплементирован класс EditGradesTypeDialogFragmentInterface
@@ -125,7 +146,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
     }
 
     // ----- метод вывода всех типов в список -----
-    void outTypesInLinearLayout(ArrayList<GradesTypeRecord> list, final LinearLayout layout) {
+    void outTypesInLinearLayout(final LinearLayout layout) {
 
         // ---- контейнер ----
         // --- текстовое поле ---
@@ -137,7 +158,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
         layout.removeAllViews();
 
         // ---- основные поля ----
-        for (int i = 0; i < list.size(); i++) {
+        for (GradesTypeRecord type : types) {
             // ---- создаем контейнер для одного элемента ----
             LinearLayout item = new LinearLayout(getActivity());
             item.setGravity(Gravity.CENTER_VERTICAL);
@@ -150,36 +171,39 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             );
             itemParams.bottomMargin = 8;
             itemParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
+            // ---- добавляем ссылку на контейнер элементу списка ----
+            type.typeContainer = item;
+            // ---- выводим контейнер в список ----
             layout.addView(item, itemParams);
 
-            // -- выводим содержимое в контейнер --
-            outContentInTypeContainer(item, i, false);
+            // ---- выводим содержимое в контейнер ----
+            outContentInTypeContainer(type, false);
         }
 
     }
 
     // ----- метод вывода содержимого одного элемента списка -----
-    void outContentInTypeContainer(final LinearLayout container, final int recordNumber, boolean isContainerActive) {
+    void outContentInTypeContainer(final GradesTypeRecord typeRecord, boolean isContainerActive) {
         // удаляем все содержимое, если оно есть
-        container.removeAllViews();
+        typeRecord.typeContainer.removeAllViews();
 
         if (isContainerActive) {// если контейнер активен выводим текстовое поле с кнопками
             // -- отключаем нажатие на контейнер --
-            container.setOnClickListener(null);
+            typeRecord.typeContainer.setOnClickListener(null);
 
             // -- удаляем текст --
-            container.removeAllViews();
+            typeRecord.typeContainer.removeAllViews();
             // -- вставляем текстовое поле --
             final EditText editText = new EditText(getActivity());
-            editText.setText(types.get(recordNumber).typeName);// + " " + record.typeId);
+            editText.setText(typeRecord.typeName);// + " " + record.typeId);
             editText.setTextSize(
                     TypedValue.COMPLEX_UNIT_PX,
                     getActivity().getResources().getDimension(R.dimen.text_subtitle_size)
             );
-            editText.setFocusable(true);
+            //editText.setFocusable(true);
             editText.setTextColor(Color.BLACK);
             editText.setSingleLine(true);
-            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            //editText.setInputType(InputType.TYPE_CLASS_NUMBER);
             editText.setGravity(Gravity.CENTER_VERTICAL);
             // параметры текста
             final LinearLayout.LayoutParams editTextParams = new LinearLayout.LayoutParams(
@@ -190,7 +214,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             editTextParams.gravity = Gravity.CENTER_VERTICAL;
             editTextParams.leftMargin = (int) pxFromDp(10);
             editTextParams.rightMargin = (int) pxFromDp(10);
-            container.addView(editText, editTextParams);
+            typeRecord.typeContainer.addView(editText, editTextParams);
 
 
             // -- и контейнер для кнопок изменения --
@@ -202,10 +226,10 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     1F
             );
-            container.addView(buttonsContainer, containerParams);
+            typeRecord.typeContainer.addView(buttonsContainer, containerParams);
 
             // кнопка удалить
-            if (types.get(recordNumber).typeId != 1) {
+            if (typeRecord.typeId != 1) {
                 Button removeButton = new Button(getActivity());
                 removeButton.setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
                 removeButton.setText(getResources().getString(R.string.settings_activity_dialog_button_remove));
@@ -223,7 +247,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     public void onClick(View v) {
                         try {
                             //вызываем в активности метод по удалению
-                            ((EditGradesTypeDialogFragmentInterface) getActivity()).removeGradesType(types.get(recordNumber).typeId);
+                            ((EditGradesTypeDialogFragmentInterface) getActivity()).removeGradesType(typeRecord.typeId);
                         } catch (java.lang.ClassCastException e) {
                             //в вызвающей активности должен быть имплементирован класс EditGradesTypeDialogFragmentInterface
                             e.printStackTrace();
@@ -234,10 +258,11 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                         }
 
                         // удаляем переменную в скролле
-                        listOut.removeView(container);
+                        listOut.removeView(typeRecord.typeContainer);
 
                         // и в списке
-                        types.remove(recordNumber);
+                        types.remove(typeRecord);
+
                     }
                 });
             }
@@ -262,7 +287,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     // вызываем метод по сохранению
                     try {
                         //вызываем в активности метод по сохранению
-                        ((EditGradesTypeDialogFragmentInterface) getActivity()).editGradesType(types.get(recordNumber).typeId, editText.getText().toString());
+                        ((EditGradesTypeDialogFragmentInterface) getActivity()).editGradesType(typeRecord.typeId, editText.getText().toString());
                     } catch (java.lang.ClassCastException e) {
                         //в вызвающей активности должен быть имплементирован класс EditGradesTypeDialogFragmentInterface
                         e.printStackTrace();
@@ -274,10 +299,10 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
 
                     // меняем переменную в списке
 
-                    types.get(recordNumber).typeName = editText.getText().toString();
+                    typeRecord.typeName = editText.getText().toString();
 
                     // выводим неактивный
-                    outContentInTypeContainer(container, recordNumber, false);
+                    outContentInTypeContainer(typeRecord, false);
                 }
             });
 
@@ -286,7 +311,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
 
             // --- текстовое поле элемента ---
             TextView textView = new TextView(getActivity());
-            textView.setText(types.get(recordNumber).typeName + " " + types.get(recordNumber).typeId);
+            textView.setText(typeRecord.typeName + " " + typeRecord.typeId);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getActivity().getResources().getDimension(R.dimen.text_subtitle_size));
             textView.setTextColor(Color.BLACK);
             textView.setGravity(Gravity.CENTER_VERTICAL);
@@ -299,14 +324,14 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             textViewParams.gravity = Gravity.CENTER_VERTICAL;
             textViewParams.leftMargin = (int) pxFromDp(10);
             textViewParams.rightMargin = (int) pxFromDp(10);
-            container.addView(textView, textViewParams);
+            typeRecord.typeContainer.addView(textView, textViewParams);
 
             // --- при нажатии на контейнер ---
-            container.setOnClickListener(new View.OnClickListener() {
+            typeRecord.typeContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // выводим его активным
-                    outContentInTypeContainer(container, recordNumber, true);
+                    outContentInTypeContainer(typeRecord, true);
                 }
             });
         }
@@ -324,6 +349,7 @@ class GradesTypeRecord {
 
     String typeName;
     long typeId;
+    LinearLayout typeContainer;
 
     GradesTypeRecord(long id, String name) {
         this.typeId = id;
