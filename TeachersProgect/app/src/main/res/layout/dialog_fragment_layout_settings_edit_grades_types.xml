@@ -49,10 +49,11 @@
                 android:gravity="center"
                 android:text="+ Добавить тип оценок"
                 android:textSize="@dimen/text_simple_size">
-
             </TextView>
+
         </LinearLayout>
     </ScrollView>
+
 
     <LinearLayout
         android:id="@+id/dialog_fragment_layout_settings_edit_grades_types_cancel_button_container"

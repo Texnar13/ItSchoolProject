@@ -3,6 +3,8 @@ package com.learning.texnar13.teachersprogect.settings;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Service;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
@@ -11,6 +13,8 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -63,27 +67,12 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             e.printStackTrace();
             Log.i(
                     "TeachersApp",
-                    "EditTimeDialogFragment: you must give time( Bungle putIntArray, putStringarray)"
+                    "EditTimeDialogFragment: you must give time( Bungle putIntArray, putStringArray)"
             );
         }
 
 // -- выводим поля в список --
         outTypesInLinearLayout(listOut);
-
-        /*{
-            RelativeLayout rrr =
-                    dialogLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_grades_types_relative_out);
-
-            EditText editText = new EditText(getActivity().getApplicationContext());
-            editText.setText("yay!");
-            rrr.addView(
-                    editText,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            );
-
-        }*/
-
 
 // ---- кнопка добавления типа ----
         TextView addTextButton = dialogLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_grades_types_text_button_add);
@@ -200,10 +189,15 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     TypedValue.COMPLEX_UNIT_PX,
                     getActivity().getResources().getDimension(R.dimen.text_subtitle_size)
             );
-            //editText.setFocusable(true);
+            editText.setInputType(InputType.TYPE_CLASS_TEXT);
             editText.setTextColor(Color.BLACK);
-            editText.setSingleLine(true);
-            //editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            editText.setSingleLine(true);//todo закрывать клавиатуру на открыфтии нового контейнера и закрытии этого
+
+            // эта строка убирает флаги(были поставлены автоматически), которые недавали открывать
+            // клавиатуру на программно созданных editText
+            //http://qaru.site/questions/2321163/soft-keyboard-does-not-show-up-on-edittext-recyclerview-in-a-dialogfragment
+            getDialog().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
             editText.setGravity(Gravity.CENTER_VERTICAL);
             // параметры текста
             final LinearLayout.LayoutParams editTextParams = new LinearLayout.LayoutParams(
@@ -245,9 +239,10 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                 removeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        boolean isDeleted = false;
                         try {
                             //вызываем в активности метод по удалению
-                            ((EditGradesTypeDialogFragmentInterface) getActivity()).removeGradesType(typeRecord.typeId);
+                            isDeleted = ((EditGradesTypeDialogFragmentInterface) getActivity()).removeGradesType(typeRecord.typeId);
                         } catch (java.lang.ClassCastException e) {
                             //в вызвающей активности должен быть имплементирован класс EditGradesTypeDialogFragmentInterface
                             e.printStackTrace();
@@ -257,12 +252,12 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                             );
                         }
 
-                        // удаляем переменную в скролле
-                        listOut.removeView(typeRecord.typeContainer);
-
-                        // и в списке
-                        types.remove(typeRecord);
-
+                        if (isDeleted) {
+                            // удаляем переменную в скролле
+                            listOut.removeView(typeRecord.typeContainer);
+                            // и в списке
+                            types.remove(typeRecord);
+                        }
                     }
                 });
             }
@@ -283,11 +278,11 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     // вызываем метод по сохранению
+                    boolean isChanged = false;
                     try {
                         //вызываем в активности метод по сохранению
-                        ((EditGradesTypeDialogFragmentInterface) getActivity()).editGradesType(typeRecord.typeId, editText.getText().toString());
+                        isChanged = ((EditGradesTypeDialogFragmentInterface) getActivity()).editGradesType(typeRecord.typeId, editText.getText().toString());
                     } catch (java.lang.ClassCastException e) {
                         //в вызвающей активности должен быть имплементирован класс EditGradesTypeDialogFragmentInterface
                         e.printStackTrace();
@@ -297,12 +292,13 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                         );
                     }
 
-                    // меняем переменную в списке
+                    if (isChanged) {
+                        // меняем переменную в списке
+                        typeRecord.typeName = editText.getText().toString();
 
-                    typeRecord.typeName = editText.getText().toString();
-
-                    // выводим неактивный
-                    outContentInTypeContainer(typeRecord, false);
+                        // выводим неактивный
+                        outContentInTypeContainer(typeRecord, false);
+                    }
                 }
             });
 
@@ -330,8 +326,15 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             typeRecord.typeContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // выводим его активным
-                    outContentInTypeContainer(typeRecord, true);
+                    // закрываем все остальные контейнеры//TODO можно будет добавить переменную boolean отвечающую зато, открыт контейнер или нет, и лишний раз не перерисовывать его
+                    for (GradesTypeRecord fType : types) {
+                        if (fType.typeId != typeRecord.typeId) {
+                            // выводим его не активным
+                            outContentInTypeContainer(fType, false);
+                        } else
+                            // выводим его активным
+                            outContentInTypeContainer(typeRecord, true);
+                    }
                 }
             });
         }
