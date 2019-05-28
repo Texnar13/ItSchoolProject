@@ -9,7 +9,6 @@ import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -19,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -313,7 +311,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                     day.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            goToScheduleDayActivity(
+                            openScheduleDayActivity(
                                     dayForIntent,
                                     viewCalendar.get(Calendar.MONTH),
                                     viewCalendar.get(Calendar.YEAR)
@@ -379,7 +377,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
 
-    void goToScheduleDayActivity(int day, int month, int year) {
+    void openScheduleDayActivity(int day, int month, int year) {
         Intent intent = new Intent(this, ScheduleDayActivity.class);
         intent.putExtra(ScheduleDayActivity.INTENT_DAY, day);
         intent.putExtra(ScheduleDayActivity.INTENT_MONTH, month);
