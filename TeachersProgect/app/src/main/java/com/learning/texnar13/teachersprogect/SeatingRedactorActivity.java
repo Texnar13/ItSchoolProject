@@ -108,7 +108,7 @@ public class SeatingRedactorActivity extends AppCompatActivity {
         // ставим заголовок имя урока
         Cursor classCursor = db.getClasses(classId);
         classCursor.moveToFirst();
-        Cursor cabinetCursor = db.getCabinets(cabinetId);
+        Cursor cabinetCursor = db.getCabinet(cabinetId);
         cabinetCursor.moveToFirst();
         setTitle(getResources().getString(R.string.title_activity_seating_redactor_first) + " " +
                 classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)) +

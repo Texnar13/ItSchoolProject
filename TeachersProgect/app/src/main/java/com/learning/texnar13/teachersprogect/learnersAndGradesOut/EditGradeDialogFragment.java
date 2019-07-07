@@ -26,6 +26,11 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
 
     public static final String INDEXES = "indexes";
 
+    // максимальная оценка из базы данных
+    int maxGrade;
+    // массив с выбранными оценками
+    int[] grades;
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -65,51 +70,59 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
 
         linearLayout.addView(title, titleParams);
 
-//---получаем входные данные с массивами---
-        int[] grades = {};
-        try {
-            grades = getArguments().getIntArray(GRADES);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+// -------- получаем оценки в массиве --------
+        grades = getArguments().getIntArray(GRADES);// todo для шлифовки кода можно убрать эту строчку(или отправить null) и исправить ошибки если они вдруг появятся
+        if (grades == null) {
+            grades = new int[]{};
             Log.i("TeachersApp", "you must give bundle argument \"" + GRADES + "\"");
-            dismiss();
         }
 
-//---spinner-ы с выбором оценки---
-        //массив с текстами оценок
+// -------- spinner-ы с выбором оценки --------
         DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity());
-
-        String gradesText[] = new String[db.getSettingsMaxGrade(1) + 2];
-
-        gradesText[0] = getString(R.string.learners_and_grades_out_activity_title_grade_n);
-        gradesText[1] = getString(R.string.learners_and_grades_out_activity_title_grade_no_answers);
-        for (int i = 2; i < gradesText.length; i++) {
-            gradesText[i] = "" + (i - 1);
-        }
-        //адаптер
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
-                getActivity().getApplicationContext(),
-                R.layout.spinner_dropdown_element_learners_and_grades_answers,
-                gradesText
-        );
-        //массив со спиннерами
+        maxGrade = db.getSettingsMaxGrade(1);
+        // массив со спиннерами
         final Spinner[] spinners = new Spinner[grades.length];
 
-        //инициализируем
+// -------- инициализируем значения в спиннерах --------
         for (int i = 0; i < spinners.length; i++) {
-            //спинер
+            // создаем массив с текстами
+            String gradesText[];
+
+            // если вдруг оценка в поле больше максимальной
+            if (grades[i] > maxGrade) {
+                // создаем дополнительное поле
+                gradesText = new String[maxGrade + 3];
+                // и интициализируем его дополнительной оценкой
+                gradesText[maxGrade + 2] = "" + grades[i];
+            } else
+                gradesText = new String[maxGrade + 2];
+
+            // инициализируем первые два поля
+            gradesText[0] = getString(R.string.learners_and_grades_out_activity_title_grade_n);
+            gradesText[1] = getString(R.string.learners_and_grades_out_activity_title_grade_no_answers);
+            // инициализируем все оценки кроме дополнительной
+            for (int j = 2; j < maxGrade + 2; j++) {
+                gradesText[j] = "" + (j - 1);
+            }
+
+            // нициализируем спинер
             spinners[i] = new Spinner(getActivity().getApplicationContext());
-            //ставим адаптер
-            spinners[i].setAdapter(arrayAdapter);
-            //выводим спиннер
+            // ставим адаптер
+            spinners[i].setAdapter(
+                    new ArrayAdapter<>(
+                            getActivity().getApplicationContext(),
+                            R.layout.spinner_dropdown_element_learners_and_grades_answers,
+                            gradesText
+                    )
+            );
+            // выводим спиннер
             linearLayout.addView(
                     spinners[i],
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
 
-            // ставим в спиннеры выбранные оценки
-
+            // выбираем нужный элемент спиннера
             switch (grades[i]) {
                 case 0:
                     spinners[i].setSelection(1, false);
@@ -118,10 +131,12 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
                     spinners[i].setSelection(0, false);
                     break;
                 default:
-                    spinners[i].setSelection(grades[i] + 1, false);
+                    if (grades[i] > maxGrade) {
+                        spinners[i].setSelection(maxGrade + 2, false);
+                    } else
+                        spinners[i].setSelection(grades[i] + 1, false);
                     break;
             }
-
         }
 
 //--кнопки согласия/отмены--
@@ -138,7 +153,7 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
         neutralButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+                (int) getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         neutralButtonParams.weight = 1;
         neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
@@ -151,7 +166,7 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+                (int) getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         positiveButtonParams.weight = 1;
         positiveButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
@@ -175,13 +190,15 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
             public void onClick(View view) {
                 try {
                     for (int j = 0; j < spinners.length; j++) {
-
                         switch (spinners[j].getSelectedItemPosition()) {
                             case 0://нулевая позиция - н
                                 finalGrades[j] = -2;
                                 break;
                             default://остальные оценки
-                                finalGrades[j] = spinners[j].getSelectedItemPosition() - 1;
+                                if (maxGrade + 2 == spinners[j].getSelectedItemPosition()) {
+                                    finalGrades[j] = grades[j];
+                                } else
+                                    finalGrades[j] = spinners[j].getSelectedItemPosition() - 1;
                                 break;
                         }
                     }

@@ -278,7 +278,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // вызываем метод по сохранению
+                    // вызываем метод по сохранению названия
                     boolean isChanged = false;
                     try {
                         //вызываем в активности метод по сохранению
@@ -291,7 +291,19 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                                 "EditGradesTypeDialogFragment: you must implements EditGradesTypeDialogFragmentInterface in your activity"
                         );
                     }
+                    // прячем клавиатуру
+                    try {
+                        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    } catch (java.lang.NullPointerException e) {
+                        e.printStackTrace();
+                        Log.e(
+                                "TeachersApp",
+                                "cannot hide keyboard"
+                        );
+                    }
 
+                    // перевыводим содержимое
                     if (isChanged) {
                         // меняем переменную в списке
                         typeRecord.typeName = editText.getText().toString();
@@ -301,7 +313,6 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     }
                 }
             });
-
 
         } else {// если контейнер не активен выводим просто текст
 

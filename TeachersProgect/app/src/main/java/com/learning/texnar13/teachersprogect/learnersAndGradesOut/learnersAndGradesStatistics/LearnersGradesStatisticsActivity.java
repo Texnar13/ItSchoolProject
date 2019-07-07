@@ -21,6 +21,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -633,7 +634,6 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                 int grade = grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_GRADE));
                 switch (grade) {
                     case -1:
-
                         Log.wtf(TAG, "LearnersGradesStatisticsActivity.outGrades - grade is -1!");
                         break;
                     case 0:
@@ -687,40 +687,42 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                 );
                 s.setSpan(style, 0, s.length() - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
             } else {
+                // вычисляем среднюю оценку и округляем до сотых (к ближайшему)
+                gradesSum = ((int)((gradesSum / gradesCount) * 100 + 0.5))/100F;
                 // текст оценки
-                s.append("" + (gradesSum / gradesCount));
+                s.append("" + (gradesSum));
                 // ---- выбираем цвет оценки ----
                 if (areTheGradesColored) {// выбраны ли цветные оценки
                     //5
-                    if ((int) (((gradesSum / gradesCount) / (float) maxAnswersCount) * 100F) <= 100) {
+                    if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 100) {
                         style = new ForegroundColorSpan(
                                 getResources().getColor(R.color.grade5Color)
                         );
                         s.setSpan(style, 0, s.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                     }
                     //4
-                    if ((int) (((gradesSum / gradesCount) / (float) maxAnswersCount) * 100F) <= 80) {
+                    if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 80) {
                         style = new ForegroundColorSpan(
                                 getResources().getColor(R.color.grade4Color)
                         );
                         s.setSpan(style, 0, s.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                     }
                     //3
-                    if ((int) (((gradesSum / gradesCount) / (float) maxAnswersCount) * 100F) <= 60) {
+                    if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 60) {
                         style = new ForegroundColorSpan(
                                 getResources().getColor(R.color.grade3Color)
                         );
                         s.setSpan(style, 0, s.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                     }
                     //2
-                    if ((int) (((gradesSum / gradesCount) / (float) maxAnswersCount) * 100F) <= 41) {
+                    if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 41) {
                         style = new ForegroundColorSpan(
                                 getResources().getColor(R.color.grade2Color)
                         );
                         s.setSpan(style, 0, s.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                     }
                     //1
-                    if ((int) (((gradesSum / gradesCount) / (float) maxAnswersCount) * 100F) <= 20) {
+                    if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 20) {
                         style = new ForegroundColorSpan(
                                 getResources().getColor(R.color.grade1Color)
                         );

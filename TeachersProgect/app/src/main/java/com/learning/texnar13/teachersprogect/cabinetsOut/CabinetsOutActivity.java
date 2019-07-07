@@ -239,7 +239,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
                     //получаем из бд
                     DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                     //кабинеты по Id
-                    Cursor cabinetCursor = db.getCabinets(finalId);
+                    Cursor cabinetCursor = db.getCabinet(finalId);
                     cabinetCursor.moveToFirst();
                     //создаем обьект с данными
                     Bundle args = new Bundle();

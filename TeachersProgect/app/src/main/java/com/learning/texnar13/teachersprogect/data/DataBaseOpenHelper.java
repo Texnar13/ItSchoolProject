@@ -22,7 +22,7 @@ import java.util.GregorianCalendar;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
     private static final boolean IS_DEBUG = false;
-    private static final int DB_VERSION = 16;
+    private static final int DB_VERSION = 17;
     private Context context;
 
 
@@ -89,7 +89,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     "[\"15\",\"15\",\"15\",\"15\",\"10\",\"15\",\"10\",\"5\",\"59\"]" +
                     "}'," +
                     SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE + " INTEGER, " +
-                    SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED + " INTEGER DEFAULT 0); ";
+                    SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED + " INTEGER DEFAULT 1); ";
             db.execSQL(sql);
 
             //кабинет
@@ -358,7 +358,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             }
             if (oldVersion < 15) {// переменная отвечающая за цветные оценки
                 db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS +
-                        " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED + " INTEGER DEFAULT 0;");
+                        " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED + " INTEGER DEFAULT 1;");
 
             }
 
@@ -418,9 +418,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 db.execSQL("PRAGMA foreign_keys = ON");
 
 
-
-
-
                 /*// -- выбор цвета оценок? --
                 // TODO: 24.01.19 недоделал 
                 db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS +
@@ -429,10 +426,21 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
                 // -- таблица расписаний --
 
+            }
 
+            if (oldVersion < 17) {// TODO: 29.06.2019 пока реализовано только здесь
+                // -- добавляем кабинетам свои значения смещения и мультипликатора хранящиеся в таблице --
+                db.execSQL("ALTER TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS +
+                        " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER + " INTEGER DEFAULT \"1\""
+                );
+                db.execSQL("ALTER TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS +
+                        " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X + " INTEGER DEFAULT \"0\""
+                );
+                db.execSQL("ALTER TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS +
+                        " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y + " INTEGER DEFAULT \"0\""
+                );
             }
         }
-
 
         //db.close();
     }
@@ -917,9 +925,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    //SELECT all FROM table1 ORDER BY sex ASC, sal DESC;
-
-
     public long getLearnerIdByClassIdAndPlaceId(long classId, long placeId) {//todo КОСТЫЛИЩЕЕЕЕ!!!!!!! во всех отношениях
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor learnersCursor = this.getLearnersByClassId(classId);
@@ -1055,13 +1060,50 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getCabinets(long cabinetId) {
+    public Cursor getCabinet(long cabinetId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {cabinetId + ""};
         Cursor cursor = db.query(SchoolContract.TableCabinets.NAME_TABLE_CABINETS, null, SchoolContract.TableCabinets.KEY_CABINET_ID + " = ?", selectionArgs, null, null, null);
         if (IS_DEBUG)
             Log.i("DBOpenHelper", "getCabinets " + cursor + "id=" + cabinetId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
+    }
+
+//    public int getCabinetMultiplier(){
+//
+//    }
+//
+//    public int getCabinetOffsetX(){
+//
+//    }
+//
+//    public int getCabinetOffsetY(){
+//
+//    }
+
+    public void setCabinetMultiplierOffsetXOffsetY(long cabinetId, int multiplier, int offsetX, int offsetY) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues content = new ContentValues();
+        content.put(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER, multiplier);
+        content.put(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X, offsetX);
+        content.put(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y, offsetY);
+
+        db.update(
+                SchoolContract.TableCabinets.NAME_TABLE_CABINETS,
+                content,
+                SchoolContract.TableCabinets.KEY_CABINET_ID + " = ?",
+                new String[]{"" + cabinetId}
+        );
+
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper",
+                    "setCabinetMultiplierOffsetXOffsetY multiplier= " + multiplier +
+                            "offsetX= " + offsetX +
+                            "offsetY= " + offsetY +
+                            " cabinetId= " + cabinetId
+            );
+        //db.close();
     }
 
     public int setCabinetName(ArrayList<Long> cabinetId, String name) {

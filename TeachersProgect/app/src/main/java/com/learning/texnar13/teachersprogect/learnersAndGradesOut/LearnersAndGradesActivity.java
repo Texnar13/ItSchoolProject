@@ -40,10 +40,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.learning.texnar13.teachersprogect.learnersAndGradesOut.learnersAndGradesStatistics.LearnersGradesStatisticsActivity;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.learnersAndGradesOut.learnersAndGradesStatistics.LearnersGradesStatisticsActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,9 +68,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     static ArrayList<Long> learnersId = new ArrayList<>();
     //имена учеников
     static ArrayList<String> learnersTitles = new ArrayList<>();
-    //массив с уроками
+    //массив с предметами
     static long[] subjectsId;
-    //выбранный урок
+    //выбранный предмет
     static int changingSubjectPosition = 0;
     //максимальная оценка
     static long maxAnswersCount;
@@ -114,6 +114,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     //назначаем функции меню
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
+        Log.i("TeachersApp", "onPrepareOptionsMenu");
         //кнопка статистики
         menu.findItem(R.id.learners_and_grades_menu_statistics).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -140,6 +141,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     //---создание ученика---
     @Override
     public void createLearner(String lastName, String name, long classId) {
+        Log.i("TeachersApp", "fromDialog-createLearner");
         //останавливаем поток загрузки данных
         flag = false;
         //создание ученика вызываемое диалогом CreateLearnerDialogFragment
@@ -157,6 +159,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     @Override
     public void updateAll() {
+        Log.i("TeachersApp", "fromDialog-updateAll");
         //останавливаем поток загрузки данных
         flag = false;
         //обновляем список учеников
@@ -169,6 +172,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     //---переименование ученика---
     @Override
     public void editLearner(String lastName, String name, long learnerId) {
+        Log.i("TeachersApp", "fromDialog-editLearner");
         //останавливаем поток загрузки данных
         flag = false;
         //редактирование ученика вызываемое диалогом EditLearnerDialogFragment
@@ -190,6 +194,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     //---удаление ученика---
     @Override
     public void removeLearner(long learnerId) {
+        Log.i("TeachersApp", "fromDialog-removeLearner");
         //останавливаем поток загрузки данных
         flag = false;
         //редактирование ученика вызываемое диалогом EditLearnerDialogFragment
@@ -210,6 +215,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     //---редактирование оценки ученика---
     @Override
     public void editGrade(int[] grades, int[] indexes) {
+        Log.i("TeachersApp", "fromDialog-editGrade");
         if (indexes.length == 3) {
 
             //сохраняем оценки в массив
@@ -253,7 +259,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     @Override
     public void returnSimpleColorForText(int[] indexes) {
-/*
+        Log.i("TeachersApp", "fromDialog-returnSimpleColorForText");
+
+/* TODO: 04.07.2019
      Process: com.learning.texnar13.teachersprogect, PID: 6047
     java.lang.NullPointerException: Attempt to invoke virtual method 'void android.widget.TextView.setBackgroundColor(int)' on a null object reference
         at com.learning.texnar13.teachersprogect.learnersAndGradesOut.LearnersAndGradesActivity.returnSimpleColorForText(LearnersAndGradesActivity.java:256)
@@ -273,6 +281,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     //разрешаем пользователю изменять оценки
     @Override
     public void allowUserEditGrades() {
+        Log.i("TeachersApp", "fromDialog-allowUserEditGrades");
         canEditGrades = true;
     }
 
@@ -280,6 +289,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("TeachersApp", "onCreate");
 
 // ---------- подготовка активности ----------
 
@@ -395,8 +405,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         classCursor.close();
 
 //----вывод данных при старте----
-        availableLessonsOut(classId, 0);
+        availableSubjectsOut(classId, 0);
+        // получаем учеников только здесь (и при удалении/добавлении <- косяк)
         getLearnersFromDB();
+        outLearnersNamesInTable();
 
 //        //инициализируем массив
 //        allGrades = new NewGradeUnit
@@ -412,15 +424,15 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 //                }
 //            }
 //        }
-
-        outLearnersNamesInTable();
-        getGradesFromDB();
+        //* ---
+        //getGradesFromDB();
         db.close();
     }
 
 //==============================вывод предметов========================================
 
-    void availableLessonsOut(final long classViewId, final int position) {
+    void availableSubjectsOut(final long classViewId, final int position) {
+        Log.i("TeachersApp", "availableSubjectsOut");
 
         final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         Cursor cursor = db.getSubjectsByClassId(classViewId);
@@ -433,7 +445,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         }
         final String[] stringOnlyLessons = new String[cursor.getCount()];
         subjectsId = new long[cursor.getCount()];
-        //Log.i("TeachersApp", "LessonRedactorActivity - " + stringLessons.length);
+        //Log.i("TeachersApp", "LearnersAndGradesActivity - " + stringLessons.length);
         for (int i = 0; i < stringLessons.length - 2; i++) {
             cursor.moveToNext();
             subjectsId[i] = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID));
@@ -463,9 +475,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                Log.w("TeachersApp", "LessonRedactorActivity - availableLessonsOut onItemSelected " + pos);
+                Log.w("TeachersApp", "LearnersAndGradesActivity - availableSubjectsOut onItemSelected " + pos);
                 if (count != 0 && stringLessons.length - 1 == pos) {
-                    Log.w("TeachersApp", "LessonRedactorActivity - remove lesson");
+                    Log.w("TeachersApp", "LearnersAndGradesActivity - remove lesson");
                     //данные передаваемые в диалог
                     Bundle args = new Bundle();
                     args.putStringArray("stringOnlyLessons", stringOnlyLessons);
@@ -478,7 +490,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                 } else if ((count != 0 && stringLessons.length - 2 == pos) || (count == 0 && stringLessons.length - 1 == pos)) {
                     //диалог создания предмета
-                    Log.w("TeachersApp", "LessonRedactorActivity - new lesson");
+                    Log.w("TeachersApp", "LearnersAndGradesActivity - new lesson");
                     //данные для диалога
                     Bundle args = new Bundle();
                     args.putStringArray("stringLessons", stringLessons);
@@ -487,18 +499,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     SubjectNameLearnersDialogFragment lessonNameDialogFragment = new SubjectNameLearnersDialogFragment();
                     lessonNameDialogFragment.setArguments(args);
                     lessonNameDialogFragment.show(getFragmentManager(), "createSubject");
-                } else if (pos != 0) {
-                    Log.w("TeachersApp", "LessonRedactorActivity - chosen lesson id = " + subjectsId[pos - 1]);
+                } else {
+                    Log.w("TeachersApp", "LearnersAndGradesActivity - chosen lesson id = " + subjectsId[pos]);
                     //останавливаем загрузку оценок
                     flag = false;
                     changingSubjectPosition = pos;
-                    outLearnersNamesInTable();
-                    getGradesFromDB();
-                } else {
-                    Log.w("TeachersApp", "LessonRedactorActivity - no lesson selected");
-                    //останавливаем загрузку оценок
-                    flag = false;
-                    changingSubjectPosition = 0;
                     outLearnersNamesInTable();
                     getGradesFromDB();
                 }
@@ -512,6 +517,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     public static class RemoveLearnerSubjectDialogFragment extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+            Log.i("TeachersApp", "RemoveLearnerSubjectDialogFragment-onCreateDialog");
 
             //начинаем строить диалог
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -696,6 +702,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
         @Override
         public void onCancel(DialogInterface dialog) {
+            Log.i("TeachersApp", "RemoveLearnerSubjectDialogFragment-onCancel");
             super.onCancel(dialog);
             ((SubjectRemoveLearnersDialogInterface) getActivity())
                     .RemoveSubjectDialogMethod(
@@ -716,6 +723,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     @Override
     public void RemoveSubjectDialogMethod(int code, int position, ArrayList<Long> deleteList) {
+        Log.i("TeachersApp", "fromDialog-RemoveSubjectDialogMethod");
         if (code == 0) {
             //останавливаем загрузку оценок
             flag = false;
@@ -724,9 +732,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             db.deleteSubjects(deleteList);
             db.close();
             //выводим
-            availableLessonsOut(classId, position);
+            availableSubjectsOut(classId, position);
         } else {
-            availableLessonsOut(classId, position);
+            availableSubjectsOut(classId, position);
         }
     }
 
@@ -735,6 +743,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     public static class SubjectNameLearnersDialogFragment extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+            Log.i("TeachersApp", "SubjectNameLearnersDialogFragment-onCreateDialog");
             //начинаем строить диалог
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -879,6 +888,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
         @Override
         public void onCancel(DialogInterface dialog) {
+            Log.i("TeachersApp", "SubjectNameLearnersDialogFragment-onCancel");
             int poz;
             if (getArguments().getStringArray("stringLessons").length == 2) {
                 poz = getArguments().getStringArray("stringLessons").length - 2;
@@ -905,11 +915,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     @Override
     public void lessonNameDialogMethod(int code, int position, String classNameText) {
+        Log.i("TeachersApp", "fromDialog-lessonNameDialogMethod");
         if (code == 1) {
             (new DataBaseOpenHelper(this)).createSubject(classNameText, classId);
-            availableLessonsOut(classId, position);
+            availableSubjectsOut(classId, position);
         } else {
-            availableLessonsOut(classId, position);
+            availableSubjectsOut(classId, position);
         }
 
     }
@@ -1114,9 +1125,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 //================поток загрузки оценок================
 
         //делаем всё в потоке
-        Thread progressThread = new Thread(new Runnable() {
+        final Thread progressThread = new Thread(new Runnable() {
             @Override
             public void run() {
+
                 Log.i("TeachersApp", "StartGradesLoadThread");
                 //для перевода даты в пустые оценки
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1140,6 +1152,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 //изменяющися строки для запросов
                 String startQestionString;
                 String endQestionString;
+//* ---
+//                try {
+//                    Log.e("TeachersApp", "остановлен");
+//                    Thread.sleep(5000);
+//                    Log.e("TeachersApp", "запущен");
+//                }catch(InterruptedException e){
+//                    e.printStackTrace();
+//                }
 
                 if (subjectsId.length != 0) {
                     DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
@@ -1153,14 +1173,35 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         for (int j = 0; j < viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH); j++) {
                             //сначала проверяем весь день целиком
                             //--время--
-
                             startQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1) + "-" + getTwoSymbols(j + 1) + " 00:00:00";
                             endQestionString = "" + viewCalendar.get(Calendar.YEAR) + "-" + getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1) + "-" + getTwoSymbols(j + 1) + " 23:59:00";
 
 
+
+                            /*
+                            *   .learning.texnar13.teachersprogect I/TeachersApp:  onStop
+07-04 23:48:59.621 6177-6177/com.learning.texnar13.teachersprogect I/TeachersApp: onCreate
+07-04 23:48:59.651 6177-6177/com.learning.texnar13.teachersprogect I/TeachersApp: availableSubjectsOut
+07-04 23:48:59.661 6177-6177/com.learning.texnar13.teachersprogect I/TeachersApp: LearnersAndGradesActivity - getLearnersFromDB
+07-04 23:48:59.661 6177-6177/com.learning.texnar13.teachersprogect I/TeachersApp: LearnersAndGradesActivity - updateTable
+07-04 23:48:59.691 6177-6177/com.learning.texnar13.teachersprogect I/TeachersApp: LearnersAndGradesActivity - getGradesFromDB
+07-04 23:48:59.691 6177-8040/com.learning.texnar13.teachersprogect I/TeachersApp: StartGradesLoadThread
+07-04 23:48:59.791 6177-6177/com.learning.texnar13.teachersprogect I/TeachersApp: onPrepareOptionsMenu
+07-04 23:48:59.791 6177-6177/com.learning.texnar13.teachersprogect W/TeachersApp: LearnersAndGradesActivity - availableSubjectsOut onItemSelected 0
+07-04 23:48:59.791 6177-6177/com.learning.texnar13.teachersprogect W/TeachersApp: LearnersAndGradesActivity - no lesson selected
+07-04 23:48:59.791 6177-6177/com.learning.texnar13.teachersprogect I/TeachersApp: LearnersAndGradesActivity - updateTable
+07-04 23:48:59.821 6177-6177/com.learning.texnar13.teachersprogect I/TeachersApp: LearnersAndGradesActivity - getGradesFromDB
+07-04 23:48:59.821 6177-8041/com.learning.texnar13.teachersprogect I/TeachersApp: StartGradesLoadThread
+07-04 23:49:00.431 6177-8041/com.learning.texnar13.teachersprogect I/TeachersApp: threadStopped
+07-04 23:49:00.431 6177-6177/com.learning.texnar13.teachersprogect I/TeachersApp: LearnersAndGradesActivity - outGradesInTable
+                            *
+                            *
+                            *
+                            *
+                            * */
                             Cursor tDay = db.getGradesByLearnerIdSubjectAndTimePeriod(
                                     learnersId.get(i),
-                                    subjectsId[changingSubjectPosition],
+                                    subjectsId[changingSubjectPosition],// TODO: 04.07.2019  ArrayIndexOutOfBoundsException <-!!!!!!
                                     startQestionString,
                                     endQestionString
                             );//может посчитать их здесь, а потом если вывели все оценки то остальные выводим уже с прочерками без проверки
@@ -1186,8 +1227,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                                     //получаем оценки по времени и предмету
                                     Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
-                                            learnersId.get(i),//todo !!!!!!!!!!!! здесь все еще есть ошибка !!!!!!!!!!!!!!! здесь ошибка java.lang.ArrayIndexOutOfBoundsException
-                                            subjectsId[changingSubjectPosition],
+                                            learnersId.get(i),
+                                            subjectsId[changingSubjectPosition],//todo !!!!!!!!!!!! здесь все еще есть ошибка !!!!!!!!!!!!!!! здесь ошибка java.lang.ArrayIndexOutOfBoundsException
                                             startQestionString,
                                             endQestionString
                                     );
@@ -1252,7 +1293,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     for (int l = 0; l < 3; l++) {
                                         //нет оценки
                                         allGrades[i][j][k] = new NewGradeUnit(
-                                                learnersId.get(i),
+                                                learnersId.get(i),// TODO: 04.07.2019 IndexOutOfBoundsException(ArrayList.get) <-!!!
                                                 new long[]{-1, -1, -1},
                                                 new int[]{0, 0, 0},
                                                 subjectsId[changingSubjectPosition],
@@ -1269,6 +1310,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 }
                 //выводим оценки после загрузки
                 handler.sendEmptyMessage(0);
+
+                Log.i("TeachersApp", "threadStopped");
             }
         });
         progressThread.setName("getGradesThread");
@@ -1319,7 +1362,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     //по оценкам за этот день
                     for (int l = 0; l < 3; l++) {
                         //[ученик][день][урок][оценка]
-                        if (allGrades[k][i][j].grades[l]//todo здесь ошибка java.lang.NullPointerException
+                        if (allGrades[k][i][j].grades[l]//todo здесь ошибка java.lang.NullPointerException (вызвано это было через handleMessage)
                                 != 0) {
                             flag = true;
                             break out;
@@ -1372,7 +1415,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         //добавляем ссылку на view к оценкам
                         allGrades[k][i][j].textView = learnerGrade;
 
-                        //ставим текст
+                        //ставим текст и окрашиваем его
                         allGrades[k][i][j].doText();
 
                         //параметры текста
@@ -1394,6 +1437,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                             arrayGrade[l] = allGrades[k][i][j].grades[l];
                         }
                         //при нажатии на оценку
+                        // todo создать глобальную переменную отвечающую за выбранную оценку и глобальную переменную отвечающую за возможность редактирования оценок, если такой еще нет
                         dateOut.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -1437,6 +1481,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     @Override
     protected void onStop() {
+        Log.i("TeachersApp", " onStop");
         //останавливаем поток
         flag = false;
 
@@ -1465,7 +1510,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 // ============================= Класс где храним оценку ==========================================
 
     class NewGradeUnit {//оценки на уроке
-        long learnerId = -1;//id ученика
+        long learnerId = -1;// id ученика
         long subjectId = -1;// предмет
         String date;//время оценки(урока)
         long[] gradeId = {-1, -1, -1};
@@ -1513,7 +1558,13 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         s.append("" + grades[i]);
                         s.append(" ");
                         // ---- выбираем цвет оценки ----
-                        if(areTheGradesColored){// выбраны ли цветные оценки
+                        if (areTheGradesColored) {// выбраны ли цветные оценки
+                            // > 5
+                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) > 100) {
+                                style = new ForegroundColorSpan(
+                                        Color.DKGRAY
+                                );
+                            }
                             //5
                             if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 100) {
                                 style = new ForegroundColorSpan(
@@ -1568,7 +1619,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             return "" + number;
         }
     }
-
 //    // -- метод трансформации числа в текст с четырьмя датами --
 //    String getFourSymbols(int number) {
 //        if (number < 10 && number >= 0) {
@@ -1580,6 +1630,33 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
 }
 
+
+// класс хранящий в себе оценки за 1 урок
+class GradeUnit {
+    int[] grades;
+
+    GradeUnit(int[] grades) {
+        this.grades = grades;
+    }
+}
+
+// данные об одном ученике в таблице
+class LearnerAndHisGrades {
+    // ученик
+    long id;
+    String name;
+    String surname;
+    // его оценки        ( [номер дня][номер урока] ).[номер оценки]
+    GradeUnit[][] learnerGrades;
+
+    LearnerAndHisGrades(long id, String name, String surname) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+    }
+}
+
+
 interface SubjectNameLearnersDialogInterface {//обратная связь от диалога
 
     void lessonNameDialogMethod(int code, int position, String classNameText);
@@ -1589,4 +1666,3 @@ interface SubjectRemoveLearnersDialogInterface {//обратная связь о
 
     void RemoveSubjectDialogMethod(int code, int position, ArrayList<Long> deleteList);
 }
-

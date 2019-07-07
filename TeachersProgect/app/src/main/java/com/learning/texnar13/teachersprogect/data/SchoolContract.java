@@ -39,6 +39,9 @@ public final class SchoolContract {
     public static final class TableCabinets {
         public static final String NAME_TABLE_CABINETS = "cabinets";
         public static final String KEY_CABINET_ID = BaseColumns._ID;
+        public static final String COLUMN_CABINET_MULTIPLIER = "sizeMultiplier";
+        public static final String COLUMN_CABINET_OFFSET_X = "offsetX";
+        public static final String COLUMN_CABINET_OFFSET_Y = "offsetY";
         public static final String COLUMN_NAME = "name";
     }
 

@@ -268,7 +268,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     //кабинет
                     lessonCabinetId = lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
                     lessonAttitudeCursor.close();
-                    Cursor cabinetCursor = db.getCabinets(lessonCabinetId);
+                    Cursor cabinetCursor = db.getCabinet(lessonCabinetId);
                     cabinetCursor.moveToFirst();
                     lessonCabinet = cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
                     cabinetCursor.close();
