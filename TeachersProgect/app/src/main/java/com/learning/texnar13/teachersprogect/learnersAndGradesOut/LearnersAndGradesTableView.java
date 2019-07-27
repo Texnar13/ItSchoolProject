@@ -128,7 +128,7 @@ public class LearnersAndGradesTableView extends View {
                         learnersAndGradesDataAndSizes.get(learnerSizeI).location.right = learnerRect.right;
                     }
                 }
-//                // сравниваем его по высоте с предыдущим // todo или через Н
+//                // сравниваем его по высоте с предыдущим // todo или через Н  //123
 //                if (learnersAndGradesDataAndSizes.get(learnerI - 1).location.right >= learnerRect.right) {
 //                    // и если предыдущий больше, то выставляем текущему размеры предыдущего
 //                    learnerRect.bottom = learnersAndGradesDataAndSizes.get(learnerI - 1).location.bottom - ;
