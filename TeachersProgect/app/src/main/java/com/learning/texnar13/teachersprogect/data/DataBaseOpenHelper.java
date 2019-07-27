@@ -22,7 +22,7 @@ import java.util.GregorianCalendar;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
     private static final boolean IS_DEBUG = false;
-    private static final int DB_VERSION = 17;
+    private static final int DB_VERSION = 16;
     private Context context;
 
 
@@ -91,10 +91,12 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE + " INTEGER, " +
                     SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED + " INTEGER DEFAULT 1); ";
             db.execSQL(sql);
-
             //кабинет
             sql = "CREATE TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "( " + SchoolContract.TableCabinets.KEY_CABINET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    SchoolContract.TableCabinets.COLUMN_NAME + " VARCHAR ); ";
+                    SchoolContract.TableCabinets.COLUMN_NAME + " VARCHAR, " +
+                    SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER + " INTEGER DEFAULT \"1\", " +
+                    SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X + " INTEGER DEFAULT \"0\", " +
+                    SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y + " INTEGER DEFAULT \"0\" ); ";
             db.execSQL(sql);
             //парта
             sql = "CREATE TABLE " + SchoolContract.TableDesks.NAME_TABLE_DESKS + "( " + SchoolContract.TableDesks.KEY_DESK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -129,14 +131,18 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY(" + SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID + ") REFERENCES " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + " (" + SchoolContract.TablePlaces.KEY_PLACE_ID + ") ON DELETE CASCADE ); ";
             db.execSQL(sql);
             //оценки учеников
-            sql = "CREATE TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ( " + SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            db.execSQL("CREATE TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ( " + SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER, " +
                     SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
                     SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " INTEGER, " +
                     SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TIMESTRING DEFAULT \"0000-00-00 00:00:00\", " +
+                    // начальное значение заголовка единица
+                    SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID + " INTEGER DEFAULT 1, " +//todo not null
                     "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE, " +
-                    "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); ";
-            db.execSQL(sql);
+                    "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE, " +
+                    "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID + ") REFERENCES " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); "
+            );
+
             //предмет
             sql = "CREATE TABLE " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " ( " + SchoolContract.TableSubjects.KEY_SUBJECT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableSubjects.COLUMN_NAME + " VARCHAR, " +
@@ -153,11 +159,27 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + " (" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ON DELETE CASCADE ," +
                     "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE ); ";
             db.execSQL(sql);
-            // добавляем таблицу с профилями статистики
+            // профили статистики
             db.execSQL("CREATE TABLE " + SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES + " ( " + SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME + " TEXT, " +
                     SchoolContract.TableStatisticsProfiles.COLUMN_START_PERIOD_TIME + " TEXT, " +
                     SchoolContract.TableStatisticsProfiles.COLUMN_END_PERIOD_TIME + " TEXT); ");
+            // типы оценок
+            db.execSQL(
+                    "CREATE TABLE " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES +
+                            " ( " + SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                            SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE + " TEXT);"
+            );
+            {// ---- вставляем одну запись "работа на уроке" ----  <-- эта запись является костантой, ее нельзя удалить
+                String name = context.getResources().getString(R.string.db_table_grade_text_first_default_value);
+                ContentValues values = new ContentValues();
+                values.put(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE, name);
+                values.put(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID, 1);
+                db.insert(
+                        SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES,
+                        null,
+                        values);
+            }
 
 
         } else {//иначе г@внокод
@@ -362,28 +384,23 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
             }
 
-            if (oldVersion < 16) {// TODO: 09.12.18 пока реализовано только здесь
+// TODO: 2019-07-09 код до обновления
+            if (oldVersion < 16) {
                 // -------- создаем таблицу типов оценок --------
                 db.execSQL(
                         "CREATE TABLE " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES +
                                 " ( " + SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                 SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE + " TEXT);"
                 );
-                //работа на уроке
 
-                {// ---- вставляем одну запись ----  <-- эта запись является костантой, ее нельзя удалить
-
-                    String name = context.getResources().getString(R.string.db_table_grade_text_first_default_value);
+                {// ---- вставляем одну запись "работа на уроке" ----  <-- эта запись является костантой, ее нельзя удалить
                     ContentValues values = new ContentValues();
-                    values.put(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE, name);
+                    values.put(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE, context.getResources().getString(R.string.db_table_grade_text_first_default_value));
                     values.put(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID, 1);
-                    long temp = db.insert(SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES,
+                    db.insert(SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES,
                             null,
                             values
                     );
-                    //-1 = ошибка ввода
-                    if (IS_DEBUG)
-                        Log.i("DBOpenHelper", "createGradeTitle returnId = " + temp + " name= " + name);
                 }
 
                 // -------- всем оценкам ставим начальный тип --------
@@ -418,17 +435,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 db.execSQL("PRAGMA foreign_keys = ON");
 
 
-                /*// -- выбор цвета оценок? --
-                // TODO: 24.01.19 недоделал 
-                db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS +
-                        " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED + " INTEGER DEFAULT 0;");
-                */
-
-                // -- таблица расписаний --
-
-            }
-
-            if (oldVersion < 17) {// TODO: 29.06.2019 пока реализовано только здесь
                 // -- добавляем кабинетам свои значения смещения и мультипликатора хранящиеся в таблице --
                 db.execSQL("ALTER TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS +
                         " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER + " INTEGER DEFAULT \"1\""
@@ -439,6 +445,11 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS +
                         " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y + " INTEGER DEFAULT \"0\""
                 );
+
+
+                // -- выбор цвета оценок? --
+
+                // -- таблица расписаний? --
             }
         }
 
