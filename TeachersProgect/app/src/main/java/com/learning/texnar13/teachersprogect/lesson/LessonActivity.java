@@ -511,7 +511,6 @@ public class LessonActivity extends AppCompatActivity {
                 );
                 grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_START);
                 grade1TextParams.setMargins((int) pxFromDp(25 * multiplier), 0, 0, 0);
 
                 RelativeLayout.LayoutParams grade2TextParams = new RelativeLayout.LayoutParams(
@@ -519,7 +518,6 @@ public class LessonActivity extends AppCompatActivity {
                 );
                 grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_END);
                 grade2TextParams.setMargins(0, 0, (int) pxFromDp(25 * multiplier), 0);
 
                 //выводим текст в контейнер

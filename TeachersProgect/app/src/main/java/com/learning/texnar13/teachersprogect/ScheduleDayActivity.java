@@ -177,9 +177,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 RelativeLayout.LayoutParams tableRelativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
                 tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_END);
                 tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_START);
                 tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 tableRelativeParams.rightMargin = 0;//(int) pxFromDp(1f);//10
                 tableRelativeParams.bottomMargin = (int) pxFromDp(1f * getResources().getInteger(R.integer.desks_screen_multiplier));//10
@@ -354,9 +352,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 RelativeLayout.LayoutParams bodyParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
                 bodyParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 bodyParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_END);
                 bodyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_START);
                 bodyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 bodyParams.rightMargin = 0;//(int) pxFromDp(1f);//10
                 bodyParams.leftMargin = 0;

@@ -78,7 +78,6 @@ public class RemoveSubjectDialogFragment extends DialogFragment {
             LinearLayout item = new LinearLayout(getActivity());
             item.setOrientation(LinearLayout.HORIZONTAL);
             item.setGravity(Gravity.LEFT);
-            item.setGravity(Gravity.START);
             LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     (int) (pxFromDp(40) * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))

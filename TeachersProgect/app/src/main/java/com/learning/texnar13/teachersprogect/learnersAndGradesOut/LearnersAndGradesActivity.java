@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +23,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -35,6 +37,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -51,7 +54,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface, AllowUserEditGradesInterface, UpdateTableInterface, SubjectNameLearnersDialogInterface, SubjectRemoveLearnersDialogInterface {
+public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface, AllowUserEditGradesInterface, UpdateTableInterface, SubjectNameLearnersDialogInterface, SubjectRemoveLearnersDialogInterface, View.OnTouchListener {
     // TODO: 2019-07-10 проставить на телефоне в отладке пункт всегда доверять этому компьютеру
 
     // todo разнести по классам диалоги! И другие исправления
@@ -295,7 +298,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("TeachersApp", "onCreate");
 
-
 // ---------- подготовка активности ----------
 
         super.onCreate(savedInstanceState);
@@ -325,6 +327,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         newLearnersAndHisGrades = new ArrayList<>();
         // находим view с таблицей
         learnersAndGradesTableView = (LearnersAndGradesTableView) findViewById(R.id.learners_and_grades_activity_table_view);
+
+        // касание таблицы
+        learnersAndGradesTableView.setOnTouchListener(this);
+
+
+
 
         // **--
 
@@ -1520,6 +1528,90 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         //        .setBackgroundColor(Color.parseColor("#00FFFFFF"));
     }
 
+
+    // **--todo
+
+    // точка начала касания
+    PointF downPointF = new PointF();
+    // время начала касания
+    long startTouchTime = 0;
+
+    // нет касания, нажатие или перемещение
+    static final int TOUCH_NONE = 0;
+    static final int TOUCH_DOWN = 1;
+    static final int TOUCH_MOVE = 2;
+    int mode = TOUCH_NONE;
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+
+            case MotionEvent.ACTION_DOWN:// поставили первый палец
+                // режим нажатия
+                mode = TOUCH_DOWN;
+                // считываем координаты
+                downPointF.x = motionEvent.getX();
+                downPointF.y = motionEvent.getY();
+                // и время нажатия
+                startTouchTime = System.currentTimeMillis();
+                Log.e("TeachersApp", "LearnersAndGradesActivity.onTouch - ACTION_DOWN: x=" + downPointF.x + " y=" + downPointF.y + " startTouchTime=" + startTouchTime);
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                if (mode == TOUCH_DOWN) {
+                    // --- движение при режиме нажатия ---
+                    // находим расстояние от точки начала касания
+                    if (Math.sqrt(
+                            Math.pow(motionEvent.getX() - downPointF.x, 2) + Math.pow(motionEvent.getY() - downPointF.y, 2)
+                    ) > pxFromDp(20)) {
+                        // режим движения
+                        mode = TOUCH_MOVE;
+                        // режим движения только начался по этому заново считываем координаты
+                        downPointF.x = motionEvent.getX();
+                        downPointF.y = motionEvent.getY();
+                        Log.e("TeachersApp", "LearnersAndGradesActivity.onTouch - ACTION_MOVE(TOUCH_MOVE->active): x=" + downPointF.x + " y=" + downPointF.y);
+
+                    }
+                    Log.e("TeachersApp", "LearnersAndGradesActivity.onTouch - ACTION_MOVE(TOUCH_DOWN): x=" + downPointF.x + " y=" + downPointF.y);
+
+                } else {
+                    // --- движение при режиме движения ---
+                    ((LearnersAndGradesTableView) view).setMove(downPointF, motionEvent.getX(), motionEvent.getY());
+                    Log.e("TeachersApp", "LearnersAndGradesActivity.onTouch - ACTION_MOVE(TOUCH_MOVE): x=" + downPointF.x + " y=" + downPointF.y);
+                }
+                break;
+
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                if (mode == TOUCH_DOWN) {
+                    // --- было только нажатие ---
+
+                    ((LearnersAndGradesTableView) view).touch(
+                            downPointF,
+                            System.currentTimeMillis() - startTouchTime >= 500 // долгое ли это было нажатие
+                    );
+//                    if (System.currentTimeMillis() - startTouchTime >= 500) {
+//                        Log.e("TeachersApp", "LearnersAndGradesActivity.onTouch - ACTION_UP(longClick): x=" + downPointF.x + " y=" + downPointF.y);
+//                    } else {
+//                        Log.e("TeachersApp", "LearnersAndGradesActivity.onTouch - ACTION_UP(shortClick): x=" + downPointF.x + " y=" + downPointF.y);
+//                    }
+
+                } else {
+                    // --- было движение ---
+                    ((LearnersAndGradesTableView) view).endMove();
+                    Log.e("TeachersApp", "LearnersAndGradesActivity.onTouch - ACTION_UP(moveEnded): x=" + downPointF.x + " y=" + downPointF.y);
+                }
+                // отключаем нажатие
+                mode = TOUCH_DOWN;
+                break;
+
+        }
+        return true;
+    }
+
+    // **--
+
 //===========при закрытии активности===========
 
     @Override
@@ -1535,14 +1627,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home://кнопка назад в actionBar
-                onBackPressed();
-                return true;
+        if (item.getItemId() == android.R.id.home) {//кнопка назад в actionBar
+            onBackPressed();
+            return true;
+        } else
+            return super.onOptionsItemSelected(item);
 
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     //-------системные методы------
@@ -1578,8 +1668,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             ForegroundColorSpan style = new ForegroundColorSpan(
                     getResources().getColor(R.color.gradeColorGray)
             );
-            for (int i = 0; i < grades.length; i++) {
-                switch (grades[i]) {
+            for (int grade : grades) {
+                switch (grade) {
                     case -1://ошибка
                         break;
                     case 0://нет оценки
@@ -1598,42 +1688,42 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         // ставим оценку
                         if (s.toString().equals(""))
                             s.append(" ");
-                        s.append(Integer.toString(grades[i]));
+                        s.append(Integer.toString(grade));
                         s.append(" ");
                         // ---- выбираем цвет оценки ----
                         if (areTheGradesColored) {// выбраны ли цветные оценки
                             // > 5
-                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) > 100) {
+                            if ((int) (((float) grade / (float) maxAnswersCount) * 100F) > 100) {
                                 style = new ForegroundColorSpan(
                                         Color.DKGRAY
                                 );
                             }
                             //5
-                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 100) {
+                            if ((int) (((float) grade / (float) maxAnswersCount) * 100F) <= 100) {
                                 style = new ForegroundColorSpan(
                                         getResources().getColor(R.color.grade5Color)
                                 );
                             }
                             //4
-                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 80) {
+                            if ((int) (((float) grade / (float) maxAnswersCount) * 100F) <= 80) {
                                 style = new ForegroundColorSpan(
                                         getResources().getColor(R.color.grade4Color)
                                 );
                             }
                             //3
-                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 60) {
+                            if ((int) (((float) grade / (float) maxAnswersCount) * 100F) <= 60) {
                                 style = new ForegroundColorSpan(
                                         getResources().getColor(R.color.grade3Color)
                                 );
                             }
                             //2
-                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 41) {
+                            if ((int) (((float) grade / (float) maxAnswersCount) * 100F) <= 41) {
                                 style = new ForegroundColorSpan(
                                         getResources().getColor(R.color.grade2Color)
                                 );
                             }
                             //1
-                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 20) {
+                            if ((int) (((float) grade / (float) maxAnswersCount) * 100F) <= 20) {
                                 style = new ForegroundColorSpan(
                                         getResources().getColor(R.color.grade1Color)
                                 );

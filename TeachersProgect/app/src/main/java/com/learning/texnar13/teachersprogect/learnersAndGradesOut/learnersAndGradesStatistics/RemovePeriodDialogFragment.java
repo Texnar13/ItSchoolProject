@@ -67,7 +67,6 @@ public class RemovePeriodDialogFragment extends DialogFragment {
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             itemTextParams.leftMargin = (int) pxFromDp(10);
             itemTextParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            itemTextParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             itemContainer.addView(itemText, itemTextParams);
             // чекбокс
             final CheckBox itemCheckBox = new CheckBox(getActivity());
@@ -76,7 +75,6 @@ public class RemovePeriodDialogFragment extends DialogFragment {
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT
             );
-            itemCheckBoxParams.addRule(RelativeLayout.ALIGN_PARENT_END);
             itemCheckBoxParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             itemContainer.addView(itemCheckBox, itemCheckBoxParams);
             // для текста

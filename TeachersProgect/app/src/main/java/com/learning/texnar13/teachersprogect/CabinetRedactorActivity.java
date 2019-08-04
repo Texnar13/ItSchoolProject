@@ -358,7 +358,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 //                    layoutParams.leftMargin = (int) motionEvent.getX()-50;
 //                    layoutParams.topMargin = (int) motionEvent.getY()-50;
 //                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-//                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
 //                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 //
 //                    out.addView(relativeLayout, layoutParams);
@@ -598,7 +597,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 );
                 verticalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 verticalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                verticalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
                 //deskLayout.setRotation(60);
                 verticalLineLayoutParams.leftMargin = (int) x;
                 verticalLineLayoutParams.topMargin = 0;
@@ -617,7 +615,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 );
                 horizontalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 horizontalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                horizontalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
                 //deskLayout.setRotation(60);
                 horizontalLineLayoutParams.leftMargin = 0;
                 horizontalLineLayoutParams.topMargin = (int) y;
@@ -759,7 +756,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             );
             newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             newDeskLayoutParams.leftMargin = (int)pxX;
             newDeskLayoutParams.topMargin = (int)pxY;
             this.desk.setLayoutParams(newDeskLayoutParams);
@@ -787,7 +783,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             );
             newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             newDeskLayoutParams.leftMargin = (int) pxX;
             newDeskLayoutParams.topMargin = (int) pxY;
             // и присваиваем их парте

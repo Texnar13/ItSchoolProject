@@ -200,7 +200,6 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                     (int) pxFromDp(1000 * multiplier));//размеры проставляются далее индивидуально
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             tempRelativeLayoutDeskParams.leftMargin =
                     (int) pxFromDp(deskUnit.x * 25 * multiplier);
             tempRelativeLayoutDeskParams.topMargin =
@@ -230,7 +229,6 @@ public class SeatingRedactorActivity extends AppCompatActivity {
                         (int) pxFromDp((1000 - 50) * multiplier));
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_START);
                 tempRelativeLayoutPlaceParams.leftMargin = (int) pxFromDp((25 + (1000 * (placeUnit.ordinalNumber - 1))) * multiplier);
                 tempRelativeLayoutPlaceParams.topMargin = (int) pxFromDp(25 * multiplier);
                 Log.i("TeachersApp", "SeatingRedactorActivity - draw view place:" + placeUnit.id);

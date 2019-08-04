@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 
 
 public class LearnersAndGradesTableView extends View {
+
+    final String TAG = "TeachersApp";
 
     // кисть для отрисовки текста
     private Paint drawTextPaint;
@@ -37,11 +40,13 @@ public class LearnersAndGradesTableView extends View {
     private int gradesSpaceMargin = 30;
 
     // растояние на которое смещены ученики по x
-    private int learnersXOffset = 30;
+    private int learnersXOffset = -10;
     // растояние на которое смещены оценки по x
-    private int gradesXOffset = 0;
+    private int gradesXOffset = -50;
     // растояние на которое смещены ученики и оценки по y
-    private int learnersAndGradesYOffset = 0;
+    private int learnersAndGradesYOffset = -10;
+    // высота шапки таблицы
+    private int learnersAndGradesOffsetForTitle = 80;
 
     // лист с учениками
     private ArrayList<LearnerAndHisGradesWithSize> learnersAndGradesDataAndSizes;
@@ -78,9 +83,32 @@ public class LearnersAndGradesTableView extends View {
     }
 
 
+    // здесь происходит определение размеров view, так же их можно задать жестко
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        Log.e("TeachersApp", "LearnersAndGradesTableView: onMeasure");
+        // и поставим view размеры
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        Log.e("TeachersApp", "LearnersAndGradesTableView: onLayout");
+        super.onLayout(changed, left, top, right, bottom);
+        // считаем размеры этого view места
+        this.viewWidth = right - left;
+        this.viewHeight = bottom - top;
+        // если ширина отображаемой части учеников еще не задана
+        if (this.learnersShowedWidth <= 0)
+            this.learnersShowedWidth = this.viewWidth / 3;
+    }
+
+
     // метод получения значений
     void setData(ArrayList<NewLearnerAndHisGrades> data, int maxAnswersCount) {
-        // todo запрет на вывод onDraw пока заполняем данные
+        Log.e("TeachersApp", "LearnersAndGradesTableView: setData");
+        // todo запрет на вывод onDraw пока заполняем данные (и на движение тк  если размеры по длинне допустим старые а новые размеры меньше то часть таблицы сьедет если перемещать по старым)
 
         //  максимальная оценка
         this.maxAnswersCount = maxAnswersCount;
@@ -128,7 +156,7 @@ public class LearnersAndGradesTableView extends View {
                         learnersAndGradesDataAndSizes.get(learnerSizeI).location.right = learnerRect.right;
                     }
                 }
-//                // сравниваем его по высоте с предыдущим // todo или через Н  //123
+//                // сравниваем его по высоте с предыдущим // todo или через Н
 //                if (learnersAndGradesDataAndSizes.get(learnerI - 1).location.right >= learnerRect.right) {
 //                    // и если предыдущий больше, то выставляем текущему размеры предыдущего
 //                    learnerRect.bottom = learnersAndGradesDataAndSizes.get(learnerI - 1).location.bottom - ;
@@ -143,9 +171,13 @@ public class LearnersAndGradesTableView extends View {
                 learnerRect.top = learnersAndGradesDataAndSizes.get(learnerI - 1).location.bottom;
                 learnerRect.bottom += learnerRect.top;
             } else {
-                // задаем смещение по высоте первому ученику                                        <-
-                learnerRect.top = 20;
-                learnerRect.bottom += 20;
+                // задаем минимальный размер первому ученику
+                if (learnerRect.right < learnersShowedWidth) {
+                    learnerRect.right = learnersShowedWidth;
+                }
+//                // задаем смещение по высоте первому ученику                                        <-
+//                learnerRect.top = 20;
+//                learnerRect.bottom += 20;
             }
 
             // и наконец сохраняем все в ученика с пустыми оценками
@@ -220,9 +252,6 @@ public class LearnersAndGradesTableView extends View {
                                 }
                             }
 
-                            Log.e("TeachersApp", "leftTextMargins[gradesI]=" + leftMargins[gradesI]);
-
-
                             // считаем ширину оценки для отступа следующей
                             if (data.get(learnerI).learnerGrades[dayI][lessonI].grades[gradesI] > 0) {
                                 // если это не нулевой балл
@@ -249,8 +278,6 @@ public class LearnersAndGradesTableView extends View {
                             // -1 -> ошибка
 
                         }
-                        Log.e("TeachersApp", "setData: 00 day=" + dayI + " lesson=" + lessonI + " learner=" + learnerI + " result" + gradeRect.right);
-
 
                         // ----- расчитываем размеры и положение самой ячейки -----
                         // считаем ширину всего прямоугольника
@@ -315,7 +342,6 @@ public class LearnersAndGradesTableView extends View {
                                         leftMargins
                                 );
 
-
                         // todo выравнивание высоты учеика по высоте оценки, если она больше? или наоборот упростить все для скорости?
                         // todo +1  чтобы не накладывались края?
 
@@ -326,91 +352,70 @@ public class LearnersAndGradesTableView extends View {
     }
 
 
-    // здесь происходит определение размеров view, так же их можно задать жестко
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // считаем размеры доступного места
-        this.viewWidth = widthMeasureSpec;
-        this.viewHeight = heightMeasureSpec;
-        //Log.e("TeachersApp", "onMeasure: "+widthMeasureSpec);
-        // и поставим view размеры
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
     // отрисовка вызываемая через invalidate();
     @Override
     protected void onDraw(Canvas canvas) {// TODO: 2019-07-10 rect.intersect(Rect r);
+        Log.e("TeachersApp", "LearnersAndGradesTableView: onDraw");
 
 
         canvas.drawRGB(200, 255, 200);
         canvas.drawText("Hello world!\uD83D\uDE0D", 100, 100, drawTextPaint);
 
-
-        //Rect tempRect = new Rect();
-        //int tempGradeMargin;
+        // определяем с какого дня и урока начать чтобы не выводить лишнее
+        int startLearner = 0;
+        while (startLearner < learnersAndGradesDataAndSizes.size() - 1
+                && (learnersAndGradesDataAndSizes.get(startLearner).location.bottom + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset) < 0 ) {
+            startLearner++;
+        }
 
         // пробегаемся по ученикам
-        for (int i = 0; i < learnersAndGradesDataAndSizes.size(); i++) {
-            //int tempA = 0;
+        for (int i = startLearner; i < learnersAndGradesDataAndSizes.size() &&
+                // смотрим не выходит ли ученик за границы экрана
+                (learnersAndGradesDataAndSizes.get(i).location.top + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset) <= viewHeight;
+             i++) {
             Log.e("TeachersApp", "onDraw: " + learnersAndGradesDataAndSizes.get(i).learnerGrades.length);
 
-            // ---- выводим текущего ученика ----
+            // -------- выводим оценки текущего ученика --------
 
-            // рисуем рамку ученика
-            backgroundPaint.setColor(getResources().getColor(R.color.colorBackGroundDark));
-            canvas.drawRect(
-                    learnersAndGradesDataAndSizes.get(i).location.left + learnersXOffset,
-                    learnersAndGradesDataAndSizes.get(i).location.top,
-                    learnersAndGradesDataAndSizes.get(i).location.right + learnersXOffset,
-                    learnersAndGradesDataAndSizes.get(i).location.bottom,
-                    backgroundPaint
-            );
-
-            // рисуем фон ученика
-            backgroundPaint.setColor(getResources().getColor(R.color.colorBackGround));
-            canvas.drawRect(
-                    learnersAndGradesDataAndSizes.get(i).location.left + cellBorderSize + learnersXOffset,
-                    learnersAndGradesDataAndSizes.get(i).location.top,
-                    learnersAndGradesDataAndSizes.get(i).location.right - cellBorderSize + learnersXOffset,
-                    learnersAndGradesDataAndSizes.get(i).location.bottom - cellBorderSize,
-                    backgroundPaint
-            );
-
-            drawTextPaint.setColor(Color.BLACK);
-            // пишем его текст
-            canvas.drawText(
-                    learnersAndGradesDataAndSizes.get(i).surname + " " + learnersAndGradesDataAndSizes.get(i).name,
-                    learnersAndGradesDataAndSizes.get(i).location.left + learnersAndGradesDataAndSizes.get(i).leftTextMargin + learnersXOffset,
-                    learnersAndGradesDataAndSizes.get(i).location.bottom - learnersAndGradesDataAndSizes.get(i).bottomTextMargin,
-                    drawTextPaint
-            );
-            backgroundPaint.setColor(getResources().getColor(R.color.colorPrimaryOrange));
-
+            // определяем с какого дня и урока начать чтобы не выводить лишнее
+            int startDay = 0;
+            while (startDay < learnersAndGradesDataAndSizes.get(i).learnerGrades.length - 1
+                    && (learnersAndGradesDataAndSizes.get(i).learnerGrades[startDay][0].location.right + learnersShowedWidth + gradesXOffset) < learnersShowedWidth) {
+                startDay++;
+            }
+            // выводим один день слева (тк этот механизм не проходится по урокам а только по дням)
+            if (startDay != 0) startDay--;
 
             // пробегаемся по дням
-            for (int dayIterator = 0; dayIterator < learnersAndGradesDataAndSizes.get(i).learnerGrades.length; dayIterator++) {
+            for (int dayIterator = startDay; dayIterator < learnersAndGradesDataAndSizes.get(i).learnerGrades.length; dayIterator++) {
+
+                // и что клетки не выходят за границы экрана (иначе их бессмысленно выводить)
+                if (learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator].length != 0)
+                    if ((learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][0].location.left + learnersShowedWidth + gradesXOffset) > viewWidth)
+                        break;
+
                 // пробегаемся по урокам в дне
                 for (int lessonIterator = 0; lessonIterator < learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator].length; lessonIterator++) {
 
-                    // не выводим клетки с нулевой шириной (весь столбик будет нулевой)
+                    // проверяем что ширина клеток больше нуля (иначе весь столбик будет нулевой)
                     if (learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.width() != 0) {
 
                         // рисуем рамку
                         backgroundPaint.setColor(getResources().getColor(R.color.colorBackGroundDark));
                         canvas.drawRect(
-                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.left + learnersShowedWidth,
-                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.top,
-                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.right + learnersShowedWidth,
-                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.bottom,
+                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.left + learnersShowedWidth + gradesXOffset,
+                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.top + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
+                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.right + learnersShowedWidth + gradesXOffset,
+                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.bottom + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
                                 backgroundPaint
                         );
                         // рисуем внутреннюю часть клетки
                         backgroundPaint.setColor(getResources().getColor(R.color.colorBackGround));
                         canvas.drawRect(
-                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.left + learnersShowedWidth,
-                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.top,
-                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.right + learnersShowedWidth - cellBorderSize,
-                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.bottom - cellBorderSize,
+                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.left + learnersShowedWidth + gradesXOffset,
+                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.top + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
+                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.right - cellBorderSize + learnersShowedWidth + gradesXOffset,
+                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.bottom - cellBorderSize + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
                                 backgroundPaint
                         );
 
@@ -423,95 +428,228 @@ public class LearnersAndGradesTableView extends View {
                             // печатаем оценки
                             if (learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] > 0) {
                                 isZero = false;
-                                // если это не нулевой балл
+                                // ------ если это не нулевой балл ------
 
-                                drawTextPaint.setColor(Color.BLACK);
+                                // ---- выбираем цвет текста  ----
+                                //1
+                                if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 20) {
+                                    drawTextPaint.setColor(getResources().getColor(R.color.grade1Color));
+                                } else
+                                    //2
+                                    if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 41) {
+                                        drawTextPaint.setColor(getResources().getColor(R.color.grade2Color));
+                                    } else
+                                        //3
+                                        if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 60) {
+                                            drawTextPaint.setColor(getResources().getColor(R.color.grade3Color));
+                                        } else
+                                            //4
+                                            if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 80) {
+                                                drawTextPaint.setColor(getResources().getColor(R.color.grade4Color));
+                                            } else
+                                                //5
+                                                if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 100) {
+                                                    drawTextPaint.setColor(getResources().getColor(R.color.grade5Color));
+                                                } else
+                                                    // > 5
+                                                    if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100F) > 100) {
+                                                        drawTextPaint.setColor(Color.DKGRAY);
+                                                    }
+                                // ---- выводим текст ----
                                 canvas.drawText(
                                         Integer.toString(learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI]),
                                         learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.left
-                                                + learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].leftTextMargins[gradeI] + learnersShowedWidth,
+                                                + learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].leftTextMargins[gradeI]
+                                                + learnersShowedWidth + gradesXOffset,
                                         learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.bottom
-                                                - learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].bottomTextMargin,
+                                                - learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].bottomTextMargin
+                                                + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
                                         drawTextPaint
                                 );
 
                             } else if (learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] == -2) {
                                 isZero = false;
-                                // -2 -> Abs
-
+                                // ------ -2 -> Abs ------
+                                // ---- выбираем цвет текста ----
                                 drawTextPaint.setColor(Color.BLACK);
+                                // ---- выводим текст ----
                                 canvas.drawText(
                                         getResources().getString(R.string.learners_and_grades_out_activity_title_grade_n),
                                         learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.left
-                                                + learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].leftTextMargins[gradeI] + learnersShowedWidth,
+                                                + learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].leftTextMargins[gradeI]
+                                                + learnersShowedWidth + gradesXOffset,
                                         learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.bottom
-                                                - learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].bottomTextMargin,
+                                                - learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].bottomTextMargin
+                                                + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
                                         drawTextPaint
                                 );
                             }
-                            //else if (
-//                                    gradeI == learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades.length - 1
-//                                            && tempGradeMargin == 0
-//                            ) {
-//                                //если уже последний заход а ширина поля все еще 0 выводим прочерк
-//                                canvas.drawText(
-//                                        "-",
-//                                        learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.left,
-//                                        learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.bottom,
-//                                        drawTextPaint
-//                                );
-//
-//                            }
-                            // -1 -> ошибка
-
-
-                            // ---- выбираем цвет оценки ----
-
-                            // > 5
-//                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) > 100) {
-//                                //        Color.DKGRAY
-//                            }
-//                            //5
-//                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 100) {
-//                                //        getResources().getColor(R.color.grade5Color)
-//                            }
-//                            //4
-//                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 80) {
-//                                //        getResources().getColor(R.color.grade4Color)
-//                            }
-//                            //3
-//                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 60) {
-//                                //        getResources().getColor(R.color.grade3Color)
-//                            }
-//                            //2
-//                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 41) {
-//                                //       getResources().getColor(R.color.grade2Color)
-//
-//                            }
-//                            //1
-//                            if ((int) (((float) grades[i] / (float) maxAnswersCount) * 100F) <= 20) {
-//                                //        getResources().getColor(R.color.grade1Color)
-//                            }
                         }
 
                         if (isZero) {
-                            // выводим прочерк
+                            // ----- выводим прочерк -----
                             drawTextPaint.setColor(Color.GRAY);
                             canvas.drawText(
                                     "-",
                                     learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.left
-                                            + cellFreeSpaceMargin + learnersShowedWidth,
+                                            + cellFreeSpaceMargin + learnersShowedWidth + gradesXOffset,
                                     learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.bottom
-                                            - learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].bottomTextMargin,
+                                            - learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].bottomTextMargin
+                                            + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
                                     drawTextPaint
                             );
                         }
                     }
                 }
             }
-        }
 
+
+            // -------- выводим текущего ученика --------
+
+            // расчитываем на сколько сокращается длинна ученика в зависимости от его смещения по горизонтали
+            //int off = learnersShowedWidth - learnersAndGradesDataAndSizes.get(i).location.right + learnersXOffset;
+
+            // рисуем рамку ученика
+            backgroundPaint.setColor(getResources().getColor(R.color.colorBackGroundDark));
+            canvas.drawRect(
+                    learnersAndGradesDataAndSizes.get(i).location.left + learnersXOffset,
+                    learnersAndGradesDataAndSizes.get(i).location.top + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
+                    learnersShowedWidth,
+                    learnersAndGradesDataAndSizes.get(i).location.bottom + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
+                    backgroundPaint
+            );
+
+            // рисуем фон ученика
+            backgroundPaint.setColor(getResources().getColor(R.color.colorBackGround));
+            canvas.drawRect(
+                    learnersAndGradesDataAndSizes.get(i).location.left + cellBorderSize + learnersXOffset,
+                    learnersAndGradesDataAndSizes.get(i).location.top + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
+                    learnersShowedWidth - cellBorderSize,
+                    learnersAndGradesDataAndSizes.get(i).location.bottom - cellBorderSize + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
+                    backgroundPaint
+            );
+
+            // ограничиваем область рисования clip-областью
+            canvas.save();
+            canvas.clipRect(
+                    learnersAndGradesDataAndSizes.get(i).location.left + cellBorderSize,
+                    learnersAndGradesDataAndSizes.get(i).location.top + cellBorderSize + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
+                    learnersShowedWidth - cellBorderSize,
+                    learnersAndGradesDataAndSizes.get(i).location.bottom - cellBorderSize + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset
+            );
+            // и пишем его текст
+            drawTextPaint.setColor(Color.BLACK);
+            canvas.drawText(
+                    learnersAndGradesDataAndSizes.get(i).surname + " " + learnersAndGradesDataAndSizes.get(i).name,
+                    learnersAndGradesDataAndSizes.get(i).location.left + learnersAndGradesDataAndSizes.get(i).leftTextMargin + learnersXOffset,
+                    learnersAndGradesDataAndSizes.get(i).location.bottom - learnersAndGradesDataAndSizes.get(i).bottomTextMargin + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
+                    drawTextPaint
+            );
+            // убираем clip-область
+            canvas.restore();
+        }
         super.onDraw(canvas);
+    }
+
+
+    // метод обрабатывающий нажатие на view
+    public void touch(PointF startPoint, boolean longClick) {
+        Log.e(TAG, "LearnersAndGradesTableView: touch(" + startPoint + ", " + longClick + ")");
+    }
+
+
+    // переременные для хранения предыдущего смещения
+    // растояние на которое смещены ученики по x
+    private int dynamicLearnersXOffset = 0;
+    // растояние на которое смещены оценки по x
+    private int dynamicGradesXOffset = 0;
+    // растояние на которое смещены ученики и оценки по y
+    private int dynamicLearnersAndGradesYOffset = 0;
+
+    // метод обрабатывающий перемещение пальца по view
+    public void setMove(PointF startPoint, float currX, float currY) {
+        if (learnersAndGradesDataAndSizes.size() != 0) {
+            // ----- смещение по x -----
+            if (startPoint.x <= learnersShowedWidth) {
+                // --- сдвигаем учеников ---
+                // убираем старое смещение
+                learnersXOffset -= dynamicLearnersXOffset;
+                // вычисляем новое смещение
+                dynamicLearnersXOffset = (int) (currX - startPoint.x);
+
+                // по первому ученику смотрим, не будет ли из-за смещения ученик уходить вправо создавая пустую облать
+                if (learnersAndGradesDataAndSizes.get(0).location.left + learnersXOffset + dynamicLearnersXOffset <= 0) {
+                    // не будет ли из-за смещения ученик уходить влево создавая пустую облать
+                    if (learnersAndGradesDataAndSizes.get(0).location.right + learnersXOffset + dynamicLearnersXOffset >= learnersShowedWidth) {
+                        // смещаем
+                        this.learnersXOffset += dynamicLearnersXOffset;
+                    } else {
+                        // иначе ставим минимально возможное значение
+                        this.learnersXOffset = -learnersAndGradesDataAndSizes.get(0).location.right + learnersShowedWidth;
+                    }
+                } else {
+                    // иначе ставим максимально возможное значение
+                    this.learnersXOffset = 0;
+                }
+            } else {
+                // --- сдвигаем оценки ---
+                // убираем старое смещение
+                gradesXOffset -= dynamicGradesXOffset;
+
+                if (learnersAndGradesDataAndSizes.get(0).learnerGrades.length != 0) {
+                    // вычисляем новое смещение
+                    dynamicGradesXOffset = (int) (currX - startPoint.x);
+
+                    // по первому столбцу оценок смотрим, не будут ли из-за положительного смещения оценки уходить вправо создавая пустую облать
+                    if (learnersAndGradesDataAndSizes.get(0).learnerGrades[0][0].location.left + gradesXOffset + dynamicGradesXOffset <= 0) {
+                        // не будут ли из-за отрицательного смещения оценки уходить влево создавая пустую облать
+                        if (learnersAndGradesDataAndSizes.get(0).learnerGrades[learnersAndGradesDataAndSizes.get(0).learnerGrades.length - 1][0].location.right + gradesXOffset + dynamicGradesXOffset >= viewWidth - learnersShowedWidth) {
+                            // смещаем
+                            this.gradesXOffset += dynamicGradesXOffset;
+                        } else {
+                            // иначе ставим минимально возможное значение
+                            this.gradesXOffset = viewWidth - learnersShowedWidth - learnersAndGradesDataAndSizes.get(0).learnerGrades[learnersAndGradesDataAndSizes.get(0).learnerGrades.length - 1][0].location.right;
+                        }
+                    } else {
+                        // иначе ставим максимально возможное значение
+                        this.gradesXOffset = 0;
+                    }
+                }
+            }
+
+            // ----- смещение по y -----
+            // убираем старое смещение
+            learnersAndGradesYOffset -= dynamicLearnersAndGradesYOffset;
+            // вычисляем новое смещение
+            dynamicLearnersAndGradesYOffset = (int) (currY - startPoint.y);
+            // по первому ученику смотрим, не будет ли из-за положительного смещения ученик уходить вниз создавая пустую облать
+            if (learnersAndGradesDataAndSizes.get(0).location.top + learnersAndGradesYOffset + dynamicLearnersAndGradesYOffset <= 0) {
+                // не будет ли из-за отрицательного смещения ученик уходить вверх создавая пустую облать
+                if (learnersAndGradesDataAndSizes.get(learnersAndGradesDataAndSizes.size() - 1).location.bottom + learnersAndGradesYOffset + dynamicLearnersAndGradesYOffset >= viewHeight - learnersAndGradesOffsetForTitle) {
+                    // смещаем
+                    this.learnersAndGradesYOffset += dynamicLearnersAndGradesYOffset;
+
+                } else {
+                    // иначе ставим минимально возможное значение
+                    this.learnersAndGradesYOffset = -learnersAndGradesDataAndSizes.get(learnersAndGradesDataAndSizes.size() - 1).location.bottom + viewHeight - learnersAndGradesOffsetForTitle;
+
+                }
+            } else {
+                // иначе ставим максимально возможное значение
+                this.learnersAndGradesYOffset = 0;
+            }
+
+            // ----- вызываем перерисовку -----
+            invalidate();
+        }
+    }
+
+    // метод сохраняющий перемещение пальца по view
+    public void endMove() {
+        // сохраняем текущее смещение
+        dynamicLearnersXOffset = 0;
+        dynamicGradesXOffset = 0;
+        dynamicLearnersAndGradesYOffset = 0;
     }
 }
 

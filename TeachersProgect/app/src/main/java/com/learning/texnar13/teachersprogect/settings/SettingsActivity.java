@@ -472,7 +472,6 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
 
             tablesParams[i].addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
             tablesParams[i].addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-            tablesParams[i].addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
 
 
             room.addView(tables[i], tablesParams[i]);
