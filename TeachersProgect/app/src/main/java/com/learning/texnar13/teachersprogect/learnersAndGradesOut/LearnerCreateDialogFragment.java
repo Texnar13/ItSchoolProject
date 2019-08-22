@@ -19,21 +19,17 @@ import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.R;
 
-public class CreateLearnerDialogFragment extends DialogFragment {
+public class LearnerCreateDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.i("TeachersApp", "CreateLearnerDialogFragment - onCreateDialog");
-        //начинаем строить диалог
+        Log.i("TeachersApp", "LearnerCreateDialogFragment - onCreateDialog");
+        // начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        //layout диалога
-        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_layout_create_learner, null);
-        builder.setView(dialogLayout);
-
-
-        //--LinearLayout в layout файле--
-        LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.create_learner_dialog_fragment_linear_layout);
+        // layout диалога
+        LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setBackgroundResource(R.color.colorBackGround);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -41,6 +37,7 @@ public class CreateLearnerDialogFragment extends DialogFragment {
         );
         linearLayoutParams.setMargins((int) pxFromDp(10), (int) pxFromDp(15), (int) pxFromDp(10), (int) pxFromDp(15));
         linearLayout.setLayoutParams(linearLayoutParams);
+        builder.setView(linearLayout);
 
 //--заголовок--
         TextView title = new TextView(getActivity());
@@ -156,8 +153,7 @@ public class CreateLearnerDialogFragment extends DialogFragment {
                     //вызываем в активности метод по созданию ученика и передаем ей имя и фамилию
                     ((CreateLearnerInterface) getActivity()).createLearner(
                             editLastName.getText().toString(),
-                            editName.getText().toString(),
-                            getArguments().getLong("classId")
+                            editName.getText().toString()
                     );
                     // -- если поля пустые, то выводим сообщение --
                     // пустое имя
@@ -173,14 +169,7 @@ public class CreateLearnerDialogFragment extends DialogFragment {
                     e.printStackTrace();
                     Log.i(
                             "TeachersApp",
-                            "CreateLearnerDialogFragment: you must implements CreateLearnerInterface in your activity"
-                    );
-                } catch (java.lang.NullPointerException e) {
-                    //в диалог необходимо передать id класса( Bungle putLong("classId",classId) )
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "CreateLearnerDialogFragment: you must give classId( Bungle putLong(\"classId\",classId) )"
+                            "LearnerCreateDialogFragment: you must implements CreateLearnerInterface in your activity"
                     );
                 }
                 dismiss();
@@ -195,7 +184,7 @@ public class CreateLearnerDialogFragment extends DialogFragment {
                 Log.i("TeachersApp", "CreateLearnerDialogFragment - dismiss(neutralButton)");
                 try {
                     //вызываем в активности метод по обновлению таблицы
-                    ((UpdateTableInterface) getActivity()).updateAll();
+                    ((UpdateTableInterface) getActivity()).allowUserEditLearners();
                 } catch (java.lang.ClassCastException e) {
                     //в вызвающей активности должен быть имплементирован класс UpdateTableInterface
                     e.printStackTrace();
@@ -213,7 +202,7 @@ public class CreateLearnerDialogFragment extends DialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        Log.i("TeachersApp", "CreateLearnerDialogFragment - onDismiss");
+        Log.i("TeachersApp", "LearnerCreateDialogFragment - onDismiss");
     }
 
 
@@ -224,7 +213,7 @@ public class CreateLearnerDialogFragment extends DialogFragment {
         Log.i("TeachersApp", "CreateLearnerDialogFragment - onCancel");
         try {
             //вызываем в активности метод по обновлению таблицы
-            ((UpdateTableInterface) getActivity()).updateAll();
+            ((UpdateTableInterface) getActivity()).allowUserEditLearners();
         } catch (java.lang.ClassCastException e) {
             //в вызвающей активности должен быть имплементирован класс UpdateTableInterface
             e.printStackTrace();
@@ -243,7 +232,7 @@ public class CreateLearnerDialogFragment extends DialogFragment {
 }
 
 interface CreateLearnerInterface {
-    void createLearner(String lastName, String name, long classId);
+    void createLearner(String lastName, String name);
 }
 
 

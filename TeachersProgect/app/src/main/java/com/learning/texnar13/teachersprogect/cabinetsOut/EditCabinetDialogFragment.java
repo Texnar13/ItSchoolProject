@@ -24,15 +24,11 @@ public class EditCabinetDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        //заголовок
-        //builder.setTitle("Редактирование кабинета");
 
         //layout диалога
-        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_layout_edit_cabinet, null);
-        builder.setView(dialogLayout);
-        //LinearLayout в layout файле
-        LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.edit_cabinet_dialog_fragment_linear_layout);
+        LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setBackgroundResource(R.color.colorBackGround);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -40,6 +36,7 @@ public class EditCabinetDialogFragment extends DialogFragment {
         );
         linearLayoutParams.setMargins((int) pxFromDp(10), (int) pxFromDp(15), (int) pxFromDp(10), (int) pxFromDp(15));
         linearLayout.setLayoutParams(linearLayoutParams);
+        builder.setView(linearLayout);
 
 //--заголовок--
         TextView title = new TextView(getActivity());

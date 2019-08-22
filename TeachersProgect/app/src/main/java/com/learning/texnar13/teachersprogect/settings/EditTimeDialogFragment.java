@@ -28,18 +28,16 @@ public class EditTimeDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         //layout диалога
-        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_layout_settings_edit_time, null);
-        builder.setView(dialogLayout);
-
-        //LinearLayout в layout файле
-        LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_time_linear_layout);
+        LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setBackgroundResource(R.color.colorBackGround);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         linearLayoutParams.setMargins((int) pxFromDp(10), (int) pxFromDp(15), (int) pxFromDp(10), (int) pxFromDp(15));
         linearLayout.setLayoutParams(linearLayoutParams);
+        builder.setView(linearLayout);
 
 //----------скролл для вывода------
         ScrollView scrollView = new ScrollView(getActivity());

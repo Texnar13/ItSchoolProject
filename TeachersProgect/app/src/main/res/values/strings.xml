@@ -93,6 +93,7 @@
     <string name="learners_and_grades_out_activity_title_table_names">Name</string>
     <string name="learners_and_grades_out_activity_title_grade_n">abs</string>
     <string name="learners_and_grades_out_activity_title_grade_no_answers">no answers</string>
+    <string name="learners_and_grades_out_activity_text_create_subject">Create new?</string>
     <!-- меню сверху -->
     <string name="learners_and_grades_out_activity_menu_title_statistics">statistics</string>
     <!-- диалоги -->
@@ -105,6 +106,7 @@
     <string name="learners_and_grades_out_activity_dialog_button_save">save</string>
     <string name="learners_and_grades_out_activity_dialog_button_delete">remove</string>
     <string name="learners_and_grades_out_activity_dialog_button_cancel">cancel</string>
+    <string name="learners_and_grades_out_activity_dialog_title_choose_subject">Choose subject:</string>
     <!-- уведомления диалогов -->
     <string name="learners_and_grades_out_activity_dialog_toast_no_name">No name entered</string>
     <string name="learners_and_grades_out_activity_dialog_toast_no_last_name">No surname entered</string>

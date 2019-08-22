@@ -1018,36 +1018,37 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return answer;
     }
 
-    public int setLearnerNameAndLastName(ArrayList<Long> learnersId, String name, String lastName) {
-        SQLiteDatabase db = this.getReadableDatabase();
+    public int setLearnerNameAndLastName(long learnerId, String name, String lastName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues contentName = new ContentValues();
         contentName.put(SchoolContract.TableLearners.COLUMN_FIRST_NAME, name);
         contentName.put(SchoolContract.TableLearners.COLUMN_SECOND_NAME, lastName);
-        int answer = 0;
-        String stringLearnersId = "";
-        for (int i = 0; i < learnersId.size(); i++) {
-            stringLearnersId = stringLearnersId + learnersId.get(i) + " | ";
-            if (db.update(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, contentName, SchoolContract.TableLearners.KEY_LEARNER_ID + " = ?", new String[]{"" + learnersId.get(i)}) == 1)
-                answer++;
-        }
+
+        int answer = db.update(SchoolContract.TableLearners.NAME_TABLE_LEARNERS,
+                contentName,
+                SchoolContract.TableLearners.KEY_LEARNER_ID + " = ?",
+                new String[]{"" + learnerId}
+        );
+
         if (IS_DEBUG)
-            Log.i("DBOpenHelper", "setLearnerNameAndLastName name= " + name + " lastName= " + lastName + " id= " + stringLearnersId + " return = " + answer);
+            Log.i("DBOpenHelper", "setLearnerNameAndLastName name= " + name + " lastName= " + lastName + " id= " + learnerId+ " return = " + answer);
         //db.close();
         return answer;
     }
 
-    public int deleteLearners(ArrayList<Long> learnersId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        int answer = 0;
-        String stringClassId = "";
-        for (int i = 0; i < learnersId.size(); i++) {
-            stringClassId = stringClassId + learnersId.get(i) + " | ";
-            if (db.delete(SchoolContract.TableLearners.NAME_TABLE_LEARNERS, SchoolContract.TableLearners.KEY_LEARNER_ID + " = ?", new String[]{"" + learnersId.get(i)}) == 1)
-                answer++;
-        }
+    // метод удаления ученика
+    public int deleteLearner(long learnerId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // удаляем ученика
+        int answer = db.delete(
+                SchoolContract.TableLearners.NAME_TABLE_LEARNERS,
+                SchoolContract.TableLearners.KEY_LEARNER_ID + " = ?",
+                new String[]{"" + learnerId}
+        );
+        // выводим лог
         if (IS_DEBUG)
-            Log.i("DBOpenHelper", "deleteLearners id= " + stringClassId + " return = " + answer);
-        //db.close();
+            Log.i("DBOpenHelper", "deleteLearner id= " + learnerId + " return = " + answer);
         return answer;
     }
 
@@ -1412,14 +1413,22 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
 
     public int setSubjectParameters(long subjectId, String subjectName, long classId) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentName = new ContentValues();
         contentName.put(SchoolContract.TableSubjects.COLUMN_NAME, subjectName);
         contentName.put(SchoolContract.TableSubjects.KEY_CLASS_ID, classId);
-        //contentName.put(SchoolContract.TableSubjects.KEY_CABINET_ID, cabinetId);
         int answer = db.update(SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS, contentName, SchoolContract.TableSubjects.KEY_SUBJECT_ID + " = ?", new String[]{Long.toString(subjectId)});
         //db.close();
         return answer;
+    }
+
+    public void setSubjectName(long subjectId, String subjectName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentName = new ContentValues();
+        contentName.put(SchoolContract.TableSubjects.COLUMN_NAME, subjectName);
+        db.update(SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS, contentName, SchoolContract.TableSubjects.KEY_SUBJECT_ID + " = ?", new String[]{Long.toString(subjectId)});
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "setSubjectName id=" + subjectId + " subjectName=" + subjectName);
     }
 
     public Cursor getSubjectById(long subjectId) {
@@ -1431,29 +1440,9 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getSubjectsById(ArrayList<Long> subjectsId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        if (subjectsId.size() == 0) {
-            return db.query(SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS, null, SchoolContract.TableSubjects.KEY_SUBJECT_ID + " = ? ", new String[]{"-1"}, null, null, null);
-        }
-        StringBuilder selection = new StringBuilder();
-        String[] selectionArgs = new String[subjectsId.size()];
-        selectionArgs[0] = subjectsId.get(0).toString();
-        selection.append(SchoolContract.TableSubjects.KEY_SUBJECT_ID + " = ? ");
-        for (int i = 1; i < subjectsId.size(); i++) {
-            selection.append("OR " + SchoolContract.TableSubjects.KEY_SUBJECT_ID + " = ? ");
-
-        }
-        Cursor cursor = db.query(SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS, null, selection.toString(), selectionArgs, null, null, null);
-        if (IS_DEBUG)
-            Log.i("DBOpenHelper", "getSubjectById  id=" + Arrays.toString(selectionArgs) + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
-        return cursor;
-    }
-
     public Cursor getSubjectsByClassId(long classId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] selectionArgs = {classId + ""};
-        Cursor cursor = db.query(SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS, null, SchoolContract.TableSubjects.KEY_CLASS_ID + " = ?", selectionArgs, null, null, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " WHERE (" + SchoolContract.TableSubjects.KEY_CLASS_ID + "= " + classId + ") ORDER BY " + SchoolContract.TableSubjects.COLUMN_NAME + " ASC;", null);
         if (IS_DEBUG)
             Log.i("DBOpenHelper", "getSubjectsByClassId " + cursor + " classId=" + classId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
         return cursor;
@@ -1591,6 +1580,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public void restartTable() {//создание бд заново
         onUpgrade(this.getReadableDatabase(), 0, 100);
     }
+
 
 //    String format(int i) {
 //        if (i < 10) {

@@ -32,13 +32,10 @@ public class LessonListEditDialogFragment extends DialogFragment {//входны
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-//---layout диалога---
-        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_layout_edit_learner, null);
-        builder.setView(dialogLayout);
-
-//--LinearLayout в layout файле--
-        LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.edit_learner_dialog_fragment_linear_layout);
+        // layout диалога
+        LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setBackgroundResource(R.color.colorBackGround);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -46,6 +43,7 @@ public class LessonListEditDialogFragment extends DialogFragment {//входны
         );
         linearLayoutParams.setMargins((int) pxFromDp(10), (int) pxFromDp(15), (int) pxFromDp(10), (int) pxFromDp(15));
         linearLayout.setLayoutParams(linearLayoutParams);
+        builder.setView(linearLayout);
 
 //--заголовок--
         TextView title = new TextView(getActivity());

@@ -78,7 +78,7 @@ public class RemovePeriodDialogFragment extends DialogFragment {
             itemCheckBoxParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             itemContainer.addView(itemCheckBox, itemCheckBoxParams);
             // для текста
-            itemTextParams.addRule(RelativeLayout.START_OF, itemCheckBox.getId());
+            //todo почему не удалил ?????itemTextParams.addRule(RelativeLayout.START_OF, itemCheckBox.getId());
             itemTextParams.addRule(RelativeLayout.LEFT_OF, itemCheckBox.getId());
 
             // при нажатии

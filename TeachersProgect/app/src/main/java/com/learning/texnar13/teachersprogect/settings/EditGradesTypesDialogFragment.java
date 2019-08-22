@@ -191,7 +191,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             );
             editText.setInputType(InputType.TYPE_CLASS_TEXT);
             editText.setTextColor(Color.BLACK);
-            editText.setSingleLine(true);//todo закрывать клавиатуру на открыфтии нового контейнера и закрытии этого
+            editText.setSingleLine(true);//todo закрывать клавиатуру на открытии нового контейнера и закрытии этого
 
             // эта строка убирает флаги(были поставлены автоматически), которые недавали открывать
             // клавиатуру на программно созданных editText

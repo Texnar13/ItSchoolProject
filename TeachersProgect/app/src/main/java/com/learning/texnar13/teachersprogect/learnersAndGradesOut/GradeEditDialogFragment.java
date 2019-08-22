@@ -19,18 +19,15 @@ import android.widget.TextView;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 
-public class EditGradeDialogFragment extends DialogFragment {//входные данные оценка, id оценки
+public class GradeEditDialogFragment extends DialogFragment {//входные данные оценка, id оценки
 
     //передаваемые данные
     public static final String GRADES = "grades";
-
-    public static final String INDEXES = "indexes";
 
     // максимальная оценка из базы данных
     int maxGrade;
     // массив с выбранными оценками
     int[] grades;
-
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -38,14 +35,10 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-//---layout диалога---
-        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_layout_edit_learner, null);
-        builder.setView(dialogLayout);
-
-
-        //--LinearLayout в layout файле--
-        LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.edit_learner_dialog_fragment_linear_layout);
+        // ---layout диалога ---
+        LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setBackgroundResource(R.color.colorBackGround);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -53,6 +46,7 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
         );
         linearLayoutParams.setMargins((int) pxFromDp(10), (int) pxFromDp(15), (int) pxFromDp(10), (int) pxFromDp(15));
         linearLayout.setLayoutParams(linearLayoutParams);
+        builder.setView(linearLayout);
 
 //--заголовок--
         TextView title = new TextView(getActivity());
@@ -86,7 +80,7 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
 // -------- инициализируем значения в спиннерах --------
         for (int i = 0; i < spinners.length; i++) {
             // создаем массив с текстами
-            String gradesText[];
+            String[] gradesText;
 
             // если вдруг оценка в поле больше максимальной
             if (grades[i] > maxGrade) {
@@ -205,25 +199,17 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
 
                     //вызываем в активности метод по изменению оценки и передаем выбранную оценку
                     ((EditGradeDialogInterface) getActivity()).editGrade(
-                            finalGrades,
-                            getArguments().getIntArray(INDEXES)
+                            finalGrades
                     );
 
-                    // убираем с текста краску
-                    ((EditGradeDialogInterface) getActivity()).returnSimpleColorForText(getArguments().getIntArray(INDEXES));
+//                    // убираем с текста краску
+//                    ((EditGradeDialogInterface) getActivity()).returnSimpleColorForCellBackground(getArguments().getIntArray(INDEXES));
                 } catch (java.lang.ClassCastException e) {
                     //в вызвающей активности должен быть имплементирован класс EditGradeDialogInterface
                     e.printStackTrace();
                     Log.i(
                             "TeachersApp",
-                            "EditGradeDialogFragment: you must implements EditGradeDialogInterface in your activity"
-                    );
-                } catch (java.lang.NullPointerException e) {
-                    //в диалог необходимо передать оценку и позиции( Bungle putLong("grade",grade) )
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "EditGradeDialogFragment: you must give grade or id( Bungle putLongArray(\"" + INDEXES + "\",indexes[]) )"
+                            "GradeEditDialogFragment: you must implements EditGradeDialogInterface in your activity"
                     );
                 }
                 dismiss();
@@ -238,14 +224,14 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
                 try {
                     //вызываем в активности метод разрешения изменения оценок
                     ((AllowUserEditGradesInterface) getActivity()).allowUserEditGrades();
-                    // убираем с текста краску
-                    ((EditGradeDialogInterface) getActivity()).returnSimpleColorForText(getArguments().getIntArray(INDEXES));
+//                    // убираем с текста краску
+//                    ((EditGradeDialogInterface) getActivity()).returnSimpleColorForCellBackground(getArguments().getIntArray(INDEXES));
                 } catch (java.lang.ClassCastException e) {
                     //в вызвающей активности должен быть имплементирован класс AllowUserEditGradesInterface
                     e.printStackTrace();
                     Log.i(
                             "TeachersApp",
-                            "EditGradeDialogFragment: you must implements AllowUserEditGradesInterface in your activity"
+                            "GradeEditDialogFragment: you must implements AllowUserEditGradesInterface in your activity"
                     );
                 }
             }
@@ -264,14 +250,14 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
         try {
             //вызываем в активности метод разрешения изменения оценок
             ((AllowUserEditGradesInterface) getActivity()).allowUserEditGrades();
-            // убираем с текста краску
-            ((EditGradeDialogInterface) getActivity()).returnSimpleColorForText(getArguments().getIntArray(INDEXES));
+//            // убираем с текста краску
+//            ((EditGradeDialogInterface) getActivity()).returnSimpleColorForCellBackground(getArguments().getIntArray(INDEXES));
         } catch (java.lang.ClassCastException e) {
             //в вызвающей активности должен быть имплементирован класс AllowUserEditGradesInterface
             e.printStackTrace();
             Log.i(
                     "TeachersApp",
-                    "EditGradeDialogFragment: you must implements AllowUserEditGradesInterface in your activity"
+                    "GradeEditDialogFragment: you must implements AllowUserEditGradesInterface in your activity"
             );
         }
     }
@@ -284,9 +270,7 @@ public class EditGradeDialogFragment extends DialogFragment {//входные д
 }
 
 interface EditGradeDialogInterface {
-    void editGrade(int[] grades, int[] indexes);
-
-    void returnSimpleColorForText(int[] indexes);
+    void editGrade(int[] grades);
 }
 
 interface AllowUserEditGradesInterface {

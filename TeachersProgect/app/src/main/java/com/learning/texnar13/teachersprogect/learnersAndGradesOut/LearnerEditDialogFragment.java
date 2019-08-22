@@ -18,23 +18,22 @@ import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.R;
 
-public class EditLearnerDialogFragment extends DialogFragment {//входные данные предыдущее имя, фамилия, id
+public class LearnerEditDialogFragment extends DialogFragment {//входные данные предыдущее имя, фамилия, id
+
+    // константы по которым в диалог передаются аргументы
+    public static final String ARGS_LEARNER_NAME = "name";
+    public static final String ARGS_LEARNER_LAST_NAME = "lastName";
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        //заголовок
-//        builder.setTitle("Редактирование ученика");
 
         //layout диалога
-        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_layout_edit_learner, null);
-        builder.setView(dialogLayout);
-
-
-        //LinearLayout в layout файле
-        LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.edit_learner_dialog_fragment_linear_layout);
+        LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setBackgroundResource(R.color.colorBackGround);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -42,8 +41,9 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
         );
         linearLayoutParams.setMargins((int) pxFromDp(10), (int) pxFromDp(15), (int) pxFromDp(10), (int) pxFromDp(15));
         linearLayout.setLayoutParams(linearLayoutParams);
+        builder.setView(linearLayout);
 
-//--заголовок--
+        // заголовок
         TextView title = new TextView(getActivity());
         title.setText(R.string.learners_and_grades_out_activity_dialog_title_edit_learner);
         title.setTextColor(Color.BLACK);
@@ -59,7 +59,7 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
 
         linearLayout.addView(title, titleParams);
 
-//--текстовое поле фамилии--
+        // текстовое поле фамилии
         final EditText editLastName = new EditText(getActivity());
         editLastName.setTextColor(Color.BLACK);
         editLastName.setHint(R.string.learners_and_grades_out_activity_dialog_hint_learner_second_name);
@@ -68,10 +68,10 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
         editLastName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         editLastName.setHintTextColor(Color.GRAY);
         try {//входные данные предыдущая фамилия
-            editLastName.setText(getArguments().getString("lastName"));
+            editLastName.setText(getArguments().getString(ARGS_LEARNER_LAST_NAME));
         } catch (NullPointerException e) {
             e.printStackTrace();
-            Log.i("TeachersApp", "you must give bundle argument \"lastName\"");
+            Log.i("TeachersApp", "you must give bundle argument \"" + ARGS_LEARNER_LAST_NAME + "\"");
         }
 
         LinearLayout editLastNameContainer = new LinearLayout(getActivity());
@@ -98,10 +98,10 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
         editName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         editName.setHintTextColor(Color.GRAY);
         try {//входные данные предыдущее имя
-            editName.setText(getArguments().getString("name"));
+            editName.setText(getArguments().getString(ARGS_LEARNER_NAME));
         } catch (NullPointerException e) {
             e.printStackTrace();
-            Log.i("TeachersApp","you must give bundle argument \"name\"");
+            Log.i("TeachersApp", "you must give bundle argument \"" + ARGS_LEARNER_NAME + "\"");
         }
 
         LinearLayout editNameContainer = new LinearLayout(getActivity());
@@ -134,7 +134,7 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
         neutralButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+                (int) getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         neutralButtonParams.weight = 1;
         neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
@@ -147,7 +147,7 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
         negativeButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams negativeButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+                (int) getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         negativeButtonParams.weight = 1;
         negativeButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
@@ -160,7 +160,7 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+                (int) getResources().getDimension(R.dimen.my_buttons_height_size)
         );
         positiveButtonParams.weight = 1;
         positiveButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
@@ -182,22 +182,14 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
                     //вызываем в активности метод по созданию ученика и передаем ей имя и фамилию
                     ((EditLearnerDialogInterface) getActivity()).editLearner(
                             editLastName.getText().toString(),
-                            editName.getText().toString(),
-                            getArguments().getLong("learnerId")
+                            editName.getText().toString()
                     );
                 } catch (java.lang.ClassCastException e) {
                     //в вызвающей активности должен быть имплементирован класс EditLearnerInterface
                     e.printStackTrace();
                     Log.i(
                             "TeachersApp",
-                            "EditLearnerDialogFragment: you must implements EditLearnerInterface in your activity"
-                    );
-                } catch (java.lang.NullPointerException e) {
-                    //в диалог необходимо передать id ученика( Bungle putLong("learnerId",learnerId) )
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "EditLearnerDialogFragment: you must give learnerId( Bungle putLong(\"learnerId\",learnerId) )"
+                            "LearnerEditDialogFragment: you must implements EditLearnerInterface in your activity"
                     );
                 }
                 dismiss();
@@ -209,10 +201,10 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
             @Override
             public void onClick(View view) {
                 dismiss();
-                Log.i("TeachersApp", "EditLearnerDialogFragment - dismiss(neutralButton)");
+                Log.i("TeachersApp", "LearnerEditDialogFragment - dismiss(neutralButton)");
                 try {
                     //вызываем в активности метод по обновлению таблицы
-                    ((UpdateTableInterface) getActivity()).updateAll();
+                    ((UpdateTableInterface) getActivity()).allowUserEditLearners();
                 } catch (java.lang.ClassCastException e) {
                     //в вызвающей активности должен быть имплементирован класс UpdateTableInterface
                     e.printStackTrace();
@@ -230,22 +222,13 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
             public void onClick(View view) {
                 try {
                     //вызываем в активности метод по далению ученика и передаем id
-                    ((EditLearnerDialogInterface) getActivity()).removeLearner(
-                            getArguments().getLong("learnerId")
-                    );
+                    ((EditLearnerDialogInterface) getActivity()).removeLearner();
                 } catch (java.lang.ClassCastException e) {
                     //в вызвающей активности должен быть имплементирован класс EditLearnerInterface
                     e.printStackTrace();
                     Log.i(
                             "TeachersApp",
-                            "EditLearnerDialogFragment: you must implements EditLearnerInterface in your activity"
-                    );
-                } catch (java.lang.NullPointerException e) {
-                    //в диалог необходимо передать id ученика( Bungle putLong("learnerId",learnerId) )
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "EditLearnerDialogFragment: you must give learnerId( Bungle putLong(\"learnerId\",learnerId) )"
+                            "LearnerEditDialogFragment: you must implements EditLearnerInterface in your activity"
                     );
                 }
                 dismiss();
@@ -263,10 +246,10 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
     @Override
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
-        Log.i("TeachersApp", "EditLearnerDialogFragment - onCancel");
+        Log.i("TeachersApp", "LearnerEditDialogFragment - onCancel");
         try {
             //вызываем в активности метод по обновлению таблицы
-            ((UpdateTableInterface) getActivity()).updateAll();
+            ((UpdateTableInterface) getActivity()).allowUserEditLearners();
         } catch (java.lang.ClassCastException e) {
             //в вызвающей активности должен быть имплементирован класс UpdateTableInterface
             e.printStackTrace();
@@ -285,7 +268,8 @@ public class EditLearnerDialogFragment extends DialogFragment {//входные 
 }
 
 interface EditLearnerDialogInterface {
-    void editLearner(String lastName, String name, long learnerId);
-    void removeLearner(long learnerId);
+    void editLearner(String lastName, String name);
+
+    void removeLearner();
 }
 

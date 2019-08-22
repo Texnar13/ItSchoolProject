@@ -92,6 +92,7 @@
     <string name="learners_and_grades_out_activity_title_table_names">ИМЯ</string>
     <string name="learners_and_grades_out_activity_title_grade_n">Н</string>
     <string name="learners_and_grades_out_activity_title_grade_no_answers">—</string>
+    <string name="learners_and_grades_out_activity_text_create_subject">Создать новый?</string>
     <!-- меню сверху -->
     <string name="learners_and_grades_out_activity_menu_title_statistics">статистика по предмету</string>
     <!-- диалоги -->
@@ -104,6 +105,7 @@
     <string name="learners_and_grades_out_activity_dialog_button_save">сохранить</string>
     <string name="learners_and_grades_out_activity_dialog_button_delete">удалить</string>
     <string name="learners_and_grades_out_activity_dialog_button_cancel">отмена</string>
+   <string name="learners_and_grades_out_activity_dialog_title_choose_subject">Выберите предмет:</string>
     <!-- уведомления диалогов -->
     <string name="learners_and_grades_out_activity_dialog_toast_no_name">Не введено имя</string>
     <string name="learners_and_grades_out_activity_dialog_toast_no_last_name">Не введена фамилия</string>

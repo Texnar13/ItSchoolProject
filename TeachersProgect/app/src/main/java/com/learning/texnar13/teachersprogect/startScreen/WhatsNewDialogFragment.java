@@ -20,26 +20,27 @@ import com.learning.texnar13.teachersprogect.R;
 
 public class WhatsNewDialogFragment extends DialogFragment {
 
-//    public static final String ARGUMENT_SHOWN_TEXT = "shownText";
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        //начинаем строить диалог
+        // начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        //layout диалога
-        View dialogView = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_layout_start_screen_whats_new, null);
-        builder.setView(dialogView);
-//---контейнер---
-        LinearLayout dialogLinearLayout = (LinearLayout) dialogView.findViewById(R.id.dialog_fragment_layout_start_screen_whats_new_linear_layout);
-// --- scroll ---
+
+        // layout диалога
+        LinearLayout dialogLinearLayout = new LinearLayout(getActivity());
+        dialogLinearLayout.setBackgroundResource(R.color.colorBackGround);
+        dialogLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        builder.setView(dialogLinearLayout);
+
+        // scroll
         ScrollView scrollView = new ScrollView(getActivity());
         dialogLinearLayout.addView(scrollView);
-// --- контейнер в нем ---
+        // контейнер в нем
         LinearLayout scrollLayout = new LinearLayout(getActivity());
         scrollLayout.setOrientation(LinearLayout.VERTICAL);
         scrollView.addView(scrollLayout);
-//---заголовок---
+
+        // заголовок
         TextView title = new TextView(getActivity());
         title.setTextColor(Color.BLACK);
         title.setText(R.string.start_screen_activity_dialog_whats_new_title);
@@ -52,7 +53,8 @@ public class WhatsNewDialogFragment extends DialogFragment {
         );
         titleParams.setMargins((int)pxFromDp(15),(int)pxFromDp(15),(int)pxFromDp(15),(int)pxFromDp(0));
         scrollLayout.addView(title,titleParams);
-//---текст---
+
+        // текст
         TextView text = new TextView(getActivity());
         text.setTextColor(Color.BLACK);
         text.setText(R.string.start_screen_activity_dialog_whats_new_text);
@@ -66,7 +68,9 @@ public class WhatsNewDialogFragment extends DialogFragment {
         textParams.setMargins((int)pxFromDp(30),(int)pxFromDp(15),(int)pxFromDp(30),(int)pxFromDp(15));
         scrollLayout.addView(text,textParams);
 
-//---кнопка выхода---
+
+        // кнопка выхода
+
         //контейнер для нее
         LinearLayout container = new LinearLayout(getActivity());
         container.setOrientation(LinearLayout.HORIZONTAL);
@@ -88,22 +92,15 @@ public class WhatsNewDialogFragment extends DialogFragment {
         container.addView(button, buttonParams);
         //контейнер в диалог
         scrollLayout.addView(container);
-        //при нажатии...
+
+
+        // при нажатии кнопки выхода
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
             }
         });
-
-//        String text;
-//
-//        try {
-//            text = getArguments().getString(ARGUMENT_SHOWN_TEXT);
-//        } catch (NullPointerException e) {
-//            Log.e("TeachersApp", "WhatsNewDialogFragment - You must give bundle argument ARGUMENT_SHOWN_TEXT (String)");
-//            e.printStackTrace();
-//        }
 
         return builder.create();
     }

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackGround"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.learning.texnar13.teachersprogect.learnersAndGradesOut.LearnersAndGradesActivity"
+    tools:showIn="@layout/activity_learners_and_grades">
+
+
+    <LinearLayout
+        android:weightSum="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/colorBackGround"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/learners_and_grades_activity_button_previous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/learners_and_grades_activity_date_text"
+                android:layout_alignBottom="@+id/learners_and_grades_activity_date_text"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/learners_and_grades_activity_date_text"
+                android:layout_toLeftOf="@+id/learners_and_grades_activity_date_text"
+                android:clickable="true"
+                android:focusable="true"
+                app:srcCompat="@drawable/calendar_left_arrow" />
+
+            <TextView
+                android:id="@+id/learners_and_grades_activity_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="TextView"
+                android:textColor="#000000"
+                android:textSize="@dimen/text_subtitle_size" />
+
+            <ImageView
+                android:id="@+id/learners_and_grades_activity_button_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/learners_and_grades_activity_date_text"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_toEndOf="@+id/learners_and_grades_activity_date_text"
+                android:layout_toRightOf="@+id/learners_and_grades_activity_date_text"
+                android:clickable="true"
+                android:focusable="true"
+                app:srcCompat="@drawable/calendar_right_arrow" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/colorBackGround"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="@string/learners_and_grades_out_activity_title_subject"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#000000"
+                android:textSize="@dimen/text_subtitle_size" />
+
+            <TextView
+                android:id="@+id/learners_and_grades_activity_subject_text_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:gravity="center|right"
+                android:text="@string/learners_and_grades_out_activity_title_subject"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/colorPrimaryBlue"
+                android:textSize="@dimen/text_subtitle_size"
+                tools:ignore="RtlHardcoded"
+                android:background="@drawable/underlined_shape"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <com.learning.texnar13.teachersprogect.learnersAndGradesOut.LearnersAndGradesTableView
+        android:id="@+id/learners_and_grades_activity_table_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>
