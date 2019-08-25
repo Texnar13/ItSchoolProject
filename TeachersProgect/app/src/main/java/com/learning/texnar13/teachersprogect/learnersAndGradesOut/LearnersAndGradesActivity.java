@@ -1004,6 +1004,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         // выбираем позицию текущего предмета
         chosenSubjectPosition = position;
 
+        // выводим название выбранного урока в текстовое поле
+        subjectTextView.setText(subjects[chosenSubjectPosition].getSubjectName());
+
         // обновляем список оценок по выбранному предмету
         getGradesFromDB();
     }
@@ -1011,8 +1014,28 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     // метод создания предмета вызываемый из диалога SubjectsDialogFragment
     @Override
     public void createSubject(String name, int position) {
+        // создаем предмет в базе данных
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        long createdSubjectId =db.createSubject(name,classId);
+        db.close();
 
+        // добавляем предмет в список под нужным номером
+        NewSubjectUnit[] newSubjectUnits = new NewSubjectUnit[subjects.length+1];
+        for (int subjectI = 0; subjectI < position; subjectI++) {
+            newSubjectUnits[subjectI] = subjects[subjectI];
+        }
+        newSubjectUnits[position] = new NewSubjectUnit(createdSubjectId,name);
+        for (int subjectsI = position; subjectsI < subjects.length; subjectsI++) {
+            newSubjectUnits[subjectsI+1] = subjects[subjectsI];
+        }
+        subjects = newSubjectUnits;
 
+        // выбираем этот предмет и ставим его имя в заголовок
+        chosenSubjectPosition = position;
+        subjectTextView.setText(subjects[chosenSubjectPosition].getSubjectName());
+
+        // загружаем оценки по выбранному предмету
+        getGradesFromDB();
     }
 
     // метод удаления предмета вызываемый из диалога SubjectsDialogFragment

@@ -370,8 +370,8 @@ public class SubjectsDialogFragment extends DialogFragment {
                     );
                 }
 
-                // выводим главное меню
-                outMainMenu();
+                // закрываем диалог
+                dismiss();
             }
         });
 
