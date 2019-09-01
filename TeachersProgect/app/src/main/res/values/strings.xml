@@ -113,6 +113,7 @@
     <!-- подсказка на экране -->
     <string name="learners_and_grades_out_activity_text_help">This is your e-zine: a list of students and their answers by dates. \nSelect the subject and month. \nThe white number next to the date is the lesson number (1st, 2nd, etc.) that you spent in this day (the previous digit). \nClick on +, so you add the student. \nHold the name of the student - a menu will open where you can delete it or rename it.</string>
     <!-- уведомления -->
+    <string name="learners_and_grades_out_activity_load_text">Loading…</string>
     <string name="learners_and_grades_out_activity_toast_grades_saved">Answers saved</string>
     <string name="learners_and_grades_out_activity_toast_grades_not_saved">Error! The answers not saved</string>
 
@@ -175,7 +176,6 @@
     <!-- заголовок активности -->
     <string name="title_activity_schedule_month">SCHEDULE</string>
     <string name="schedule_month_activity_ad_preview_title">Ad</string>
-    <string name="schedule_month_activity_ad_preview_text">If you like our app, support by clicking on ads! \n(Coming soon)</string>
 
 
     <!-- активность календаря на день-->
@@ -232,8 +232,6 @@
 
     <!-- активность редактора рассадки-->
     <!-- заголовок активности -->
-    <string name="title_activity_seating_redactor_first">Seating </string>
-    <string name="title_activity_seating_redactor_second"> in the cabinet </string>
 
 
     <!-- активность урока-->

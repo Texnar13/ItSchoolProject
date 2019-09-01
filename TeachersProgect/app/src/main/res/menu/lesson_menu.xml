@@ -19,9 +19,4 @@
         android:title="@string/lesson_activity_menu_text_desks"
         app:showAsAction="withText">
     </item>
-    <item
-    android:id="@+id/lesson_menu_help"
-    android:title="@string/lesson_activity_menu_text_help"
-    app:showAsAction="withText|ifRoom">
-</item>
 </menu>

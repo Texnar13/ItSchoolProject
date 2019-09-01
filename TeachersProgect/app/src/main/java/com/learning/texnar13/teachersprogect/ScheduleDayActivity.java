@@ -21,6 +21,7 @@ import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity;
+import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -257,7 +258,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     //класс
                     lessonClassId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
                     lessonCursor.close();
-                    Cursor classCursor = db.getClasses(lessonClassId);
+                    Cursor classCursor = db.getLearnersClass(lessonClassId);
                     classCursor.moveToFirst();
                     lessonClass = classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
                     classCursor.close();

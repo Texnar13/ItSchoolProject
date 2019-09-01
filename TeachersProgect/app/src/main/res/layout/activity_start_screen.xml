@@ -5,255 +5,549 @@
     android:id="@+id/activity_start_screen_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackGround"
+    android:background="@color/backgroundWhite"
     tools:context="com.learning.texnar13.teachersprogect.startScreen.StartScreenActivity">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
-
-        <RelativeLayout
-            android:id="@+id/start_screen_button_my_classes"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/start_screen_image_view_my_learners_background"
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_marginEnd="@dimen/start_screen_button_margins"
-                android:layout_marginLeft="@dimen/start_screen_button_margins"
-                android:layout_marginRight="@dimen/start_screen_button_margins"
-                android:layout_marginStart="@dimen/start_screen_button_margins"
-                android:layout_marginTop="@dimen/start_screen_button_margins"
-                app:srcCompat="@drawable/start_screen_3_1_blue_spot" />
+                android:layout_height="0dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/_background_bottom_round_blue"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+
+            <LinearLayout
+                android:id="@+id/start_screen_layout_now"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="50dp"
+                android:background="@drawable/_dialog_full_background_white"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintLeft_toRightOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/start_screen_button_start_lesson_background"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/_button_round_background_green"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="*Начать урок?*"
+                    android:textColor="@color/backgroundWhite"
+                    android:textSize="@dimen/text_subtitle_size" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/start_screen_text_view_my_learners"
+                android:id="@+id/start_screen_text_day_of_week"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignLeft="@+id/start_screen_image_view_my_learners_background"
-                android:layout_alignStart="@+id/start_screen_image_view_my_learners_background"
-                android:layout_marginLeft="@dimen/start_screen_text_margins"
-                android:layout_marginStart="@dimen/start_screen_text_margins"
-                android:layout_toLeftOf="@+id/start_screen_image_view_my_learners"
-                android:layout_toStartOf="@+id/start_screen_image_view_my_learners"
-                android:gravity="center_vertical"
-                android:text="@string/start_screen_activity_title_my_learners"
-                android:textAllCaps="true"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/text_title_size" />
-
-            <ImageView
-                android:id="@+id/start_screen_image_view_my_learners"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginEnd="@dimen/start_screen_image_margins"
-                android:layout_marginRight="@dimen/start_screen_image_margins"
-                android:adjustViewBounds="true"
-                android:scaleType="fitEnd"
-                app:srcCompat="@drawable/start_screen_3_1_girl_vector" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/start_screen_button_my_cabinets"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <ImageView
-                android:id="@+id/start_screen_image_view_my_cabinets_background"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_marginEnd="@dimen/start_screen_button_margins"
-                android:layout_marginLeft="@dimen/start_screen_button_margins"
-                android:layout_marginRight="@dimen/start_screen_button_margins"
-                android:layout_marginStart="@dimen/start_screen_button_margins"
-                android:layout_marginTop="@dimen/start_screen_button_margins"
-                app:srcCompat="@drawable/start_screen_3_2_yellow_spot" />
-
-            <ImageView
-                android:id="@+id/start_screen_image_view_my_cabinets"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/start_screen_image_margins"
-                android:layout_marginStart="@dimen/start_screen_image_margins"
-                android:adjustViewBounds="true"
-                android:scaleType="fitEnd"
-                app:srcCompat="@drawable/start_screen_3_2_cabinet_vector" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="*Понедельник*"
+                android:textColor="#000000"
+                android:textSize="@dimen/text_subtitle_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/start_screen_text_date" />
 
             <TextView
-                android:id="@+id/start_screen_text_view_my_cabinets"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignEnd="@+id/start_screen_image_view_my_cabinets_background"
-                android:layout_alignRight="@+id/start_screen_image_view_my_cabinets_background"
-                android:layout_marginEnd="@dimen/start_screen_text_margins"
-                android:layout_marginRight="@dimen/start_screen_text_margins"
-                android:layout_toEndOf="@+id/start_screen_image_view_my_cabinets"
-                android:layout_toRightOf="@+id/start_screen_image_view_my_cabinets"
-                android:gravity="center_vertical|right"
-                android:text="@string/start_screen_activity_title_my_cabinets"
-                android:textAllCaps="true"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/text_title_size" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/start_screen_button_schedule"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <ImageView
-                android:id="@+id/start_screen_image_view_my_schedule_background"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_marginEnd="@dimen/start_screen_button_margins"
-                android:layout_marginLeft="@dimen/start_screen_button_margins"
-                android:layout_marginRight="@dimen/start_screen_button_margins"
-                android:layout_marginStart="@dimen/start_screen_button_margins"
-                android:layout_marginTop="@dimen/start_screen_button_margins"
-                app:srcCompat="@drawable/start_screen_3_3_green_spot" />
+                android:layout_height="20dp"
+                android:gravity="bottom"
+                android:text="*СЕЙЧАС:*"
+                android:textColor="@color/backgroundWhite"
+                android:textSize="@dimen/text_simple_size"
+                app:layout_constraintBottom_toTopOf="@+id/start_screen_layout_now"
+                app:layout_constraintLeft_toLeftOf="@+id/start_screen_layout_now"
+                app:layout_constraintTop_toBottomOf="@+id/start_screen_text_day_of_week"
+                tools:ignore="RtlHardcoded" />
 
             <TextView
-                android:id="@+id/start_screen_text_view_my_schedule"
+                android:id="@+id/start_screen_text_time"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignLeft="@+id/start_screen_image_view_my_schedule_background"
-                android:layout_alignStart="@+id/start_screen_image_view_my_schedule_background"
-                android:layout_marginLeft="@dimen/start_screen_text_margins"
-                android:layout_marginStart="@dimen/start_screen_text_margins"
-                android:layout_toLeftOf="@+id/start_screen_image_view_my_schedule"
-                android:layout_toStartOf="@+id/start_screen_image_view_my_schedule"
-                android:gravity="center_vertical"
-                android:text="@string/start_screen_activity_title_my_schedule"
-                android:textAllCaps="true"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/text_title_size" />
-
-            <ImageView
-                android:id="@+id/start_screen_image_view_my_schedule"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginEnd="@dimen/start_screen_image_margins"
-                android:layout_marginRight="@dimen/start_screen_image_margins"
-                android:adjustViewBounds="true"
-                android:scaleType="fitEnd"
-                app:srcCompat="@drawable/start_screen_3_3_calendar_vector" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/start_screen_button_now"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <ImageView
-                android:id="@+id/start_screen_image_view_current_lesson_background"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_marginEnd="@dimen/start_screen_button_margins"
-                android:layout_marginLeft="@dimen/start_screen_button_margins"
-                android:layout_marginRight="@dimen/start_screen_button_margins"
-                android:layout_marginStart="@dimen/start_screen_button_margins"
-                android:layout_marginTop="@dimen/start_screen_button_margins"
-                app:srcCompat="@drawable/start_screen_3_4_pink_spot" />
-
-            <ImageView
-                android:id="@+id/start_screen_image_view_current_lesson"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/start_screen_image_margins"
-                android:layout_marginStart="@dimen/start_screen_image_margins"
-                android:adjustViewBounds="true"
-                android:scaleType="fitEnd"
-                app:srcCompat="@drawable/start_screen_3_4_book_vector" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="*10:35*"
+                android:textColor="#000000"
+                android:textSize="@dimen/text_title_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/start_screen_text_view_current_lesson"
+                android:id="@+id/start_screen_text_date"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="*31 Октября*"
+                android:textColor="#000000"
+                android:textSize="@dimen/text_title_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/start_screen_text_time" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_alignEnd="@+id/start_screen_image_view_current_lesson_background"
-                android:layout_alignRight="@+id/start_screen_image_view_current_lesson_background"
-                android:layout_marginEnd="@dimen/start_screen_text_margins"
-                android:layout_marginRight="@dimen/start_screen_text_margins"
-                android:layout_toEndOf="@+id/start_screen_image_view_current_lesson"
-                android:layout_toRightOf="@+id/start_screen_image_view_current_lesson"
-                android:gravity="center_vertical|right"
-                android:text="@string/start_screen_activity_title_current_lesson"
-                android:textAllCaps="true"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/text_title_size" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:weightSum="2"
+                tools:ignore="RtlHardcoded">
 
+                <RelativeLayout
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/start_screen_button_schedule"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        app:srcCompat="@drawable/_button_background_start_screen_1_calendar" />
 
-        <RelativeLayout
-            android:id="@+id/start_screen_button_reload"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/start_screen_button_schedule"
+                        android:layout_alignTop="@+id/start_screen_button_schedule"
+                        android:layout_alignRight="@+id/start_screen_button_schedule"
+                        android:layout_alignBottom="@+id/start_screen_button_schedule"
+                        android:orientation="vertical"
+                        android:weightSum="3"
+                        tools:ignore="RtlHardcoded">
 
-            <ImageView
-                android:id="@+id/start_screen_image_view_settings_background"
-                android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="*Расписание*"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/text_subtitle_size" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/start_screen_button_my_cabinets"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        app:srcCompat="@drawable/_button_background_start_screen_3_cabinets" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/start_screen_button_my_cabinets"
+                        android:layout_alignTop="@+id/start_screen_button_my_cabinets"
+                        android:layout_alignRight="@+id/start_screen_button_my_cabinets"
+                        android:layout_alignBottom="@+id/start_screen_button_my_cabinets"
+                        android:orientation="vertical"
+                        android:weightSum="3"
+                        tools:ignore="RtlHardcoded">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="*Кабинеты*"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/text_subtitle_size" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="@dimen/start_screen_button_margins"
-                android:layout_marginEnd="@dimen/start_screen_button_margins"
-                android:layout_marginLeft="@dimen/start_screen_button_margins"
-                android:layout_marginRight="@dimen/start_screen_button_margins"
-                android:layout_marginStart="@dimen/start_screen_button_margins"
-                android:layout_marginTop="@dimen/start_screen_button_margins"
-                app:srcCompat="@drawable/start_screen_3_5_magenta_spot" />
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:weightSum="2"
+                tools:ignore="RtlHardcoded">
 
-            <TextView
-                android:id="@+id/start_screen_text_view_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignLeft="@+id/start_screen_image_view_settings_background"
-                android:layout_alignStart="@+id/start_screen_image_view_settings_background"
-                android:layout_marginLeft="@dimen/start_screen_text_margins"
-                android:layout_marginStart="@dimen/start_screen_text_margins"
-                android:layout_toLeftOf="@+id/start_screen_image_view_settings"
-                android:layout_toStartOf="@+id/start_screen_image_view_settings"
-                android:gravity="center_vertical"
-                android:text="@string/start_screen_activity_title_settings"
-                android:textAllCaps="true"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/text_title_size" />
+                <RelativeLayout
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/start_screen_image_view_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginEnd="@dimen/start_screen_image_margins"
-                android:layout_marginRight="@dimen/start_screen_image_margins"
-                android:adjustViewBounds="true"
-                android:scaleType="fitEnd"
-                app:srcCompat="@drawable/start_screen_3_5_settings_vector" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/start_screen_button_my_classes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        app:srcCompat="@drawable/_button_background_start_screen_2_girl" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/start_screen_button_my_classes"
+                        android:layout_alignTop="@+id/start_screen_button_my_classes"
+                        android:layout_alignRight="@+id/start_screen_button_my_classes"
+                        android:layout_alignBottom="@+id/start_screen_button_my_classes"
+                        android:orientation="vertical"
+                        android:weightSum="3">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="*Ученики*"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/text_subtitle_size" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/start_screen_button_reload"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        app:srcCompat="@drawable/_button_background_start_screen_4_settings" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/start_screen_button_reload"
+                        android:layout_alignTop="@+id/start_screen_button_reload"
+                        android:layout_alignRight="@+id/start_screen_button_reload"
+                        android:layout_alignBottom="@+id/start_screen_button_reload"
+                        android:orientation="vertical"
+                        android:weightSum="3">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="*Настройки*"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/text_subtitle_size" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
     </LinearLayout>
+
+
+
+
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_alignParentLeft="true"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        android:orientation="vertical">-->
+
+
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/start_screen_button_my_classes"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1">-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/start_screen_image_view_my_learners_background"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_centerInParent="true"-->
+<!--                android:layout_marginEnd="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginLeft="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginRight="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginStart="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginTop="@dimen/start_screen_button_margins"-->
+<!--                app:srcCompat="@drawable/start_screen_3_1_blue_spot" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/start_screen_text_view_my_learners"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_alignLeft="@+id/start_screen_image_view_my_learners_background"-->
+<!--                android:layout_alignStart="@+id/start_screen_image_view_my_learners_background"-->
+<!--                android:layout_marginLeft="@dimen/start_screen_text_margins"-->
+<!--                android:layout_marginStart="@dimen/start_screen_text_margins"-->
+<!--                android:layout_toLeftOf="@+id/start_screen_image_view_my_learners"-->
+<!--                android:layout_toStartOf="@+id/start_screen_image_view_my_learners"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:text="@string/start_screen_activity_title_my_learners"-->
+<!--                android:textAllCaps="true"-->
+<!--                android:textColor="#ffffff"-->
+<!--                android:textSize="@dimen/text_title_size" />-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/start_screen_image_view_my_learners"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_alignParentBottom="true"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                android:layout_alignParentTop="true"-->
+<!--                android:layout_marginEnd="@dimen/start_screen_image_margins"-->
+<!--                android:layout_marginRight="@dimen/start_screen_image_margins"-->
+<!--                android:adjustViewBounds="true"-->
+<!--                android:scaleType="fitEnd"-->
+<!--                app:srcCompat="@drawable/start_screen_3_1_girl_vector" />-->
+
+<!--        </RelativeLayout>-->
+
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/start_screen_button_my_cabinets"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1">-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/start_screen_image_view_my_cabinets_background"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_centerInParent="true"-->
+<!--                android:layout_marginEnd="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginLeft="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginRight="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginStart="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginTop="@dimen/start_screen_button_margins"-->
+<!--                app:srcCompat="@drawable/start_screen_3_2_yellow_spot" />-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/start_screen_image_view_my_cabinets"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginLeft="@dimen/start_screen_image_margins"-->
+<!--                android:layout_marginStart="@dimen/start_screen_image_margins"-->
+<!--                android:adjustViewBounds="true"-->
+<!--                android:scaleType="fitEnd"-->
+<!--                app:srcCompat="@drawable/start_screen_3_2_cabinet_vector" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/start_screen_text_view_my_cabinets"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_alignEnd="@+id/start_screen_image_view_my_cabinets_background"-->
+<!--                android:layout_alignRight="@+id/start_screen_image_view_my_cabinets_background"-->
+<!--                android:layout_marginEnd="@dimen/start_screen_text_margins"-->
+<!--                android:layout_marginRight="@dimen/start_screen_text_margins"-->
+<!--                android:layout_toEndOf="@+id/start_screen_image_view_my_cabinets"-->
+<!--                android:layout_toRightOf="@+id/start_screen_image_view_my_cabinets"-->
+<!--                android:gravity="center_vertical|right"-->
+<!--                android:text="@string/start_screen_activity_title_my_cabinets"-->
+<!--                android:textAllCaps="true"-->
+<!--                android:textColor="#ffffff"-->
+<!--                android:textSize="@dimen/text_title_size" />-->
+
+<!--        </RelativeLayout>-->
+
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/start_screen_button_schedule"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1">-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/start_screen_image_view_my_schedule_background"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_centerInParent="true"-->
+<!--                android:layout_marginEnd="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginLeft="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginRight="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginStart="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginTop="@dimen/start_screen_button_margins"-->
+<!--                app:srcCompat="@drawable/start_screen_3_3_green_spot" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/start_screen_text_view_my_schedule"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_alignLeft="@+id/start_screen_image_view_my_schedule_background"-->
+<!--                android:layout_alignStart="@+id/start_screen_image_view_my_schedule_background"-->
+<!--                android:layout_marginLeft="@dimen/start_screen_text_margins"-->
+<!--                android:layout_marginStart="@dimen/start_screen_text_margins"-->
+<!--                android:layout_toLeftOf="@+id/start_screen_image_view_my_schedule"-->
+<!--                android:layout_toStartOf="@+id/start_screen_image_view_my_schedule"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:text="@string/start_screen_activity_title_my_schedule"-->
+<!--                android:textAllCaps="true"-->
+<!--                android:textColor="#ffffff"-->
+<!--                android:textSize="@dimen/text_title_size" />-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/start_screen_image_view_my_schedule"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                android:layout_marginEnd="@dimen/start_screen_image_margins"-->
+<!--                android:layout_marginRight="@dimen/start_screen_image_margins"-->
+<!--                android:adjustViewBounds="true"-->
+<!--                android:scaleType="fitEnd"-->
+<!--                app:srcCompat="@drawable/start_screen_3_3_calendar_vector" />-->
+<!--        </RelativeLayout>-->
+
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/start_screen_button_now"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1">-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/start_screen_image_view_current_lesson_background"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_centerInParent="true"-->
+<!--                android:layout_marginEnd="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginLeft="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginRight="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginStart="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginTop="@dimen/start_screen_button_margins"-->
+<!--                app:srcCompat="@drawable/start_screen_3_4_pink_spot" />-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/start_screen_image_view_current_lesson"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginLeft="@dimen/start_screen_image_margins"-->
+<!--                android:layout_marginStart="@dimen/start_screen_image_margins"-->
+<!--                android:adjustViewBounds="true"-->
+<!--                android:scaleType="fitEnd"-->
+<!--                app:srcCompat="@drawable/start_screen_3_4_book_vector" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/start_screen_text_view_current_lesson"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_alignEnd="@+id/start_screen_image_view_current_lesson_background"-->
+<!--                android:layout_alignRight="@+id/start_screen_image_view_current_lesson_background"-->
+<!--                android:layout_marginEnd="@dimen/start_screen_text_margins"-->
+<!--                android:layout_marginRight="@dimen/start_screen_text_margins"-->
+<!--                android:layout_toEndOf="@+id/start_screen_image_view_current_lesson"-->
+<!--                android:layout_toRightOf="@+id/start_screen_image_view_current_lesson"-->
+<!--                android:gravity="center_vertical|right"-->
+<!--                android:text="@string/start_screen_activity_title_current_lesson"-->
+<!--                android:textAllCaps="true"-->
+<!--                android:textColor="#ffffff"-->
+<!--                android:textSize="@dimen/text_title_size" />-->
+
+
+<!--        </RelativeLayout>-->
+
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/start_screen_button_reload"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1">-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/start_screen_image_view_settings_background"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_centerInParent="true"-->
+<!--                android:layout_marginBottom="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginEnd="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginLeft="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginRight="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginStart="@dimen/start_screen_button_margins"-->
+<!--                android:layout_marginTop="@dimen/start_screen_button_margins"-->
+<!--                app:srcCompat="@drawable/start_screen_3_5_magenta_spot" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/start_screen_text_view_settings"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_alignLeft="@+id/start_screen_image_view_settings_background"-->
+<!--                android:layout_alignStart="@+id/start_screen_image_view_settings_background"-->
+<!--                android:layout_marginLeft="@dimen/start_screen_text_margins"-->
+<!--                android:layout_marginStart="@dimen/start_screen_text_margins"-->
+<!--                android:layout_toLeftOf="@+id/start_screen_image_view_settings"-->
+<!--                android:layout_toStartOf="@+id/start_screen_image_view_settings"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:text="@string/start_screen_activity_title_settings"-->
+<!--                android:textAllCaps="true"-->
+<!--                android:textColor="#ffffff"-->
+<!--                android:textSize="@dimen/text_title_size" />-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/start_screen_image_view_settings"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                android:layout_marginEnd="@dimen/start_screen_image_margins"-->
+<!--                android:layout_marginRight="@dimen/start_screen_image_margins"-->
+<!--                android:adjustViewBounds="true"-->
+<!--                android:scaleType="fitEnd"-->
+<!--                app:srcCompat="@drawable/start_screen_3_5_settings_vector" />-->
+<!--        </RelativeLayout>-->
+<!--    </LinearLayout>-->
 </RelativeLayout>

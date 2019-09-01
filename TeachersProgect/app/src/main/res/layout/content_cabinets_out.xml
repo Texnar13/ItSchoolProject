@@ -1,13 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackGround"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity"
     tools:showIn="@layout/activity_cabinets_out">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/backgroundWhite"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/cabinets_out_menu_back_arrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            app:srcCompat="@drawable/_button_back_arrow_orange"
+            tools:ignore="RtlHardcoded" />
+
+        <ImageView
+            android:id="@+id/cabinets_out_menu_menu_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            app:srcCompat="@drawable/_button_menu_white"
+            tools:ignore="RtlHardcoded" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_toLeftOf="@+id/cabinets_out_menu_menu_button"
+            android:layout_toRightOf="@+id/cabinets_out_menu_back_arrow"
+            android:background="@drawable/_button_round_background_orange"
+            android:gravity="center"
+            tools:ignore="RtlHardcoded">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="5dp"
+                android:textAllCaps="true"
+                android:text="@string/start_screen_activity_title_my_cabinets"
+                android:textColor="@color/backgroundWhite"
+                android:textSize="@dimen/text_subtitle_size" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -20,4 +73,4 @@
             android:orientation="vertical" />
 
     </ScrollView>
-</RelativeLayout>
+</LinearLayout>

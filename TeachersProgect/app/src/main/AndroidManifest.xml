@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.learning.texnar13.teachersprogect"
-    android:versionCode="43"
-    android:versionName="super2.190">
+    android:versionCode="44"
+    android:versionName="super2.191">
 
     <application
         android:name=".MyApplication"
@@ -33,7 +33,7 @@
             android:configChanges="locale"
             android:label="@string/title_activity_lesson_list" />
         <activity
-            android:name=".SeatingRedactorActivity"
+            android:name=".seatingRedactor.SeatingRedactorActivity"
             android:configChanges="locale" />
         <activity
             android:name=".ScheduleMonthActivity"
@@ -57,9 +57,6 @@
             android:configChanges="locale"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".lesson.LessonHelp"
-            android:configChanges="locale" />
-        <activity
             android:name=".cabinetsOut.CabinetsOutActivity"
             android:configChanges="locale"
             android:label="@string/title_activity_cabinets_out"
@@ -72,7 +69,6 @@
             android:configChanges="locale"
             android:label="@string/title_activity_learners_classes_out"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".TestActivity" />
         <activity
             android:name=".learnersAndGradesOut.learnersAndGradesStatistics.LearnersGradesStatisticsActivity"
             android:windowSoftInputMode="adjustPan" />

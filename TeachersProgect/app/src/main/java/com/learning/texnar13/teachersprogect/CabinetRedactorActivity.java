@@ -88,10 +88,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     ImageView instrumentalImage;
 
 
-    // точка середины между пальцами при первой постановке
-    // (нужна, чтобы при зуме был общий центр относительно которого все менялось)
-    //int[] xDeskPxStart = {};
-    //int[] yDeskPxStart = {};
     // точка середины между пальцами за предыдущую итерацию
     Point oldMid = new Point();
     // множитель за предыдущую итерацию
@@ -210,8 +206,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         }
 
 
-        out = (RelativeLayout) findViewById(R.id.redactor_out);
-        outBackground = (RelativeLayout) findViewById(R.id.redactor_out_background);
+        out = findViewById(R.id.redactor_out);
+        outBackground = findViewById(R.id.redactor_out_background);
 
         //кнопка назад в actionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -286,9 +282,9 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 
 // кнопка добавить парту
         // размеры и положение
-        instrumentalImage = (ImageView) findViewById(R.id.activity_cabinet_redactor_instrumental_image);
+        instrumentalImage = findViewById(R.id.activity_cabinet_redactor_instrumental_image);
         ImageView instrumentalImageBackground;
-        instrumentalImageBackground = (ImageView) findViewById(R.id.activity_cabinet_redactor_instrumental_image_background);
+        instrumentalImageBackground = findViewById(R.id.activity_cabinet_redactor_instrumental_image_background);
         // нажатие на +
         instrumentalImageBackground.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -307,7 +303,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         });
 
 //текст в центре
-        stateText = (TextView) findViewById(R.id.cabinet_redactor_state_text);
+        stateText = findViewById(R.id.cabinet_redactor_state_text);
         //если парт нет, то показываем текст
         if (desksList.size() == 0) {
             stateText.setText(R.string.cabinet_redactor_activity_text_help);

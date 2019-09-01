@@ -72,29 +72,29 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:background="@drawable/button_gray">
+<!--    <LinearLayout-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="1"-->
+<!--        android:orientation="vertical"-->
+<!--        android:background="@drawable/button_gray">-->
 
-        <TextView
-            android:textColor="#ffffff"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:textSize="@dimen/text_small_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/schedule_month_activity_ad_preview_title" />
-        <TextView
-            android:textColor="#ffffff"
-            android:textSize="@dimen/text_simple_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/schedule_month_activity_ad_preview_text" />
-    </LinearLayout>
+<!--        <TextView-->
+<!--            android:textColor="#ffffff"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            android:layout_marginStart="5dp"-->
+<!--            android:textSize="@dimen/text_small_size"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/schedule_month_activity_ad_preview_title" />-->
+<!--        <TextView-->
+<!--            android:textColor="#ffffff"-->
+<!--            android:textSize="@dimen/text_simple_size"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:text="@string/schedule_month_activity_ad_preview_text" />-->
+<!--    </LinearLayout>-->
 </LinearLayout>

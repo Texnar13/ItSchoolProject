@@ -1,19 +1,25 @@
 package com.learning.texnar13.teachersprogect.lesson;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.VectorDrawable;
+import android.graphics.Point;
+import android.graphics.RectF;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
-import android.view.ContextMenu;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -21,10 +27,12 @@ import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
 import com.learning.texnar13.teachersprogect.R;
-import com.learning.texnar13.teachersprogect.SeatingRedactorActivity;
+import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.lessonList.LessonListActivity;
+
+import java.util.ArrayList;
 
 /*
  * onCreate(),
@@ -39,54 +47,98 @@ import com.learning.texnar13.teachersprogect.lesson.lessonList.LessonListActivit
  *
  * */
 
-public class LessonActivity extends AppCompatActivity {
+public class LessonActivity extends AppCompatActivity implements View.OnTouchListener, GradesDialogInterface, EndLessonInterface {
 
-    //----------------данные----------------
-    //--константы--
+
+    public static final String TAG = "TeachersApp";
+
+    // режимы зума
+    private static final int NONE = 0;
+    private static final int ZOOM = 2;
+    // размер одноместной парты
+    private static final int NO_ZOOMED_DESK_SIZE = 40;
+    // ширина границы вокруг клетки ученика на парте
+    private static final int NO_ZOOMED_LEARNER_BORDER_SIZE = NO_ZOOMED_DESK_SIZE / 20;
+
+    // лист с партами
+    ArrayList<DeskUnit> desksList = new ArrayList<>();
+    // режим: нет, перемещение, zoom
+    int mode = NONE;
+    // растяжение по осям
+    float multiplier = 0;//0,1;10
+    // текущее смещение по осям
+    float xAxisPXOffset = 0;
+    float yAxisPXOffset = 0;
+
+
+    // слой с партами
+    RelativeLayout out;
+
+    // максимальная оценка
+    int maxAnswersCount;
+    // названия типов ответов и их id
+    AnswersType[] answersTypes;
+
+    // точка середины между пальцами за предыдущую итерацию
+    Point oldMid = new Point();
+    // множитель за предыдущую итерацию
+    float oldMultiplier = 0;
+    // предыдущее растояние между пальцам
+    float oldDist = 1f;
+
+
+    // константа по которой получаеми id зависимости
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
+    // константа по которой получаем время урока (для повторяющихся уроков)//todo костылище!!!!!!!!!!!!!!!!!!!!!!!!!!
     public static final String LESSON_TIME = "startTime";
-    //--переменные--
-    float multiplier = 2;
-    RelativeLayout room;
-    //--загружаемые из бд поля--
-    //максимальная оценка
-    static long maxAnswersCount = 6;
-    //id
-    static long lessonAttitudeId = -2;
-    static long subjectId;
-    static long learnersClassId;
-    static long cabinetId;
-    //текст
-    static String lessonName = "";
-    //массивы
-    static LearnerAndGrade[] learnersAndGrades;
 
-//------------------------------------подготовка меню-----------------------------------------------
+    // id зависимости
+    static long lessonAttitudeId;
+    // id класса
+    private static long learnersClassId;
+    // имя класса
+    private static String className;
+    // id предмета
+    private static long subjectId;
+    // имя предмета
+    private static String subjectName;
+    // id кабинета
+    private static long cabinetId;
 
-    //--раздуваем--
+    // массив учеников
+    private MyLearnerAndHisGrades[] learnersAndTheirGrades;
+
+    // номер выбранного ученика
+    static int chosenLearnerPosition;
+
+
+    // подготовка меню
+    // раздуваем
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.lesson_menu, menu);
         return true;
     }
 
-    //--назначаем действия--
+    // назначаем действия
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        //закончить урок
+        // закончить урок
         menu.findItem(R.id.lesson_menu_end_lesson).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                long[] learnersId = new long[learnersAndGrades.length];
-                long[] grades1 = new long[learnersAndGrades.length];
-                long[] grades2 = new long[learnersAndGrades.length];
-                long[] grades3 = new long[learnersAndGrades.length];
-                for (int j = 0; j < learnersAndGrades.length; j++) {
-                    learnersId[j] = learnersAndGrades[j].learnerId;
-                    grades1[j] = learnersAndGrades[j].getRawGrade(0);
-                    grades2[j] = learnersAndGrades[j].getRawGrade(1);
-                    grades3[j] = learnersAndGrades[j].getRawGrade(2);
+                long[] learnersId = new long[learnersAndTheirGrades.length];
+                long[] grades1 = new long[learnersAndTheirGrades.length];
+                long[] grades2 = new long[learnersAndTheirGrades.length];
+                long[] grades3 = new long[learnersAndTheirGrades.length];
+                for (int j = 0; j < learnersAndTheirGrades.length; j++) {
+                    learnersId[j] = learnersAndTheirGrades[j].learnerId;
+                    grades1[j] = learnersAndTheirGrades[j].learnerGrades[0];
+                    grades2[j] = learnersAndTheirGrades[j].learnerGrades[1];
+                    grades3[j] = learnersAndTheirGrades[j].learnerGrades[2];
                 }
+
+                // переходим к активности списка оценок
                 Intent intent = new Intent(getApplicationContext(), LessonListActivity.class);
                 intent.putExtra(LessonListActivity.ATTITUDE_ID, lessonAttitudeId);
                 intent.putExtra(LessonListActivity.SUBJECT_ID, subjectId);
@@ -94,52 +146,46 @@ public class LessonActivity extends AppCompatActivity {
                 intent.putExtra(LessonListActivity.FIRST_LIST_GRADES, grades1);
                 intent.putExtra(LessonListActivity.SECOND_LIST_GRADES, grades2);
                 intent.putExtra(LessonListActivity.THIRD_LIST_GRADES, grades3);
+
+                // передаем полученную дату урока
                 intent.putExtra(LESSON_TIME, getIntent().getStringExtra(LESSON_TIME));
                 startActivity(intent);
 
                 //обнуляем данные
-                lessonAttitudeId = -2;
+                chosenLearnerPosition = -1;
+                lessonAttitudeId = -1;
                 subjectId = 0;
                 learnersClassId = 0;
                 cabinetId = 0;
-                lessonName = null;
-                learnersAndGrades = null;
+                subjectName = null;
+                learnersAndTheirGrades = null;
                 finish();
                 return true;
             }
         });
-        //посадить учеников
+        // посадить учеников
         menu.findItem(R.id.lesson_menu_edit_seating).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                //намерение перехода на редактор рассадки
+                // намерение перехода на редактор рассадки
                 Intent intent = new Intent(getApplicationContext(), SeatingRedactorActivity.class);
-                //кладем id в intent
+                // кладем id в intent
                 intent.putExtra(SeatingRedactorActivity.CLASS_ID, learnersClassId);
                 intent.putExtra(SeatingRedactorActivity.CABINET_ID, cabinetId);
-                //переходим
+                // переходим
                 startActivity(intent);
                 return true;
             }
         });
-        //расставить парты
+        // расставить парты
         menu.findItem(R.id.lesson_menu_edit_tables).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                //намерение перехода на редактор кабинета
+                // намерение перехода на редактор кабинета
                 Intent intent = new Intent(getApplicationContext(), CabinetRedactorActivity.class);
-                //кладем id в intent
+                // кладем id в intent
                 intent.putExtra(CabinetRedactorActivity.EDITED_CABINET_ID, cabinetId);
-                //переходим
-                startActivity(intent);
-                return true;
-            }
-        });
-        //подсказка
-        menu.findItem(R.id.lesson_menu_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(getApplicationContext(), LessonHelp.class);
+                // переходим
                 startActivity(intent);
                 return true;
             }
@@ -147,148 +193,159 @@ public class LessonActivity extends AppCompatActivity {
         return true;
     }
 
-//----------------------------------создание экрана-------------------------------------------------
 
+    // создание экрана
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_main);
-        //кнопка назад в actionBar
+
+        // цвет кнопки меню
+        getSupportActionBar().getThemedContext().setTheme(R.style.LessonStyle);
+
+        // вставляем в actionBar заголовок активности
+        LinearLayout titleContainer = new LinearLayout(this);
+        titleContainer.setGravity(Gravity.CENTER);
+        titleContainer.setBackgroundResource(R.drawable._button_round_background_orange);
+        ActionBar.LayoutParams titleContainerParams = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.MATCH_PARENT,
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                Gravity.CENTER
+        );
+        titleContainerParams.leftMargin = (int) pxFromDp(24);
+        titleContainerParams.rightMargin = (int) pxFromDp(24);
+        //android:layout_centerInParent="true"
+
+        TextView title = new TextView(this);
+        title.setSingleLine(true);
+        title.setTextColor(getResources().getColor(R.color.backgroundWhite));
+        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        titleParams.leftMargin = (int) pxFromDp(10);
+        titleParams.topMargin = (int) pxFromDp(5);
+        titleParams.rightMargin = (int) pxFromDp(10);
+        titleParams.bottomMargin = (int) pxFromDp(5);
+        titleContainer.addView(title, titleParams);
+        getSupportActionBar().setCustomView(titleContainer, titleContainerParams);
+        // выставляем свой заголовок
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+
+
+        // кнопка назад в actionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // убираем тень
+        getSupportActionBar().setElevation(0);
+        // цвет фона
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.backgroundWhite));
+        // кнопка назад
+        getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable._button_back_arrow_orange));
+
 
         // для того, чтобы векторные изображения созданные в коде отображались нормально todo разобраться бы что это
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
-//-------------------------------загружаем статичные поля из бд-------------------------------------
-        //проверка, загружены ли уже данные, если нет, то достаем их
-        if (lessonAttitudeId == -2) {
+
+        // получаем зависимость из intent
+        lessonAttitudeId = getIntent().getLongExtra(LESSON_ATTITUDE_ID, -1);
+        // -1 он будет равен только при ошибке
+        if (lessonAttitudeId == -1) {
+            finish();
+            return;
+        }
+
+        // (проверяем по одному из полей) был создан новый экран или он просто переворачивался
+        if (learnersAndTheirGrades == null) {
+            // получаем данные из бд
             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
-            // ---заполняем---
-            //id зависимости
-            lessonAttitudeId = getIntent().getLongExtra(LESSON_ATTITUDE_ID, -1);
-            //если id не передано
-            if (lessonAttitudeId == -1) {
-                finish();
-            }
-
-            //курсор с зависимостью, из него все данные
+            // получаем зависимость
             Cursor attitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(lessonAttitudeId);
             attitudeCursor.moveToFirst();
-            //id кабинета
+            // получаем из завмсимости id кабинета
             cabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID
             ));
-            //id предмета
+            // получаем из завмсимости id предмета
             subjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID
             ));
-//
-            //Todo какой урок открыт
-//            Toast toast = Toast.makeText(this,""+attitudeCursor.getString(attitudeCursor.getColumnIndex(
-//                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN
-//            ))+" "+attitudeCursor.getString(attitudeCursor.getColumnIndex(
-//                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END
-//            )),Toast.LENGTH_LONG);
-//            toast.show();
-//
-            //закончили работать с зависимостью
             attitudeCursor.close();
 
-            //курсор с предметом, из него все данные
+            // получаем предмет
             Cursor subjectCursor = db.getSubjectById(subjectId);
             subjectCursor.moveToFirst();
-            //id класса
+            // получаем имя предмета
+            subjectName = subjectCursor.getString(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME));
+            // получаем id класса
             learnersClassId = subjectCursor.getLong(subjectCursor.getColumnIndex(
                     SchoolContract.TableSubjects.KEY_CLASS_ID
             ));
-            lessonName = subjectCursor.getString(subjectCursor.getColumnIndex(
-                    SchoolContract.TableSubjects.COLUMN_NAME
-            ));
-            //закончили работать с предметом
             subjectCursor.close();
 
-            //курсор с учениками, из него все данные
+            // получаем имя класа
+            Cursor learnersClass = db.getLearnersClass(learnersClassId);
+            learnersClass.moveToFirst();
+            className = learnersClass.getString(learnersClass.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
+            learnersClass.close();
+
+
+            // получаем учеников по id класса
             Cursor learnersCursor = db.getLearnersByClassId(learnersClassId);
-            //инициализируем массив нужной длинны
-            learnersAndGrades = new LearnerAndGrade[learnersCursor.getCount()];
+
+            // инициализируем массив с учениками
+            learnersAndTheirGrades = new MyLearnerAndHisGrades[learnersCursor.getCount()];
             //заполняем его
-            for (int i = 0; i < learnersAndGrades.length; i++) {
+            for (int i = 0; i < learnersAndTheirGrades.length; i++) {
                 learnersCursor.moveToPosition(i);
-                //создаем нового
-                learnersAndGrades[i] = new LearnerAndGrade(
+
+                // создаем нового ученика
+                learnersAndTheirGrades[i] = new MyLearnerAndHisGrades(
                         learnersCursor.getLong(learnersCursor.getColumnIndex(
                                 SchoolContract.TableLearners.KEY_LEARNER_ID
+                        )),
+                        learnersCursor.getString(learnersCursor.getColumnIndex(
+                                SchoolContract.TableLearners.COLUMN_FIRST_NAME
+                        )),
+                        learnersCursor.getString(learnersCursor.getColumnIndex(
+                                SchoolContract.TableLearners.COLUMN_SECOND_NAME
                         ))
                 );
             }
-            //закончили работать с учениками
             learnersCursor.close();
+
+            // номер выбранного ученика
+            chosenLearnerPosition = -1;
+
+            //максимальная оценка
+            maxAnswersCount = db.getSettingsMaxGrade(1);
+
+            // названия типоав ответов
+            Cursor typesCursor = db.getGradesTypes();
+            answersTypes = new AnswersType[typesCursor.getCount()];
+            // извлекаем данные из курсора
+            for (int typeI = 0; typeI < answersTypes.length; typeI++) {
+                typesCursor.moveToPosition(typeI);
+                // добавляем новый тип во внутренний список
+                answersTypes[typeI] = new AnswersType(
+                        typesCursor.getLong(typesCursor.getColumnIndex(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID)),
+                        typesCursor.getString(typesCursor.getColumnIndex(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE))
+                );
+            }
+            typesCursor.close();
+            db.close();
         }
 
-//---инициализация компонентов---
-//поле вывода, класс
-        room = (RelativeLayout) findViewById(R.id.room_layout);
-//кнопки зума
-        final ImageView buttonZoomIn = (ImageView) findViewById(R.id.lesson_button_zoom_in);
-        final ImageView buttonZoomOut = (ImageView) findViewById(R.id.lesson_button_zoom_out);
 
-        // увеличение
-        buttonZoomIn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //изменяем размер
-                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                //проверяем можем ли изменять
-                int last = (int) db.getInterfaceSizeBySettingsProfileId(1);
-                if (last < 96) {
-                    db.setSettingsProfileParameters(
-                            1,
-                            "default",
-                            last + 3
-                    );
-                    db.close();
+        // слой с партами
+        out = findViewById(R.id.activity_lesson_room_layout);
+        out.setOnTouchListener(this);
 
-                    //активируем другую если приближать можно
-                    buttonZoomOut.setEnabled(true);
-                    buttonZoomOut.setImageResource(R.drawable.ic_vector_zoom_out_dark);
-
-
-                    //выводим все
-                    outDecks();
-                } else {//деактивируем кнопку если приближать нельзя
-                    buttonZoomIn.setEnabled(false);
-                    buttonZoomIn.setImageResource(R.drawable.ic_vector_zoom_in_light);
-                }
-            }
-        });
-
-        // уменьшение
-        buttonZoomOut.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //изменяем размер
-                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                //проверяем можем ли изменять
-                int last = (int) db.getInterfaceSizeBySettingsProfileId(1);
-                if (last > 5) {
-                    db.setSettingsProfileParameters(
-                            1,
-                            "default",
-                            (int) db.getInterfaceSizeBySettingsProfileId(1) - 3
-                    );
-                    db.close();
-
-                    //активируем другую если приближать можно
-                    buttonZoomIn.setEnabled(true);
-                    buttonZoomIn.setImageResource(R.drawable.ic_vector_zoom_in_dark);
-
-                    //выводим все
-                    outDecks();
-                } else {//деактивируем кнопку если отдалять нельзя
-                    buttonZoomOut.setEnabled(false);
-                    buttonZoomOut.setImageResource(R.drawable.ic_vector_zoom_out_light);
-                }
-            }
-        });
+        // выставляем название предмета и класса в заголовок
+        title.setText(subjectName + "," + className);
 
 
         /*
@@ -298,7 +355,6 @@ public class LessonActivity extends AppCompatActivity {
          * эти поля должны быть статичными, и с проверкой на существование(для переворота)
          * при переходе (окончании урока) удалить
          */
-
         //3 это класс урока
 //        * вывод учеников, парт и мест, по нажатию на ученика открывается доп.меню*
 //        где можно выбрать оценку, нет оценки/1/2/3/4/5
@@ -365,105 +421,78 @@ public class LessonActivity extends AppCompatActivity {
 //        *
 //        *
 //        * нажимаем сохранить и сохраняем в таблицу ученик-оценка
-
     }
 
-//------------------------------------запуск экрана-------------------------------------------------
-
-    Cursor desksCursor;
-
+    // при каждом запуске экрана
     @Override
     protected void onStart() {
         super.onStart();
-        //сразу ставим заголовок
-        setTitle(lessonName);
 
-        outDecks();
+        // обновляем список парт и положение учеников
+        // и выводим все
+        outAll();
     }
 
-//------------------------------------вывод графики-------------------------------------------------
 
-    void outDecks() {
+    // метод вывода учеников с партами
+    void outAll() {
 
-//-------------------------------загружаем не статичные поля----------------------------------------
-//                      (обновляются при перезаходе на активность)
-
-        //база данных
+        // загружаем из базы данных
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        //максимальная оценка
-        maxAnswersCount = db.getSettingsMaxGrade(1);
-        //размер парт
-        multiplier = db.getInterfaceSizeBySettingsProfileId(1) / 1000f * getResources().getInteger(R.integer.desks_screen_multiplier);
-        //курсор с партами
-        desksCursor = db.getDesksByCabinetId(cabinetId);
-        //размеры экрана по парте
-        int maxX = 0;
-        int maxY = 0;
 
-//--------------------------------вывод парт и учеников---------------------------------------------
+        // получаем кабинет из бд чтобы достать размеры которые могли измениться
+        Cursor cabinetCursor = db.getCabinet(cabinetId);
+        Log.e(TAG, "cabinetId" + cabinetCursor.getCount());
+        cabinetCursor.moveToFirst();
 
-        //чистим класс
-        room.removeAllViews();
-        //выводим парты
-        for (int deskIterator = 0; deskIterator < desksCursor.getCount(); deskIterator++) {
-            desksCursor.moveToPosition(deskIterator);
-//-----------создание парты-----------
-            RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);
-            //tempRelativeLayoutDesk.setBackgroundColor(Color.LTGRAY);
-            tempRelativeLayoutDesk.setBackgroundResource(R.drawable.button_gray);
-
-            //длина парты по количеству мест и фикс. ширина
-            RelativeLayout.LayoutParams tempRelativeLayoutDeskParams =
-                    new RelativeLayout.LayoutParams(
-                            (int) pxFromDp(
-                                    desksCursor.getLong(desksCursor.getColumnIndex(
-                                            SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES
-                                    )) * 1000 * multiplier),
-                            (int) pxFromDp(1000 * multiplier));
-            //координаты парт
-            tempRelativeLayoutDeskParams.leftMargin = (int) pxFromDp(
-                    desksCursor.getLong(desksCursor.getColumnIndex(
-                            SchoolContract.TableDesks.COLUMN_X
-                    )) * 25 * multiplier);
-            tempRelativeLayoutDeskParams.topMargin = (int) pxFromDp(
-                    desksCursor.getLong(desksCursor.getColumnIndex(
-                            SchoolContract.TableDesks.COLUMN_Y
-                    )) * 25 * multiplier);
-            tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+        // получаем множитель  (0.25 <-> 4)
+        multiplier = 0.0375F *
+                cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER))
+                + 0.25F;
+        // и отступы
+        xAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X));
+        yAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y));
+        cabinetCursor.close();
 
 
-//-----считаем максимальную парту-----
-            if (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * 100 * multiplier > maxX) {
-                maxX = (int) (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * 100 * multiplier);
-            }
-            if (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * 100 * multiplier > maxY) {
-                maxY = (int) (desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * 100 * multiplier);
-            }
+        // загружаем парты из бд
+        Cursor desksCursor = db.getDesksByCabinetId(cabinetId);
+        // и выводим
+        out.removeAllViews();
+        desksList.clear();
+        while (desksCursor.moveToNext()) {
+            // достаем данные из бд
+            int numberOfPlaces = desksCursor.getInt(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES));
+            long deskXDp = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X));
+            long deskYDp = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y));
+
+            // создаем view парты
+            final RelativeLayout deskLayout = new RelativeLayout(this);
+            //выводим парту
+            out.addView(deskLayout);
+
+            //добавлем парту и данные в массив (в конструкторе заполняяпозицию и размеры view)
+            desksList.add(new DeskUnit(
+                    pxFromDp(deskXDp * multiplier) + xAxisPXOffset,
+                    pxFromDp(deskYDp * multiplier) + yAxisPXOffset,
+                    numberOfPlaces,
+                    deskLayout
+            ));
 
 
-            //выводим места на парте
-            Cursor placeCursor = db.getPlacesByDeskId(
+            // ---- выводим на парте учеников и их оценки ----
+
+            // получаем места на парте
+            Cursor placesCursor = db.getPlacesByDeskId(
                     desksCursor.getLong(desksCursor.getColumnIndex(
                             SchoolContract.TableDesks.KEY_DESK_ID
                     ))
             );
-            for (int placeIterator = 0; placeIterator < placeCursor.getCount(); placeIterator++) {
-                placeCursor.moveToPosition(placeIterator);
-//-----------создание места-----------
-//-место
-//---контейнер
-//-----оценки
-//-----контейнер ученика
-//-------картинка ученика
-//-------имя ученика
+            // пробегаемся по ним
+            while (placesCursor.moveToNext()) {
 
-//
-// новый вариант
-// -место
-//---контейнер
-//-----оценки
+//---контейнер места          placeOut
+//-----оценки                 grade1Text grade2Text
 //-----контейнер ученика
 //-------контейнер картинки
 //---------картинка ученика
@@ -472,123 +501,130 @@ public class LessonActivity extends AppCompatActivity {
 //-------имя ученика
 
 
-//-----контейнер-----
-                //создаем layout с контейнером ученика и оценками
-                RelativeLayout placeOut = new RelativeLayout(this);
-                //placeOut.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                //ставим размеры
-                RelativeLayout.LayoutParams placeParams = new RelativeLayout.LayoutParams(
-                        (int) pxFromDp((1000 - 50) * multiplier),
-                        (int) pxFromDp((1000 - 50) * multiplier)
-                );
-                // и отступы
-                placeParams.leftMargin = (int) pxFromDp(
-                        (25 + (1000 * (
-                                placeCursor.getLong(placeCursor.getColumnIndex(
-                                        SchoolContract.TablePlaces.COLUMN_ORDINAL
-                                )) - 1))) * multiplier);
-                placeParams.topMargin = (int) pxFromDp(25 * multiplier);
-                placeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                placeParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                placeParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-
-//-----текст оценок-----
-
-                //текст с оценками
-                final TextView grade1Text = new TextView(this);
-                grade1Text.setTextColor(Color.WHITE);
-                grade1Text.setTextSize(325 * multiplier);
-                grade1Text.setText("");
-
-                final TextView grade2Text = new TextView(this);
-                grade2Text.setTextColor(Color.WHITE);
-                grade2Text.setTextSize(325 * multiplier);
-                grade2Text.setText("");
-
-                //параметры текста
-                RelativeLayout.LayoutParams grade1TextParams = new RelativeLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-                );
-                grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                grade1TextParams.setMargins((int) pxFromDp(25 * multiplier), 0, 0, 0);
-
-                RelativeLayout.LayoutParams grade2TextParams = new RelativeLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-                );
-                grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                grade2TextParams.setMargins(0, 0, (int) pxFromDp(25 * multiplier), 0);
-
-                //выводим текст в контейнер
-                placeOut.addView(grade1Text, grade1TextParams);
-                placeOut.addView(grade2Text, grade2TextParams);
-
-//------создание ученика на месте------
-
-//-----контейнер ученика----
-//(с именем и картинкой)
-                //контейнер
-                LinearLayout learnerContainer = new LinearLayout(this);
-                learnerContainer.setOrientation(LinearLayout.VERTICAL);
-                //параметры контейнера
-                LinearLayout.LayoutParams learnerContainerParams = new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                );
-
-                //получаем ученика, который сидит на этом месте
+                // получаем id ученика, который сидит на этом месте
                 long learnerId = db.getLearnerIdByClassIdAndPlaceId(
                         learnersClassId,
-                        placeCursor.getLong(placeCursor.getColumnIndex(
+                        placesCursor.getLong(placesCursor.getColumnIndex(
                                 SchoolContract.TablePlaces.KEY_PLACE_ID
                         ))
                 );
-                //если ученик есть
-                if (learnerId != -1) {
 
-                    //ищем ученика в массиве с оценками
+                // если ученика нет, то нет и смысла выводить здесь что-либо
+                if (learnerId >= 0) {
+
+                    // ищем ученика в массиве с оценками
                     int temp = -1;
-                    for (int i = 0; i < learnersAndGrades.length; i++) {
-                        if (learnersAndGrades[i].learnerId == learnerId) {
+
+                    for (int i = 0; i < learnersAndTheirGrades.length; i++) {
+                        if (learnersAndTheirGrades[i].learnerId == learnerId) {
                             temp = i;
                             break;
                         }
                     }
                     final int learnerPosition = temp;
 
-                    //получаем ученика
-                    Cursor learnerCursor = db.getLearner(learnerId);
-                    learnerCursor.moveToFirst();
+                    desksList.get(desksList.size() - 1).seatingLearnerNumber[
+                            (int) (placesCursor.getLong(placesCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1)
+                            ] = learnerPosition;
 
-                    //старые данные сохраненных оценок
-                    if (learnersAndGrades[learnerPosition].getGradesCount() == 2) {
-                        grade2Text.setText("" + learnersAndGrades[learnerPosition].getRawGrade(1));
-                    }
-                    if (learnersAndGrades[learnerPosition].getGradesCount() >= 1) {
-                        grade1Text.setText("" + learnersAndGrades[learnerPosition].getRawGrade(0));
-                    }
-
-
-//------------контейнер картинки------------
-                    //создаем layout контейнер
-                    RelativeLayout imageContainer = new RelativeLayout(this);
+                    // создаем layout с контейнером ученика и оценками
+                    RelativeLayout placeOut = new RelativeLayout(this);
+                    // сохраняем контейнер чтобы потом менять ему размеры
+                    learnersAndTheirGrades[learnerPosition].viewPlaceOut = placeOut;
                     //ставим размеры
+                    RelativeLayout.LayoutParams placeOutParams = new RelativeLayout.LayoutParams(
+                            (int) pxFromDp((NO_ZOOMED_DESK_SIZE - NO_ZOOMED_LEARNER_BORDER_SIZE * 2) * multiplier),
+                            (int) pxFromDp((NO_ZOOMED_DESK_SIZE - NO_ZOOMED_LEARNER_BORDER_SIZE * 2) * multiplier)
+                    );
+                    // выравниваем его относительно парты
+                    placeOutParams.leftMargin = (int) pxFromDp((NO_ZOOMED_DESK_SIZE
+                            * (placesCursor.getLong(placesCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1)
+                            + NO_ZOOMED_LEARNER_BORDER_SIZE) * multiplier);
+                    placeOutParams.topMargin = (int) pxFromDp(NO_ZOOMED_LEARNER_BORDER_SIZE * multiplier);
+                    placeOutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    placeOutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                    deskLayout.addView(placeOut, placeOutParams);
+
+
+                    // первый текст с оценкой // todo оценки после отображения ученика
+                    final TextView grade1Text = new TextView(this);
+                    // сохраняем текст чтобы потом менять ему размеры
+                    learnersAndTheirGrades[learnerPosition].viewGrade1 = grade1Text;
+                    grade1Text.setTextColor(Color.WHITE);
+                    grade1Text.setTextSize(13 * multiplier);// 325
+                    // если в массивах есть данные об оценках
+                    if (learnersAndTheirGrades[learnerPosition].learnerGrades[1] > 0) {
+                        grade1Text.setText(Integer.toString(learnersAndTheirGrades[learnerPosition].learnerGrades[2]));
+                    } else
+                        grade1Text.setText("");
+                    RelativeLayout.LayoutParams grade1TextParams = new RelativeLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                    );
+                    grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    grade1TextParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                    placeOut.addView(grade1Text, grade1TextParams);
+
+                    // второй текст с оценкой
+                    final TextView grade2Text = new TextView(this);
+                    // сохраняем текст чтобы потом менять ему размеры
+                    learnersAndTheirGrades[learnerPosition].viewGrade2 = grade2Text;
+                    grade2Text.setTextColor(Color.WHITE);
+                    grade2Text.setTextSize(13 * multiplier);// 325
+                    if (learnersAndTheirGrades[learnerPosition].learnerGrades[2] > 0) {
+                        grade2Text.setText(Integer.toString(learnersAndTheirGrades[learnerPosition].learnerGrades[2]));
+                    } else
+                        grade2Text.setText("");
+                    RelativeLayout.LayoutParams grade2TextParams = new RelativeLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                    );
+                    grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    grade2TextParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    placeOut.addView(grade2Text, grade2TextParams);
+
+
+                    // контейнер ученика
+                    LinearLayout learnerContainer = new LinearLayout(this);
+                    learnerContainer.setOrientation(LinearLayout.VERTICAL);
+                    learnerContainer.setWeightSum(4);
+                    //параметры контейнера
+                    LinearLayout.LayoutParams learnerContainerParams = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                    );
+                    placeOut.addView(learnerContainer, learnerContainerParams);
+
+
+                    // контейнер картинки
+                    RelativeLayout imageContainer = new RelativeLayout(this);
+                    // ставим размеры
                     LinearLayout.LayoutParams imageContainerParams = new LinearLayout.LayoutParams(
                             RelativeLayout.LayoutParams.MATCH_PARENT,
-                            RelativeLayout.LayoutParams.MATCH_PARENT,
-                            0.75F
+                            0,
+                            3
                     );
                     learnerContainer.addView(imageContainer, imageContainerParams);
 
 
-//------------картинка ученика------------
-//создаем картинку
+                    // создаем картинку ученика
                     final ImageView tempLernerImage = new ImageView(this);
+                    RelativeLayout.LayoutParams tempLernerImageParams = new RelativeLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                    );
+                    // сохраняем картинку чтобы потом менять её
+                    learnersAndTheirGrades[learnerPosition].viewLearnerImage = tempLernerImage;
+                    //добавляем картинку в контейнер
+                    imageContainer.addView(tempLernerImage, tempLernerImageParams);
 
+                    //находим последнюю поставленную оценку
+                    int currentGrade = learnersAndTheirGrades[learnerPosition].learnerGrades[0];
+                    if (learnersAndTheirGrades[learnerPosition].learnerGrades[2] != 0) {
+                        currentGrade = learnersAndTheirGrades[learnerPosition].learnerGrades[2];
+                    } else if (learnersAndTheirGrades[learnerPosition].learnerGrades[1] != 0)
+                        currentGrade = learnersAndTheirGrades[learnerPosition].learnerGrades[1];
 
-                    //ставим ей изображение по оценке(из памяти)
-                    switch ((int) learnersAndGrades[learnerPosition].getGrade()) {
+                    // ставим в tempLernerImage изображение по последней оценке(из памяти)
+                    switch (currentGrade) {
                         case -2:
                             tempLernerImage.setImageResource(R.drawable.lesson_learner_abs_white);
                             break;
@@ -596,387 +632,323 @@ public class LessonActivity extends AppCompatActivity {
                             tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
                             break;
                         default:
-                            //5
-                            if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
+                            if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 20) {
+                                //1
+                                tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
+                            } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 41) {
+                                //2
+                                tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
+                            } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 60) {
+                                //3
+                                tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
+                            } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 80) {
+                                //4
+                                tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
+                            } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 100) {
+                                //5
                                 tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
                             }
-                            //4
-                            if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
-                                tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
-                            }
-                            //3
-                            if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
-                                tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
-                            }
-                            //2
-                            if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
-                                tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
-                            }
-                            //1
-                            if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
-                                tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
-                            }
-
-                            //tempLernerImage.setImageResource(R.drawable.learner_active);
-
                     }
-                    //параметры картинки
-                    LinearLayout.LayoutParams tempLernerImageParams = new LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            0.75F
-                    );
 
-                    //добавляем картинку в контейнер
-                    imageContainer.addView(tempLernerImage, tempLernerImageParams);
-
-//---------------контейнер главного текста---------------
-
-                    //создаем layout с контейнером
-                    LinearLayout bigTextContainer = new LinearLayout(this);
-                    //ставим размеры
-                    RelativeLayout.LayoutParams bigTextContainerParams = new RelativeLayout.LayoutParams(
-                            RelativeLayout.LayoutParams.MATCH_PARENT,
-                            RelativeLayout.LayoutParams.MATCH_PARENT
-                    );
-                    bigTextContainer.setGravity(Gravity.CENTER_HORIZONTAL);
-                    imageContainer.addView(bigTextContainer, bigTextContainerParams);
-
-//---------------главный текст---------------
+                    // текст главной оценки
                     final TextView bigText = new TextView(this);
-                    bigText.setTextColor(Color.WHITE);
-                    bigText.setTextSize(340 * multiplier);
-                    if (learnersAndGrades[learnerPosition].getGrade() > 0) {
-                        bigText.setText("" + learnersAndGrades[learnerPosition].getGrade());
+                    // сохраняем текст чтобы потом менять ему размеры
+                    learnersAndTheirGrades[learnerPosition].viewMainGradeText = bigText;
+                    bigText.setTextColor(Color.BLACK);
+                    bigText.setTextSize(13 * multiplier);//340
+                    if (currentGrade > 0) {
+                        bigText.setText("" + currentGrade);
                     } else
                         bigText.setText("");
                     bigText.setGravity(Gravity.BOTTOM);
-                    //параметры текста
-                    LinearLayout.LayoutParams bigTextParams = new LinearLayout.LayoutParams(
+                    // параметры текста
+                    RelativeLayout.LayoutParams bigTextParams = new RelativeLayout.LayoutParams(
                             ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT
                     );
-                    bigTextParams.gravity = Gravity.BOTTOM;
+                    //bigTextParams.gravity = Gravity.BOTTOM;
+                    bigTextParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    bigTextParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                    imageContainer.addView(bigText, bigTextParams);
 
-                    bigTextContainer.addView(bigText, bigTextParams);
 
-//---------------текст ученика---------------
-                    //создание текста
-                    TextView tempLearnerText = new TextView(this);
-                    //tempLearnerText.setBackgroundColor(Color.BLACK);отладка
-                    tempLearnerText.setTextSize(200 * multiplier);
-                    tempLearnerText.setSingleLine(true);
-                    tempLearnerText.setGravity(Gravity.TOP);
-                    tempLearnerText.setTextColor(Color.WHITE);
-                    tempLearnerText.setAllCaps(true);
-                    // проверяем не пустое ли имя
-                    if ((learnerCursor.getString(learnerCursor.getColumnIndex(
-                            SchoolContract.TableLearners.COLUMN_FIRST_NAME
-                    ))).length() == 0) {
-                        tempLearnerText.setText(
-                                learnerCursor.getString(learnerCursor.getColumnIndex(
-                                        SchoolContract.TableLearners.COLUMN_SECOND_NAME
-                                ))
-                        );
+                    // текст ученика
+                    TextView learnerNameText = new TextView(this);
+                    // сохраняем текст чтобы потом менять ему размеры
+                    learnersAndTheirGrades[learnerPosition].viewLearnerNameText = learnerNameText;
+                    learnerNameText.setTextSize(8 * multiplier);//200
+                    learnerNameText.setSingleLine(true);
+                    learnerNameText.setGravity(Gravity.TOP);
+                    learnerNameText.setTextColor(Color.BLACK);
+                    learnerNameText.setAllCaps(true);
+                    // выставляем в текстовое поле имя и фамилию
+                    if (learnersAndTheirGrades[learnerPosition].name.length() == 0) {
+                        learnerNameText.setText(learnersAndTheirGrades[learnerPosition].lastName);
 
                     } else
-                        tempLearnerText.setText(
-                                (learnerCursor.getString(learnerCursor.getColumnIndex(
-                                        SchoolContract.TableLearners.COLUMN_FIRST_NAME
-                                ))).charAt(0) + " " +
-                                        learnerCursor.getString(learnerCursor.getColumnIndex(
-                                                SchoolContract.TableLearners.COLUMN_SECOND_NAME
-                                        ))
-                        );
-
+                        learnerNameText.setText(learnersAndTheirGrades[learnerPosition].name.charAt(0) + " " +
+                                learnersAndTheirGrades[learnerPosition].lastName);
                     //параметры текста
-                    LinearLayout.LayoutParams tempLearnerTextParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams learnerNameTextParams = new LinearLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            2.25F
+                            0,
+                            1
                     );
+                    learnerContainer.addView(learnerNameText, learnerNameTextParams);
 
-                    //добавляем текст в контейнер
-                    learnerContainer.addView(tempLearnerText, tempLearnerTextParams);
-
-//------------при нажатии на контейнер ученика------------
+                    // при нажатии на контейнер ученика
                     learnerContainer.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if (learnersAndGrades[learnerPosition].grade[0] != -2)
-                                if (learnersAndGrades[learnerPosition].getGrade() != maxAnswersCount) {
-                                    learnersAndGrades[learnerPosition].setGrade(
-                                            (byte) (1 + learnersAndGrades[learnerPosition].getGrade())
-                                    );
+                            // меняем его оценку
+
+                            // если стоит Н, то ничего не делаем
+                            if (learnersAndTheirGrades[learnerPosition].learnerGrades[0] != -2) {
+                                // если все же стоит какая-то оценка,
+
+                                // смотрим можем ли ее увеличивать
+                                if (learnersAndTheirGrades[learnerPosition].learnerGrades[0] != maxAnswersCount) {// если да
+                                    // увеличиваем ее на один пункт
+                                    learnersAndTheirGrades[learnerPosition].learnerGrades[0]++;
                                 } else {
-                                    learnersAndGrades[learnerPosition].setGrade((byte) 1);
+                                    // если увеличить нельзя сбрасываем до минимума
+                                    learnersAndTheirGrades[learnerPosition].learnerGrades[0] = 1;
                                 }
 
-                            switch ((int) learnersAndGrades[learnerPosition].getGrade()) {
-                                case -2:
-                                    tempLernerImage.setImageResource(R.drawable.lesson_learner_abs_white);
-                                    break;
+                                // выводим в текстовое поле
+                                learnersAndTheirGrades[learnerPosition].viewMainGradeText.setText(
+                                        "" + learnersAndTheirGrades[learnerPosition].learnerGrades[0]
+                                );
 
-                                default:
-                                    //5
-                                    if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
-                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
-                                    }
-                                    //4
-                                    if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
-                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
-                                    }
-                                    //3
-                                    if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
-                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
-                                    }
-                                    //2
-                                    if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
-                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
-                                    }
+                                // ставим соответствующую картинку
+                                if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 20) {
                                     //1
-                                    if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
-                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
-                                    }
-
-
-                                    //tempLernerImage.setImageResource(R.drawable.learner_active);
-
-//                                case 0:
-//                                    tempLernerImage.setImageResource(R.drawable.learner_gray);
-//                                    break;
-
-//                                case 1:
-//                                    tempLernerImage.setImageResource(R.drawable.learner_red);
-//                                    break;
-//                                case 2:
-//                                    tempLernerImage.setImageResource(R.drawable.learner_orange);
-//                                    break;
-//                                case 3:
-//                                    tempLernerImage.setImageResource(R.drawable.learner_yellow);
-//                                    break;
-//                                case 4:
-//                                    tempLernerImage.setImageResource(R.drawable.learner_lime);
-//                                    break;
-//                                case 5:
-//                                    tempLernerImage.setImageResource(R.drawable.learner_green);
-//                                    break;
+                                    tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
+                                } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 41) {
+                                    //2
+                                    tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
+                                } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 60) {
+                                    //3
+                                    tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
+                                } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 80) {
+                                    //4
+                                    tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
+                                } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 100) {
+                                    //5
+                                    tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
+                                }
                             }
-                            if (learnersAndGrades[learnerPosition].getGrade() > 0) {
-                                bigText.setText("" + learnersAndGrades[learnerPosition].getGrade());
-                            } else
-                                bigText.setText("");
                         }
                     });
 
-                    learnerContainer.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                    // при долгом клике на ученика
+                    learnerContainer.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
-                        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+                        public boolean onLongClick(View v) {
 
-                            //отсутствует
-                            if (learnersAndGrades[learnerPosition].getGrade() != -2 && learnersAndGrades[learnerPosition].getGradesCount() < 1) {
-                                contextMenu.add(0, -2, 0, R.string.lesson_activity_context_menu_text_no_learner).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_abs_white);
-                                        learnersAndGrades[learnerPosition].setGrade((byte) -2);
-                                        bigText.setText("");
-                                        return true;
-                                    }
-                                });
-                            }
-                            //нет оценки
-                            if (learnersAndGrades[learnerPosition].getGrade() != 0) {
-                                contextMenu.add(0, 0, 0, R.string.lesson_activity_context_menu_text_no_answers).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
-                                        learnersAndGrades[learnerPosition].setGrade((byte) 0);
-                                        bigText.setText("");
-                                        return true;
-                                    }
-                                });
-                            }
-                            //вычесть 1
-                            if (learnersAndGrades[learnerPosition].getGrade() > 0) {
-                                contextMenu.add(0, 1, 0, R.string.lesson_activity_context_menu_text_delete_answer).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        if (learnersAndGrades[learnerPosition].getGrade() == 1) {
-                                            learnersAndGrades[learnerPosition].setGrade(
-                                                    (byte) (maxAnswersCount)
-                                            );
-                                        } else
-                                            learnersAndGrades[learnerPosition].setGrade(
-                                                    (byte) (learnersAndGrades[learnerPosition].getGrade() - 1)
-                                            );
-                                        //ставим картинку
-                                        //5
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
-                                        }
-                                        //4
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
-                                        }
-                                        //3
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
-                                        }
-                                        //2
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
-                                        }
-                                        //1
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
-                                        }
-                                        //ставим текст
-                                        bigText.setText("" + learnersAndGrades[learnerPosition].getGrade());
-                                        return true;
-                                    }
-                                });
-                            }
-                            //прибавить 1
-                            if (learnersAndGrades[learnerPosition].getGrade() != maxAnswersCount && learnersAndGrades[learnerPosition].getGrade() >= 0) {
-                                contextMenu.add(0, 2, 0, R.string.lesson_activity_context_menu_text_add_answer).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        learnersAndGrades[learnerPosition].setGrade(
-                                                (byte) (learnersAndGrades[learnerPosition].getGrade() + 1)
-                                        );
-                                        bigText.setText("" + learnersAndGrades[learnerPosition].getGrade());
-                                        //ставим картинку
-                                        //5
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
-                                        }
-                                        //4
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
-                                        }
-                                        //3
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
-                                        }
-                                        //2
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
-                                        }
-                                        //1
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
-                                        }
-                                        //ставим текст
-                                        return true;
-                                    }
-                                });
-                            }
-                            //предыдущая оценка
-                            if (learnersAndGrades[learnerPosition].getGradesCount() != 0 && learnersAndGrades[learnerPosition].getGrade() != -2) {
-                                contextMenu.add(0, 6, 0, R.string.lesson_activity_context_menu_text_last_answers).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        //обнуляем текущую
-                                        learnersAndGrades[learnerPosition].setGrade((byte) 0);
-                                        //берем предыдущую
-                                        learnersAndGrades[learnerPosition].lastGrade();
+                            // выставляем этого ученика как выбранного
+                            chosenLearnerPosition = learnerPosition;
 
-                                        bigText.setText("" + learnersAndGrades[learnerPosition].getGrade());
+                            // вызываем диалог изменения оценок
+                            GradeDialogFragment gradeDialog = new GradeDialogFragment();
+                            // передаем на вход данные
+                            Bundle args = new Bundle();
+                            args.putString(GradeDialogFragment.ARGS_LEARNER_NAME,
+                                    learnersAndTheirGrades[learnerPosition].lastName + " "
+                                            + learnersAndTheirGrades[learnerPosition].name
+                            );
 
-                                        //ставим картинку
-                                        //5
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 100) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
-                                        }
-                                        //4
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 80) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
-                                        }
-                                        //3
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 60) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
-                                        }
-                                        //2
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 41) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
-                                        }
-                                        //1
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) <= 20) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
-                                        }
-                                        //0
-                                        if ((int) (((float) learnersAndGrades[learnerPosition].getGrade() / (float) maxAnswersCount) * 100F) == 0) {
-                                            tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
-                                        }
-                                        switch (learnersAndGrades[learnerPosition].getGradesCount()) {
-                                            case 0:
-                                                grade1Text.setText("");
-                                                break;
-                                            case 1:
-                                                grade2Text.setText("");
-                                                break;
-                                        }
-                                        return true;
-                                    }
-                                });
+                            // переводим названия предметов в строковый массив
+                            String[] stringTypes = new String[answersTypes.length];
+                            for (int typeI = 0; typeI < answersTypes.length; typeI++) {
+                                stringTypes[typeI] = answersTypes[typeI].typeName;
                             }
-                            //новая оценка
-                            if (learnersAndGrades[learnerPosition].getGradesCount() != 2 && learnersAndGrades[learnerPosition].getGrade() != 0 && learnersAndGrades[learnerPosition].getGrade() != -2) {
-                                contextMenu.add(0, 7, 0, R.string.lesson_activity_context_menu_text_new_answers).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem menuItem) {
-                                        tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
-                                        bigText.setText("");
+                            args.putStringArray(GradeDialogFragment.ARGS_STRING_GRADES_TYPES_ARRAY,
+                                    stringTypes
+                            );
 
-                                        switch (learnersAndGrades[learnerPosition].getGradesCount()) {
-                                            case 0:
-                                                grade1Text.setText("" + learnersAndGrades[learnerPosition].getGrade());
-                                                break;
-                                            case 1:
-                                                grade2Text.setText("" + learnersAndGrades[learnerPosition].getGrade());
-                                                break;
-                                        }
-                                        learnersAndGrades[learnerPosition].nextGrade();
-                                        return true;
-                                    }
-                                });
-                            }
+                            args.putIntArray(GradeDialogFragment.ARGS_INT_GRADES_ARRAY,
+                                    learnersAndTheirGrades[learnerPosition].learnerGrades.clone()
+                            );
+
+                            args.putIntArray(GradeDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY,
+                                    learnersAndTheirGrades[learnerPosition].learnerGradesTypes.clone()
+                            );
+
+                            args.putInt(GradeDialogFragment.ARGS_INT_MAX_GRADE,
+                                    maxAnswersCount
+                            );
+
+                            gradeDialog.setArguments(args);
+                            // показываем диалог
+                            gradeDialog.show(getFragmentManager(), "gradeDialog - Hello");
+
+
+                            return true;
                         }
                     });
-
-                    learnerCursor.close();
                 }
-                //добавляем контейнер с текстом и картинкой в основной контейнер
-                placeOut.addView(learnerContainer, learnerContainerParams);
-                tempRelativeLayoutDesk.addView(placeOut, placeParams);
             }
-            placeCursor.close();
-            room.addView(tempRelativeLayoutDesk, tempRelativeLayoutDeskParams);
+            placesCursor.close();
         }
-        //размеры комнаты по самой дальней парте
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                (maxX + (int) (pxFromDp(3000) * multiplier)),
-                (maxY + (int) (pxFromDp(3000) * multiplier))
-        );
-        //getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT
-        //если ширина экрана всетаки больше
-        if (getResources().getDisplayMetrics().widthPixels >= maxX + (int) (pxFromDp(3000) * multiplier)) {
-            layoutParams.width = getResources().getDisplayMetrics().widthPixels;
-        }
-        //если высота экрана всетаки больше
-        if (getResources().getDisplayMetrics().heightPixels - (int) pxFromDp(81) >= maxY + (int) (pxFromDp(3000) * multiplier)) {
-            layoutParams.height = getResources().getDisplayMetrics().heightPixels - (int) pxFromDp(81);
-        }
-
-        room.setLayoutParams(layoutParams);
-
-
         desksCursor.close();
         db.close();
     }
 
-//----------------------------------------функциональные кнопки-------------------------------------
+
+    // обратная связь от диалога оценок
+    @Override
+    public void setGrades(int[] grades, int[] chosenTypesNumbers) {
+        // передаем измененные массивы в общий список
+        learnersAndTheirGrades[chosenLearnerPosition].learnerGrades = grades;
+        learnersAndTheirGrades[chosenLearnerPosition].learnerGradesTypes = chosenTypesNumbers;
+
+        // обновляем текст и картинки на ученике
+        learnersAndTheirGrades[chosenLearnerPosition].updateViewsData();
+    }
+
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+
+        //-действие
+        //=состояние
+        // комментарий
+
+        //первое нажатие
+        //  =перемещение=
+        //  -ищем парту и омечаем-
+        //нажатие
+        //  -заканчиваем перемещение, сохраняем-
+        //  =zoom=
+        //  -инициализируем зум-
+        //движение
+        //  -при перемещении меняем-
+        //  -при зуме зумим-
+        //отпускание
+        //   если есть прекращаем зум, не начиная касания
+        //  =none=
+        //последнее отпускание
+        //  -если есть завершаем перемещение-
+        //  =none=
+
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN: {// поставили первый палец
+                break;
+            }
+            case MotionEvent.ACTION_POINTER_DOWN:// поставили следующий палец
+                // если уже поставлен второй палец на остальные не реагируем
+                if (motionEvent.getPointerCount() == 2) {
+
+                    // --------- начинаем zoom -----------
+                    // находим изначальное растояние между пальцами
+                    oldDist = spacing(motionEvent);
+                    // готовимся к зуму
+                    mode = ZOOM;
+                    // начальные данные о пальцах
+                    oldMultiplier = multiplier;
+                    oldMid = findMidPoint(motionEvent);
+
+                }
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                if (mode == ZOOM) {//зумим
+                    // текущая середина касания пальцев
+                    Point nowMid = findMidPoint(motionEvent);
+                    //находим коэффициент разницы между новым и изначальным расстоянием между пальцами
+                    float nowDist = spacing(motionEvent);
+                    float scale = nowDist * 100 / oldDist;
+                    // -------- сам зум --------
+                    if ((multiplier * scale / 100 >= 0.25f) &&//слишком маленький размер
+                            (multiplier * scale / 100 <= 4f)//слишком большой размер
+                    ) {
+                        // переназначаем смещение осей из-за зума
+                        xAxisPXOffset = nowMid.x - (((nowMid.x - xAxisPXOffset) * scale)) / 100;
+                        yAxisPXOffset = nowMid.y - (((nowMid.y - yAxisPXOffset) * scale)) / 100;
+                        // меняя множитель назначаем растяжение осей
+                        multiplier = multiplier * scale / 100;
+                        // пробегаемся по партам
+                        for (int i = 0; i < desksList.size(); i++) {
+                            if (i == 12)
+                                Log.i(TAG, "onTouch: ------>answer =" + (nowMid.x - ((int) (scale * (nowMid.x - desksList.get(i).pxX))) / 100) +
+                                        " nowMid.x=" + nowMid.x + " scale=" + scale + " desksList.get(i).pxX=" + desksList.get(i).pxX
+                                );
+
+                            // новые координаты и размеры
+                            desksList.get(i).setDeskParams(
+                                    // трансформация координаты относительно центра пальцев
+                                    nowMid.x - ((scale * (nowMid.x - desksList.get(i).pxX))) / 100,
+                                    nowMid.y - ((scale * (nowMid.y - desksList.get(i).pxY))) / 100,
+                                    // трансформация размера за счет мультипликатора
+                                    (int) pxFromDp(NO_ZOOMED_DESK_SIZE * desksList.get(i).numberOfPlaces * multiplier),
+                                    (int) pxFromDp(NO_ZOOMED_DESK_SIZE * multiplier)
+                            );
+                            // новые размеры элементам ученика
+                            for (int placeI = 0; placeI < desksList.get(i).seatingLearnerNumber.length; placeI++) {
+                                if (desksList.get(i).seatingLearnerNumber[placeI] != -1)
+                                    learnersAndTheirGrades[desksList.get(i).seatingLearnerNumber[placeI]].setSizes(
+                                            multiplier, placeI
+                                    );
+                            }
+
+                        }
+                    }
+
+                    // -------- перемещение центра пальцев --------
+                    // пробегаемся по партам
+                    for (int i = 0; i < desksList.size(); i++) {
+                        // обновляем координаты изменяя только положение парт
+                        desksList.get(i).setDeskPosition(
+                                desksList.get(i).pxX + nowMid.x - oldMid.x,
+                                desksList.get(i).pxY + nowMid.y - oldMid.y
+                        );
+                    }
+                    //переназначаем центр осей по перемещению центра пальцев
+                    xAxisPXOffset = xAxisPXOffset + nowMid.x - oldMid.x;
+                    yAxisPXOffset = yAxisPXOffset + nowMid.y - oldMid.y;
+
+                    // текущие позиции пальцев становятся предыдущими
+                    oldDist = nowDist;
+                    oldMid = nowMid;
+                }
+                break;
+
+            case MotionEvent.ACTION_POINTER_UP: {
+                DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+                // сохраняем множитель и смещение для этого кабинета
+                db.setCabinetMultiplierOffsetXOffsetY(
+                        cabinetId,
+                        (int) ((multiplier - 0.25F) / 0.0375F),
+                        (int) xAxisPXOffset,
+                        (int) yAxisPXOffset
+                );
+                mode = NONE;
+                break;
+            }
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                // прекращаем перемещение
+                mode = NONE;
+        }
+
+        return true;// todo не везде->?
+    }
+
+    // Расстояние между первым и вторым пальцами из event
+    private float spacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
+    // координата середины между первым и вторым пальцами из event
+    private Point findMidPoint(MotionEvent event) {
+        float x = event.getX(0) + event.getX(1);
+        float y = event.getY(0) + event.getY(1);
+        return new Point((int) (x / 2), (int) (y / 2));
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -993,174 +965,273 @@ public class LessonActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        // показываем диалог подтверждения выхода из активности
+        EndLessonDialogFragment endLessonDialogFragment = new EndLessonDialogFragment();
+        endLessonDialogFragment.show(getSupportFragmentManager(), "EndLesson - Hello");
+    }
+
+    // обратная связь от диалога EndLessonDialogFragment
+    @Override
+    public void endLesson() {
+
         //обнуляем данные
-        lessonAttitudeId = -2;
+        chosenLearnerPosition = -1;
+        lessonAttitudeId = -1;
         subjectId = 0;
         learnersClassId = 0;
         cabinetId = 0;
-        lessonName = null;
-        learnersAndGrades = null;
-        super.onBackPressed();
-    }
+        subjectName = null;
+        learnersAndTheirGrades = null;
 
+        // выходим из активности
+        finish();
+    }
 
     private float pxFromDp(float dp) {
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
 
-}
 
-//--------------------------------класс для хранения данных-----------------------------------------
-class LearnerAndGrade {
-    long learnerId;
-    private byte gradesCount = 0;//здесь количество с нуля!
-    byte[] grade = new byte[3];
+    //класс для хранения типов ответов
+    class AnswersType {
+        long id;
+        String typeName;
 
-    LearnerAndGrade(long learnerId) {
-        this.learnerId = learnerId;
-
-    }
-
-
-    byte getGrade() {
-        return grade[gradesCount];
-    }
-
-    byte getLastGrade() {
-        if (gradesCount == 0) {
-            return -1;
-        } else
-            return grade[gradesCount - 1];
-    }
-
-    byte getRawGrade(int i) {
-        if (i >= 0 && i <= 2) {
-            return grade[i];
-        }
-        return grade[0];
-    }
-
-    void setGrade(byte grade) {
-        this.grade[gradesCount] = grade;
-    }
-
-    void nextGrade() {
-        if (gradesCount != 2) {
-            gradesCount++;
+        public AnswersType(long id, String typeName) {
+            this.id = id;
+            this.typeName = typeName;
         }
     }
 
-    void lastGrade() {
-        if (gradesCount != 0) {
-            gradesCount--;
+    // класс для хранения ученика и его оценок
+    class MyLearnerAndHisGrades {
+
+        // параметры ученика
+        long learnerId;
+        String name;
+        String lastName;
+
+        // массив оценок
+        int[] learnerGrades;
+        // массив номеров типов оценок
+        int[] learnerGradesTypes;
+
+        MyLearnerAndHisGrades(long learnerId, String name, String lastName) {
+            this.learnerId = learnerId;
+            this.name = name;
+            this.lastName = lastName;
+            this.learnerGrades = new int[]{0, 0, 0};
+            this.learnerGradesTypes = new int[]{0, 0, 0};
+        }
+
+        // контейнер места ученика
+        RelativeLayout viewPlaceOut;
+        // текст имени ученика
+        TextView viewLearnerNameText;
+        // текст главной оценки
+        TextView viewMainGradeText;
+        // текст побочной оценки 1
+        TextView viewGrade1;
+        // текст побочной оценки 2
+        TextView viewGrade2;
+
+        // картинка ученика
+        ImageView viewLearnerImage;
+
+        void setSizes(float multiplier, int placeNumber) {
+            // контейнер места ученика
+            ((RelativeLayout.LayoutParams) viewPlaceOut.getLayoutParams()).leftMargin = (int) pxFromDp((NO_ZOOMED_DESK_SIZE
+                    * placeNumber
+                    + NO_ZOOMED_LEARNER_BORDER_SIZE) * multiplier);
+
+            ((RelativeLayout.LayoutParams) viewPlaceOut.getLayoutParams()).topMargin =
+                    (int) pxFromDp(NO_ZOOMED_LEARNER_BORDER_SIZE * multiplier);
+
+            ((RelativeLayout.LayoutParams) viewPlaceOut.getLayoutParams()).width =
+                    (int) pxFromDp((NO_ZOOMED_DESK_SIZE - NO_ZOOMED_LEARNER_BORDER_SIZE * 2) * multiplier);
+
+            ((RelativeLayout.LayoutParams) viewPlaceOut.getLayoutParams()).height =
+                    (int) pxFromDp((NO_ZOOMED_DESK_SIZE - NO_ZOOMED_LEARNER_BORDER_SIZE * 2) * multiplier);
+
+
+            // текст побочной оценки 1
+            this.viewGrade1.setTextSize(13 * multiplier);
+
+
+            // текст побочной оценки 2
+            this.viewGrade2.setTextSize(13 * multiplier);
+
+
+            // текст главной оценки
+            this.viewMainGradeText.setTextSize(13 * multiplier);
+
+
+            // текст имени ученика
+            this.viewLearnerNameText.setTextSize(8 * multiplier);
+        }
+
+        void updateViewsData() {
+
+            // текст главной оценки
+            if (learnerGrades[0] > 0) {
+                this.viewMainGradeText.setText("" + learnerGrades[0]);
+            } else
+                this.viewMainGradeText.setText("");
+
+            // текст побочной оценки 1
+            if (learnerGrades[1] > 0) {
+                this.viewGrade1.setText("" + learnerGrades[1]);
+            } else
+                this.viewGrade1.setText("");
+
+            // текст побочной оценки 2
+            if (learnerGrades[2] > 0) {
+                this.viewGrade2.setText("" + learnerGrades[2]);
+            } else
+                this.viewGrade2.setText("");
+
+            // меняем изображение на учненике в соответствии с оценкой
+            switch (learnerGrades[0]) {
+                case -2:
+                    viewLearnerImage.setImageResource(R.drawable.lesson_learner_abs_white);
+                    break;
+                case 0:
+                    viewLearnerImage.setImageResource(R.drawable.lesson_learner_0_gray);
+                    break;
+                default:
+                    if ((int) (((float) learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 20) {
+                        //1
+                        viewLearnerImage.setImageResource(R.drawable.lesson_learner_1);
+                    } else if ((int) (((float) learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 41) {
+                        //2
+                        viewLearnerImage.setImageResource(R.drawable.lesson_learner_2);
+                    } else if ((int) (((float) learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 60) {
+                        //3
+                        viewLearnerImage.setImageResource(R.drawable.lesson_learner_3);
+                    } else if ((int) (((float) learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 80) {
+                        //4
+                        viewLearnerImage.setImageResource(R.drawable.lesson_learner_4);
+                    } else if ((int) (((float) learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 100) {
+                        //5
+                        viewLearnerImage.setImageResource(R.drawable.lesson_learner_5);
+                    }
+            }
+
         }
     }
 
-    byte getGradesCount() {
-        return gradesCount;
+    // класс содержащий в себе парту
+    class DeskUnit {
+        int numberOfPlaces;
+        int[] seatingLearnerNumber;
+        RelativeLayout desk;
+        float pxX;
+        float pxY;
+
+        DeskUnit(float pxX, float pxY, int numberOfPlaces, RelativeLayout relativeLayout) {
+            this.pxX = pxX;
+            this.pxY = pxY;
+            this.numberOfPlaces = numberOfPlaces;
+            this.seatingLearnerNumber = new int[numberOfPlaces];
+
+            // заполняем места на партах пустыми учениками
+            for (int learnerI = 0; learnerI < seatingLearnerNumber.length; learnerI++) {
+                seatingLearnerNumber[learnerI] = -1;
+            }
+
+            // --- получаем графический контейнер ---
+            this.desk = relativeLayout;
+
+            // и создаем для него параметры
+            RelativeLayout.LayoutParams newDeskLayoutParams = new RelativeLayout.LayoutParams(
+                    (int) pxFromDp(NO_ZOOMED_DESK_SIZE * numberOfPlaces * multiplier),
+                    (int) pxFromDp(NO_ZOOMED_DESK_SIZE * multiplier)
+            );
+            newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            newDeskLayoutParams.leftMargin = (int) pxX;
+            newDeskLayoutParams.topMargin = (int) pxY;
+            this.desk.setLayoutParams(newDeskLayoutParams);
+
+            // ставим парте Drawable
+            int radius = (int) (pxFromDp(7) * multiplier);
+            ShapeDrawable rectDrawable = new ShapeDrawable(new RoundRectShape(
+                    new float[]{radius, radius, radius, radius, radius, radius, radius, radius},
+                    new RectF(0, 0, 0, 0),
+                    new float[]{0, 0, 0, 0, 0, 0, 0, 0}
+            ));
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
+
+            this.desk.setBackground(rectDrawable);
+        }
+
+        void setDeskParams(float pxX, float pxY, int pxWidth, int pxHeight) {
+            this.pxX = pxX;
+            this.pxY = pxY;
+
+            // создаем новые параметры
+            RelativeLayout.LayoutParams newDeskLayoutParams = new RelativeLayout.LayoutParams(
+                    pxWidth,
+                    pxHeight
+            );
+            newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            newDeskLayoutParams.leftMargin = (int) pxX;
+            newDeskLayoutParams.topMargin = (int) pxY;
+            // и присваиваем их парте
+            desk.setLayoutParams(newDeskLayoutParams);
+
+            // ставим парте Drawable
+            int radius = (int) (pxFromDp(7) * multiplier);
+            ShapeDrawable rectDrawable = new ShapeDrawable(new RoundRectShape(
+                    new float[]{radius, radius, radius, radius, radius, radius, radius, radius},
+                    new RectF(0, 0, 0, 0),
+                    new float[]{0, 0, 0, 0, 0, 0, 0, 0}
+            ));
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
+            desk.setBackground(rectDrawable);
+        }
+
+        void setDeskPosition(float pxX, float pxY) {//desk.getLayoutParams().width и desk.getWidth() это совершенно разные переменные
+            // ----- двигаем координаты в списке -----
+            this.pxX = pxX;
+            this.pxY = pxY;
+
+            // ----- двигаем парту -----
+            RelativeLayout.LayoutParams newParams = new RelativeLayout.LayoutParams(
+                    desk.getLayoutParams().width,
+                    desk.getLayoutParams().height
+            );
+            newParams.leftMargin = (int) pxX;
+            newParams.topMargin = (int) pxY;
+            desk.setLayoutParams(newParams);
+
+            // ----- создаем drawable -----
+            // радиус скругления
+            int radius = (int) (pxFromDp(7) * multiplier);
+            ShapeDrawable rectDrawable = new ShapeDrawable(new RoundRectShape(
+                    new float[]{radius, radius, radius, radius, radius, radius, radius, radius},// внешний радиус скругления
+                    new RectF(0, 0, 0, 0),// размеры внутренней пустой области
+                    new float[]{0, 0, 0, 0, 0, 0, 0, 0}// внутренний радиус скругления
+            ));
+            // задаем цвет
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
+            // и ставим его на задний фон layout
+            desk.setBackground(rectDrawable);
+
+            //    |    A   |     new float[]{A, B, A, B, A, B, A, B}
+            // _  _________________________
+            //    |       /|
+            //    |    /   |
+            // B  |  /     |
+            // _  |/_______|
+            //    |
+        }
     }
+
 }
 
 /*
-    static final int NONE = 0;
-    static final int ZOOM = 2;
-    int mode = NONE;
-    //середина касания пальцев
-    PointF startMid = new PointF();
-    //текущая позиия
-    PointF nowMid = new PointF();
-    //изначальное растояние между пальцам
-    float oldDist = 1f;
-    //начальные параметры обьекта
-    int widthOld = 1;
-    int heightOld = 1;
-    int xOld = 1;
-    int yOld = 1;
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_POINTER_DOWN:
-                //если поставлен второй палец,назначаем новые координаты
-                if (event.getPointerCount() == 2) {
-                    //начальные размеры обьекта
-                    widthOld = myRectangle.getWidth();
-                    heightOld = myRectangle.getHeight();
-                    //начальные координаты обьекта
-                    xOld = (int) myRectangle.getX();
-                    yOld = (int) myRectangle.getY();
-                    //находим изначальное растояние между пальцами
-                    oldDist = spacing(event);
-                    if (oldDist > 10f) {
-                        findMidPoint(startMid, event);
-                        findMidPoint(nowMid, event);
-                        mode = ZOOM;
-                    }
-                }
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (mode == ZOOM) {
-                    //новое расстояние между пальцами
-                    float newDist = spacing(event);
-                    //находим коэффициент разницы между изначальным и новым расстоянием
-                    float scale = newDist / oldDist;
-
-                    if (newDist > 10f) {//слишком маленькое расстояние между пальцами
-                        if (scale > 0.01f &&//слишком маленький коэффициент
-                                (widthOld * scale > 10f && heightOld * scale > 10f) &&//слишком маленький размер
-                                (widthOld * scale < 1500f && heightOld * scale < 1500f)//слишком большой размер
-                                ) {
-                            //-----трансформация размера-----
-                            rectParams.width = (int) (widthOld * scale);
-                            rectParams.height = (int) (heightOld * scale);
-                            myRectangle.setLayoutParams(rectParams);
-
-                            //-----трансформация координаты-----
-                            //текущая середина пальцев
-                            findMidPoint(nowMid, event);
-                            //-перемещение обьекта-
-                            // относительно центра зуммирования и перемещение пальцев в процессе зума
-                            //ставим обьекту координаты
-                            myRectangle.setX(((xOld - startMid.x) * scale) + nowMid.x);
-                            myRectangle.setY(((yOld - startMid.y) * scale) + nowMid.y);
-                        } else {
-                            //если не можем использовать изменение размера,
-                            // тогда просто перемещаем
-                            //берем прошлую середину
-                            float lastX = nowMid.x;
-                            float lastY = nowMid.y;
-                            // и текущую
-                            findMidPoint(nowMid, event);
-                            //и сравниваем их
-                            myRectangle.setX(myRectangle.getX() + nowMid.x - lastX);
-                            myRectangle.setY(myRectangle.getY() + nowMid.y - lastY);
-                        }
-                    }
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_POINTER_UP:
-                //один палец - ничего
-                if (event.getPointerCount() - 1 < 2) {
-                    mode = NONE;
-                }
-                break;
-        }
-        return true;
-    }
-
-    //******************* Расстояние между первым и вторым пальцами из event
-    private float spacing(MotionEvent event) {
-        float x = event.getX(0) - event.getX(1);
-        float y = event.getY(0) - event.getY(1);
-        return (float) Math.sqrt(x * x + y * y);
-    }
-
-    //************* координата середины между первым и вторым пальцами из event
-    private void findMidPoint(PointF point, MotionEvent event) {
-        float x = event.getX(0) + event.getX(1);
-        float y = event.getY(0) + event.getY(1);
-        point.set(x / 2, y / 2);
-    }
-    */
+ * getResources().getConfiguration().orientation = Configuration.ORIENTATION_PORTRAIT;
+//getSupportActionBar().setHomeAsUpIndicator(R.drawable._button_back_arrow_blue);
+ * */

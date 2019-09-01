@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -30,15 +32,15 @@ import java.util.GregorianCalendar;
 public class StartScreenActivity extends AppCompatActivity implements View.OnClickListener, RateInterface {
 
     //текущий урок
-    RelativeLayout relButtonNow;
+    LinearLayout relButtonNow;
     // расписание
-    RelativeLayout relButtonSchedule;
+    ImageView relButtonSchedule;
     // кабинеты
-    RelativeLayout relButtonCabinets;
+    ImageView relButtonCabinets;
     // классы
-    RelativeLayout relButtonClasses;
+    ImageView relButtonClasses;
     // настройки
-    RelativeLayout relButtonSettings;
+    ImageView relButtonSettings;
 
 //--константы--
 
@@ -135,11 +137,11 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_start_screen);
 
         //находим все кнопки
-        relButtonNow = (RelativeLayout) findViewById(R.id.start_screen_button_now);
-        relButtonSchedule = (RelativeLayout) findViewById(R.id.start_screen_button_schedule);
-        relButtonCabinets = (RelativeLayout) findViewById(R.id.start_screen_button_my_cabinets);
-        relButtonClasses = (RelativeLayout) findViewById(R.id.start_screen_button_my_classes);
-        relButtonSettings = (RelativeLayout) findViewById(R.id.start_screen_button_reload);
+        relButtonNow = findViewById(R.id.start_screen_layout_now);
+        relButtonSchedule = findViewById(R.id.start_screen_button_schedule);
+        relButtonCabinets = findViewById(R.id.start_screen_button_my_cabinets);
+        relButtonClasses =  findViewById(R.id.start_screen_button_my_classes);
+        relButtonSettings = findViewById(R.id.start_screen_button_reload);
 
         //назначаем кликеры
         relButtonNow.setOnClickListener(this);
@@ -177,21 +179,21 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 //        }
 //----диалог что нового----
         //если уже создано
-        if (sharedPreferences.contains(WHATS_NEW)) {
-            //если версия старая
-            if (sharedPreferences.getInt(WHATS_NEW, -1) < NOW_VERSION) {
-                //меняем версию
-                editor.putInt(WHATS_NEW, NOW_VERSION);
-                //показываем диалог что нового
-                WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
-                dialogFragment.show(getFragmentManager(), WHATS_NEW);
-            }
-        } else {
-            //если еще не созданно
-            //создаем переменную с версией
-            editor.putInt(WHATS_NEW, NOW_VERSION);
-            //начальный диалог...
-        }
+//        if (sharedPreferences.contains(WHATS_NEW)) {
+//            //если версия старая
+//            if (sharedPreferences.getInt(WHATS_NEW, -1) < NOW_VERSION) {
+//                //меняем версию
+//                editor.putInt(WHATS_NEW, NOW_VERSION);
+//                //показываем диалог что нового
+//                WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
+//                dialogFragment.show(getFragmentManager(), WHATS_NEW);
+//            }
+//        } else {
+//            //если еще не созданно
+//            //создаем переменную с версией
+//            editor.putInt(WHATS_NEW, NOW_VERSION);
+//            //начальный диалог...
+//        }
 
         //завершаем редактирование сохраненных параметров
         editor.commit();
@@ -219,7 +221,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
-            case R.id.start_screen_button_now: {//запуск текущего урока
+            case R.id.start_screen_layout_now: {//запуск текущего урока
                 intent = new Intent(this, LessonActivity.class);
                 GregorianCalendar currentCalendar = new GregorianCalendar();//получаем текущее время
                 currentCalendar.setTime(new Date());

@@ -112,6 +112,7 @@
     <!-- подсказка на экране -->
     <string name="learners_and_grades_out_activity_text_help">Это ваш электронный журнал: список учеников и их ответы по датам.\nВыберите предмет и месяц.\nБелая цифра рядом с датой - это номер урока(1-ый, 2-ой и.т.д.), который вы провели в этот день (предшествующая цифра).\nНажмите на +, так вы добавите ученика.\nУдерживайте имя ученика - откроется меню, где можно его удалить или переименовать.</string>
     <!-- уведомления -->
+    <string name="learners_and_grades_out_activity_load_text">Загрузка…</string>
     <string name="learners_and_grades_out_activity_toast_grades_saved">Ответы сохранены</string>
     <string name="learners_and_grades_out_activity_toast_grades_not_saved">Ошибка! Ответы не сохраны</string>
 
@@ -174,7 +175,6 @@
     <!-- заголовок активности -->
     <string name="title_activity_schedule_month">РАСПИСАНИЕ</string>
     <string name="schedule_month_activity_ad_preview_title">Рекламма</string>
-    <string name="schedule_month_activity_ad_preview_text">Если любите наше приложение, поддержите кликом по рекламе! (Скоро появится)</string>
 
 
     <!-- активность календаря на день-->
@@ -231,9 +231,7 @@
 
 
     <!-- активность редактора рассадки-->
-    <!-- заголовок активности todo formatted -->
-    <string name="title_activity_seating_redactor_first">Рассадка </string>
-    <string name="title_activity_seating_redactor_second"> в кабинете </string>
+    <!-- заголовок активности -->
 
 
     <!-- активность урока-->

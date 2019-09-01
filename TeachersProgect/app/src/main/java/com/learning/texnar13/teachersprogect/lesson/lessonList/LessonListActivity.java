@@ -23,6 +23,8 @@ import java.text.SimpleDateFormat;
 
 public class LessonListActivity extends AppCompatActivity implements EditGradeDialogInterface {
 
+    public static final String LESSON_TIME = "startTime";
+
     public static final String ATTITUDE_ID = "attitudeId";
     public static final String SUBJECT_ID = "subjectId";
     public static final String LIST_ID = "listId";
@@ -105,13 +107,13 @@ public class LessonListActivity extends AppCompatActivity implements EditGradeDi
                 //сохранить оценки
                 for (int i = 0; i < learnersGrades.length; i++) {
                     if (learnersGrades[i].grades[0] != 0) {
-                        db.createGrade(learnersGrades[i].learnerId, learnersGrades[i].grades[0], lessonId, getIntent().getStringExtra(LessonActivity.LESSON_TIME));
+                        db.createGrade(learnersGrades[i].learnerId, learnersGrades[i].grades[0], lessonId, getIntent().getStringExtra(LESSON_TIME));
                     }
                     if (learnersGrades[i].grades[1] != 0) {
-                        db.createGrade(learnersGrades[i].learnerId, learnersGrades[i].grades[1], lessonId, getIntent().getStringExtra(LessonActivity.LESSON_TIME));
+                        db.createGrade(learnersGrades[i].learnerId, learnersGrades[i].grades[1], lessonId, getIntent().getStringExtra(LESSON_TIME));
                     }
                     if (learnersGrades[i].grades[2] != 0) {
-                        db.createGrade(learnersGrades[i].learnerId, learnersGrades[i].grades[2], lessonId, getIntent().getStringExtra(LessonActivity.LESSON_TIME));
+                        db.createGrade(learnersGrades[i].learnerId, learnersGrades[i].grades[2], lessonId, getIntent().getStringExtra(LESSON_TIME));
                     }
                     toast.show();
                 }

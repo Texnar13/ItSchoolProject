@@ -126,7 +126,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
     void getLearnersClasses() {
         //выводим классы из бд
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        Cursor learnersClass = db.getClasses();
+        Cursor learnersClass = db.getLearnersClass();
         //инициализируем и очищаем массивы
         learnersClassesId = new Long[learnersClass.getCount()];
         classesNames = new String[learnersClass.getCount()];
@@ -218,7 +218,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
                     //получаем из бд
                     DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                     //классы по Id
-                    Cursor classCursor = db.getClasses(finalId);
+                    Cursor classCursor = db.getLearnersClass(finalId);
                     classCursor.moveToFirst();
                     //создаем обьект с данными
                     Bundle args = new Bundle();

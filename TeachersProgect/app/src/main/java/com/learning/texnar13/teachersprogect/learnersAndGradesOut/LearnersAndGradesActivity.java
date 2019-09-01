@@ -51,6 +51,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     // календарь хранящий в себе отображаемую дату
     static GregorianCalendar viewCalendar = null;
+    // текущая дата
+    GregorianCalendar currentCalendar;
 
     // переменная работающего в текущий момент потока
     static GetGradesThread loadGradesThread = null;
@@ -81,17 +83,36 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
-                // запускаем активность статистики
-                Intent intent = new Intent(
-                        LearnersAndGradesActivity.this,
-                        LearnersGradesStatisticsActivity.class
-                );
-                // и передаем ему id предмета
-                intent.putExtra(
-                        LearnersGradesStatisticsActivity.INTENT_SUBJECT_ID,
-                        subjects[chosenSubjectPosition].getSubjectId())
-                ;
-                startActivity(intent);
+                // выбран ли урок
+                if (chosenSubjectPosition < 0) {
+                    // создаем диалог работы с предметами
+                    SubjectsDialogFragment subjectsDialogFragment = new SubjectsDialogFragment();
+
+                    // готоим и передаем массив названий предиметов
+                    Bundle args = new Bundle();
+                    String[] subjectsArray = new String[subjects.length];
+                    for (int subjectI = 0; subjectI < subjectsArray.length; subjectI++) {
+                        subjectsArray[subjectI] = subjects[subjectI].getSubjectName();
+                    }
+                    args.putStringArray(SubjectsDialogFragment.ARGS_LEARNERS_NAMES_STRING_ARRAY, subjectsArray);
+                    subjectsDialogFragment.setArguments(args);
+
+                    // показываем диалог
+                    subjectsDialogFragment.show(getFragmentManager(), "subjectsDialogFragment - hello");
+
+                } else {
+                    // запускаем активность статистики
+                    Intent intent = new Intent(
+                            LearnersAndGradesActivity.this,
+                            LearnersGradesStatisticsActivity.class
+                    );
+                    // и передаем ему id предмета
+                    intent.putExtra(
+                            LearnersGradesStatisticsActivity.INTENT_SUBJECT_ID,
+                            subjects[chosenSubjectPosition].getSubjectId()
+                    );
+                    startActivity(intent);
+                }
                 return true;
             }
         });
@@ -122,13 +143,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         // получаем название класса из бд и ставим в заголовок
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         //название класса
-        Cursor classCursor = db.getClasses(classId);
+        Cursor classCursor = db.getLearnersClass(classId);
         classCursor.moveToFirst();
-        getSupportActionBar().setTitle(
-                getResources().getString(R.string.title_activity_learners_and_grades) + " " +
-                        classCursor.getString(
-                                classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)
-                        )
+        ((TextView) findViewById(R.id.learners_and_grades_activity_text_title)).setText(
+                classCursor.getString(
+                        classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)
+                )
         );
         classCursor.close();
 
@@ -165,38 +185,28 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             }
         });
 
-        // плавающая кнопка добавления ученика
-        findViewById(R.id.learners_and_grades_add_fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                // чтобы не было нескольких вызовов одновременно
-                if (chosenLearnerPosition == -1) {
-                    // запрещаем пока работать с учениками
-                    chosenLearnerPosition = 0;
-
-//                    // останавливаем поток загрузки оценок и уничтожаем все его данные
-//                    if (loadGradesThread != null) {
-//                        loadGradesThread.stopThread();
-//                        loadGradesThread = null;
-//                    }
-
-                    // создаем диалог добавления ученика
-                    LearnerCreateDialogFragment createLearnerDialog = new LearnerCreateDialogFragment();
-                    //показываем диалог
-                    createLearnerDialog.show(getFragmentManager(), "createLearnerDialog");
-                }
-            }
-        });
-
-
         // ---- переключение даты ----
 
         // инициализируем календарь текущей датой если он пуст, если не пуст, то был перевернут экран
         if (viewCalendar == null) {
             viewCalendar = new GregorianCalendar();
             viewCalendar.setTime(new Date());
+            viewCalendar.setLenient(false);
+            // выствляем первый день, чтобы небыло путанницы с днями при переключении даты
+            viewCalendar.set(Calendar.DAY_OF_MONTH,1);
         }
+
+        // выставляем в таблицу текущую дату
+        currentCalendar = new GregorianCalendar();
+        currentCalendar.setTime(new Date());
+        currentCalendar.setLenient(false);
+        // если отображаемый календарь уже был создан, сравниваем с ним текущую дату
+        if(viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
+                viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH) ){
+            learnersAndGradesTableView.currentDate = currentCalendar.get(Calendar.DAY_OF_MONTH) - 1;
+        }else
+            learnersAndGradesTableView.currentDate = -1;
+
 
         // получаем локализованные названия месяцев
         final String[] monthsNames = getResources().getStringArray(R.array.months_names);
@@ -225,6 +235,13 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 }
                 dateText.setText(monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR));
 
+                // выставляем в таблицу текущую дату
+                if(viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
+                        viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH) ){
+                    learnersAndGradesTableView.currentDate = currentCalendar.get(Calendar.DAY_OF_MONTH) - 1;
+                }else
+                    learnersAndGradesTableView.currentDate = -1;
+
                 // получаем оценки из бд по новой дате
                 getGradesFromDB();
             }
@@ -249,6 +266,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) + 1);
                 }
                 dateText.setText(monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR));
+
+                // выставляем в таблицу текущую дату
+                if(viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
+                        viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH) ){
+                    learnersAndGradesTableView.currentDate = currentCalendar.get(Calendar.DAY_OF_MONTH) - 1;
+                }else
+                    learnersAndGradesTableView.currentDate = -1;
+
 
                 // получаем оценки из бд по новой дате
                 getGradesFromDB();
@@ -706,81 +731,95 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     // если пользователь нажал что-то
                     if (touchData[0] != -1) {
 
-                        // проверяем что нажато, оценки или ученки
-                        if (touchData[1] != -1) {// если нажаты оценки
-
-                            // если не выбран предмет то не можем редактировать оценки
-                            if (chosenSubjectPosition < 0) {
-                                // создаем диалог работы с предметами
-                                SubjectsDialogFragment subjectsDialogFragment = new SubjectsDialogFragment();
-
-                                // готоим и передаем массив названий предиметов
-                                Bundle args = new Bundle();
-                                String[] subjectsArray = new String[subjects.length];
-                                for (int subjectI = 0; subjectI < subjectsArray.length; subjectI++) {
-                                    subjectsArray[subjectI] = subjects[subjectI].getSubjectName();
-                                }
-                                args.putStringArray(SubjectsDialogFragment.ARGS_LEARNERS_NAMES_STRING_ARRAY, subjectsArray);
-                                subjectsDialogFragment.setArguments(args);
-
-                                // показываем диалог
-                                subjectsDialogFragment.show(getFragmentManager(), "subjectsDialogFragment - hello");
-                            } else {
-
-                                // чтобы не было нескольких вызовов одновременно
-                                if (chosenGradePosition[0] == -1) {
-
-                                    // ставим полученные координаты оценки как выбранные
-                                    chosenGradePosition = touchData;
-
-                                    // вызываем диалог изменения оценок
-                                    GradeEditDialogFragment editGrade = new GradeEditDialogFragment();
-                                    //параметры
-                                    Bundle bundle = new Bundle();
-                                    // оценки
-                                    bundle.putIntArray(
-                                            GradeEditDialogFragment.GRADES,
-                                            newLearnersAndHisGrades.get(touchData[0]).learnerGrades[touchData[1]][touchData[2]].grades
-                                    );
-
-                                    //запускаем
-                                    editGrade.setArguments(bundle);
-                                    editGrade.show(getFragmentManager(), "editGradeDialog - hello");
-                                }
-                            }
-                        } else {// если нажат ученик
+                        // если пользователь нажал на создание ученика
+                        if (touchData[0] == -2) {
 
                             // чтобы не было нескольких вызовов одновременно
-                            // и учеников меняем по долгому нажатию
-                            if (chosenLearnerPosition == -1 && isLongClick) {
-                                // выбираем ученика
-                                chosenLearnerPosition = touchData[0];
+                            if (chosenLearnerPosition == -1) {
+                                // запрещаем пока работать с учениками
+                                chosenLearnerPosition = 0;
 
-
-                                // останавливаем поток загрузки оценок и уничтожаем все его данные
-                                if (loadGradesThread != null) {
-                                    loadGradesThread.stopThread();
-                                    loadGradesThread = null;
-                                }
-
-                                // создаем диалог
-                                LearnerEditDialogFragment editDialog = new LearnerEditDialogFragment();
-
-                                // создаем обьект с данными для диалога
-                                Bundle args = new Bundle();
-                                args.putString(LearnerEditDialogFragment.ARGS_LEARNER_NAME,
-                                        newLearnersAndHisGrades.get(touchData[0]).name);
-                                args.putString(LearnerEditDialogFragment.ARGS_LEARNER_LAST_NAME,
-                                        newLearnersAndHisGrades.get(touchData[0]).surname);
-
-                                // передаем данные диалогу
-                                editDialog.setArguments(args);
-
-                                // показываем диалог
-                                editDialog.show(getFragmentManager(), "editLearnerDialog - hello");
-
+                                // создаем диалог добавления ученика
+                                LearnerCreateDialogFragment createLearnerDialog = new LearnerCreateDialogFragment();
+                                //показываем диалог
+                                createLearnerDialog.show(getFragmentManager(), "createLearnerDialog");
                             }
-                        }
+
+                        } else// иначе проверяем что нажато, оценки или ученки
+                            if (touchData[1] != -1) {// если нажаты оценки
+
+                                // если не выбран предмет то не можем редактировать оценки
+                                if (chosenSubjectPosition < 0) {
+                                    // создаем диалог работы с предметами
+                                    SubjectsDialogFragment subjectsDialogFragment = new SubjectsDialogFragment();
+
+                                    // готоим и передаем массив названий предиметов
+                                    Bundle args = new Bundle();
+                                    String[] subjectsArray = new String[subjects.length];
+                                    for (int subjectI = 0; subjectI < subjectsArray.length; subjectI++) {
+                                        subjectsArray[subjectI] = subjects[subjectI].getSubjectName();
+                                    }
+                                    args.putStringArray(SubjectsDialogFragment.ARGS_LEARNERS_NAMES_STRING_ARRAY, subjectsArray);
+                                    subjectsDialogFragment.setArguments(args);
+
+                                    // показываем диалог
+                                    subjectsDialogFragment.show(getFragmentManager(), "subjectsDialogFragment - hello");
+                                } else {
+
+                                    // чтобы не было нескольких вызовов одновременно
+                                    if (chosenGradePosition[0] == -1) {
+
+                                        // ставим полученные координаты оценки как выбранные
+                                        chosenGradePosition = touchData;
+
+                                        // вызываем диалог изменения оценок
+                                        GradeEditDialogFragment editGrade = new GradeEditDialogFragment();
+                                        //параметры
+                                        Bundle bundle = new Bundle();
+                                        // оценки
+                                        bundle.putIntArray(
+                                                GradeEditDialogFragment.GRADES,
+                                                newLearnersAndHisGrades.get(touchData[0]).learnerGrades[touchData[1]][touchData[2]].grades
+                                        );
+
+                                        //запускаем
+                                        editGrade.setArguments(bundle);
+                                        editGrade.show(getFragmentManager(), "editGradeDialog - hello");
+                                    }
+                                }
+                            } else {// если нажат ученик
+
+                                // чтобы не было нескольких вызовов одновременно
+                                // и учеников меняем по долгому нажатию
+                                if (chosenLearnerPosition == -1 && isLongClick) {
+                                    // выбираем ученика
+                                    chosenLearnerPosition = touchData[0];
+
+
+                                    // останавливаем поток загрузки оценок и уничтожаем все его данные
+                                    if (loadGradesThread != null) {
+                                        loadGradesThread.stopThread();
+                                        loadGradesThread = null;
+                                    }
+
+                                    // создаем диалог
+                                    LearnerEditDialogFragment editDialog = new LearnerEditDialogFragment();
+
+                                    // создаем обьект с данными для диалога
+                                    Bundle args = new Bundle();
+                                    args.putString(LearnerEditDialogFragment.ARGS_LEARNER_NAME,
+                                            newLearnersAndHisGrades.get(touchData[0]).name);
+                                    args.putString(LearnerEditDialogFragment.ARGS_LEARNER_LAST_NAME,
+                                            newLearnersAndHisGrades.get(touchData[0]).surname);
+
+                                    // передаем данные диалогу
+                                    editDialog.setArguments(args);
+
+                                    // показываем диалог
+                                    editDialog.show(getFragmentManager(), "editLearnerDialog - hello");
+
+                                }
+                            }
                     }
                 } else {
                     // --- было движение ---
@@ -806,8 +845,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     // todo запрет на переключение даты?
 
-    // TODO: 2019-07-10 проставить на телефоне в отладке пункт всегда доверять этому компьютеру
-
 
 // -------------------------- обратная связь диалогов --------------------------
 
@@ -822,22 +859,59 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             loadGradesThread = null;
         }
 
-//        // создаем ученика в базе данных
-//        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-//
-//
-//        // ---- создаем ученика в локальном списке ----
-//        // создаем для него пустой список оценок todo
-//        NewGradeUnit[][] emptyGradeUnit = new NewGradeUnit[][];
-//
-//        // добавляем ученика в локальный список //todo сортировка
-//        newLearnersAndHisGrades.add(new NewLearnerAndHisGrades(
-//                db.createLearner(lastName, name, classId),
-//                name,
-//                lastName,
-//                emptyGradeUnit
-//        ));
-//        db.close();
+        // создаем ученика в базе данных
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+
+
+        // ---- создаем ученика в локальном списке ----
+        // создаем для него пустой список оценок
+        NewGradeUnit[][] emptyGradeUnitsArray = new NewGradeUnit[viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)][9];
+        // пробегаемся по дням
+        for (int dayI = 0; dayI < viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH); dayI++) {
+            // пробегаемся по урокам
+            for (int lessonI = 0; lessonI < emptyGradeUnitsArray[dayI].length; lessonI++) {
+
+                // заполняем ячейки уроков пустыми оценками
+                emptyGradeUnitsArray[dayI][lessonI] =
+                        new NewGradeUnit(
+                                new int[]{0, 0, 0},
+                                new long[]{-1, -1, -1}
+                        );
+            }
+        }
+
+
+        // добавляем ученика в локальный список
+        // сравниваем этого ученика поочереди со всеми остальными
+        int poz = -1;
+        for (int learnerI = 0; learnerI < newLearnersAndHisGrades.size(); learnerI++) {
+            // если полученное имя лексикографически меньше текущего в списке то ставим полученное перед текущим
+            if ((lastName.compareTo(newLearnersAndHisGrades.get(learnerI).surname) < 0) ||
+                    // при равных фамилиях сравниваем имена
+                    (lastName.compareTo(newLearnersAndHisGrades.get(learnerI).surname) == 0 &&
+                            name.compareTo(newLearnersAndHisGrades.get(learnerI).name) < 0)
+            ) {
+                newLearnersAndHisGrades.add(learnerI, new NewLearnerAndHisGrades(
+                        db.createLearner(lastName, name, classId),
+                        name,
+                        lastName,
+                        emptyGradeUnitsArray
+                ));
+                poz = learnerI;
+                break;
+            }
+        }
+        // если строка больше всех других строк, помещаем в конец списка
+        if (poz == -1) {
+
+            newLearnersAndHisGrades.add(new NewLearnerAndHisGrades(
+                    db.createLearner(lastName, name, classId),
+                    name,
+                    lastName,
+                    emptyGradeUnitsArray
+            ));
+        }
+        db.close();
 
 
         // выводим изменившихся учеников во view
@@ -846,7 +920,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
         // разрешаем редактировать учеников
         chosenLearnerPosition = -1;
-
     }
 
     // todo не костыль часом?
@@ -1016,17 +1089,17 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     public void createSubject(String name, int position) {
         // создаем предмет в базе данных
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        long createdSubjectId =db.createSubject(name,classId);
+        long createdSubjectId = db.createSubject(name, classId);
         db.close();
 
         // добавляем предмет в список под нужным номером
-        NewSubjectUnit[] newSubjectUnits = new NewSubjectUnit[subjects.length+1];
+        NewSubjectUnit[] newSubjectUnits = new NewSubjectUnit[subjects.length + 1];
         for (int subjectI = 0; subjectI < position; subjectI++) {
             newSubjectUnits[subjectI] = subjects[subjectI];
         }
-        newSubjectUnits[position] = new NewSubjectUnit(createdSubjectId,name);
+        newSubjectUnits[position] = new NewSubjectUnit(createdSubjectId, name);
         for (int subjectsI = position; subjectsI < subjects.length; subjectsI++) {
-            newSubjectUnits[subjectsI+1] = subjects[subjectsI];
+            newSubjectUnits[subjectsI + 1] = subjects[subjectsI];
         }
         subjects = newSubjectUnits;
 
@@ -1042,172 +1115,92 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     @Override
     public void deleteSubjects(boolean[] deleteList) {
 
+        // удаляем предметы
+        ArrayList<Long> deleteId = new ArrayList<>();
+        for (int subjectI = 0; subjectI < subjects.length; subjectI++) {
+            if (deleteList[subjectI]) {
+                deleteId.add(subjects[subjectI].getSubjectId());
+                // смотрим не удален ли выбранный предмет
+                if (chosenSubjectPosition == subjectI)
+                    chosenSubjectPosition = -1;
+            }
+        }
+
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        db.deleteSubjects(deleteId);
+        db.close();
+
+        // создаем новый список
+        NewSubjectUnit[] newSubjectUnits = new NewSubjectUnit[subjects.length - deleteId.size()];
+        int newArrayIterator = 0;
+        for (int subjectI = 0; subjectI < subjects.length; subjectI++) {
+            if (!deleteList[subjectI]) {
+                // сохраняем не удаленные предметы
+                newSubjectUnits[newArrayIterator] = subjects[subjectI];
+
+                // и оставляем выбранную позицию
+                if (chosenSubjectPosition == subjectI)
+                    chosenSubjectPosition = newArrayIterator;
+
+                newArrayIterator++;
+            }
+        }
+        subjects = newSubjectUnits;
+
+        // если текущий предмет был удален
+        if (chosenSubjectPosition == -1) {
+            // ставим выбор на первом предмете
+            if (subjects.length != 0) {
+                chosenSubjectPosition = 0;
+                // выводим название предмета
+                subjectTextView.setText(subjects[chosenSubjectPosition].getSubjectName());
+
+            } else { // если проедметов в базе данных нет не выбираем ничего
+                // выводим текст о том, что предмета нет
+                subjectTextView.setText(getResources().getString(R.string.learners_and_grades_out_activity_text_create_subject));
+            }
+            // получаем оценки
+            getGradesFromDB();
+        }
     }
 
     // метод переименования предметов вызываемый из диалога SubjectsDialogFragment
     @Override
     public void renameSubjects(String[] newSubjectsNames) {
-//        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-//
-//        // в цикле переименовываем все предметы в массиве активности
-//        for (int subjectI = 0; subjectI < subjects.length; subjectI++) {
-//
-//            subjects[subjectI].setSubjectName(newSubjectsNames[subjectI]);
-//            // и сохраняем все изменения в базу данных
-//            db.setSubjectName(
-//                    subjects[subjectI].getSubjectId(),
-//                    subjects[subjectI].getSubjectName()
-//            );
-//
-//        }
-//        db.close();
-//
-//        // сортируем текущий список
-//
-//
-//        // обновляем надпись на тексте с названием предмета
-//        subjectTextView.setText(subjects[chosenSubjectPosition].getSubjectName());
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+
+        // в цикле переименовываем все предметы в массиве активности
+        for (int subjectI = 0; subjectI < subjects.length; subjectI++) {
+
+            subjects[subjectI].setSubjectName(newSubjectsNames[subjectI]);
+
+            // и сохраняем все изменения в базу данных
+            db.setSubjectName(
+                    subjects[subjectI].getSubjectId(),
+                    subjects[subjectI].getSubjectName()
+            );
+        }
+        db.close();
+
+        // сортируем текущий список (пузырьком)
+        for (int out = subjects.length - 1; out > 0; out--) {
+            for (int in = 0; in < out; in++) {
+                if (subjects[in].getSubjectName().compareTo(subjects[in + 1].getSubjectName()) > 0) {
+                    if (chosenSubjectPosition == in) {
+                        chosenSubjectPosition = in + 1;
+                    } else if (chosenSubjectPosition == in + 1) {
+                        chosenSubjectPosition = in;
+                    }
+                    NewSubjectUnit temp = subjects[in + 1];
+                    subjects[in + 1] = subjects[in];
+                    subjects[in] = temp;
+                }
+            }
+        }
+
+        // обновляем надпись на тексте с названием предмета
+        subjectTextView.setText(subjects[chosenSubjectPosition].getSubjectName());
     }
-
-
-//    //  метод создания предмета вызываемый из диалога
-//    @Override
-//    public void createSubjectDialogMethod(int code, int position, String classNameText) {
-//        Log.i(TAG, "fromDialog-createSubjectDialogMethod");
-//
-//        // todo
-//        if (code == 1) {
-//            (new DataBaseOpenHelper(this)).createSubject(classNameText, classId);
-//            availableSubjectsOut(classId, position);
-//        } else {
-//            availableSubjectsOut(classId, position);
-//        }
-//    }
-//
-//    // метод удаления предмета вызываемый из диалога
-//    @Override
-//    public void RemoveSubjectDialogMethod(int code, int position, ArrayList<Long> deleteList) {
-//        Log.i(TAG, "fromDialog-RemoveSubjectDialogMethod");
-//        if (code == 0) {// todo
-//
-//            // останавливаем поток загрузки оценок и уничтожаем все его данные
-//            loadGradesThread.stopThread();
-//            loadGradesThread = null;
-//
-//            //удаляем
-//            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-//            db.deleteSubjects(deleteList);
-//            db.close();
-//
-//            //выводим
-//            availableSubjectsOut(classId, position);
-//        } else {
-//            availableSubjectsOut(classId, position);
-//        }
-//    }
-
-    //    //  метод вывода предметов в спиннер // todo чистка +
-//    void availableSubjectsOut(final long classViewId, final int position) {
-//        Log.i(TAG, "availableSubjectsOut");
-//
-//        // получаем предметы из базы данных
-//        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-//        Cursor subjectsCursor = db.getSubjectsByClassId(classViewId);
-//
-//        // инициализируем массив предметов
-//        subjects = new NewSubjectUnit[subjectsCursor.getCount()];
-//        for (int subjectsIterator = 0; subjectsIterator < subjectsCursor.getCount(); subjectsIterator++) {
-//            subjectsCursor.moveToFirst();
-//            subjects[subjectsIterator] = new NewSubjectUnit(
-//                    subjectsCursor.getLong(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID)),
-//                    subjectsCursor.getString(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME))
-//            );
-//        }
-//
-//
-//        // останавливаем поток загрузки и уничтожаем все его данные
-//        loadGradesThread.stopThread();
-//        loadGradesThread = null;
-//
-//        chosenSubjectPosition = position;
-//        getGradesFromDB();
-//        //
-//
-//
-////        // final int count = cursor.getCount();
-////        // final String[] stringLessons;
-////        if (count == 0) {
-////            stringLessons = new String[cursor.getCount() + 1];
-////        } else {
-////            stringLessons = new String[cursor.getCount() + 2];
-////        }
-////        final String[] stringOnlyLessons = new String[cursor.getCount()];
-////        subjectsId = new long[cursor.getCount()];
-////        for (int i = 0; i < stringLessons.length - 2; i++) {
-////            cursor.moveToNext();
-////            subjectsId[i] = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID));
-////            stringLessons[i] = cursor.getString(cursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME));
-////            stringOnlyLessons[i] = stringLessons[i];
-////        }
-////        cursor.close();
-////        db.close();
-////
-////        if (count == 0) {
-////            stringLessons[stringLessons.length - 1] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_create_subject);
-////        } else {
-////            stringLessons[stringLessons.length - 1] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_remove_subject);
-////            stringLessons[stringLessons.length - 2] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_create_subject);
-////        }
-////
-////        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-////                this,
-////                R.layout.spinner_dropdown_element_learners_and_grades_subjects,
-////                stringLessons
-////        );
-////        subjectSpinner.setAdapter(adapter);
-////        subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-////            @Override
-////            public void onNothingSelected(AdapterView<?> parent) {
-////            }
-////
-////            @Override
-////            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-////                Log.w(TAG, "LearnersAndGradesActivity - availableSubjectsOut onItemSelected " + pos);
-////                if (count != 0 && stringLessons.length - 1 == pos) {
-////                    Log.w(TAG, "LearnersAndGradesActivity - remove lesson");
-////                    //данные передаваемые в диалог
-////                    Bundle args = new Bundle();
-////                    args.putStringArray("stringOnlyLessons", stringOnlyLessons);
-////                    args.putLongArray("lessonsId", subjectsId);
-////                    args.putInt("position", position);
-////                    //диалог по удалению
-////                    RemoveLearnerSubjectDialogFragment removeDialog = new RemoveLearnerSubjectDialogFragment();
-////                    removeDialog.setArguments(args);
-////                    removeDialog.show(getFragmentManager(), "removeLessons");
-////
-////                } else if ((count != 0 && stringLessons.length - 2 == pos) || (count == 0 && stringLessons.length - 1 == pos)) {
-////                    //диалог создания предмета
-////                    Log.w(TAG, "LearnersAndGradesActivity - new lesson");
-////                    //данные для диалога
-////                    Bundle args = new Bundle();
-////                    args.putStringArray("stringLessons", stringLessons);
-////                    args.putInt("position", position);
-////                    //диалог по созданию нового предмета
-////                    SubjectNameLearnersDialogFragment lessonNameDialogFragment = new SubjectNameLearnersDialogFragment();
-////                    lessonNameDialogFragment.setArguments(args);
-////                    lessonNameDialogFragment.show(getFragmentManager(), "createSubject");
-////                } else {
-////                    Log.w(TAG, "LearnersAndGradesActivity - chosen lesson id = " + subjectsId[pos]);
-////                    //останавливаем загрузку оценок
-////                    flag = false;
-////                    chosenSubjectPosition = pos;
-////                    outLearnersNamesInTable();
-////                    getGradesFromDB();
-////                }
-////            }
-////        });
-////        subjectSpinner.setSelection(position, false);
-//    }
 
 
     // при выходе из активности
@@ -1242,7 +1235,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         classId = -1;
         newLearnersAndHisGrades = null;
         chosenLearnerPosition = -1;
-        chosenGradePosition = new int[]{-1,-1,-1};
+        chosenGradePosition = new int[]{-1, -1, -1};
         subjects = null;
         chosenSubjectPosition = -1;
         viewCalendar = null;

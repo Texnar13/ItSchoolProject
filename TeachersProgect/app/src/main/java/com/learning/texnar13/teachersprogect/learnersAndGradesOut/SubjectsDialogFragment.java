@@ -1,6 +1,5 @@
 package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.graphics.Color;
@@ -9,7 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -34,7 +32,7 @@ public class SubjectsDialogFragment extends DialogFragment {
     ArrayList<String> subjectsNames;
 
     // контейнеры содержимого диалога
-    RelativeLayout titleLayout;
+    LinearLayout titleLayout;
     LinearLayout bodyLayout;
     LinearLayout bottomLayout;
 
@@ -46,7 +44,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // ---- layout диалога ----
         LinearLayout linearLayout = new LinearLayout(getActivity());
-        linearLayout.setBackgroundResource(R.color.colorBackGround);
+        linearLayout.setBackgroundColor(Color.TRANSPARENT);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setLayoutParams(
                 new LinearLayout.LayoutParams(
@@ -57,7 +55,7 @@ public class SubjectsDialogFragment extends DialogFragment {
         builder.setView(linearLayout);
 
         // ---- контейнер для шапки ----
-        titleLayout = new RelativeLayout(getActivity());
+        titleLayout = new LinearLayout(getActivity());
         linearLayout.addView(titleLayout,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -96,16 +94,18 @@ public class SubjectsDialogFragment extends DialogFragment {
         outMainMenu();
 
         // наконец создаем диалог и возвращаем его
-        return builder.create();
+        Dialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        return dialog;
     }
 
     // метод вывода главного меню
     void outMainMenu() {
 
         // выставляем цвета диалога
-        titleLayout.setBackgroundResource(R.color.colorPrimaryBlue);
-        bodyLayout.setBackgroundResource(R.color.colorBackGround);
-        bottomLayout.setBackgroundResource(R.color.colorBackGroundDark);
+        titleLayout.setBackgroundResource(R.drawable._dialog_head_background_blue);
+        bodyLayout.setBackgroundResource(R.color.backgroundWhite);
+        bottomLayout.setBackgroundResource(R.drawable._dialog_bottom_background_dark);
 
         // затираем то что было выведено до этого
         titleLayout.removeAllViews();
@@ -115,10 +115,8 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // кнопка закрыть
         LinearLayout closeImageView = new LinearLayout(getActivity());
-        closeImageView.setBackgroundResource(R.drawable.start_screen_3_3_green_spot);
-
-
-        RelativeLayout.LayoutParams closeImageViewParams = new RelativeLayout.LayoutParams(pxFromDp(40), pxFromDp(40));
+        closeImageView.setBackgroundResource(R.drawable._button_close);
+        LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(pxFromDp(40), pxFromDp(40));
         closeImageViewParams.setMargins(pxFromDp(10), pxFromDp(10), pxFromDp(10), pxFromDp(10));
         titleLayout.addView(closeImageView, closeImageViewParams);
         // при нажатии на кнопку закрыть
@@ -137,13 +135,13 @@ public class SubjectsDialogFragment extends DialogFragment {
         title.setTextColor(Color.WHITE);
         title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
 
-        RelativeLayout.LayoutParams titleParams = new RelativeLayout.LayoutParams(
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         titleParams.setMargins(0, pxFromDp(10), pxFromDp(10), pxFromDp(10));
-        titleParams.addRule(RelativeLayout.RIGHT_OF, closeImageView.getId());
-        titleParams.addRule(RelativeLayout.CENTER_VERTICAL);
+        Log.e("TeachersApp", "outMainMenu: " + closeImageView.getId());
+        titleParams.gravity = Gravity.CENTER_VERTICAL;
         titleLayout.addView(title, titleParams);
 
 
@@ -172,7 +170,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                         Log.e("TeachersApp", "onClick: " + finalPosition);
 
                         // выделяем цветом выбранный текст
-                        subjectText.setTextColor(getResources().getColor(R.color.colorPrimaryGreen));
+                        subjectText.setTextColor(getResources().getColor(R.color.baseGreen));
 
                         try {
                             // вызываем в активности метод по выбору предмета
@@ -211,7 +209,7 @@ public class SubjectsDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 // выделяем цветом выбранный текст
-                changeTextButton.setTextColor(getResources().getColor(R.color.colorPrimaryGreen));
+                changeTextButton.setTextColor(getResources().getColor(R.color.baseGreen));
                 // выводим меню редактирования
                 outEditSubjectsMenu();
             }
@@ -236,7 +234,7 @@ public class SubjectsDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 // выделяем цветом выбранный текст
-                addTextButton.setTextColor(getResources().getColor(R.color.colorPrimaryGreen));
+                addTextButton.setTextColor(getResources().getColor(R.color.baseGreen));
                 // выводим меню создания предмета
                 outCreateSubjectMenu();
             }
@@ -246,9 +244,9 @@ public class SubjectsDialogFragment extends DialogFragment {
     // метод вывода интерфейса создания предмета
     void outCreateSubjectMenu() {
         // выставляем цвета диалога
-        titleLayout.setBackgroundResource(R.color.colorBackGroundDark);
-        bodyLayout.setBackgroundResource(R.color.colorBackGround);
-        bottomLayout.setBackgroundResource(R.color.colorBackGround);
+        titleLayout.setBackgroundResource(R.drawable._dialog_head_background_dark);
+        bodyLayout.setBackgroundResource(R.color.backgroundWhite);
+        bottomLayout.setBackgroundResource(R.drawable._dialog_bottom_background_white);
 
         // затираем то что было выведено до этого
         titleLayout.removeAllViews();
@@ -264,7 +262,7 @@ public class SubjectsDialogFragment extends DialogFragment {
         ImageView closeImageView = new ImageView(getActivity());
         closeImageView.setBackgroundResource(R.drawable.calendar_left_arrow);
 
-        RelativeLayout.LayoutParams closeImageViewParams = new RelativeLayout.LayoutParams(pxFromDp(40), pxFromDp(40));
+        LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(pxFromDp(40), pxFromDp(40));
         closeImageViewParams.setMargins(pxFromDp(10), pxFromDp(10), pxFromDp(10), pxFromDp(10));
         titleLayout.addView(closeImageView, closeImageViewParams);
         // при нажатии на кнопку закрыть
@@ -285,13 +283,12 @@ public class SubjectsDialogFragment extends DialogFragment {
         title.setTextColor(Color.WHITE);
         title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
 
-        RelativeLayout.LayoutParams titleParams = new RelativeLayout.LayoutParams(
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         titleParams.setMargins(0, pxFromDp(10), pxFromDp(10), pxFromDp(10));
-        titleParams.addRule(RelativeLayout.RIGHT_OF, closeImageView.getId());
-        titleParams.addRule(RelativeLayout.CENTER_VERTICAL);
+        titleParams.gravity = Gravity.CENTER_VERTICAL;
         titleLayout.addView(title, titleParams);
 
 
@@ -311,7 +308,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // контейнер кнопки создать
         LinearLayout createButtonContainer = new LinearLayout(getActivity());
-        createButtonContainer.setBackgroundResource(R.drawable.start_screen_3_3_green_spot);
+        createButtonContainer.setBackgroundResource(R.drawable._button_round_background_green);
         // параметры контейнера
         LinearLayout.LayoutParams saveTextButtonContainerParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -340,13 +337,13 @@ public class SubjectsDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 // выделяем цветом выбранный текст
-                createTextButton.setTextColor(getResources().getColor(R.color.colorPrimaryGreen));
+                createTextButton.setTextColor(getResources().getColor(R.color.baseGreen));
                 // todo скрываем клавиатуру
 
                 // сортируя при этом
                 int position = -1;
                 for (int subjectI = 0; subjectI < subjectsNames.size(); subjectI++) {
-                    // если полученная строка лексикографически меньше текущей в списке то ставим ее перед ней
+                    // если полученная строка лексикографически меньше текущей в списке то ставим полученную перед текущей
                     if (subjectNameField.getText().toString().compareTo(subjectsNames.get(subjectI)) < 0) {
                         subjectsNames.add(subjectI, subjectNameField.getText().toString());
                         position = subjectI;
@@ -380,9 +377,9 @@ public class SubjectsDialogFragment extends DialogFragment {
     // метод вывода списка удаления и редактирования
     void outEditSubjectsMenu() {
         // выставляем цвета диалога
-        titleLayout.setBackgroundResource(R.color.colorBackGroundDark);
-        bodyLayout.setBackgroundResource(R.color.colorBackGround);
-        bottomLayout.setBackgroundResource(R.color.colorBackGround);
+        titleLayout.setBackgroundResource(R.drawable._dialog_head_background_dark);
+        bodyLayout.setBackgroundResource(R.color.backgroundWhite);
+        bottomLayout.setBackgroundResource(R.drawable._dialog_bottom_background_white);
 
         // затираем то что было выведено до этого
         titleLayout.removeAllViews();
@@ -393,13 +390,18 @@ public class SubjectsDialogFragment extends DialogFragment {
         getDialog().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
 
 
+        // relative контейнер для заголовка
+        RelativeLayout relativeHeadContainer = new RelativeLayout(getActivity());
+        titleLayout.addView(relativeHeadContainer,
+                LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+
         // кнопка назад
         ImageView closeImageView = new ImageView(getActivity());
         closeImageView.setBackgroundResource(R.drawable.calendar_left_arrow);
 
         RelativeLayout.LayoutParams closeImageViewParams = new RelativeLayout.LayoutParams(pxFromDp(40), pxFromDp(40));
         closeImageViewParams.setMargins(pxFromDp(10), pxFromDp(10), pxFromDp(10), pxFromDp(10));
-        titleLayout.addView(closeImageView, closeImageViewParams);
+        relativeHeadContainer.addView(closeImageView, closeImageViewParams);
         // при нажатии на кнопку закрыть
         closeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -425,6 +427,7 @@ public class SubjectsDialogFragment extends DialogFragment {
         titleParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         titleParams.addRule(RelativeLayout.CENTER_VERTICAL);
         titleParams.setMargins(0, pxFromDp(10), pxFromDp(10), pxFromDp(10));
+        relativeHeadContainer.addView(title, titleParams);
 
 
         // массив EditText из которых будем брать измененные предметы
@@ -449,7 +452,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
             // кнопка чтобы отмечать предметы на удаление
             final ImageView deleteImage = new ImageView(getActivity());
-            deleteImage.setBackgroundResource(R.drawable.button_lite_blue);
+            deleteImage.setBackgroundResource(R.drawable._checkbox_empty);
             // параметры кнопки
             LinearLayout.LayoutParams deleteImageParams = new LinearLayout.LayoutParams(
                     pxFromDp(30), pxFromDp(30)
@@ -466,9 +469,9 @@ public class SubjectsDialogFragment extends DialogFragment {
                 public void onClick(View v) {
                     // инвертируем состояние кнопки
                     if (deleteList[finalSubjectI]) {
-                        deleteImage.setBackgroundResource(R.drawable.button_lite_blue);
+                        deleteImage.setBackgroundResource(R.drawable._checkbox_empty);
                     } else {
-                        deleteImage.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
+                        deleteImage.setBackgroundResource(R.drawable._checkbox_full);
                     }
                     // и переменной
                     deleteList[finalSubjectI] = !deleteList[finalSubjectI];
@@ -481,7 +484,7 @@ public class SubjectsDialogFragment extends DialogFragment {
             editSubjectsNames[subjectI].setText(subjectsNames.get(subjectI));
             editSubjectsNames[subjectI].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             editSubjectsNames[subjectI].setTextColor(Color.BLACK);
-            editSubjectsNames[subjectI].setBackgroundResource(R.drawable.underlined_shape);
+            editSubjectsNames[subjectI].setBackgroundResource(R.drawable._underlined_blue);
             editSubjectsNames[subjectI].setHint("*Название предмета*");
             // параметры текста
             LinearLayout.LayoutParams subjectTextParams = new LinearLayout.LayoutParams(
@@ -494,7 +497,6 @@ public class SubjectsDialogFragment extends DialogFragment {
 
 
         // нажатие на кнопку удалить
-        titleLayout.addView(title, titleParams);
         title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -527,7 +529,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // контейнер кнопки сохранить
         LinearLayout saveButtonContainer = new LinearLayout(getActivity());
-        saveButtonContainer.setBackgroundResource(R.drawable.start_screen_3_3_green_spot);
+        saveButtonContainer.setBackgroundResource(R.drawable._button_round_background_green);
         // параметры контейнера
         LinearLayout.LayoutParams saveTextButtonContainerParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -556,24 +558,19 @@ public class SubjectsDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 // выделяем цветом выбранный текст
-                saveTextButton.setTextColor(getResources().getColor(R.color.colorPrimaryGreen));
+                saveTextButton.setTextColor(getResources().getColor(R.color.baseGreen));
                 // todo скрываем клавиатуру
 
                 // сохраняем имена из текстовых полей в массив
+                // и параллельно создаем массив для предачи в активность
+                String[] arrForActivity = new String[subjectsNames.size()];
                 for (int subjectsI = 0; subjectsI < subjectsNames.size(); subjectsI++) {
                     subjectsNames.set(subjectsI, editSubjectsNames[subjectsI].getText().toString());
-                }
 
-                // передаем массив активности
-                try {
-                    // вызываем в активности метод по переименованию предметов
-                    ((SubjectsDialogInterface) getActivity()).renameSubjects((String[]) subjectsNames.toArray());
-                } catch (java.lang.ClassCastException e) {
-                    e.printStackTrace();
-                    Log.i("TeachersApp",
-                            "SubjectsDialogFragment: you must implements SubjectsDialogInterface in your activity"
-                    );
+                    arrForActivity[subjectsI] = subjectsNames.get(subjectsI);
                 }
+                // вызываем в активности метод по переименованию предметов
+                ((SubjectsDialogInterface) getActivity()).renameSubjects(arrForActivity);
 
                 // сортируем внутренний массив
                 String[] tempArray = new String[subjectsNames.size()];
@@ -614,255 +611,11 @@ interface SubjectsDialogInterface {
 
 }
 
-
-//
-
-
-//
-
-
-//
-
-
-// void createSubjectDialogMethod(int code, int position, String classNameText);
-// void RemoveSubjectDialogMethod(int code, int position, ArrayList<Long> deleteList);
-
-
-
 /*
-*
-
-
-package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
-
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-
-import com.learning.texnar13.teachersprogect.R;
-
-import java.util.ArrayList;
-
-public class SubjectRemoveDialogFragment extends DialogFragment {
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.i("TeachersApp", "RemoveLearnerSubjectDialogFragment-onCreateDialog");
-
-        // начинаем строить диалог
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-        // layout диалога
-        LinearLayout out = new LinearLayout(getActivity());
-        builder.setView(out);
-
-        //--LinearLayout в layout файле--
-        LinearLayout linearLayout = new LinearLayout(getActivity());
-        linearLayout.setBackgroundResource(R.color.colorBackGround);
-        linearLayout.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        linearLayoutParams.setMargins((int) pxFromDp(10), (int) pxFromDp(15), (int) pxFromDp(10), (int) pxFromDp(15));
-        linearLayout.setLayoutParams(linearLayoutParams);
-        out.addView(linearLayout);--
-
-//--заголовок--
-        TextView title = new TextView(getActivity());
-        title.setText(R.string.lesson_redactor_activity_dialog_title_remove_subjects);
-        title.setTextColor(Color.BLACK);
-        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-        title.setAllCaps(true);
-        title.setGravity(Gravity.CENTER);
-
-        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        titleParams.setMargins((int) pxFromDp(15), (int) pxFromDp(15), (int) pxFromDp(15), 0);
-
-        linearLayout.addView(title, titleParams);
-
-//--список выбранных предметов--
-        final ArrayList<Integer> mSelectedItems = new ArrayList<>();
-        //--------ставим диалогу список в виде view--------
-        //список названий
-        String[] subjectNames = getArguments().getStringArray("stringOnlyLessons");
-
-        //контейнеры для прокрутки
-        ScrollView scrollView = new ScrollView(getActivity());
-        linearLayout.addView(scrollView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1F));
-        LinearLayout linear = new LinearLayout(getActivity());
-        linear.setOrientation(LinearLayout.VERTICAL);
-        scrollView.addView(linear);
-
-
-        for (int i = 0; i < subjectNames.length; i++) {
-//--------пункт списка--------
-            //контейнер
-            LinearLayout item = new LinearLayout(getActivity());
-            item.setOrientation(LinearLayout.HORIZONTAL);
-            item.setGravity(Gravity.LEFT);
-            LinearLayout.LayoutParams itemParams =
-                    new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            (int) (pxFromDp(40) * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))
-                    );
-            itemParams.setMargins(
-                    (int) (pxFromDp(20 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
-                    (int) (pxFromDp(10 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
-                    (int) (pxFromDp(20 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
-                    (int) (pxFromDp(10 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier)))
-            );
-            linear.addView(item, itemParams);
-
-            //чекбокс
-            final CheckBox checkBox = new CheckBox(getActivity());
-            checkBox.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-            checkBox.setChecked(false);
-            item.addView(checkBox);
-
-            //текст в нем
-            TextView text = new TextView(getActivity());
-            text.setText(subjectNames[i]);
-            text.setTextColor(Color.BLACK);
-            text.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-            item.addView(text);
-
-            //нажатие на пункт списка
-            final int number = i;
-            item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (checkBox.isChecked()) {
-                        checkBox.setChecked(false);
-                        if (mSelectedItems.contains(number)) {
-                            // Else, if the item is already in the array, remove it
-                            mSelectedItems.remove(Integer.valueOf(number));
-                        }
-                    } else {
-                        // If the user checked the item, add it to the selected items
-                        checkBox.setChecked(true);
-                        mSelectedItems.add(number);
-                    }
-                }
-            });
+todo пригодится
+* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         }
-
-//--кнопки согласия/отмены--
-        //контейнер для них
-        LinearLayout container = new LinearLayout(getActivity());
-        container.setOrientation(LinearLayout.HORIZONTAL);
-        container.setGravity(Gravity.CENTER);
-
-        //кнопка отмены
-        Button neutralButton = new Button(getActivity());
-        neutralButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
-        neutralButton.setText(R.string.lesson_redactor_activity_dialog_button_cancel);
-        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-        neutralButton.setTextColor(Color.WHITE);
-        LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.my_buttons_height_size)
-        );
-        neutralButtonParams.weight = 1;
-        neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
-
-        //кнопка согласия
-        Button positiveButton = new Button(getActivity());
-        positiveButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
-        positiveButton.setText(R.string.lesson_redactor_activity_dialog_button_remove);
-        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-        positiveButton.setTextColor(Color.WHITE);
-        LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.my_buttons_height_size)
-        );
-        positiveButtonParams.weight = 1;
-        positiveButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
-
-
-        //кнопки в контейнер
-        container.addView(neutralButton, neutralButtonParams);
-        container.addView(positiveButton, positiveButtonParams);
-
-        //контейнер в диалог
-        linearLayout.addView(container);
-
-
-        //при нажатии...
-        //согласие
-        positiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                long[] lessonsId = getArguments().getLongArray("lessonsId");
-                ArrayList<Long> deleteList = new ArrayList<>(mSelectedItems.size());
-                for (int itemPoz : mSelectedItems) {
-                    deleteList.add(lessonsId[itemPoz]);
-                }
-                //возвращаем все в активность
-                ((SubjectRemoveLearnersDialogInterface) getActivity())
-                        .RemoveSubjectDialogMethod(
-                                0,
-                                0,
-                                deleteList
-                        );
-
-                dismiss();
-            }
-        });
-
-        //отмена
-        neutralButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //возвращаем все в активность
-                ((SubjectRemoveLearnersDialogInterface) getActivity())
-                        .RemoveSubjectDialogMethod(
-                                1,
-                                getArguments().getInt("position"),
-                                new ArrayList<Long>()
-                        );
-                dismiss();
-            }
-        });
-        return builder.create();
-
-    }
-
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        Log.i("TeachersApp", "RemoveLearnerSubjectDialogFragment-onCancel");
-        super.onCancel(dialog);
-        ((SubjectRemoveLearnersDialogInterface) getActivity())
-                .RemoveSubjectDialogMethod(
-                        1,
-                        getArguments().getInt("position"),
-                        new ArrayList<Long>()
-                );
-    }
-
-    //---------форматы----------
-
-    private float pxFromDp(float px) {
-        return px * getActivity().getResources().getDisplayMetrics().density;
-    }
-}
-
-
-
+*
 *
 * */

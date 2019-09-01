@@ -77,7 +77,7 @@ public final class SchoolContract {
 
     public static final class TableLearnersOnPlaces {
         public static final String NAME_TABLE_LEARNERS_ON_PLACES = "learnersOnPlaces";
-        public static final String KEY_ATTITUDES_ID = BaseColumns._ID;
+        public static final String KEY_ATTITUDE_ID = BaseColumns._ID;
         public static final String KEY_LEARNER_ID = "learnerId";
         public static final String KEY_PLACE_ID = "placeId";
     }

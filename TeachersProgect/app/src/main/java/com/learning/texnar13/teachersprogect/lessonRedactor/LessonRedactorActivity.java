@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.R;
-import com.learning.texnar13.teachersprogect.SeatingRedactorActivity;
+import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
@@ -252,7 +252,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
     // ------ вывод классов в спиннер ------
     void outClasses() {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        Cursor classesCursor = db.getClasses();
+        Cursor classesCursor = db.getLearnersClass();
         String[] stringClasses = new String[classesCursor.getCount()];
         final long[] classesId = new long[stringClasses.length];
         for (int i = 0; i < stringClasses.length; i++) {
@@ -565,3 +565,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         }
     }
 }
+
+/*
+* https://developer.android.com/guide/topics/ui/menus#PopupMenu
+* */
