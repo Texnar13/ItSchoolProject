@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.R;
@@ -26,7 +28,7 @@ public class EditMaxAnswersCountDialogFragment extends DialogFragment {
         editText.setText("" + getArguments().getInt(ARGUMENT_LAST_MAX));
         // -------------------------------- кнопки сохранения/отмены --------------------------------
         // сохранение
-        Button buttonSave = (Button) linearLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_maximum_grade_button_save);
+        LinearLayout buttonSave = linearLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_maximum_grade_button_save);
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +83,7 @@ public class EditMaxAnswersCountDialogFragment extends DialogFragment {
             }
         });
         // отмена
-        Button buttonCancel = (Button) linearLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_maximum_grade_button_cancel);
+        ImageView buttonCancel = linearLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_maximum_grade_button_cancel);
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,8 +94,11 @@ public class EditMaxAnswersCountDialogFragment extends DialogFragment {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         // отдаем Layout
         dialogBuilder.setView(linearLayout);
-        // строим
-        return dialogBuilder.create();
+
+        // наконец создаем диалог и возвращаем его
+        Dialog dialog = dialogBuilder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        return dialog;
     }
 }
 

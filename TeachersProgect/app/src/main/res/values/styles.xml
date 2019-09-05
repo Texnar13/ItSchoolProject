@@ -4,9 +4,9 @@
         <!-- семейство шрифтов -->
         <item name="android:fontFamily">@font/geometria_family</item>
 
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/baseBlue</item>
         <item name="colorPrimaryDark">@color/backgroundLiteGray</item>
-        <item name="colorAccent">@color/basePink</item>
+        <item name="colorAccent">@color/backgroundGray</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

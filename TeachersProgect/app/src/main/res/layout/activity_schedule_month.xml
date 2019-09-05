@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackGround"
-    android:orientation="vertical"
-    android:weightSum="8"
+    android:background="@color/backgroundWhite"
     tools:context="com.learning.texnar13.teachersprogect.ScheduleMonthActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="7"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <RelativeLayout
+            android:layout_marginBottom="@dimen/double_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -29,21 +27,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/schedule_month_date_text"
                 android:clickable="true"
-                app:srcCompat="@drawable/calendar_left_arrow" />
-
-            <TextView
-                android:id="@+id/schedule_month_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:text="TextView"
-                android:textAllCaps="true"
-
-                android:textColor="#000000"
-                android:textSize="@dimen/text_title_size" />
+                app:srcCompat="@drawable/__button_calendar_previous" />
 
             <ImageView
                 android:id="@+id/schedule_month_button_next"
@@ -55,46 +39,50 @@
                 android:layout_alignParentRight="true"
                 android:layout_toRightOf="@+id/schedule_month_date_text"
                 android:clickable="true"
-                app:srcCompat="@drawable/calendar_right_arrow" />
+                app:srcCompat="@drawable/__button_calendar_next" />
+
+            <TextView
+                android:fontFamily="@font/geometria_bold"
+                android:id="@+id/schedule_month_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="TextView"
+                android:textAllCaps="true"
+
+                android:textColor="@color/baseBlue"
+                android:textSize="@dimen/text_title_size" />
 
         </RelativeLayout>
-
 
         <LinearLayout
             android:id="@+id/schedule_month_table"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/double_margin"
             android:orientation="vertical"
             tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp">
-
-        </LinearLayout>
+            tools:layout_editor_absoluteY="8dp"/>
 
     </LinearLayout>
 
-<!--    <LinearLayout-->
-<!--        android:layout_margin="10dp"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_weight="1"-->
-<!--        android:orientation="vertical"-->
-<!--        android:background="@drawable/button_gray">-->
 
-<!--        <TextView-->
-<!--            android:textColor="#ffffff"-->
-<!--            android:layout_marginTop="5dp"-->
-<!--            android:layout_marginLeft="5dp"-->
-<!--            android:layout_marginStart="5dp"-->
-<!--            android:textSize="@dimen/text_small_size"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/schedule_month_activity_ad_preview_title" />-->
-<!--        <TextView-->
-<!--            android:textColor="#ffffff"-->
-<!--            android:textSize="@dimen/text_simple_size"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:gravity="center"-->
-<!--            android:text="@string/schedule_month_activity_ad_preview_text" />-->
-<!--    </LinearLayout>-->
-</LinearLayout>
+
+
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/shedule_month_ad_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="ca-app-pub-3940256099942544/6300978111"/>
+        <!-- testId BANNER ca-app-pub-3940256099942544/6300978111 -->
+        <!-- testId SMART_BANNER ca-app-pub-3940256099942544/2247696110 -->
+        <!-- testId Interstitial ca-app-pub-3940256099942544/1033173712 -->
+        <!-- myId BANNER ca-app-pub-5709922862247260/2509785131 -->
+        <!-- myId SMART_BANNER ca-app-pub-5709922862247260/2292332710 -->
+</RelativeLayout>

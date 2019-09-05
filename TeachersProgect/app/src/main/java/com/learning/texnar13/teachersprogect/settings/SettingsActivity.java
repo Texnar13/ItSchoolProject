@@ -1,19 +1,17 @@
 package com.learning.texnar13.teachersprogect.settings;
 
-import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -21,6 +19,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -32,10 +32,230 @@ import java.util.GregorianCalendar;
 
 public class SettingsActivity extends AppCompatActivity implements EditMaxAnswersDialogInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface, EditGradesTypeDialogFragmentInterface, SettingsRemoveInterface {
 
-    TextView saveButton;
+    TextView maxGradeText;
+
+    // межстраничный баннер открывающийся при выходе из настроек
+    InterstitialAd mInterstitialAd;
+
+    // создание экрана
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
 
 
-//-----------------------------------методы диалогов----------------------------------------------
+        // отключаем поворот
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
+        // загружаем межстраничный баннер настроек
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        // создаем запрос
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
+                .build();
+        mInterstitialAd.loadAd(adRequest);
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
+
+        final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+
+//-------------максимальный ответ-------------
+
+
+
+        // ставим прошлый максимум
+        maxGradeText = ((TextView)findViewById(R.id.activity_settings_edit_max_answers_count_text));
+        maxGradeText.setText(
+                String.format(
+                        getResources().getString(R.string.settings_activity_button_edit_max_answer),
+                        "" + db.getSettingsMaxGrade(1)
+                )
+        );
+        //кнопка вызова диалога по изменению
+        findViewById(R.id.activity_settings_edit_max_answers_count_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                // аргументы
+                Bundle args = new Bundle();
+                args.putInt(EditMaxAnswersCountDialogFragment.ARGUMENT_LAST_MAX, db.getSettingsMaxGrade(1));
+                // показываем диалог
+                EditMaxAnswersCountDialogFragment editMaxAnswersCountDialogFragment = new EditMaxAnswersCountDialogFragment();
+                editMaxAnswersCountDialogFragment.setArguments(args);
+                editMaxAnswersCountDialogFragment.show(getFragmentManager(), "EditMaxAnswersDialogInterface");
+                db.close();
+            }
+        });
+
+
+// -------------- кнопка для изменения типов оценок -----------
+
+        RelativeLayout editGradesTypesButton = findViewById(R.id.activity_settings_edit_grades_type_button);
+        editGradesTypesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                Cursor types = db.getGradesTypes();
+
+                // массивы из базы данных
+                long[] typesId = new long[types.getCount()];
+                String[] typesStrings = new String[types.getCount()];
+                for (int i = 0; i < types.getCount(); i++) {
+                    types.moveToNext();
+
+                    typesId[i] = types.getLong(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID));
+                    typesStrings[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE));
+                }
+                // запуск диалога
+                EditGradesTypesDialogFragment typesDialogFragment = new EditGradesTypesDialogFragment();
+                // данные
+                Bundle args = new Bundle();
+                args.putLongArray(EditGradesTypesDialogFragment.ARGS_TYPES_ID_ARRAY_TAG, typesId);
+                args.putStringArray(EditGradesTypesDialogFragment.ARGS_TYPES_NAMES_ARRAY_TAG, typesStrings);
+                typesDialogFragment.setArguments(args);
+                // запуск
+                typesDialogFragment.show(getFragmentManager(), "editGradesTypesDialogFragment");
+            }
+        });
+
+
+//--------------изменить время-----------
+
+        //кнопка  изменения
+        RelativeLayout editTimeButton = findViewById(R.id.activity_settings_edit_time_button);
+        //слушатель
+        editTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                int[][] arrays = db.getSettingsTime(1);
+                db.close();
+                Log.e("TeachersApp", "editTimeButton*********" + Arrays.toString(arrays));
+
+                int[] arr0 = arrays[0];// TODO error ArrayIndexOutOfBoundsException
+                int[] arr1 = arrays[1];
+                int[] arr2 = arrays[2];
+                int[] arr3 = arrays[3];
+                int[] arr4 = arrays[4];
+                int[] arr5 = arrays[5];
+                int[] arr6 = arrays[6];
+                int[] arr7 = arrays[7];
+                int[] arr8 = arrays[8];
+
+                //диалог
+                EditTimeDialogFragment editTimeDialogFragment = new EditTimeDialogFragment();
+                //данные
+                Bundle args = new Bundle();
+                args.putIntArray("arr0", arr0);
+                args.putIntArray("arr1", arr1);
+                args.putIntArray("arr2", arr2);
+                args.putIntArray("arr3", arr3);
+                args.putIntArray("arr4", arr4);
+                args.putIntArray("arr5", arr5);
+                args.putIntArray("arr6", arr6);
+                args.putIntArray("arr7", arr7);
+                args.putIntArray("arr8", arr8);
+                editTimeDialogFragment.setArguments(args);
+                editTimeDialogFragment.show(getFragmentManager(), "editTime");
+            }
+        });
+
+
+//--------------удаление данных-----------
+
+        RelativeLayout removeDataButton = findViewById(R.id.activity_settings_remove_data_button);
+        removeDataButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //создаем диалог
+                SettingsRemoveDataDialogFragment removeDialog =
+                        new SettingsRemoveDataDialogFragment();
+                // запускаем
+                removeDialog.show(getFragmentManager(), "removeSettingsDialog");
+            }
+        });
+
+//--------------настройка локализации-----------------
+        // находим кнопку
+        LinearLayout editLocaleButton = findViewById(R.id.activity_settings_edit_locale_button);
+        // ставим текст
+        {
+            // достаем коды языков
+            String[] localeСodes = getResources().getStringArray(R.array.locale_code);
+            // получаем текущий код локализации из бд
+            String lastLocale = db.getSettingsLocale(1);
+            // находим прошлую локализацию в списке
+            int lastLocaleNumber = 0;
+            for (int i = 0; i < localeСodes.length; i++) {
+                if (localeСodes[i].equals(lastLocale)) {
+                    lastLocaleNumber = i;
+                }
+            }
+            // достаем названия языков
+            String[] localeNames = getResources().getStringArray(R.array.locale_names);
+            // выводим название
+            ((TextView)findViewById(R.id.activity_settings_edit_locale_button_locale_text)).setText(localeNames[lastLocaleNumber]);
+        }
+        // ставим обработчик
+        editLocaleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //текущая локаль из бд
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+
+                Bundle args = new Bundle();
+                args.putString("locale", db.getSettingsLocale(1));
+                //создаем диалог
+                EditLocaleDialogFragment localeDialog = new EditLocaleDialogFragment();
+                localeDialog.setArguments(args);
+                // запускаем
+                localeDialog.show(getFragmentManager(), "editLocaleDialog");
+            }
+        });
+
+//// ------------- цветные оценки -----------------
+//
+//        LinearLayout coloredGradesContainer = findViewById(R.id.activity_settings_are_grades_colored_container);
+//        final Switch coloredGradesSwitch = findViewById(R.id.activity_settings_are_grades_colored_switch);
+//        // нажимаем переключатель
+//        coloredGradesSwitch.setChecked(db.getSettingsAreTheGradesColoredByProfileId(1));
+//        // обработчик контейнеру
+//        coloredGradesContainer.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                db.setSettingsAreTheGradesColoredByProfileId(1, !coloredGradesSwitch.isChecked());
+//                coloredGradesSwitch.setChecked(db.getSettingsAreTheGradesColoredByProfileId(1));
+//            }
+//        });
+//        // переключатель не нажимается
+//        coloredGradesSwitch.setClickable(false);
+
+//--------------оцените нас-----------------
+
+        RelativeLayout rateUsButton = findViewById(R.id.settings_rate_button);
+        rateUsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("market://details?id=com.learning.texnar13.teachersprogect"));
+                if (!isActivityStarted(intent)) {
+                    intent.setData(Uri
+                            .parse("https://play.google.com/store/apps/details?id=com.learning.texnar13.teachersprogect"));
+                    if (!isActivityStarted(intent)) {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Could not open Android market, please check if the market app installed or not. Try again later",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+        db.close();
+    }
+
 
     //удаление настроек
     @Override
@@ -156,7 +376,7 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
         db.setSettingsMaxGrade(1, max);
         db.close();
         // ставим новый максимум
-        saveButton.setText(
+        maxGradeText.setText(
                 String.format(
                         getResources().getString(R.string.settings_activity_button_edit_max_answer),
                         "" + max
@@ -192,256 +412,7 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
     }
 
 
-//-----------------------------------------создание экрана------------------------------------------
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
-
-//----------изменение размера------------
-
-        final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-
-        SeekBar sizeSeekBar = (SeekBar) findViewById(R.id.activity_settings_seekBar);
-        LinearLayout sizeShowLayOut = (LinearLayout) findViewById(R.id.activity_settings_size_show_layout);
-
-        final RelativeLayout room = new RelativeLayout(this);
-        sizeShowLayOut.addView(room, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-
-        if (db.getInterfaceSizeBySettingsProfileId(1) == -1) {
-            db.createNewSettingsProfileWithId1("default", 50);//TODO Skipped 49 frames!  The application may be doing too much work on its main thread.
-        }
-        sizeSeekBar.setProgress((int) db.getInterfaceSizeBySettingsProfileId(1));
-        updateShowRoom(room, (int) db.getInterfaceSizeBySettingsProfileId(1));
-
-
-        sizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {//не когда касается, а когда начинает двигаться
-
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (i != 0) {//избегаем деления на ноль
-                    updateShowRoom(room, i);
-                    // todo почему я все еще могу сохранять если база данных закрыта
-                    db.setSettingsProfileParameters(1, "default", i);
-                }
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-//-------------максимальный ответ-------------
-
-        //кнопка вызова диалога по изменению
-        saveButton = (TextView) findViewById(R.id.activity_settings_edit_max_answers_count_button);
-        // ставим прошлый максимум
-        saveButton.setText(
-                String.format(
-                        getResources().getString(R.string.settings_activity_button_edit_max_answer),
-                        "" + db.getSettingsMaxGrade(1)
-                )
-        );
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                // аргументы
-                Bundle args = new Bundle();
-                args.putInt(EditMaxAnswersCountDialogFragment.ARGUMENT_LAST_MAX, db.getSettingsMaxGrade(1));
-                // показываем диалог
-                EditMaxAnswersCountDialogFragment editMaxAnswersCountDialogFragment = new EditMaxAnswersCountDialogFragment();
-                editMaxAnswersCountDialogFragment.setArguments(args);
-                editMaxAnswersCountDialogFragment.show(getFragmentManager(), "EditMaxAnswersDialogInterface");
-                db.close();
-            }
-        });
-
-
-// -------------- кнопка для изменения типов оценок -----------
-
-        TextView editGradesTypesButton = (TextView) findViewById(R.id.activity_settings_edit_grades_type_button);
-        editGradesTypesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                Cursor types = db.getGradesTypes();
-
-                // массивы из базы данных
-                long[] typesId = new long[types.getCount()];
-                String[] typesStrings = new String[types.getCount()];
-                for (int i = 0; i < types.getCount(); i++) {
-                    types.moveToNext();
-
-                    typesId[i] = types.getLong(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID));
-                    typesStrings[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE));
-                }
-                // запуск диалога
-                EditGradesTypesDialogFragment typesDialogFragment = new EditGradesTypesDialogFragment();
-                // данные
-                Bundle args = new Bundle();
-                args.putLongArray(EditGradesTypesDialogFragment.ARGS_TYPES_ID_ARRAY_TAG, typesId);
-                args.putStringArray(EditGradesTypesDialogFragment.ARGS_TYPES_NAMES_ARRAY_TAG, typesStrings);
-                typesDialogFragment.setArguments(args);
-                // запуск
-                typesDialogFragment.show(getFragmentManager(), "editGradesTypesDialogFragment");
-            }
-        });
-
-
-//--------------изменить время-----------
-
-        //кнопка  изменения
-        TextView editTimeButton = (TextView) findViewById(R.id.activity_settings_edit_time_button);
-        //слушатель
-        editTimeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                int[][] arrays = db.getSettingsTime(1);
-                db.close();
-                Log.e("TeachersApp", "editTimeButton*********" + Arrays.toString(arrays));
-
-                int[] arr0 = arrays[0];// TODO error ArrayIndexOutOfBoundsException
-                int[] arr1 = arrays[1];
-                int[] arr2 = arrays[2];
-                int[] arr3 = arrays[3];
-                int[] arr4 = arrays[4];
-                int[] arr5 = arrays[5];
-                int[] arr6 = arrays[6];
-                int[] arr7 = arrays[7];
-                int[] arr8 = arrays[8];
-
-                //диалог
-                EditTimeDialogFragment editTimeDialogFragment = new EditTimeDialogFragment();
-                //данные
-                Bundle args = new Bundle();
-                args.putIntArray("arr0", arr0);
-                args.putIntArray("arr1", arr1);
-                args.putIntArray("arr2", arr2);
-                args.putIntArray("arr3", arr3);
-                args.putIntArray("arr4", arr4);
-                args.putIntArray("arr5", arr5);
-                args.putIntArray("arr6", arr6);
-                args.putIntArray("arr7", arr7);
-                args.putIntArray("arr8", arr8);
-                editTimeDialogFragment.setArguments(args);
-                editTimeDialogFragment.show(getFragmentManager(), "editTime");
-            }
-        });
-
-
-//--------------удаление данных-----------
-
-        Button removeDataButton = (Button) findViewById(R.id.activity_settings_remove_data_button);
-        removeDataButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //создаем диалог
-                SettingsRemoveDataDialogFragment removeDialog =
-                        new SettingsRemoveDataDialogFragment();
-                // запускаем
-                removeDialog.show(getFragmentManager(), "removeSettingsDialog");
-            }
-        });
-
-//--------------настройка локализации-----------------
-        // находим кнопку
-        TextView editLocaleButton = (TextView) findViewById(R.id.activity_settings_edit_locale_button);
-        // ставим текст
-        {
-            // достаем коды языков
-            String[] localeСodes = getResources().getStringArray(R.array.locale_code);
-            // получаем текущий код локализации из бд
-            String lastLocale = db.getSettingsLocale(1);
-            // находим прошлую локализацию в списке
-            int lastLocaleNumber = 0;
-            for (int i = 0; i < localeСodes.length; i++) {
-                if (localeСodes[i].equals(lastLocale)) {
-                    lastLocaleNumber = i;
-                }
-            }
-            // достаем названия языков
-            String[] localeNames = getResources().getStringArray(R.array.locale_names);
-            // выводим название
-            editLocaleButton.setText(
-                    String.format(
-                            getResources().getString(R.string.settings_activity_button_edit_locale),
-                            localeNames[lastLocaleNumber]
-                    )
-            );
-        }
-        // ставим обработчик
-        editLocaleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //текущая локаль из бд
-                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-
-                Bundle args = new Bundle();
-                args.putString("locale", db.getSettingsLocale(1));
-                //создаем диалог
-                EditLocaleDialogFragment localeDialog =
-                        new EditLocaleDialogFragment();
-                localeDialog.setArguments(args);
-                // запускаем
-                localeDialog.show(getFragmentManager(), "editLocaleDialog");
-            }
-        });
-
-// ------------- цветные оценки -----------------
-
-        LinearLayout coloredGradesContainer = findViewById(R.id.activity_settings_are_grades_colored_container);
-        final Switch coloredGradesSwitch = findViewById(R.id.activity_settings_are_grades_colored_switch);
-        // нажимаем переключатель
-        coloredGradesSwitch.setChecked(db.getSettingsAreTheGradesColoredByProfileId(1));
-        // обработчик контейнеру
-        coloredGradesContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.setSettingsAreTheGradesColoredByProfileId(1, !coloredGradesSwitch.isChecked());
-                coloredGradesSwitch.setChecked(db.getSettingsAreTheGradesColoredByProfileId(1));
-            }
-        });
-        // переключатель не нажимается
-        coloredGradesSwitch.setClickable(false);
-
-//--------------оцените нас-----------------
-
-        Button rateUsButton = (Button) findViewById(R.id.settings_rate_button);
-        rateUsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("market://details?id=com.learning.texnar13.teachersprogect"));
-                if (!isActivityStarted(intent)) {
-                    intent.setData(Uri
-                            .parse("https://play.google.com/store/apps/details?id=com.learning.texnar13.teachersprogect"));
-                    if (!isActivityStarted(intent)) {
-                        Toast.makeText(
-                                getApplicationContext(),
-                                "Could not open Android market, please check if the market app installed or not. Try again later",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
-        db.close();
-    }
 
     //для кнопки оцените нас
     private boolean isActivityStarted(Intent aIntent) {
@@ -454,39 +425,6 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
     }
 
 
-//----------------------------------------обновление парт-------------------------------------------
-
-    private void updateShowRoom(RelativeLayout room, float multiplier) {
-        room.removeAllViews();
-
-        multiplier = multiplier / 1000 * getResources().getInteger(R.integer.desks_screen_multiplier);
-
-        RelativeLayout[] tables = new RelativeLayout[4];
-        RelativeLayout.LayoutParams[] tablesParams = new RelativeLayout.LayoutParams[4];
-
-        for (int i = 0; i < 4; i++) {
-            tables[i] = new RelativeLayout(this);
-            tables[i].setBackground(getResources().getDrawable(R.drawable.settings_desk));
-            tablesParams[i] = new RelativeLayout.LayoutParams(
-                    (int) pxFromDp(2000 * multiplier), (int) pxFromDp(1000 * multiplier));
-
-            tablesParams[i].addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-            tablesParams[i].addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-
-
-            room.addView(tables[i], tablesParams[i]);
-        }
-        // 00 11
-        // 22 33
-        tablesParams[0].setMargins((int) pxFromDp(1000 * multiplier), (int) pxFromDp(1000 * multiplier), 0, 0);
-        tablesParams[1].setMargins((int) pxFromDp(4000 * multiplier), (int) pxFromDp(1000 * multiplier), 0, 0);
-        tablesParams[2].setMargins((int) pxFromDp(1000 * multiplier), (int) pxFromDp(3000 * multiplier), 0, 0);
-        tablesParams[3].setMargins((int) pxFromDp(4000 * multiplier), (int) pxFromDp(3000 * multiplier), 0, 0);
-
-    }
-
-
-//---------------------------------------технические методы-----------------------------------------
 
     private float pxFromDp(float dp) {
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
@@ -494,13 +432,20 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home://кнопка назад в actionBar
-                onBackPressed();
-                return true;
+        if (item.getItemId() == android.R.id.home) {//кнопка назад в actionBar
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-            default:
-                return super.onOptionsItemSelected(item);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        // выводим рекламу при закрытии активности настроек
+        if(mInterstitialAd.isLoaded()){
+            mInterstitialAd.show();
         }
     }
 }

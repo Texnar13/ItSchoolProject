@@ -686,7 +686,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return temp;
     }
 
-    public int[][] getSettingsTime(long profileId) {//return урок[[hh],[mm],[hh],[mm]],
+    public int[][] getSettingsTime(long profileId) {//return урок [[hh],[mm],[hh],[mm]] , [[hh],[mm],[hh],[mm]], ...
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = ?", new String[]{"" + profileId}, null, null, null);
         if (cursor.getCount() == 0) {
@@ -1262,17 +1262,18 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
 
     //оценки учеников
-    public long createGrade(long learnerId, long grade, long subjectId, String date) {
+    public long createGrade(long learnerId, long grade, long typeId, long subjectId, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableLearnersGrades.KEY_LEARNER_ID, learnerId);
         values.put(SchoolContract.TableLearnersGrades.COLUMN_GRADE, grade);
+        values.put(SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID, typeId);
         values.put(SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID, subjectId);
         values.put(SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP, date);
         long temp = db.insert(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, values);//-1 = ошибка ввода
         //db.close();
         if (IS_DEBUG)
-            Log.i("DBOpenHelper", "createGrade returnId = " + temp + " learnerId= " + learnerId + " grade= " + grade + " subjectId= " + subjectId + " date= " + date);
+            Log.i("DBOpenHelper", "createGrade returnId = " + temp + " learnerId= " + learnerId + " grade= " + grade + " typeId= " + typeId + " subjectId= " + subjectId + " date= " + date);
         return temp;
     }
 
@@ -1310,10 +1311,11 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public long editGrade(long gradeId, long grade) {
+    public long editGrade(long gradeId, long grade, long gradeTypeId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableLearnersGrades.COLUMN_GRADE, grade);
+        values.put(SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID, gradeTypeId);
         long temp = db.update(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, values, SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " = ?", new String[]{Long.toString(gradeId)});//-1 = ошибка ввода
         //db.close();
         if (IS_DEBUG)

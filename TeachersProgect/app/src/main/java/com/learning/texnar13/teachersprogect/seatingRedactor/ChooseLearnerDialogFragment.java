@@ -3,8 +3,8 @@ package com.learning.texnar13.teachersprogect.seatingRedactor;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AlertDialog;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -50,7 +50,7 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
 
         // кнопка закрыть
         LinearLayout closeImageView = new LinearLayout(getActivity());
-        closeImageView.setBackgroundResource(R.drawable._button_close);
+        closeImageView.setBackgroundResource(R.drawable.__button_close);
         LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(pxFromDp(40), pxFromDp(40));
         closeImageViewParams.setMargins(pxFromDp(10), pxFromDp(10), pxFromDp(10), pxFromDp(10));
         titleLayout.addView(closeImageView, closeImageViewParams);

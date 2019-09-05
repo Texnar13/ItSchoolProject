@@ -8,16 +8,24 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -86,6 +94,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     TextView stateText;
     // картинка с иконками
     ImageView instrumentalImage;
+    // фон картинки с иконками
+    ImageView instrumentalImageBackground;
 
 
     // точка середины между пальцами за предыдущую итерацию
@@ -196,6 +206,51 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cabinet_redactor);
+
+        // цвет кнопки меню
+        getSupportActionBar().getThemedContext().setTheme(R.style.LessonStyle);
+
+        // вставляем в actionBar заголовок активности
+        LinearLayout titleContainer = new LinearLayout(this);
+        titleContainer.setGravity(Gravity.CENTER);
+        titleContainer.setBackgroundResource(R.drawable._button_round_background_orange);
+        ActionBar.LayoutParams titleContainerParams = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.MATCH_PARENT,
+                (int) getResources().getDimension(R.dimen.my_toolbar_text_container_height_size),
+                Gravity.CENTER
+        );
+        titleContainerParams.leftMargin = (int) getResources().getDimension(R.dimen.double_margin);
+        titleContainerParams.rightMargin = (int) getResources().getDimension(R.dimen.double_margin);
+        //android:layout_centerInParent="true"
+
+        TextView title = new TextView(this);
+        title.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+        title.setSingleLine(true);
+        title.setGravity(Gravity.CENTER);
+        title.setTextColor(getResources().getColor(R.color.backgroundWhite));
+        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        titleParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+        titleParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+        titleContainer.addView(title, titleParams);
+        getSupportActionBar().setCustomView(titleContainer, titleContainerParams);
+        // выставляем свой заголовок
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+
+
+        // кнопка назад в actionBar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // убираем тень
+        getSupportActionBar().setElevation(0);
+        // цвет фона
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.backgroundWhite));
+        // кнопка назад
+        getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_orange));
+
+
         // размеры экрана
         // узнаем размеры экрана из класса Display
         {
@@ -225,8 +280,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         cabinetCursor.moveToFirst();
 
         // выводим его имя
-        setTitle(// todo переделать через файл строк
-                getTitle() + " " + cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME))
+        title.setText(// todo переделать через файл строк
+                cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME))
         );
         // множитель    0.25 <-> 4
         multiplier = 0.0375F *
@@ -283,7 +338,6 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 // кнопка добавить парту
         // размеры и положение
         instrumentalImage = findViewById(R.id.activity_cabinet_redactor_instrumental_image);
-        ImageView instrumentalImageBackground;
         instrumentalImageBackground = findViewById(R.id.activity_cabinet_redactor_instrumental_image_background);
         // нажатие на +
         instrumentalImageBackground.setOnClickListener(new View.OnClickListener() {
@@ -387,7 +441,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                                 motionEvent.getY() - pxFromDp(NO_ZOOMED_DESK_HALF_SIZE * multiplier)
                         );
                         // ставим иконку для удаления
-                        instrumentalImage.setImageResource(R.drawable.ic_vector_basket);
+                        instrumentalImage.setImageResource(0);
+                        instrumentalImageBackground.setImageResource(R.drawable.__button_bucket);
                     }
                     i--;
                 }
@@ -407,7 +462,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         // прекращаем перемещение
                         mode = NONE;
                         // ставим изображение в плюс
-                        instrumentalImage.setImageResource(R.drawable.ic_vector_plus);
+                        instrumentalImage.setImageResource(R.drawable.__button_add);
+                        instrumentalImageBackground.setImageResource(R.drawable.cabinet_redactor_add_desk_button);
                         // снимаем выбор с парты
                         checkedDeskId = -1;
                     }
@@ -444,7 +500,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         // из списка
                         desksList.remove(i);
                         // возвращаем картинку
-                        instrumentalImage.setImageResource(R.drawable.ic_vector_plus);
+                        instrumentalImage.setImageResource(R.drawable.__button_add);
+                        instrumentalImageBackground.setImageResource(R.drawable.cabinet_redactor_add_desk_button);
 
                         // прекращаем перемещение парты
                         mode = NONE;
@@ -559,7 +616,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     db.close();
 
                     // ставим изображение в плюс
-                    instrumentalImage.setImageResource(R.drawable.ic_vector_plus);
+                    instrumentalImage.setImageResource(R.drawable.__button_add);
+                    instrumentalImageBackground.setImageResource(R.drawable.cabinet_redactor_add_desk_button);
                     // снимаем с парты выбор
                     checkedDeskId = -1;
                 }
@@ -582,13 +640,17 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             x = (xAxisPXOffset % pxFromDp(NO_ZOOMED_GIRD_MARGIN * multiplier));
             y = (yAxisPXOffset % pxFromDp(NO_ZOOMED_GIRD_MARGIN * multiplier));
 
+            int linesWidth = (int) pxFromDp(1F);
+            if (linesWidth == 0)
+                linesWidth = 1;
+
 
             //пробежка по x
             while (x < widthDisplaySize) {
                 //вывод вертикальной полосы
                 final RelativeLayout verticalLine = new RelativeLayout(this);
                 RelativeLayout.LayoutParams verticalLineLayoutParams = new RelativeLayout.LayoutParams(
-                        3,
+                        linesWidth,
                         heightDisplaySize
                 );
                 verticalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -597,7 +659,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 verticalLineLayoutParams.leftMargin = (int) x;
                 verticalLineLayoutParams.topMargin = 0;
                 verticalLine.setLayoutParams(verticalLineLayoutParams);
-                verticalLine.setBackgroundColor(Color.LTGRAY);
+                verticalLine.setBackgroundColor(getResources().getColor(R.color.backgroundDarkWhite));
                 outBackground.addView(verticalLine);
                 x = x + pxFromDp(NO_ZOOMED_GIRD_MARGIN * multiplier);
             }
@@ -607,7 +669,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 final RelativeLayout horizontalLine = new RelativeLayout(this);
                 RelativeLayout.LayoutParams horizontalLineLayoutParams = new RelativeLayout.LayoutParams(
                         widthDisplaySize,
-                        3
+                        linesWidth
                 );
                 horizontalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 horizontalLineLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -615,7 +677,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 horizontalLineLayoutParams.leftMargin = 0;
                 horizontalLineLayoutParams.topMargin = (int) y;
                 horizontalLine.setLayoutParams(horizontalLineLayoutParams);
-                horizontalLine.setBackgroundColor(Color.LTGRAY);
+                horizontalLine.setBackgroundColor(getResources().getColor(R.color.backgroundDarkWhite));
                 outBackground.addView(horizontalLine);
                 y = y + pxFromDp(NO_ZOOMED_GIRD_MARGIN * multiplier);
 
@@ -718,8 +780,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         // создаем объект парты и добавляем его в лист
         desksList.add(new CabinetRedactorPoint(
                 deskId,
-                widthDisplaySize / 2F -  pxFromDp(NO_ZOOMED_DESK_HALF_SIZE * numberOfPlaces * multiplier),
-                heightDisplaySize / 2F -  pxFromDp(NO_ZOOMED_DESK_HALF_SIZE * multiplier),
+                widthDisplaySize / 2F - pxFromDp(NO_ZOOMED_DESK_HALF_SIZE * numberOfPlaces * multiplier),
+                heightDisplaySize / 2F - pxFromDp(NO_ZOOMED_DESK_HALF_SIZE * multiplier),
                 numberOfPlaces,
                 newDeskLayout
         ));
@@ -752,8 +814,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             );
             newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            newDeskLayoutParams.leftMargin = (int)pxX;
-            newDeskLayoutParams.topMargin = (int)pxY;
+            newDeskLayoutParams.leftMargin = (int) pxX;
+            newDeskLayoutParams.topMargin = (int) pxY;
             this.desk.setLayoutParams(newDeskLayoutParams);
 
             // ставим парте Drawable
@@ -763,7 +825,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     new RectF(0, 0, 0, 0),
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}
             ));
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.colorPrimaryOrange));
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.baseOrange));
 
             this.desk.setBackground(rectDrawable);
         }
@@ -791,7 +853,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     new RectF(0, 0, 0, 0),
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}
             ));
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.colorPrimaryOrange));
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.baseOrange));
             desk.setBackground(rectDrawable);
         }
 
@@ -818,7 +880,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}// внутренний радиус скругления
             ));
             // задаем цвет
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.colorPrimaryOrange));
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.baseOrange));
             // и ставим его на задний фон layout
             desk.setBackground(rectDrawable);
 

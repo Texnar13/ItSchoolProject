@@ -1,19 +1,20 @@
 package com.learning.texnar13.teachersprogect.cabinetsOut;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
@@ -30,110 +31,42 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
     String[] cabinetsNames;
     LinearLayout room;
 
-//---------------------------------методы диалогов--------------------------------------------------
 
-
-//-----создание-----
-
-    @Override
-    public void createCabinet(String name) {
-        //создаем кабинет
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        db.createCabinet(name);
-        db.close();
-        //опять выводим списки
-        getCabinets();
-        outCabinets();
-    }
-
-//-----редактирование-----
-
-    //переименование
-    @Override
-    public void editCabinet(String name, long cabinetId) {
-        //изменяем кабинет
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        ArrayList<Long> arrayList = new ArrayList<>();
-        arrayList.add(cabinetId);
-        db.setCabinetName(arrayList, name);
-        db.close();
-        //опять выводим списки
-        getCabinets();
-        outCabinets();
-    }
-
-    //удаление
-    @Override
-    public void removeCabinet(long cabinetId) {
-        //удаляем кабинет
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        ArrayList<Long> arrayList = new ArrayList<>();
-        arrayList.add(cabinetId);
-        db.deleteCabinets(arrayList);
-        db.close();
-        //опять выводим списки
-        getCabinets();
-        outCabinets();
-    }
-
-//-------------------------------меню сверху--------------------------------------------------------
-
-//убрал за ненадобностью в подсказке
-//    //раздуваем неаше меню
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.cabinets_out_menu, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
-//
-//    //назначаем функции меню
-//    @Override
-//    public boolean onPrepareOptionsMenu(final Menu menu) {
-//        //кнопка помощь
-//        menu.findItem(R.id.cabinets_out_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem menuItem) {
-//                Toast toast = Toast.makeText(getApplicationContext(),"В разработке ¯\\_(ツ)_/¯",Toast.LENGTH_LONG);
-//                toast.show();
-//
-//                return true;
-//            }
-//        });
-//        return super.onPrepareOptionsMenu(menu);
-//    }
-
-//------------------------------создаем активность--------------------------------------------------
-
+    // создаем активность
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cabinets_out);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.cabinets_out_toolbar);
-        setSupportActionBar(toolbar);
+
+        // вертикальная ориентация
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
         //кнопка назад
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        findViewById(R.id.cabinets_out_toolbar_back_arrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // выходим из активности
+                onBackPressed();
+            }
+        });
 
         //------плавающая кнопка с низу--------
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.fab)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //-----диалог создания-----
-                //инициализируем диалог
+                // инициализируем диалог создания
                 CreateCabinetDialogFragment createCabinetDialog = new CreateCabinetDialogFragment();
-                //показать диалог
+                // показать диалог
                 createCabinetDialog.show(getFragmentManager(), "createCabinetDialog");
 
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
             }
         });
-        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryOrange)));
 
         //--------экран со списком---------
         //создание
-        room = (LinearLayout) findViewById(R.id.cabinets_out_room);
+        room = findViewById(R.id.cabinets_out_room);
 
         //обновляем данные
         getCabinets();
@@ -173,52 +106,67 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         room.removeAllViews();
         //пробегаемся по кабинетам и создаем список из LinearLayout
         for (int i = 0; i < cabinetsId.length; i++) {
-//создаем пункт списка-----------
-            //список
-            //-контейнер
-            //--текст
 
-//------контейнер----
-            //создаем LinearLayout
-            LinearLayout container = new LinearLayout(this);
-            container.setBackgroundResource(R.drawable.start_screen_3_2_yellow_spot);
 
-            //параметры контейнера(т.к. элемент находится в LinearLayout то и параметры используем его)
+            //создаем контейнер
+            RelativeLayout cabinetContainer = new RelativeLayout(this);
+            cabinetContainer.setBackgroundResource(R.drawable.__background_round_simple_full_dark_white);
+            // параметры контейнера
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,//ш
                     ViewGroup.LayoutParams.WRAP_CONTENT//в
             );
-            containerParams.setMargins((int)pxFromDp(4), (int)pxFromDp(4), (int)pxFromDp(4), (int)pxFromDp(0));
-
-//------текст------
-            //создаём текст
-            TextView item = new TextView(this);
-            item.setGravity(Gravity.CENTER);
-            item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_title_size));
-            item.setTextColor(Color.WHITE);
-
-            //параметры пункта(т.к. элемент находится в LinearLayout то и параметры используем его)
-            LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,//ш
-                    ViewGroup.LayoutParams.WRAP_CONTENT//в
+            containerParams.setMargins(
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    0
             );
-            itemParams.gravity = Gravity.CENTER;
-            // отступы текста в рамке
-            itemParams.setMargins((int) pxFromDp(3), (int) pxFromDp(9), (int) pxFromDp(3), (int) pxFromDp(9));
+            room.addView(cabinetContainer, containerParams);
 
-            //--выводим текст--
+            // создаём текст
+            TextView item = new TextView(this);
+            item.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
+            item.setGravity(Gravity.CENTER_VERTICAL);
+            item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            item.setTextColor(Color.BLACK);
             item.setText(cabinetsNames[i]);
+            //параметры пункта
+            RelativeLayout.LayoutParams itemParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,//ш
+                    RelativeLayout.LayoutParams.WRAP_CONTENT//в
+            );
+            itemParams.setMargins(
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    (int) (getResources().getDimension(R.dimen.my_icon_small_size)
+                            + 2 * getResources().getDimension(R.dimen.simple_margin)),
+                    (int) getResources().getDimension(R.dimen.double_margin)
+            );
+            cabinetContainer.addView(item, itemParams);
 
-//------помещаем текст в контейнер--------
-            container.addView(item, itemParams);
-//------помещаем контейнер в список-------
-            room.addView(container, containerParams);
+            // стрелочка
+            LinearLayout arrow = new LinearLayout(this);
+            arrow.setBackgroundResource(R.drawable.__button_forward_arrow_orange);
+            RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
+                    (int) getResources().getDimension(R.dimen.my_icon_small_size),
+                    (int) getResources().getDimension(R.dimen.my_icon_small_size)
+            );
+            arrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
+            arrowParams.setMargins(
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin)
+            );
+            cabinetContainer.addView(arrow, arrowParams);
 
-//------нажатие на пункт списка-------
-            //номер пункта в списке
+
+            // короткое нажатие на пункт списка
+            // номер пункта в списке
             final long finalId = cabinetsId[i];
-//--короткое--
-            container.setOnClickListener(new View.OnClickListener() {
+            cabinetContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //переходим на редактирование этого кабинета
@@ -229,8 +177,8 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
                 }
             });
 
-//--долгое--
-            container.setOnLongClickListener(new View.OnLongClickListener() {
+            // долгое
+            cabinetContainer.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     //инициализируем диалог
@@ -252,6 +200,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
                     editDialog.setArguments(args);
                     //показать диалог
                     editDialog.show(getFragmentManager(), "editCabinetDialog");
+
                     //заканчиваем работу с бд
                     cabinetCursor.close();
                     db.close();
@@ -261,14 +210,6 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         }
 
 //------в конце выводим текст с подсказкой------
-
-        //экран
-        //-...
-        //-контейнер
-        //--текст
-        //-контейнер
-        //экран
-
         //---контейнер---
         LinearLayout container = new LinearLayout(this);
         container.setOrientation(LinearLayout.VERTICAL);
@@ -278,19 +219,24 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                 );
-        containerParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
+        containerParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin)
+        );
 
         //---1 текст---
         //создаем
-        TextView helpText1 = new TextView(this);
-        helpText1.setGravity(Gravity.CENTER);
-        helpText1.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-        helpText1.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
-        //helpText1.setText("Чтобы создать кабинет, нажмите \"+\" и введите его название. ");
-        helpText1.setText(R.string.cabinets_out_activity_text_help);
+        TextView helpText = new TextView(this);
+        helpText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
+        helpText.setGravity(Gravity.CENTER);
+        helpText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        helpText.setTextColor(getResources().getColor(R.color.backgroundLiteGray));
+        helpText.setText(R.string.cabinets_out_activity_text_help);
         //добавляем
         container.addView(
-                helpText1,
+                helpText,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
@@ -299,112 +245,60 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         room.addView(container, containerParams);
     }
 
-//------системные кнопки--------
 
+    // методы диалогов
+
+    // создание
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home://кнопка назад в actionBar
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
+    public void createCabinet(String name) {
+        //создаем кабинет
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        db.createCabinet(name);
+        db.close();
+        //опять выводим списки
+        getCabinets();
+        outCabinets();
     }
 
-//---------форматы----------
 
-    private float pxFromDp(float px) {
-        return px * getApplicationContext().getResources().getDisplayMetrics().density;
+    // переименование
+    @Override
+    public void editCabinet(String name, long cabinetId) {
+        //изменяем кабинет
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        ArrayList<Long> arrayList = new ArrayList<>();
+        arrayList.add(cabinetId);
+        db.setCabinetName(arrayList, name);
+        db.close();
+        //опять выводим списки
+        getCabinets();
+        outCabinets();
     }
+
+    // удаление
+    @Override
+    public void removeCabinet(long cabinetId) {
+        //удаляем кабинет
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        ArrayList<Long> arrayList = new ArrayList<>();
+        arrayList.add(cabinetId);
+        db.deleteCabinets(arrayList);
+        db.close();
+        //опять выводим списки
+        getCabinets();
+        outCabinets();
+    }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (item.getItemId() == android.R.id.home) {//кнопка назад в actionBar
+//            onBackPressed();
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//
+//    }
 }
 
-/*
-    // We can be in one of these 3 states
-    static final int NONE = 0;
-    static final int ZOOM = 2;
-    int mode = NONE;
-    //середина касания пальцев
-    PointF startMid = new PointF();
-    //изначальное растояние между пальцам
-    float oldDist = 1f;
-    //начальные параметры обьекта
-    int widthOld = 1;
-    int heightOld = 1;
-    int xOld = 1;
-    int yOld = 1;
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_POINTER_DOWN:
-                //если поставлен второй палец,назначаем новые координаты
-                if (event.getPointerCount() == 2) {
-                    //начальные размеры обьекта
-                    widthOld = myRectangle.getWidth();
-                    heightOld = myRectangle.getHeight();
-                    //начальные координаты обьекта
-                    xOld = (int) myRectangle.getX();
-                    yOld = (int) myRectangle.getY();
-                    //находим изначальное растояние между пальцами
-                    oldDist = spacing(event);
-                    if (oldDist > 10f) {
-                        findMidPoint(startMid, event);
-                        mode = ZOOM;
-                    }
-                }
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (mode == ZOOM) {
-                    //новое расстояние между пальцами
-                    float newDist = spacing(event);
-                    //находим коэффициент разницы между изначальным и новым расстоянием
-                    float scale = newDist / oldDist;
-
-                    if (newDist > 10f &&//слишком маленькое расстояние между пальцами
-                            scale > 0.01f &&//слишком маленький коэффициент
-                            (widthOld * scale > 10f && heightOld * scale > 10f) &&//слишком маленький размер
-                            (widthOld * scale < 1500f && heightOld * scale < 1500f)//слишком большой размер
-                            ) {
-                        //-----трансформация размера-----
-                        rectParams.width = (int) (widthOld * scale);
-                        rectParams.height = (int) (heightOld * scale);
-                        myRectangle.setLayoutParams(rectParams);
-
-                        //-----трансформация координаты-----
-                        //текущая середина пальцев
-                        PointF nowMid = new PointF();
-                        findMidPoint(nowMid, event);
-                        //-перемещение обьекта-
-                        // относительно центра зуммирования и перемещение пальцев в процессе зума
-                        //ставим обьекту координаты
-                        myRectangle.setX(((xOld - startMid.x) * scale) + nowMid.x);
-                        myRectangle.setY(((yOld - startMid.y) * scale) + nowMid.y);
-                    }
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_POINTER_UP:
-
-                mode = NONE;
-
-                break;
-        }
-        return true;
-    }
-
-    //******************* Расстояние между первым и вторым пальцами из event
-    private float spacing(MotionEvent event) {
-        float x = event.getX(0) - event.getX(1);
-        float y = event.getY(0) - event.getY(1);
-        return (float) Math.sqrt(x * x + y * y);
-    }
-
-    //************* координата середины между первым и вторым пальцами из event
-    private void findMidPoint(PointF point, MotionEvent event) {
-        float x = event.getX(0) + event.getX(1);
-        float y = event.getY(0) + event.getY(1);
-        point.set(x / 2, y / 2);
-    }
-    */
+// Убираем панель уведомлений
+//this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);

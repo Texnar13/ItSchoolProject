@@ -33,7 +33,7 @@
                 android:layout_toLeftOf="@+id/learners_and_grades_activity_date_text"
                 android:clickable="true"
                 android:focusable="true"
-                app:srcCompat="@drawable/_button_calendar_previous"
+                app:srcCompat="@drawable/__button_calendar_previous"
                 tools:ignore="RtlHardcoded" />
 
             <TextView
@@ -59,7 +59,7 @@
                 android:layout_toRightOf="@+id/learners_and_grades_activity_date_text"
                 android:clickable="true"
                 android:focusable="true"
-                app:srcCompat="@drawable/_button_calendar_next"
+                app:srcCompat="@drawable/__button_calendar_next"
                 tools:ignore="RtlHardcoded" />
 
         </RelativeLayout>

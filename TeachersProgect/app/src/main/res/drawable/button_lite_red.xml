@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 <item>
     <shape>
-        <stroke android:width="1dp" android:color="@color/colorAccentRed"/>
+        <stroke android:width="1dp" android:color="@color/design_default_color_primary_dark"/>
 
         <corners android:bottomRightRadius="@dimen/my_buttons_rounding_radius_size"
             android:bottomLeftRadius="@dimen/my_buttons_rounding_radius_size"

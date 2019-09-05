@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackGround"
+    android:background="@color/backgroundWhite"
     android:orientation="vertical"
     tools:context="com.learning.texnar13.teachersprogect.settings.SettingsActivity">
 
@@ -16,230 +17,253 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/settings_title_height">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/settings_title_background_image_height"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/__background_settings" />
+                <ImageView
+                    android:layout_centerInParent="true"
+                    android:layout_width="@dimen/settings_title_round_image_size"
+                    android:layout_height="@dimen/settings_title_round_image_size"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/__image_settings" />
+            </RelativeLayout>
+
+
             <LinearLayout
+                android:id="@+id/activity_settings_edit_locale_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/button_lite_gray"
+                android:layout_marginBottom="@dimen/double_margin"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center"
-                    android:text="@string/settings_activity_title_desk_size"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/text_subtitle_size" />
-
-                <SeekBar
-                    android:id="@+id/activity_settings_seekBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" />
+                    android:background="@drawable/_dialog_head_background_dark"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_marginLeft="@dimen/double_margin"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/my_buttons_height_size"
+                        android:gravity="center_vertical"
+                        android:text="@string/settings_activity_button_edit_locale"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/text_subtitle_size" />
+                </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/activity_settings_size_show_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="20dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/_dialog_bottom_background_dark"
                     android:orientation="vertical">
-
+                    <TextView
+                        android:id="@+id/activity_settings_edit_locale_button_locale_text"
+                        android:layout_marginLeft="@dimen/double_margin"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/my_buttons_height_size"
+                        android:gravity="center_vertical"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/text_subtitle_size" />
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/activity_settings_edit_time_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:orientation="vertical">
+                android:background="@drawable/__background_round_simple_full_dark"
+                android:layout_marginBottom="@dimen/double_margin"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:textAllCaps="true"
-                    android:gravity="center"
-                    android:id="@+id/activity_settings_edit_max_answers_count_button"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/my_buttons_height_size"
-                    android:background="@drawable/button_lite_gray"
-                    android:text="@string/settings_activity_button_edit_max_answer"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/text_simple_size" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:textAllCaps="true"
-                    android:id="@+id/activity_settings_edit_time_button"
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:layout_height="@dimen/my_buttons_height_size"
-                    android:background="@drawable/button_lite_gray"
+                    android:layout_marginLeft="@dimen/double_margin"
+                    android:layout_marginRight="@dimen/my_icon_size"
+                    android:gravity="center_vertical"
                     android:text="@string/settings_activity_button_edit_time"
                     android:textColor="#000000"
-                    android:textSize="@dimen/text_simple_size" />
-            </LinearLayout>
+                    android:textSize="@dimen/text_subtitle_size"
+                    tools:ignore="RtlHardcoded" />
 
-            <LinearLayout
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/simple_margin"
+                    android:layout_width="@dimen/my_icon_size"
+                    android:layout_height="@dimen/my_icon_size"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/activity_settings_edit_max_answers_count_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:orientation="vertical">
+                android:background="@drawable/__background_round_simple_full_dark"
+                android:layout_marginBottom="@dimen/double_margin"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:textAllCaps="true"
-                    android:id="@+id/activity_settings_edit_locale_button"
-                    android:layout_width="match_parent"
+                    android:id="@+id/activity_settings_edit_max_answers_count_text"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/my_buttons_height_size"
-                    android:background="@drawable/button_lite_gray"
-                    android:singleLine="true"
-                    android:gravity="center"
-                    android:text="@string/settings_activity_button_edit_locale"
+                    android:layout_marginLeft="@dimen/double_margin"
+                    android:layout_marginRight="@dimen/my_icon_size"
+                    android:gravity="center_vertical"
+                    android:text="@string/settings_activity_button_edit_max_answer"
                     android:textColor="#000000"
-                    android:textSize="@dimen/text_simple_size" />
-            </LinearLayout>
+                    android:textSize="@dimen/text_subtitle_size"
+                    tools:ignore="RtlHardcoded" />
 
-            <LinearLayout
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/simple_margin"
+                    android:layout_width="@dimen/my_icon_size"
+                    android:layout_height="@dimen/my_icon_size"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
+
+            </RelativeLayout>
+
+
+
+            <RelativeLayout
+                android:id="@+id/activity_settings_edit_grades_type_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:orientation="vertical">
+                android:background="@drawable/__background_round_simple_full_dark"
+                android:layout_marginBottom="@dimen/double_margin"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:textAllCaps="true"
-                    android:id="@+id/activity_settings_edit_grades_color_button"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/my_buttons_height_size"
-                    android:background="@drawable/button_lite_gray"
-                    android:singleLine="true"
-                    android:gravity="center"
-                    android:text="@string/settings_activity_title_grades_color"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/text_simple_size" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:textAllCaps="true"
-                    android:id="@+id/activity_settings_edit_grades_type_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/my_buttons_height_size"
-                    android:background="@drawable/button_lite_gray"
-                    android:singleLine="true"
-                    android:gravity="center"
+                    android:layout_marginLeft="@dimen/double_margin"
+                    android:layout_marginRight="@dimen/my_icon_size"
+                    android:gravity="center_vertical"
                     android:text="@string/settings_activity_title_grades_type"
                     android:textColor="#000000"
-                    android:textSize="@dimen/text_simple_size" />
-            </LinearLayout>
+                    android:textSize="@dimen/text_subtitle_size"
+                    tools:ignore="RtlHardcoded" />
 
-            <LinearLayout
-                android:id="@+id/activity_settings_are_grades_colored_container"
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/simple_margin"
+                    android:layout_width="@dimen/my_icon_size"
+                    android:layout_height="@dimen/my_icon_size"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
+
+            </RelativeLayout>
+
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/activity_settings_are_grades_colored_container"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="@dimen/double_margin"-->
+<!--               -->
+<!--                android:layout_marginLeft="@dimen/double_margin"-->
+<!--                android:layout_marginRight="@dimen/double_margin"-->
+<!--               -->
+<!--                android:orientation="horizontal"-->
+<!--                android:background="@drawable/button_lite_gray">-->
+
+<!--                <Switch-->
+<!--                    android:id="@+id/activity_settings_are_grades_colored_switch"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:layout_marginStart="10dp"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:layout_height="@dimen/my_buttons_height_size"-->
+<!--                    android:layout_width="wrap_content" />-->
+
+<!--                <TextView-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:layout_marginStart="10dp"-->
+<!--                    android:text="@string/settings_activity_title_colored_grades"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:textColor="#000000"-->
+<!--                    android:textSize="@dimen/text_simple_size"-->
+<!--                    />-->
+<!--            </LinearLayout>-->
+
+            <RelativeLayout
+                android:id="@+id/activity_settings_remove_data_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:orientation="horizontal"
-                android:background="@drawable/button_lite_gray">
-
-                <Switch
-                    android:id="@+id/activity_settings_are_grades_colored_switch"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_gravity="center"
-                    android:layout_height="@dimen/my_buttons_height_size"
-                    android:layout_width="wrap_content" />
+                android:background="@drawable/__background_round_simple_full_dark"
+                android:layout_marginBottom="@dimen/double_margin"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
-                    android:text="@string/settings_activity_title_colored_grades"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/text_simple_size"
-                    />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/activity_settings_remove_data_button"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/my_buttons_height_size"
-                    android:layout_gravity="center"
-                    android:background="@drawable/button_lite_blue"
+                    android:layout_marginLeft="@dimen/double_margin"
+                    android:layout_marginRight="@dimen/my_icon_size"
+                    android:gravity="center_vertical"
                     android:text="@string/settings_activity_button_remove_data"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_simple_size" />
-            </LinearLayout>
+                    android:textColor="#000000"
+                    android:textSize="@dimen/text_subtitle_size"
+                    tools:ignore="RtlHardcoded" />
 
-            <LinearLayout
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/simple_margin"
+                    android:layout_width="@dimen/my_icon_size"
+                    android:layout_height="@dimen/my_icon_size"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/settings_rate_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:orientation="vertical">
+                android:background="@drawable/__background_round_simple_full_blue"
+                android:layout_marginBottom="@dimen/double_margin"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/settings_rate_button"
+                <TextView
+                    android:fontFamily="@font/geometria_bold"
+                    android:textAllCaps="true"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/my_buttons_height_size"
-                    android:layout_gravity="center"
-                    android:background="@drawable/button_lite_red"
+                    android:layout_marginLeft="@dimen/double_margin"
+                    android:layout_marginRight="@dimen/double_margin"
+                    android:gravity="center"
                     android:text="@string/settings_activity_button_rate_us"
-                    android:textColor="@color/colorAccentRed"
-                    android:textSize="@dimen/text_simple_size" />
-            </LinearLayout>
+                    android:textColor="@color/backgroundWhite"
+                    android:textSize="@dimen/text_simple_size"
+                    tools:ignore="RtlHardcoded" />
+
+            </RelativeLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

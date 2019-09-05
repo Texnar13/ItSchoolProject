@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorBackGround">
+        android:background="@color/backgroundWhite">
 
     </RelativeLayout>
 
@@ -37,7 +37,7 @@
             android:layout_marginRight="50dp"
             android:gravity="center"
             android:text="@string/cabinet_redactor_activity_text_help"
-            android:textColor="@color/colorBackGroundDark"
+            android:textColor="@color/backgroundLiteGray"
             android:textSize="10pt" />
     </RelativeLayout>
 
@@ -70,7 +70,7 @@
                 android:layout_width="@dimen/cabinet_redactor_button_add_image_size"
                 android:layout_height="@dimen/cabinet_redactor_button_add_image_size"
                 android:layout_centerInParent="true"
-                app:srcCompat="@drawable/ic_vector_plus" />
+                app:srcCompat="@drawable/__button_add" />
         </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>

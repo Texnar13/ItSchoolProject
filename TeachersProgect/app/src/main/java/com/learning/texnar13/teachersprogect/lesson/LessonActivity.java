@@ -9,9 +9,12 @@ import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.res.ResourcesCompat;
+
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -30,7 +33,6 @@ import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
-import com.learning.texnar13.teachersprogect.lesson.lessonList.LessonListActivity;
 
 import java.util.ArrayList;
 
@@ -61,23 +63,23 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     private static final int NO_ZOOMED_LEARNER_BORDER_SIZE = NO_ZOOMED_DESK_SIZE / 20;
 
     // лист с партами
-    ArrayList<DeskUnit> desksList = new ArrayList<>();
+    static ArrayList<DeskUnit> desksList = new ArrayList<>();
     // режим: нет, перемещение, zoom
     int mode = NONE;
     // растяжение по осям
-    float multiplier = 0;//0,1;10
+    static float multiplier = 0;//0,1;10
     // текущее смещение по осям
-    float xAxisPXOffset = 0;
-    float yAxisPXOffset = 0;
+    static float xAxisPXOffset = 0;
+    static float yAxisPXOffset = 0;
 
 
     // слой с партами
     RelativeLayout out;
 
     // максимальная оценка
-    int maxAnswersCount;
+    static int maxAnswersCount;
     // названия типов ответов и их id
-    AnswersType[] answersTypes;
+    static AnswersType[] answersTypes;
 
     // точка середины между пальцами за предыдущую итерацию
     Point oldMid = new Point();
@@ -106,7 +108,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     private static long cabinetId;
 
     // массив учеников
-    private MyLearnerAndHisGrades[] learnersAndTheirGrades;
+    static private MyLearnerAndHisGrades[] learnersAndTheirGrades;
 
     // номер выбранного ученика
     static int chosenLearnerPosition;
@@ -127,29 +129,70 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         menu.findItem(R.id.lesson_menu_end_lesson).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+
+
                 long[] learnersId = new long[learnersAndTheirGrades.length];
-                long[] grades1 = new long[learnersAndTheirGrades.length];
-                long[] grades2 = new long[learnersAndTheirGrades.length];
-                long[] grades3 = new long[learnersAndTheirGrades.length];
+
+                int[] grades1 = new int[learnersAndTheirGrades.length];
+                int[] grades2 = new int[learnersAndTheirGrades.length];
+                int[] grades3 = new int[learnersAndTheirGrades.length];
+
+                int[] gradesTypes1 = new int[learnersAndTheirGrades.length];
+                int[] gradesTypes2 = new int[learnersAndTheirGrades.length];
+                int[] gradesTypes3 = new int[learnersAndTheirGrades.length];
+
+                String[] learnersNames = new String[learnersAndTheirGrades.length];
+
                 for (int j = 0; j < learnersAndTheirGrades.length; j++) {
-                    learnersId[j] = learnersAndTheirGrades[j].learnerId;
+
                     grades1[j] = learnersAndTheirGrades[j].learnerGrades[0];
                     grades2[j] = learnersAndTheirGrades[j].learnerGrades[1];
                     grades3[j] = learnersAndTheirGrades[j].learnerGrades[2];
+
+                    gradesTypes1[j] = learnersAndTheirGrades[j].learnerGradesTypes[0];
+                    gradesTypes2[j] = learnersAndTheirGrades[j].learnerGradesTypes[1];
+                    gradesTypes3[j] = learnersAndTheirGrades[j].learnerGradesTypes[2];
+
+                    learnersId[j] = learnersAndTheirGrades[j].learnerId;
+                    learnersNames[j] = learnersAndTheirGrades[j].lastName + " " + learnersAndTheirGrades[j].name;
                 }
 
                 // переходим к активности списка оценок
                 Intent intent = new Intent(getApplicationContext(), LessonListActivity.class);
-                intent.putExtra(LessonListActivity.ATTITUDE_ID, lessonAttitudeId);
                 intent.putExtra(LessonListActivity.SUBJECT_ID, subjectId);
-                intent.putExtra(LessonListActivity.LIST_ID, learnersId);
-                intent.putExtra(LessonListActivity.FIRST_LIST_GRADES, grades1);
-                intent.putExtra(LessonListActivity.SECOND_LIST_GRADES, grades2);
-                intent.putExtra(LessonListActivity.THIRD_LIST_GRADES, grades3);
+                intent.putExtra(LessonListActivity.ARGS_STRING_ARRAY_LEARNERS_NAMES, learnersNames);
+
+                intent.putExtra(LessonListActivity.ARGS_INT_ARRAY_LEARNERS_ID, learnersId);
+
+
+                // конвертируем типы оценок
+
+                long[] typesId = new long[answersTypes.length];
+                String[] typesNames = new String[answersTypes.length];
+                for (int typeI = 0; typeI < answersTypes.length; typeI++) {
+                    typesId[typeI] = answersTypes[typeI].id;
+                    typesNames[typeI] = answersTypes[typeI].typeName;
+                }
+
+                intent.putExtra(LessonListActivity.STRING_GRADES_TYPES_ARRAY, typesNames);
+                intent.putExtra(LessonListActivity.INT_GRADES_TYPES_ID_ARRAY, typesId);
+
+
+                intent.putExtra(LessonListActivity.INT_MAX_GRADE, maxAnswersCount);
+
+                intent.putExtra(LessonListActivity.FIRST_GRADES, grades1);
+                intent.putExtra(LessonListActivity.SECOND_GRADES, grades2);
+                intent.putExtra(LessonListActivity.THIRD_GRADES, grades3);
+
+                intent.putExtra(LessonListActivity.FIRST_GRADES_TYPES, gradesTypes1);
+                intent.putExtra(LessonListActivity.SECOND_GRADES_TYPES, gradesTypes2);
+                intent.putExtra(LessonListActivity.THIRD_GRADES_TYPES, gradesTypes3);
+
 
                 // передаем полученную дату урока
                 intent.putExtra(LESSON_TIME, getIntent().getStringExtra(LESSON_TIME));
                 startActivity(intent);
+
 
                 //обнуляем данные
                 chosenLearnerPosition = -1;
@@ -210,25 +253,25 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         titleContainer.setBackgroundResource(R.drawable._button_round_background_orange);
         ActionBar.LayoutParams titleContainerParams = new ActionBar.LayoutParams(
                 ActionBar.LayoutParams.MATCH_PARENT,
-                ActionBar.LayoutParams.WRAP_CONTENT,
+                (int) getResources().getDimension(R.dimen.my_toolbar_text_container_height_size),
                 Gravity.CENTER
         );
-        titleContainerParams.leftMargin = (int) pxFromDp(24);
-        titleContainerParams.rightMargin = (int) pxFromDp(24);
+        titleContainerParams.leftMargin = (int) getResources().getDimension(R.dimen.double_margin);
+        titleContainerParams.rightMargin = (int) getResources().getDimension(R.dimen.double_margin);
         //android:layout_centerInParent="true"
 
         TextView title = new TextView(this);
+        title.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
         title.setSingleLine(true);
+        title.setGravity(Gravity.CENTER);
         title.setTextColor(getResources().getColor(R.color.backgroundWhite));
         title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        titleParams.leftMargin = (int) pxFromDp(10);
-        titleParams.topMargin = (int) pxFromDp(5);
-        titleParams.rightMargin = (int) pxFromDp(10);
-        titleParams.bottomMargin = (int) pxFromDp(5);
+        titleParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+        titleParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
         titleContainer.addView(title, titleParams);
         getSupportActionBar().setCustomView(titleContainer, titleContainerParams);
         // выставляем свой заголовок
@@ -242,7 +285,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         // цвет фона
         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.backgroundWhite));
         // кнопка назад
-        getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable._button_back_arrow_orange));
+        getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_orange));
 
 
         // для того, чтобы векторные изображения созданные в коде отображались нормально todo разобраться бы что это
@@ -323,7 +366,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             //максимальная оценка
             maxAnswersCount = db.getSettingsMaxGrade(1);
 
-            // названия типоав ответов
+            // названия типов ответов
             Cursor typesCursor = db.getGradesTypes();
             answersTypes = new AnswersType[typesCursor.getCount()];
             // извлекаем данные из курсора
@@ -545,6 +588,23 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     placeOutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                     deskLayout.addView(placeOut, placeOutParams);
 
+                    // выбираем очередность оценок//..
+
+                    int grade1Pos;
+                    int grade2Pos;
+                    if (learnersAndTheirGrades[learnerPosition].chosenGradePosition == 0) {
+                        //g12
+                        grade1Pos = 1;
+                        grade2Pos = 2;
+                    } else if (learnersAndTheirGrades[learnerPosition].chosenGradePosition == 1) {
+                        //1g2
+                        grade1Pos = 0;
+                        grade2Pos = 2;
+                    } else {
+                        //12g
+                        grade1Pos = 0;
+                        grade2Pos = 1;
+                    }
 
                     // первый текст с оценкой // todo оценки после отображения ученика
                     final TextView grade1Text = new TextView(this);
@@ -553,8 +613,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     grade1Text.setTextColor(Color.WHITE);
                     grade1Text.setTextSize(13 * multiplier);// 325
                     // если в массивах есть данные об оценках
-                    if (learnersAndTheirGrades[learnerPosition].learnerGrades[1] > 0) {
-                        grade1Text.setText(Integer.toString(learnersAndTheirGrades[learnerPosition].learnerGrades[2]));
+                    if (learnersAndTheirGrades[learnerPosition].learnerGrades[grade1Pos] > 0) {
+                        grade1Text.setText(Integer.toString(learnersAndTheirGrades[learnerPosition].learnerGrades[grade1Pos]));
                     } else
                         grade1Text.setText("");
                     RelativeLayout.LayoutParams grade1TextParams = new RelativeLayout.LayoutParams(
@@ -570,8 +630,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     learnersAndTheirGrades[learnerPosition].viewGrade2 = grade2Text;
                     grade2Text.setTextColor(Color.WHITE);
                     grade2Text.setTextSize(13 * multiplier);// 325
-                    if (learnersAndTheirGrades[learnerPosition].learnerGrades[2] > 0) {
-                        grade2Text.setText(Integer.toString(learnersAndTheirGrades[learnerPosition].learnerGrades[2]));
+                    if (learnersAndTheirGrades[learnerPosition].learnerGrades[grade2Pos] > 0) {
+                        grade2Text.setText(Integer.toString(learnersAndTheirGrades[learnerPosition].learnerGrades[grade2Pos]));
                     } else
                         grade2Text.setText("");
                     RelativeLayout.LayoutParams grade2TextParams = new RelativeLayout.LayoutParams(
@@ -617,11 +677,11 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     imageContainer.addView(tempLernerImage, tempLernerImageParams);
 
                     //находим последнюю поставленную оценку
-                    int currentGrade = learnersAndTheirGrades[learnerPosition].learnerGrades[0];
-                    if (learnersAndTheirGrades[learnerPosition].learnerGrades[2] != 0) {
-                        currentGrade = learnersAndTheirGrades[learnerPosition].learnerGrades[2];
-                    } else if (learnersAndTheirGrades[learnerPosition].learnerGrades[1] != 0)
-                        currentGrade = learnersAndTheirGrades[learnerPosition].learnerGrades[1];
+                    int currentGrade = learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition];//..
+//                    if (learnersAndTheirGrades[learnerPosition].learnerGrades[2] != 0) {
+//                        currentGrade = learnersAndTheirGrades[learnerPosition].learnerGrades[2];
+//                    } else if (learnersAndTheirGrades[learnerPosition].learnerGrades[1] != 0)
+//                        currentGrade = learnersAndTheirGrades[learnerPosition].learnerGrades[1];
 
                     // ставим в tempLernerImage изображение по последней оценке(из памяти)
                     switch (currentGrade) {
@@ -702,38 +762,40 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                         public void onClick(View view) {
                             // меняем его оценку
 
+                            //..------_____
+
                             // если стоит Н, то ничего не делаем
-                            if (learnersAndTheirGrades[learnerPosition].learnerGrades[0] != -2) {
+                            if (learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition] != -2) {
                                 // если все же стоит какая-то оценка,
 
                                 // смотрим можем ли ее увеличивать
-                                if (learnersAndTheirGrades[learnerPosition].learnerGrades[0] != maxAnswersCount) {// если да
+                                if (learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition] != maxAnswersCount) {// если да
                                     // увеличиваем ее на один пункт
-                                    learnersAndTheirGrades[learnerPosition].learnerGrades[0]++;
+                                    learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition]++;
                                 } else {
                                     // если увеличить нельзя сбрасываем до минимума
-                                    learnersAndTheirGrades[learnerPosition].learnerGrades[0] = 1;
+                                    learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition] = 1;
                                 }
 
                                 // выводим в текстовое поле
                                 learnersAndTheirGrades[learnerPosition].viewMainGradeText.setText(
-                                        "" + learnersAndTheirGrades[learnerPosition].learnerGrades[0]
+                                        "" + learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition]//..
                                 );
 
                                 // ставим соответствующую картинку
-                                if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 20) {
+                                if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 20) {
                                     //1
                                     tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
-                                } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 41) {
+                                } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 41) {
                                     //2
                                     tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
-                                } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 60) {
+                                } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 60) {
                                     //3
                                     tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
-                                } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 80) {
+                                } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 80) {
                                     //4
                                     tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
-                                } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[0] / (float) maxAnswersCount) * 100F) <= 100) {
+                                } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 100) {
                                     //5
                                     tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
                                 }
@@ -779,6 +841,10 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                                     maxAnswersCount
                             );
 
+                            args.putInt(GradeDialogFragment.ARGS_INT_CHOSEN_GRADE_POSITION,
+                                    learnersAndTheirGrades[learnerPosition].chosenGradePosition//..
+                            );
+
                             gradeDialog.setArguments(args);
                             // показываем диалог
                             gradeDialog.show(getFragmentManager(), "gradeDialog - Hello");
@@ -796,9 +862,15 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 
-    // обратная связь от диалога оценок
+    // обратная связь от диалога оценок GradeDialogFragment
     @Override
     public void setGrades(int[] grades, int[] chosenTypesNumbers) {
+        // ставим выбранной следующую оценку
+        if (learnersAndTheirGrades[chosenLearnerPosition].chosenGradePosition != 2) {
+            learnersAndTheirGrades[chosenLearnerPosition].chosenGradePosition++;
+        } else
+            learnersAndTheirGrades[chosenLearnerPosition].chosenGradePosition = 0;
+
         // передаем измененные массивы в общий список
         learnersAndTheirGrades[chosenLearnerPosition].learnerGrades = grades;
         learnersAndTheirGrades[chosenLearnerPosition].learnerGradesTypes = chosenTypesNumbers;
@@ -992,12 +1064,12 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 
-    //класс для хранения типов ответов
+    // класс для хранения типов ответов
     class AnswersType {
         long id;
         String typeName;
 
-        public AnswersType(long id, String typeName) {
+        AnswersType(long id, String typeName) {
             this.id = id;
             this.typeName = typeName;
         }
@@ -1015,6 +1087,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         int[] learnerGrades;
         // массив номеров типов оценок
         int[] learnerGradesTypes;
+
+        // номер выбранной оценки //..
+        int chosenGradePosition = 0;
 
         MyLearnerAndHisGrades(long learnerId, String name, String lastName) {
             this.learnerId = learnerId;
@@ -1071,27 +1146,44 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         }
 
         void updateViewsData() {
+            //..
+            int grade1Pos;
+            int grade2Pos;
+            if (chosenGradePosition == 0) {
+                //g12
+                grade1Pos = 1;
+                grade2Pos = 2;
+            } else if (chosenGradePosition == 1) {
+                //1g2
+                grade1Pos = 0;
+                grade2Pos = 2;
+            } else {
+                //12g
+                grade1Pos = 0;
+                grade2Pos = 1;
+            }
+
 
             // текст главной оценки
-            if (learnerGrades[0] > 0) {
-                this.viewMainGradeText.setText("" + learnerGrades[0]);
+            if (learnerGrades[chosenGradePosition] > 0) {
+                this.viewMainGradeText.setText("" + learnerGrades[chosenGradePosition]);
             } else
                 this.viewMainGradeText.setText("");
 
             // текст побочной оценки 1
-            if (learnerGrades[1] > 0) {
-                this.viewGrade1.setText("" + learnerGrades[1]);
+            if (learnerGrades[grade1Pos] > 0) {
+                this.viewGrade1.setText("" + learnerGrades[grade1Pos]);
             } else
                 this.viewGrade1.setText("");
 
             // текст побочной оценки 2
-            if (learnerGrades[2] > 0) {
-                this.viewGrade2.setText("" + learnerGrades[2]);
+            if (learnerGrades[grade2Pos] > 0) {
+                this.viewGrade2.setText("" + learnerGrades[grade2Pos]);
             } else
                 this.viewGrade2.setText("");
 
             // меняем изображение на учненике в соответствии с оценкой
-            switch (learnerGrades[0]) {
+            switch (learnerGrades[chosenGradePosition]) {
                 case -2:
                     viewLearnerImage.setImageResource(R.drawable.lesson_learner_abs_white);
                     break;

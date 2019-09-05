@@ -1,19 +1,25 @@
 package com.learning.texnar13.teachersprogect.learnersClassesOut;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
+
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.learnersAndGradesOut.LearnersAndGradesActivity;
@@ -82,21 +88,21 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learners_classes_out);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.learners_classes_out_toolbar);
-        setSupportActionBar(toolbar);
 
-//        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.test_lay);
-//        relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams((int) getApplicationContext().getResources().getDisplayMetrics().heightPixels, getApplicationContext().getResources().getDisplayMetrics().heightPixels));
-
-//        //------заголовок--------
-//        setTitle("Мои классы");
+        // вертикальная ориентация
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
         //кнопка назад
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        findViewById(R.id.learners_classes_out_toolbar_back_arrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // выходим из активности
+                onBackPressed();
+            }
+        });
 
         //------плавающая кнопка с низу--------
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.learners_classes_out_add_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.learners_classes_out_add_fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //-----диалог создания-----
@@ -104,16 +110,12 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
                 CreateLearnersClassDialogFragment createClassDialog = new CreateLearnersClassDialogFragment();
                 //показать диалог
                 createClassDialog.show(getFragmentManager(), "createClassDialog");
-
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
             }
         });
-        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryBlue)));
 
         //--------экран со списком---------
         //создание
-        room = (LinearLayout) findViewById(R.id.learners_classes_out_room);
+        room = findViewById(R.id.learners_classes_out_room);
 
         //обновляем данные
         getLearnersClasses();
@@ -153,51 +155,65 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
         room.removeAllViews();
         //пробегаемся по классам и создаем список из LinearLayout
         for (int i = 0; i < learnersClassesId.length; i++) {
-//создаем пункт списка-----------
-            //список
-            //-контейнер
-            //--текст
 
-//------контейнер----
-            //создаем LinearLayout
-            LinearLayout container = new LinearLayout(this);
-            container.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
-
-            //параметры контейнера(т.к. элемент находится в LinearLayout то и параметры используем его)
+            //создаем контейнер
+            RelativeLayout learnersClassContainer = new RelativeLayout(this);
+            learnersClassContainer.setBackgroundResource(R.drawable.__background_round_simple_full_dark_white);
+            // параметры контейнера
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,//ш
                     ViewGroup.LayoutParams.WRAP_CONTENT//в
             );
-            containerParams.setMargins((int)pxFromDp(4), (int)pxFromDp(4), (int)pxFromDp(4), (int)pxFromDp(0));
-
-//------текст------
-            //создаём текст
-            TextView item = new TextView(this);
-            item.setGravity(Gravity.CENTER);
-            item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_title_size));
-            item.setTextColor(Color.WHITE);
-
-            //параметры пункта(т.к. элемент находится в LinearLayout то и параметры используем его)
-            LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,//ш
-                    ViewGroup.LayoutParams.WRAP_CONTENT//в
+            containerParams.setMargins(
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    0
             );
-            itemParams.gravity = Gravity.CENTER;
-            itemParams.setMargins((int) pxFromDp(3), (int) pxFromDp(9), (int) pxFromDp(3), (int) pxFromDp(9));
+            room.addView(learnersClassContainer, containerParams);
 
-            //--выводим текст--
+            // создаём текст
+            TextView item = new TextView(this);
+            item.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
+            item.setGravity(Gravity.CENTER_VERTICAL);
+            item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            item.setTextColor(Color.BLACK);
             item.setText(classesNames[i]);
+            //параметры пункта
+            RelativeLayout.LayoutParams itemParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,//ш
+                    RelativeLayout.LayoutParams.WRAP_CONTENT//в
+            );
+            itemParams.setMargins(
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    (int) (getResources().getDimension(R.dimen.my_icon_small_size)
+                            + 2 * getResources().getDimension(R.dimen.simple_margin)),
+                    (int) getResources().getDimension(R.dimen.double_margin)
+            );
+            learnersClassContainer.addView(item, itemParams);
 
-//------помещаем текст в контейнер--------
-            container.addView(item, itemParams);
-//------помещаем контейнер в список-------
-            room.addView(container, containerParams);
+            // стрелочка
+            LinearLayout arrow = new LinearLayout(this);
+            arrow.setBackgroundResource(R.drawable.__button_forward_arrow_blue);
+            RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
+                    (int) getResources().getDimension(R.dimen.my_icon_small_size),
+                    (int) getResources().getDimension(R.dimen.my_icon_small_size)
+            );
+            arrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
+            arrowParams.setMargins(
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin)
+            );
+            learnersClassContainer.addView(arrow, arrowParams);
 
-//------------------нажатие на пункт списка----------------------
-            //номер пункта в списке
+
+            // короткое нажатие на пункт списка
             final long finalId = learnersClassesId[i];
-//--короткое--
-            container.setOnClickListener(new View.OnClickListener() {
+            learnersClassContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //переходим к ученикам этого класса
@@ -208,8 +224,8 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
                 }
             });
 
-//--долгое--
-            container.setOnLongClickListener(new View.OnLongClickListener() {
+            // долгое
+            learnersClassContainer.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     //инициализируем диалог
@@ -264,9 +280,10 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
         //---1 текст---
         //создаем
         TextView helpText1 = new TextView(this);
+        helpText1.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
         helpText1.setGravity(Gravity.CENTER);
         helpText1.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-        helpText1.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
+        helpText1.setTextColor(getResources().getColor(R.color.backgroundLiteGray));
         helpText1.setText(R.string.learners_classes_out_activity_text_help);
         //добавляем
         container.addView(
@@ -283,14 +300,11 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
     //системные кнопки
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home://кнопка назад в actionBar
-                onBackPressed();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {//кнопка назад в actionBar
+            onBackPressed();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
 
     }
 
@@ -298,9 +312,5 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 
     private float pxFromDp(float px) {
         return px * getApplicationContext().getResources().getDisplayMetrics().density;
-    }
-
-    private float dpFromPx(float px) {
-        return px / getApplicationContext().getResources().getDisplayMetrics().density;
     }
 }

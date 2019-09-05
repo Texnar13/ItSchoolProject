@@ -1,17 +1,23 @@
 package com.learning.texnar13.teachersprogect;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -39,383 +45,374 @@ public class ScheduleDayActivity extends AppCompatActivity {
     int month = -1;
     int year = -1;
 
-    //время уроков из бд
-    int[][] lessonsTime;
-
-    //время уроков с сегодняшней датой и временем из бд
-    static LessonTimePeriod[] lessonStandardTimePeriods = new LessonTimePeriod[9];
-
-//-------------------------------меню сверху--------------------------------------------------------
-
-    //раздуваем неаше меню
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.shedule_day_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    //назначаем функции меню
-    @Override
-    public boolean onPrepareOptionsMenu(final Menu menu) {
-        //кнопка помощь
-        menu.findItem(R.id.shedule_day_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Toast toast = Toast.makeText(getApplicationContext(), R.string.schedule_day_activity_toast_develop, Toast.LENGTH_LONG);
-                toast.show();
-
-                return true;
-            }
-        });
-        return super.onPrepareOptionsMenu(menu);
-    }
-
+    // главный контенйнер уроков
+    TableLayout outLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_schedule_day);
 
-        //setTitle("Расписание на день");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
+        // вставляем в actionBar заголовок активности
+        LinearLayout titleContainer = new LinearLayout(this);
+        titleContainer.setGravity(Gravity.CENTER);
+        ActionBar.LayoutParams titleContainerParams = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.MATCH_PARENT,
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                Gravity.CENTER
+        );
+        titleContainerParams.leftMargin = (int) pxFromDp(24);
+        titleContainerParams.rightMargin = (int) pxFromDp(24);
 
+        TextView title = new TextView(this);
+        title.setSingleLine(true);
+        title.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+        title.setTextColor(getResources().getColor(R.color.baseBlue));
+        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        titleParams.leftMargin = (int) pxFromDp(10);
+        titleParams.topMargin = (int) pxFromDp(5);
+        titleParams.rightMargin = (int) pxFromDp(10);
+        titleParams.bottomMargin = (int) pxFromDp(5);
+        titleContainer.addView(title, titleParams);
+        // выставляем свой заголовок
+        getSupportActionBar().setCustomView(titleContainer, titleContainerParams);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+
+
+        // кнопка назад в actionBar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // убираем тень
+        getSupportActionBar().setElevation(0);
+        // цвет фона
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.backgroundWhite));
+        // кнопка назад
+        getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_blue));
+
+
+        // вертикальная ориентация
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
+
+        // получаем данные из intent
         day = getIntent().getIntExtra(INTENT_DAY, -1);
         month = getIntent().getIntExtra(INTENT_MONTH, -1);
         year = getIntent().getIntExtra(INTENT_YEAR, -1);
         if (day == -1 || month == -1 || year == -1) {
-            Log.wtf("TeachersApp", "wtf intent: ScheduleDayActivity day = " + day + " month = " + month + " year = " + year);
             finish();
         }
-//-----кнопки вперед назад------
-
-        final TableLayout table = (TableLayout) findViewById(R.id.schedule_day_table);
-
-        final String months[] = getResources().getStringArray(R.array.months_names_low_case);
-        final int monthCapacity[];
-        if (year % 4 == 0 &&
-                year % 100 != 0 ||
-                year % 400 == 0) {
-            monthCapacity = new int[]{31, 29,//високосный
-                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        } else {
-            monthCapacity = new int[]{31, 28,//не високосный
-                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        }
-//        dateText.setText(day + " " + months[month]);
-        setTitle(getTitle() + " " + day + " " + months[month]);
-//        dateText.setGravity(Gravity.CENTER);
-
-        final Calendar calendar = new GregorianCalendar(year, month, day);
-
-        outViewDay(calendar, table);
+        // выводим заголовок
+        title.setText(day + " " + getResources().getStringArray(R.array.months_names_low_case)[month] + " " + year);
 
 
-//        previous.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
-//                    if (calendar.get(Calendar.MONTH) == Calendar.JANUARY) {
-//                        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 1);
-//                        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
-//                    } else {
-//                        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
-//                    }
-//                    calendar.set(Calendar.DAY_OF_MONTH,
-//                            monthCapacity[calendar.get(Calendar.MONTH)]);
-//                } else {
-//                    calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) - 1);
-//                }
-//                dateText.setText(calendar.get(Calendar.DAY_OF_MONTH) + " " + months[calendar.get(Calendar.MONTH)]);
-//                setTitle("Расписание на " +calendar.get(Calendar.DAY_OF_MONTH) + " " + months[calendar.get(Calendar.MONTH)]);
-//                outViewDay(calendar, table);
-//
-//            }
-//        });
-//
-//        next.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (calendar.get(Calendar.DAY_OF_MONTH) == monthCapacity[calendar.get(Calendar.MONTH)]) {
-//                    if (calendar.get(Calendar.MONTH) == Calendar.DECEMBER) {
-//                        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 1);
-//                        calendar.set(Calendar.MONTH, Calendar.JANUARY);
-//                    } else {
-//                        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + 1);
-//                    }
-//                    calendar.set(Calendar.DAY_OF_MONTH, 1);
-//                } else {
-//                    calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
-//                }
-//                dateText.setText(calendar.get(Calendar.DAY_OF_MONTH) + " " + months[calendar.get(Calendar.MONTH)]);
-//                setTitle("Расписание на " +calendar.get(Calendar.DAY_OF_MONTH) + " " + months[calendar.get(Calendar.MONTH)]);
-//                outViewDay(calendar, table);
-//            }
-//        });
-    }
-
-    void outViewDay(Calendar viewDay, TableLayout table) {
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-
-        table.removeAllViews();
-        String tableHeadStrings[] = getResources().getStringArray(R.array.schedule_day_activity_table_titles_array);
-
-// --------------------------- шапка таблицы ---------------------------
-        {
-            TextView tableHeadTexts[] = new TextView[tableHeadStrings.length];
-            TableRow head = new TableRow(this);
-            for (int i = 0; i < tableHeadStrings.length; i++) {
-                //textView
-                tableHeadTexts[i] = new TextView(this);
-                tableHeadTexts[i].setAllCaps(true);
-                tableHeadTexts[i].setText("  " + tableHeadStrings[i] + "  ");
-                tableHeadTexts[i].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-                tableHeadTexts[i].setTextColor(Color.BLACK);
-                tableHeadTexts[i].setGravity(Gravity.CENTER);
-//цвет заголовка
-                tableHeadTexts[i].setBackgroundColor(getResources().getColor(R.color.colorPrimaryGreen));
-                //tableHeadTexts[i].setBackgroundColor(Color.parseColor("#e4ea7e"));
-                //параметры для клеток
-                RelativeLayout.LayoutParams tableRelativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
-                tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                tableRelativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                tableRelativeParams.rightMargin = 0;//(int) pxFromDp(1f);//10
-                tableRelativeParams.bottomMargin = (int) pxFromDp(1f * getResources().getInteger(R.integer.desks_screen_multiplier));//10
-                tableRelativeParams.leftMargin = 0;
-                tableRelativeParams.topMargin = (int) pxFromDp(1f * getResources().getInteger(R.integer.desks_screen_multiplier));
-                //RelativeLayout в котором находится textView(нужен для создания границ в таблице)
-                RelativeLayout relativeLayout = new RelativeLayout(this);
-                relativeLayout.setBackgroundColor(Color.LTGRAY);//"#fdffdf"
-                relativeLayout.addView(tableHeadTexts[i], tableRelativeParams);
-                head.addView(relativeLayout, RelativeLayout.LayoutParams.MATCH_PARENT, (int) pxFromDp(50f * getResources().getInteger(R.integer.desks_screen_multiplier)));
-
-                head.setBackgroundColor(Color.RED);//красный только на время отладки
-            }
-            table.addView(head);
-        }
-
-        lessonsTime = db.getSettingsTime(1);
-
-// --------------------------- тело таблицы ---------------------------
-        String timePeriodsString[] = {
-                "" + lessonsTime[0][0] + ":" + getTwoSymbols(lessonsTime[0][1]) + "—" + lessonsTime[0][2] + ":" + getTwoSymbols(lessonsTime[0][3]),
-                lessonsTime[1][0] + ":" + getTwoSymbols(lessonsTime[1][1]) + "—" + lessonsTime[1][2] + ":" + getTwoSymbols(lessonsTime[1][3]),
-                lessonsTime[2][0] + ":" + getTwoSymbols(lessonsTime[2][1]) + "—" + lessonsTime[2][2] + ":" + getTwoSymbols(lessonsTime[2][3]),
-                lessonsTime[3][0] + ":" + getTwoSymbols(lessonsTime[3][1]) + "—" + lessonsTime[3][2] + ":" + getTwoSymbols(lessonsTime[3][3]),
-                lessonsTime[4][0] + ":" + getTwoSymbols(lessonsTime[4][1]) + "—" + lessonsTime[4][2] + ":" + getTwoSymbols(lessonsTime[4][3]),
-                lessonsTime[5][0] + ":" + getTwoSymbols(lessonsTime[5][1]) + "—" + lessonsTime[5][2] + ":" + getTwoSymbols(lessonsTime[5][3]),
-                lessonsTime[6][0] + ":" + getTwoSymbols(lessonsTime[6][1]) + "—" + lessonsTime[6][2] + ":" + getTwoSymbols(lessonsTime[6][3]),
-                lessonsTime[7][0] + ":" + getTwoSymbols(lessonsTime[7][1]) + "—" + lessonsTime[7][2] + ":" + getTwoSymbols(lessonsTime[7][3]),
-                getResources().getString(R.string.schedule_day_activity_table_time_string_no_working_time)
-        };
-
-        //Todo на заметку, замени когда будешь пересобирать
-        //получаем текущий месяц и год
-        //SimpleDateFormat nowDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        //nowDateFormat.format(new Date());
-        //
+        // выводим поля в таблицу
+        // скролящийся контейнер таблицы
+        ScrollView scrollView = new ScrollView(this);
+        scrollView.setBackgroundColor(getResources().getColor(R.color.backgroundWhite));
+        setContentView(scrollView);
+        // главный контенйнер уроков
+        outLayout = new TableLayout(this);
+        //outLayout.setOrientation(LinearLayout.VERTICAL);
+        scrollView.addView(outLayout, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
 
-        lessonStandardTimePeriods[0] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[0][0], lessonsTime[0][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[0][2], lessonsTime[0][3]));
-        lessonStandardTimePeriods[1] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[1][0], lessonsTime[1][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[1][2], lessonsTime[1][3]));
-        lessonStandardTimePeriods[2] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[2][0], lessonsTime[2][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[2][2], lessonsTime[2][3]));
-        lessonStandardTimePeriods[3] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[3][0], lessonsTime[3][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[3][2], lessonsTime[3][3]));
-        lessonStandardTimePeriods[4] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[4][0], lessonsTime[4][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[4][2], lessonsTime[4][3]));
-        lessonStandardTimePeriods[5] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[5][0], lessonsTime[5][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[5][2], lessonsTime[5][3]));
-        lessonStandardTimePeriods[6] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[6][0], lessonsTime[6][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[6][2], lessonsTime[6][3]));
-        lessonStandardTimePeriods[7] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[7][0], lessonsTime[7][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[7][2], lessonsTime[7][3]));
-        lessonStandardTimePeriods[8] = new LessonTimePeriod(new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[8][0], lessonsTime[8][1]), new GregorianCalendar(viewDay.get(Calendar.YEAR), viewDay.get(Calendar.MONTH), viewDay.get(Calendar.DAY_OF_MONTH), lessonsTime[8][2], lessonsTime[8][3]));
-
-        TableRow tableRows[] = new TableRow[9];//строки таблицы
-        for (int i = 0; i < tableRows.length; i++) {
-            tableRows[i] = new TableRow(this);//инициализация
-            boolean isLessonReady = false;//можно ли начать урок
-            long lessonAttitudeId = -1;//id-шники
-            long lessonClassId = -1;
-            long lessonCabinetId = -1;
-            String lessonName;//строки которые выводятся в таблицу
-            String lessonClass;
-            String lessonCabinet;
-            {
-                //id урока в выбарнном интервале времени (45 мин)
-                ArrayList<Long> arrayList = db.getSubjectAndTimeCabinetAttitudesIdByTimePeriod(lessonStandardTimePeriods[i].calendarStartTime, lessonStandardTimePeriods[i].calendarEndTime);
-                if (arrayList.size() != 0) {//есть ли в это время урок
-                    lessonAttitudeId = arrayList.get(0);//id зависимости урока
-                    Cursor lessonAttitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(lessonAttitudeId);//зависимость по id
-                    lessonAttitudeCursor.moveToFirst();
-                    //имя
-                    Cursor lessonCursor = db.getSubjectById(
-                            lessonAttitudeCursor.getLong(
-                                    lessonAttitudeCursor.getColumnIndex(
-                                            SchoolContract.TableSubjectAndTimeCabinetAttitude.
-                                                    KEY_SUBJECT_ID)));
-                    lessonCursor.moveToFirst();
-                    lessonName = lessonCursor.getString(//ставим имя урока
-                            lessonCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME)
-                    );
-
-                    //класс
-                    lessonClassId = lessonCursor.getLong(lessonCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
-                    lessonCursor.close();
-                    Cursor classCursor = db.getLearnersClass(lessonClassId);
-                    classCursor.moveToFirst();
-                    lessonClass = classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
-                    classCursor.close();
 
 
-                    //кабинет
-                    lessonCabinetId = lessonAttitudeCursor.getLong(lessonAttitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
-                    lessonAttitudeCursor.close();
-                    Cursor cabinetCursor = db.getCabinet(lessonCabinetId);
-                    cabinetCursor.moveToFirst();
-                    lessonCabinet = cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
-                    cabinetCursor.close();
-
-                } else {
-
-                    lessonName = "—";
-                    lessonClass = "—";
-                    lessonCabinet = "—";
-                }
-            }
-            //проверяем все ли ученики рассажены
-            if (db.getNotPutLearnersIdByCabinetIdAndClassId(lessonCabinetId, lessonClassId).size() == 0) {
-                isLessonReady = true;
-            }
-
-            for (int j = 0; j < tableHeadStrings.length; j++) {
-                //параметры TextView
-                TextView bodyText = new TextView(this);
-                bodyText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-                bodyText.setGravity(Gravity.CENTER);
-                if (lessonAttitudeId == -1) {
-                    bodyText.setTextColor(Color.GRAY);
-//цвет строки"#efeaea"
-                    bodyText.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
-                } else {
-                    bodyText.setTextColor(Color.BLACK);
-                    if (isLessonReady) {
-                        bodyText.setBackgroundColor(Color.WHITE);//светло салатовый"#fdffdf"
-                    } else {
-
-                        bodyText.setBackgroundColor(getResources().getColor(R.color.colorAccentRed));//оранжевый
-                    }
-                }
-                {//обработка нажатия
-                    final boolean intentIsLessonReady = isLessonReady;
-
-                    final long lessonAttitudeIdForIntent = lessonAttitudeId;
-
-                    //создание/редактирование урока
-                    final Intent intentForLessonEditor = new Intent(this, LessonRedactorActivity.class);
-                    intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, lessonAttitudeId);
-                    intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_START_TIME, lessonStandardTimePeriods[i].calendarStartTime.getTime().getTime());
-                    intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_END_TIME, lessonStandardTimePeriods[i].calendarEndTime.getTime().getTime());
-
-                    //парсим дату
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    //начать урок
-                    final Intent intentForStartLesson = new Intent(this, LessonActivity.class);
-                    intentForStartLesson.putExtra(LessonActivity.LESSON_ATTITUDE_ID, lessonAttitudeId);
-                    intentForStartLesson.putExtra(LessonActivity.LESSON_TIME, dateFormat.format(lessonStandardTimePeriods[i].calendarStartTime.getTime()));
-
-                    //редактировать рассадку
-                    final Toast toastSeatingRedactor = Toast.makeText(this, R.string.schedule_day_activity_toast_learners, Toast.LENGTH_LONG);
-                    final Intent intentForStartSeatingRedactor = new Intent(this, SeatingRedactorActivity.class);
-                    intentForStartSeatingRedactor.putExtra(SeatingRedactorActivity.CABINET_ID, lessonCabinetId);
-                    intentForStartSeatingRedactor.putExtra(SeatingRedactorActivity.CLASS_ID, lessonClassId);
-
-                    bodyText.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (lessonAttitudeIdForIntent == -1) {//создание урока
-                                startActivityForResult(intentForLessonEditor, 1);
-                            } else if (intentIsLessonReady) {//начать урок
-                                startActivity(intentForStartLesson);
-                            } else {
-                                toastSeatingRedactor.show();
-                                startActivityForResult(intentForStartSeatingRedactor, 1);//редактировать рассадку
-                            }
-                        }
-                    });
-
-                    bodyText.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View view) {
-                            startActivityForResult(intentForLessonEditor, 1);//создание/редактирование урока
-                            return true;
-                        }
-                    });
-                }
-
-                //параметры для клеток
-                RelativeLayout.LayoutParams bodyParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 190);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                bodyParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                bodyParams.rightMargin = 0;//(int) pxFromDp(1f);//10
-                bodyParams.leftMargin = 0;
-                bodyParams.bottomMargin = 0;//5
-                bodyParams.topMargin = 0;
 
 
-                if (j == 0) {//параметры для No
-                    bodyText.setText(" " + (i + 1) + " ");
-
-                } else if (j == 1) {//параметры для времени
-                    bodyText.setText("" + timePeriodsString[i] + "");
-
-                } else if (j == 2) {//параметры для класса
-                    bodyText.setText("  " + lessonClass + "  ");
-
-                } else if (j == 3) {//параметры для названия предмета
-                    bodyText.setText("  " + lessonName + "  ");
-
-                } else if (j == 4) {//параметры для кабинета
-                    bodyText.setText("  " + lessonCabinet + "  ");
-
-                } else if (j == 5) {//параметры для доп.
-                    if (lessonAttitudeId == -1) {
-                        bodyText.setText("  " + getString(R.string.schedule_day_activity_table_additional_title_empty) + "  ");
-                    } else if (!isLessonReady) {
-                        bodyText.setText("  " + getString(R.string.schedule_day_activity_table_additional_title_learners) + "  ");
-                    } else {
-                        bodyText.setText("  " + getString(R.string.schedule_day_activity_table_additional_title_ready) + "  ");
-                    }
-
-                }
-
-                Calendar calendar = new GregorianCalendar();//получаем текущее время
-                calendar.setTime(new Date());
-                //ищем текущий
-                RelativeLayout relativeLayout = new RelativeLayout(this);
-                if (calendar.getTime().getTime() >= lessonStandardTimePeriods[i].calendarStartTime.getTime().getTime() && calendar.getTime().getTime() <= lessonStandardTimePeriods[i].calendarEndTime.getTime().getTime()) {
-                    relativeLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryGreen));
-                    bodyParams.bottomMargin = (int) pxFromDp(2f * getResources().getInteger(R.integer.desks_screen_multiplier));//5
-                    bodyParams.topMargin = (int) pxFromDp(2f * getResources().getInteger(R.integer.desks_screen_multiplier));
-                } else
-                    relativeLayout.setBackgroundColor(Color.WHITE);//"#fdffdf"
-                relativeLayout.addView(bodyText, bodyParams);
-                tableRows[i].addView(relativeLayout, RelativeLayout.LayoutParams.WRAP_CONTENT, (int) pxFromDp(50f * getResources().getInteger(R.integer.desks_screen_multiplier)));//200
-            }
-//цвет ряда"#efeaea"
-            //добавляем в таблицу ряд
-            tableRows[i].setBackgroundColor(getResources().getColor(R.color.colorBackGround));
-            table.addView(tableRows[i], new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
-            db.close();
-
-        }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onStart() {
+        super.onStart();
 
-        TableLayout table = (TableLayout) findViewById(R.id.schedule_day_table);
-        Calendar calendar = new GregorianCalendar(year, month, day);
-        outViewDay(calendar, table);
+        outLayout.removeAllViews();
+
+        // получаем стандартное время уроков
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        int[][] standartLessonsPeriods = db.getSettingsTime(1);
+
+
+        // пробегаемся по урокам
+        for (int lessonI = 0; lessonI < standartLessonsPeriods.length; lessonI++) {
+
+            // преобразуем дату к нужному времени
+            final GregorianCalendar currentCalendar = new GregorianCalendar(year, month, day, standartLessonsPeriods[lessonI][0],standartLessonsPeriods[lessonI][1]);
+            final GregorianCalendar endTimeCalendar = new GregorianCalendar(year, month, day, standartLessonsPeriods[lessonI][2],standartLessonsPeriods[lessonI][3]);
+
+            // ищем в базе данных урок
+            final long attitudeId = db.getSubjectAndTimeCabinetAttitudeIdByTime(currentCalendar);
+
+
+            // если не нашли зависимость урока
+            if (attitudeId == -1) {
+
+                // выводим пустую разметку
+
+                // контейнер урока
+                TableRow lessonContainer = new TableRow(this);
+                lessonContainer.setGravity(Gravity.CENTER_VERTICAL);
+                lessonContainer.setOrientation(LinearLayout.HORIZONTAL);
+                outLayout.addView(lessonContainer, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                // если урок текущй
+                GregorianCalendar currentTime = new GregorianCalendar();
+                currentTime.setTime(new Date());
+                if (currentTime.getTime().getTime() >= currentCalendar.getTime().getTime() &&
+                        currentTime.getTime().getTime() <= endTimeCalendar.getTime().getTime()) {
+                    lessonContainer.setBackgroundResource(R.drawable.__current_lesson_background_uplined_orange);
+                } else
+                    lessonContainer.setBackgroundResource(R.drawable.__current_lesson_background_uplined_white);
+
+                // текст номера урока
+                TextView lessonNumberText = new TextView(this);
+                lessonNumberText.setGravity(Gravity.CENTER);
+                lessonNumberText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
+                lessonNumberText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                lessonNumberText.setTextColor(Color.BLACK);
+                lessonNumberText.setText(" " + (lessonI + 1) + ".");
+                TableRow.LayoutParams lessonNumberTextParams = new TableRow.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                lessonNumberTextParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                lessonNumberTextParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                lessonContainer.addView(lessonNumberText, lessonNumberTextParams);
+
+
+                // контейнер времени
+                LinearLayout timeContainer = new LinearLayout(this);
+                timeContainer.setGravity(Gravity.CENTER);
+                timeContainer.setOrientation(LinearLayout.VERTICAL);
+                TableRow.LayoutParams timeContainerParams = new TableRow.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                lessonContainer.addView(timeContainer, timeContainerParams);
+
+                // текст времени начала урока
+                TextView lessonBeginTimeText = new TextView(this);
+                lessonBeginTimeText.setGravity(Gravity.CENTER);
+                lessonBeginTimeText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                lessonBeginTimeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                lessonBeginTimeText.setTextColor(getResources().getColor(R.color.backgroundMediumGray));
+                lessonBeginTimeText.setText(getTwoSymbols(standartLessonsPeriods[lessonI][0]) + ':' + getTwoSymbols(standartLessonsPeriods[lessonI][1]));
+                timeContainer.addView(lessonBeginTimeText, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                // текст времени конца урока
+                TextView lessonEndTimeText = new TextView(this);
+                lessonEndTimeText.setGravity(Gravity.CENTER);
+                lessonEndTimeText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                lessonEndTimeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                lessonEndTimeText.setTextColor(getResources().getColor(R.color.backgroundMediumGray));
+                lessonEndTimeText.setText(getTwoSymbols(standartLessonsPeriods[lessonI][2]) + ':' + getTwoSymbols(standartLessonsPeriods[lessonI][3]));
+                timeContainer.addView(lessonEndTimeText, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                // при нажатиина контейнер
+                lessonContainer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //создание/редактирование урока
+                        Intent intentForLessonEditor = new Intent(getApplicationContext(), LessonRedactorActivity.class);
+                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, attitudeId);
+                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_START_TIME, currentCalendar.getTime().getTime());
+                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_END_TIME, endTimeCalendar.getTime().getTime());
+                        startActivity(intentForLessonEditor);
+                    }
+                });
+
+            } else {// если нашли
+
+                // получаем его данные
+                Cursor attitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(attitudeId);
+                attitudeCursor.moveToFirst();
+                // получаем id предмета
+                long subjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
+                // получаем id кабинета
+                final long cabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
+                attitudeCursor.close();
+
+                // получаем предмет
+                Cursor subjectCursor = db.getSubjectById(subjectId);
+                subjectCursor.moveToFirst();
+                // получаем имя предмета
+                String subjectName = subjectCursor.getString(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME));
+                // получаем id класса
+                final long learnersClassId = subjectCursor.getLong(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
+                subjectCursor.close();
+
+                // получаем класс
+                Cursor classCursor = db.getLearnersClass(learnersClassId);
+                classCursor.moveToFirst();
+                // получаем имя класса
+                String learnersClassName = classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
+                classCursor.close();
+
+                // получаем кабинет
+                Cursor cabinetCursor = db.getCabinet(cabinetId);
+                cabinetCursor.moveToFirst();
+                // получаем имя кабинета
+                String cabinetName = cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
+                cabinetCursor.close();
+
+                // укорачиваем поля если они слишком длинные Loading…
+                if (subjectName.length() > 10) {
+                    subjectName = subjectName.substring(0, 9) + "…";
+                }
+                if (learnersClassName.length() > 4) {
+                    learnersClassName = learnersClassName.substring(0, 3) + "…";// absde -> abc…  abcd->abcd
+                }
+                if (cabinetName.length() > 4) {
+                    cabinetName = cabinetName.substring(0, 3) + "…";
+                }
+
+
+                // выводим разметку
+
+                // контейнер урока
+                TableRow lessonContainer = new TableRow(this);
+                lessonContainer.setGravity(Gravity.CENTER_VERTICAL);
+                lessonContainer.setOrientation(LinearLayout.HORIZONTAL);
+                outLayout.addView(lessonContainer, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                // если урок текущй
+                GregorianCalendar currentTime = new GregorianCalendar();
+                currentTime.setTime(new Date());
+                if (currentTime.getTime().getTime() >= currentCalendar.getTime().getTime() &&
+                        currentTime.getTime().getTime() <= endTimeCalendar.getTime().getTime()) {
+                    lessonContainer.setBackgroundResource(R.drawable.__current_lesson_background_uplined_orange);
+                } else
+                    lessonContainer.setBackgroundResource(R.drawable.__current_lesson_background_uplined_white);
+
+
+                // текст номера урока
+                TextView lessonNumberText = new TextView(this);
+                lessonNumberText.setGravity(Gravity.CENTER);
+                lessonNumberText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
+                lessonNumberText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                lessonNumberText.setTextColor(Color.BLACK);
+                lessonNumberText.setText(" " + (lessonI + 1) + ".");
+                TableRow.LayoutParams lessonNumberTextParams = new TableRow.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                lessonNumberTextParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                lessonNumberTextParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                lessonContainer.addView(lessonNumberText, lessonNumberTextParams);
+
+
+                // контейнер времени
+                LinearLayout timeContainer = new LinearLayout(this);
+                timeContainer.setGravity(Gravity.CENTER);
+                timeContainer.setOrientation(LinearLayout.VERTICAL);
+                TableRow.LayoutParams timeContainerParams = new TableRow.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                lessonContainer.addView(timeContainer, timeContainerParams);
+
+                // текст времени начала урока
+                TextView lessonBeginTimeText = new TextView(this);
+                lessonBeginTimeText.setGravity(Gravity.CENTER);
+                lessonBeginTimeText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                lessonBeginTimeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                lessonBeginTimeText.setTextColor(getResources().getColor(R.color.backgroundMediumGray));
+                lessonBeginTimeText.setText(getTwoSymbols(standartLessonsPeriods[lessonI][0]) + ':' + getTwoSymbols(standartLessonsPeriods[lessonI][1]));
+                timeContainer.addView(lessonBeginTimeText, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                // текст времени конца урока
+                TextView lessonEndTimeText = new TextView(this);
+                lessonEndTimeText.setGravity(Gravity.CENTER);
+                lessonEndTimeText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                lessonEndTimeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                lessonEndTimeText.setTextColor(getResources().getColor(R.color.backgroundMediumGray));
+                lessonEndTimeText.setText(getTwoSymbols(standartLessonsPeriods[lessonI][2]) + ':' + getTwoSymbols(standartLessonsPeriods[lessonI][3]));
+                timeContainer.addView(lessonEndTimeText, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+
+                // текст предмета
+                TextView subjectText = new TextView(this);
+                subjectText.setGravity(Gravity.CENTER);
+                subjectText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                subjectText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                subjectText.setTextColor(Color.BLACK);
+                subjectText.setText(subjectName);
+                TableRow.LayoutParams subjectTextParams = new TableRow.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                subjectTextParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                subjectTextParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                lessonContainer.addView(subjectText, subjectTextParams);
+
+
+                // текст класса
+                TextView classText = new TextView(this);
+                classText.setGravity(Gravity.CENTER);
+                classText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_medium));
+                classText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                classText.setTextColor(Color.BLACK);
+                classText.setText(learnersClassName);
+                TableRow.LayoutParams classTextParams = new TableRow.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                classTextParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                lessonContainer.addView(classText, classTextParams);
+
+
+                // текст кабинета
+                TextView cabinetText = new TextView(this);
+                cabinetText.setGravity(Gravity.CENTER);
+                cabinetText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
+                cabinetText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                cabinetText.setTextColor(Color.BLACK);
+                cabinetText.setText(cabinetName);
+                TableRow.LayoutParams cabinetTextParams = new TableRow.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                cabinetTextParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                lessonContainer.addView(cabinetText, cabinetTextParams);
+
+
+                // при нажатиина контейнер
+                lessonContainer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                        //проверяем все ли ученики рассажены
+                        if (db.getNotPutLearnersIdByCabinetIdAndClassId(cabinetId, learnersClassId).size() == 0) {
+                            //парсим дату
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            //начать урок
+                            Intent intentForStartLesson = new Intent(getApplicationContext(), LessonActivity.class);
+                            intentForStartLesson.putExtra(LessonActivity.LESSON_ATTITUDE_ID, attitudeId);
+                            intentForStartLesson.putExtra(LessonActivity.LESSON_TIME, dateFormat.format(currentCalendar.getTime()));
+                            startActivity(intentForStartLesson);
+                        }else{
+                            // тост о не рассаженных учениках
+                            Toast.makeText(getApplicationContext(), R.string.schedule_day_activity_toast_learners, Toast.LENGTH_LONG).show();
+                            //редактировать рассадку
+                            Intent intentForStartSeatingRedactor = new Intent(getApplicationContext(), SeatingRedactorActivity.class);
+                            intentForStartSeatingRedactor.putExtra(SeatingRedactorActivity.CABINET_ID, cabinetId);
+                            intentForStartSeatingRedactor.putExtra(SeatingRedactorActivity.CLASS_ID, learnersClassId);
+                            startActivity(intentForStartSeatingRedactor);
+                        }
+                        db.close();
+                    }
+                });
+
+                lessonContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        //создание/редактирование урока
+                        final Intent intentForLessonEditor = new Intent(getApplicationContext(), LessonRedactorActivity.class);
+                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, attitudeId);
+                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_START_TIME, currentCalendar.getTime().getTime());
+                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_END_TIME, endTimeCalendar.getTime().getTime());
+                        startActivity(intentForLessonEditor);
+                        return true;
+                    }
+                });
+
+            }
+        }
+        db.close();
     }
 
     float pxFromDp(float dp) {
@@ -444,13 +441,13 @@ public class ScheduleDayActivity extends AppCompatActivity {
     }
 }
 
-class LessonTimePeriod {
-    GregorianCalendar calendarStartTime;
-    GregorianCalendar calendarEndTime;
-
-    public LessonTimePeriod(GregorianCalendar calendarStartTime, GregorianCalendar calendarEndTime) {
-        this.calendarStartTime = calendarStartTime;
-        this.calendarEndTime = calendarEndTime;
-    }
-}
+//class LessonTimePeriod {
+//    GregorianCalendar calendarStartTime;
+//    GregorianCalendar calendarEndTime;
+//
+//    public LessonTimePeriod(GregorianCalendar calendarStartTime, GregorianCalendar calendarEndTime) {
+//        this.calendarStartTime = calendarStartTime;
+//        this.calendarEndTime = calendarEndTime;
+//    }
+//}
 

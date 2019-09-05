@@ -1,106 +1,93 @@
 package com.learning.texnar13.teachersprogect.learnersAndGradesOut.learnersAndGradesStatistics;
 
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 
-public class LearnersGradesStatisticsActivity extends AppCompatActivity implements CreateStatisticDialogInterface, RemoveStatisticDialogInterface, EditStatisticDialogInterface {
+public class LearnersGradesStatisticsActivity extends AppCompatActivity implements PeriodsDialogInterface {
     public static final String TAG = "TeachersApp";
 
-    // трансферные переменные
+    // для получения id предмета
     public static final String INTENT_SUBJECT_ID = "subjectID";
 
-    // ---------- layout-ы -----------
-    // --- время ---
-    // спиннер с названиями периодов
-    private Spinner periodsNamesSpinner;
-    // текстовые поля
+
+    // id полученного предмета
+    private static long subjectId = -1;
+
+    // массив периодов
+    private static ArrayList<PeriodUnit> periods;
+    // номер выбранного периода
+    private static int periodPosition;
+
+    // массив учеников
+    private static LearnerUnit[] learners;
+
+    // размер максимально допустимой оценки
+    private static int maxAnswersCount;
+    // окрашиваем ли оценки
+    private static boolean areTheGradesColored = false;
+
+    // переменная разрешающая проверять поля дат и сохранять даты
+    private static boolean isTextCheckRun = true;
+
+
+    // текстовые поля времени
     private EditText startDayEditText;
     private EditText startMonthEditText;
     private EditText startYearEditText;
     private EditText endDayEditText;
     private EditText endMonthEditText;
     private EditText endYearEditText;
-    // --- таблица ---
-    // колонка со списком учеников
-    private LinearLayout learnersColumn;
+
     // колонка со списком оценок
     private LinearLayout gradesColumn;
-    // колонка со списком оценок
+    // колонка со списком пропусков
     private LinearLayout absentsColumn;
 
-    // ------ переменные созданные в процессе работы ------
-    private long subjectId = -1;
-    private long learnersClassId = -1;
-    private long[] learnersId;
-
-    // параметры профилей
-    private long[] profilesId;
-    private String[] profilesNames;
-    private String[] outProfilesStrings;
-    private int[][] dates;
-    private int chosenProfileNumber;
-    private int maxAnswersCount;
-    private boolean areTheGradesColored = false;
-
-    // переменная разрешающая проверять поля дат и сохранять даты
-    boolean isTextCheckRun = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // ставим содержимое экрана
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learners_grades_statistics);
-        // кнопка назад в actionBar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        // заголовок активности
-        setTitle(R.string.title_activity_learners_and_grades_statistics);
+        // Убираем заголовок
+        getSupportActionBar().hide();
 
-        // ---------- layout-ы -----------
-        // --- время ---
-        // спиннер с названиями периодов
-        periodsNamesSpinner = (Spinner) findViewById(R.id.learners_grades_statistics_spinner);
-        // текстовые поля
-        startDayEditText = (EditText) findViewById(R.id.learners_grades_statistics_begin_day);
-        startMonthEditText = (EditText) findViewById(R.id.learners_grades_statistics_begin_month);
-        startYearEditText = (EditText) findViewById(R.id.learners_grades_statistics_begin_year);
-        endDayEditText = (EditText) findViewById(R.id.learners_grades_statistics_end_day);
-        endMonthEditText = (EditText) findViewById(R.id.learners_grades_statistics_end_month);
-        endYearEditText = (EditText) findViewById(R.id.learners_grades_statistics_end_year);
-        // --- таблица ---
-        // колонка со списком учеников
-        learnersColumn = (LinearLayout) findViewById(R.id.learners_grades_learners_table);
-        // колонка со списком оценок
-        gradesColumn = (LinearLayout) findViewById(R.id.learners_grades_statistics_grade_column);
-        // колонка со списком оценок
-        absentsColumn = (LinearLayout) findViewById(R.id.learners_grades_statistics_absent_column);
+        // вертикальная ориентация
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
+        // кнопка назад
+        findViewById(R.id.learners_and_grades_statistics_toolbar_back_arrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
 
         // получаем id предмета
@@ -110,27 +97,78 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             finish();
         }
 
-        // ------------------------ получаем данные из бд ------------------------
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        // максимальная оценка
-        maxAnswersCount = db.getSettingsMaxGrade(1);
-        // цветные оценки
-        areTheGradesColored = db.getSettingsAreTheGradesColoredByProfileId(1);
-        // курсор предмета
-        Cursor subjectCursor = db.getSubjectById(subjectId);
-        subjectCursor.moveToNext();
-        // id класса
-        learnersClassId = subjectCursor.getLong(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
-        subjectCursor.close();
-        db.close();
 
-        // ------------------------ вывод данных ------------------------
-        // выводим учеников
-        outLearners();
-        // выводим названия и, если есть, даты, по ним оценки
-        outSpinner(-1);
+        // проверяем на поворот экрана
+        if (periods == null) {
 
-        // ----- слушатели изменения текста, при изменении поля запускают проверку, сохранение и вывод -----
+            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+            // максимальная оценка
+            maxAnswersCount = db.getSettingsMaxGrade(1);
+            // цветные оценки
+            areTheGradesColored = db.getSettingsAreTheGradesColoredByProfileId(1);
+
+
+            // получаем периоды из бд
+            Cursor periodsCursor = db.getAllStatisticsProfiles();
+            // создаем список
+            periods = new ArrayList<>(periodsCursor.getCount());
+            while (periodsCursor.moveToNext()) {
+                // дата начала
+                String startDate = periodsCursor.getString(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_START_PERIOD_TIME));
+                // дата конца
+                String endDate = periodsCursor.getString(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_END_PERIOD_TIME));
+                // переводим дату из строки в числа
+                int[] dates = new int[6];
+                dates[0] = Integer.parseInt(startDate.substring(0, 4));
+                dates[1] = Integer.parseInt(startDate.substring(5, 7));
+                dates[2] = Integer.parseInt(startDate.substring(8, 10));
+                dates[3] = Integer.parseInt(endDate.substring(0, 4));
+                dates[4] = Integer.parseInt(endDate.substring(5, 7));
+                dates[5] = Integer.parseInt(endDate.substring(8, 10));
+
+                // создаем период
+                periods.add(new PeriodUnit(
+                        periodsCursor.getLong(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID)),
+                        periodsCursor.getString(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME)),
+                        dates
+                ));
+            }
+            periodsCursor.close();
+
+
+            // получаем предмет
+            Cursor subjectCursor = db.getSubjectById(subjectId);
+            subjectCursor.moveToFirst();
+            // получаем id класса
+            long classId = subjectCursor.getLong(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
+            subjectCursor.close();
+
+
+            // получаем учеников из бд
+            Cursor learnersCursor = db.getLearnersByClassId(classId);
+            // создаем массив
+            learners = new LearnerUnit[learnersCursor.getCount()];
+            for (int learnerI = 0; learnerI < learners.length; learnerI++) {
+                learnersCursor.moveToPosition(learnerI);
+                learners[learnerI] = new LearnerUnit(
+                        learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)),
+                        learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)),
+                        learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME))
+                );
+            }
+            learnersCursor.close();
+        }
+
+
+        // находим текстовые поля дат
+        startDayEditText = (EditText) findViewById(R.id.learners_grades_statistics_begin_day);
+        startMonthEditText = (EditText) findViewById(R.id.learners_grades_statistics_begin_month);
+        startYearEditText = (EditText) findViewById(R.id.learners_grades_statistics_begin_year);
+        endDayEditText = (EditText) findViewById(R.id.learners_grades_statistics_end_day);
+        endMonthEditText = (EditText) findViewById(R.id.learners_grades_statistics_end_month);
+        endYearEditText = (EditText) findViewById(R.id.learners_grades_statistics_end_year);
+
+        // назначаем слушатели изменения текста, которые при изменении поля запускают проверку, сохранение и вывод
         startDayEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -145,21 +183,21 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             @Override
             public void afterTextChanged(Editable s) {
                 if (isTextCheckRun)
+                    // проверяем даты на соответствие
                     if (isDateGood(startDayEditText, startMonthEditText, startYearEditText, endDayEditText, endMonthEditText, endYearEditText)) {
                         // помещаем в массив
-                        Log.e("TeachersApp", "startDayEditText.afterTextChanged: saveDate");
-                        dates[chosenProfileNumber][0] = Integer.parseInt(startYearEditText.getText().toString());
-                        dates[chosenProfileNumber][1] = Integer.parseInt(startMonthEditText.getText().toString());
-                        dates[chosenProfileNumber][2] = Integer.parseInt(startDayEditText.getText().toString());
-                        dates[chosenProfileNumber][3] = Integer.parseInt(endYearEditText.getText().toString());
-                        dates[chosenProfileNumber][4] = Integer.parseInt(endMonthEditText.getText().toString());
-                        dates[chosenProfileNumber][5] = Integer.parseInt(endDayEditText.getText().toString());
+                        periods.get(periodPosition).dates[0] = Integer.parseInt(startYearEditText.getText().toString());
+                        periods.get(periodPosition).dates[1] = Integer.parseInt(startMonthEditText.getText().toString());
+                        periods.get(periodPosition).dates[2] = Integer.parseInt(startDayEditText.getText().toString());
+                        periods.get(periodPosition).dates[3] = Integer.parseInt(endYearEditText.getText().toString());
+                        periods.get(periodPosition).dates[4] = Integer.parseInt(endMonthEditText.getText().toString());
+                        periods.get(periodPosition).dates[5] = Integer.parseInt(endDayEditText.getText().toString());
                         // сохраняем в бд
                         DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                         db.setStatisticTime(
-                                profilesId[chosenProfileNumber],
-                                "" + dates[chosenProfileNumber][0] + "-" + getTwoSymbols(dates[chosenProfileNumber][1]) + "-" + getTwoSymbols(dates[chosenProfileNumber][2]) + " 00:00:00",
-                                "" + dates[chosenProfileNumber][3] + "-" + getTwoSymbols(dates[chosenProfileNumber][4]) + "-" + getTwoSymbols(dates[chosenProfileNumber][5]) + " 23:59:59"
+                                periods.get(periodPosition).periodId,
+                                "" + periods.get(periodPosition).dates[0] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[2]) + " 00:00:00",
+                                "" + periods.get(periodPosition).dates[3] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[5]) + " 23:59:59"
                         );
                         db.close();
                         // выводим оценки
@@ -184,18 +222,18 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                     if (isDateGood(startDayEditText, startMonthEditText, startYearEditText, endDayEditText, endMonthEditText, endYearEditText)) {
                         // помещаем в массив
                         Log.e("TeachersApp", "startMonthEditText.afterTextChanged: saveDate");
-                        dates[chosenProfileNumber][0] = Integer.parseInt(startYearEditText.getText().toString());
-                        dates[chosenProfileNumber][1] = Integer.parseInt(startMonthEditText.getText().toString());
-                        dates[chosenProfileNumber][2] = Integer.parseInt(startDayEditText.getText().toString());
-                        dates[chosenProfileNumber][3] = Integer.parseInt(endYearEditText.getText().toString());
-                        dates[chosenProfileNumber][4] = Integer.parseInt(endMonthEditText.getText().toString());
-                        dates[chosenProfileNumber][5] = Integer.parseInt(endDayEditText.getText().toString());
+                        periods.get(periodPosition).dates[0] = Integer.parseInt(startYearEditText.getText().toString());
+                        periods.get(periodPosition).dates[1] = Integer.parseInt(startMonthEditText.getText().toString());
+                        periods.get(periodPosition).dates[2] = Integer.parseInt(startDayEditText.getText().toString());
+                        periods.get(periodPosition).dates[3] = Integer.parseInt(endYearEditText.getText().toString());
+                        periods.get(periodPosition).dates[4] = Integer.parseInt(endMonthEditText.getText().toString());
+                        periods.get(periodPosition).dates[5] = Integer.parseInt(endDayEditText.getText().toString());
                         // сохраняем в бд
                         DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                         db.setStatisticTime(
-                                profilesId[chosenProfileNumber],
-                                "" + dates[chosenProfileNumber][0] + "-" + getTwoSymbols(dates[chosenProfileNumber][1]) + "-" + getTwoSymbols(dates[chosenProfileNumber][2]) + " 00:00:00",
-                                "" + dates[chosenProfileNumber][3] + "-" + getTwoSymbols(dates[chosenProfileNumber][4]) + "-" + getTwoSymbols(dates[chosenProfileNumber][5]) + " 23:59:59"
+                                periods.get(periodPosition).periodId,
+                                "" + periods.get(periodPosition).dates[0] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[2]) + " 00:00:00",
+                                "" + periods.get(periodPosition).dates[3] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[5]) + " 23:59:59"
                         );
                         db.close();
                         // выводим оценки
@@ -220,18 +258,18 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                     if (isDateGood(startDayEditText, startMonthEditText, startYearEditText, endDayEditText, endMonthEditText, endYearEditText)) {
                         // помещаем в массив
                         Log.e("TeachersApp", "startYearEditText.afterTextChanged: saveDate");
-                        dates[chosenProfileNumber][0] = Integer.parseInt(startYearEditText.getText().toString());
-                        dates[chosenProfileNumber][1] = Integer.parseInt(startMonthEditText.getText().toString());
-                        dates[chosenProfileNumber][2] = Integer.parseInt(startDayEditText.getText().toString());
-                        dates[chosenProfileNumber][3] = Integer.parseInt(endYearEditText.getText().toString());
-                        dates[chosenProfileNumber][4] = Integer.parseInt(endMonthEditText.getText().toString());
-                        dates[chosenProfileNumber][5] = Integer.parseInt(endDayEditText.getText().toString());
+                        periods.get(periodPosition).dates[0] = Integer.parseInt(startYearEditText.getText().toString());
+                        periods.get(periodPosition).dates[1] = Integer.parseInt(startMonthEditText.getText().toString());
+                        periods.get(periodPosition).dates[2] = Integer.parseInt(startDayEditText.getText().toString());
+                        periods.get(periodPosition).dates[3] = Integer.parseInt(endYearEditText.getText().toString());
+                        periods.get(periodPosition).dates[4] = Integer.parseInt(endMonthEditText.getText().toString());
+                        periods.get(periodPosition).dates[5] = Integer.parseInt(endDayEditText.getText().toString());
                         // сохраняем в бд
                         DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                         db.setStatisticTime(
-                                profilesId[chosenProfileNumber],
-                                "" + dates[chosenProfileNumber][0] + "-" + getTwoSymbols(dates[chosenProfileNumber][1]) + "-" + getTwoSymbols(dates[chosenProfileNumber][2]) + " 00:00:00",
-                                "" + dates[chosenProfileNumber][3] + "-" + getTwoSymbols(dates[chosenProfileNumber][4]) + "-" + getTwoSymbols(dates[chosenProfileNumber][5]) + " 23:59:59"
+                                periods.get(periodPosition).periodId,
+                                "" + periods.get(periodPosition).dates[0] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[2]) + " 00:00:00",
+                                "" + periods.get(periodPosition).dates[3] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[5]) + " 23:59:59"
                         );
                         db.close();
                         // выводим оценки
@@ -256,18 +294,18 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                     if (isDateGood(startDayEditText, startMonthEditText, startYearEditText, endDayEditText, endMonthEditText, endYearEditText)) {
                         // помещаем в массив
                         Log.e("TeachersApp", "endDayEditText.afterTextChanged: saveDate");
-                        dates[chosenProfileNumber][0] = Integer.parseInt(startYearEditText.getText().toString());
-                        dates[chosenProfileNumber][1] = Integer.parseInt(startMonthEditText.getText().toString());
-                        dates[chosenProfileNumber][2] = Integer.parseInt(startDayEditText.getText().toString());
-                        dates[chosenProfileNumber][3] = Integer.parseInt(endYearEditText.getText().toString());
-                        dates[chosenProfileNumber][4] = Integer.parseInt(endMonthEditText.getText().toString());
-                        dates[chosenProfileNumber][5] = Integer.parseInt(endDayEditText.getText().toString());
+                        periods.get(periodPosition).dates[0] = Integer.parseInt(startYearEditText.getText().toString());
+                        periods.get(periodPosition).dates[1] = Integer.parseInt(startMonthEditText.getText().toString());
+                        periods.get(periodPosition).dates[2] = Integer.parseInt(startDayEditText.getText().toString());
+                        periods.get(periodPosition).dates[3] = Integer.parseInt(endYearEditText.getText().toString());
+                        periods.get(periodPosition).dates[4] = Integer.parseInt(endMonthEditText.getText().toString());
+                        periods.get(periodPosition).dates[5] = Integer.parseInt(endDayEditText.getText().toString());
                         // сохраняем в бд
                         DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                         db.setStatisticTime(
-                                profilesId[chosenProfileNumber],
-                                "" + dates[chosenProfileNumber][0] + "-" + getTwoSymbols(dates[chosenProfileNumber][1]) + "-" + getTwoSymbols(dates[chosenProfileNumber][2]) + " 00:00:00",
-                                "" + dates[chosenProfileNumber][3] + "-" + getTwoSymbols(dates[chosenProfileNumber][4]) + "-" + getTwoSymbols(dates[chosenProfileNumber][5]) + " 23:59:59"
+                                periods.get(periodPosition).periodId,
+                                "" + periods.get(periodPosition).dates[0] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[2]) + " 00:00:00",
+                                "" + periods.get(periodPosition).dates[3] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[5]) + " 23:59:59"
                         );
                         db.close();
                         // выводим оценки
@@ -292,18 +330,18 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                     if (isDateGood(startDayEditText, startMonthEditText, startYearEditText, endDayEditText, endMonthEditText, endYearEditText)) {
                         // помещаем в массив
                         Log.e("TeachersApp", "endMonthEditText.afterTextChanged: saveDate");
-                        dates[chosenProfileNumber][0] = Integer.parseInt(startYearEditText.getText().toString());
-                        dates[chosenProfileNumber][1] = Integer.parseInt(startMonthEditText.getText().toString());
-                        dates[chosenProfileNumber][2] = Integer.parseInt(startDayEditText.getText().toString());
-                        dates[chosenProfileNumber][3] = Integer.parseInt(endYearEditText.getText().toString());
-                        dates[chosenProfileNumber][4] = Integer.parseInt(endMonthEditText.getText().toString());
-                        dates[chosenProfileNumber][5] = Integer.parseInt(endDayEditText.getText().toString());
+                        periods.get(periodPosition).dates[0] = Integer.parseInt(startYearEditText.getText().toString());
+                        periods.get(periodPosition).dates[1] = Integer.parseInt(startMonthEditText.getText().toString());
+                        periods.get(periodPosition).dates[2] = Integer.parseInt(startDayEditText.getText().toString());
+                        periods.get(periodPosition).dates[3] = Integer.parseInt(endYearEditText.getText().toString());
+                        periods.get(periodPosition).dates[4] = Integer.parseInt(endMonthEditText.getText().toString());
+                        periods.get(periodPosition).dates[5] = Integer.parseInt(endDayEditText.getText().toString());
                         // сохраняем в бд
                         DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                         db.setStatisticTime(
-                                profilesId[chosenProfileNumber],
-                                "" + dates[chosenProfileNumber][0] + "-" + getTwoSymbols(dates[chosenProfileNumber][1]) + "-" + getTwoSymbols(dates[chosenProfileNumber][2]) + " 00:00:00",
-                                "" + dates[chosenProfileNumber][3] + "-" + getTwoSymbols(dates[chosenProfileNumber][4]) + "-" + getTwoSymbols(dates[chosenProfileNumber][5]) + " 23:59:59"
+                                periods.get(periodPosition).periodId,
+                                "" + periods.get(periodPosition).dates[0] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[2]) + " 00:00:00",
+                                "" + periods.get(periodPosition).dates[3] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[5]) + " 23:59:59"
                         );
                         db.close();
                         // выводим оценки
@@ -328,18 +366,18 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                     if (isDateGood(startDayEditText, startMonthEditText, startYearEditText, endDayEditText, endMonthEditText, endYearEditText)) {
                         // помещаем в массив
                         Log.e("TeachersApp", "endYearEditText.afterTextChanged: saveDate");
-                        dates[chosenProfileNumber][0] = Integer.parseInt(startYearEditText.getText().toString());
-                        dates[chosenProfileNumber][1] = Integer.parseInt(startMonthEditText.getText().toString());
-                        dates[chosenProfileNumber][2] = Integer.parseInt(startDayEditText.getText().toString());
-                        dates[chosenProfileNumber][3] = Integer.parseInt(endYearEditText.getText().toString());
-                        dates[chosenProfileNumber][4] = Integer.parseInt(endMonthEditText.getText().toString());
-                        dates[chosenProfileNumber][5] = Integer.parseInt(endDayEditText.getText().toString());
+                        periods.get(periodPosition).dates[0] = Integer.parseInt(startYearEditText.getText().toString());
+                        periods.get(periodPosition).dates[1] = Integer.parseInt(startMonthEditText.getText().toString());
+                        periods.get(periodPosition).dates[2] = Integer.parseInt(startDayEditText.getText().toString());
+                        periods.get(periodPosition).dates[3] = Integer.parseInt(endYearEditText.getText().toString());
+                        periods.get(periodPosition).dates[4] = Integer.parseInt(endMonthEditText.getText().toString());
+                        periods.get(periodPosition).dates[5] = Integer.parseInt(endDayEditText.getText().toString());
                         // сохраняем в бд
                         DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                         db.setStatisticTime(
-                                profilesId[chosenProfileNumber],
-                                "" + dates[chosenProfileNumber][0] + "-" + getTwoSymbols(dates[chosenProfileNumber][1]) + "-" + getTwoSymbols(dates[chosenProfileNumber][2]) + " 00:00:00",
-                                "" + dates[chosenProfileNumber][3] + "-" + getTwoSymbols(dates[chosenProfileNumber][4]) + "-" + getTwoSymbols(dates[chosenProfileNumber][5]) + " 23:59:59"
+                                periods.get(periodPosition).periodId,
+                                "" + periods.get(periodPosition).dates[0] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[2]) + " 00:00:00",
+                                "" + periods.get(periodPosition).dates[3] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[5]) + " 23:59:59"
                         );
                         db.close();
                         // выводим оценки
@@ -349,283 +387,124 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         });
 
 
-    }
-
-    // ----------- вывод данных в спиннер и поля времени -----------
-
-    void outSpinner(long getId) {// -1 вывести первый элемент
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        // получаем профили
-        Cursor profiles = db.getAllStatisticsProfiles();
-        // создам массив с id
-        profilesId = new long[profiles.getCount()];
-        // создам массив с названиями и пунктами
-        outProfilesStrings = new String[profiles.getCount() + 2];
-        // создам массив с названиями
-        profilesNames = new String[profiles.getCount()];
-        // создаем массив с датами
-        dates = new int[profiles.getCount()][6];
-        // по профилям
-        for (int i = 0; i < profiles.getCount(); i++) {
-            profiles.moveToPosition(i);
-            // достаем данные
-            // id
-            profilesId[i] = profiles.getLong(profiles.getColumnIndex(SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID));
-            // имя
-            profilesNames[i] = profiles.getString(profiles.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME));
-            outProfilesStrings[i] = profiles.getString(profiles.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME));
-            // дата начала
-            String startDate = profiles.getString(profiles.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_START_PERIOD_TIME));
-            // дата конца
-            String endDate = profiles.getString(profiles.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_END_PERIOD_TIME));
-            dates[i][0] = Integer.parseInt(startDate.substring(0, 4));
-            dates[i][1] = Integer.parseInt(startDate.substring(5, 7));
-            dates[i][2] = Integer.parseInt(startDate.substring(8, 10));
-            dates[i][3] = Integer.parseInt(endDate.substring(0, 4));
-            dates[i][4] = Integer.parseInt(endDate.substring(5, 7));
-            dates[i][5] = Integer.parseInt(endDate.substring(8, 10));
+        // выводим учеников в таблицу
+        LinearLayout learnersColumn = findViewById(R.id.learners_grades_learners_table);
+        learnersColumn.removeAllViews();
+        // выводим самих учеников
+        for (LearnerUnit learner : learners) {
+            // текст ученика
+            TextView learnerText = new TextView(this);
+            learnerText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+            learnerText.setTextColor(Color.BLACK);
+            learnerText.setBackgroundColor(getResources().getColor(R.color.backgroundDarkWhite));
+            learnerText.setGravity(Gravity.CENTER_VERTICAL);
+            learnerText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            learnerText.setPadding(
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin)
+            );
+            learnerText.setText(
+                    learner.learnerSurname + " " + learner.learnerSurname
+            );
+            LinearLayout.LayoutParams learnerTextParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            learnerTextParams.bottomMargin = (int) getResources().getDimension(R.dimen.gird_lines_width);
+            learnersColumn.addView(learnerText, learnerTextParams);
         }
 
-        // ------- вывод данных в спиннер -------
-        // -- дополнительные пункты --
-        outProfilesStrings[outProfilesStrings.length - 2] = getResources().getString(R.string.learners_and_grades_statistics_activity_spinner_text_add);
-        outProfilesStrings[outProfilesStrings.length - 1] = getResources().getString(R.string.learners_and_grades_statistics_activity_spinner_text_remove);
-        // -- передаем строки --
-        ArrayAdapter<String> namesSpinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_learners_and_grades_subjects, outProfilesStrings);
-        periodsNamesSpinner.setAdapter(namesSpinnerAdapter);
 
-        // ------- при выборе пункта спиннера -------
-        // ----- выбор -----
-        periodsNamesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        // выводим название периода в кнопку
+        if (periods.size() == 0) {
+            // ставим пустой выбор
+            periodPosition = -1;
+            ((TextView) findViewById(R.id.learners_grades_statistics_period_button_text)).
+                    setText(R.string.learners_and_grades_statistics_activity_spinner_text_add);
+        } else {
+            // ставим выбор на первом предмете
+            periodPosition = 0;
+            ((TextView) findViewById(R.id.learners_grades_statistics_period_button_text)).
+                    setText(periods.get(0).periodName);
+        }
+        outDates();
 
+        // нажатие на кнопку периода
+        findViewById(R.id.learners_grades_statistics_period_button).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onClick(View v) {
 
-                if (position == outProfilesStrings.length - 2) {
-                    // -- показываем диалог по созданию --
-                    CreatePeriodDialogFragment createPeriodDialogFragment = new CreatePeriodDialogFragment();
-                    createPeriodDialogFragment.show(getFragmentManager(), "createPeriodDialogFragment");
-                } else if (position == outProfilesStrings.length - 1) {
-                    // -- показываем диалог по удалению --
-                    RemovePeriodDialogFragment removePeriodDialogFragment = new RemovePeriodDialogFragment();
-                    // параметры
-                    Bundle bundle = new Bundle();
-                    bundle.putLongArray(RemovePeriodDialogFragment.PROFILES_ID_INTENT, profilesId);
-                    bundle.putStringArray(RemovePeriodDialogFragment.PROFILES_NAMES_INTENT, profilesNames);
-                    removePeriodDialogFragment.setArguments(bundle);
-                    removePeriodDialogFragment.show(getFragmentManager(), "removePeriodDialogFragment");
-                } else {
-                    // -- выбран период --
-                    chosenProfileNumber = position;
-                    // выводим даты
-                    outDates();
-                    // выводим оценки
-                    outGrades();
+                // вызываем диалог предметов
+                PeriodDialogFragment periodDialog = new PeriodDialogFragment();
+                // аргументы массив названий предметов
+                String[] periodsNames = new String[periods.size()];
+                for (int periodI = 0; periodI < periods.size(); periodI++) {
+                    periodsNames[periodI] = periods.get(periodI).periodName;
                 }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+                Bundle args = new Bundle();
+                args.putStringArray(PeriodDialogFragment.ARGS_PERIODS_STRING_ARRAY, periodsNames);
+                periodDialog.setArguments(args);
+                periodDialog.show(getSupportFragmentManager(),"periodDialog - Hello");
             }
         });
 
-        // по id выводим пункт
-        if (getId != -1)
-            for (int i = 0; i < profilesId.length; i++) {
 
-                if (profilesId[i] == getId) {
-                    periodsNamesSpinner.setSelection(i, false);
-                }
-            }
+        // колонка со списком оценок
+        gradesColumn = (LinearLayout) findViewById(R.id.learners_grades_statistics_grade_column);
+        // колонка со списком оценок
+        absentsColumn = (LinearLayout) findViewById(R.id.learners_grades_statistics_absent_column);
 
-        // ----- долгое нажатие -----
-        periodsNamesSpinner.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i(TAG, "periodsNamesSpinner.onItemLongClick");
-                if (position < outProfilesStrings.length - 2) {// только профили
-                    // -- показываем диалог по изменению --
-                    EditPeriodDialogFragment editPeriodDialogFragment = new EditPeriodDialogFragment();
-                    // параметры
-                    Bundle bundle = new Bundle();
-                    bundle.putLong(EditPeriodDialogFragment.ARGUMENT_ID, profilesId[position]);
-                    bundle.putString(EditPeriodDialogFragment.ARGUMENT_NAME, profilesNames[position]);
-                    bundle.putIntArray(EditPeriodDialogFragment.ARGUMENT_DATE_ARRAY, dates[position]);
-                    editPeriodDialogFragment.setArguments(bundle);
-                    editPeriodDialogFragment.show(getFragmentManager(), "editPeriodDialogFragment");
-                }
-                return true;
-            }
-        });
+        // выводим оценки
+        outGrades();
 
-        // закрываем курсор
-        profiles.close();
     }
 
-// ----------- вывод данных в поля времени -----------
 
+    // вывод данных в поля времени
     void outDates() {
-        Log.e("TeachersApp", "outDates");
         // чтобы текстовые поля не проверяли и не сохраняли старые данные приостанавливаем их работу
         isTextCheckRun = false;
         // меняем тексты
-        startDayEditText.setText("" + dates[chosenProfileNumber][2]);
-        startDayEditText.setBackgroundResource(R.drawable.button_lite_gray);
-        startMonthEditText.setText("" + dates[chosenProfileNumber][1]);
-        startMonthEditText.setBackgroundResource(R.drawable.button_lite_gray);
-        startYearEditText.setText("" + dates[chosenProfileNumber][0]);
-        startYearEditText.setBackgroundResource(R.drawable.button_lite_gray);
-        endDayEditText.setText("" + dates[chosenProfileNumber][5]);
-        endDayEditText.setBackgroundResource(R.drawable.button_lite_gray);
-        endMonthEditText.setText("" + dates[chosenProfileNumber][4]);
-        endMonthEditText.setBackgroundResource(R.drawable.button_lite_gray);
-        endYearEditText.setText("" + dates[chosenProfileNumber][3]);
-        endYearEditText.setBackgroundResource(R.drawable.button_lite_gray);
+        if (periodPosition != -1) {
+            startDayEditText.setText("" + periods.get(periodPosition).dates[2]);
+            startDayEditText.setBackgroundResource(R.drawable._underlined_black);
+            startMonthEditText.setText("" + periods.get(periodPosition).dates[1]);
+            startMonthEditText.setBackgroundResource(R.drawable._underlined_black);
+            startYearEditText.setText("" + periods.get(periodPosition).dates[0]);
+            startYearEditText.setBackgroundResource(R.drawable._underlined_black);
+            endDayEditText.setText("" + periods.get(periodPosition).dates[5]);
+            endDayEditText.setBackgroundResource(R.drawable._underlined_black);
+            endMonthEditText.setText("" + periods.get(periodPosition).dates[4]);
+            endMonthEditText.setBackgroundResource(R.drawable._underlined_black);
+            endYearEditText.setText("" + periods.get(periodPosition).dates[3]);
+            endYearEditText.setBackgroundResource(R.drawable._underlined_black);
+        }
         // разрешаем проверку
         isTextCheckRun = true;
     }
 
-// ----------- вывод учеников в таблицу -----------
 
-    void outLearners() {
-        // достаем учеников из базы
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        Cursor learnersCursor = db.getLearnersByClassId(learnersClassId);
-
-        // - чистим колонку -
-        learnersColumn.removeAllViews();
-        // - чистим массив с id -
-        learnersId = new long[learnersCursor.getCount()];
-
-// ---- выводим заголовок ----
-        // контейнер
-        LinearLayout titleContainer = new LinearLayout(this);
-        titleContainer.setBackgroundColor(Color.GRAY);
-        learnersColumn.addView(titleContainer,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        // текст
-        TextView columnTitle = new TextView(this);
-        columnTitle.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));
-        columnTitle.setTextColor(Color.BLACK);
-        columnTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-        columnTitle.setText(R.string.learners_and_grades_statistics_activity_title_column_learner_name);
-        LinearLayout.LayoutParams columnTitleParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        //columnTitleParams.setMargins(5, 5, 0, 5);
-        columnTitleParams.setMargins(0, 0, 0, 0);
-        titleContainer.addView(columnTitle, columnTitleParams);
-
-
-// ---- проходим по ученикам выводя ячейки ----
-        for (int i = 0; i < learnersCursor.getCount(); i++) {
-            learnersCursor.moveToPosition(i);
-
-            // --- получаем id ученика ---
-            learnersId[i] = learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID));
-
-            // --- ячейка таблицы ---
-            // контейнер
-            LinearLayout learnerContainer = new LinearLayout(this);
-            learnerContainer.setBackgroundColor(Color.GRAY);
-            learnersColumn.addView(
-                    learnerContainer,
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-            );
-            // текст
-            TextView learnerText = new TextView(this);
-            learnerText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-            learnerText.setText(
-                    learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) +
-                            " " +
-                            learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME))
-            );
-            learnerText.setTextColor(Color.BLACK);
-            learnerText.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
-            LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-            );
-            textParams.setMargins(5, 0, 0, 5);
-            learnerContainer.addView(learnerText, textParams);
-        }
-
-        // закрываем базу
-        learnersCursor.close();
-        db.close();
-    }
-
-// ----------- вывод оценок учеников в таблицу -----------
-
+    //  вывод оценок в таблицу
     void outGrades() {
         // --- чистим колонки ---
         gradesColumn.removeAllViews();
         absentsColumn.removeAllViews();
 
-// ---- выводим заголовок оценок ----
-        // контейнер
-        LinearLayout titleGradesContainer = new LinearLayout(this);
-        titleGradesContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));
-        gradesColumn.addView(titleGradesContainer,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        // текст
-        TextView columnGradesTitle = new TextView(this);
-        columnGradesTitle.setGravity(Gravity.CENTER);
-        columnGradesTitle.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));
-        columnGradesTitle.setTextColor(Color.BLACK);
-        columnGradesTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-        columnGradesTitle.setText(R.string.learners_and_grades_statistics_activity_title_column_grade);
-        LinearLayout.LayoutParams columnGradesTitleParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-//        columnGradesTitleParams.setMargins(5, 5, 5, 5);
-        columnGradesTitleParams.setMargins((int) pxFromDp(5), 0, (int) pxFromDp(5), 0);
-        titleGradesContainer.addView(columnGradesTitle, columnGradesTitleParams);
-
-// ---- выводим заголовок пропусков ----
-        // контейнер
-        LinearLayout titleAbsentContainer = new LinearLayout(this);
-        titleAbsentContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));
-        absentsColumn.addView(titleAbsentContainer,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        // текст
-        TextView columnAbsentTitle = new TextView(this);
-        columnAbsentTitle.setGravity(Gravity.CENTER);
-        columnAbsentTitle.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBlue));
-        columnAbsentTitle.setTextColor(Color.BLACK);
-        columnAbsentTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-        columnAbsentTitle.setText(R.string.learners_and_grades_statistics_activity_title_column_absent);
-        LinearLayout.LayoutParams columnAbsentTitleParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-//        columnAbsentTitleParams.setMargins(0, 5, 5, 5);
-        columnGradesTitleParams.setMargins((int) pxFromDp(5), 0, (int) pxFromDp(5), 0);
-        titleAbsentContainer.addView(columnAbsentTitle, columnAbsentTitleParams);
-
-// ---- пробегаемся по ученикам ----
+        // загружаем оценки из базы данных
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        for (long aLearnersId : learnersId) {
-            // ---- получаем оценки за указанный период по выбранному ученику ----
+        // пробегаемся по ученикам
+        for (LearnerUnit learner : learners) {
+
+            // получаем оценки за указанный период по выбранному ученику
             Cursor grades = db.getGradesByLearnerIdSubjectAndTimePeriod(
-                    aLearnersId,
+                    learner.learnerId,
                     subjectId,
-                    "" + dates[chosenProfileNumber][0] + "-" + getTwoSymbols(dates[chosenProfileNumber][1]) + "-" + getTwoSymbols(dates[chosenProfileNumber][2]) + " 00:00:00",
-                    "" + dates[chosenProfileNumber][3] + "-" + getTwoSymbols(dates[chosenProfileNumber][4]) + "-" + getTwoSymbols(dates[chosenProfileNumber][5]) + " 23:59:59"
+                    periods.get(periodPosition).dates[0] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[2]) + " 00:00:00",
+                    periods.get(periodPosition).dates[3] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[5]) + " 23:59:59"
             );
-
-
-            //вычисляем среднее значение и считаем 'н'
+            // вычисляем среднее значение и считаем 'н'
             long nCount = 0;
             float gradesSum = 0;
             float gradesCount = 0;
@@ -647,192 +526,130 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                         break;
                 }
             }
+            grades.close();
 
-            // -------- пункт списка с оценками --------
-            // ---- контейнер оценки ----
 
-            LinearLayout gradeContainer = new LinearLayout(this);
-            gradeContainer.setOrientation(LinearLayout.VERTICAL);
-            gradeContainer.setBackgroundColor(Color.GRAY);
-            LinearLayout.LayoutParams gradeContainerParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            //добавляем вывод
-            gradesColumn.addView(
-                    gradeContainer,
-                    gradeContainerParams
-            );
-
-            // --- текст оценки ---
-
+            // выводим среднюю оценку ученику
             TextView gradeText = new TextView(this);
-            gradeText.setTextColor(Color.BLACK);
+            gradeText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
             gradeText.setGravity(Gravity.CENTER);
-            gradeText.setSingleLine(true);
-            gradeText.setEms(2);
+            gradeText.setBackgroundColor(getResources().getColor(R.color.backgroundWhite));
             gradeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-
-            // строка для покраски
-            SpannableStringBuilder s = new SpannableStringBuilder();
-            // цвет
-            ForegroundColorSpan style;
-            // ставим текст
-            if (gradesCount == 0) {
-                // текст оценки
-                s.append("-");
-                // серый для прочерков
-                style = new ForegroundColorSpan(
-                        getResources().getColor(R.color.gradeColorGray)
-                );
-                s.setSpan(style, 0, s.length() - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            } else {
-                // вычисляем среднюю оценку и округляем до сотых (к ближайшему)
-                gradesSum = ((int)((gradesSum / gradesCount) * 100 + 0.5))/100F;
-                // текст оценки
-                s.append("" + (gradesSum));
-                // ---- выбираем цвет оценки ----
-                if (areTheGradesColored) {// выбраны ли цветные оценки
-                    //5
-                    if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 100) {
-                        style = new ForegroundColorSpan(
-                                getResources().getColor(R.color.grade5Color)
-                        );
-                        s.setSpan(style, 0, s.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                    }
-                    //4
-                    if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 80) {
-                        style = new ForegroundColorSpan(
-                                getResources().getColor(R.color.grade4Color)
-                        );
-                        s.setSpan(style, 0, s.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                    }
-                    //3
-                    if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 60) {
-                        style = new ForegroundColorSpan(
-                                getResources().getColor(R.color.grade3Color)
-                        );
-                        s.setSpan(style, 0, s.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                    }
-                    //2
-                    if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 41) {
-                        style = new ForegroundColorSpan(
-                                getResources().getColor(R.color.grade2Color)
-                        );
-                        s.setSpan(style, 0, s.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                    }
-                    //1
-                    if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 20) {
-                        style = new ForegroundColorSpan(
-                                getResources().getColor(R.color.grade1Color)
-                        );
-                        s.setSpan(style, 0, s.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                    }
-                }
-            }
-            gradeText.setText(s);
-            gradeText.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
+            gradeText.setPadding(
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin)
+            );
             LinearLayout.LayoutParams gradeTextParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
-            gradeTextParams.setMargins(5, 0, 5, 5);
-            gradeContainer.addView(gradeText, gradeTextParams);
+            gradeTextParams.bottomMargin = (int) getResources().getDimension(R.dimen.gird_lines_width);
+            gradesColumn.addView(gradeText, gradeTextParams);
+            // задаем текст и цвет
+            if (gradesCount == 0) {
+                gradeText.setText("-");
+                gradeText.setTextColor(Color.BLACK);
+            } else {
+                // вычисляем среднюю оценку и округляем до сотых (к ближайшему)
+                gradesSum = ((int) ((gradesSum / gradesCount) * 100 + 0.5)) / 100F;
+                // текст оценки
+                gradeText.setText(new DecimalFormat("#0.00").format(gradesSum));
+                // выбраны ли цветные оценки
+                if (areTheGradesColored) {
+                    // выбираем цвет оценки
+                    //1
+                    if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 20) {
+                        gradeText.setTextColor(getResources().getColor(R.color.grade1));
+                    } else
+                        //2
+                        if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 41) {
+                            gradeText.setTextColor(getResources().getColor(R.color.grade2));
+                        } else
+                            //3
+                            if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 60) {
+                                gradeText.setTextColor(getResources().getColor(R.color.grade3));
+                            } else
+                                //4
+                                if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 80) {
+                                    gradeText.setTextColor(getResources().getColor(R.color.grade4));
+                                } else
+                                    //5
+                                    if ((int) (((gradesSum) / (float) maxAnswersCount) * 100F) <= 100) {
+                                        gradeText.setTextColor(getResources().getColor(R.color.grade5));
+                                    } else
+                                        // за пределами значений
+                                        gradeText.setTextColor(getResources().getColor(R.color.backgroundGray));
+                }
+            }
 
-            // ---- контейнер пропусков ----
 
-            LinearLayout absContainer = new LinearLayout(this);
-            absContainer.setOrientation(LinearLayout.VERTICAL);
-            absContainer.setBackgroundColor(Color.GRAY);
-            LinearLayout.LayoutParams absContainerParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
+            // выводим количество пропусков
+            TextView absText = new TextView(this);
+            absText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+            absText.setGravity(Gravity.CENTER);
+            absText.setBackgroundColor(getResources().getColor(R.color.backgroundWhite));
+            absText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            absText.setPadding(
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin)
             );
-            //добавляем вывод
-            absentsColumn.addView(
-                    absContainer,
-                    absContainerParams
-            );
-
-            // --- текст пропусков ---
-
-            TextView absentText = new TextView(this);
-            absentText.setTextColor(Color.BLACK);
-            absentText.setGravity(Gravity.CENTER);
-            absentText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-            absentText.setText(" " + nCount);
-            absentText.setSingleLine(true);
-            absentText.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
             LinearLayout.LayoutParams absTextParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
-            absTextParams.setMargins(0, 0, 5, 5);
-            absContainer.addView(absentText, absTextParams);
-
-            // закончили работать с курсором
-            grades.close();
+            absTextParams.bottomMargin = (int) getResources().getDimension(R.dimen.gird_lines_width);
+            absentsColumn.addView(absText, absTextParams);
+            // выводим количество пропусков
+            absText.setText("" + nCount);
         }
-
-
         db.close();
     }
 
-// ---------- обратная связь от диалогов ----------
 
-// ----- создание -----
-
-    @Override
-    public void createStatistic(String name, String startDate, String endDate) {
-        Log.i(TAG, "CreateStatisticProfile name:" + name + " start:" + startDate + " end:" + endDate);
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        long profileId = db.createStatistic(name, startDate, endDate);
-        db.close();
-        outSpinner(profileId);
-    }
-
-// ----- удаление -----
-
-    @Override
-    public void removeStatistic(ArrayList<Long> chosenProfilesIDArray) {
-        Log.i(TAG, "RemoveStatisticProfile chosenProfilesIDArray:" + Arrays.toString(chosenProfilesIDArray.toArray()));
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        for (long id : chosenProfilesIDArray) {
-            db.removeStatisticProfile(id);
-        }
-        outSpinner(-1);
-        db.close();
-    }
-
-// ----- изменение -----
-
-    @Override
-    public void editStatistic(long id, String name, String startDate, String endDate) {
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        db.setStatisticParameters(id, name, startDate, endDate);
-        outSpinner(id);
-        db.close();
-    }
-
-    // ----- просто обновление -----
-    @Override
-    public void onlyUpdate() {
-        outSpinner(-1);
-    }
+//    // создание
+//    @Override
+//    public void createStatistic(String name, String startDate, String endDate) {
+//        Log.i(TAG, "CreateStatisticProfile name:" + name + " start:" + startDate + " end:" + endDate);
+//        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+//        long profileId = db.createStatistic(name, startDate, endDate);
+//        db.close();
+//        //outSpinner(profileId);
+//    }
+//
+//    // удаление
+//    @Override
+//    public void removeStatistic(ArrayList<Long> chosenProfilesIDArray) {
+//        Log.i(TAG, "RemoveStatisticProfile chosenProfilesIDArray:" + Arrays.toString(chosenProfilesIDArray.toArray()));
+//        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+//        for (long id : chosenProfilesIDArray) {
+//            db.removeStatisticProfile(id);
+//        }
+//        //outSpinner(-1);
+//        db.close();
+//    }
+//
+//
+//    // изменение
+//    @Override
+//    public void editStatistic(long id, String name, String startDate, String endDate) {
+//        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+//        db.setStatisticParameters(id, name, startDate, endDate);
+//        //outSpinner(id);
+//        db.close();
+//    }
+//
+//    // просто обновление
+//    @Override
+//    public void onlyUpdate() {
+//        //outSpinner(-1);
+//    }
 
 
-// ---------- полезные методы ----------
-
-    // -- метод трансформации числа в текст с двумя позициями --
-    String getTwoSymbols(int number) {
-        if (number < 10 && number >= 0) {
-            return "0" + number;
-        } else {
-            return "" + number;
-        }
-    }
-
-    // -- проверка дат --
+    // проверка дат
     boolean isDateGood(EditText editStartDay, EditText editStartMonth, EditText editStartYear, EditText editEndDay, EditText editEndMonth, EditText editEndYear) {
         //переменная отвечающая за то подходят данные или нет
         boolean isGood = true;
@@ -844,16 +661,16 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 
         // размеры текста
         if (editStartYear.getText().toString().length() != 4) {
-            editStartYear.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
+            editStartYear.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
             isGood = false;
         } else {
             // диапазон чисел
             if (Integer.parseInt(editStartYear.getText().toString()) < 1000 || Integer.parseInt(editStartYear.getText().toString()) > 9999) {
-                editStartYear.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
+                editStartYear.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
                 isGood = false;
             } else {
                 //убираем красный
-                startDayEditText.setBackgroundResource(R.drawable.button_lite_gray);
+                startDayEditText.setBackgroundResource(R.drawable._underlined_black);
                 // год в календарь
                 startCalendar.set(GregorianCalendar.YEAR, Integer.parseInt(editStartYear.getText().toString()));
 
@@ -862,16 +679,16 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 
         // размеры текста
         if (editStartMonth.getText().toString().length() <= 0 || editStartMonth.getText().toString().length() > 2) {
-            editStartMonth.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
+            editStartMonth.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
             isGood = false;
         } else {
             // диапазон чисел
             if (Integer.parseInt(editStartMonth.getText().toString()) < 1 || Integer.parseInt(editStartMonth.getText().toString()) > 12) {
-                editStartMonth.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
+                editStartMonth.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
                 isGood = false;
             } else {
                 //убираем красный
-                editStartMonth.setBackgroundResource(R.drawable.button_lite_gray);
+                editStartMonth.setBackgroundResource(R.drawable._underlined_black);
                 // месяц в календарь
                 startCalendar.set(GregorianCalendar.MONTH, Integer.parseInt(editStartMonth.getText().toString()) - 1);
             }
@@ -880,16 +697,16 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         //if (isGood) {
         // размеры текста
         if (editStartDay.getText().toString().length() <= 0 || editStartDay.getText().toString().length() > 2) {
-            editStartDay.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
+            editStartDay.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
             isGood = false;
         } else {
             // диапазон чисел
             if (Integer.parseInt(editStartDay.getText().toString()) < 1 || Integer.parseInt(editStartDay.getText().toString()) > startCalendar.getActualMaximum(GregorianCalendar.DAY_OF_MONTH)) {
-                editStartDay.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
+                editStartDay.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
                 isGood = false;
             } else {
                 //убираем красный
-                editStartDay.setBackgroundResource(R.drawable.button_lite_gray);
+                editStartDay.setBackgroundResource(R.drawable._underlined_black);
                 // день в календарь
                 startCalendar.set(GregorianCalendar.DAY_OF_MONTH, Integer.parseInt(editStartDay.getText().toString()));
             }
@@ -905,16 +722,16 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 
         // размеры текста
         if (editEndYear.getText().toString().length() != 4) {
-            editEndYear.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
+            editEndYear.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
             isGood = false;
         } else {
             // диапазон чисел
             if (Integer.parseInt(editEndYear.getText().toString()) < 1000 || Integer.parseInt(editEndYear.getText().toString()) > 9999) {
-                editEndYear.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
+                editEndYear.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
                 isGood = false;
             } else {
                 //убираем красный
-                editEndYear.setBackgroundResource(R.drawable.button_lite_gray);
+                editEndYear.setBackgroundResource(R.drawable._underlined_black);
                 // год в календарь
                 endCalendar.set(GregorianCalendar.YEAR, Integer.parseInt(editEndYear.getText().toString()));
             }
@@ -922,16 +739,16 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 
         // размеры текста
         if (editEndMonth.getText().toString().length() <= 0 || editEndMonth.getText().toString().length() > 2) {
-            editEndMonth.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
+            editEndMonth.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
             isGood = false;
         } else {
             // диапазон чисел
             if (Integer.parseInt(editEndMonth.getText().toString()) < 1 || Integer.parseInt(editEndMonth.getText().toString()) > 12) {
-                editEndMonth.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
+                editEndMonth.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
                 isGood = false;
             } else {
                 //убираем красный
-                editEndMonth.setBackgroundResource(R.drawable.button_lite_gray);
+                editEndMonth.setBackgroundResource(R.drawable._underlined_black);
                 // месяц в календарь
                 endCalendar.set(GregorianCalendar.MONTH, Integer.parseInt(editEndMonth.getText().toString()) - 1);
             }
@@ -941,16 +758,16 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         //if (isGood) {
         // размеры текста
         if (editEndDay.getText().toString().length() <= 0 || editEndDay.getText().toString().length() > 2) {
-            editEndDay.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
+            editEndDay.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
             isGood = false;
         } else {
             // диапазон чисел
             if (Integer.parseInt(editEndDay.getText().toString()) < 1 || Integer.parseInt(editEndDay.getText().toString()) > endCalendar.getActualMaximum(GregorianCalendar.DAY_OF_MONTH)) {
-                editEndDay.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
+                editEndDay.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
                 isGood = false;
             } else {
                 //убираем красный
-                editEndDay.setBackgroundResource(R.drawable.button_lite_gray);
+                editEndDay.setBackgroundResource(R.drawable._underlined_black);
                 // день в календарь
                 endCalendar.set(GregorianCalendar.DAY_OF_MONTH, Integer.parseInt(editEndDay.getText().toString()));
             }
@@ -960,20 +777,20 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         if (isGood) {
             // проверка по времени
             if (startCalendar.getTime().getTime() > endCalendar.getTime().getTime()) {
-                editStartDay.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
-                editStartMonth.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
-                editStartYear.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
-                editEndDay.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
-                editEndMonth.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
-                editEndYear.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
+                editStartDay.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+                editStartMonth.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+                editStartYear.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+                editEndDay.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+                editEndMonth.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+                editEndYear.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
                 isGood = false;
             } else {
-                editStartDay.setBackgroundResource(R.drawable.button_lite_gray);
-                editStartMonth.setBackgroundResource(R.drawable.button_lite_gray);
-                editStartYear.setBackgroundResource(R.drawable.button_lite_gray);
-                editEndDay.setBackgroundResource(R.drawable.button_lite_gray);
-                editEndMonth.setBackgroundResource(R.drawable.button_lite_gray);
-                editEndYear.setBackgroundResource(R.drawable.button_lite_gray);
+                editStartDay.setBackgroundResource(R.drawable._underlined_black);
+                editStartMonth.setBackgroundResource(R.drawable._underlined_black);
+                editStartYear.setBackgroundResource(R.drawable._underlined_black);
+                editEndDay.setBackgroundResource(R.drawable._underlined_black);
+                editEndMonth.setBackgroundResource(R.drawable._underlined_black);
+                editEndYear.setBackgroundResource(R.drawable._underlined_black);
             }
         }
 
@@ -981,23 +798,89 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         return isGood;
     }
 
-    //---------форматы----------
 
-    private float pxFromDp(float px) {
-        return px * getResources().getDisplayMetrics().density;
+    // обратная связь от диаологов
+
+    @Override
+    public void setPeriodPosition(int position) {
+
     }
 
-// ----------- системные кнопки -------------
+    @Override
+    public void createPeriod(String name) {
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        long profileId = db.createStatistic(name, startDate, endDate);
+        db.close();
+        //outSpinner(profileId);
+    }
+
+    @Override
+    public void deletePeriods(boolean[] deleteList) {
+
+    }
+
+    @Override
+    public void renamePeriods(String[] newPeriodsNames) {
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home://кнопка назад в actionBar
-                onBackPressed();
-                return true;
+        if (item.getItemId() == android.R.id.home) {//кнопка назад в actionBar
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-            default:
-                return super.onOptionsItemSelected(item);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // чистим данные, чтобы при следующем заходе загрузить заново
+        periods = null;
+    }
+
+
+    // метод трансформации числа в текст с двумя позициями
+    String getTwoSymbols(int number) {
+        return new DecimalFormat("#00").format(number);
+    }
+
+
+    // класс хранящий в себе данные одного периода
+    class PeriodUnit {
+
+        // id периода
+        long periodId;
+        // имя преиода
+        String periodName;
+        // даты {day,month,year, day,month,year}
+        int[] dates;
+
+
+        public PeriodUnit(long periodId, String periodName, int[] dates) {
+            this.periodId = periodId;
+            this.periodName = periodName;
+            this.dates = dates;
+        }
+    }
+
+    // класс хранящий одного ученика
+    class LearnerUnit {
+
+        // id ученика
+        long learnerId;
+        // имя ученика
+        String learnerName;
+        // фамилия ученика
+        String learnerSurname;
+
+
+        public LearnerUnit(long learnerId, String learnerName, String learnerSurname) {
+            this.learnerId = learnerId;
+            this.learnerName = learnerName;
+            this.learnerSurname = learnerSurname;
         }
     }
 }

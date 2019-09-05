@@ -33,9 +33,28 @@
     <!-- высота кнопок -->
     <dimen name="my_buttons_height_size">48sp</dimen>
     <dimen name="spinner_height_size">48dp</dimen>
+    <dimen name="my_toolbar_text_container_height_size">35sp</dimen>
+
+    <dimen name="my_icon_size">40dp</dimen>
+    <dimen name="my_icon_small_size">30dp</dimen>
+
+    <dimen name="begin_lesson_start_screen_button_height_plus">50dp</dimen>
+    <dimen name="begin_lesson_start_screen_button_height">40dp</dimen>
+    <dimen name="begin_lesson_start_screen_button_height_half">20dp</dimen>
+
+
+    <dimen name="forth_margin">40dp</dimen>
+    <dimen name="double_margin">20dp</dimen>
+    <dimen name="half_more_margin">15dp</dimen>
+    <dimen name="simple_margin">10dp</dimen>
+    <dimen name="half_margin">5dp</dimen>
+
+    <dimen name="gird_lines_width">1dp</dimen>
+
 
     <!-- радиус скругления углов кнопок -->
-    <dimen name="my_buttons_rounding_radius_size">7dp</dimen>
+    <dimen name="my_buttons_rounding_radius_size">10dp</dimen>
+    <dimen name="my_buttons_rounding_radius_size_half">5dp</dimen>
 
     <!--размеры текста-->
     <dimen name="text_title_size">28sp</dimen>
@@ -52,10 +71,27 @@
     <dimen name="start_screen_text_margins">7dp</dimen>
     <dimen name="start_screen_image_margins">14dp</dimen>
 
-    <!--вывод учеников и оценок-->
+    <!-- активность списка кабинетов -->
+    <dimen name="cabinets_out_add_cabinet_image_width">149.05dp</dimen>
+    <dimen name="cabinets_out_add_cabinet_image_height">130dp</dimen>
+
+    <!-- активность списка классов -->
+    <dimen name="classes_out_add_class_image_width">218.26dp</dimen>
+    <dimen name="classes_out_add_class_image_height">130dp</dimen>
+
+    <!-- активность списка учеников -->
+    <dimen name="learners_and_grades_add_learner_image_width">111.53dp</dimen>
+    <dimen name="learners_and_grades_add_learner_image_height">130dp</dimen>
+
     <dimen name="learners_and_grades_out_name_margin">140dp</dimen>
 
     <!--редактор кабинета-->
     <dimen name="cabinet_redactor_button_add_size">50dp</dimen>
     <dimen name="cabinet_redactor_button_add_image_size">30dp</dimen>
+
+    <!-- активность настроек -->
+    <dimen name="settings_title_height">180dp</dimen>
+    <dimen name="settings_title_background_image_height">130dp</dimen>
+    <dimen name="settings_title_round_image_size">140dp</dimen>
+
 </resources>

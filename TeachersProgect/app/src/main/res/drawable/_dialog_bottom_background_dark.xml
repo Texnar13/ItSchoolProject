@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <corners android:bottomLeftRadius="10dp" android:bottomRightRadius="10dp" />
+            <corners android:bottomLeftRadius="@dimen/my_buttons_rounding_radius_size" android:bottomRightRadius="@dimen/my_buttons_rounding_radius_size" />
             <solid android:color="@color/backgroundDarkWhite" />
         </shape>
     </item>

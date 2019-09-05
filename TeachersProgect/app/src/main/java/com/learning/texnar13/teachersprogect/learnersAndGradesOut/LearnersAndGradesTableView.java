@@ -7,9 +7,9 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Typeface;
-import android.support.annotation.Nullable;
-import android.support.v4.content.res.ResourcesCompat;
+
+import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -94,7 +94,7 @@ public class LearnersAndGradesTableView extends View {
         drawTextPaint = new Paint();
         drawTextPaint.setTextSize(getResources().getDimension(R.dimen.text_subtitle_size));
         // семейство шрифтов
-        drawTextPaint.setTypeface(ResourcesCompat.getFont(getContext(), R.font.geometria_family));
+        drawTextPaint.setTypeface(ResourcesCompat.getFont(getContext(), R.font.geometria));
         // сглаживание
         drawTextPaint.setAntiAlias(true);
 
@@ -110,7 +110,7 @@ public class LearnersAndGradesTableView extends View {
         cellBorderSize = (int) pxFromDp(1);
         if (cellBorderSize < 1) cellBorderSize = 1;
         // свободное пространство в клетке вокруг текста
-        cellFreeSpaceMargin = (int) pxFromDp(15);
+        cellFreeSpaceMargin = (int) getResources().getDimension(R.dimen.half_more_margin);
 
         // минимальная ширина текста не пустой клетки
         cellTextMinimumWidth = (rect.left + rect.right) / 2 + cellFreeSpaceMargin * 2 + cellBorderSize;
@@ -644,7 +644,7 @@ public class LearnersAndGradesTableView extends View {
             }
 
             // выводим кнопку добавить ученика
-            String addButtonText = "*+Добавить ученика*";
+            String addButtonText = getResources().getString(R.string.learners_and_grades_out_activity_text_add_learner);
             drawTextPaint.setColor(Color.BLACK);
             drawTextPaint.getTextBounds(addButtonText, 0, addButtonText.length(), headTextRect);
             if (learnersAndGradesDataAndSizes.size() != 0) {

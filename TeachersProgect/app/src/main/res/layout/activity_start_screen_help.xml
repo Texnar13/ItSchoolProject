@@ -11,525 +11,525 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
 
-            <TextView
-                style="?android:starStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="@string/start_screen_activity_help_text_1"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                style="?android:starStyle"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/start_screen_activity_help_text_1"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_2"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_2"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_3"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_3"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_4"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_4"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:selectAllOnFocus="true"
-                android:text="@string/start_screen_activity_help_text_5"
-                android:textIsSelectable="true"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:selectAllOnFocus="true"-->
+<!--                android:text="@string/start_screen_activity_help_text_5"-->
+<!--                android:textIsSelectable="true"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                style="?android:listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_6"
-                android:textColor="#494949"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                style="?android:listSeparatorTextViewStyle"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_6"-->
+<!--                android:textColor="#494949"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_7"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_7"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                style="?android:listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_8"
-                android:textColor="#494949"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                style="?android:listSeparatorTextViewStyle"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_8"-->
+<!--                android:textColor="#494949"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_9"
-                android:textSize="@dimen/text_simple_size" />
-
-
-            <TextView
-                style="?android:listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_10"
-                android:textColor="#494949"
-                android:textSize="@dimen/text_simple_size" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_11"
-                android:textSize="@dimen/text_simple_size" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_12"
-                android:textSize="@dimen/text_simple_size" />
-
-            <TextView
-                style="?android:starStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_13"
-                android:textSize="@dimen/text_simple_size" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_14"
-                android:textSize="@dimen/text_simple_size" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_15"
-                android:textSize="@dimen/text_simple_size" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_16"
-                android:textSize="@dimen/text_simple_size" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                app:srcCompat="@drawable/start_screen_help_6" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_17"
-                android:textSize="@dimen/text_simple_size" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_18"
-                android:textSize="@dimen/text_simple_size" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:adjustViewBounds="true"
-                app:srcCompat="@drawable/start_screen_help_7" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_19"
-                android:textSize="@dimen/text_simple_size" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:adjustViewBounds="true"
-                app:srcCompat="@drawable/start_screen_help_9" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_20"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_9"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_21"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                style="?android:listSeparatorTextViewStyle"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_10"-->
+<!--                android:textColor="#494949"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_22"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_11"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_23"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_12"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_24"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                style="?android:starStyle"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_13"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_25"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="40dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="40dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_14"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                style="?android:listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_26"
-                android:textColor="#494949"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_15"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_27"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="40dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="40dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_16"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                app:srcCompat="@drawable/start_screen_help_13" />
+<!--            <ImageView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                app:srcCompat="@drawable/start_screen_help_6" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_28"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="40dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="40dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_17"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:adjustViewBounds="true"
-                app:srcCompat="@drawable/start_screen_help_14" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="40dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="40dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_18"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_29"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <ImageView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:adjustViewBounds="true"-->
+<!--                app:srcCompat="@drawable/start_screen_help_7" />-->
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:adjustViewBounds="true"
-                app:srcCompat="@drawable/start_screen_help_15" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="40dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="40dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_19"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                style="?android:listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_30"
-                android:textColor="#494949"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <ImageView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:adjustViewBounds="true"-->
+<!--                app:srcCompat="@drawable/start_screen_help_9" />-->
 
-            <TextView
-                style="?android:listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_31"
-                android:textColor="#494949"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="40dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="40dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_20"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_32"
-                android:textSize="@dimen/text_simple_size" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:adjustViewBounds="true"
-                app:srcCompat="@drawable/start_screen_help_16" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="40dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="40dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_21"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_33"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="40dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="40dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_22"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                style="?android:listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_34"
-                android:textColor="#494949"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="40dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="40dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_23"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/start_screen_activity_help_text_35"
-                android:textSize="@dimen/text_simple_size" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="40dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="40dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_24"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
 
-        </LinearLayout>
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="40dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="40dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_25"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
+
+<!--            <TextView-->
+<!--                style="?android:listSeparatorTextViewStyle"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_26"-->
+<!--                android:textColor="#494949"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_27"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                app:srcCompat="@drawable/start_screen_help_13" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_28"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:adjustViewBounds="true"-->
+<!--                app:srcCompat="@drawable/start_screen_help_14" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_29"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:adjustViewBounds="true"-->
+<!--                app:srcCompat="@drawable/start_screen_help_15" />-->
+
+<!--            <TextView-->
+<!--                style="?android:listSeparatorTextViewStyle"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_30"-->
+<!--                android:textColor="#494949"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
+
+<!--            <TextView-->
+<!--                style="?android:listSeparatorTextViewStyle"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_31"-->
+<!--                android:textColor="#494949"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_32"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:adjustViewBounds="true"-->
+<!--                app:srcCompat="@drawable/start_screen_help_16" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_33"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
+
+<!--            <TextView-->
+<!--                style="?android:listSeparatorTextViewStyle"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_34"-->
+<!--                android:textColor="#494949"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="@string/start_screen_activity_help_text_35"-->
+<!--                android:textSize="@dimen/text_simple_size" />-->
+
+<!--        </LinearLayout>-->
     </ScrollView>
 </LinearLayout>

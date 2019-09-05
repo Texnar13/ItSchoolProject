@@ -4,8 +4,10 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.res.ResourcesCompat;
+
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -27,6 +29,8 @@ public class GradeDialogFragment extends DialogFragment {
     public static final String ARGS_INT_GRADES_ARRAY = "grades";
     public static final String ARGS_INT_MAX_GRADE = "maxGrade";
     public static final String ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY = "chosenTypes";
+
+    public static final String ARGS_INT_CHOSEN_GRADE_POSITION = "gradePosition";
 
     // массив позиций выбранных оценок
     int[] grades;
@@ -78,6 +82,7 @@ public class GradeDialogFragment extends DialogFragment {
 
         // имя ученика
         TextView name = new TextView(getActivity());
+        name.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
         name.setSingleLine(true);
         name.setText(learnerName);
         name.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_title_size));
@@ -87,7 +92,7 @@ public class GradeDialogFragment extends DialogFragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 1
         );
-        nameParams.setMargins(pxFromDp(10), pxFromDp(10), pxFromDp(10), pxFromDp(5));
+        nameParams.setMargins(pxFromDp(10), 0, pxFromDp(10), 0);
         titleLayout.addView(name, nameParams);
 
 
@@ -101,28 +106,33 @@ public class GradeDialogFragment extends DialogFragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 1
         );
-        absContainerParams.setMargins(pxFromDp(10), pxFromDp(5), pxFromDp(10), pxFromDp(10));
+        absContainerParams.setMargins(pxFromDp(10), 0, pxFromDp(10), 0);
         titleLayout.addView(absContainer, absContainerParams);
 
         // чекбокс отсутствия
         final ImageView checkImage = new ImageView(getActivity());
         if (grades[0] == -2) {
-            checkImage.setBackgroundResource(R.drawable._checkbox_full);
+            checkImage.setBackgroundResource(R.drawable.__checkbox_full);
         } else
-            checkImage.setBackgroundResource(R.drawable._checkbox_empty);
+            checkImage.setBackgroundResource(R.drawable.__checkbox_empty);
         LinearLayout.LayoutParams checkImageParams = new LinearLayout.LayoutParams(pxFromDp(20), pxFromDp(20));
+        checkImageParams.topMargin = pxFromDp(10);
+        checkImageParams.bottomMargin = pxFromDp(10);
         checkImageParams.rightMargin = pxFromDp(10);
         absContainer.addView(checkImage, checkImageParams);
 
         // текст отсутствия
         TextView absText = new TextView(getActivity());
-        absText.setText("*Отсутствует на уроке*");
+        absText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        absText.setText(R.string.lesson_activity_learner_absent_text);
         absText.setTextColor(Color.BLACK);
         absText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         LinearLayout.LayoutParams absTextParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
+        absTextParams.topMargin = pxFromDp(10);
+        absTextParams.bottomMargin = pxFromDp(10);
         absContainer.addView(absText, absTextParams);
 
         // нажатие на контейнер отсутствия
@@ -131,7 +141,7 @@ public class GradeDialogFragment extends DialogFragment {
             public void onClick(View v) {
                 // если чекбокс был активен, дизактивируем
                 if (grades[0] == -2) {
-                    checkImage.setBackgroundResource(R.drawable._checkbox_empty);
+                    checkImage.setBackgroundResource(R.drawable.__checkbox_empty);
                     for (int gradeI = 0; gradeI < grades.length; gradeI++) {
                         // ставим позиции в массивы
                         grades[gradeI] = 0;
@@ -154,7 +164,7 @@ public class GradeDialogFragment extends DialogFragment {
                     }
 
                 } else {// иначе активируем его
-                    checkImage.setBackgroundResource(R.drawable._checkbox_full);
+                    checkImage.setBackgroundResource(R.drawable.__checkbox_full);
                     for (int gradeI = 0; gradeI < grades.length; gradeI++) {
                         // ставим Н вместо оценок
                         grades[gradeI] = -2;
@@ -181,6 +191,10 @@ public class GradeDialogFragment extends DialogFragment {
         // ---- контейнер для тела диалога ----
         LinearLayout bodyLayout = view.findViewById(R.id.dialog_fragment_layout_edit_grade_bottom);
 
+        // на какой оценке сейчас стоит выбор
+        int chosenGradePosition = getArguments().getInt(ARGS_INT_CHOSEN_GRADE_POSITION);
+
+
         // контейнер со спиннерами
         LinearLayout spinnersContainer = new LinearLayout(getActivity());
         spinnersContainer.setOrientation(LinearLayout.VERTICAL);
@@ -198,6 +212,10 @@ public class GradeDialogFragment extends DialogFragment {
         for (int gradeI = 0; gradeI < grades.length; gradeI++) {
             // создаем горизонтальный контейнер под спиннеры одной оценки
             LinearLayout gradeContainer = new LinearLayout(getActivity());
+            // закрашиваем фон выбранной оценки
+            if(chosenGradePosition == gradeI){
+                gradeContainer.setBackgroundColor(getResources().getColor(R.color.backgroundLiteGray));
+            }
             gradeContainer.setOrientation(LinearLayout.HORIZONTAL);
             LinearLayout.LayoutParams gradeContainerParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -300,7 +318,8 @@ public class GradeDialogFragment extends DialogFragment {
         spinnersContainer.addView(saveButtonContainer, saveButtonContainerParams);
 
         TextView saveText = new TextView(getActivity());
-        saveText.setText("*Сохранить*");
+        saveText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        saveText.setText(R.string.lesson_list_activity_menu_text_save);
         saveText.setTextColor(getResources().getColor(R.color.backgroundWhite));
         saveText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         LinearLayout.LayoutParams saveTextParams = new LinearLayout.LayoutParams(

@@ -9,7 +9,9 @@ import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
@@ -20,6 +22,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 
 import java.util.ArrayList;
@@ -44,18 +51,30 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         gestureOverlayView.setGestureColor(Color.TRANSPARENT);//делаем невидимым
         gestureOverlayView.setUncertainGestureColor(Color.TRANSPARENT);
 
-//        setTitle("КАЛЕНДАРЬ");
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//вертикальная ориентация
+        // вертикальная ориентация
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
         gestureLib = GestureLibraries.fromRawResource(this, R.raw.gestures);
         if (!gestureLib.load()) {
             finish();
             return;
         }
-        setContentView(gestureOverlayView);
-        //setContentView(R.layout.activity_schedule_month);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
+        setContentView(gestureOverlayView);
+
+
+        // находим рекламмный баннер
+        AdView sheduleMonthAdView = findViewById(R.id.shedule_month_ad_banner);
+        // создаем запрос для рекламмы
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
+                .build();
+        // загружаем рекламму запросом
+        sheduleMonthAdView.loadAd(adRequest);
+
+        //кнопка назад в actionBar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_white));
 
         linearLayout = (LinearLayout) findViewById(R.id.schedule_month_table);
 
@@ -201,8 +220,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         LinearLayout weekLinearRows[] = new LinearLayout[7];
         for (int i = 0; i < weekLinearRows.length; i++) {
             weekLinearRows[i] = new LinearLayout(this);
-            //weekTableRows[i].setWeight(1);
-            weekLinearRows[i].setBackgroundColor(getResources().getColor(R.color.colorBackGround));
+            //weekLinearRows[i].setBackgroundColor(getResources().getColor(R.color.colorBackGround));
             weekLinearRows[i].setGravity(LinearLayout.VERTICAL);
             weekLinearRows[i].setWeightSum(7f);
             if (i == 0) {
@@ -225,12 +243,13 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         String week[] = getResources().getStringArray(R.array.schedule_month_activity_week_days_short_array);
         for (int i = 0; i < 7; i++) {
             TextView day = new TextView(this);
+            day.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
             day.setText(week[i]);
             day.setAllCaps(true);
             day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-            day.setTextColor(Color.BLACK);
+            day.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
             day.setGravity(Gravity.CENTER);
-            day.setBackgroundColor(getResources().getColor(R.color.colorBackGround));//Color.LTGRAY"#e4ea7e""#fbffb9""#fdffdf"
+            //day.setBackgroundColor(getResources().getColor(R.color.colorBackGround));//Color.LTGRAY"#e4ea7e""#fbffb9""#fdffdf"
             weekLinearRows[0].addView(
                     day,
                     new LinearLayout.LayoutParams(
@@ -250,6 +269,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
                 //---текст---//на заднюю часть текста можно поставить drawable
                 TextView day = new TextView(this);
+                day.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
                 day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                 day.setTextColor(Color.BLACK);
                 day.setGravity(Gravity.CENTER);
@@ -265,14 +285,14 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 //---контейнер в контейнере---ему можно поставить фон и еще им можно отредактировать размер границы клеток
                 LinearLayout textContainer = new LinearLayout(this);
                 textContainer.setGravity(Gravity.CENTER);
-                textContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
+                //textContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
                 if ((weekDay == 5 || weekDay == 6)
                         // если не шестая неделя или (в последней неделе есть дни не дополнившие неделю до конца и полных недель пять)
                         && (weekOfMonth != 6 || (((dayOfWeek + countOfDays) % 7 > 0) && (dayOfWeek + countOfDays) / 7 == 5))// если заполняемых недель шесть то последние две клетки не выводим
                         ) {
-                    textContainer.setBackgroundResource(R.drawable.button_gray);
+                    //textContainer.setBackgroundResource(R.drawable.button_gray);
                 } else {
-                    textContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
+                    //textContainer.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
                 }
 
                 LinearLayout.LayoutParams textContainerParams = new LinearLayout.LayoutParams(
@@ -331,8 +351,9 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                         );
                         db.close();
                         if (lessonsAttitudesId.size() != 0) {
-                            day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_title_size));
-                            day.setTextColor(getResources().getColor(R.color.colorPrimary));//"#469500"
+                            day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                            day.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                            day.setTextColor(Color.BLACK);//"#469500"
                         }
                     }
 //----------выделяем текущую дату------------
@@ -349,8 +370,9 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                         day.setGravity(Gravity.CENTER);
                         day.setLayoutParams(tempP);
 
-                        //добавляем красный круг
-                        day.setBackgroundResource(R.drawable.calendar_current_day_circle);
+                        // добавляем круг текущий
+                        day.setTextColor(getResources().getColor(R.color.backgroundWhite));
+                        day.setBackgroundResource(R.drawable._button_round_background_orange);
                     }
                     monthDay++;
                 }

@@ -5,13 +5,15 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.res.ResourcesCompat;
+
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -19,45 +21,6 @@ import android.widget.TextView;
 import com.learning.texnar13.teachersprogect.R;
 
 public class EditLocaleDialogFragment extends DialogFragment {
-    /*
-    *
-
-    private SharedPreferences preferences;
-    private Locale locale;
-    private String lang;
-
-    @Override
-    public void onCreate() {
-        //получаем предыдущие данные
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        //извлекаем язык
-        lang = preferences.getString("lang", "default");//здесь просто получение строки из диалога ..default..en..ru..
-        //по умолчанию?
-        if (lang.equals("default")) {lang=getResources().getConfiguration().locale.getCountry();}
-        //новая локализация
-        locale = new Locale(lang);
-        Locale.setDefault(locale);
-        //новые настройки
-        Configuration config = new Configuration();
-        config.locale = locale;
-        //сохраняем новые настройки
-        getBaseContext().getResources().updateConfiguration(config, null);
-
-        super.onCreate();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
-        super.onConfigurationChanged(newConfig);
-        locale = new Locale(lang);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config, null);
-    }
-
-    */
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -67,7 +30,6 @@ public class EditLocaleDialogFragment extends DialogFragment {
 
         //layout диалога
         LinearLayout linearLayout = new LinearLayout(getActivity());
-        linearLayout.setBackgroundResource(R.color.colorBackGround);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
@@ -78,21 +40,60 @@ public class EditLocaleDialogFragment extends DialogFragment {
         linearLayout.setLayoutParams(linearLayoutParams);
         builder.setView(linearLayout);
 
-//--заголовок--
-        TextView title = new TextView(getActivity());
-        title.setText(R.string.settings_activity_dialog_edit_locale_title);
-        title.setTextColor(Color.BLACK);
-        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-        title.setAllCaps(true);
-        title.setGravity(Gravity.CENTER);
 
-        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+        // layout заголовка
+        LinearLayout headLayout = new LinearLayout(getActivity());
+        headLayout.setOrientation(LinearLayout.HORIZONTAL);
+        headLayout.setBackgroundResource(R.drawable._dialog_head_background_dark);
+        headLayout.setGravity(Gravity.CENTER_VERTICAL);
+        LinearLayout.LayoutParams headLayoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        titleParams.setMargins((int) pxFromDp(15), (int) pxFromDp(15), (int) pxFromDp(15), 0);
+        linearLayout.addView(headLayout, headLayoutParams);
 
-        linearLayout.addView(title, titleParams);
+        // кнопка закрыть
+        LinearLayout closeImageView = new LinearLayout(getActivity());
+        closeImageView.setBackgroundResource(R.drawable.__button_close);
+        LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(
+                (int) getResources().getDimension(R.dimen.my_icon_size),
+                (int) getResources().getDimension(R.dimen.my_icon_size));
+        closeImageViewParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin));
+        headLayout.addView(closeImageView, closeImageViewParams);
+        // при нажатии на кнопку закрыть
+        closeImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // закрываем диалог
+                dismiss();
+            }
+        });
+
+        // текст заголовка
+        TextView title = new TextView(getActivity());
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        title.setText(R.string.settings_activity_dialog_edit_locale_title);
+        title.setGravity(Gravity.CENTER_VERTICAL);
+        title.setTextColor(Color.WHITE);
+        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        titleParams.setMargins(
+                0,
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin));
+        Log.e("TeachersApp", "outMainMenu: " + closeImageView.getId());
+        titleParams.gravity = Gravity.CENTER_VERTICAL;
+        headLayout.addView(title, titleParams);
+
 
 //--список языков--
         //--------ставим диалогу список в виде view--------
@@ -112,37 +113,38 @@ public class EditLocaleDialogFragment extends DialogFragment {
 
         //контейнеры для прокрутки
         ScrollView scrollView = new ScrollView(getActivity());
+        scrollView.setBackgroundResource(R.drawable._dialog_bottom_background_white);
         linearLayout.addView(scrollView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1F));
+
         LinearLayout linear = new LinearLayout(getActivity());
         linear.setOrientation(LinearLayout.VERTICAL);
         scrollView.addView(linear);
 
-
+        // проходимся по списку
         for (int i = 0; i < localeСodes.length; i++) {
-//--------пункт списка--------
             //контейнер
             LinearLayout item = new LinearLayout(getActivity());
-            if (lastLocaleNumber == i) {
-                item.setBackgroundColor(getResources().getColor(R.color.colorBackGroundDark));
-            }
+
             item.setOrientation(LinearLayout.HORIZONTAL);
-            item.setGravity(Gravity.CENTER);
-            LinearLayout.LayoutParams itemParams =
-                    new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            (int) (pxFromDp(40) * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))
-                    );
+            item.setGravity(Gravity.CENTER_VERTICAL);
+            LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
             itemParams.setMargins(
-                    (int) (pxFromDp(20 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
-                    (int) (pxFromDp(10 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
-                    (int) (pxFromDp(20 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
-                    (int) (pxFromDp(10 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier)))
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin)
             );
             linear.addView(item, itemParams);
             //текст в нем
             TextView text = new TextView(getActivity());
+            text.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             text.setText(localeNames[i]);
-            text.setTextColor(Color.BLACK);
+            if (lastLocaleNumber == i) {
+                text.setTextColor(getResources().getColor(R.color.baseBlue));
+            } else text.setTextColor(Color.BLACK);
             text.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             item.addView(text);
 
@@ -157,36 +159,11 @@ public class EditLocaleDialogFragment extends DialogFragment {
             });
         }
 
-//--кнопка отмены--
-        //контейнер для них
-        LinearLayout container = new LinearLayout(getActivity());
-        container.setOrientation(LinearLayout.HORIZONTAL);
-        container.setGravity(Gravity.CENTER);
 
-        //кнопка отмены
-        Button neutralButton = new Button(getActivity());
-        neutralButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
-        neutralButton.setText(R.string.lesson_redactor_activity_dialog_button_cancel);
-        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-        neutralButton.setTextColor(Color.WHITE);
-        LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
-        );
-        neutralButtonParams.weight = 1;
-        neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
-        //кнопки в контейнер
-        container.addView(neutralButton, neutralButtonParams);
-        //контейнер в диалог
-        linearLayout.addView(container);
-        //отмена
-        neutralButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
-        return builder.create();
+        // наконец создаем диалог и возвращаем его
+        Dialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        return dialog;
     }
 
     @Override
@@ -196,8 +173,8 @@ public class EditLocaleDialogFragment extends DialogFragment {
 
     //---------форматы----------
 
-    private float pxFromDp(float px) {
-        return px * getActivity().getResources().getDisplayMetrics().density;
+    private int pxFromDp(float px) {
+        return (int) (px * getActivity().getResources().getDisplayMetrics().density);
     }
 }
 

@@ -22,6 +22,7 @@
         <item>НОЯБРЬ</item>
         <item>ДЕКАБРЬ</item>
     </string-array>
+
     <string-array name="months_names_low_case">
         <item>января</item>        
         <item>Февраля</item>
@@ -35,6 +36,16 @@
         <item>октября</item>        
         <item>ноября</item>        
         <item>декабря</item>
+    </string-array>
+
+    <string-array name="week_days_simple">        
+        <item>Суббота</item>        
+        <item>Воскресенье</item> 
+        <item>Понедельник</item>        
+        <item>Вторник</item>  
+        <item>Среда</item>        
+        <item>Четверг</item>       
+        <item>Пятница</item>  
     </string-array>
 
     <!-- активность календаря на день-->

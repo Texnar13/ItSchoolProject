@@ -11,11 +11,14 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
 
@@ -29,7 +32,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
 
         // layout диалога
         LinearLayout linearLayout = new LinearLayout(getActivity());
-        linearLayout.setBackgroundResource(R.color.colorBackGround);
+        linearLayout.setBackgroundResource(R.drawable._dialog_full_background_white);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
@@ -52,7 +55,12 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        titleParams.setMargins((int) pxFromDp(15), (int) pxFromDp(15), (int) pxFromDp(15), 0);
+        titleParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                0
+        );
 
         linearLayout.addView(title, titleParams);
 
@@ -65,10 +73,20 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         final TextView numberText = new TextView(getActivity());
         numberText.setGravity(Gravity.CENTER);
         numberText.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
-        numberText.setText(getResources().getString(R.string.settings_activity_dialog_delete_text_confirm_delete)+" " + n);
+        numberText.setText(getResources().getString(R.string.settings_activity_dialog_delete_text_confirm_delete) + " " + n);
         numberText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        LinearLayout.LayoutParams numberTextParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        numberTextParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                0,
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                0
+        );
         //добавляем текстовое поле
-        linearLayout.addView(numberText);
+        linearLayout.addView(numberText, numberTextParams);
 
         //текстовое поле для числа
         final EditText editNumber = new EditText(getActivity());
@@ -78,8 +96,18 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         editNumber.setHint(getResources().getString(R.string.settings_activity_dialog_hint_number));
         editNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
         editNumber.setHintTextColor(Color.GRAY);
+        LinearLayout.LayoutParams editNumberParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        editNumberParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                0,
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                0
+        );
         //добавляем текстовое поле
-        linearLayout.addView(editNumber);
+        linearLayout.addView(editNumber, editNumberParams);
 
 //----кнопки согласия/отмены----
         //контейнер для них
@@ -89,54 +117,96 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         //контейнер в диалог
         linearLayout.addView(container);
 //--кнопка отмены--
-        Button neutralButton = new Button(getActivity());
-        neutralButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
-        neutralButton.setText(R.string.settings_activity_dialog_button_cancel);
-        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-        neutralButton.setTextColor(Color.WHITE);
-        LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+        // контейнер кнопки
+        LinearLayout cancelButtonContainer = new LinearLayout(getActivity());
+        cancelButtonContainer.setGravity(Gravity.CENTER);
+        cancelButtonContainer.setBackgroundResource(R.drawable.__background_round_simple_full_dark);
+        LinearLayout.LayoutParams cancelButtonContainerParams = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1
         );
-        neutralButtonParams.weight = 1;
-        neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
-        //кнопку в контейнер
-        container.addView(neutralButton, neutralButtonParams);
+        cancelButtonContainerParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin)
+        );
+        cancelButtonContainerParams.gravity = Gravity.CENTER;
+        container.addView(cancelButtonContainer, cancelButtonContainerParams);
+
+        TextView cancelText = new TextView(getActivity());
+        cancelText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        cancelText.setText(R.string.settings_activity_dialog_button_cancel);
+        cancelText.setTextColor(getResources().getColor(R.color.backgroundWhite));
+        cancelText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        LinearLayout.LayoutParams cancelTextParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        cancelTextParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin)
+        );
+        cancelButtonContainer.addView(cancelText, cancelTextParams);
         //при нажатии
-        neutralButton.setOnClickListener(new View.OnClickListener() {
+        cancelButtonContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
             }
         });
 
-//--кнопка удаления--
-        Button positiveButton = new Button(getActivity());
-        positiveButton.setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
-        positiveButton.setText(R.string.settings_activity_dialog_button_remove);
-        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-        positiveButton.setTextColor(Color.WHITE);
-        LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+        // кнопка удалить
+        // контейнер кнопки
+        LinearLayout removeButtonContainer = new LinearLayout(getActivity());
+        removeButtonContainer.setGravity(Gravity.CENTER);
+        removeButtonContainer.setBackgroundResource(R.drawable.__background_round_simple_full_pink);
+        LinearLayout.LayoutParams removeButtonContainerParams = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1
         );
-        positiveButtonParams.weight = 1;
-        positiveButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
-        //кнопку в контейнер
-        container.addView(positiveButton, positiveButtonParams);
+        removeButtonContainerParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin)
+        );
+        removeButtonContainerParams.gravity = Gravity.CENTER;
+        container.addView(removeButtonContainer, removeButtonContainerParams);
+
+        TextView removeText = new TextView(getActivity());
+        removeText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        removeText.setText(R.string.settings_activity_dialog_button_remove);
+        removeText.setTextColor(getResources().getColor(R.color.backgroundWhite));
+        removeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        LinearLayout.LayoutParams removeTextParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        removeTextParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin)
+        );
+        removeButtonContainer.addView(removeText, removeTextParams);
         //при нажатии
-        positiveButton.setOnClickListener(new View.OnClickListener() {
+        removeButtonContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     //если числа совпали вызываем в активности метод по удалению
-                    if(editNumber.getText().toString().equals(Integer.toString(n))) {
+                    if (editNumber.getText().toString().equals(Integer.toString(n))) {
                         ((com.learning.texnar13.teachersprogect.settings.SettingsRemoveInterface)
                                 getActivity()).settingsRemove();
-                    }else{
+                    } else {
                         //пишем пользователю о его ошибке
                         Toast toast = Toast.makeText(getActivity().getApplicationContext()
-                                ,getResources().getString(R.string.settings_activity_toast_data_delete_falture),Toast.LENGTH_SHORT);
+                                , getResources().getString(R.string.settings_activity_toast_data_delete_falture), Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 } catch (java.lang.ClassCastException e) {
@@ -150,7 +220,12 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
-        return builder.create();
+
+
+        // наконец создаем диалог и возвращаем его
+        Dialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        return dialog;
     }
 
     @Override

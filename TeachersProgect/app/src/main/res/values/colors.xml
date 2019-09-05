@@ -43,7 +43,12 @@
     <color name="backgroundWhite">#ffffff</color>
     <color name="backgroundDarkWhite">#ededed</color>
     <color name="backgroundLiteGray">#d1d1d1</color>
+    <color name="backgroundMediumGray">#BABABA</color>
     <color name="backgroundGray">#a0a0a0</color>
+    <color name="backgroundDarkGray">#5D5D5D</color>
+
+
+    <color name="dopDarkBlue">#1D7CBC</color>
 
     <!-- цвета оценок -->
     <color name="grade1">#ea5757</color>
@@ -52,6 +57,8 @@
     <color name="grade4">#ceff00</color>
     <color name="grade5">#8bc837</color>
     <color name="gradeMix">#8ab5f9</color>
+
+
 
 
 </resources>

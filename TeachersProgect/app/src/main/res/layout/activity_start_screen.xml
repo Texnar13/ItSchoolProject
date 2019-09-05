@@ -15,7 +15,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -23,7 +23,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="@dimen/begin_lesson_start_screen_button_height_half"
                 android:background="@drawable/_background_bottom_round_blue"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
@@ -35,12 +35,13 @@
 
             <LinearLayout
                 android:id="@+id/start_screen_layout_now"
+                android:gravity="center_vertical"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="50dp"
-                android:background="@drawable/_dialog_full_background_white"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/simple_margin"
+                android:layout_marginRight="@dimen/simple_margin"
+                android:layout_marginBottom="@dimen/begin_lesson_start_screen_button_height_plus"
+                android:background="@drawable/_background_start_screen_current"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -49,7 +50,7 @@
             <LinearLayout
                 android:id="@+id/start_screen_button_start_lesson_background"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/begin_lesson_start_screen_button_height"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/_button_round_background_green"
                 android:gravity="center"
@@ -58,12 +59,12 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
-
+                    android:id="@+id/start_screen_button_start_lesson_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="*Начать урок?*"
+                    android:layout_marginLeft="@dimen/simple_margin"
+                    android:layout_marginRight="@dimen/simple_margin"
+                    android:text="@string/start_screen_activity_title_current_start_lesson"
                     android:textColor="@color/backgroundWhite"
                     android:textSize="@dimen/text_subtitle_size" />
             </LinearLayout>
@@ -74,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="*Понедельник*"
-                android:textColor="#000000"
+                android:textColor="@color/dopDarkBlue"
                 android:textSize="@dimen/text_subtitle_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -82,9 +83,9 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:gravity="bottom"
-                android:text="*СЕЙЧАС:*"
+                android:text="@string/start_screen_activity_title_now"
                 android:textColor="@color/backgroundWhite"
                 android:textSize="@dimen/text_simple_size"
                 app:layout_constraintBottom_toTopOf="@+id/start_screen_layout_now"
@@ -97,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/simple_margin"
                 android:text="*10:35*"
                 android:textColor="#000000"
                 android:textSize="@dimen/text_title_size"
@@ -117,9 +118,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/start_screen_text_time" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
+            android:layout_marginBottom="@dimen/simple_margin"
+            android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -128,17 +131,17 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="@dimen/simple_margin"
+                android:layout_marginTop="@dimen/simple_margin"
+                android:layout_marginRight="@dimen/simple_margin"
+                android:layout_marginBottom="@dimen/simple_margin"
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:weightSum="2"
                 tools:ignore="RtlHardcoded">
 
                 <RelativeLayout
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="@dimen/double_margin"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -148,7 +151,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/_button_background_start_screen_1_calendar" />
+                        app:srcCompat="@drawable/__background_start_screen_1_calendar" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -167,7 +170,7 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="*Расписание*"
+                            android:text="@string/start_screen_activity_title_my_schedule"
                             android:textColor="#000000"
                             android:textSize="@dimen/text_subtitle_size" />
                     </LinearLayout>
@@ -183,7 +186,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/_button_background_start_screen_3_cabinets" />
+                        app:srcCompat="@drawable/__background_start_screen_3_cabinets" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -202,7 +205,7 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="*Кабинеты*"
+                            android:text="@string/start_screen_activity_title_my_cabinets"
                             android:textColor="#000000"
                             android:textSize="@dimen/text_subtitle_size" />
                     </LinearLayout>
@@ -213,17 +216,17 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="@dimen/simple_margin"
+                android:layout_marginTop="@dimen/simple_margin"
+                android:layout_marginRight="@dimen/simple_margin"
+                android:layout_marginBottom="@dimen/simple_margin"
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:weightSum="2"
                 tools:ignore="RtlHardcoded">
 
                 <RelativeLayout
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="@dimen/double_margin"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -233,7 +236,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/_button_background_start_screen_2_girl" />
+                        app:srcCompat="@drawable/__background_start_screen_2_girl" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -251,7 +254,7 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="*Ученики*"
+                            android:text="@string/start_screen_activity_title_my_learners"
                             android:textColor="#000000"
                             android:textSize="@dimen/text_subtitle_size" />
                     </LinearLayout>
@@ -267,7 +270,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/_button_background_start_screen_4_settings" />
+                        app:srcCompat="@drawable/__background_start_screen_4_settings" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -285,7 +288,7 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="*Настройки*"
+                            android:text="@string/start_screen_activity_title_settings"
                             android:textColor="#000000"
                             android:textSize="@dimen/text_subtitle_size" />
                     </LinearLayout>

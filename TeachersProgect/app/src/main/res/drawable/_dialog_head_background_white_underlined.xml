@@ -2,14 +2,14 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <layer-list>
-            <item android:top="10dp">
+            <item android:top="@dimen/my_buttons_rounding_radius_size">
                 <shape>
                     <solid android:color="@color/backgroundLiteGray" />
                 </shape>
             </item>
             <item android:bottom="3px">
                 <shape android:shape="rectangle">
-                    <corners android:topLeftRadius="10dp" android:topRightRadius="10dp" />
+                    <corners android:topLeftRadius="@dimen/my_buttons_rounding_radius_size" android:topRightRadius="@dimen/my_buttons_rounding_radius_size" />
                     <solid android:color="@color/backgroundWhite" />
                 </shape>
             </item>

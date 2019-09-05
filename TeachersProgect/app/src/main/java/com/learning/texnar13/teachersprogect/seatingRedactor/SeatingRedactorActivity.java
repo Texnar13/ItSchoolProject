@@ -6,7 +6,9 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -657,10 +659,6 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     // сохраняем ссылку на textView чтобы потом при зуме  менять его
                     this.learnersTextViews[placeI] = learnerText;
 
-                    // место LinearLayout
-                    // -- картинка ImageView
-                    // -- текст TextView
-
 
 //                    //создание места
 //                    final LinearLayout tempPlaceLayout = new LinearLayout(this);
@@ -850,16 +848,20 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
         void outEmpty() {
             for (int placesI = 0; placesI < viewPlaceOut.length; placesI++) {
 
+                Log.e(TAG, "outEmpty: isPlus" + isPlus);
                 // если на месте нет ученика и можно выводить плюсы
-                if (learnersIndexes[placesI] == -1 && isPlus) {
-                    viewPlaceOut[placesI].removeAllViews();
+                if (learnersIndexes[placesI] == -1)
+                    if (isPlus) {
+                        viewPlaceOut[placesI].removeAllViews();
 
-                    // выводим картинку +
-                    ImageView lernerImage = new ImageView(getApplicationContext());
-                    LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                    lernerImage.setImageResource(R.drawable._button_circle_plus);
-                    viewPlaceOut[placesI].addView(lernerImage, lernerImageParams);
-                }
+                        // выводим картинку +
+                        ImageView lernerImage = new ImageView(getApplicationContext());
+                        LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                        lernerImage.setImageResource(R.drawable.__button_circle_plus);
+                        viewPlaceOut[placesI].addView(lernerImage, lernerImageParams);
+                    } else {
+                        viewPlaceOut[placesI].removeAllViews();
+                    }
             }
         }
 
@@ -915,350 +917,3 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
         return super.onOptionsItemSelected(item);
     }
 }
-
-
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//
-//        //----выводим всё----
-//        drawDesks(db);
-//    }
-//
-//
-//    //------------вывести парты------------
-//    private void drawDesks(final DataBaseOpenHelper db) {
-//        RelativeLayout room = findViewById(R.id.seating_redactor_room);
-//        room.removeAllViews();
-//
-//        for (DeskUnit deskUnit : desksList) {//пробегаемся по выгруженным партам
-//
-//            //создание парты
-//            RelativeLayout tempRelativeLayoutDesk = new RelativeLayout(this);
-//            tempRelativeLayoutDesk.setBackgroundColor(Color.LTGRAY);
-//            tempRelativeLayoutDesk.setBackgroundResource(R.drawable.start_screen_3_3_green_spot);
-//            //настраиваем параметры под конкретную парту
-//            tempRelativeLayoutDeskParams = new RelativeLayout.LayoutParams(
-//                    (int) pxFromDp(1000 * deskUnit.countOfPlaces * multiplier),
-//                    (int) pxFromDp(1000 * multiplier));//размеры проставляются далее индивидуально
-//            tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-//            tempRelativeLayoutDeskParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//            tempRelativeLayoutDeskParams.leftMargin =
-//                    (int) pxFromDp(deskUnit.x * 25 * multiplier);
-//            tempRelativeLayoutDeskParams.topMargin =
-//                    (int) pxFromDp(deskUnit.y * 25 * multiplier);
-//            Log.i("TeachersApp", "SeatingRedactorActivity - draw - view desk:" + deskUnit.id);
-//
-//            for (final PlaceUnit placeUnit : deskUnit.placesList) {//проходим по местам на парте
-//                //создание места и ученика
-//
-//                //получаем id ученика
-//                long learnerId = -1;
-//                int attitudeIndex = -1;
-//                for (int i = 0; i < attitudesList.size(); i++) {
-//                    if (attitudesList.get(i).placeId == placeUnit.id) {
-//                        learnerId = attitudesList.get(i).learnerId;
-//                        attitudeIndex = i;
-//                        break;
-//                    }
-//                }
-//                //создание места
-//                final LinearLayout tempPlaceLayout = new LinearLayout(this);
-//                tempPlaceLayout.setOrientation(LinearLayout.VERTICAL);
-//                //tempPlaceLayout.setBackgroundColor(Color.parseColor("#e4ea7e"));
-//                //настраиваем параметры под конкретное место
-//                tempRelativeLayoutPlaceParams = new RelativeLayout.LayoutParams(
-//                        (int) pxFromDp((1000 - 50) * multiplier),
-//                        (int) pxFromDp((1000 - 50) * multiplier));
-//                tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-//                tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//                tempRelativeLayoutPlaceParams.leftMargin = (int) pxFromDp((25 + (1000 * (placeUnit.ordinalNumber - 1))) * multiplier);
-//                tempRelativeLayoutPlaceParams.topMargin = (int) pxFromDp(25 * multiplier);
-//                Log.i("TeachersApp", "SeatingRedactorActivity - draw view place:" + placeUnit.id);
-//                //сажаем ученика на место
-//                if (learnerId != -1) {//если id ученика не равно -1 то выводим ученика иначе кнопку добавить ученика
-//                    //final переменная
-//                    final long finalLearnerId = learnerId;
-//                    final int finalAttitudeIndex = attitudeIndex;
-//                    //создание картинки ученика
-//                    final ImageView tempLernerImage = new ImageView(this);
-//                    final LinearLayout.LayoutParams tempLernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F);
-//                    tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);//по умолчанию серая картинка
-//
-//                    //создание текста ученика
-//                    final TextView tempLearnerText = new TextView(this);
-//                    tempLearnerText.setTextSize(200 * multiplier);
-//                    final LinearLayout.LayoutParams tempLearnerTextParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 3F);
-//                    tempLearnerText.setGravity(Gravity.CENTER_HORIZONTAL);
-//                    tempLearnerText.setTextColor(Color.GRAY);
-//                    String learnerLastName = "";
-//                    //получаем текст ученика
-//                    for (int i = 0; i < learnersList.size(); i++) {
-//                        if (learnersList.get(i).id == learnerId) {
-//                            learnerLastName = learnersList.get(i).lastName;
-//                            break;
-//                        }
-//                    }
-//                    tempLearnerText.setText(learnerLastName);
-//                    //картинка ученика
-//                    tempLernerImage.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            db.deleteAttitudeByLearnerIdAndPlaceId(finalLearnerId, placeUnit.id);//сразу удаляем запись по id ученика и урока
-//                            attitudesList.remove(finalAttitudeIndex);
-//                            drawDesks(db);
-//                        }
-//                    });
-//                    tempPlaceLayout.addView(tempLernerImage, tempLernerImageParams);
-//
-//                    //текст ученика
-//                    tempLearnerText.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            db.deleteAttitudeByLearnerIdAndPlaceId(finalLearnerId, placeUnit.id);//сразу удаляем запись по id ученика и урока
-//                            attitudesList.remove(finalAttitudeIndex);
-//                            drawDesks(db);
-//
-//                        }
-//                    });
-//                    tempPlaceLayout.addView(tempLearnerText, tempLearnerTextParams);
-//                } else {
-//                    //создание кнопки добавить ученика
-//                    final ImageView tempImageAdd = new ImageView(getApplicationContext());
-//                    final LinearLayout.LayoutParams tempImageAddParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-//                    tempImageAdd.setImageResource(R.drawable.ic_menu_add_standart);
-//                    tempImageAdd.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            tempPlaceLayout.removeAllViews();
-//                            Bundle bundle = new Bundle();
-//                            bundle.putLong("cabinetId", cabinetId);
-//                            bundle.putLong("classId", classId);
-//                            ChooseLearnerDialogFragment dialogFragment = new ChooseLearnerDialogFragment();
-//                            dialogFragment.setArguments(bundle);
-//                            dialogFragment.show(getFragmentManager(), "chooseLearners");
-//                            handler = new Handler() {
-//                                public void handleMessage(android.os.Message msg) {
-//                                    //возврат -1 если ничего не выбрано иначе id ученика
-//                                    if (msg.what != -1) {
-//                                        //добавляем запись по id ученика и урока
-//
-//                                        attitudesList.add(//добавляем зависимость в локальный массив
-//                                                new AttitudeUnit(
-//                                                        db.setLearnerOnPlace(msg.what, placeUnit.id),//добавляем зависимость в базу получаем id
-//                                                        msg.what,//id ученика
-//                                                        placeUnit.id//d места
-//                                                )
-//                                        );
-//                                    }
-//                                    drawDesks(db);
-//                                }
-//                            };
-//                        }
-//                    });
-//                    if (learnersList.size() != attitudesList.size())
-//                        tempPlaceLayout.addView(tempImageAdd, tempImageAddParams);
-//                }
-//
-//
-//                //добавление места в парту
-//                tempRelativeLayoutDesk.addView(tempPlaceLayout, tempRelativeLayoutPlaceParams);
-//            }
-//
-//            //добавление парты в комнату
-//            room.addView(tempRelativeLayoutDesk, tempRelativeLayoutDeskParams);
-//        }
-//
-////--------размеры комнаты по самой дальней парте-------
-//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-//                (maxDeskX + (int) pxFromDp(3000 * multiplier)),
-//                (maxDeskY + (int) pxFromDp(3000 * multiplier))
-//        );
-//
-//        //если ширина экрана все-таки больше
-//        if (getResources().getDisplayMetrics().widthPixels >= maxDeskX + (int) (pxFromDp(3000) * multiplier)) {
-//            layoutParams.width = getResources().getDisplayMetrics().widthPixels;
-//        }
-//        //если высота экрана всетаки больше
-//        if (getResources().getDisplayMetrics().heightPixels - (int) pxFromDp(72) >= maxDeskY + (int) (pxFromDp(3000) * multiplier)) {
-//            layoutParams.height = getResources().getDisplayMetrics().heightPixels - (int) pxFromDp(72);
-//        }
-//        room.setLayoutParams(layoutParams);
-//
-//        Log.i("TeachersProject", "" + (maxDeskX + (int) dpFromPx((2000 + 1000) * multiplier)) + "" + (maxDeskY + (int) dpFromPx((2000 + 1000) * multiplier)));
-//    }
-//
-//    //---------------системные методы---------------
-//
-//    private float pxFromDp(float dp) {
-//        return dp * getApplicationContext().getResources().getDisplayMetrics().density;
-//    }
-//
-//    private float dpFromPx(float px) {
-//        return px / getApplicationContext().getResources().getDisplayMetrics().density;
-//
-//    }
-//
-//
-//
-////----------------диалог выбора ученика-----------------
-//
-//    public static class ChooseLearnerDialogFragment extends DialogFragment {//диалог по выбору не распределенного ученика
-//
-//        long cabinetId;
-//        long classId;
-//
-//        public ChooseLearnerDialogFragment() {
-//
-//        }
-//
-//        @Override
-//        public Dialog onCreateDialog(Bundle savedInstanceState) {
-//            //
-//            // инициализация переменных
-//            this.cabinetId = getArguments().getLong("cabinetId");
-//            this.classId = getArguments().getLong("classId");
-//            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());//билдер диалога
-//            final DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity().getApplicationContext());//база
-//            final ArrayList<Long> learnersId = db.getNotPutLearnersIdByCabinetIdAndClassId(cabinetId, classId);//лист с id нераспределенных по местам учеников
-//            String[] learnersNames = new String[learnersId.size()];//массив с именами учеников(пустой)
-//            for (int i = 0; i < learnersNames.length; i++) {//заполняем
-//                Cursor learnerTempCursor = db.getLearner(learnersId.get(i));//получаем ученика
-//                learnerTempCursor.moveToFirst();
-//                //получаем имя
-//                learnersNames[i] = learnerTempCursor.getString(learnerTempCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)) + " " + learnerTempCursor.getString(learnerTempCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME));
-//                learnerTempCursor.close();
-//            }
-//            //--------ставим диалогу список в виде view--------
-//            ScrollView scroll = new ScrollView(getActivity());
-//
-//            //контейнер список
-//            LinearLayout linearLayout = new LinearLayout(getActivity());
-//            linearLayout.setOrientation(LinearLayout.VERTICAL);
-//            linearLayout.setBackgroundColor(getResources().getColor(R.color.colorBackGround));
-//            linearLayout.setLayoutParams(new LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.MATCH_PARENT,
-//                    LinearLayout.LayoutParams.WRAP_CONTENT
-//            ));
-//            scroll.addView(linearLayout);
-//
-//            for (int i = 0; i < learnersNames.length; i++) {
-//                //пункт списка
-//                LinearLayout item = new LinearLayout(getActivity());
-//                item.setOrientation(LinearLayout.VERTICAL);
-//                item.setGravity(Gravity.CENTER);
-//                LinearLayout.LayoutParams itemParams =
-//                        new LinearLayout.LayoutParams(
-//                                LinearLayout.LayoutParams.MATCH_PARENT,
-//                                (int) (pxFromDp(40) * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))
-//                        );
-//                itemParams.setMargins(
-//                        (int) (pxFromDp(20 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
-//                        (int) (pxFromDp(10 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
-//                        (int) (pxFromDp(20 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier))),
-//                        (int) (pxFromDp(10 * getActivity().getResources().getInteger(R.integer.desks_screen_multiplier)))
-//                );
-//                linearLayout.addView(item, itemParams);
-//                //текст в нем
-//                TextView text = new TextView(getActivity());
-//                text.setText(learnersNames[i]);
-//                text.setTextColor(Color.BLACK);
-//                text.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-//                item.addView(text);
-//
-//                //нажатие на пункт списка
-//                final int number = i;
-//                item.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Cursor learnerTempCursor = db.getLearner(learnersId.get(number));//получаем выбранного ученика
-//                        learnerTempCursor.moveToFirst();
-//                        //посылаем id выбранного ученика
-//                        SeatingRedactorActivity.handler.sendEmptyMessage((int)
-//                                learnerTempCursor.getLong(learnerTempCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)));
-//                        learnerTempCursor.close();
-//                        dismiss();
-//                    }
-//                });
-//            }
-//            builder.setView(scroll);
-//            return builder.create();
-//        }
-//
-//        @Override
-//        public void onDismiss(DialogInterface dialog) {
-//            Log.i("teachersApp", "SeatingRedactorActivity/ChooseLearnerDialogFragment/onDismiss");
-//            super.onDismiss(dialog);
-//            SeatingRedactorActivity.handler.sendEmptyMessage(-1);
-//        }
-//
-//        //---------------системные методы(здесь свои)---------------
-//
-//        private float pxFromDp(float dp) {
-//            return dp * getActivity().getResources().getDisplayMetrics().density;
-//        }
-//
-//
-//    }
-
-
-//class DeskUnit {//хранит в себе одну парту
-//
-//
-//    long id;
-//    long x;
-//    long y;
-//    long countOfPlaces;
-//    ArrayList<PlaceUnit> placesList;
-//
-//    DeskUnit(long id, long x, long y, long countOfPlaces) {
-//        this.id = id;
-//        this.x = x;
-//        this.y = y;
-//        this.countOfPlaces = countOfPlaces;
-//        this.placesList = new ArrayList<>();
-//    }
-//}
-//
-//class PlaceUnit {//хранит в себе одно место
-//    long id;
-//    long deskId;
-//    long ordinalNumber;
-//
-//    PlaceUnit(long id, long deskId, long ordinalNumber) {
-//        this.id = id;
-//        this.deskId = deskId;
-//        this.ordinalNumber = ordinalNumber;
-//    }
-//}
-//
-//class LearnerUnit {//хранит в себе одного ученика
-//    long id;
-//    String name;
-//    String lastName;
-//    long classId;
-//
-//    LearnerUnit(long id, String name, String lastName, long classId) {
-//        this.id = id;
-//        this.name = name;
-//        this.lastName = lastName;
-//        this.classId = classId;
-//    }
-//}
-//
-
-//class AttitudeUnit {//хранит в себе зависимость ученик место
-//    long id;
-//    long learnerId;
-//    long placeId;
-//
-//    AttitudeUnit(long id, long learnerId, long placeId) {
-//        this.id = id;
-//        this.learnerId = learnerId;
-//        this.placeId = placeId;
-//    }
-//}
-
-

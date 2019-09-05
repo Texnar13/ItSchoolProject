@@ -11,6 +11,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-5709922862247260~7347771743"/>
+
         <activity
             android:name=".startScreen.StartScreenActivity"
             android:configChanges="locale">
@@ -29,7 +33,7 @@
             android:configChanges="locale"
             android:label="@string/title_activity_cabinet_redactor" />
         <activity
-            android:name=".lesson.lessonList.LessonListActivity"
+            android:name=".lesson.LessonListActivity"
             android:configChanges="locale"
             android:label="@string/title_activity_lesson_list" />
         <activity

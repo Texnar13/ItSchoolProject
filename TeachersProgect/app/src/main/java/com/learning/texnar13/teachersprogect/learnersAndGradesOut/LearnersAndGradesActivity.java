@@ -6,8 +6,10 @@ import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +27,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface, AllowUserEditGradesInterface, UpdateTableInterface, View.OnTouchListener, SubjectsDialogInterface {
+public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface, UpdateTableInterface, View.OnTouchListener, SubjectsDialogInterface {
 
     // тег для логов
     private static final String TAG = "TeachersApp";
@@ -47,6 +49,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     static NewSubjectUnit[] subjects;
     // номер выбранного предмета в массиве
     int chosenSubjectPosition;
+
+    // локализованные названия месяцев
+    String[] monthsNames;
+    String[] transformedMonthsNames;
+    // размер максимальной оценки
+    int maxGrade;
+    // названия типов ответов и их id
+    AnswersType[] answersTypes;
 
 
     // календарь хранящий в себе отображаемую дату
@@ -152,10 +162,26 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         );
         classCursor.close();
 
+        // параллельно находим максимальную оценку
+        maxGrade = db.getSettingsMaxGrade(1);
+
+        // названия типов ответов
+        Cursor typesCursor = db.getGradesTypes();
+        answersTypes = new AnswersType[typesCursor.getCount()];
+        // извлекаем данные из курсора
+        for (int typeI = 0; typeI < answersTypes.length; typeI++) {
+            typesCursor.moveToPosition(typeI);
+            // добавляем новый тип во внутренний список
+            answersTypes[typeI] = new AnswersType(
+                    typesCursor.getLong(typesCursor.getColumnIndex(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID)),
+                    typesCursor.getString(typesCursor.getColumnIndex(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE))
+            );
+        }
+
         // находим view с таблицей
         learnersAndGradesTableView = findViewById(R.id.learners_and_grades_activity_table_view);
         // получаем размер максимальной оценки
-        learnersAndGradesTableView.setMaxAnswersCount(db.getSettingsMaxGrade(1));
+        learnersAndGradesTableView.setMaxAnswersCount(maxGrade);
         // назначаем талице обработчик касаний
         learnersAndGradesTableView.setOnTouchListener(this);
         db.close();
@@ -177,7 +203,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     subjectsArray[subjectI] = subjects[subjectI].getSubjectName();
                 }
                 args.putStringArray(SubjectsDialogFragment.ARGS_LEARNERS_NAMES_STRING_ARRAY, subjectsArray);
-                args.putInt(SubjectsDialogFragment.ARGS_CHOSEN_SUBJECT_NUMBER, chosenSubjectPosition);
                 subjectsDialogFragment.setArguments(args);
 
                 // показываем диалог
@@ -193,7 +218,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             viewCalendar.setTime(new Date());
             viewCalendar.setLenient(false);
             // выствляем первый день, чтобы небыло путанницы с днями при переключении даты
-            viewCalendar.set(Calendar.DAY_OF_MONTH,1);
+            viewCalendar.set(Calendar.DAY_OF_MONTH, 1);
         }
 
         // выставляем в таблицу текущую дату
@@ -201,15 +226,16 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         currentCalendar.setTime(new Date());
         currentCalendar.setLenient(false);
         // если отображаемый календарь уже был создан, сравниваем с ним текущую дату
-        if(viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
-                viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH) ){
+        if (viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
+                viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH)) {
             learnersAndGradesTableView.currentDate = currentCalendar.get(Calendar.DAY_OF_MONTH) - 1;
-        }else
+        } else
             learnersAndGradesTableView.currentDate = -1;
 
 
         // получаем локализованные названия месяцев
-        final String[] monthsNames = getResources().getStringArray(R.array.months_names);
+        monthsNames = getResources().getStringArray(R.array.months_names);
+        transformedMonthsNames = getResources().getStringArray(R.array.months_names_low_case);
         // текстовое поле под название даты
         final TextView dateText = findViewById(R.id.learners_and_grades_activity_date_text);
         dateText.setText(monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR));
@@ -236,10 +262,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 dateText.setText(monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR));
 
                 // выставляем в таблицу текущую дату
-                if(viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
-                        viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH) ){
+                if (viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
+                        viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH)) {
                     learnersAndGradesTableView.currentDate = currentCalendar.get(Calendar.DAY_OF_MONTH) - 1;
-                }else
+                } else
                     learnersAndGradesTableView.currentDate = -1;
 
                 // получаем оценки из бд по новой дате
@@ -268,10 +294,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 dateText.setText(monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR));
 
                 // выставляем в таблицу текущую дату
-                if(viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
-                        viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH) ){
+                if (viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
+                        viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH)) {
                     learnersAndGradesTableView.currentDate = currentCalendar.get(Calendar.DAY_OF_MONTH) - 1;
-                }else
+                } else
                     learnersAndGradesTableView.currentDate = -1;
 
 
@@ -325,7 +351,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     // -------------------------- основные методы --------------------------
 
-    // метод получения предметов из азы данных
+    // метод получения предметов из базы данных
     void getSubjectsFromDB() {
         Log.i(TAG, "getSubjectsFromDB");
 
@@ -482,7 +508,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                             copy.get(learnerI).learnerGrades[dayI][lessonI] =
                                     new NewGradeUnit(
                                             new int[]{0, 0, 0},
-                                            new long[]{-1, -1, -1}
+                                            new long[]{-1, -1, -1},
+                                            new int[]{0, 0, 0}
                                     );
                         }
                     }
@@ -578,12 +605,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 copy.get(learnerI).learnerGrades[dayI][lessonI] =
                                         new NewGradeUnit(
                                                 new int[3],
-                                                new long[3]
+                                                new long[3],
+                                                new int[3]
                                         );
 
                                 // проходимся по оценкам в курсоре
                                 for (int gradeI = 0; gradeI < 3; gradeI++) {
-                                    if (gradesLessonCursor.moveToPosition(gradeI)) {//есть оценка
+                                    if (gradesLessonCursor.moveToPosition(gradeI)) {
+                                        // есть оценка
                                         copy.get(learnerI).learnerGrades[dayI][lessonI].grades[gradeI] =
                                                 gradesLessonCursor.getInt(gradesLessonCursor.getColumnIndex(
                                                         SchoolContract.TableLearnersGrades.COLUMN_GRADE
@@ -592,9 +621,23 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                                 gradesLessonCursor.getLong(gradesLessonCursor.getColumnIndex(
                                                         SchoolContract.TableLearnersGrades.KEY_GRADE_ID
                                                 ));
-                                    } else {//нет оценки
+
+                                        long typeId = gradesLessonCursor.getLong(gradesLessonCursor.getColumnIndex(
+                                                SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID
+                                        ));
+
+                                        // ищем соответствующий тип в типах оценок
+                                        for (int typeI = 0; typeI < answersTypes.length; typeI++) {
+                                            if (typeId == answersTypes[typeI].id) {
+                                                copy.get(learnerI).learnerGrades[dayI][lessonI].gradesTypesIndexes[gradeI] = typeI;
+                                                break;
+                                            }
+                                        }
+
+                                    } else { // нет оценки
                                         copy.get(learnerI).learnerGrades[dayI][lessonI].grades[gradeI] = 0;
                                         copy.get(learnerI).learnerGrades[dayI][lessonI].gradesId[gradeI] = -1;
+                                        copy.get(learnerI).learnerGrades[dayI][lessonI].gradesTypesIndexes[gradeI] = 0;
                                     }
                                 }
                                 gradesLessonCursor.close();
@@ -619,7 +662,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 copy.get(learnerI).learnerGrades[dayI][lessonI] =
                                         new NewGradeUnit(
                                                 new int[]{0, 0, 0},
-                                                new long[]{-1, -1, -1}
+                                                new long[]{-1, -1, -1},
+                                                new int[]{0, 0, 0}
                                         );
                             }
                         }
@@ -776,10 +820,51 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                         GradeEditDialogFragment editGrade = new GradeEditDialogFragment();
                                         //параметры
                                         Bundle bundle = new Bundle();
-                                        // оценки
+
+                                        // имя ученика
+                                        bundle.putString(
+                                                GradeEditDialogFragment.ARGS_LEARNER_NAME,
+                                                newLearnersAndHisGrades.get(touchData[0]).surname + " " + newLearnersAndHisGrades.get(touchData[0]).name
+                                        );
+
+                                        // названия типов оценок в массиве
+                                        String[] stringTypes = new String[answersTypes.length];
+                                        for (int typeI = 0; typeI < answersTypes.length; typeI++) {
+                                            stringTypes[typeI] = answersTypes[typeI].typeName;
+                                        }
+                                        bundle.putStringArray(
+                                                GradeEditDialogFragment.ARGS_STRING_GRADES_TYPES_ARRAY,
+                                                stringTypes
+                                        );
+
+                                        // массив оценок
                                         bundle.putIntArray(
-                                                GradeEditDialogFragment.GRADES,
-                                                newLearnersAndHisGrades.get(touchData[0]).learnerGrades[touchData[1]][touchData[2]].grades
+                                                GradeEditDialogFragment.ARGS_INT_GRADES_ARRAY,
+                                                newLearnersAndHisGrades.get(touchData[0]).learnerGrades[touchData[1]][touchData[2]].grades.clone()
+                                        );
+
+                                        // максимальный размер оценки
+                                        bundle.putInt(
+                                                GradeEditDialogFragment.ARGS_INT_MAX_GRADE,
+                                                maxGrade
+                                        );
+
+                                        // массив с номерами выбранных типов
+                                        bundle.putIntArray(
+                                                GradeEditDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY,
+                                                newLearnersAndHisGrades.get(touchData[0]).learnerGrades[touchData[1]][touchData[2]].gradesTypesIndexes.clone()
+                                        );
+
+                                        // текущая дата в строке
+                                        bundle.putString(
+                                                GradeEditDialogFragment.ARGS_STRING_CURRENT_DATE,
+                                                (touchData[1] + 1) + " " + transformedMonthsNames[viewCalendar.get(Calendar.MONTH)]
+                                        );
+
+                                        // выбранный номер урока
+                                        bundle.putInt(
+                                                GradeEditDialogFragment.ARGS_INT_LESSON_NUMBER,
+                                                touchData[2]
                                         );
 
                                         //запускаем
@@ -875,7 +960,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 emptyGradeUnitsArray[dayI][lessonI] =
                         new NewGradeUnit(
                                 new int[]{0, 0, 0},
-                                new long[]{-1, -1, -1}
+                                new long[]{-1, -1, -1},
+                                new int[]{0, 0, 0}
                         );
             }
         }
@@ -990,15 +1076,19 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         chosenLearnerPosition = -1;
     }
 
-    // метод редактирования оценки ученика вызываемый из диалога
+    // метод редактирования оценки ученика из диалога GradeEditDialogFragment
     @Override
-    public void editGrade(final int[] grades) {
+    public void editGrades(int[] grades, int[] chosenTypesNumbers, int lessonPoz) {
         Log.i(TAG, "fromDialog-editGrade");
-        if (chosenGradePosition[0] != -1 && chosenGradePosition[1] != -1 && chosenGradePosition[2] != -1) {
+        // проверяем выбрана ли все еще дата
+        if (chosenGradePosition[0] != -1 && chosenGradePosition[1] != -1 && lessonPoz != -1) {
 
             // сохраняем оценки в массив
             newLearnersAndHisGrades.get(chosenGradePosition[0]).// todo length 12 ??????????????????????????????????
-                    learnerGrades[chosenGradePosition[1]][chosenGradePosition[2]].grades = grades;
+                    learnerGrades[chosenGradePosition[1]][lessonPoz].grades = grades;
+            // и типы
+            newLearnersAndHisGrades.get(chosenGradePosition[0]).
+                    learnerGrades[chosenGradePosition[1]][lessonPoz].gradesTypesIndexes = chosenTypesNumbers;
 
             // сохраняем оценки в бд
             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
@@ -1008,8 +1098,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             StringBuilder gradeTime = (new StringBuilder()).append(viewCalendar.get(Calendar.YEAR)).append('-')
                     .append(getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1)).append('-')
                     .append(getTwoSymbols(chosenGradePosition[1] + 1))
-                    .append(' ').append(getTwoSymbols(timeOfLessons[chosenGradePosition[2]][0])).append(':')
-                    .append(getTwoSymbols(timeOfLessons[chosenGradePosition[2]][1])).append(":00");
+                    .append(' ').append(getTwoSymbols(timeOfLessons[lessonPoz][0])).append(':')
+                    .append(getTwoSymbols(timeOfLessons[lessonPoz][1])).append(":00");
 
 
             // пробегаемся по массиву оценок
@@ -1017,16 +1107,17 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                 // id оценки -1, значит оценка новая
                 if (newLearnersAndHisGrades.get(chosenGradePosition[0]).
-                        learnerGrades[chosenGradePosition[1]][chosenGradePosition[2]].gradesId[gradeI] == -1) {
+                        learnerGrades[chosenGradePosition[1]][lessonPoz].gradesId[gradeI] == -1) {
 
                     // если оценка не нулевая то создаем ее
                     if (grades[gradeI] != 0) {
                         // и сохраняем id в массив
                         newLearnersAndHisGrades.get(chosenGradePosition[0]).
-                                learnerGrades[chosenGradePosition[1]][chosenGradePosition[2]].gradesId[gradeI] =
+                                learnerGrades[chosenGradePosition[1]][lessonPoz].gradesId[gradeI] =
                                 db.createGrade(
                                         newLearnersAndHisGrades.get(chosenGradePosition[0]).id,
                                         grades[gradeI],
+                                        answersTypes[chosenTypesNumbers[gradeI]].id,
                                         subjects[chosenSubjectPosition].getSubjectId(),
                                         gradeTime.toString()
                                 );
@@ -1038,16 +1129,17 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     if (grades[gradeI] == 0) {
                         // удаляем сначала из списка
                         newLearnersAndHisGrades.get(chosenGradePosition[0]).
-                                learnerGrades[chosenGradePosition[1]][chosenGradePosition[2]].gradesId[gradeI] = -1;
+                                learnerGrades[chosenGradePosition[1]][lessonPoz].gradesId[gradeI] = -1;
                         // а потом из бд
                         db.removeGrade(newLearnersAndHisGrades.get(chosenGradePosition[0]).
-                                learnerGrades[chosenGradePosition[1]][chosenGradePosition[2]].gradesId[gradeI]);
+                                learnerGrades[chosenGradePosition[1]][lessonPoz].gradesId[gradeI]);
                     } else {
                         // не нулевую меняем в бд
                         db.editGrade(
                                 newLearnersAndHisGrades.get(chosenGradePosition[0]).
-                                        learnerGrades[chosenGradePosition[1]][chosenGradePosition[2]].gradesId[gradeI],
-                                grades[gradeI]
+                                        learnerGrades[chosenGradePosition[1]][lessonPoz].gradesId[gradeI],
+                                grades[gradeI],
+                                answersTypes[chosenTypesNumbers[gradeI]].id
                         );
                     }
                 }
@@ -1062,13 +1154,16 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         chosenGradePosition = new int[]{-1, -1, -1};
     }
 
-    //разрешаем пользователю изменять оценки
+    // метод разрешающий пользователю изменять оценки из диалога GradeEditDialogFragment
     @Override
-    public void allowUserEditGrades() {
+    public void gradesSelectNothing() {
         Log.i(TAG, "fromDialog-allowUserEditGrades");
 
         //разрешаем пользователю менять оценки
         chosenGradePosition = new int[]{-1, -1, -1};
+
+        // и обновляем таблицу, чтобы исчезли синие квадраты
+        learnersAndGradesTableView.invalidate();
     }
 
     // метод выбора текущего предмета вызываемый из диалога SubjectsDialogFragment
@@ -1290,10 +1385,12 @@ class NewSubjectUnit {
 class NewGradeUnit {
     int[] grades;
     long[] gradesId;
+    int[] gradesTypesIndexes;
 
-    NewGradeUnit(int[] grades, long[] gradesId) {
+    NewGradeUnit(int[] grades, long[] gradesId, int[] gradesTypesIndexes) {
         this.grades = grades;
         this.gradesId = gradesId;
+        this.gradesTypesIndexes = gradesTypesIndexes;
     }
 }
 
@@ -1311,5 +1408,17 @@ class NewLearnerAndHisGrades {
         this.name = name;
         this.surname = surname;
         this.learnerGrades = learnerGrades;
+    }
+}
+
+
+//класс для хранения типов ответов
+class AnswersType {
+    long id;
+    String typeName;
+
+    AnswersType(long id, String typeName) {
+        this.id = id;
+        this.typeName = typeName;
     }
 }

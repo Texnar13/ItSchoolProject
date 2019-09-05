@@ -11,11 +11,12 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
 
@@ -29,7 +30,6 @@ public class EditTimeDialogFragment extends DialogFragment {
 
         //layout диалога
         LinearLayout linearLayout = new LinearLayout(getActivity());
-        linearLayout.setBackgroundResource(R.color.colorBackGround);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -39,8 +39,63 @@ public class EditTimeDialogFragment extends DialogFragment {
         linearLayout.setLayoutParams(linearLayoutParams);
         builder.setView(linearLayout);
 
-//----------скролл для вывода------
+        // layout заголовка
+        LinearLayout headLayout = new LinearLayout(getActivity());
+        headLayout.setOrientation(LinearLayout.HORIZONTAL);
+        headLayout.setBackgroundResource(R.drawable._dialog_head_background_dark);
+        headLayout.setGravity(Gravity.CENTER_VERTICAL);
+        LinearLayout.LayoutParams headLayoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        linearLayout.addView(headLayout, headLayoutParams);
+
+        // кнопка закрыть
+        LinearLayout closeImageView = new LinearLayout(getActivity());
+        closeImageView.setBackgroundResource(R.drawable.__button_close);
+        LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(
+                (int) getResources().getDimension(R.dimen.my_icon_size),
+                (int) getResources().getDimension(R.dimen.my_icon_size));
+        closeImageViewParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin));
+        headLayout.addView(closeImageView, closeImageViewParams);
+        // при нажатии на кнопку закрыть
+        closeImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // закрываем диалог
+                dismiss();
+            }
+        });
+
+        // текст заголовка
+        TextView title = new TextView(getActivity());
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        title.setText(R.string.settings_activity_dialog_edit_time_title);
+        title.setGravity(Gravity.CENTER_VERTICAL);
+        title.setTextColor(Color.WHITE);
+        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        titleParams.setMargins(
+                0,
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin));
+        Log.e("TeachersApp", "outMainMenu: " + closeImageView.getId());
+        titleParams.gravity = Gravity.CENTER_VERTICAL;
+        headLayout.addView(title, titleParams);
+
+
+        // скролл для вывода
         ScrollView scrollView = new ScrollView(getActivity());
+        scrollView.setBackgroundResource(R.drawable._dialog_bottom_background_white);
         LinearLayout.LayoutParams scrollViewParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -48,27 +103,12 @@ public class EditTimeDialogFragment extends DialogFragment {
         );
         linearLayout.addView(scrollView, scrollViewParams);
 
-//----LinearLayout в скролле----
+        // LinearLayout в скролле
         LinearLayout timesOut = new LinearLayout(getActivity());
         timesOut.setGravity(Gravity.CENTER);
         timesOut.setOrientation(LinearLayout.VERTICAL);
         scrollView.addView(timesOut);
 
-//--заголовок--
-        TextView title = new TextView(getActivity());
-        title.setText(getResources().getString(R.string.settings_activity_dialog_edit_time_title));
-        title.setTextColor(Color.BLACK);
-        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_title_size));
-        title.setAllCaps(true);
-        title.setGravity(Gravity.CENTER);
-
-        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        titleParams.setMargins((int) pxFromDp(15), (int) pxFromDp(15), (int) pxFromDp(15), 0);
-
-        timesOut.addView(title, titleParams);
 
 //--поля времени--
         int[][] array = new int[9][4];
@@ -122,7 +162,8 @@ public class EditTimeDialogFragment extends DialogFragment {
 
             //--цифра
             TextView number = new TextView(getActivity());
-            number.setText("" + (i + 1) + ".");
+            number.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+            number.setText((i + 1) + ".");
             number.setTextSize(TypedValue.COMPLEX_UNIT_PX, getActivity().getResources().getDimension(R.dimen.text_subtitle_size));
             number.setTextColor(Color.BLACK);
             item.addView(number);
@@ -135,16 +176,23 @@ public class EditTimeDialogFragment extends DialogFragment {
 
             //----поле ввода beginHour
             fields[i][0] = new EditText(getActivity());
+            fields[i][0].setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             fields[i][0].setGravity(Gravity.CENTER);
             fields[i][0].setHint(getResources().getString(R.string.settings_activity_dialog_hint_hour));
             fields[i][0].setText("" + array[i][0]);
             fields[i][0].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][0].setInputType(InputType.TYPE_CLASS_NUMBER);
-            fields[i][0].setBackgroundResource(R.drawable.button_lite_gray);
-            timeContainer.addView(fields[i][0], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
+            fields[i][0].setBackgroundResource(R.drawable._underlined_black);
+            LinearLayout.LayoutParams fieldOneParams = new LinearLayout.LayoutParams(
+                    (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width),
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            fieldOneParams.leftMargin = (int) getResources().getDimension(R.dimen.double_margin);
+            timeContainer.addView(fields[i][0], fieldOneParams);
 
             //----:
             TextView beginPointer = new TextView(getActivity());
+            beginPointer.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             beginPointer.setTextColor(Color.BLACK);
             beginPointer.setText(R.string.settings_activity_dialog_text_time_colon);
             beginPointer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -152,33 +200,43 @@ public class EditTimeDialogFragment extends DialogFragment {
 
             //----поле ввода beginMinute
             fields[i][1] = new EditText(getActivity());
+            fields[i][1].setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             fields[i][1].setGravity(Gravity.CENTER);
             fields[i][1].setHint(getResources().getString(R.string.settings_activity_dialog_hint_minute));
             fields[i][1].setText("" + getTwoSymbols(array[i][1]));
             fields[i][1].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][1].setInputType(InputType.TYPE_CLASS_NUMBER);
-            fields[i][1].setBackgroundResource(R.drawable.button_lite_gray);
+            fields[i][1].setBackgroundResource(R.drawable._underlined_black);
             timeContainer.addView(fields[i][1], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
 
             //---- --
             TextView pointerMid = new TextView(getActivity());
+            beginPointer.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             pointerMid.setTextColor(Color.BLACK);
             pointerMid.setText(R.string.settings_activity_dialog_text_time_dash);
             pointerMid.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-            timeContainer.addView(pointerMid);
+            LinearLayout.LayoutParams pointerMidParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            pointerMidParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+            pointerMidParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+            timeContainer.addView(pointerMid,pointerMidParams);
 
             //----поле ввода endHour
             fields[i][2] = new EditText(getActivity());
+            fields[i][2].setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             fields[i][2].setGravity(Gravity.CENTER);
             fields[i][2].setHint(getResources().getString(R.string.settings_activity_dialog_hint_hour));
             fields[i][2].setText("" + array[i][2]);
             fields[i][2].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][2].setInputType(InputType.TYPE_CLASS_NUMBER);
-            fields[i][2].setBackgroundResource(R.drawable.button_lite_gray);
+            fields[i][2].setBackgroundResource(R.drawable._underlined_black);
             timeContainer.addView(fields[i][2], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
 
             //----:
             TextView endPointer = new TextView(getActivity());
+            endPointer.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             endPointer.setTextColor(Color.BLACK);
             endPointer.setText(R.string.settings_activity_dialog_text_time_colon);
             endPointer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -186,56 +244,52 @@ public class EditTimeDialogFragment extends DialogFragment {
 
             //----поле ввода endMinute
             fields[i][3] = new EditText(getActivity());
+            fields[i][3].setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             fields[i][3].setGravity(Gravity.CENTER);
             fields[i][3].setHint(getResources().getString(R.string.settings_activity_dialog_hint_minute));
             fields[i][3].setText("" + getTwoSymbols(array[i][3]));
             fields[i][3].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][3].setInputType(InputType.TYPE_CLASS_NUMBER);
-            fields[i][3].setBackgroundResource(R.drawable.button_lite_gray);
+            fields[i][3].setBackgroundResource(R.drawable._underlined_black);
             timeContainer.addView(fields[i][3], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
 
         }
 
-//--кнопки согласия/отмены--
 
-        //контейнер для них
+
+        //контейнер для кнопки
         LinearLayout container = new LinearLayout(getActivity());
         container.setOrientation(LinearLayout.HORIZONTAL);
+        container.setBackgroundResource(R.drawable._button_round_background_green);
         container.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
-                1F
+                ViewGroup.LayoutParams.WRAP_CONTENT
         );
+        containerParams.setMargins(
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin));
         //контейнер в диалог
         timesOut.addView(container, containerParams);
 
-//кнопка отмены
-        Button neutralButton = new Button(getActivity());
-        neutralButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
-        neutralButton.setText(getResources().getString(R.string.settings_activity_dialog_button_cancel));
-        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-        neutralButton.setTextColor(Color.WHITE);
-        LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
-        );
-        neutralButtonParams.weight = 1;
-        neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
-        container.addView(neutralButton, neutralButtonParams);
 
-//кнопка сохранения
-        Button positiveButton = new Button(getActivity());
-        positiveButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
-        positiveButton.setText(getResources().getString(R.string.settings_activity_dialog_button_save));
-        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+        //кнопка сохранения
+        TextView positiveButton = new TextView(getActivity());
+        positiveButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        positiveButton.setGravity(Gravity.CENTER);
+        positiveButton.setText(getResources().getString(R.string.button_save));
+        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+                LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        positiveButtonParams.weight = 1;
-        positiveButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
+        positiveButtonParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.half_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.half_margin));
         container.addView(positiveButton, positiveButtonParams);
 
 
@@ -302,15 +356,11 @@ public class EditTimeDialogFragment extends DialogFragment {
             }
         });
 
-        //отмена
-        neutralButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
 
-        return builder.create();
+        // наконец создаем диалог и возвращаем его
+        Dialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        return dialog;
     }
 
     //---------форматы----------

@@ -3,19 +3,31 @@ package com.learning.texnar13.teachersprogect.startScreen;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.ScheduleMonthActivity;
 import com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity;
@@ -26,23 +38,12 @@ import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.settings.SettingsActivity;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class StartScreenActivity extends AppCompatActivity implements View.OnClickListener, RateInterface {
 
-    //текущий урок
-    LinearLayout relButtonNow;
-    // расписание
-    ImageView relButtonSchedule;
-    // кабинеты
-    ImageView relButtonCabinets;
-    // классы
-    ImageView relButtonClasses;
-    // настройки
-    ImageView relButtonSettings;
-
-//--константы--
 
     //счетчик заходов в приложение для оценки в sharedPreferences
     static final String ENTERS_COUNT = "entersCount";
@@ -52,9 +53,340 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     static final String WHATS_NEW = "whatsNew";
     static final int NOW_VERSION = 42;// todo получать автоматически
 
-//-----------------------------------метод диалога--------------------------------------------------
 
-    //диалог оценить
+    // при создании
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // отключаем поворот
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
+
+        setContentView(R.layout.activity_start_screen);
+
+
+        // отключаем туллбар
+        getSupportActionBar().hide();
+
+
+        // при запуске приложения инициализируем рекламные сервисы
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                /*
+                Если вы используете mediation(посредничество), дождитесь вызова обработчика завершения,
+                прежде чем загружать объявления, поскольку это обеспечит инициализацию всех
+                адаптеров посредничества.
+                */
+            }
+        });
+
+        // расписание
+        ImageView relButtonSchedule = findViewById(R.id.start_screen_button_schedule);
+        // кабинеты
+        ImageView relButtonCabinets = findViewById(R.id.start_screen_button_my_cabinets);
+        // классы
+        ImageView relButtonClasses = findViewById(R.id.start_screen_button_my_classes);
+        // настройки
+        ImageView relButtonSettings = findViewById(R.id.start_screen_button_reload);
+
+        //назначаем кликеры
+        relButtonSchedule.setOnClickListener(this);
+        relButtonCabinets.setOnClickListener(this);
+        relButtonClasses.setOnClickListener(this);
+        relButtonSettings.setOnClickListener(this);
+
+
+//------сохраненные параметры------
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        //начинаем редактировать
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        //todo перенести все подсчеты в создание самого класса, а то при перевороте срабатывают
+
+//----счетчик "оцените нас"----
+        // через семь заходов в приложение открывает диалог 'оцените'
+        if (!sharedPreferences.getBoolean(IS_RATE, false)) {
+            editor.putInt(ENTERS_COUNT, sharedPreferences.getInt(ENTERS_COUNT, 0) + 1);
+            if (sharedPreferences.getInt(ENTERS_COUNT, 0) == 10) {
+                //на всякий случай обнуляем счетчик
+                editor.putInt(ENTERS_COUNT, 1);
+                editor.putBoolean(IS_RATE, false);
+                //создать диалог
+                StartScreenRateUsDialog startScreenRateUsDialog = new StartScreenRateUsDialog();
+                //показать диалог
+                startScreenRateUsDialog.show(getFragmentManager(), IS_RATE);
+            }
+        }
+//        {
+//            WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
+//            dialogFragment.show(getFragmentManager(), WHATS_NEW);
+//        }
+//----диалог что нового----
+        //если уже создано
+//        if (sharedPreferences.contains(WHATS_NEW)) {
+//            //если версия старая
+//            if (sharedPreferences.getInt(WHATS_NEW, -1) < NOW_VERSION) {
+//                //меняем версию
+//                editor.putInt(WHATS_NEW, NOW_VERSION);
+//                //показываем диалог что нового
+//                WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
+//                dialogFragment.show(getFragmentManager(), WHATS_NEW);
+//            }
+//        } else {
+//            //если еще не созданно
+//            //создаем переменную с версией
+//            editor.putInt(WHATS_NEW, NOW_VERSION);
+//            //начальный диалог...
+//        }
+
+        //завершаем редактирование сохраненных параметров
+        editor.commit();
+
+    }
+
+
+    // при запуске/при входе на эту активность
+    @Override
+    protected void onStart() {
+
+
+        // получаем текущее время и выводим его в поля
+        GregorianCalendar nowCalendar = new GregorianCalendar();
+        nowCalendar.setTime(new Date());
+        // текст времени
+        ((TextView) findViewById(R.id.start_screen_text_time)).setText(nowCalendar.get(Calendar.HOUR_OF_DAY) + ":" + getTwoSymbols(nowCalendar.get(Calendar.MINUTE)));
+        // текст даты
+        ((TextView) findViewById(R.id.start_screen_text_date)).setText(nowCalendar.get(Calendar.DAY_OF_MONTH) + " " + getResources().getStringArray(R.array.months_names_low_case)[nowCalendar.get(Calendar.MONTH)]);
+        // текст дня недели
+        ((TextView) findViewById(R.id.start_screen_text_day_of_week)).setText(getResources().getStringArray(R.array.week_days_simple)[nowCalendar.get(Calendar.DAY_OF_WEEK)]);
+
+
+        // выводим текущий урок
+        {
+            // находим контейнер для вывода
+            LinearLayout containerNow = findViewById(R.id.start_screen_layout_now);
+            containerNow.removeAllViews();
+
+            // получаем сведения о текущем уроке
+            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+            final long attitudeId = db.getSubjectAndTimeCabinetAttitudeIdByTime(nowCalendar);
+
+            // если урока нет
+            if (attitudeId == -1) {
+
+                // текст пустоты
+                TextView absText = new TextView(this);
+                absText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_extra_light));
+                absText.setText(R.string.start_screen_activity_title_current_no_lesson);
+                absText.setTextColor(Color.BLACK);
+                absText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                LinearLayout.LayoutParams absTextParams = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                absTextParams.topMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                absTextParams.bottomMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                absTextParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                containerNow.addView(absText, absTextParams);
+
+
+                // убираем кнопку
+                ((LinearLayout) (findViewById(R.id.start_screen_button_start_lesson_background))).setBackgroundResource(android.R.color.transparent);
+                ((TextView) (findViewById(R.id.start_screen_button_start_lesson_text))).setText("");
+            } else {// если урок есть
+
+                // получаем поля урока
+                Cursor attitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(attitudeId);
+                attitudeCursor.moveToFirst();
+                long subjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
+                long cabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
+                String dateBegin = attitudeCursor.getString(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN));
+                String dateEnd = attitudeCursor.getString(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END));
+                attitudeCursor.close();
+                // имя предмета
+                Cursor subjectCursor = db.getSubjectById(subjectId);
+                subjectCursor.moveToFirst();
+                String subjectName = subjectCursor.getString(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME));
+                long learnersClassId = subjectCursor.getLong(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
+                subjectCursor.close();
+                // имя класса
+                Cursor classCursor = db.getLearnersClass(learnersClassId);
+                classCursor.moveToFirst();
+                String className = classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
+                classCursor.close();
+                // имя кабинета
+                Cursor cabinetCursor = db.getCabinet(cabinetId);
+                cabinetCursor.moveToFirst();
+                String cabinetName = cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
+                cabinetCursor.close();
+
+                // укорачиваем поля если они слишком длинные Loading…
+                if (subjectName.length() > 10) {
+                    subjectName = subjectName.substring(0, 9) + "…";
+                }
+                if (className.length() > 5) {
+                    className = className.substring(0, 4) + "…";// absde -> abc…  abcd->abcd
+                }
+                if (cabinetName.length() > 5) {
+                    cabinetName = cabinetName.substring(0, 4) + "…";
+                }
+
+                // выводим поля в контейнер
+
+                // контейнер времени
+                LinearLayout timeContainer = new LinearLayout(this);
+                timeContainer.setOrientation(LinearLayout.VERTICAL);
+                LinearLayout.LayoutParams timeContainerParams = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                timeContainerParams.topMargin = (int) getResources().getDimension(R.dimen.half_margin);
+                timeContainerParams.bottomMargin = (int) getResources().getDimension(R.dimen.half_margin);
+                timeContainerParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                containerNow.addView(timeContainer, timeContainerParams);
+                // первое время
+                TextView firstTime = new TextView(this);
+                firstTime.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                firstTime.setText(dateBegin.substring(11, 16));
+                firstTime.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                firstTime.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+                timeContainer.addView(firstTime,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                // второе время
+                TextView secondTime = new TextView(this);
+                secondTime.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                secondTime.setText(dateEnd.substring(11, 16));
+                secondTime.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                secondTime.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+                timeContainer.addView(secondTime,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+
+                // предмет
+                TextView subjectText = new TextView(this);
+                subjectText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                subjectText.setText(subjectName);
+                subjectText.setTextColor(Color.BLACK);
+                subjectText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                LinearLayout.LayoutParams subjectTextParams = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                subjectTextParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                containerNow.addView(subjectText, subjectTextParams);
+
+                // класс
+                TextView classText = new TextView(this);
+                classText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_medium));
+                classText.setText(className);
+                classText.setTextColor(Color.BLACK);
+                classText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                LinearLayout.LayoutParams classTextParams = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                classTextParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                containerNow.addView(classText, classTextParams);
+
+                // кабинет
+                TextView cabinetText = new TextView(this);
+                cabinetText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
+                cabinetText.setText(cabinetName);
+                cabinetText.setTextColor(Color.BLACK);
+                cabinetText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                LinearLayout.LayoutParams cabinetTextParams = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                cabinetTextParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+                containerNow.addView(cabinetText, cabinetTextParams);
+
+
+                // назначаем открытие при нажатии
+                View.OnClickListener clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // создаем намерение
+                        Intent intent = new Intent(getApplicationContext(), LessonActivity.class);
+
+                        //получаем предмет
+                        DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                        Cursor attitude = db.getSubjectAndTimeCabinetAttitudeById(attitudeId);
+                        attitude.moveToFirst();
+                        //берем его время
+                        String dBTime = attitude.getString(attitude.getColumnIndex(
+                                SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN
+                        ));
+                        attitude.close();
+                        db.close();
+                        //получаем текущий месяц и год
+                        SimpleDateFormat nowDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        String nowDate = nowDateFormat.format(new Date());
+                        //соединяем и отправляем
+                        intent.putExtra(LessonActivity.LESSON_TIME, nowDate + dBTime.substring(10, 19));
+                        //отправляем id
+                        intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, attitudeId);
+
+                        startActivity(intent);
+                    }
+                };
+                // нажатие на контейнер с датой
+                containerNow.setOnClickListener(clickListener);
+                // и кнопку создать урок
+                findViewById(R.id.start_screen_button_start_lesson_background)
+                        .setOnClickListener(clickListener);
+            }
+            db.close();
+        }
+
+
+        //проверка на запись настроек
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        Cursor settingCursor = db.getSettingProfileById(1);//получаем первый профиль настроек
+        Log.i("TeachersApp", "StartScreen - settingCursor.getCount() = " + settingCursor.getCount());
+        if (settingCursor.getCount() == 0) {//если нет профиля настроек
+            db.createNewSettingsProfileWithId1("default", 50);//тогда создем его
+        }
+        settingCursor.close();
+        db.close();
+
+
+        super.onStart();
+    }
+
+    @Override
+    public void onClick(View view) {
+        Intent intent;
+        switch (view.getId()) {
+            case R.id.start_screen_button_schedule://переход в список расписаний
+                intent = new Intent(this, ScheduleMonthActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.start_screen_button_my_cabinets://переход в список кабинетов
+                intent = new Intent(this, CabinetsOutActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.start_screen_button_my_classes: {//переход в список классов
+                intent = new Intent(this, LearnersClassesOutActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.start_screen_button_reload: {
+                intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+
+                break;
+            }
+        }
+    }
+
+
+    // метод диалога оценить
     @Override
     public void rate(int rateId) {
 
@@ -100,186 +432,18 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-
-//-------------------------------меню сверху--------------------------------------------------------
-
-    //раздуваем неаше меню
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.start_screen_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    //назначаем функции меню
-    @Override
-    public boolean onPrepareOptionsMenu(final Menu menu) {
-        //кнопка помощь
-        menu.findItem(R.id.start_screen_menu_item_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(getApplicationContext(), StartScreenHelp.class);
-                startActivity(intent);
-//                Toast toast = Toast.makeText(getApplicationContext(),"В разработке ¯\\_(ツ)_/¯",Toast.LENGTH_LONG);
-//                toast.show();
-                return true;
-            }
-        });
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-
-//----------------------------------------при создании----------------------------------------------
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start_screen);
-
-        //находим все кнопки
-        relButtonNow = findViewById(R.id.start_screen_layout_now);
-        relButtonSchedule = findViewById(R.id.start_screen_button_schedule);
-        relButtonCabinets = findViewById(R.id.start_screen_button_my_cabinets);
-        relButtonClasses =  findViewById(R.id.start_screen_button_my_classes);
-        relButtonSettings = findViewById(R.id.start_screen_button_reload);
-
-        //назначаем кликеры
-        relButtonNow.setOnClickListener(this);
-        relButtonSchedule.setOnClickListener(this);
-        relButtonCabinets.setOnClickListener(this);
-        relButtonClasses.setOnClickListener(this);
-        relButtonSettings.setOnClickListener(this);
-
-        //setTitle("помощник учителя");
-
-//------сохраненные параметры------
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        //начинаем редактировать
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        //todo перенести все подсчеты в создание самого класса, а то при перевороте срабатывают
-
-//----счетчик "оцените нас"----
-        // через семь заходов в приложение открывает диалог 'оцените'
-        if (!sharedPreferences.getBoolean(IS_RATE, false)) {
-            editor.putInt(ENTERS_COUNT, sharedPreferences.getInt(ENTERS_COUNT, 0) + 1);
-            if (sharedPreferences.getInt(ENTERS_COUNT, 0) == 7) {
-                //на всякий случай обнуляем счетчик
-                editor.putInt(ENTERS_COUNT, 1);
-                editor.putBoolean(IS_RATE, false);
-                //создать диалог
-                StartScreenRateUsDialog startScreenRateUsDialog = new StartScreenRateUsDialog();
-                //показать диалог
-                startScreenRateUsDialog.show(getFragmentManager(), IS_RATE);
-            }
+    // число в текст с двумя позициями
+    String getTwoSymbols(int number) {
+        if (number < 10 && number >= 0) {
+            return "0" + number;
+        } else {
+            return "" + number;
         }
-//        {
-//            WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
-//            dialogFragment.show(getFragmentManager(), WHATS_NEW);
-//        }
-//----диалог что нового----
-        //если уже создано
-//        if (sharedPreferences.contains(WHATS_NEW)) {
-//            //если версия старая
-//            if (sharedPreferences.getInt(WHATS_NEW, -1) < NOW_VERSION) {
-//                //меняем версию
-//                editor.putInt(WHATS_NEW, NOW_VERSION);
-//                //показываем диалог что нового
-//                WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
-//                dialogFragment.show(getFragmentManager(), WHATS_NEW);
-//            }
-//        } else {
-//            //если еще не созданно
-//            //создаем переменную с версией
-//            editor.putInt(WHATS_NEW, NOW_VERSION);
-//            //начальный диалог...
-//        }
-
-        //завершаем редактирование сохраненных параметров
-        editor.commit();
-
     }
 
-//----------------------------------------при запуске-----------------------------------------------
-
-    @Override
-    protected void onStart() {
-        //при входе на эту активность
-        //проверка на запись настроек
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        Cursor settingCursor = db.getSettingProfileById(1);//получаем первый профиль настроек
-        Log.i("TeachersApp", "StartScreen - settingCursor.getCount() = " + settingCursor.getCount());
-        if (settingCursor.getCount() == 0) {//если нет профиля настроек
-            db.createNewSettingsProfileWithId1("default", 50);//тогда создем его
-        }
-        settingCursor.close();
-        db.close();
-        super.onStart();
-    }
-
-    @Override
-    public void onClick(View view) {
-        Intent intent;
-        switch (view.getId()) {
-            case R.id.start_screen_layout_now: {//запуск текущего урока
-                intent = new Intent(this, LessonActivity.class);
-                GregorianCalendar currentCalendar = new GregorianCalendar();//получаем текущее время
-                currentCalendar.setTime(new Date());
-                DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-                long attitudeId = db.getSubjectAndTimeCabinetAttitudeIdByTime(currentCalendar);
-                if (attitudeId == -1) {
-                    Toast toast = Toast.makeText(this, R.string.start_screen_activity_toast_no_lessons, Toast.LENGTH_SHORT);
-                    toast.show();
-                } else {
-                    //получаем предмет
-                    Cursor attitude = db.getSubjectAndTimeCabinetAttitudeById(attitudeId);
-                    attitude.moveToFirst();
-                    //берем его время
-                    String dBTime = attitude.getString(attitude.getColumnIndex(
-                            SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN
-                    ));
-                    attitude.close();
-                    //получаем текущий месяц и год
-                    SimpleDateFormat nowDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    String nowDate = nowDateFormat.format(new Date());
-                    //соединяем и отправляем
-                    intent.putExtra(LessonActivity.LESSON_TIME, nowDate + dBTime.substring(10, 19));
-                    //отправляем id
-                    intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, attitudeId);
-
-                    startActivity(intent);
-                }
-            }
-            break;
-            case R.id.start_screen_button_schedule://переход в список расписаний
-                intent = new Intent(this, ScheduleMonthActivity.class);
-                startActivity(intent);
-                /*
-                * существуют рассадки, то есть как ученики класса сидят в конкретном кабинете (в разных кабинетах ученики одного класса сидят по разному)
-                * если уроку присвоены класс и кабинет, но нет рассадки этого класса в этом кабинете,
-                или не у всех учеников назначено место, то, например, подсвечивать урок
-                красным и не давать возможности начать этот урок(надо предусмотреть вариант,
-                когда учеников больше чем мест)
-                * при нажатии на урок можно будет его начать -> запустить LessonActivity с параметрами этого
-                урока(урок ограничение по времени не имеет, время начала и конца нужны только для поиска текущего по времени урока)
-                * должен открываться редактор рассадки, скорее всего надо будет
-                сдеать кнопку в диалоге, что-то вроде "редактировать рассадку учеников" */
-                break;
-            case R.id.start_screen_button_my_cabinets://переход в список кабинетов
-                intent = new Intent(this, CabinetsOutActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.start_screen_button_my_classes: {//переход в список классов
-                intent = new Intent(this, LearnersClassesOutActivity.class);
-                startActivity(intent);
-                break;
-            }
-            case R.id.start_screen_button_reload: {
-                intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
-                break;
-            }
-        }
+    // преобразование зависимой величины в пиксели
+    private int pxFromDp(float dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
     }
 
     @Override
@@ -291,3 +455,15 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
 
 }
+
+
+/*
+todo хранилище полезного кода :)
+
+
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+}
+
+
+* */

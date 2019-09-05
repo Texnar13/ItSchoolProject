@@ -17,9 +17,13 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
 
@@ -83,8 +87,8 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                 try {
                     // ---- вызываем в активности метод по созданию нового типа ----
                     GradesTypeRecord newType = new GradesTypeRecord(
-                            ((EditGradesTypeDialogFragmentInterface) getActivity()).createGradesType("Новый тип"),
-                            "Новый тип"
+                            ((EditGradesTypeDialogFragmentInterface) getActivity()).createGradesType(getResources().getString(R.string.settings_activity_dialog_new_type_title)),
+                            getResources().getString(R.string.settings_activity_dialog_new_type_title)
                     );
                     // ---- создаем контейнер ----
                     LinearLayout newTypeContainer = new LinearLayout(getActivity());
@@ -123,7 +127,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
 
 
 // ---- кнопка отмены ----
-        Button neutralButton = dialogLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_grades_types_cancel_button);
+        ImageView neutralButton = dialogLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_grades_types_cancel_button);
         neutralButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,7 +135,10 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             }
         });
 
-        return builder.create();
+        // наконец создаем диалог и возвращаем его
+        Dialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        return dialog;
     }
 
     // ----- метод вывода всех типов в список -----
@@ -184,7 +191,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             typeRecord.typeContainer.removeAllViews();
             // -- вставляем текстовое поле --
             final EditText editText = new EditText(getActivity());
-            editText.setText(typeRecord.typeName);// + " " + record.typeId);
+            editText.setText(typeRecord.typeName);
             editText.setTextSize(
                     TypedValue.COMPLEX_UNIT_PX,
                     getActivity().getResources().getDimension(R.dimen.text_subtitle_size)
@@ -224,19 +231,42 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
 
             // кнопка удалить
             if (typeRecord.typeId != 1) {
-                Button removeButton = new Button(getActivity());
-                removeButton.setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
-                removeButton.setText(getResources().getString(R.string.settings_activity_dialog_button_remove));
-                removeButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-                removeButton.setTextColor(Color.WHITE);
-                LinearLayout.LayoutParams removeButtonParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        (int) getResources().getDimension(R.dimen.my_buttons_height_size)
+
+                // контейнер кнопки
+                LinearLayout removeButtonContainer = new LinearLayout(getActivity());
+                removeButtonContainer.setGravity(Gravity.CENTER);
+                removeButtonContainer.setBackgroundResource(R.drawable.__background_round_simple_full_dark);
+                LinearLayout.LayoutParams removeButtonContainerParams = new LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1
                 );
-                removeButtonParams.weight = 1;
-                removeButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
-                buttonsContainer.addView(removeButton, removeButtonParams);
-                removeButton.setOnClickListener(new View.OnClickListener() {
+                removeButtonContainerParams.setMargins(
+                        (int) getResources().getDimension(R.dimen.simple_margin),
+                        (int) getResources().getDimension(R.dimen.simple_margin),
+                        (int) getResources().getDimension(R.dimen.simple_margin),
+                        (int) getResources().getDimension(R.dimen.simple_margin)
+                );
+                removeButtonContainerParams.gravity = Gravity.CENTER;
+                buttonsContainer.addView(removeButtonContainer, removeButtonContainerParams);
+
+                TextView removeText = new TextView(getActivity());
+                removeText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+                removeText.setText(R.string.settings_activity_dialog_button_remove);
+                removeText.setTextColor(getResources().getColor(R.color.backgroundWhite));
+                removeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                LinearLayout.LayoutParams removeTextParams = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                removeTextParams.setMargins(
+                        (int) getResources().getDimension(R.dimen.simple_margin),
+                        (int) getResources().getDimension(R.dimen.simple_margin),
+                        (int) getResources().getDimension(R.dimen.simple_margin),
+                        (int) getResources().getDimension(R.dimen.simple_margin)
+                );
+                removeButtonContainer.addView(removeText, removeTextParams);
+                removeButtonContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         boolean isDeleted = false;
@@ -262,20 +292,42 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                 });
             }
 
-            // кнопка сохранить
-            Button saveButton = new Button(getActivity());
-            saveButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
-            saveButton.setText(getResources().getString(R.string.settings_activity_dialog_button_save));
-            saveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-            saveButton.setTextColor(Color.WHITE);
-            LinearLayout.LayoutParams saveButtonParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    (int) getResources().getDimension(R.dimen.my_buttons_height_size)
+
+            // контейнер кнопки
+            LinearLayout saveButtonContainer = new LinearLayout(getActivity());
+            saveButtonContainer.setGravity(Gravity.CENTER);
+            saveButtonContainer.setBackgroundResource(R.drawable.__background_round_simple_full_dark);
+            LinearLayout.LayoutParams saveButtonContainerParams = new LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1
             );
-            saveButtonParams.weight = 1;
-            saveButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
-            buttonsContainer.addView(saveButton, saveButtonParams);
-            saveButton.setOnClickListener(new View.OnClickListener() {
+            saveButtonContainerParams.setMargins(
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin)
+            );
+            saveButtonContainerParams.gravity = Gravity.CENTER;
+            buttonsContainer.addView(saveButtonContainer, saveButtonContainerParams);
+
+            TextView saveText = new TextView(getActivity());
+            saveText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+            saveText.setText(R.string.settings_activity_dialog_button_save);
+            saveText.setTextColor(getResources().getColor(R.color.backgroundWhite));
+            saveText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            LinearLayout.LayoutParams saveTextParams = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            saveTextParams.setMargins(
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin)
+            );
+            saveButtonContainer.addView(saveText, saveTextParams);
+            saveButtonContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // вызываем метод по сохранению названия
@@ -318,7 +370,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
 
             // --- текстовое поле элемента ---
             TextView textView = new TextView(getActivity());
-            textView.setText(typeRecord.typeName + " " + typeRecord.typeId);
+            textView.setText(typeRecord.typeName);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getActivity().getResources().getDimension(R.dimen.text_subtitle_size));
             textView.setTextColor(Color.BLACK);
             textView.setGravity(Gravity.CENTER_VERTICAL);

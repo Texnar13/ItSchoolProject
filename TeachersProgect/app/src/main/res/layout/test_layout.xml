@@ -4,394 +4,309 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundLiteGray"
-    android:orientation="vertical">
-
-    <!--    <LinearLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:gravity="center_horizontal"-->
-    <!--        android:orientation="vertical">-->
-
-    <!--        <android.support.constraint.ConstraintLayout-->
-    <!--            -->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content">-->
-
-    <!--            <LinearLayout-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginBottom="20dp"-->
-    <!--                android:background="@drawable/_background_bottom_round_blue"-->
-    <!--                android:gravity="center_horizontal"-->
-    <!--                android:orientation="vertical">-->
+    android:background="@color/backgroundGray"
+    android:orientation="vertical"
+    tools:ignore="HardcodedText">
 
 
-    <!--                <LinearLayout-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="112dp"-->
-    <!--                    android:orientation="vertical">-->
 
-    <!--                    <TextView-->
-    <!--                        android:layout_width="wrap_content"-->
-    <!--                        android:layout_height="wrap_content"-->
-    <!--                        android:layout_gravity="center_horizontal"-->
-    <!--                        android:text="*10:35*"-->
-    <!--                        android:textColor="#000000"-->
-    <!--                        android:textSize="@dimen/text_title_size" />-->
+    <LinearLayout
+        android:weightSum="20"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/__current_lesson_background_uplined_white">
+        <TextView
+            android:gravity="center"
+            android:layout_weight="4"
+            android:fontFamily="@font/geometria_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_subtitle_size"
+            android:textColor="#000000"
+            android:text=" 1."/>
+        <LinearLayout
+            android:gravity="center"
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:gravity="center"
+                android:textColor="@color/backgroundMediumGray"
+                android:fontFamily="@font/geometria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12:25"
+                android:textSize="@dimen/text_subtitle_size" />
+            <TextView
+                android:textColor="@color/backgroundMediumGray"
+                android:fontFamily="@font/geometria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12:25"
+                android:textSize="@dimen/text_subtitle_size"/>
 
+        </LinearLayout>
 
-    <!--                    <TextView-->
-    <!--                        android:layout_width="wrap_content"-->
-    <!--                        android:layout_height="wrap_content"-->
-    <!--                        android:layout_gravity="center_horizontal"-->
-    <!--                        android:text="*31 Октября*"-->
-    <!--                        android:textColor="#000000"-->
-    <!--                        android:textSize="@dimen/text_title_size" />-->
+       <TextView
+           android:gravity="center"
+           android:layout_weight="10"
+           android:fontFamily="@font/geometria"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="@dimen/text_subtitle_size"
+           android:textColor="#000000"
+           android:text="UTJVTNHBZ"/>
 
-    <!--                    <TextView-->
-    <!--                        android:layout_width="wrap_content"-->
-    <!--                        android:layout_height="wrap_content"-->
-    <!--                        android:layout_gravity="center_horizontal"-->
-    <!--                        android:text="*Понедельник*"-->
-    <!--                        android:textColor="#000000"-->
-    <!--                        android:textSize="@dimen/text_subtitle_size" />-->
-    <!--                </LinearLayout>-->
+       <TextView
+           android:gravity="center"
+           android:layout_weight="2"
+           android:fontFamily="@font/geometria_medium"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="@dimen/text_subtitle_size"
+           android:textColor="#000000"
+           android:text="9Б"/>
 
-    <!--                <LinearLayout-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="76dp"-->
-    <!--                    android:orientation="vertical">-->
+       <TextView
+           android:gravity="center"
+           android:layout_weight="2"
+           android:fontFamily="@font/geometria_light"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="@dimen/text_subtitle_size"
+           android:textColor="#000000"
+           android:text="404"/>
+    </LinearLayout>
 
-    <!--                    <TextView-->
-    <!--                        android:layout_width="wrap_content"-->
-    <!--                        android:layout_height="20dp"-->
-    <!--                        android:layout_gravity="bottom|left"-->
-    <!--                        android:layout_marginLeft="10dp"-->
-    <!--                        android:gravity="bottom"-->
-    <!--                        android:text="*СЕЙЧАС:*"-->
-    <!--                        android:textColor="@color/backgroundWhite"-->
-    <!--                        android:textSize="@dimen/text_simple_size"-->
-    <!--                        tools:ignore="RtlHardcoded" />-->
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <!--                    <LinearLayout-->
-    <!--                        android:layout_width="match_parent"-->
-    <!--                        android:layout_height="match_parent"-->
-    <!--                        android:layout_marginLeft="10dp"-->
-    <!--                        android:layout_marginRight="10dp"-->
-    <!--                        android:background="@drawable/_dialog_full_background_white"/>-->
+        <TableRow>
+            <TextView
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:gravity="center"
+                android:fontFamily="@font/geometria_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_subtitle_size"
+                android:textColor="#000000"
+                android:text=" 1."/>
+            <LinearLayout
+                android:layout_marginRight="@dimen/double_margin"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:gravity="center"
+                    android:textColor="@color/backgroundMediumGray"
+                    android:fontFamily="@font/geometria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12:25"
+                    android:textSize="@dimen/text_subtitle_size" />
+                <TextView
+                    android:textColor="@color/backgroundMediumGray"
+                    android:fontFamily="@font/geometria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12:25"
+                    android:textSize="@dimen/text_subtitle_size"/>
 
-    <!--                </LinearLayout>-->
+            </LinearLayout>
 
-    <!--            </LinearLayout>-->
+            <TextView
+                android:layout_marginRight="@dimen/double_margin"
+                android:gravity="center"
+                android:fontFamily="@font/geometria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_subtitle_size"
+                android:textColor="#000000"
+                android:text="UTJVTN"/>
 
-    <!--            <LinearLayout-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="40dp"-->
-    <!--                android:layout_centerHorizontal="true"-->
-    <!--                android:background="@drawable/_button_round_background_green"-->
-    <!--                android:gravity="center"-->
-    <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--                app:layout_constraintEnd_toEndOf="parent"-->
-    <!--                app:layout_constraintStart_toStartOf="parent">-->
+            <TextView
+                android:layout_marginRight="@dimen/double_margin"
+                android:gravity="center"
+                android:fontFamily="@font/geometria_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_subtitle_size"
+                android:textColor="#000000"
+                android:text="9Б9Б"/>
 
-    <!--                <TextView-->
+            <TextView
+                android:layout_marginRight="@dimen/double_margin"
+                android:gravity="center"
+                android:fontFamily="@font/geometria_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_subtitle_size"
+                android:textColor="#000000"
+                android:text="4044"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:gravity="center"
+                android:fontFamily="@font/geometria_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_subtitle_size"
+                android:textColor="#000000"
+                android:text=" 1."/>
+            <LinearLayout
+                android:layout_marginRight="@dimen/double_margin"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:gravity="center"
+                    android:textColor="@color/backgroundMediumGray"
+                    android:fontFamily="@font/geometria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12:25"
+                    android:textSize="@dimen/text_subtitle_size" />
+                <TextView
+                    android:textColor="@color/backgroundMediumGray"
+                    android:fontFamily="@font/geometria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12:25"
+                    android:textSize="@dimen/text_subtitle_size"/>
 
-    <!--                    android:layout_width="wrap_content"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:layout_marginLeft="10dp"-->
-    <!--                    android:layout_marginRight="10dp"-->
-    <!--                    android:text="*Начать урок?*"-->
-    <!--                    android:textColor="@color/backgroundWhite"-->
-    <!--                    android:textSize="@dimen/text_subtitle_size" />-->
-    <!--            </LinearLayout>-->
+            </LinearLayout>
 
-    <!--        </android.support.constraint.ConstraintLayout>-->
+            <TextView
+                android:layout_marginRight="@dimen/double_margin"
+                android:gravity="center"
+                android:fontFamily="@font/geometria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_subtitle_size"
+                android:textColor="#000000"
+                android:text="UTJVTddddN"/>
 
+            <TextView
+                android:layout_marginRight="@dimen/double_margin"
+                android:gravity="center"
+                android:fontFamily="@font/geometria_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_subtitle_size"
+                android:textColor="#000000"
+                android:text="9Б9Б"/>
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:gravity="center_horizontal"-->
-<!--        android:orientation="vertical">-->
+            <TextView
+                android:layout_marginRight="@dimen/double_margin"
+                android:gravity="center"
+                android:fontFamily="@font/geometria_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_subtitle_size"
+                android:textColor="#000000"
+                android:text="4044"/>
 
-<!--        <android.support.constraint.ConstraintLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="250dp">-->
+        </TableRow>
+    </TableLayout>
 
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/__current_lesson_background_uplined_white">
+        <TextView
+            android:layout_marginLeft="@dimen/double_margin"
+            android:layout_marginRight="@dimen/double_margin"
+            android:gravity="center"
+            android:fontFamily="@font/geometria_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_subtitle_size"
+            android:textColor="#000000"
+            android:text=" 1."/>
+        <LinearLayout
+            android:layout_marginRight="@dimen/double_margin"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:gravity="center"
+                android:textColor="@color/backgroundMediumGray"
+                android:fontFamily="@font/geometria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12:25"
+                android:textSize="@dimen/text_subtitle_size" />
+            <TextView
+                android:textColor="@color/backgroundMediumGray"
+                android:fontFamily="@font/geometria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12:25"
+                android:textSize="@dimen/text_subtitle_size"/>
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/linearLayout4"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_marginBottom="20dp"-->
-<!--                android:background="@drawable/_background_bottom_round_blue"-->
-<!--                android:gravity="center_horizontal"-->
-<!--                android:orientation="vertical"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent">-->
-<!--            </LinearLayout>-->
+        </LinearLayout>
 
+       <TextView
+           android:layout_marginRight="@dimen/double_margin"
+           android:gravity="center"
+           android:fontFamily="@font/geometria"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="@dimen/text_subtitle_size"
+           android:textColor="#000000"
+           android:text="UTJVTN"/>
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/linearLayout3"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:layout_marginLeft="10dp"-->
-<!--                android:layout_marginRight="10dp"-->
-<!--                android:layout_marginBottom="50dp"-->
-<!--                android:background="@drawable/_dialog_full_background_white"-->
-<!--                android:orientation="horizontal"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintLeft_toLeftOf="parent"-->
-<!--                app:layout_constraintLeft_toRightOf="parent" />-->
+       <TextView
+           android:layout_marginRight="@dimen/double_margin"
+           android:gravity="center"
+           android:fontFamily="@font/geometria_medium"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="@dimen/text_subtitle_size"
+           android:textColor="#000000"
+           android:text="9Б9Б"/>
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/linearLayout"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="40dp"-->
-<!--                android:layout_centerHorizontal="true"-->
-<!--                android:background="@drawable/_button_round_background_green"-->
-<!--                android:gravity="center"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent">-->
-
-<!--                <TextView-->
-
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginRight="10dp"-->
-<!--                    android:text="*Начать урок?*"-->
-<!--                    android:textColor="@color/backgroundWhite"-->
-<!--                    android:textSize="@dimen/text_subtitle_size" />-->
-<!--            </LinearLayout>-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/textView5"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center_horizontal"-->
-<!--                android:text="*Понедельник*"-->
-<!--                android:textColor="#000000"-->
-<!--                android:textSize="@dimen/text_subtitle_size"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/textView4" />-->
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="20dp"-->
-<!--                android:gravity="bottom"-->
-<!--                android:text="*СЕЙЧАС:*"-->
-<!--                android:textColor="@color/backgroundWhite"-->
-<!--                android:textSize="@dimen/text_simple_size"-->
-<!--                app:layout_constraintBottom_toTopOf="@+id/linearLayout3"-->
-<!--                app:layout_constraintStart_toLeftOf="@+id/linearLayout3"-->
-<!--                app:layout_constraintStart_toStartOf="@+id/linearLayout3"-->
-<!--                tools:ignore="RtlHardcoded" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/textView"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center_horizontal"-->
-<!--                android:layout_marginTop="10dp"-->
-<!--                android:text="*10:35*"-->
-<!--                android:textColor="#000000"-->
-<!--                android:textSize="@dimen/text_title_size"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/textView4"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center_horizontal"-->
-<!--                android:text="*31 Октября*"-->
-<!--                android:textColor="#000000"-->
-<!--                android:textSize="@dimen/text_title_size"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/textView" />-->
-
-<!--        </android.support.constraint.ConstraintLayout>-->
-
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:weightSum="2">-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="5dp"-->
-<!--                        android:layout_marginTop="5dp"-->
-<!--                        android:layout_marginRight="5dp"-->
-<!--                        android:orientation="horizontal"-->
-<!--                        android:weightSum="2">-->
-
-<!--                        <RelativeLayout-->
-<!--                            android:layout_margin="5dp"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_weight="1">-->
-<!--                            <ImageView-->
-<!--                                android:id="@+id/tempId1"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:adjustViewBounds="true"-->
-<!--                                app:srcCompat="@drawable/_button_background_start_screen_1_calendar" />-->
-
-<!--                            <LinearLayout-->
-<!--                                android:orientation="vertical"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_alignLeft="@+id/tempId1"-->
-<!--                                android:layout_alignTop="@+id/tempId1"-->
-<!--                                android:layout_alignRight="@+id/tempId1"-->
-<!--                                android:layout_alignBottom="@+id/tempId1"-->
-<!--                                android:weightSum="3">-->
-
-<!--                                <TextView-->
-<!--                                    android:layout_gravity="center_horizontal"-->
-<!--                                    android:gravity="center"-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="0dp"-->
-<!--                                    android:layout_weight="1"-->
-<!--                                    android:text="*Расписание*"-->
-<!--                                    android:textColor="#000000"-->
-<!--                                    android:textSize="@dimen/text_subtitle_size" />-->
-<!--                            </LinearLayout>-->
-<!--                        </RelativeLayout>-->
-
-<!--                        <RelativeLayout-->
-<!--                            android:layout_margin="5dp"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_weight="1">-->
-<!--                            <ImageView-->
-<!--                                android:id="@+id/tempId2"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:adjustViewBounds="true"-->
-<!--                                app:srcCompat="@drawable/_button_background_start_screen_2_girl" />-->
-
-<!--                            <LinearLayout-->
-<!--                                android:orientation="vertical"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_alignLeft="@+id/tempId2"-->
-<!--                                android:layout_alignTop="@+id/tempId2"-->
-<!--                                android:layout_alignRight="@+id/tempId2"-->
-<!--                                android:layout_alignBottom="@+id/tempId2"-->
-<!--                                android:weightSum="3">-->
-
-<!--                                <TextView-->
-<!--                                    android:layout_gravity="center_horizontal"-->
-<!--                                    android:gravity="center"-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="0dp"-->
-<!--                                    android:layout_weight="1"-->
-<!--                                    android:text="*Ученики*"-->
-<!--                                    android:textColor="#000000"-->
-<!--                                    android:textSize="@dimen/text_subtitle_size" />-->
-<!--                            </LinearLayout>-->
-<!--                        </RelativeLayout>-->
-<!--                    </LinearLayout>-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="5dp"-->
-<!--                        android:layout_marginTop="5dp"-->
-<!--                        android:layout_marginRight="5dp"-->
-<!--                        android:orientation="horizontal"-->
-<!--                        android:weightSum="2">-->
-
-<!--                        <RelativeLayout-->
-<!--                            android:layout_margin="5dp"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_weight="1">-->
-<!--                            <ImageView-->
-<!--                                android:id="@+id/tempId3"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:adjustViewBounds="true"-->
-<!--                                app:srcCompat="@drawable/_button_background_start_screen_3_cabinets" />-->
-
-<!--                            <LinearLayout-->
-<!--                                android:orientation="vertical"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_alignLeft="@+id/tempId3"-->
-<!--                                android:layout_alignTop="@+id/tempId3"-->
-<!--                                android:layout_alignRight="@+id/tempId3"-->
-<!--                                android:layout_alignBottom="@+id/tempId3"-->
-<!--                                android:weightSum="3">-->
-
-<!--                                <TextView-->
-<!--                                    android:layout_gravity="center_horizontal"-->
-<!--                                    android:gravity="center"-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="0dp"-->
-<!--                                    android:layout_weight="1"-->
-<!--                                    android:text="*Кабинеты*"-->
-<!--                                    android:textColor="#000000"-->
-<!--                                    android:textSize="@dimen/text_subtitle_size" />-->
-<!--                            </LinearLayout>-->
-<!--                        </RelativeLayout>-->
-
-<!--                        <RelativeLayout-->
-<!--                            android:layout_margin="5dp"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_weight="1">-->
-<!--                            <ImageView-->
-<!--                                android:id="@+id/tempId4"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:adjustViewBounds="true"-->
-<!--                                app:srcCompat="@drawable/_button_background_start_screen_4_settings" />-->
-
-<!--                            <LinearLayout-->
-<!--                                android:orientation="vertical"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_alignLeft="@+id/tempId4"-->
-<!--                                android:layout_alignTop="@+id/tempId4"-->
-<!--                                android:layout_alignRight="@+id/tempId4"-->
-<!--                                android:layout_alignBottom="@+id/tempId4"-->
-<!--                                android:weightSum="3">-->
-
-<!--                                <TextView-->
-<!--                                    android:layout_gravity="center_horizontal"-->
-<!--                                    android:gravity="center"-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="0dp"-->
-<!--                                    android:layout_weight="1"-->
-<!--                                    android:text="*Настройки*"-->
-<!--                                    android:textColor="#000000"-->
-<!--                                    android:textSize="@dimen/text_subtitle_size" />-->
-<!--                            </LinearLayout>-->
-<!--                        </RelativeLayout>-->
-<!--                    </LinearLayout>-->
-<!--                </LinearLayout>-->
+       <TextView
+           android:layout_marginRight="@dimen/double_margin"
+           android:gravity="center"
+           android:fontFamily="@font/geometria_light"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="@dimen/text_subtitle_size"
+           android:textColor="#000000"
+           android:text="4044"/>
+    </LinearLayout>
 
 
-<!--    </LinearLayout>-->
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!--    <RelativeLayout-->
+<!--        android:background="@drawable/_dialog_head_background_white"-->
 <!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp">-->
+<!--        android:layout_height="wrap_content">-->
 
 
 <!--        <ImageView-->
@@ -399,230 +314,247 @@
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="wrap_content"-->
 <!--            android:adjustViewBounds="true"-->
-<!--            app:srcCompat="@drawable/start_screen_help_13" />-->
+<!--            app:srcCompat="@drawable/__background_edit_lesson" />-->
 
 <!--        <ImageView-->
 <!--            android:layout_width="40dp"-->
 <!--            android:layout_height="40dp"-->
 <!--            android:layout_marginLeft="10dp"-->
 <!--            android:layout_marginTop="10dp"-->
-<!--            app:srcCompat="@drawable/ic_vector_zoom_in_dark"-->
+<!--            app:srcCompat="@drawable/__button_close"-->
 <!--            tools:ignore="RtlHardcoded">-->
 
 <!--        </ImageView>-->
 
-<!--        <ImageView-->
-<!--            android:layout_width="40dp"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:layout_alignParentRight="true"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:layout_marginRight="10dp"-->
-<!--            app:srcCompat="@drawable/ic_vector_zoom_in_dark"-->
-<!--            tools:ignore="RtlHardcoded">-->
 
-<!--        </ImageView>-->
+<!--    </RelativeLayout>-->
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_below="@+id/imageView"-->
+<!--        android:layout_marginTop="0dp"-->
+<!--        android:background="@drawable/_dialog_bottom_background_white"-->
+<!--        android:gravity="center"-->
+<!--        android:orientation="vertical">-->
+
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="2"-->
+<!--            android:gravity="center"-->
+<!--            android:text="Алгебра"-->
+<!--            android:textSize="@dimen/text_title_size" />-->
+
+<!--        <TextView-->
+
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="2"-->
+<!--            android:gravity="center_horizontal"-->
+<!--            android:text="понедельник, 10 мая"-->
+<!--            android:textSize="@dimen/text_simple_size" />-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="2"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:orientation="horizontal">-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="@dimen/icon_size"-->
+<!--                android:layout_height="@dimen/icon_size"-->
+<!--                android:layout_marginLeft="@dimen/double_margin"-->
+<!--                android:layout_marginRight="@dimen/double_margin"-->
+<!--                app:srcCompat="@drawable/__icon_edit_lesson_time"-->
+<!--                tools:ignore="RtlHardcoded">-->
+
+<!--            </ImageView>-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="1 урок (8:30 - 9:15)"-->
+<!--                android:textSize="@dimen/text_subtitle_size" />-->
+<!--        </LinearLayout>-->
 
 
 <!--        <LinearLayout-->
 <!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_below="@+id/imageView"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="2"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:orientation="horizontal">-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="@dimen/icon_size"-->
+<!--                android:layout_height="@dimen/icon_size"-->
+<!--                android:layout_marginLeft="@dimen/double_margin"-->
+<!--                android:layout_marginRight="@dimen/double_margin"-->
+<!--                app:srcCompat="@drawable/__icon_edit_lesson_class"-->
+<!--                tools:ignore="RtlHardcoded">-->
+
+<!--            </ImageView>-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="7Б"-->
+<!--                android:textSize="@dimen/text_subtitle_size" />-->
+<!--        </LinearLayout>-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="2"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:orientation="horizontal">-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="@dimen/icon_size"-->
+<!--                android:layout_height="@dimen/icon_size"-->
+<!--                android:layout_marginLeft="@dimen/double_margin"-->
+<!--                android:layout_marginRight="@dimen/double_margin"-->
+<!--                app:srcCompat="@drawable/__icon_edit_lesson_cabinet"-->
+<!--                tools:ignore="RtlHardcoded">-->
+
+<!--            </ImageView>-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="201"-->
+<!--                android:textSize="@dimen/text_subtitle_size" />-->
+<!--        </LinearLayout>-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="1"/>-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:weightSum="4"-->
+<!--            android:background="@drawable/_background_doublelined_white"-->
+<!--            android:gravity="center">-->
+
+<!--            <TextView-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="@dimen/simple_margin"-->
+<!--                android:layout_marginRight="@dimen/simple_margin"-->
+<!--                android:gravity="center"-->
+<!--                android:text="Не повторять"-->
+<!--                android:textSize="@dimen/text_small_size" />-->
+
+<!--            <TextView-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginRight="@dimen/simple_margin"-->
+<!--                android:gravity="center"-->
+<!--                android:text="Ежемесячно"-->
+<!--                android:textSize="@dimen/text_small_size"/>-->
+
+<!--            <TextView-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginRight="@dimen/simple_margin"-->
+<!--                android:gravity="center"-->
+<!--                android:text="Еженедельно"-->
+<!--                android:textSize="@dimen/text_small_size" />-->
+
+<!--            <TextView-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginRight="@dimen/simple_margin"-->
+<!--                android:gravity="center"-->
+<!--                android:text="Ежедневно"-->
+<!--                android:textSize="@dimen/text_small_size" />-->
+<!--        </LinearLayout>-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="3"-->
 <!--            android:gravity="center"-->
-<!--            android:orientation="vertical">-->
+<!--            android:orientation="horizontal"-->
+<!--            android:weightSum="2">-->
 
 <!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="0dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:orientation="horizontal">-->
-
-<!--                <ImageView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:srcCompat="@drawable/ic_vector_zoom_in_light"-->
-<!--                    tools:ignore="RtlHardcoded">-->
-
-<!--                </ImageView>-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="1 урок (8:30 - 9:15)"-->
-<!--                    android:textSize="@dimen/text_title_size" />-->
-<!--            </LinearLayout>-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="0dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:orientation="horizontal">-->
-
-<!--                <ImageView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:srcCompat="@drawable/ic_vector_zoom_in_light"-->
-<!--                    tools:ignore="RtlHardcoded">-->
-
-<!--                </ImageView>-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="7Б"-->
-<!--                    android:textSize="@dimen/text_title_size" />-->
-<!--            </LinearLayout>-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="0dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:orientation="horizontal">-->
-
-<!--                <ImageView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:srcCompat="@drawable/ic_vector_zoom_in_light"-->
-<!--                    tools:ignore="RtlHardcoded">-->
-
-<!--                </ImageView>-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="201"-->
-<!--                    android:textSize="@dimen/text_title_size" />-->
-<!--            </LinearLayout>-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="0dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:background="@drawable/button_lite_blue"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/__background_round_simple_full_dark"-->
 <!--                android:gravity="center">-->
 
 <!--                <TextView-->
 <!--                    android:layout_width="wrap_content"-->
 <!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="2010*0000*0000*0000"-->
-<!--                    android:textSize="@dimen/text_title_size" />-->
+<!--                    android:layout_marginLeft="@dimen/double_margin"-->
+<!--                    android:layout_marginTop="@dimen/simple_margin"-->
+<!--                    android:layout_marginRight="@dimen/double_margin"-->
+<!--                    android:layout_marginBottom="@dimen/simple_margin"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="Рассадить учеников"-->
+<!--                    android:textColor="@color/backgroundWhite"-->
+<!--                    android:textSize="@dimen/text_simple_size" />-->
 <!--            </LinearLayout>-->
+<!--        </LinearLayout>-->
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="0dp"-->
-<!--                android:layout_margin="40dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:background="@drawable/button_lite_blue"-->
-<!--                android:gravity="center_vertical">-->
-
-<!--            </LinearLayout>-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="0dp"-->
-<!--                android:layout_weight="2"-->
-<!--                android:background="@color/grade3Color"-->
-<!--                android:gravity="center_vertical">-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:gravity="bottom|center_horizontal"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:weightSum="1">-->
 
 
-<!--            </LinearLayout>-->
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="0dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:gravity="center"-->
-<!--                android:text="Алгебра"-->
-<!--                android:textSize="@dimen/text_title_size" />-->
-
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="0dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:gravity="center"-->
-<!--                android:text="понедельник, 10 мая"-->
-<!--                android:textSize="@dimen/text_simple_size" />-->
+<!--                <TextView-->
+<!--                    android:background="@drawable/_underlined_blue"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="Удалить урок"-->
+<!--                    android:textColor="@color/backgroundDarkGray"-->
+<!--                    android:textSize="@dimen/text_simple_size" />-->
 
 <!--        </LinearLayout>-->
 
 
-<!--        <RelativeLayout-->
-<!--            android:layout_width="0dp"-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="0dp"-->
-<!--            android:background="@color/baseGreen">-->
+<!--            android:layout_weight="3"-->
+<!--            android:gravity="center"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:weightSum="2">-->
 
-<!--            <RelativeLayout-->
-<!--                android:layout_width="72dp"-->
-<!--                android:layout_height="72dp"-->
-<!--                android:layout_alignParentLeft="true"-->
-<!--                android:layout_alignParentTop="true"-->
-<!--                android:layout_marginLeft="4dp"-->
-<!--                android:layout_marginTop="4dp"-->
-<!--                android:background="@color/baseOrange">-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:orientation="vertical">-->
-
-<!--                    <RelativeLayout-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:layout_weight="3">-->
-
-<!--                        <ImageView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="match_parent"-->
-<!--                            app:srcCompat="@drawable/lesson_learner_0_gray" />-->
-
-<!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_alignParentBottom="true"-->
-<!--                            android:layout_centerHorizontal="true"-->
-<!--                            android:layout_gravity="bottom"-->
-<!--                            android:gravity="bottom"-->
-<!--                            android:text="5"-->
-<!--                            android:textColor="#000000"-->
-<!--                            android:textSize="4pt" />-->
-
-<!--                    </RelativeLayout>-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:gravity="top"-->
-<!--                        android:maxLines="1"-->
-<!--                        android:text="И Иванов"-->
-<!--                        android:textAllCaps="true"-->
-<!--                        android:textColor="#000000"-->
-<!--                        android:textSize="2pt" />-->
-<!--                </LinearLayout>-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/_button_round_background_green"-->
+<!--                android:gravity="center">-->
 
 <!--                <TextView-->
 <!--                    android:layout_width="wrap_content"-->
 <!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_alignParentTop="true"-->
-<!--                    android:layout_alignParentRight="true"-->
-<!--                    android:text="5"-->
-<!--                    android:textColor="@color/backgroundWhite" />-->
+<!--                    android:layout_marginLeft="@dimen/double_margin"-->
+<!--                    android:layout_marginTop="@dimen/half_margin"-->
+<!--                    android:layout_marginRight="@dimen/double_margin"-->
+<!--                    android:layout_marginBottom="@dimen/half_margin"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="Сохранить"-->
+<!--                    android:textColor="@color/backgroundWhite"-->
+<!--                    android:textSize="@dimen/text_simple_size" />-->
+<!--            </LinearLayout>-->
+<!--        </LinearLayout>-->
+<!--    </LinearLayout>-->
 
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_alignParentLeft="true"-->
-<!--                    android:layout_alignParentTop="true"-->
-<!--                    android:text="5"-->
-<!--                    android:textColor="@color/backgroundWhite" />-->
-<!--            </RelativeLayout>-->
-<!--        </RelativeLayout>-->
-
-
-<!--    </RelativeLayout>-->
 
 </LinearLayout>

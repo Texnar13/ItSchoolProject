@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackGround"
+    android:background="@color/backgroundWhite"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity"
@@ -12,57 +12,47 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/backgroundWhite"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/cabinets_out_menu_back_arrow"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_alignParentLeft="true"
+            android:id="@+id/cabinets_out_toolbar_back_arrow"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            app:srcCompat="@drawable/_button_back_arrow_orange"
-            tools:ignore="RtlHardcoded" />
+            android:layout_width="@dimen/my_icon_size"
+            android:layout_height="@dimen/my_icon_size"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/__button_back_arrow_orange"/>
 
         <ImageView
-            android:id="@+id/cabinets_out_menu_menu_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="8dp"
-            app:srcCompat="@drawable/_button_menu_white"
-            tools:ignore="RtlHardcoded" />
+            android:layout_marginLeft="@dimen/my_icon_size"
+            android:layout_marginRight="@dimen/my_icon_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/__background_edit_lesson"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:layout_toLeftOf="@+id/cabinets_out_menu_menu_button"
-            android:layout_toRightOf="@+id/cabinets_out_menu_back_arrow"
-            android:background="@drawable/_button_round_background_orange"
             android:gravity="center"
-            tools:ignore="RtlHardcoded">
-
+            android:layout_marginLeft="@dimen/my_icon_size"
+            android:layout_marginRight="@dimen/my_icon_size"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/my_toolbar_text_container_height_size"
+            android:background="@drawable/_button_round_background_orange">
             <TextView
+                android:textSize="@dimen/text_subtitle_size"
+                android:textColor="@color/backgroundWhite"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="5dp"
-                android:textAllCaps="true"
-                android:text="@string/start_screen_activity_title_my_cabinets"
-                android:textColor="@color/backgroundWhite"
-                android:textSize="@dimen/text_subtitle_size" />
+                android:text="@string/title_activity_cabinets_out"
+                android:fontFamily="@font/geometria"/>
         </LinearLayout>
+
     </RelativeLayout>
 
     <ScrollView
+        android:layout_marginTop="@dimen/simple_margin"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
