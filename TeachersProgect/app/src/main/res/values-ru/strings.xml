@@ -24,11 +24,11 @@
     <string name="start_screen_activity_dialog_button_later">позже</string>
 
     <string name="start_screen_activity_dialog_whats_new_title">Что нового:</string>
-    <string name="start_screen_activity_dialog_whats_new_text"><b>Важное объявление:</b>\nУважаемый пользователь!\nЕсли вам нравится наше приложение, поддержите разработчиков, они тоже хотят кушать! Вскоре в нижнем углу календаря появится реклама, и за каждый клик по ней (но не несколько раз подряд) нам будет перечисляться 50 копеек. Поэтому кликайте почаще!
-Также мы вставим видео-рекламу на страницу «настройки», в самую малопосещаемую страницу. Просмотр видеоролика пересылает нам по рублю, а это уж и вовсе замечательно!\nСпасибо!\n
- P.S. Баннер будет маленький, видео-ролик можно закрыть, но если кому-то захочется насовсем избавиться от рекламы, мы добавим функцию – отключить рекламу за 1 доллар.\n\n<b>По вашим просьбам мы раскрасили оценки, теперь их можно сделать цветными!</b>
+    <string name="start_screen_activity_dialog_whats_new_text">Поздравляем Вас с началом учебного года, дорогие пользователи!\n\n<b>Представляем обещанное глобальное обновление</b>: теперь все гораздо удобнее и красивее. С новым дизайном пришли и новые возможности (к примеру, типы оценок: тест, контрольная, четвертная). Не забудьте залезть в Настройки – они позволяют сделать приложение 100 % подходящим для вас.
+Спасибо за ваши отзывы – именно они помогают нам сделать приложение лучше! Если у вас есть предложения – пишите, у нас грандиозные планы по дальнейшему улучшению Помощника учителя!
+
     </string>
-    <string name="start_screen_activity_dialog_whats_new_button_ok">понятно</string>
+    <string name="start_screen_activity_dialog_whats_new_button_ok">Понятно</string>
     <!-- уведомления -->
     <string name="start_screen_activity_toast_no_lessons">На текущий момент уроков не запланировано</string>
 
@@ -130,8 +130,8 @@
     <!-- заголовок активности -->
     <string name="title_activity_learners_and_grades_statistics">Статистика за период</string>
     <!-- тексты -->
-    <string name="learners_and_grades_statistics_activity_title_column_learner_name">ИМЯ</string>
-    <string name="learners_and_grades_statistics_activity_title_column_grade">СР.</string>
+    <string name="learners_and_grades_statistics_activity_title_column_learner_name">Имя</string>
+    <string name="learners_and_grades_statistics_activity_title_column_grade">Балл</string>
     <string name="learners_and_grades_statistics_activity_title_column_absent">Н</string>
     <string name="learners_and_grades_statistics_activity_hint_date_day">ДЕНЬ</string>
     <string name="learners_and_grades_statistics_activity_hint_date_month">МЕСЯЦ</string>
@@ -139,9 +139,10 @@
     <string name="learners_and_grades_statistics_activity_spinner_text_add">+ Добавить период времени</string>
     <string name="learners_and_grades_statistics_activity_spinner_text_remove">- Удалить периоды времени</string>
     <!-- диалог -->
-    <string name="learners_and_grades_statistics_activity_dialog_title_add_statistic">Добавить учебный период</string>
+    <string name="learners_and_grades_statistics_activity_dialog_title_add_statistic">Создать учебный период</string>
     <string name="learners_and_grades_statistics_activity_dialog_title_remove_statistic">Удалить учебный период</string>
     <string name="learners_and_grades_statistics_activity_dialog_title_edit_statistic">Редактировать учебный период</string>
+    <string name="learners_and_grades_statistics_activity_dialog_title_choose_period">Выберите период:</string>
     <string name="learners_and_grades_statistics_activity_dialog_text_time_before">С:</string>
     <string name="learners_and_grades_statistics_activity_dialog_text_time_after">ДО:</string>
     <string name="learners_and_grades_statistics_activity_dialog_hint_profile_name">Название периода</string>
@@ -208,9 +209,9 @@
     <string name="lesson_redactor_activity_spinner_text_create_subject">+ создать предмет для этого класса</string>
     <string name="lesson_redactor_activity_spinner_text_remove_subject">-  удалить предмет(ы)</string>
     <string name="lesson_redactor_activity_spinner_text_select_subject">выберите предмет:</string>
-    <string name="lesson_redactor_activity_spinner_text_repeat_never">никогда</string>
-    <string name="lesson_redactor_activity_spinner_text_repeat_daily">ежедневно</string>
-    <string name="lesson_redactor_activity_spinner_text_repeat_weekly">еженедельно</string>
+    <string name="lesson_redactor_activity_spinner_text_repeat_never">Не повторять</string>
+    <string name="lesson_redactor_activity_spinner_text_repeat_daily">Ежедневно</string>
+    <string name="lesson_redactor_activity_spinner_text_repeat_weekly">Еженедельно</string>
     <!-- тексты -->
     <string name="lesson_redactor_activity_title_class">Класс</string>
     <string name="lesson_redactor_activity_title_subject">Предмет</string>
@@ -226,7 +227,7 @@
     <string name="lesson_redactor_activity_toast_text_subject_not_chosen">Не выбран предмет, вы можете создать класс в разделе «МОИ УЧЕНИКИ», затем зайдите в него и создайте предмет</string>
     <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">Не выбран кабинет, вы можете создать его в разделе «МОИ КАБИНЕТЫ»</string>
     <!-- кнопки -->
-    <string name="lesson_redactor_activity_button_edit_seating">Редактировать рассадку</string>
+    <string name="lesson_redactor_activity_button_edit_seating">Рассадить учеников</string>
     <string name="lesson_redactor_activity_button_remove">Удалить урок</string>
     <string name="lesson_redactor_activity_button_save">Сохранить</string>
     <string name="lesson_redactor_activity_button_cancel">Отмена</string>
@@ -240,7 +241,7 @@
 
 
     <!-- активность редактора рассадки-->
-    <!-- заголовок активности -->
+    <string name="lesson_redactor_activity_text_choose_learner">Выберите ученика:</string>
 
 
     <!-- активность урока-->
@@ -258,6 +259,9 @@
     <string name="lesson_activity_menu_text_end_lesson">закончить</string>
     <!-- диалоговое окно -->
     <string name="lesson_activity_learner_absent_text">Отсутствует на уроке</string>
+    <string name="lesson_activity_learner_dialog_out_text">Вы точно хотите выйти из урока без сохранения?</string>
+    <string name="lesson_activity_learner_dialog_out_yes">Да</string>
+    <string name="lesson_activity_learner_dialog_out_no">Нет!</string>
 
 
     <!-- активность  помощи на уроке-->
@@ -333,7 +337,7 @@
     <string name="settings_activity_dialog_edit_time_title">Время уроков</string>
     <string name="settings_activity_dialog_hint_hour">ЧАС</string>
     <string name="settings_activity_dialog_hint_minute">МИН</string>
-    <string name="settings_activity_dialog_text_time_colon">:</string>
+    <string name="settings_activity_dialog_text_time_colon">.</string>
     <string name="settings_activity_dialog_text_time_dash">—</string>
     <string name="settings_activity_dialog_edit_locale_title">Выберите язык:</string>
 

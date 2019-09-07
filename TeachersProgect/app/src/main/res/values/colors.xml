@@ -1,33 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- СТАРЫЕ ЦВЕТА -->
-    <color name="colorPrimary">#7FADE5</color>
-    <color name="colorPrimaryDark">#303f9f</color>
-    <color name="colorAccentRed">#d264ac</color>
-
-
-    <!--фон-->
-    <color name="colorBackGround">#e8e3e0</color>
-    <color name="colorBackGroundDark">#b4a8a2</color>
-
-    <!--цвета меню-->
-    <color name="colorPrimaryBlue">#6691e8</color>
-    <color name="colorPrimaryOrange">#e9af4f</color>
-    <color name="colorPrimaryGreen">#9ec747</color>
-    <color name="colorPrimaryPink">#c577aa</color>
-    <color name="colorPrimaryMagenta">#916eea</color>
-
-    <!-- цвета оценок -->
-    <color name="gradeColorGray">#7f7f7f</color>
-    <color name="grade1Color">#d451a7</color>
-    <color name="grade2Color">#d89325</color>
-    <color name="grade3Color">#8cb434</color>
-    <color name="grade4Color">#4a81f1</color>
-    <color name="grade5Color">#6843c7</color>
-    <color name="gradeColorWhite">#ffffff</color>
-
-
     <!-- НОВЫЕ ЦВЕТА -->
     <!-- базовые цвета -->
     <color name="baseBlue">#7fade5</color>
@@ -57,8 +29,5 @@
     <color name="grade4">#ceff00</color>
     <color name="grade5">#8bc837</color>
     <color name="gradeMix">#8ab5f9</color>
-
-
-
 
 </resources>

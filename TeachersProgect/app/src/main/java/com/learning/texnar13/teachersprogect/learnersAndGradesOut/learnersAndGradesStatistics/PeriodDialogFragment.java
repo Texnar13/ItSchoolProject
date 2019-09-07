@@ -142,8 +142,8 @@ public class PeriodDialogFragment extends DialogFragment {
 
         // текст заголовка
         TextView title = new TextView(getActivity());
-        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-        title.setText("*Выберите период:*");
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_light));
+        title.setText(R.string.learners_and_grades_statistics_activity_dialog_title_choose_period);
         title.setGravity(Gravity.CENTER_VERTICAL);
         title.setTextColor(Color.WHITE);
         title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -158,7 +158,6 @@ public class PeriodDialogFragment extends DialogFragment {
                 (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin)
         );
-        Log.e("TeachersApp", "outMainMenu: " + closeImageView.getId());
         titleParams.gravity = Gravity.CENTER_VERTICAL;
         titleLayout.addView(title, titleParams);
 
@@ -182,7 +181,7 @@ public class PeriodDialogFragment extends DialogFragment {
             for (int periodI = 0; periodI < periodsNames.size(); periodI++) {
                 // создаем текстовое поле с названием предмета
                 final TextView periodText = new TextView(getActivity());
-                periodText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+                periodText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_light));
                 periodText.setText(periodsNames.get(periodI));
                 periodText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                 periodText.setTextColor(Color.BLACK);
@@ -225,7 +224,7 @@ public class PeriodDialogFragment extends DialogFragment {
 
         // кнопка изменить
         final TextView changeTextButton = new TextView(getActivity());
-        changeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        changeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_light));
         changeTextButton.setText(getResources().getString(R.string.learners_and_grades_out_activity_dialog_button_change));
         changeTextButton.setGravity(Gravity.CENTER);
         changeTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -256,7 +255,7 @@ public class PeriodDialogFragment extends DialogFragment {
 
         // кнопка добавить
         final TextView addTextButton = new TextView(getActivity());
-        addTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        addTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_light));
         addTextButton.setText(getResources().getString(R.string.learners_and_grades_out_activity_dialog_button_add));
         addTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         addTextButton.setGravity(Gravity.CENTER);
@@ -331,8 +330,8 @@ public class PeriodDialogFragment extends DialogFragment {
 
         // текст заголовка
         TextView title = new TextView(getActivity());
-        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-        title.setText("*Создать период*");
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_light));
+        title.setText(R.string.learners_and_grades_statistics_activity_dialog_title_add_statistic);
         title.setGravity(Gravity.CENTER_VERTICAL);
         title.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
         title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -353,7 +352,8 @@ public class PeriodDialogFragment extends DialogFragment {
 
         // текстовое поле для названия предмета
         final EditText periodNameField = new EditText(getActivity());
-        periodNameField.setHint("*Еще подсказка*");
+        periodNameField.setBackgroundResource(R.drawable._underlined_black);
+        periodNameField.setHint(R.string.learners_and_grades_statistics_activity_dialog_hint_profile_name);
         periodNameField.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         periodNameField.setTextColor(Color.BLACK);
         // параметры текста
@@ -379,16 +379,16 @@ public class PeriodDialogFragment extends DialogFragment {
         );
         saveTextButtonContainerParams.setMargins(
                 (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.simple_margin)
+                (int) getResources().getDimension(R.dimen.double_margin)
         );
         saveTextButtonContainerParams.gravity = Gravity.CENTER;
         bottomLayout.addView(createButtonContainer, saveTextButtonContainerParams);
 
         // кнопка создать
         final TextView createTextButton = new TextView(getActivity());
-        createTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        createTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_light));
         createTextButton.setText(getResources().getString(R.string.learners_and_grades_out_activity_dialog_button_create));
         createTextButton.setGravity(Gravity.CENTER);
         createTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -483,7 +483,7 @@ public class PeriodDialogFragment extends DialogFragment {
 
         // кнопка удалить в заголовке
         final TextView title = new TextView(getActivity());
-        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_light));
         title.setText(getResources().getString(R.string.learners_and_grades_out_activity_dialog_button_delete));
         title.setGravity(Gravity.CENTER_VERTICAL);
         title.setTextColor(Color.RED);
@@ -538,9 +538,9 @@ public class PeriodDialogFragment extends DialogFragment {
             );
             deleteImageParams.setMargins(
                     (int) getResources().getDimension(R.dimen.simple_margin),
-                    0,
                     (int) getResources().getDimension(R.dimen.simple_margin),
-                    0
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.half_margin)
             );
             deleteImageParams.gravity = Gravity.CENTER;
             periodContainer.addView(deleteImage, deleteImageParams);
@@ -565,10 +565,11 @@ public class PeriodDialogFragment extends DialogFragment {
 
             // создаем текстовое поле с названием предмета
             editPeriodsNames[periodI] = new EditText(getActivity());
+            editPeriodsNames[periodI].setBackgroundResource(R.drawable._underlined_black);
             editPeriodsNames[periodI].setText(periodsNames.get(periodI));
             editPeriodsNames[periodI].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             editPeriodsNames[periodI].setTextColor(Color.BLACK);
-            editPeriodsNames[periodI].setHint("*Подсказка*");
+            editPeriodsNames[periodI].setHint(R.string.learners_and_grades_statistics_activity_dialog_hint_profile_name);
             // параметры текста
             LinearLayout.LayoutParams periodTextParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -624,16 +625,16 @@ public class PeriodDialogFragment extends DialogFragment {
         );
         saveTextButtonContainerParams.setMargins(
                 (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.simple_margin)
+                (int) getResources().getDimension(R.dimen.double_margin)
         );
         saveTextButtonContainerParams.gravity = Gravity.CENTER;
         bottomLayout.addView(saveButtonContainer, saveTextButtonContainerParams);
 
         // кнопка сохранить
         final TextView saveTextButton = new TextView(getActivity());
-        saveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        saveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_light));
         saveTextButton.setText(getResources().getString(R.string.learners_and_grades_out_activity_dialog_button_save));
         saveTextButton.setGravity(Gravity.CENTER);
         saveTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));

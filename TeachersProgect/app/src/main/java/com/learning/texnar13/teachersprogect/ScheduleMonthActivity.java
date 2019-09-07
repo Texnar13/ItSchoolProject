@@ -68,6 +68,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         // создаем запрос для рекламмы
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
+                .addTestDevice("239C7C3FF5E172E5131C0FAA9994FDBF")
                 .build();
         // загружаем рекламму запросом
         sheduleMonthAdView.loadAd(adRequest);

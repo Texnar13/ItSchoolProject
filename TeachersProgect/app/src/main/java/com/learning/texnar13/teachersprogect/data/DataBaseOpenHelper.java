@@ -812,15 +812,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return temp;
     }
 
-    public int removeStatisticProfile(long id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        int temp = db.delete(SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES, SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID + " = ?", new String[]{"" + id});//-1 = ошибка ввода
-        db.close();
-        if (IS_DEBUG)
-            Log.i("DBOpenHelper", "removeStatisticProfile id=" + id + " return=" + temp);
-        return temp;
-    }
-
     public void setStatisticParameters(long id, String newName, String startDate, String endDate) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -842,6 +833,25 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         db.close();
         if (IS_DEBUG)
             Log.i("DBOpenHelper", "setStatisticTime id=" + id + " startDate=" + startDate + " endDate=" + endDate + " return=" + temp);
+    }
+
+    public void setStatisticName(long periodId, String periodName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME, periodName);
+        int temp = db.update(SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES, values, SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID + " = ?", new String[]{"" + periodId});//-1 = ошибка ввода
+        db.close();
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "setStatisticParameters id=" + periodId + " periodName=" + periodName + " return=" + temp);
+    }
+
+    public int removeStatisticProfile(long id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int temp = db.delete(SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES, SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID + " = ?", new String[]{"" + id});//-1 = ошибка ввода
+        db.close();
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "removeStatisticProfile id=" + id + " return=" + temp);
+        return temp;
     }
 
     //класс

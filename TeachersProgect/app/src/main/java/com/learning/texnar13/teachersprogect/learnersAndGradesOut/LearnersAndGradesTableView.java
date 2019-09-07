@@ -515,6 +515,9 @@ public class LearnersAndGradesTableView extends View {
                                     // ------ если это не нулевой балл ------
 
                                     // ---- выбираем цвет текста  ----
+                                    if(maxAnswersCount == -1){
+                                        drawTextPaint.setColor(getResources().getColor(R.color.backgroundDarkGray));
+                                    }else
                                     //1
                                     if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 20) {
                                         drawTextPaint.setColor(getResources().getColor(R.color.grade1));
@@ -985,7 +988,7 @@ public class LearnersAndGradesTableView extends View {
             // по первому ученику смотрим, не будет ли из-за положительного смещения ученик уходить вниз создавая пустую облать
             if (learnersAndGradesDataAndSizes.get(0).location.top + learnersAndGradesYOffset + dynamicLearnersAndGradesYOffset <= 0
                     // и проверяем не меньше ли высота учеников чем высота view
-                    && learnersAndGradesDataAndSizes.get(learnersAndGradesDataAndSizes.size() - 1).location.bottom >= viewHeight - learnersAndGradesOffsetForTitle) {
+                    && learnersAndGradesDataAndSizes.get(learnersAndGradesDataAndSizes.size() - 1).location.bottom >= viewHeight - learnersAndGradesOffsetForTitle - addLearnerButtonHeight) {
                 // не будет ли из-за отрицательного смещения ученик уходить вверх создавая пустую облать
                 if (learnersAndGradesDataAndSizes.get(learnersAndGradesDataAndSizes.size() - 1).location.bottom + learnersAndGradesYOffset + dynamicLearnersAndGradesYOffset >= viewHeight - learnersAndGradesOffsetForTitle - addLearnerButtonHeight) {
                     // смещаем

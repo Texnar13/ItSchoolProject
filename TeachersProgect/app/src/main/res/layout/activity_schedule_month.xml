@@ -79,10 +79,9 @@
             android:layout_alignParentBottom="true"
             android:gravity="center"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111"/>
+            ads:adUnitId="ca-app-pub-5709922862247260/2292332710"/>
         <!-- testId BANNER ca-app-pub-3940256099942544/6300978111 -->
         <!-- testId SMART_BANNER ca-app-pub-3940256099942544/2247696110 -->
         <!-- testId Interstitial ca-app-pub-3940256099942544/1033173712 -->
-        <!-- myId BANNER ca-app-pub-5709922862247260/2509785131 -->
         <!-- myId SMART_BANNER ca-app-pub-5709922862247260/2292332710 -->
 </RelativeLayout>

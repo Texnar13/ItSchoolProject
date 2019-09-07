@@ -31,7 +31,7 @@ import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
 import java.text.SimpleDateFormat;
 
-public class LessonListActivity extends AppCompatActivity implements GradesDialogInterface {
+public class LessonListActivity extends AppCompatActivity implements GradesDialogInterface,EndLessonInterface {
 
     public static final String LESSON_TIME = "startTime";
     public static final String SUBJECT_ID = "subjectId";
@@ -163,10 +163,11 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
         // загружаем межстраничный баннер конца урока
         lessonEndBanner = new InterstitialAd(this);
-        lessonEndBanner.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        lessonEndBanner.setAdUnitId("ca-app-pub-5709922862247260/2817934566");// работает
         // создаем запрос
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
+                .addTestDevice("239C7C3FF5E172E5131C0FAA9994FDBF")// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
                 .build();
         lessonEndBanner.loadAd(adRequest);
 
@@ -580,9 +581,20 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
     @Override
     public void onBackPressed() {
+        // показываем диалог подтверждения выхода из активности
+        EndLessonDialogFragment endLessonDialogFragment = new EndLessonDialogFragment();
+        endLessonDialogFragment.show(getSupportFragmentManager(), "EndLesson - Hello");
+    }
+
+    // обратная связь от диалога EndLessonDialogFragment
+    @Override
+    public void endLesson() {
+
         // очистка данных
         learnersId = null;
-        super.onBackPressed();
+
+        // выходим из активности
+        finish();
     }
 
     private int pxFromDp(float px) {

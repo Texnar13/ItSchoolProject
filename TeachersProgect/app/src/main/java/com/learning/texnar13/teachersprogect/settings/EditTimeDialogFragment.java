@@ -315,11 +315,11 @@ public class EditTimeDialogFragment extends DialogFragment {
                                     (Integer.parseInt(fields[i][j].getText().toString()) < 0)//не слишком маленькое численно
                                     ) {
                                 flag = false;
-                                fields[i][j].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
+                                fields[i][j].setBackgroundResource(R.drawable._underlined_black_pink);
                             }
                         } else {
                             flag = false;
-                            fields[i][j].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
+                            fields[i][j].setBackgroundResource(R.drawable._underlined_black_pink);
                         }
                     }
                     //----проверяем сразу ряд----
@@ -327,10 +327,10 @@ public class EditTimeDialogFragment extends DialogFragment {
                         //если время начала больше времени конца
                         if (((Integer.parseInt(fields[i][0].getText().toString()) > Integer.parseInt(fields[i][2].getText().toString())) || ((Integer.parseInt(fields[i][0].getText().toString()) == Integer.parseInt(fields[i][2].getText().toString())) && (Integer.parseInt(fields[i][1].getText().toString()) >= Integer.parseInt(fields[i][3].getText().toString()))))) {
                             flag = false;
-                            fields[i][0].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
-                            fields[i][1].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
-                            fields[i][2].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
-                            fields[i][3].setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
+                            fields[i][0].setBackgroundResource(R.drawable._underlined_black_pink);
+                            fields[i][1].setBackgroundResource(R.drawable._underlined_black_pink);
+                            fields[i][2].setBackgroundResource(R.drawable._underlined_black_pink);
+                            fields[i][3].setBackgroundResource(R.drawable._underlined_black_pink);
                         } else {
                             time[i][0] = Integer.parseInt(fields[i][0].getText().toString());
                             time[i][1] = Integer.parseInt(fields[i][1].getText().toString());

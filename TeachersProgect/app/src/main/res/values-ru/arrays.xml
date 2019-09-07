@@ -39,13 +39,13 @@
     </string-array>
 
     <string-array name="week_days_simple">        
-        <item>Суббота</item>        
         <item>Воскресенье</item> 
         <item>Понедельник</item>        
         <item>Вторник</item>  
         <item>Среда</item>        
         <item>Четверг</item>       
-        <item>Пятница</item>  
+        <item>Пятница</item>       
+        <item>Суббота</item>   
     </string-array>
 
     <!-- активность календаря на день-->

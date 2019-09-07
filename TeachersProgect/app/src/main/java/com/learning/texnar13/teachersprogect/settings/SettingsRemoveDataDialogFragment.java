@@ -72,7 +72,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         //текстовое поле с числом
         final TextView numberText = new TextView(getActivity());
         numberText.setGravity(Gravity.CENTER);
-        numberText.setTextColor(getResources().getColor(R.color.colorBackGroundDark));
+        numberText.setTextColor(getResources().getColor(R.color.backgroundLiteGray));
         numberText.setText(getResources().getString(R.string.settings_activity_dialog_delete_text_confirm_delete) + " " + n);
         numberText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         LinearLayout.LayoutParams numberTextParams = new LinearLayout.LayoutParams(

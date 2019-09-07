@@ -258,11 +258,11 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 if (subjectName.length() > 10) {
                     subjectName = subjectName.substring(0, 9) + "…";
                 }
-                if (learnersClassName.length() > 4) {
-                    learnersClassName = learnersClassName.substring(0, 3) + "…";// absde -> abc…  abcd->abcd
+                if (learnersClassName.length() > 5) {
+                    learnersClassName = learnersClassName.substring(0, 4) + "…";// absde -> abc…  abcd->abcd
                 }
-                if (cabinetName.length() > 4) {
-                    cabinetName = cabinetName.substring(0, 3) + "…";
+                if (cabinetName.length() > 5) {
+                    cabinetName = cabinetName.substring(0, 4) + "…";
                 }
 
 

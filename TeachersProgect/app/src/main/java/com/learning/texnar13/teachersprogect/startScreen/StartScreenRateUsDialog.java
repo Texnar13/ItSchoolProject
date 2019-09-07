@@ -27,7 +27,7 @@ public class StartScreenRateUsDialog extends DialogFragment {
 
         //layout диалога
         LinearLayout linearLayout = new LinearLayout(getActivity());
-        linearLayout.setBackgroundResource(R.color.colorBackGround);
+        linearLayout.setBackgroundResource(R.drawable._dialog_full_background_white);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
@@ -74,7 +74,7 @@ public class StartScreenRateUsDialog extends DialogFragment {
 
         //кнопка отмены
         Button neutralButton = new Button(getActivity());
-        neutralButton.setBackgroundResource(R.drawable.start_screen_3_4_pink_spot);
+        neutralButton.setBackgroundResource(R.drawable._button_round_background_pink);
         neutralButton.setText(R.string.start_screen_activity_dialog_button_later);
         neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         neutralButton.setTextColor(Color.WHITE);
@@ -87,7 +87,7 @@ public class StartScreenRateUsDialog extends DialogFragment {
 
         //кнопка согласия
         Button positiveButton = new Button(getActivity());
-        positiveButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
+        positiveButton.setBackgroundResource(R.drawable.__background_round_simple_full_blue);
         positiveButton.setText(R.string.start_screen_activity_dialog_button_rate_now);
         positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         positiveButton.setTextColor(Color.WHITE);
@@ -150,7 +150,10 @@ public class StartScreenRateUsDialog extends DialogFragment {
             }
         });
 
-        return builder.create();
+        // наконец создаем диалог и возвращаем его
+        Dialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        return dialog;
     }
 
     @Override

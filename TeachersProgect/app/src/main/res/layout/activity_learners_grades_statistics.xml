@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/title_activity_learners_and_grades_statistics"
-                android:fontFamily="@font/geometria"/>
+                android:fontFamily="@font/geometria_light"/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -234,6 +234,7 @@
                             android:background="@color/backgroundLiteGray"
                             android:orientation="vertical">
                             <TextView
+                                android:singleLine="true"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:padding="@dimen/simple_margin"
@@ -265,6 +266,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:singleLine="true"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:padding="@dimen/simple_margin"
@@ -288,6 +290,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:singleLine="true"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"

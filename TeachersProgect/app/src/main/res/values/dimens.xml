@@ -33,14 +33,15 @@
     <!-- высота кнопок -->
     <dimen name="my_buttons_height_size">48sp</dimen>
     <dimen name="spinner_height_size">48dp</dimen>
-    <dimen name="my_toolbar_text_container_height_size">35sp</dimen>
+    <dimen name="my_toolbar_text_container_height_size">36sp</dimen>
 
     <dimen name="my_icon_size">40dp</dimen>
     <dimen name="my_icon_small_size">30dp</dimen>
+    <dimen name="my_icon_small_half_size">15dp</dimen>
 
     <dimen name="begin_lesson_start_screen_button_height_plus">50dp</dimen>
-    <dimen name="begin_lesson_start_screen_button_height">40dp</dimen>
-    <dimen name="begin_lesson_start_screen_button_height_half">20dp</dimen>
+    <dimen name="begin_lesson_start_screen_button_height">36dp</dimen>
+    <dimen name="begin_lesson_start_screen_button_height_half">18dp</dimen>
 
 
     <dimen name="forth_margin">40dp</dimen>

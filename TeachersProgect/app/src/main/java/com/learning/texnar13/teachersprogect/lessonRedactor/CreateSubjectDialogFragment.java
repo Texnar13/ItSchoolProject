@@ -25,7 +25,7 @@ public class CreateSubjectDialogFragment extends DialogFragment {
 
         //layout диалога
         LinearLayout linearLayout = new LinearLayout(getActivity());
-        linearLayout.setBackgroundResource(R.color.colorBackGround);
+        linearLayout.setBackgroundResource(R.drawable._dialog_full_background_white);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
@@ -84,7 +84,7 @@ public class CreateSubjectDialogFragment extends DialogFragment {
 
         //кнопка отмены
         Button neutralButton = new Button(getActivity());
-        neutralButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
+        neutralButton.setBackgroundResource(R.drawable.__background_round_simple_full_blue);
         neutralButton.setText(R.string.lesson_redactor_activity_dialog_button_cancel);
         neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         neutralButton.setTextColor(Color.WHITE);
@@ -97,7 +97,7 @@ public class CreateSubjectDialogFragment extends DialogFragment {
 
         //кнопка согласия
         Button positiveButton = new Button(getActivity());
-        positiveButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
+        positiveButton.setBackgroundResource(R.drawable.__background_round_simple_full_blue);
         positiveButton.setText(R.string.lesson_redactor_activity_dialog_button_add);
         positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         positiveButton.setTextColor(Color.WHITE);
@@ -146,7 +146,11 @@ public class CreateSubjectDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
-        return builder.create();
+
+        // наконец создаем диалог и возвращаем его
+        Dialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        return dialog;
     }
 
     //---------форматы----------

@@ -8,8 +8,10 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.os.Bundle;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -64,9 +66,9 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
 
     // id класса
-    private static long learnersClassId;
+    static private long learnersClassId;
     // id кабинета
-    private static long cabinetId;
+    static private long cabinetId;
 
     // массив с учениками
     private static MyLearner[] learners;
@@ -79,7 +81,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
     private static int chosenPlacePosition;
 
     // выводятся ли плюсы
-    boolean isPlus;
+    static boolean isPlus;
 
 
     // layout для вывода всего
@@ -101,18 +103,18 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
     private int mode = NONE;
 
     // растяжение по осям
-    private float multiplier = 0;//0,1;10
+    static private float multiplier;//0,1;10
     // текущее смещение по осям
-    private float xAxisPXOffset = 0;
-    private float yAxisPXOffset = 0;
+    static private float xAxisPXOffset;
+    static private float yAxisPXOffset;
 
 
     // точка середины между пальцами за предыдущую итерацию
-    private Point oldMid = new Point();
+    static private Point oldMid;
     // множитель за предыдущую итерацию
-    private float oldMultiplier = 0;
+    static private float oldMultiplier;
     // предыдущее растояние между пальцам
-    private float oldDist = 1f;
+    static private float oldDist;
 
 
     //-
@@ -121,18 +123,20 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // проверить/получить данные
-        // заплнить учеников
-        // заполнить парты связав с зависимостями на парте учеников которые уже рассажены
+        setContentView(R.layout.activity_seating_redactor);
+        out = findViewById(R.id.seating_redactor_room);
+        out.setOnTouchListener(this);
 
+        // отключаем тулбар
+        getSupportActionBar().hide();
 
-        // вывести учеников и парты
-
-
-        // при нажатии на место на парте записываем номера выбранной парты и места
-
-
-        /////
+        // кнопка назад
+        findViewById(R.id.seating_redactor_toolbar_back_arrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
 
         // получаем id класса и кабинета из intent
@@ -144,15 +148,8 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
         }
 
 
-        // layout для вывода всего
-        out = new RelativeLayout(this);
-        out.setOnTouchListener(this);
-        setContentView(out);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
-
-
         // проверяем был ли это просто поворот или создание активности
-        if (learners == null) {
+        //if (learners == null) {//todo придумать как выполнять этот код только один раз но при этом каждый переворот выводить парты
             // получаем данные из бд
             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
@@ -178,7 +175,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             String learnersClassName = classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
             classCursor.close();
             // выставляем заголовок
-            setTitle(learnersClassName + ", " + cabinetName);
+            ((TextView)findViewById(R.id.seating_redactor_toolbar_title)).setText(learnersClassName + ", " + cabinetName);
 
 
             // получаем учеников
@@ -279,7 +276,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                 desk.outEmpty();
             }
 
-        }
+        //}
     }
 
 
@@ -645,6 +642,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
                     // создаем текст ученика
                     TextView learnerText = new TextView(getApplicationContext());
+                    learnerText.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.geometria));
                     learnerText.setTextSize(8 * multiplier);
                     learnerText.setAllCaps(true);
                     learnerText.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -658,110 +656,6 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     this.viewPlaceOut[placeI].addView(learnerText, learnerTextParams);
                     // сохраняем ссылку на textView чтобы потом при зуме  менять его
                     this.learnersTextViews[placeI] = learnerText;
-
-
-//                    //создание места
-//                    final LinearLayout tempPlaceLayout = new LinearLayout(this);
-//                    tempPlaceLayout.setOrientation(LinearLayout.VERTICAL);
-//                    //tempPlaceLayout.setBackgroundColor(Color.parseColor("#e4ea7e"));
-//                    //настраиваем параметры под конкретное место
-//                    tempRelativeLayoutPlaceParams = new RelativeLayout.LayoutParams(
-//                            (int) pxFromDp((1000 - 50) * multiplier),
-//                            (int) pxFromDp((1000 - 50) * multiplier));
-//                    tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-//                    tempRelativeLayoutPlaceParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//                    tempRelativeLayoutPlaceParams.leftMargin = (int) pxFromDp((25 + (1000 * (placeUnit.ordinalNumber - 1))) * multiplier);
-//                    tempRelativeLayoutPlaceParams.topMargin = (int) pxFromDp(25 * multiplier);
-//                    Log.i("TeachersApp", "SeatingRedactorActivity - draw view place:" + placeUnit.id);
-//                    //сажаем ученика на место
-//                    if (learnerId != -1) {//если id ученика не равно -1 то выводим ученика иначе кнопку добавить ученика
-//                        //final переменная
-//                        final long finalLearnerId = learnerId;
-//                        final int finalAttitudeIndex = attitudeIndex;
-//                        //создание картинки ученика
-//                        final ImageView tempLernerImage = new ImageView(this);
-//                        final LinearLayout.LayoutParams tempLernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F);
-//                        tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);//по умолчанию серая картинка
-//
-//                        //создание текста ученика
-//                        final TextView tempLearnerText = new TextView(this);
-//                        tempLearnerText.setTextSize(200 * multiplier);
-//                        final LinearLayout.LayoutParams tempLearnerTextParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 3F);
-//                        tempLearnerText.setGravity(Gravity.CENTER_HORIZONTAL);
-//                        tempLearnerText.setTextColor(Color.GRAY);
-//                        String learnerLastName = "";
-//                        //получаем текст ученика
-//                        for (int i = 0; i < learnersList.size(); i++) {
-//                            if (learnersList.get(i).id == learnerId) {
-//                                learnerLastName = learnersList.get(i).lastName;
-//                                break;
-//                            }
-//                        }
-//                        tempLearnerText.setText(learnerLastName);
-//                        tempLearnerText.setText(learnerLastName);
-//                        //картинка ученика
-//                        tempLernerImage.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                db.deleteAttitudeByLearnerIdAndPlaceId(finalLearnerId, placeUnit.id);//сразу удаляем запись по id ученика и урока
-//                                attitudesList.remove(finalAttitudeIndex);
-//                                drawDesks(db);
-//                            }
-//                        });
-//                        tempPlaceLayout.addView(tempLernerImage, tempLernerImageParams);
-//
-//                        //текст ученика
-//                        tempLearnerText.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                db.deleteAttitudeByLearnerIdAndPlaceId(finalLearnerId, placeUnit.id);//сразу удаляем запись по id ученика и урока
-//                                attitudesList.remove(finalAttitudeIndex);
-//                                drawDesks(db);
-//
-//                            }
-//                        });
-//                        tempPlaceLayout.addView(tempLearnerText, tempLearnerTextParams);
-//                    } else {
-//                        //создание кнопки добавить ученика
-//                        final ImageView tempImageAdd = new ImageView(getApplicationContext());
-//                        final LinearLayout.LayoutParams tempImageAddParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-//                        tempImageAdd.setImageResource(R.drawable.ic_menu_add_standart);
-//                        tempImageAdd.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                tempPlaceLayout.removeAllViews();
-//                                Bundle bundle = new Bundle();
-//                                bundle.putLong("cabinetId", cabinetId);
-//                                bundle.putLong("classId", classId);
-//                                ChooseLearnerDialogFragment dialogFragment = new ChooseLearnerDialogFragment();
-//                                dialogFragment.setArguments(bundle);
-//                                dialogFragment.show(getFragmentManager(), "chooseLearners");
-//                                handler = new Handler() {
-//                                    public void handleMessage(android.os.Message msg) {
-//                                        //возврат -1 если ничего не выбрано иначе id ученика
-//                                        if (msg.what != -1) {
-//                                            //добавляем запись по id ученика и урока
-//
-//                                            attitudesList.add(//добавляем зависимость в локальный массив
-//                                                    new AttitudeUnit(
-//                                                            db.setLearnerOnPlace(msg.what, placeUnit.id),//добавляем зависимость в базу получаем id
-//                                                            msg.what,//id ученика
-//                                                            placeUnit.id//d места
-//                                                    )
-//                                            );
-//                                        }
-//                                        drawDesks(db);
-//                                    }
-//                                };
-//                            }
-//                        });
-//                        if (learnersList.size() != attitudesList.size())
-//                            tempPlaceLayout.addView(tempImageAdd, tempImageAddParams);
-//                    }
-//
-//
-//                    //добавление места в парту
-//                    tempRelativeLayoutDesk.addView(tempPlaceLayout, tempRelativeLayoutPlaceParams);
                 }
             }
 
@@ -876,6 +770,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
             // создаем текст ученика
             TextView learnerText = new TextView(getApplicationContext());
+            learnerText.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.geometria));
             learnerText.setTextSize(8 * multiplier);
             learnerText.setAllCaps(true);
             learnerText.setGravity(Gravity.CENTER_HORIZONTAL);

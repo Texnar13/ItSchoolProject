@@ -24,11 +24,11 @@
     <string name="start_screen_activity_dialog_button_later">later</string>
 
     <string name="start_screen_activity_dialog_whats_new_title">What\'s new:</string>
-    <string name="start_screen_activity_dialog_whats_new_text"><b>Big announcement:</b>\nDear user!\nIf you like our app, please support the developers! There would soon be an advertisement, in the bottom corner of the calendar, and for each click on it (but not several times in a row) we will receive 0,008$. So click more often!
-        We will also insert a video ad on the \“settings\” page, into the least visited page. Watching the video sends us 0,01$, and that\'s not bad!\nThank!\n
-        P.S. The banner will be small, the video clip can be closed, but if someone wants to get rid of advertising for good, we will add a function - turn off advertising for 1$.\n\n<b>Also the colors of the grades were altered and the grades in the pupils table were colored.</b>
+    <string name="start_screen_activity_dialog_whats_new_text">Congratulations on the start of the school year, dear users!\n\n
+We present the promised global update: now everything is much more convenient and beautiful. With the new design, new features also came (for example, types of ratings: test, control, quarterly). Do not forget to get into Settings - they allow you to make the application 100% suitable for you.
+Thank you for your feedback - it was they who helped us make the application better! If you have any suggestions - write, we have ambitious plans to further improve the Teacher Assistant!
     </string>
-    <string name="start_screen_activity_dialog_whats_new_button_ok">OK</string>
+    <string name="start_screen_activity_dialog_whats_new_button_ok">Ok</string>
     <!-- тост -->
     <string name="start_screen_activity_toast_no_lessons">At the moment there are no lessons planned</string>
 
@@ -131,7 +131,7 @@
     <!-- заголовок активности -->
     <string name="title_activity_learners_and_grades_statistics">Statistics for the period</string>
     <!-- тексты -->
-    <string name="learners_and_grades_statistics_activity_title_column_learner_name">NAME</string>
+    <string name="learners_and_grades_statistics_activity_title_column_learner_name">Name</string>
     <string name="learners_and_grades_statistics_activity_title_column_grade">Average</string>
     <string name="learners_and_grades_statistics_activity_title_column_absent">Abs</string>
     <string name="learners_and_grades_statistics_activity_hint_date_day">DAY</string>
@@ -143,6 +143,7 @@
     <string name="learners_and_grades_statistics_activity_dialog_title_add_statistic">Add time period</string>
     <string name="learners_and_grades_statistics_activity_dialog_title_remove_statistic">Delete time period</string>
     <string name="learners_and_grades_statistics_activity_dialog_title_edit_statistic">Edit time period</string>
+    <string name="learners_and_grades_statistics_activity_dialog_title_choose_period">Choose period:</string>
     <string name="learners_and_grades_statistics_activity_dialog_text_time_before">From:</string>
     <string name="learners_and_grades_statistics_activity_dialog_text_time_after">To:</string>
     <string name="learners_and_grades_statistics_activity_dialog_hint_profile_name">Period name</string>
@@ -240,7 +241,7 @@
 
 
     <!-- активность редактора рассадки-->
-    <!-- заголовок активности -->
+    <string name="lesson_redactor_activity_text_choose_learner">Choose learner:</string>
 
 
     <!-- активность урока-->
@@ -258,6 +259,9 @@
     <string name="lesson_activity_menu_text_end_lesson">end the lesson</string>
     <!-- диалоговое окно -->
     <string name="lesson_activity_learner_absent_text">Absent</string>
+    <string name="lesson_activity_learner_dialog_out_text">You definitely want to leave the lesson without saving?</string>
+    <string name="lesson_activity_learner_dialog_out_yes">Yes</string>
+    <string name="lesson_activity_learner_dialog_out_no">No!</string>
 
 
 
@@ -311,7 +315,7 @@
     <string name="settings_activity_title_desk_size">SETTING THE SIZE OF DESKS</string>
     <string name="settings_activity_title_max_answer">Max answers count</string>
     <string name="settings_activity_title_grades_type">Answers types</string>
-    <string name="settings_activity_title_colored_grades">COLORED GRADES IN TABLE</string>
+    <string name="settings_activity_title_colored_grades">Colored grades in table</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">Max. answers count: %1$s</string>
     <string name="settings_activity_button_edit_time">Edit lessons time</string>
@@ -339,7 +343,7 @@
     <string name="settings_activity_dialog_edit_time_title">Change time lessons</string>
     <string name="settings_activity_dialog_hint_hour">HOUR</string>
     <string name="settings_activity_dialog_hint_minute">MIN</string>
-    <string name="settings_activity_dialog_text_time_colon">:</string>
+    <string name="settings_activity_dialog_text_time_colon">.</string>
     <string name="settings_activity_dialog_text_time_dash">—</string>
     <string name="settings_activity_dialog_edit_locale_title">Choose language:</string>
 

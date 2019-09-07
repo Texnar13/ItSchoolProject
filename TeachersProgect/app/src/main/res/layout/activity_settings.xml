@@ -175,37 +175,40 @@
             </RelativeLayout>
 
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/activity_settings_are_grades_colored_container"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginBottom="@dimen/double_margin"-->
-<!--               -->
-<!--                android:layout_marginLeft="@dimen/double_margin"-->
-<!--                android:layout_marginRight="@dimen/double_margin"-->
-<!--               -->
-<!--                android:orientation="horizontal"-->
-<!--                android:background="@drawable/button_lite_gray">-->
+            <RelativeLayout
+                android:id="@+id/activity_settings_are_grades_colored_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/double_margin"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:orientation="horizontal"
+                android:background="@drawable/__background_round_simple_full_dark">
 
-<!--                <Switch-->
-<!--                    android:id="@+id/activity_settings_are_grades_colored_switch"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginStart="10dp"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:layout_height="@dimen/my_buttons_height_size"-->
-<!--                    android:layout_width="wrap_content" />-->
 
-<!--                <TextView-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginStart="10dp"-->
-<!--                    android:text="@string/settings_activity_title_colored_grades"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:textColor="#000000"-->
-<!--                    android:textSize="@dimen/text_simple_size"-->
-<!--                    />-->
-<!--            </LinearLayout>-->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/my_buttons_height_size"
+                    android:layout_marginLeft="@dimen/double_margin"
+                    android:layout_marginRight="@dimen/my_icon_size"
+                    android:gravity="center_vertical"
+                    android:text="@string/settings_activity_title_colored_grades"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/text_subtitle_size"
+                    tools:ignore="RtlHardcoded" />
+
+                <Switch
+                    android:id="@+id/activity_settings_are_grades_colored_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/my_buttons_height_size"
+                    android:layout_marginRight="@dimen/double_margin"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center_vertical" />
+
+
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/activity_settings_remove_data_button"

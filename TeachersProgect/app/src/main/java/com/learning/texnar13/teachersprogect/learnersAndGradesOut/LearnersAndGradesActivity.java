@@ -143,6 +143,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         setSupportActionBar(toolbar);
         // кнопка назад в actionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // кнопка назад
+        getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_blue));
 
         // получаем id класса
         classId = getIntent().getLongExtra(CLASS_ID, -1);
@@ -181,7 +183,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         // находим view с таблицей
         learnersAndGradesTableView = findViewById(R.id.learners_and_grades_activity_table_view);
         // получаем размер максимальной оценки
-        learnersAndGradesTableView.setMaxAnswersCount(maxGrade);
+        if(db.getSettingsAreTheGradesColoredByProfileId(1)){
+            learnersAndGradesTableView.setMaxAnswersCount(maxGrade);
+        }else{
+            // не раскрашиваем оценки в таблице
+            learnersAndGradesTableView.setMaxAnswersCount(-1);
+        }
         // назначаем талице обработчик касаний
         learnersAndGradesTableView.setOnTouchListener(this);
         db.close();
@@ -1084,7 +1091,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         if (chosenGradePosition[0] != -1 && chosenGradePosition[1] != -1 && lessonPoz != -1) {
 
             // сохраняем оценки в массив
-            newLearnersAndHisGrades.get(chosenGradePosition[0]).// todo length 12 ??????????????????????????????????
+            newLearnersAndHisGrades.get(chosenGradePosition[0]).
                     learnerGrades[chosenGradePosition[1]][lessonPoz].grades = grades;
             // и типы
             newLearnersAndHisGrades.get(chosenGradePosition[0]).
@@ -1127,12 +1134,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                     // нулевую оценку с id удаляем
                     if (grades[gradeI] == 0) {
-                        // удаляем сначала из списка
-                        newLearnersAndHisGrades.get(chosenGradePosition[0]).
-                                learnerGrades[chosenGradePosition[1]][lessonPoz].gradesId[gradeI] = -1;
                         // а потом из бд
                         db.removeGrade(newLearnersAndHisGrades.get(chosenGradePosition[0]).
                                 learnerGrades[chosenGradePosition[1]][lessonPoz].gradesId[gradeI]);
+                        // удаляем сначала из списка
+                        newLearnersAndHisGrades.get(chosenGradePosition[0]).
+                                learnerGrades[chosenGradePosition[1]][lessonPoz].gradesId[gradeI] = -1;
                     } else {
                         // не нулевую меняем в бд
                         db.editGrade(

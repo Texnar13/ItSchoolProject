@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -13,8 +14,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
 
@@ -22,13 +26,12 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         // начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         // layout диалога
         LinearLayout dialogLinearLayout = new LinearLayout(getActivity());
-        dialogLinearLayout.setBackgroundResource(R.color.colorBackGround);
+        dialogLinearLayout.setBackgroundResource(R.drawable._dialog_full_background_white);
         dialogLinearLayout.setOrientation(LinearLayout.VERTICAL);
         builder.setView(dialogLinearLayout);
 
@@ -42,6 +45,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
         // заголовок
         TextView title = new TextView(getActivity());
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria));
         title.setTextColor(Color.BLACK);
         title.setText(R.string.start_screen_activity_dialog_whats_new_title);
         title.setTextSize(
@@ -51,11 +55,17 @@ public class WhatsNewDialogFragment extends DialogFragment {
         LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        titleParams.setMargins((int)pxFromDp(15),(int)pxFromDp(15),(int)pxFromDp(15),(int)pxFromDp(0));
+        titleParams.setMargins(
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
+                0
+        );
         scrollLayout.addView(title,titleParams);
 
         // текст
         TextView text = new TextView(getActivity());
+        text.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria));
         text.setTextColor(Color.BLACK);
         text.setText(R.string.start_screen_activity_dialog_whats_new_text);
         text.setTextSize(
@@ -65,33 +75,53 @@ public class WhatsNewDialogFragment extends DialogFragment {
         LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        textParams.setMargins((int)pxFromDp(30),(int)pxFromDp(15),(int)pxFromDp(30),(int)pxFromDp(15));
+        textParams.setMargins(
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.double_margin)
+        );
         scrollLayout.addView(text,textParams);
 
 
         // кнопка выхода
 
         //контейнер для нее
-        LinearLayout container = new LinearLayout(getActivity());
-        container.setOrientation(LinearLayout.HORIZONTAL);
+        RelativeLayout container = new RelativeLayout(getActivity());
+        container.setBackgroundResource(R.drawable._button_round_background_blue);
         container.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        containerParams.gravity = Gravity.CENTER;
+        containerParams.setMargins(
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.double_margin)
+        );
+        //контейнер в диалог
+        scrollLayout.addView(container,containerParams);
 
         //сама кнопка
-        Button button = new Button(getActivity());
-        button.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
+        TextView button = new TextView(getActivity());
+        button.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria));
         button.setText(R.string.start_screen_activity_dialog_whats_new_button_ok);
-        button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+        button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         button.setTextColor(Color.WHITE);
-        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+        RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        buttonParams.weight = 1;
-        buttonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
+        buttonParams.setMargins(
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin)
+        );
         //кнопки в контейнер
         container.addView(button, buttonParams);
-        //контейнер в диалог
-        scrollLayout.addView(container);
 
 
         // при нажатии кнопки выхода
@@ -102,7 +132,11 @@ public class WhatsNewDialogFragment extends DialogFragment {
             }
         });
 
-        return builder.create();
+
+        // наконец создаем диалог и возвращаем его
+        Dialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        return dialog;
     }
 
     @Override
@@ -113,11 +147,5 @@ public class WhatsNewDialogFragment extends DialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-    }
-
-    //---------форматы----------
-
-    private float pxFromDp(float px) {
-        return px * getActivity().getResources().getDisplayMetrics().density;
     }
 }

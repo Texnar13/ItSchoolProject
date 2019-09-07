@@ -825,7 +825,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     new RectF(0, 0, 0, 0),
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}
             ));
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.baseOrange));
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
 
             this.desk.setBackground(rectDrawable);
         }
@@ -853,7 +853,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     new RectF(0, 0, 0, 0),
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}
             ));
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.baseOrange));
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
             desk.setBackground(rectDrawable);
         }
 
@@ -880,7 +880,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}// внутренний радиус скругления
             ));
             // задаем цвет
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.baseOrange));
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
             // и ставим его на задний фон layout
             desk.setBackground(rectDrawable);
 

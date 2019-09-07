@@ -51,7 +51,9 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     static final String IS_RATE = "isRate";
     //версия
     static final String WHATS_NEW = "whatsNew";
-    static final int NOW_VERSION = 42;// todo получать автоматически
+    static final int NOW_VERSION = 44;// todo получать автоматически
+
+    static int i = 0;
 
 
     // при создании
@@ -119,30 +121,28 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 startScreenRateUsDialog.show(getFragmentManager(), IS_RATE);
             }
         }
-//        {
-//            WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
-//            dialogFragment.show(getFragmentManager(), WHATS_NEW);
-//        }
 //----диалог что нового----
         //если уже создано
-//        if (sharedPreferences.contains(WHATS_NEW)) {
-//            //если версия старая
-//            if (sharedPreferences.getInt(WHATS_NEW, -1) < NOW_VERSION) {
-//                //меняем версию
-//                editor.putInt(WHATS_NEW, NOW_VERSION);
-//                //показываем диалог что нового
-//                WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
-//                dialogFragment.show(getFragmentManager(), WHATS_NEW);
-//            }
-//        } else {
-//            //если еще не созданно
-//            //создаем переменную с версией
-//            editor.putInt(WHATS_NEW, NOW_VERSION);
-//            //начальный диалог...
-//        }
+        if (sharedPreferences.contains(WHATS_NEW)) {
+            //если версия старая
+            if (sharedPreferences.getInt(WHATS_NEW, -1) < NOW_VERSION) {
+                Log.e("TeachersApp", "onCreate:  ------------------------"+i);
+                i = -1;
+                // меняем версию
+                editor.putInt(WHATS_NEW, NOW_VERSION);
+                // показываем диалог что нового
+                WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
+                dialogFragment.show(getFragmentManager(), WHATS_NEW);
+            }
+        } else {
+            //если еще не созданно
+            //создаем переменную с версией
+            editor.putInt(WHATS_NEW, NOW_VERSION);
+            //начальный диалог...
+        }
 
         //завершаем редактирование сохраненных параметров
-        editor.commit();
+        editor.apply();
 
     }
 
@@ -160,7 +160,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         // текст даты
         ((TextView) findViewById(R.id.start_screen_text_date)).setText(nowCalendar.get(Calendar.DAY_OF_MONTH) + " " + getResources().getStringArray(R.array.months_names_low_case)[nowCalendar.get(Calendar.MONTH)]);
         // текст дня недели
-        ((TextView) findViewById(R.id.start_screen_text_day_of_week)).setText(getResources().getStringArray(R.array.week_days_simple)[nowCalendar.get(Calendar.DAY_OF_WEEK)]);
+        ((TextView) findViewById(R.id.start_screen_text_day_of_week)).setText(getResources().getStringArray(R.array.week_days_simple)[nowCalendar.get(Calendar.DAY_OF_WEEK)-1]);
 
 
         // выводим текущий урок
@@ -223,14 +223,14 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 cabinetCursor.close();
 
                 // укорачиваем поля если они слишком длинные Loading…
-                if (subjectName.length() > 10) {
-                    subjectName = subjectName.substring(0, 9) + "…";
+                if (subjectName.length() > 15) {
+                    subjectName = subjectName.substring(0, 14) + "…";
                 }
-                if (className.length() > 5) {
-                    className = className.substring(0, 4) + "…";// absde -> abc…  abcd->abcd
+                if (className.length() > 6) {
+                    className = className.substring(0, 5) + "…";// absde -> abc…  abcd->abcd
                 }
-                if (cabinetName.length() > 5) {
-                    cabinetName = cabinetName.substring(0, 4) + "…";
+                if (cabinetName.length() > 6) {
+                    cabinetName = cabinetName.substring(0, 5) + "…";
                 }
 
                 // выводим поля в контейнер
@@ -465,5 +465,6 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
 }
 
-
+Используйте это свойство внутри своего тега activity чтобы избежать появления activity в списке недавно использованных приложений.
+ android:excludeFromRecents="true"
 * */

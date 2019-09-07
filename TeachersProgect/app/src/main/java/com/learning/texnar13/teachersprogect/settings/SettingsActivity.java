@@ -47,10 +47,11 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
 
         // загружаем межстраничный баннер настроек
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.setAdUnitId("ca-app-pub-5709922862247260/3501279089");// работает
         // создаем запрос
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
+                .addTestDevice("239C7C3FF5E172E5131C0FAA9994FDBF")
                 .build();
         mInterstitialAd.loadAd(adRequest);
 
@@ -215,22 +216,27 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
             }
         });
 
-//// ------------- цветные оценки -----------------
+        // цветные оценки
+        final RelativeLayout coloredGradesContainer = findViewById(R.id.activity_settings_are_grades_colored_container);
+        final Switch coloredGradesSwitch = findViewById(R.id.activity_settings_are_grades_colored_switch);
+        // ставим переключатель в состояние из бд
+        coloredGradesSwitch.setChecked(db.getSettingsAreTheGradesColoredByProfileId(1));
+        // обработчик контейнеру
+        coloredGradesContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.setSettingsAreTheGradesColoredByProfileId(1, !coloredGradesSwitch.isChecked());
+                coloredGradesSwitch.setChecked(db.getSettingsAreTheGradesColoredByProfileId(1));
+//                if(coloredGradesSwitch.isChecked()){
+//                    coloredGradesSwitch.color(getResources().getColor(R.color.baseBlue));
+//                } else {
+//                    coloredGradesSwitch.setHighlightColor(getResources().getColor(R.color.backgroundWhite));
 //
-//        LinearLayout coloredGradesContainer = findViewById(R.id.activity_settings_are_grades_colored_container);
-//        final Switch coloredGradesSwitch = findViewById(R.id.activity_settings_are_grades_colored_switch);
-//        // нажимаем переключатель
-//        coloredGradesSwitch.setChecked(db.getSettingsAreTheGradesColoredByProfileId(1));
-//        // обработчик контейнеру
-//        coloredGradesContainer.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                db.setSettingsAreTheGradesColoredByProfileId(1, !coloredGradesSwitch.isChecked());
-//                coloredGradesSwitch.setChecked(db.getSettingsAreTheGradesColoredByProfileId(1));
-//            }
-//        });
-//        // переключатель не нажимается
-//        coloredGradesSwitch.setClickable(false);
+//                }
+            }
+        });
+        // переключатель не нажимается
+        coloredGradesSwitch.setClickable(false);
 
 //--------------оцените нас-----------------
 

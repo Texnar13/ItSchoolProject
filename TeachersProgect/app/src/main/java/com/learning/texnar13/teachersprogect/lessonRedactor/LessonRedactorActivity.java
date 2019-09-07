@@ -1,16 +1,21 @@
 package com.learning.texnar13.teachersprogect.lessonRedactor;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,9 +51,14 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
     //какие повторения
     long repeat = 0;
 
-    // ----- Layout-ы -----
+    // номер выбранного предмета в списке
+    int subjectPosition = 0;
+
+
     //индикатор состояния рассадки
-    TextView seatingStateText;
+    ImageView seatingStateImage;
+    // текст текущей даты
+    TextView currentDateText;
     // --- спиннеры ---
     // -- спиннер классов --
     Spinner classSpinner;
@@ -58,49 +68,27 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
     Spinner subjectSpinner;
     // -- спиннер времени --
     Spinner timeSpinner;
-    // -- спиннер повторов --
-    Spinner lessonRepeatSpinner;
-
-
-    // ----- созданные в процессе работы -----
-    String[] repeatPeriodsNames;
-    // номер выбранного предмета в списке
-    int subjectPosition = 0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_redactor);
-        repeatPeriodsNames = new String[]{
-                getResources().getString(R.string.lesson_redactor_activity_spinner_text_repeat_never),
-                getResources().getString(R.string.lesson_redactor_activity_spinner_text_repeat_daily),
-                getResources().getString(R.string.lesson_redactor_activity_spinner_text_repeat_weekly)
-                //, "ежемесячно"//to-do
-        };
+        // Убираем заголовок
+        getSupportActionBar().hide();
 
-        // ------ спиннеры и кнопки ------
-        // -- спиннер классов --
-        classSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_class_spinner);
-        // -- спиннер кабинетов --
-        cabinetSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_cabinet_spinner);
-        // -- спиннер предметов --
-        subjectSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_lesson_name_spinner);
-        // -- спиннер времени --
-        timeSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_time_spinner);
-        // -- спиннер повторов --
-        lessonRepeatSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_lesson_repeat_spinner);
-        // - рассадка -
-        TextView editSeatingButton = (TextView) findViewById(R.id.activity_lesson_redactor_seating_redactor_button);
-        seatingStateText = (TextView) findViewById(R.id.activity_lesson_redactor_seating_state);
-        // -- кнопки сохранения удаления отмены --
-        // - и их контейнер -
-        LinearLayout buttonsOut = (LinearLayout) findViewById(R.id.activity_lesson_redactor_buttons_out);
-        TextView removeButton = (TextView) findViewById(R.id.activity_lesson_redactor_remove_button);
-        TextView backButton = (TextView) findViewById(R.id.activity_lesson_redactor_back_button);
-        TextView saveButton = (TextView) findViewById(R.id.activity_lesson_redactor_save_button);
-        // -- кнопка назад в actionBar --
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTheme(android.R.style.Theme_Dialog);
+
+        // вертикальная ориентация
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
+        // кнопка назад
+        findViewById(R.id.activity_lesson_redactor_back_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
 
 // ******************** загружаем данные ********************
@@ -152,6 +140,92 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
             db.close();
         }
 
+
+        // ------ спиннеры и кнопки ------
+        // -- спиннер классов --
+        classSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_class_spinner);
+        // -- спиннер кабинетов --
+        cabinetSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_cabinet_spinner);
+        // -- спиннер предметов --
+        subjectSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_lesson_name_spinner);
+        // -- спиннер времени --
+        timeSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_time_spinner);
+        // - рассадка -
+        RelativeLayout editSeatingButton = findViewById(R.id.activity_lesson_redactor_seating_redactor_button);
+
+
+        // картинка сишнализирующая о рассадке
+        seatingStateImage = findViewById(R.id.activity_lesson_redactor_seating_state);
+        // кнопки сохранения удаления
+        LinearLayout removeButton = findViewById(R.id.activity_lesson_redactor_remove_button);
+        LinearLayout saveButton = findViewById(R.id.activity_lesson_redactor_save_button);
+        // текст текущей даты
+        ((TextView) findViewById(R.id.activity_lesson_redactor_current_date_text)).setText(
+                getResources().getTextArray(R.array.week_days_simple)[calendarStartTime.get(Calendar.DAY_OF_WEEK)-1] + ", "
+                        + calendarStartTime.get(Calendar.DAY_OF_MONTH) + " " + getResources().getTextArray(R.array.months_names_low_case)[calendarStartTime.get(Calendar.MONTH)]
+        );
+
+
+        // кнопка не повторять урок
+        findViewById(R.id.activity_lesson_redactor_lesson_repeat_no).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // переключаем цвета
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+                        setTextColor(getResources().getColor(R.color.baseGreen));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                // и переменные
+                repeat = SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER;
+            }
+        });
+        // кнопка повторять урок каждый день
+        findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // переключаем цвета
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+                        setTextColor(getResources().getColor(R.color.baseGreen));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                // и переменные
+                repeat = SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY;
+
+            }
+        });
+        // кнопка повторять урок каждую неделю
+        findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // переключаем цвета
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+                        setTextColor(getResources().getColor(R.color.baseGreen));
+                // и переменные
+                repeat = SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY;
+
+            }
+        });
+
+        // закрашиваем выбранный тип повторов
+        if (repeat == SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER) {
+            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+                    setTextColor(getResources().getColor(R.color.baseGreen));
+        } else if (repeat == SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY) {
+            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+                    setTextColor(getResources().getColor(R.color.baseGreen));
+        } else {
+            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+                    setTextColor(getResources().getColor(R.color.baseGreen));
+        }
+
 // ******************** вывод данных в поля ********************
 
         // -- спиннер классов --
@@ -162,8 +236,6 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
 
         // -- спиннер времени --
         outTime();
-        // -- спиннер повторов --
-        outRepeats();
         // - рассадка -
         // ------ обновляем текст с информацией о рассадке ------
         seatingTextUpdate();
@@ -174,16 +246,9 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         // ---- удаляем лишние кнопки ----
 
         if (attitudeId == -1) {
-            buttonsOut.removeView(removeButton);
-            //отмена
-            backButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finish();
-                }
-            });
+            removeButton.removeAllViews();
         } else {
-            buttonsOut.removeView(backButton);
+            //buttonsOut.removeView(backButton);
             //удаление урока
             removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -263,8 +328,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         classesCursor.close();
         db.close();
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_lesson_redactor, stringClasses);
-        arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_element_lesson_redactor);
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_subtitle, stringClasses);
         classSpinner.setAdapter(arrayAdapter);
         classSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -306,7 +370,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         cabinetsCursor.close();
         db.close();
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_lesson_redactor, stringCabinets);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_subtitle, stringCabinets);
         cabinetSpinner.setAdapter(adapter);
         cabinetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -367,8 +431,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         db.close();
 
         // адаптер для спиннера
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_lesson_redactor, stringLessons);
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_lesson_redactor);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_title, stringLessons);
         subjectSpinner.setAdapter(adapter);
         // позиция
         if (subjectPosition == -1) {
@@ -434,14 +497,13 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         //SimpleDateFormat textTimeFormat = new SimpleDateFormat("H:m", Locale.getDefault());
         for (int i = 0; i < textTime.length; i++) {
             //'  4 урок 11:30 - 12:15  '
-            textTime[i] = "  " + (i + 1) + " " + getResources().getString(R.string.lesson_redactor_activity_spinner_title_lesson) + " " +
+            textTime[i] = "" + (i + 1) + " " + getResources().getString(R.string.lesson_redactor_activity_spinner_title_lesson) + " " +
                     time[i][0] + ":" + time[i][1] + " - " +
                     time[i][2] + ":" + time[i][3] + "  ";
         }
 
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_lesson_redactor, textTime);
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_lesson_redactor);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_subtitle, textTime);
         timeSpinner.setAdapter(adapter);
         timeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -478,30 +540,11 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
                     calendarStartTime.get(Calendar.MINUTE) == time[i][1] &&
                     calendarEndTime.get(Calendar.HOUR_OF_DAY) == time[i][2] &&
                     calendarEndTime.get(Calendar.MINUTE) == time[i][3]
-                    ) {
+            ) {
                 Log.i("TeachersApp", "outTime:chooseTime:" + (i + 1));
                 timeSpinner.setSelection(i, false);
             }
         }
-    }
-
-    // -- спиннер повторов --
-    void outRepeats() {
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_lesson_redactor, repeatPeriodsNames);
-        lessonRepeatSpinner.setAdapter(
-                adapter);
-        lessonRepeatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                repeat = i;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-        lessonRepeatSpinner.setSelection((int) repeat, false);
     }
 
 
@@ -525,15 +568,14 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
 
     // -- текст рассадки --
     void seatingTextUpdate() {
+
+        // проверяем рассажены ли ученики
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         ArrayList<Long> arrayList = db.getNotPutLearnersIdByCabinetIdAndClassId(cabinetId, classId);
-        if (arrayList.size() == 0) {
-            //seatingStateText.setText(R.string.lesson_redactor_activity_text_learners_ready);
-            seatingStateText.setText("");
-            seatingStateText.setTextColor(Color.parseColor("#469500"));
-        } else {
-            seatingStateText.setText(R.string.lesson_redactor_activity_text_learners_not_ready);
-            seatingStateText.setTextColor(getResources().getColor(R.color.colorAccentRed));
+        if (arrayList.size() == 0) {// если да
+            seatingStateImage.setImageResource(R.drawable.__signal_correct_sitting);
+        } else {// если нет
+            seatingStateImage.setImageResource(R.drawable.__signal_wrong_sitting);
         }
         db.close();
     }
@@ -567,5 +609,5 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
 }
 
 /*
-* https://developer.android.com/guide/topics/ui/menus#PopupMenu
-* */
+ * https://developer.android.com/guide/topics/ui/menus#PopupMenu
+ * */

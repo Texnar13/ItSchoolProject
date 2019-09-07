@@ -11,8 +11,6 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,7 +24,7 @@ import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class LearnersGradesStatisticsActivity extends AppCompatActivity implements PeriodsDialogInterface {
@@ -119,12 +117,12 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                 String endDate = periodsCursor.getString(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_END_PERIOD_TIME));
                 // переводим дату из строки в числа
                 int[] dates = new int[6];
-                dates[0] = Integer.parseInt(startDate.substring(0, 4));
+                dates[0] = Integer.parseInt(startDate.substring(8, 10));
                 dates[1] = Integer.parseInt(startDate.substring(5, 7));
-                dates[2] = Integer.parseInt(startDate.substring(8, 10));
-                dates[3] = Integer.parseInt(endDate.substring(0, 4));
+                dates[2] = Integer.parseInt(startDate.substring(0, 4));
+                dates[3] = Integer.parseInt(endDate.substring(8, 10));
                 dates[4] = Integer.parseInt(endDate.substring(5, 7));
-                dates[5] = Integer.parseInt(endDate.substring(8, 10));
+                dates[5] = Integer.parseInt(endDate.substring(0, 4));
 
                 // создаем период
                 periods.add(new PeriodUnit(
@@ -169,7 +167,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         endYearEditText = (EditText) findViewById(R.id.learners_grades_statistics_end_year);
 
         // назначаем слушатели изменения текста, которые при изменении поля запускают проверку, сохранение и вывод
-        startDayEditText.addTextChangedListener(new TextWatcher() {
+        TextWatcher watcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -183,208 +181,41 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             @Override
             public void afterTextChanged(Editable s) {
                 if (isTextCheckRun)
-                    // проверяем даты на соответствие
-                    if (isDateGood(startDayEditText, startMonthEditText, startYearEditText, endDayEditText, endMonthEditText, endYearEditText)) {
-                        // помещаем в массив
-                        periods.get(periodPosition).dates[0] = Integer.parseInt(startYearEditText.getText().toString());
-                        periods.get(periodPosition).dates[1] = Integer.parseInt(startMonthEditText.getText().toString());
-                        periods.get(periodPosition).dates[2] = Integer.parseInt(startDayEditText.getText().toString());
-                        periods.get(periodPosition).dates[3] = Integer.parseInt(endYearEditText.getText().toString());
-                        periods.get(periodPosition).dates[4] = Integer.parseInt(endMonthEditText.getText().toString());
-                        periods.get(periodPosition).dates[5] = Integer.parseInt(endDayEditText.getText().toString());
-                        // сохраняем в бд
-                        DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                        db.setStatisticTime(
-                                periods.get(periodPosition).periodId,
-                                "" + periods.get(periodPosition).dates[0] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[2]) + " 00:00:00",
-                                "" + periods.get(periodPosition).dates[3] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[5]) + " 23:59:59"
-                        );
-                        db.close();
-                        // выводим оценки
-                        outGrades();
+                    // проверяем, можем ли получать оценки
+                    if (periodPosition != -1) {
+                        // проверяем даты на соответствие
+                        if (isDateGood(startDayEditText, startMonthEditText, startYearEditText, endDayEditText, endMonthEditText, endYearEditText)) {
+                            // помещаем в массив
+                            Log.e("TeachersApp", "endYearEditText.afterTextChanged: saveDate");
+                            periods.get(periodPosition).dates[0] = Integer.parseInt(startDayEditText.getText().toString());
+                            periods.get(periodPosition).dates[1] = Integer.parseInt(startMonthEditText.getText().toString());
+                            periods.get(periodPosition).dates[2] = Integer.parseInt(startYearEditText.getText().toString());
+                            periods.get(periodPosition).dates[3] = Integer.parseInt(endDayEditText.getText().toString());
+                            periods.get(periodPosition).dates[4] = Integer.parseInt(endMonthEditText.getText().toString());
+                            periods.get(periodPosition).dates[5] = Integer.parseInt(endYearEditText.getText().toString());
+                            // сохраняем в бд
+                            DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                            db.setStatisticTime(
+                                    periods.get(periodPosition).periodId,
+                                    "" + periods.get(periodPosition).dates[2] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[0]) + " 00:00:00",
+                                    "" + periods.get(periodPosition).dates[5] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[3]) + " 23:59:59"
+                            );
+                            db.close();
+                            // выводим оценки
+                            getAndOutGrades();
+                        }
+                    } else {
+                        // если нет периода, не даем редактировать дату
+                        s.clear();
                     }
             }
-        });
-        startMonthEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (isTextCheckRun)
-                    if (isDateGood(startDayEditText, startMonthEditText, startYearEditText, endDayEditText, endMonthEditText, endYearEditText)) {
-                        // помещаем в массив
-                        Log.e("TeachersApp", "startMonthEditText.afterTextChanged: saveDate");
-                        periods.get(periodPosition).dates[0] = Integer.parseInt(startYearEditText.getText().toString());
-                        periods.get(periodPosition).dates[1] = Integer.parseInt(startMonthEditText.getText().toString());
-                        periods.get(periodPosition).dates[2] = Integer.parseInt(startDayEditText.getText().toString());
-                        periods.get(periodPosition).dates[3] = Integer.parseInt(endYearEditText.getText().toString());
-                        periods.get(periodPosition).dates[4] = Integer.parseInt(endMonthEditText.getText().toString());
-                        periods.get(periodPosition).dates[5] = Integer.parseInt(endDayEditText.getText().toString());
-                        // сохраняем в бд
-                        DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                        db.setStatisticTime(
-                                periods.get(periodPosition).periodId,
-                                "" + periods.get(periodPosition).dates[0] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[2]) + " 00:00:00",
-                                "" + periods.get(periodPosition).dates[3] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[5]) + " 23:59:59"
-                        );
-                        db.close();
-                        // выводим оценки
-                        outGrades();
-                    }
-            }
-        });
-        startYearEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (isTextCheckRun)
-                    if (isDateGood(startDayEditText, startMonthEditText, startYearEditText, endDayEditText, endMonthEditText, endYearEditText)) {
-                        // помещаем в массив
-                        Log.e("TeachersApp", "startYearEditText.afterTextChanged: saveDate");
-                        periods.get(periodPosition).dates[0] = Integer.parseInt(startYearEditText.getText().toString());
-                        periods.get(periodPosition).dates[1] = Integer.parseInt(startMonthEditText.getText().toString());
-                        periods.get(periodPosition).dates[2] = Integer.parseInt(startDayEditText.getText().toString());
-                        periods.get(periodPosition).dates[3] = Integer.parseInt(endYearEditText.getText().toString());
-                        periods.get(periodPosition).dates[4] = Integer.parseInt(endMonthEditText.getText().toString());
-                        periods.get(periodPosition).dates[5] = Integer.parseInt(endDayEditText.getText().toString());
-                        // сохраняем в бд
-                        DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                        db.setStatisticTime(
-                                periods.get(periodPosition).periodId,
-                                "" + periods.get(periodPosition).dates[0] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[2]) + " 00:00:00",
-                                "" + periods.get(periodPosition).dates[3] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[5]) + " 23:59:59"
-                        );
-                        db.close();
-                        // выводим оценки
-                        outGrades();
-                    }
-            }
-        });
-        endDayEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (isTextCheckRun)
-                    if (isDateGood(startDayEditText, startMonthEditText, startYearEditText, endDayEditText, endMonthEditText, endYearEditText)) {
-                        // помещаем в массив
-                        Log.e("TeachersApp", "endDayEditText.afterTextChanged: saveDate");
-                        periods.get(periodPosition).dates[0] = Integer.parseInt(startYearEditText.getText().toString());
-                        periods.get(periodPosition).dates[1] = Integer.parseInt(startMonthEditText.getText().toString());
-                        periods.get(periodPosition).dates[2] = Integer.parseInt(startDayEditText.getText().toString());
-                        periods.get(periodPosition).dates[3] = Integer.parseInt(endYearEditText.getText().toString());
-                        periods.get(periodPosition).dates[4] = Integer.parseInt(endMonthEditText.getText().toString());
-                        periods.get(periodPosition).dates[5] = Integer.parseInt(endDayEditText.getText().toString());
-                        // сохраняем в бд
-                        DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                        db.setStatisticTime(
-                                periods.get(periodPosition).periodId,
-                                "" + periods.get(periodPosition).dates[0] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[2]) + " 00:00:00",
-                                "" + periods.get(periodPosition).dates[3] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[5]) + " 23:59:59"
-                        );
-                        db.close();
-                        // выводим оценки
-                        outGrades();
-                    }
-            }
-        });
-        endMonthEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (isTextCheckRun)
-                    if (isDateGood(startDayEditText, startMonthEditText, startYearEditText, endDayEditText, endMonthEditText, endYearEditText)) {
-                        // помещаем в массив
-                        Log.e("TeachersApp", "endMonthEditText.afterTextChanged: saveDate");
-                        periods.get(periodPosition).dates[0] = Integer.parseInt(startYearEditText.getText().toString());
-                        periods.get(periodPosition).dates[1] = Integer.parseInt(startMonthEditText.getText().toString());
-                        periods.get(periodPosition).dates[2] = Integer.parseInt(startDayEditText.getText().toString());
-                        periods.get(periodPosition).dates[3] = Integer.parseInt(endYearEditText.getText().toString());
-                        periods.get(periodPosition).dates[4] = Integer.parseInt(endMonthEditText.getText().toString());
-                        periods.get(periodPosition).dates[5] = Integer.parseInt(endDayEditText.getText().toString());
-                        // сохраняем в бд
-                        DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                        db.setStatisticTime(
-                                periods.get(periodPosition).periodId,
-                                "" + periods.get(periodPosition).dates[0] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[2]) + " 00:00:00",
-                                "" + periods.get(periodPosition).dates[3] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[5]) + " 23:59:59"
-                        );
-                        db.close();
-                        // выводим оценки
-                        outGrades();
-                    }
-            }
-        });
-        endYearEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (isTextCheckRun)
-                    if (isDateGood(startDayEditText, startMonthEditText, startYearEditText, endDayEditText, endMonthEditText, endYearEditText)) {
-                        // помещаем в массив
-                        Log.e("TeachersApp", "endYearEditText.afterTextChanged: saveDate");
-                        periods.get(periodPosition).dates[0] = Integer.parseInt(startYearEditText.getText().toString());
-                        periods.get(periodPosition).dates[1] = Integer.parseInt(startMonthEditText.getText().toString());
-                        periods.get(periodPosition).dates[2] = Integer.parseInt(startDayEditText.getText().toString());
-                        periods.get(periodPosition).dates[3] = Integer.parseInt(endYearEditText.getText().toString());
-                        periods.get(periodPosition).dates[4] = Integer.parseInt(endMonthEditText.getText().toString());
-                        periods.get(periodPosition).dates[5] = Integer.parseInt(endDayEditText.getText().toString());
-                        // сохраняем в бд
-                        DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                        db.setStatisticTime(
-                                periods.get(periodPosition).periodId,
-                                "" + periods.get(periodPosition).dates[0] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[2]) + " 00:00:00",
-                                "" + periods.get(periodPosition).dates[3] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[5]) + " 23:59:59"
-                        );
-                        db.close();
-                        // выводим оценки
-                        outGrades();
-                    }
-            }
-        });
+        };
+        startDayEditText.addTextChangedListener(watcher);
+        startMonthEditText.addTextChangedListener(watcher);
+        startYearEditText.addTextChangedListener(watcher);
+        endDayEditText.addTextChangedListener(watcher);
+        endMonthEditText.addTextChangedListener(watcher);
+        endYearEditText.addTextChangedListener(watcher);
 
 
         // выводим учеников в таблицу
@@ -406,7 +237,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                     (int) getResources().getDimension(R.dimen.simple_margin)
             );
             learnerText.setText(
-                    learner.learnerSurname + " " + learner.learnerSurname
+                    learner.learnerSurname + " " + learner.learnerName
             );
             LinearLayout.LayoutParams learnerTextParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -426,11 +257,14 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         } else {
             // ставим выбор на первом предмете
             periodPosition = 0;
+            // сокращаем название до 15 символов
+            String shortName = periods.get(0).periodName;
+            if (shortName.length() > 15) {
+                shortName = shortName.substring(0, 14) + "…";
+            }
             ((TextView) findViewById(R.id.learners_grades_statistics_period_button_text)).
-                    setText(periods.get(0).periodName);
+                    setText(shortName);
         }
-        outDates();
-
         // нажатие на кнопку периода
         findViewById(R.id.learners_grades_statistics_period_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -446,9 +280,13 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                 Bundle args = new Bundle();
                 args.putStringArray(PeriodDialogFragment.ARGS_PERIODS_STRING_ARRAY, periodsNames);
                 periodDialog.setArguments(args);
-                periodDialog.show(getSupportFragmentManager(),"periodDialog - Hello");
+                periodDialog.show(getSupportFragmentManager(), "periodDialog - Hello");
             }
         });
+
+
+        // выводим дату в поля
+        outDates();
 
 
         // колонка со списком оценок
@@ -457,7 +295,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         absentsColumn = (LinearLayout) findViewById(R.id.learners_grades_statistics_absent_column);
 
         // выводим оценки
-        outGrades();
+        getAndOutGrades();
 
     }
 
@@ -468,17 +306,17 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         isTextCheckRun = false;
         // меняем тексты
         if (periodPosition != -1) {
-            startDayEditText.setText("" + periods.get(periodPosition).dates[2]);
+            startDayEditText.setText("" + periods.get(periodPosition).dates[0]);
             startDayEditText.setBackgroundResource(R.drawable._underlined_black);
             startMonthEditText.setText("" + periods.get(periodPosition).dates[1]);
             startMonthEditText.setBackgroundResource(R.drawable._underlined_black);
-            startYearEditText.setText("" + periods.get(periodPosition).dates[0]);
+            startYearEditText.setText("" + periods.get(periodPosition).dates[2]);
             startYearEditText.setBackgroundResource(R.drawable._underlined_black);
-            endDayEditText.setText("" + periods.get(periodPosition).dates[5]);
+            endDayEditText.setText("" + periods.get(periodPosition).dates[3]);
             endDayEditText.setBackgroundResource(R.drawable._underlined_black);
             endMonthEditText.setText("" + periods.get(periodPosition).dates[4]);
             endMonthEditText.setBackgroundResource(R.drawable._underlined_black);
-            endYearEditText.setText("" + periods.get(periodPosition).dates[3]);
+            endYearEditText.setText("" + periods.get(periodPosition).dates[5]);
             endYearEditText.setBackgroundResource(R.drawable._underlined_black);
         }
         // разрешаем проверку
@@ -487,8 +325,9 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 
 
     //  вывод оценок в таблицу
-    void outGrades() {
-        // --- чистим колонки ---
+    void getAndOutGrades() {
+
+        // чистим колонки
         gradesColumn.removeAllViews();
         absentsColumn.removeAllViews();
 
@@ -497,37 +336,41 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         // пробегаемся по ученикам
         for (LearnerUnit learner : learners) {
 
-            // получаем оценки за указанный период по выбранному ученику
-            Cursor grades = db.getGradesByLearnerIdSubjectAndTimePeriod(
-                    learner.learnerId,
-                    subjectId,
-                    periods.get(periodPosition).dates[0] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[2]) + " 00:00:00",
-                    periods.get(periodPosition).dates[3] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[5]) + " 23:59:59"
-            );
             // вычисляем среднее значение и считаем 'н'
             long nCount = 0;
             float gradesSum = 0;
             float gradesCount = 0;
-            for (int j = 0; j < grades.getCount(); j++) {
-                grades.moveToPosition(j);
-                int grade = grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_GRADE));
-                switch (grade) {
-                    case -1:
-                        Log.wtf(TAG, "LearnersGradesStatisticsActivity.outGrades - grade is -1!");
-                        break;
-                    case 0:
-                        break;
-                    case -2:
-                        nCount++;
-                        break;
-                    default:
-                        gradesSum = gradesSum + grade;
-                        gradesCount++;
-                        break;
-                }
-            }
-            grades.close();
 
+            // проверяем, можем ли получать оценки
+            if (periodPosition != -1) {
+                // получаем оценки за указанный период по выбранному ученику
+                Cursor grades = db.getGradesByLearnerIdSubjectAndTimePeriod(
+                        learner.learnerId,
+                        subjectId,
+                        periods.get(periodPosition).dates[2] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[0]) + " 00:00:00",
+                        periods.get(periodPosition).dates[5] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[3]) + " 23:59:59"
+                );
+
+                for (int j = 0; j < grades.getCount(); j++) {
+                    grades.moveToPosition(j);
+                    int grade = grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_GRADE));
+                    switch (grade) {
+                        case -1:
+                            Log.wtf(TAG, "LearnersGradesStatisticsActivity.getAndOutGrades - grade is -1!");
+                            break;
+                        case 0:
+                            break;
+                        case -2:
+                            nCount++;
+                            break;
+                        default:
+                            gradesSum = gradesSum + grade;
+                            gradesCount++;
+                            break;
+                    }
+                }
+                grades.close();
+            }
 
             // выводим среднюю оценку ученику
             TextView gradeText = new TextView(this);
@@ -607,47 +450,8 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             absText.setText("" + nCount);
         }
         db.close();
+
     }
-
-
-//    // создание
-//    @Override
-//    public void createStatistic(String name, String startDate, String endDate) {
-//        Log.i(TAG, "CreateStatisticProfile name:" + name + " start:" + startDate + " end:" + endDate);
-//        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-//        long profileId = db.createStatistic(name, startDate, endDate);
-//        db.close();
-//        //outSpinner(profileId);
-//    }
-//
-//    // удаление
-//    @Override
-//    public void removeStatistic(ArrayList<Long> chosenProfilesIDArray) {
-//        Log.i(TAG, "RemoveStatisticProfile chosenProfilesIDArray:" + Arrays.toString(chosenProfilesIDArray.toArray()));
-//        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-//        for (long id : chosenProfilesIDArray) {
-//            db.removeStatisticProfile(id);
-//        }
-//        //outSpinner(-1);
-//        db.close();
-//    }
-//
-//
-//    // изменение
-//    @Override
-//    public void editStatistic(long id, String name, String startDate, String endDate) {
-//        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-//        db.setStatisticParameters(id, name, startDate, endDate);
-//        //outSpinner(id);
-//        db.close();
-//    }
-//
-//    // просто обновление
-//    @Override
-//    public void onlyUpdate() {
-//        //outSpinner(-1);
-//    }
-
 
     // проверка дат
     boolean isDateGood(EditText editStartDay, EditText editStartMonth, EditText editStartYear, EditText editEndDay, EditText editEndMonth, EditText editEndYear) {
@@ -803,25 +607,133 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 
     @Override
     public void setPeriodPosition(int position) {
+        // ставим выбор на последнем периоде
+        periodPosition = position;
 
+        // сокращаем название до 15 символов
+        String shortName = periods.get(periodPosition).periodName;
+        if (shortName.length() > 15) {
+            shortName = shortName.substring(0, 14) + "…";
+        }
+        // выводим поле в название
+        ((TextView) findViewById(R.id.learners_grades_statistics_period_button_text)).setText(shortName);
+
+        // выводим в поля даты
+        outDates();
+
+        // и выводим оценки
+        getAndOutGrades();
     }
 
     @Override
     public void createPeriod(String name) {
+
+        // сохраняем новую дату в бд и выставляем ее в поля
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        long profileId = db.createStatistic(name, startDate, endDate);
+        // получаем текущую дату
+        GregorianCalendar nowCalendar = new GregorianCalendar();
+        nowCalendar.setLenient(false);
+        nowCalendar.setTime(new Date());
+        int[] dates = new int[6];
+        dates[0] = nowCalendar.get(GregorianCalendar.DAY_OF_MONTH);
+        dates[1] = nowCalendar.get(GregorianCalendar.MONTH) + 1;
+        dates[2] = nowCalendar.get(GregorianCalendar.YEAR);
+        // берем завтрашнюю дату
+        nowCalendar.add(GregorianCalendar.DAY_OF_MONTH, 1);
+        dates[3] = nowCalendar.get(GregorianCalendar.DAY_OF_MONTH);
+        dates[4] = (nowCalendar.get(GregorianCalendar.MONTH) + 1);
+        dates[5] = nowCalendar.get(GregorianCalendar.YEAR);
+
+        String startDate = dates[2] + "-" + getTwoSymbols(dates[1]) + "-" + getTwoSymbols(dates[0]) + " 00:00:00";
+        String endDate = dates[5] + "-" + getTwoSymbols(dates[4]) + "-" + getTwoSymbols(dates[3]) + " 23:59:59";
+
+        long periodId = db.createStatistic(name, startDate, endDate);
+
+        // добавляем профиль в список
+        periods.add(new PeriodUnit(periodId, name, dates));
+
+
+        // ставим выбор на последнем периоде
+        periodPosition = periods.size() - 1;
+
+        // сокращаем название до 15 символов
+        if (name.length() > 15) {
+            name = name.substring(0, 14) + "…";
+        }
+        // выводим поле в название
+        ((TextView) findViewById(R.id.learners_grades_statistics_period_button_text)).setText(name);
+
+        // выводим в поля даты
+        outDates();
+
+        // и выводим оценки
+        getAndOutGrades();
+
         db.close();
-        //outSpinner(profileId);
     }
 
     @Override
     public void deletePeriods(boolean[] deleteList) {
+        for (int periodI = deleteList.length - 1; periodI >= 0; periodI--) {
 
+            if (deleteList[periodI]) {
+                // удаляем период из базы данных
+                DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+                db.removeStatisticProfile(periods.get(periodI).periodId);
+                db.close();
+
+                // удаляем период из списка
+                periods.remove(periodI);
+            }
+        }
+
+        // выводим первый или нулевой период
+        if (periods.size() == 0) {
+            // ставим пустой выбор
+            periodPosition = -1;
+            ((TextView) findViewById(R.id.learners_grades_statistics_period_button_text)).
+                    setText(R.string.learners_and_grades_statistics_activity_spinner_text_add);
+        } else {
+            // ставим выбор на первом предмете
+            periodPosition = 0;
+            // сокращаем название до 15 символов
+            String shortName = periods.get(0).periodName;
+            if (shortName.length() > 15) {
+                shortName = shortName.substring(0, 14) + "…";
+            }
+            ((TextView) findViewById(R.id.learners_grades_statistics_period_button_text)).
+                    setText(shortName);
+        }
+        outDates();
+        getAndOutGrades();
     }
 
     @Override
     public void renamePeriods(String[] newPeriodsNames) {
 
+        // переименоввываем все периоды
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        for (int periodI = 0; periodI < periods.size(); periodI++) {
+            // меняем их в списке
+            periods.get(periodI).periodName = newPeriodsNames[periodI];
+            // меняем их в базе данных
+            db.setStatisticName(periods.get(periodI).periodId, periods.get(periodI).periodName);
+        }
+        db.close();
+
+        // проверяем не пустой ли писок
+        if (periodPosition != -1) {
+            // выводим переименованный предмет
+            // сокращаем название до 15 символов
+            String shortName = periods.get(periodPosition).periodName;
+            if (shortName.length() > 15) {
+                shortName = shortName.substring(0, 14) + "…";
+            }
+            ((TextView) findViewById(R.id.learners_grades_statistics_period_button_text)).
+                    setText(shortName);
+        }
+        outDates();
+        getAndOutGrades();
     }
 
 

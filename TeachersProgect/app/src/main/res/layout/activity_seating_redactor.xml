@@ -1,37 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity">
 
-    <HorizontalScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:background="@color/colorBackGround">
+        android:layout_height="56dp">
 
-        <ScrollView
+        <ImageView
+            android:id="@+id/seating_redactor_toolbar_back_arrow"
+            android:layout_centerVertical="true"
+            android:layout_width="@dimen/my_icon_size"
+            android:layout_height="@dimen/my_icon_size"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/__button_back_arrow_green"/>
+
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_marginLeft="@dimen/my_icon_size"
+            android:layout_marginRight="@dimen/my_icon_size"
+            android:layout_centerInParent="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            android:layout_height="@dimen/my_toolbar_text_container_height_size"
+            android:background="@drawable/_button_round_background_green">
+            <TextView
+                android:id="@+id/seating_redactor_toolbar_title"
+                android:textSize="@dimen/text_subtitle_size"
+                android:textColor="@color/backgroundWhite"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:text="@string/title_activity_learners_and_grades_statistics"
+                android:fontFamily="@font/geometria"/>
+        </LinearLayout>
+    </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/seating_redactor_room"
-                    android:layout_width="600dp"
-                    android:layout_height="600dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true">
 
-                </RelativeLayout>
-            </LinearLayout>
-        </ScrollView>
-    </HorizontalScrollView>
-</RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/seating_redactor_room"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

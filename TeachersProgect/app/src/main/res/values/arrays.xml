@@ -45,14 +45,14 @@
         <item>december</item>
     </string-array>
 
-    <string-array name="week_days_simple">     
-        <item>Saturday</item>        
+    <string-array name="week_days_simple">            
         <item>Sunday</item>
         <item>Monday</item>        
         <item>Tuesday</item> 
         <item>Wednesday</item>        
         <item>Thursday</item>       
         <item>Friday</item>       
+        <item>Saturday</item> 
     </string-array>
 
     <!-- активность календаря на день -->

@@ -37,11 +37,11 @@
     <!-- стиль ActionBar урока -->
     <style name="LessonStyle">
         <!-- цвет иконок навигации -->
-        <item name="colorControlNormal">@color/baseOrange</item>
+        <item name="colorControlNormal">@color/basePink</item>
         <!-- color of the menu overflow icon -->
-        <item name="android:textColorSecondary">@color/baseOrange</item>
+        <item name="android:textColorSecondary">@color/basePink</item>
 
-        <item name="actionMenuTextColor">@color/baseOrange</item>
+        <item name="actionMenuTextColor">@color/basePink</item>
     </style>
 
 

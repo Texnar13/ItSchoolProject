@@ -16,7 +16,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/__button_add"
-        app:backgroundTint="@color/colorPrimaryOrange"/>
+        app:backgroundTint="@color/baseOrange"/>
 
     <include layout="@layout/content_cabinets_out" />
 

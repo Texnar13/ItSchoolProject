@@ -36,7 +36,7 @@ public class EndLessonDialogFragment extends DialogFragment {
 
         // заголовок
         TextView title = new TextView(getActivity());
-        title.setText("*Вы точно хотите выйти из урока без сохранения?*");
+        title.setText(R.string.lesson_activity_learner_dialog_out_text);
         title.setTextColor(Color.BLACK);
         title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         title.setAllCaps(true);
@@ -59,8 +59,8 @@ public class EndLessonDialogFragment extends DialogFragment {
 
         // кнопка отмены
         Button neutralButton = new Button(getActivity());
-        neutralButton.setBackgroundResource(R.drawable.start_screen_3_2_yellow_spot);
-        neutralButton.setText("*Нет!*");
+        neutralButton.setBackgroundResource(R.drawable._button_round_background_orange);
+        neutralButton.setText(R.string.lesson_activity_learner_dialog_out_no);
         neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         neutralButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
@@ -80,8 +80,8 @@ public class EndLessonDialogFragment extends DialogFragment {
 
         // кнопка согласия
         Button positiveButton = new Button(getActivity());
-        positiveButton.setBackgroundResource(R.drawable.start_screen_3_2_yellow_spot);
-        positiveButton.setText("*Да*");
+        positiveButton.setBackgroundResource(R.drawable._button_round_background_orange);
+        positiveButton.setText(R.string.lesson_activity_learner_dialog_out_yes);
         positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(

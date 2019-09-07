@@ -3,6 +3,8 @@ package com.learning.texnar13.teachersprogect.seatingRedactor;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
+
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.appcompat.app.AlertDialog;
 import android.util.TypedValue;
@@ -65,7 +67,8 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
 
         // текст заголовка
         TextView title = new TextView(getActivity());
-        title.setText("*Выберите ученика:*");
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria));
+        title.setText(R.string.lesson_redactor_activity_text_choose_learner);
         title.setGravity(Gravity.CENTER_VERTICAL);
         title.setTextColor(Color.WHITE);
         title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -110,6 +113,7 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
                 bodyLayoutContainer.addView(textContainer, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
                 TextView learnerText = new TextView(getActivity());
+                learnerText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria));
                 learnerText.setText(learnersNames.get(learnerI));
                 learnerText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                 learnerText.setTextColor(Color.BLACK);
