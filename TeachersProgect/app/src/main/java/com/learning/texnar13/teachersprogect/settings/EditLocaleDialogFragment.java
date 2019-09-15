@@ -14,6 +14,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -53,8 +54,8 @@ public class EditLocaleDialogFragment extends DialogFragment {
         linearLayout.addView(headLayout, headLayoutParams);
 
         // кнопка закрыть
-        LinearLayout closeImageView = new LinearLayout(getActivity());
-        closeImageView.setBackgroundResource(R.drawable.__button_close);
+        ImageView closeImageView = new ImageView(getActivity());
+        closeImageView.setImageResource(R.drawable.__button_close);
         LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),
                 (int) getResources().getDimension(R.dimen.my_icon_size));

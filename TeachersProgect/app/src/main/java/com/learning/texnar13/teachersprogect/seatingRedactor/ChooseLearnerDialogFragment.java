@@ -11,6 +11,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -51,8 +52,8 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
         // кнопка закрыть
-        LinearLayout closeImageView = new LinearLayout(getActivity());
-        closeImageView.setBackgroundResource(R.drawable.__button_close);
+        ImageView closeImageView = new ImageView(getActivity());
+        closeImageView.setImageResource(R.drawable.__button_close);
         LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(pxFromDp(40), pxFromDp(40));
         closeImageViewParams.setMargins(pxFromDp(10), pxFromDp(10), pxFromDp(10), pxFromDp(10));
         titleLayout.addView(closeImageView, closeImageViewParams);

@@ -118,8 +118,8 @@ public class SubjectsDialogFragment extends DialogFragment {
 
 
         // кнопка закрыть
-        LinearLayout closeImageView = new LinearLayout(getActivity());
-        closeImageView.setBackgroundResource(R.drawable.__button_close);
+        ImageView closeImageView = new ImageView(getActivity());
+        closeImageView.setImageResource(R.drawable.__button_close);
         LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(
                 (int)getResources().getDimension(R.dimen.my_icon_size),
                 (int)getResources().getDimension(R.dimen.my_icon_size)
@@ -158,7 +158,6 @@ public class SubjectsDialogFragment extends DialogFragment {
                 (int)getResources().getDimension(R.dimen.simple_margin),
                 (int)getResources().getDimension(R.dimen.simple_margin)
                 );
-        Log.e("TeachersApp", "outMainMenu: " + closeImageView.getId());
         titleParams.gravity = Gravity.CENTER_VERTICAL;
         titleLayout.addView(title, titleParams);
 
@@ -310,7 +309,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // кнопка назад
         ImageView closeImageView = new ImageView(getActivity());
-        closeImageView.setBackgroundResource(R.drawable.__button_back_arrow_blue);
+        closeImageView.setImageResource(R.drawable.__button_back_arrow_blue);
 
         LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(
                 (int)getResources().getDimension(R.dimen.my_icon_size),
@@ -476,7 +475,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // кнопка назад
         ImageView closeImageView = new ImageView(getActivity());
-        closeImageView.setBackgroundResource(R.drawable.__button_back_arrow_blue);
+        closeImageView.setImageResource(R.drawable.__button_back_arrow_blue);
 
         RelativeLayout.LayoutParams closeImageViewParams = new RelativeLayout.LayoutParams((int)getResources().getDimension(R.dimen.my_icon_size), (int)getResources().getDimension(R.dimen.my_icon_size));
         closeImageViewParams.setMargins(
@@ -547,7 +546,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
             // кнопка чтобы отмечать предметы на удаление
             final ImageView deleteImage = new ImageView(getActivity());
-            deleteImage.setBackgroundResource(R.drawable.__checkbox_empty);
+            deleteImage.setImageResource(R.drawable.__checkbox_empty);
             // параметры кнопки
             LinearLayout.LayoutParams deleteImageParams = new LinearLayout.LayoutParams(
                     (int)getResources().getDimension(R.dimen.my_icon_small_size), (int)getResources().getDimension(R.dimen.my_icon_small_size)
@@ -569,9 +568,9 @@ public class SubjectsDialogFragment extends DialogFragment {
                 public void onClick(View v) {
                     // инвертируем состояние кнопки
                     if (deleteList[finalSubjectI]) {
-                        deleteImage.setBackgroundResource(R.drawable.__checkbox_empty);
+                        deleteImage.setImageResource(R.drawable.__checkbox_empty);
                     } else {
-                        deleteImage.setBackgroundResource(R.drawable.__checkbox_full);
+                        deleteImage.setImageResource(R.drawable.__checkbox_full);
                     }
                     // и переменной
                     deleteList[finalSubjectI] = !deleteList[finalSubjectI];

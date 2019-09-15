@@ -64,7 +64,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        linearLayoutParams.setMargins((int) getResources().getDimension(R.dimen.simple_margin),(int) getResources().getDimension(R.dimen.half_more_margin), (int) getResources().getDimension(R.dimen.simple_margin), (int) getResources().getDimension(R.dimen.half_more_margin));
+        linearLayoutParams.setMargins((int) getResources().getDimension(R.dimen.simple_margin), (int) getResources().getDimension(R.dimen.half_more_margin), (int) getResources().getDimension(R.dimen.simple_margin), (int) getResources().getDimension(R.dimen.half_more_margin));
         linearLayout.setLayoutParams(linearLayoutParams);
         builder.setView(linearLayout);
 
@@ -90,17 +90,34 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
             }
         }
 
-        // названия типов оценок
-        final String[] gradesTypesNames = getArguments().getStringArray(ARGS_STRING_GRADES_TYPES_ARRAY);
 
         // создаем массив с оценками в текстовом виде
-        int maxGrade = getArguments().getInt(ARGS_INT_MAX_GRADE, 0);
-        final String[] gradesString = new String[maxGrade + 1];
-        gradesString[0] = "-";
-        for (int gradeI = 1; gradeI < maxGrade + 1; gradeI++) {
-            gradesString[gradeI] = "" + gradeI;
+        final int maxGrade = getArguments().getInt(ARGS_INT_MAX_GRADE, 0);
+        final String[][] gradesString = new String[grades.length][];
+        // массив для хранения дополнительных оценок
+        final int[] dopGrades = new int[grades.length];
+        for (int gradeNumberI = 0; gradeNumberI < gradesString.length; gradeNumberI++) {
+            // если вдруг оценка в поле больше максимальной
+            if (grades[gradeNumberI] > maxGrade) {
+                // создаем дополнительное поле
+                gradesString[gradeNumberI] = new String[maxGrade + 2];
+                // и интициализируем его дополнительной оценкой
+                gradesString[gradeNumberI][maxGrade + 1] = grades[gradeNumberI]+" ";
+
+                dopGrades[gradeNumberI] = grades[gradeNumberI];
+            } else
+                gradesString[gradeNumberI] = new String[maxGrade + 1];
+
+            // инициализируем оценки от прочерка до максимальной
+            gradesString[gradeNumberI][0] = "- ";
+            for (int gradeI = 1; gradeI < maxGrade + 1; gradeI++) {
+                gradesString[gradeNumberI][gradeI] = "" + gradeI+" ";
+            }
         }
 
+
+        // названия типов оценок
+        final String[] gradesTypesNames = getArguments().getStringArray(ARGS_STRING_GRADES_TYPES_ARRAY);
 
         // контейнер текущей даты и номера урока
         RelativeLayout currentContainer = new RelativeLayout(getActivity());
@@ -249,7 +266,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                         gradesSpinners[gradeI].setAdapter(new ArrayAdapter<>(
                                 getActivity(),
                                 R.layout.spinner_dropdown_element_subtitle,
-                                gradesString
+                                gradesString[gradeI]
                         ));
 
                         typesSpinners[gradeI].setSelection(0, false);
@@ -335,10 +352,14 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                 gradesSpinners[gradeI].setAdapter(new ArrayAdapter<>(
                         getActivity(),
                         R.layout.spinner_dropdown_element_subtitle,
-                        gradesString
+                        gradesString[gradeI]
                 ));
                 // ставим выбор
-                gradesSpinners[gradeI].setSelection(grades[gradeI]);
+                if (grades[gradeI] <= maxGrade) {
+                    gradesSpinners[gradeI].setSelection(grades[gradeI]);
+                } else {
+                    gradesSpinners[gradeI].setSelection(maxGrade+1);
+                }
             } else {
                 // адаптер спиннера
                 gradesSpinners[gradeI].setAdapter(new ArrayAdapter<>(
@@ -354,7 +375,12 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     // если не Н
                     if (grades[0] >= 0)
-                        grades[finalGradeI] = position;
+                        if (position <= maxGrade) {
+                            grades[finalGradeI] = position;
+                        } else {
+                            grades[finalGradeI] = dopGrades[finalGradeI];
+                        }
+
                 }
 
                 @Override
@@ -489,29 +515,279 @@ interface EditGradeDialogInterface {
 
 /*
 *
+public class EditGradeDialogFragment extends DialogFragment {//входные данные оценка, id оценки
 
-public class GradeDialogFragment extends DialogFragment {
+    //передаваемые данные
+    public static final String GRADES = "grades";
 
+    public static final String INDEXES = "indexes";
 
-
+    // максимальная оценка из базы данных
+    int maxGrade;
+    // массив с выбранными оценками
+    int[] grades;
 
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Log.i("TeachersApp", "LessonListEditDialogFragment - onCreateDialog");
+        //начинаем строить диалог
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+//---layout диалога---
+        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_layout_edit_learner, null);
+        builder.setView(dialogLayout);
 
 
+        //--LinearLayout в layout файле--
+        LinearLayout linearLayout = (LinearLayout) dialogLayout.findViewById(R.id.edit_learner_dialog_fragment_linear_layout);
+        linearLayout.setBackgroundResource(R.color.colorBackGround);
+        linearLayout.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        linearLayoutParams.setMargins((int) pxFromDp(10), (int) pxFromDp(15), (int) pxFromDp(10), (int) pxFromDp(15));
+        linearLayout.setLayoutParams(linearLayoutParams);
+
+//--заголовок--
+        TextView title = new TextView(getActivity());
+        title.setText(R.string.learners_and_grades_out_activity_dialog_title_edit_grade);
+        title.setTextColor(Color.BLACK);
+        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        title.setAllCaps(true);
+        title.setGravity(Gravity.CENTER);
+
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        titleParams.setMargins((int) pxFromDp(15), (int) pxFromDp(15), (int) pxFromDp(15), 0);
+
+        linearLayout.addView(title, titleParams);
+
+// -------- получаем оценки в массиве --------
+        grades = getArguments().getIntArray(GRADES);// todo для шлифовки кода можно убрать эту строчку(или отправить null) и исправить ошибки если они вдруг появятся
+        if (grades == null) {
+            grades = new int[]{};
+            Log.i("TeachersApp", "you must give bundle argument \"" + GRADES + "\"");
+        }
+
+// -------- spinner-ы с выбором оценки --------
+        DataBaseOpenHelper db = new DataBaseOpenHelper(getActivity());
+        maxGrade = db.getSettingsMaxGrade(1);
+        // массив со спиннерами
+        final Spinner[] spinners = new Spinner[grades.length];
+
+// -------- инициализируем значения в спиннерах --------
+        for (int i = 0; i < spinners.length; i++) {
+            // создаем массив с текстами
+            String gradesText[];
+
+            // если вдруг оценка в поле больше максимальной
+            if (grades[i] > maxGrade) {
+                // создаем дополнительное поле
+                gradesText = new String[maxGrade + 3];
+                // и интициализируем его дополнительной оценкой
+                gradesText[maxGrade + 2] = "" + grades[i];
+            } else
+                gradesText = new String[maxGrade + 2];
+
+            // инициализируем первые два поля
+            gradesText[0] = getString(R.string.learners_and_grades_out_activity_title_grade_n);
+            gradesText[1] = getString(R.string.learners_and_grades_out_activity_title_grade_no_answers);
+            // инициализируем все оценки кроме дополнительной
+            for (int j = 2; j < maxGrade + 2; j++) {
+                gradesText[j] = "" + (j - 1);
+            }
+
+            // нициализируем спинер
+            spinners[i] = new Spinner(getActivity().getApplicationContext());
+            // ставим адаптер
+            spinners[i].setAdapter(
+                    new ArrayAdapter<>(
+                            getActivity().getApplicationContext(),
+                            R.layout.spinner_dropdown_element_learners_and_grades_answers,
+                            gradesText
+                    )
+            );
+            // выводим спиннер
+            linearLayout.addView(
+                    spinners[i],
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+
+            // выбираем нужный элемент спиннера
+            switch (grades[i]) {
+                case 0:
+                    spinners[i].setSelection(1, false);
+                    break;
+                case -2:
+                    spinners[i].setSelection(0, false);
+                    break;
+                default:
+                    if (grades[i] > maxGrade) {
+                        spinners[i].setSelection(maxGrade + 2, false);
+                    } else
+                        spinners[i].setSelection(grades[i] + 1, false);
+                    break;
+            }
+        }
+
+//--кнопки согласия/отмены--
+        //контейнер для них
+        LinearLayout container = new LinearLayout(getActivity());
+        container.setOrientation(LinearLayout.HORIZONTAL);
+        container.setGravity(Gravity.CENTER);
+
+        //кнопка отмены
+        Button neutralButton = new Button(getActivity());
+        neutralButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
+        neutralButton.setText(R.string.learners_classes_out_activity_dialog_button_cancel);
+        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+        neutralButton.setTextColor(Color.WHITE);
+        LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (int) getResources().getDimension(R.dimen.my_buttons_height_size)
+        );
+        neutralButtonParams.weight = 1;
+        neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
+
+        //кнопка согласия
+        Button positiveButton = new Button(getActivity());
+        positiveButton.setBackgroundResource(R.drawable.start_screen_3_1_blue_spot);
+        positiveButton.setText(R.string.learners_classes_out_activity_dialog_button_save);
+        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+        positiveButton.setTextColor(Color.WHITE);
+        LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (int) getResources().getDimension(R.dimen.my_buttons_height_size)
+        );
+        positiveButtonParams.weight = 1;
+        positiveButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
+
+
+        //кнопки в контейнер
+        container.addView(neutralButton, neutralButtonParams);
+        container.addView(positiveButton, positiveButtonParams);
+
+        //контейнер в диалог
+        linearLayout.addView(container);
+
+
+        //при нажатии...
+        //согласие
+
+        //передаваемые массивы
+        final int[] finalGrades = grades;
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    for (int j = 0; j < spinners.length; j++) {
+                        switch (spinners[j].getSelectedItemPosition()) {
+                            case 0://нулевая позиция - н
+                                finalGrades[j] = -2;
+                                break;
+                            default://остальные оценки
+                                if (maxGrade + 2 == spinners[j].getSelectedItemPosition()) {
+                                    finalGrades[j] = grades[j];
+                                } else
+                                    finalGrades[j] = spinners[j].getSelectedItemPosition() - 1;
+                                break;
+                        }
+                    }
+
+                    //вызываем в активности метод по изменению оценки и передаем выбранную оценку
+                    ((EditGradeDialogInterface) getActivity()).editGrade(
+                            finalGrades,
+                            getArguments().getIntArray(INDEXES)
+                    );
+
+                    // убираем с текста краску
+                    ((EditGradeDialogInterface) getActivity()).returnSimpleColorForText(getArguments().getIntArray(INDEXES));
+                } catch (java.lang.ClassCastException e) {
+                    //в вызвающей активности должен быть имплементирован класс EditGradeDialogInterface
+                    e.printStackTrace();
+                    Log.i(
+                            "TeachersApp",
+                            "EditGradeDialogFragment: you must implements EditGradeDialogInterface in your activity"
+                    );
+                } catch (java.lang.NullPointerException e) {
+                    //в диалог необходимо передать оценку и позиции( Bungle putLong("grade",grade) )
+                    e.printStackTrace();
+                    Log.i(
+                            "TeachersApp",
+                            "EditGradeDialogFragment: you must give grade or id( Bungle putLongArray(\"" + INDEXES + "\",indexes[]) )"
+                    );
+                }
+                dismiss();
+            }
+        });
+
+        //отмена
+        neutralButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+                try {
+                    //вызываем в активности метод разрешения изменения оценок
+                    ((AllowUserEditGradesInterface) getActivity()).allowUserEditGrades();
+                    // убираем с текста краску
+                    ((EditGradeDialogInterface) getActivity()).returnSimpleColorForText(getArguments().getIntArray(INDEXES));
+                } catch (java.lang.ClassCastException e) {
+                    //в вызвающей активности должен быть имплементирован класс AllowUserEditGradesInterface
+                    e.printStackTrace();
+                    Log.i(
+                            "TeachersApp",
+                            "EditGradeDialogFragment: you must implements AllowUserEditGradesInterface in your activity"
+                    );
+                }
+            }
+        });
+        return builder.create();
     }
 
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+    }
 
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+        try {
+            //вызываем в активности метод разрешения изменения оценок
+            ((AllowUserEditGradesInterface) getActivity()).allowUserEditGrades();
+            // убираем с текста краску
+            ((EditGradeDialogInterface) getActivity()).returnSimpleColorForText(getArguments().getIntArray(INDEXES));
+        } catch (java.lang.ClassCastException e) {
+            //в вызвающей активности должен быть имплементирован класс AllowUserEditGradesInterface
+            e.printStackTrace();
+            Log.i(
+                    "TeachersApp",
+                    "EditGradeDialogFragment: you must implements AllowUserEditGradesInterface in your activity"
+            );
+        }
+    }
 
+    //---------форматы----------
+
+    private float pxFromDp(float px) {
+        return px * getActivity().getResources().getDisplayMetrics().density;
+    }
 }
 
+interface EditGradeDialogInterface {
+    void editGrade(int[] grades, int[] indexes);
 
-interface GradesDialogInterface {
-
-    // установить предмет стоящий на этой позиции как выбранный
-    void setGrades(int[] grades, int[] chosenTypesNumbers);
-
+    void returnSimpleColorForText(int[] indexes);
 }
+
+interface AllowUserEditGradesInterface {
+    void allowUserEditGrades();
+}
+
 *
 * */

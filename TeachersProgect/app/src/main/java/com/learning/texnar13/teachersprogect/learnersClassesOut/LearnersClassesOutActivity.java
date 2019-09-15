@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -194,8 +195,8 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
             learnersClassContainer.addView(item, itemParams);
 
             // стрелочка
-            LinearLayout arrow = new LinearLayout(this);
-            arrow.setBackgroundResource(R.drawable.__button_forward_arrow_blue);
+            ImageView arrow = new ImageView(this);
+            arrow.setImageResource(R.drawable.__button_forward_arrow_blue);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
                     (int) getResources().getDimension(R.dimen.my_icon_small_size),
                     (int) getResources().getDimension(R.dimen.my_icon_small_size)

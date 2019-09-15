@@ -150,131 +150,140 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
         // проверяем был ли это просто поворот или создание активности
         //if (learners == null) {//todo придумать как выполнять этот код только один раз но при этом каждый переворот выводить парты
-            // получаем данные из бд
-            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        // получаем данные из бд
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
 
-            // получаем кабинет из бд
-            Cursor cabinetCursor = db.getCabinet(cabinetId);
-            cabinetCursor.moveToFirst();
-            // получаем множитель из кабинета  (0.25 <-> 4)
-            multiplier = 0.0375F * cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER))
-                    + 0.25F;
-            // и отступы
-            xAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X));
-            yAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y));
-            // получаем название кабинета
-            String cabinetName = cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
-            cabinetCursor.close();
+        // получаем кабинет из бд
+        Cursor cabinetCursor = db.getCabinet(cabinetId);
+        cabinetCursor.moveToFirst();
+        // получаем множитель из кабинета  (0.25 <-> 4)
+        multiplier = 0.0375F * cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER))
+                + 0.25F;
+        // и отступы
+        xAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X));
+        yAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y));
+        // получаем название кабинета
+        String cabinetName = cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
+        cabinetCursor.close();
 
 
-            // получаем класс из бд
-            Cursor classCursor = db.getLearnersClass(learnersClassId);
-            classCursor.moveToFirst();
-            // получаем название класса
-            String learnersClassName = classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
-            classCursor.close();
-            // выставляем заголовок
-            ((TextView)findViewById(R.id.seating_redactor_toolbar_title)).setText(learnersClassName + ", " + cabinetName);
+        // получаем класс из бд
+        Cursor classCursor = db.getLearnersClass(learnersClassId);
+        classCursor.moveToFirst();
+        // получаем название класса
+        String learnersClassName = classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
+        classCursor.close();
+
+        // укорачиваем поля если они слишком длинные Loading…
+        if (learnersClassName.length() > 6) {
+            learnersClassName = learnersClassName.substring(0, 5) + "…";// absde -> abc…  abcd->abcd
+        }
+        if (cabinetName.length() > 6) {
+            cabinetName = cabinetName.substring(0, 5) + "…";
+        }
+
+        // выставляем заголовок
+        ((TextView) findViewById(R.id.seating_redactor_toolbar_title)).setText(learnersClassName + ", " + cabinetName);
 
 
-            // получаем учеников
-            Cursor learnersCursor = db.getLearnersByClassId(learnersClassId);
-            learners = new MyLearner[learnersCursor.getCount()];
-            for (int learnerI = 0; learnerI < learnersCursor.getCount(); learnerI++) {
-                learnersCursor.moveToPosition(learnerI);
-                learners[learnerI] = new MyLearner(
-                        learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)),
-                        learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)),
-                        learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME))
-                );
-            }
-            learnersCursor.close();
+        // получаем учеников
+        Cursor learnersCursor = db.getLearnersByClassId(learnersClassId);
+        learners = new MyLearner[learnersCursor.getCount()];
+        for (int learnerI = 0; learnerI < learnersCursor.getCount(); learnerI++) {
+            learnersCursor.moveToPosition(learnerI);
+            learners[learnerI] = new MyLearner(
+                    learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)),
+                    learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)),
+                    learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME))
+            );
+        }
+        learnersCursor.close();
 
 
-            // получаем парты
-            Cursor desksCursor = db.getDesksByCabinetId(cabinetId);
-            desks = new DeskUnit[desksCursor.getCount()];
-            for (int deskI = 0; deskI < desksCursor.getCount(); deskI++) {
-                desksCursor.moveToPosition(deskI);
+        // получаем парты
+        Cursor desksCursor = db.getDesksByCabinetId(cabinetId);
+        desks = new DeskUnit[desksCursor.getCount()];
+        for (int deskI = 0; deskI < desksCursor.getCount(); deskI++) {
+            desksCursor.moveToPosition(deskI);
 
-                // id парты
-                long deskId = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID));
+            // id парты
+            long deskId = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID));
 
-                // получаем места на парте
-                Cursor placesCursor = db.getPlacesByDeskId(deskId);
-                // количество мест на парте
-                int countOfPlaces = desksCursor.getInt(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES));
-                // id мест
-                long[] placesId = new long[countOfPlaces];
-                int[] learnersIndexes = new int[countOfPlaces];
-                long[] attitudesId = new long[countOfPlaces];
-                // по местам
-                for (int placeI = 0; placeI < placesId.length; placeI++) {
-                    placesCursor.moveToPosition(placeI);
+            // получаем места на парте
+            Cursor placesCursor = db.getPlacesByDeskId(deskId);
+            // количество мест на парте
+            int countOfPlaces = desksCursor.getInt(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES));
+            // id мест
+            long[] placesId = new long[countOfPlaces];
+            int[] learnersIndexes = new int[countOfPlaces];
+            long[] attitudesId = new long[countOfPlaces];
+            // по местам
+            for (int placeI = 0; placeI < placesId.length; placeI++) {
+                placesCursor.moveToPosition(placeI);
 
-                    // номер места на парте
-                    int placePoz = (int) placesCursor.getLong(placesCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1;
-                    // находим id места
-                    placesId[placePoz] = placesCursor.getLong(placesCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID));
+                // номер места на парте
+                int placePoz = (int) placesCursor.getLong(placesCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1;
+                // находим id места
+                placesId[placePoz] = placesCursor.getLong(placesCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID));
 
-                    // получаем id зависимости и номер ученика сидящего на этой парте
-                    attitudesId[placePoz] = -1;
-                    learnersIndexes[placePoz] = -1;
-                    // пробегаемся по ученикам (берем первую найденную)
-                    for (int learnerI = 0; learnerI < learners.length && attitudesId[placePoz] == -1; learnerI++) {
+                // получаем id зависимости и номер ученика сидящего на этой парте
+                attitudesId[placePoz] = -1;
+                learnersIndexes[placePoz] = -1;
+                // пробегаемся по ученикам (берем первую найденную)
+                for (int learnerI = 0; learnerI < learners.length && attitudesId[placePoz] == -1; learnerI++) {
 
-                        // опрашиваем, есть ли место
-                        Cursor attitudesCursor = db.getAttitudeByLearnerIdAndPlaceId(learners[learnerI].learnerId, placesId[placePoz]);
-                        // если она есть
-                        if (attitudesCursor.moveToFirst()) {
+                    // опрашиваем, есть ли место
+                    Cursor attitudesCursor = db.getAttitudeByLearnerIdAndPlaceId(learners[learnerI].learnerId, placesId[placePoz]);
+                    // если она есть
+                    if (attitudesCursor.moveToFirst()) {
 
-                            // сохраняем id зависимоси в парту
-                            attitudesId[placePoz] =
-                                    attitudesCursor.getLong(attitudesCursor.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_ATTITUDE_ID));
-                            // и номер ученика в парту
-                            learnersIndexes[placePoz] = learnerI;
+                        // сохраняем id зависимоси в парту
+                        attitudesId[placePoz] =
+                                attitudesCursor.getLong(attitudesCursor.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_ATTITUDE_ID));
+                        // и номер ученика в парту
+                        learnersIndexes[placePoz] = learnerI;
 
-                            // и сохраняем в ученика его позицию
-                            learners[learnerI].deskNumber = deskI;
-                            learners[learnerI].placeNumber = placePoz;
-                        }
-                        attitudesCursor.close();
+                        // и сохраняем в ученика его позицию
+                        learners[learnerI].deskNumber = deskI;
+                        learners[learnerI].placeNumber = placePoz;
                     }
+                    attitudesCursor.close();
                 }
-                placesCursor.close();
-
-
-                // создаем view для парты и выводим его
-                RelativeLayout deskLayout = new RelativeLayout(getApplicationContext());
-                out.addView(deskLayout);
-
-                // создаем парту
-                desks[deskI] = new DeskUnit(
-                        deskLayout,
-                        pxFromDp(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * multiplier) + xAxisPXOffset,
-                        pxFromDp(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * multiplier) + yAxisPXOffset,
-                        learnersIndexes,
-                        deskId,
-                        placesId,
-                        attitudesId,
-                        deskI
-                );
             }
-            desksCursor.close();
-            db.close();
+            placesCursor.close();
 
-            // проверяем все ли ученики рассажены
-            isPlus = false;
-            for (MyLearner learner : learners) {
-                if (learner.deskNumber == -1)
-                    isPlus = true;
-            }
 
-            // заполняем все ячейки без учеников
-            for (DeskUnit desk : desks) {
-                desk.outEmpty();
-            }
+            // создаем view для парты и выводим его
+            RelativeLayout deskLayout = new RelativeLayout(getApplicationContext());
+            out.addView(deskLayout);
+
+            // создаем парту
+            desks[deskI] = new DeskUnit(
+                    deskLayout,
+                    pxFromDp(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * multiplier) + xAxisPXOffset,
+                    pxFromDp(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * multiplier) + yAxisPXOffset,
+                    learnersIndexes,
+                    deskId,
+                    placesId,
+                    attitudesId,
+                    deskI
+            );
+        }
+        desksCursor.close();
+        db.close();
+
+        // проверяем все ли ученики рассажены
+        isPlus = false;
+        for (MyLearner learner : learners) {
+            if (learner.deskNumber == -1)
+                isPlus = true;
+        }
+
+        // заполняем все ячейки без учеников
+        for (DeskUnit desk : desks) {
+            desk.outEmpty();
+        }
 
         //}
     }

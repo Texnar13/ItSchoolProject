@@ -92,7 +92,12 @@ public class GradeDialogFragment extends DialogFragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 1
         );
-        nameParams.setMargins(pxFromDp(10), 0, pxFromDp(10), 0);
+        nameParams.setMargins(
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin)
+        );
         titleLayout.addView(name, nameParams);
 
 
@@ -106,7 +111,12 @@ public class GradeDialogFragment extends DialogFragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 1
         );
-        absContainerParams.setMargins(pxFromDp(10), 0, pxFromDp(10), 0);
+        absContainerParams.setMargins(
+                (int) getResources().getDimension(R.dimen.double_margin),
+                0,
+                (int) getResources().getDimension(R.dimen.double_margin),
+                0
+        );
         titleLayout.addView(absContainer, absContainerParams);
 
         // чекбокс отсутствия
@@ -115,10 +125,13 @@ public class GradeDialogFragment extends DialogFragment {
             checkImage.setBackgroundResource(R.drawable.__checkbox_full);
         } else
             checkImage.setBackgroundResource(R.drawable.__checkbox_empty);
-        LinearLayout.LayoutParams checkImageParams = new LinearLayout.LayoutParams(pxFromDp(20), pxFromDp(20));
-        checkImageParams.topMargin = pxFromDp(10);
-        checkImageParams.bottomMargin = pxFromDp(10);
-        checkImageParams.rightMargin = pxFromDp(10);
+        LinearLayout.LayoutParams checkImageParams = new LinearLayout.LayoutParams(
+                (int) getResources().getDimension(R.dimen.my_icon_small_size),
+                (int) getResources().getDimension(R.dimen.my_icon_small_size)
+        );
+        checkImageParams.topMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+        checkImageParams.bottomMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+        checkImageParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
         absContainer.addView(checkImage, checkImageParams);
 
         // текст отсутствия
@@ -126,13 +139,13 @@ public class GradeDialogFragment extends DialogFragment {
         absText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
         absText.setText(R.string.lesson_activity_learner_absent_text);
         absText.setTextColor(Color.BLACK);
-        absText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+        absText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         LinearLayout.LayoutParams absTextParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        absTextParams.topMargin = pxFromDp(10);
-        absTextParams.bottomMargin = pxFromDp(10);
+        absTextParams.topMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+        absTextParams.bottomMargin = (int) getResources().getDimension(R.dimen.simple_margin);
         absContainer.addView(absText, absTextParams);
 
         // нажатие на контейнер отсутствия
@@ -203,7 +216,12 @@ public class GradeDialogFragment extends DialogFragment {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        spinnersContainerParams.setMargins(pxFromDp(5), pxFromDp(5), pxFromDp(5), pxFromDp(5));
+        spinnersContainerParams.setMargins(
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin)
+        );
         bodyLayout.addView(spinnersContainer, spinnersContainerParams);
 
         // добавляем спиннеры
@@ -313,23 +331,28 @@ public class GradeDialogFragment extends DialogFragment {
                 ActionBar.LayoutParams.WRAP_CONTENT,
                 2
         );
-        saveButtonContainerParams.setMargins(pxFromDp(10), pxFromDp(10), pxFromDp(10), pxFromDp(10));
+        saveButtonContainerParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin)
+        );
         saveButtonContainerParams.gravity = Gravity.CENTER;
         spinnersContainer.addView(saveButtonContainer, saveButtonContainerParams);
 
         TextView saveText = new TextView(getActivity());
         saveText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-        saveText.setText(R.string.lesson_list_activity_menu_text_save);
+        saveText.setText(R.string.button_save);
         saveText.setTextColor(getResources().getColor(R.color.backgroundWhite));
-        saveText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+        saveText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         LinearLayout.LayoutParams saveTextParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        saveTextParams.leftMargin = pxFromDp(10);
-        saveTextParams.topMargin = pxFromDp(5);
-        saveTextParams.rightMargin = pxFromDp(10);
-        saveTextParams.bottomMargin = pxFromDp(5);
+        saveTextParams.leftMargin = (int) getResources().getDimension(R.dimen.double_margin);
+        saveTextParams.topMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+        saveTextParams.rightMargin = (int) getResources().getDimension(R.dimen.double_margin);
+        saveTextParams.bottomMargin = (int) getResources().getDimension(R.dimen.simple_margin);
         saveButtonContainer.addView(saveText, saveTextParams);
 
         // при нажатии на кнопку сохранить
@@ -349,12 +372,6 @@ public class GradeDialogFragment extends DialogFragment {
         Dialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         return dialog;
-    }
-
-
-    // преобразование зависимой величины в пиксели
-    private int pxFromDp(float dp) {
-        return (int) (dp * getActivity().getResources().getDisplayMetrics().density);
     }
 }
 

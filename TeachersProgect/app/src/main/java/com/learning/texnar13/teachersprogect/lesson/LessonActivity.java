@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
@@ -106,6 +107,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     private static String subjectName;
     // id кабинета
     private static long cabinetId;
+    // имя предмета
+    private static String cabinetName;
 
     // массив учеников
     static private MyLearnerAndHisGrades[] learnersAndTheirGrades;
@@ -285,7 +288,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         // цвет фона
         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.backgroundWhite));
         // кнопка назад
-        getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_pink));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_pink));
 
 
         // для того, чтобы векторные изображения созданные в коде отображались нормально todo разобраться бы что это
@@ -334,6 +338,12 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             learnersClass.moveToFirst();
             className = learnersClass.getString(learnersClass.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
             learnersClass.close();
+
+            // получаем имя кабинета
+            Cursor cabinetNameCursor = db.getCabinet(cabinetId);
+            cabinetNameCursor.moveToFirst();
+            cabinetName = cabinetNameCursor.getString(cabinetNameCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
+            cabinetNameCursor.close();
 
 
             // получаем учеников по id класса
@@ -387,8 +397,26 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         out = findViewById(R.id.activity_lesson_room_layout);
         out.setOnTouchListener(this);
 
+
+        // укорачиваем поля если они слишком длинные …
+        String shortSubjectName;
+        String shortClassName;
+        String shortCabinetName;
+        if (subjectName.length() > 10) {
+            shortSubjectName = subjectName.substring(0, 9) + "…";
+        } else
+            shortSubjectName = subjectName;
+        if (className.length() > 4) {
+            shortClassName = className.substring(0, 3) + "…";// absde -> abc…  abcd->abcd
+        } else
+            shortClassName = className;
+        if (cabinetName.length() > 4) {
+            shortCabinetName = cabinetName.substring(0, 3) + "…";
+        } else
+            shortCabinetName = cabinetName;
+
         // выставляем название предмета и класса в заголовок
-        title.setText(subjectName + ", " + className);
+        title.setText(shortSubjectName + ", " + shortClassName + ", " + shortCabinetName);
 
 
         /*
@@ -1185,7 +1213,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             } else
                 this.viewGrade2.setText("");
 
-            Log.e(TAG, "--------- "+learnerGrades[chosenGradePosition]);
+            Log.e(TAG, "--------- " + learnerGrades[chosenGradePosition]);
             // меняем изображение на учненике в соответствии с оценкой
             switch (learnerGrades[chosenGradePosition]) {
                 case -2:

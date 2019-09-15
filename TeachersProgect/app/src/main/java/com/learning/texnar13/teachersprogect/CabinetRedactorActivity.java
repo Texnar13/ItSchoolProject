@@ -13,6 +13,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -248,7 +249,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         // цвет фона
         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.backgroundWhite));
         // кнопка назад
-        getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_orange));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_orange));
 
 
         // размеры экрана

@@ -42,8 +42,8 @@
     <dimen name="text_small_size">20sp</dimen>
 
     <!--  ширина текстовых полей -->
-    <dimen name="text_field_two_simple_symbols_width">60dp</dimen>
-    <dimen name="text_field_four_simple_symbols_width">110dp</dimen>
+    <dimen name="text_field_two_simple_symbols_width">70dp</dimen>
+    <dimen name="text_field_four_simple_symbols_width">120dp</dimen>
 
     <!--главный экран-->
     <dimen name="start_screen_button_margins">24dp</dimen>

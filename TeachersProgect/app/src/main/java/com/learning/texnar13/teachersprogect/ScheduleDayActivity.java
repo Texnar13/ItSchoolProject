@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
@@ -89,7 +90,8 @@ public class ScheduleDayActivity extends AppCompatActivity {
         // цвет фона
         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.backgroundWhite));
         // кнопка назад
-        getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_blue));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_blue));
 
 
         // вертикальная ориентация

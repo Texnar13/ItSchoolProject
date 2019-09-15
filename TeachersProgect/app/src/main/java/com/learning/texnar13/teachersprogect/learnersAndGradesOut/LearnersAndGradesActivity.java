@@ -3,6 +3,7 @@ package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.PointF;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -144,7 +145,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         // кнопка назад в actionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // кнопка назад
-        getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_blue));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_blue));
 
         // получаем id класса
         classId = getIntent().getLongExtra(CLASS_ID, -1);
@@ -551,11 +553,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         endTime.delete(0, endTime.length());
                         // сделаем запрос всего дня и если он пуст заполним его нулевыми значениями
                         startTime.append(viewCalendar.get(Calendar.YEAR))
-                                .append("-").append(getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1))
-                                .append("-").append(getTwoSymbols(dayI + 1)).append(" 00:00:00");
+                                .append('-').append(getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1))
+                                .append('-').append(getTwoSymbols(dayI + 1)).append(" 00:00:00");
                         endTime.append(viewCalendar.get(Calendar.YEAR))
-                                .append("-").append(getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1))
-                                .append("-").append(getTwoSymbols(dayI + 1)).append(" 23:59:00");
+                                .append('-').append(getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1))
+                                .append('-').append(getTwoSymbols(dayI + 1)).append(" 23:59:00");
 
                         Cursor allDayGradesCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
                                 copy.get(learnerI).id,
@@ -876,7 +878,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                                         //запускаем
                                         editGrade.setArguments(bundle);
-                                        editGrade.show(getFragmentManager(), "editGradeDialog - hello");
+                                        editGrade.show(getFragmentManager(), "editGradeDialog - hello");// illegalState - вызов в неподходящее время
                                     }
                                 }
                             } else {// если нажат ученик
@@ -1301,7 +1303,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         }
 
         // обновляем надпись на тексте с названием предмета
-        subjectTextView.setText(subjects[chosenSubjectPosition].getSubjectName());
+        if (subjects.length != 0) {
+            // выводим название предмета
+            subjectTextView.setText(subjects[chosenSubjectPosition].getSubjectName());
+
+        } else { // если проедметов в базе данных нет не выбираем ничего
+            // выводим текст о том, что предмета нет
+            subjectTextView.setText(getResources().getString(R.string.learners_and_grades_out_activity_text_create_subject));
+        }
     }
 
 

@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
-    private static final boolean IS_DEBUG = false;
+    private static final boolean IS_DEBUG = true;
     private static final int DB_VERSION = 16;
     private Context context;
 
@@ -67,6 +67,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES + ";");
+            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES + ";");
             db.execSQL("PRAGMA foreign_keys = ON;");
 
             //настройки
@@ -91,6 +92,13 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE + " INTEGER, " +
                     SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED + " INTEGER DEFAULT 1); ";
             db.execSQL(sql);
+            {// ---- вставляем одну запись настроек ----
+                ContentValues values = new ContentValues();
+                values.put(SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME, "simpleName");
+                values.put(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE, 1);
+                db.insert(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, values);
+            }
+
             //кабинет
             sql = "CREATE TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "( " + SchoolContract.TableCabinets.KEY_CABINET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableCabinets.COLUMN_NAME + " VARCHAR, " +
@@ -384,7 +392,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
             }
 
-// TODO: 2019-07-09 код до обновления
             if (oldVersion < 16) {
                 // -------- создаем таблицу типов оценок --------
                 db.execSQL(
@@ -446,8 +453,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y + " INTEGER DEFAULT \"0\""
                 );
 
-
-                // -- выбор цвета оценок? --
 
                 // -- таблица расписаний? --
             }

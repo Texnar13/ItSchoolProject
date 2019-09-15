@@ -13,6 +13,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -146,8 +147,8 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
             cabinetContainer.addView(item, itemParams);
 
             // стрелочка
-            LinearLayout arrow = new LinearLayout(this);
-            arrow.setBackgroundResource(R.drawable.__button_forward_arrow_orange);
+            ImageView arrow = new ImageView(this);
+            arrow.setImageResource(R.drawable.__button_forward_arrow_orange);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
                     (int) getResources().getDimension(R.dimen.my_icon_small_size),
                     (int) getResources().getDimension(R.dimen.my_icon_small_size)

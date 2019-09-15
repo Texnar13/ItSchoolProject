@@ -60,7 +60,7 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
 
         // картинка
         ImageView imageBackground = new ImageView(getActivity());
-        imageBackground.setBackgroundResource(R.drawable.__background_add_class);
+        imageBackground.setImageResource(R.drawable.__background_add_class);
         imageBackground.setAdjustViewBounds(true);
         RelativeLayout.LayoutParams imageBackgroundParams = new RelativeLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.classes_out_add_class_image_width),
@@ -72,7 +72,7 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
 
         // кнопка назад
         ImageView backImage = new ImageView(getActivity());
-        backImage.setBackgroundResource(R.drawable.__button_back_arrow_dark_gray);
+        backImage.setImageResource(R.drawable.__button_back_arrow_dark_gray);
         backImage.setAdjustViewBounds(true);
         RelativeLayout.LayoutParams backImageParams = new RelativeLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),
