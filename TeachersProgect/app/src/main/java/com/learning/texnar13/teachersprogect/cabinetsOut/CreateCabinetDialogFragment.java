@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
@@ -27,6 +28,9 @@ public class CreateCabinetDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        // настраиваем программный вывод векторных изображений
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // layout диалога
         LinearLayout linearLayout = new LinearLayout(getActivity());
@@ -58,7 +62,7 @@ public class CreateCabinetDialogFragment extends DialogFragment {
 
         // картинка
         ImageView imageBackground = new ImageView(getActivity());
-        imageBackground.setBackgroundResource(R.drawable.__background_add_cabinet);
+        imageBackground.setImageResource(R.drawable.__background_add_cabinet);
         imageBackground.setAdjustViewBounds(true);
         RelativeLayout.LayoutParams imageBackgroundParams = new RelativeLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.cabinets_out_add_cabinet_image_width),
@@ -70,7 +74,7 @@ public class CreateCabinetDialogFragment extends DialogFragment {
 
         // кнопка назад
         ImageView backImage = new ImageView(getActivity());
-        backImage.setBackgroundResource(R.drawable.__button_back_arrow_dark_gray);
+        backImage.setImageResource(R.drawable.__button_back_arrow_dark_gray);
         backImage.setAdjustViewBounds(true);
         RelativeLayout.LayoutParams backImageParams = new RelativeLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),

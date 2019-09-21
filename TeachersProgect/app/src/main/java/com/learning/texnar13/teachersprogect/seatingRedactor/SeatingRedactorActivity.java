@@ -8,6 +8,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.os.Bundle;
@@ -123,6 +124,10 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // настраиваем программный вывод векторных изображений
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
         setContentView(R.layout.activity_seating_redactor);
         out = findViewById(R.id.seating_redactor_room);
         out.setOnTouchListener(this);
@@ -642,6 +647,8 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                 // если на этом месте сидит ученик
                 if (learnersIndexes[placeI] != -1) {
 
+                    // настраиваем программный вывод векторных изображений
+                    AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
                     // создаем картинку ученика
                     ImageView lernerImage = new ImageView(getApplicationContext());

@@ -337,7 +337,8 @@
     <string name="settings_activity_dialog_edit_time_title">Время уроков</string>
     <string name="settings_activity_dialog_hint_hour">ЧАС</string>
     <string name="settings_activity_dialog_hint_minute">МИН</string>
-    <string name="settings_activity_dialog_text_time_colon">.</string>
+    <string name="settings_activity_dialog_text_time_dot">.</string>
+    <string name="settings_activity_dialog_text_time_colon">:</string>
     <string name="settings_activity_dialog_text_time_dash">—</string>
     <string name="settings_activity_dialog_edit_locale_title">Выберите язык:</string>
 

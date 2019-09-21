@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.app.Service;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -94,7 +95,8 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     LinearLayout newTypeContainer = new LinearLayout(getActivity());
                     newTypeContainer.setGravity(Gravity.CENTER_VERTICAL);
                     newTypeContainer.setOrientation(LinearLayout.VERTICAL);
-                    newTypeContainer.setBackground(getActivity().getResources().getDrawable(R.drawable.button_lite_gray));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        newTypeContainer.setBackground(getActivity().getResources().getDrawable(R.drawable.button_lite_gray));
                     // параметры контейнера
                     LinearLayout.LayoutParams newTypeContainerParams = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -159,7 +161,8 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             LinearLayout item = new LinearLayout(getActivity());
             item.setGravity(Gravity.CENTER_VERTICAL);
             item.setOrientation(LinearLayout.VERTICAL);
-            item.setBackground(getActivity().getResources().getDrawable(R.drawable.button_lite_gray));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                item.setBackground(getActivity().getResources().getDrawable(R.drawable.button_lite_gray));
             // параметры контейнера
             LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,

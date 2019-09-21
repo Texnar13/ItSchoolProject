@@ -20,6 +20,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
@@ -55,6 +56,9 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
 
         // начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        // настраиваем программный вывод векторных изображений
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         //layout диалога
         LinearLayout linearLayout = new LinearLayout(getActivity());
@@ -224,9 +228,9 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
         // чекбокс отсутствия
         final ImageView checkImage = new ImageView(getActivity());
         if (grades[0] == -2) {
-            checkImage.setBackgroundResource(R.drawable.__checkbox_full);
+            checkImage.setImageResource(R.drawable.__checkbox_full);
         } else
-            checkImage.setBackgroundResource(R.drawable.__checkbox_empty);
+            checkImage.setImageResource(R.drawable.__checkbox_empty);
         LinearLayout.LayoutParams checkImageParams = new LinearLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_small_size),
                 (int) getResources().getDimension(R.dimen.my_icon_small_size));
@@ -255,7 +259,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
             public void onClick(View v) {
                 // если чекбокс был активен, дизактивируем
                 if (grades[0] == -2) {
-                    checkImage.setBackgroundResource(R.drawable.__checkbox_empty);
+                    checkImage.setImageResource(R.drawable.__checkbox_empty);
                     for (int gradeI = 0; gradeI < grades.length; gradeI++) {
                         // ставим позиции в массивы
                         grades[gradeI] = 0;
@@ -278,7 +282,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                     }
 
                 } else {// иначе активируем его
-                    checkImage.setBackgroundResource(R.drawable.__checkbox_full);
+                    checkImage.setImageResource(R.drawable.__checkbox_full);
                     for (int gradeI = 0; gradeI < grades.length; gradeI++) {
                         // ставим Н вместо оценок
                         grades[gradeI] = -2;

@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
@@ -29,6 +30,8 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+        // настраиваем программный вывод векторных изображений
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // layout диалога
         LinearLayout linearLayout = new LinearLayout(getActivity());

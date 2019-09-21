@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity">
 
-
+    <include layout="@layout/content_cabinets_out" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -17,7 +17,5 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/__button_add"
         app:backgroundTint="@color/baseOrange"/>
-
-    <include layout="@layout/content_cabinets_out" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

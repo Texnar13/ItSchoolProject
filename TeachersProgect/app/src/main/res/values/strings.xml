@@ -343,7 +343,8 @@ Thank you for your feedback - it was they who helped us make the application bet
     <string name="settings_activity_dialog_edit_time_title">Change time lessons</string>
     <string name="settings_activity_dialog_hint_hour">HOUR</string>
     <string name="settings_activity_dialog_hint_minute">MIN</string>
-    <string name="settings_activity_dialog_text_time_colon">.</string>
+    <string name="settings_activity_dialog_text_time_dot">.</string>
+    <string name="settings_activity_dialog_text_time_colon">:</string>
     <string name="settings_activity_dialog_text_time_dash">—</string>
     <string name="settings_activity_dialog_edit_locale_title">Choose language:</string>
 
