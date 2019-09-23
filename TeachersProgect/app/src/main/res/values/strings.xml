@@ -8,84 +8,45 @@
 
 
     <!-- активность главный экран -->
-    <!-- меню сверху -->
-    <string name="start_screen_activity_menu_text_help">hint</string>
     <!-- тексты кнопок -->
     <string name="start_screen_activity_title_my_learners">Students</string>
-    <string name="start_screen_activity_title_my_cabinets">Cabinets</string>
+    <string name="start_screen_activity_title_my_cabinets">Classrooms</string>
     <string name="start_screen_activity_title_my_schedule">Schedule</string>
     <string name="start_screen_activity_title_settings">Settings</string>
     <string name="start_screen_activity_title_now">Now:</string>
     <string name="start_screen_activity_title_current_no_lesson">Now there is no lesson.</string>
     <string name="start_screen_activity_title_current_start_lesson">Start the lesson?</string>
     <!-- диалог -->
-    <string name="start_screen_activity_dialog_title_rate">Please rate our app)</string>
-    <string name="start_screen_activity_dialog_button_rate_now">rate!</string>
-    <string name="start_screen_activity_dialog_button_later">later</string>
+    <string name="start_screen_activity_dialog_title_rate">Please rate our app!</string>
+    <string name="start_screen_activity_dialog_button_rate_now">Rate!</string>
+    <string name="start_screen_activity_dialog_button_later">Later</string>
 
     <string name="start_screen_activity_dialog_whats_new_title">What\'s new:</string>
-    <string name="start_screen_activity_dialog_whats_new_text">Congratulations on the start of the school year, dear users!\n\n
+    <string name="start_screen_activity_dialog_whats_new_text">Congratulations on the start of the new school year, dear users!\n\n
 We present the promised global update: now everything is much more convenient and beautiful. With the new design, new features also came (for example, types of ratings: test, control, quarterly). Do not forget to get into Settings - they allow you to make the application 100% suitable for you.
-Thank you for your feedback - it was they who helped us make the application better! If you have any suggestions - write, we have ambitious plans to further improve the Teacher Assistant!
+Thank you for your feedback - it helped us make the application better! If you have any suggestions - write, we have ambitious plans to further improve the Teacher Assistant!
     </string>
-    <string name="start_screen_activity_dialog_whats_new_button_ok">Ok</string>
+    <string name="start_screen_activity_dialog_whats_new_button_ok">OK</string>
     <!-- тост -->
     <string name="start_screen_activity_toast_no_lessons">At the moment there are no lessons planned</string>
 
 
-    <!-- активность помощь главного экрана -->
-    <!-- текст -->
-    <string name="start_screen_activity_help_text_1">Hello!</string>
-    <string name="start_screen_activity_help_text_2">Our «Teacher Assistant» application is a substitute for a paper \«teacher\'s diary», only its possibilities are much wider. Let\'s take a brief look at it. </string>
-    <string name="start_screen_activity_help_text_3">(In the future, this screen can be accessed through the help button in the main menu)</string>
-    <string name="start_screen_activity_help_text_4">If there was a problem, write:</string>
-    <string name="start_screen_activity_help_text_5">ivanmarch@gmail.com</string>
-    <string name="start_screen_activity_help_text_6">«My students»</string>
-    <string name="start_screen_activity_help_text_7">In the «My students» section, you can add and edit classes with your students, and you can also watch the answers you gave them for the lesson.</string>
-    <string name="start_screen_activity_help_text_8"> «My cabinets» </string>
-    <string name="start_screen_activity_help_text_9">In this section, you can work with the «virtual classes» function. You can create cabinets and put the desks in them. </string>
-    <string name="start_screen_activity_help_text_10">«My schedule»</string>
-    <string name="start_screen_activity_help_text_11">In the «My Schedule» section, you can compose your own electronic timetable, which is always at hand.</string>
-    <string name="start_screen_activity_help_text_12">! Before adding a lesson, you need to add a class with students in the section «My students» and add your classrooms in the section «My offices» !</string>
-    <string name="start_screen_activity_help_text_13">How do I use this section?</string>
-    <string name="start_screen_activity_help_text_14">In this semester you have on Mondays a 3rd mathematics lesson in 7 «B» class in 45 rooms</string>
-    <string name="start_screen_activity_help_text_15">What should be done:</string>
-    <string name="start_screen_activity_help_text_16">1. Click on the nearest Monday (we have it on January 5)</string>
-    <string name="start_screen_activity_help_text_17">Before you will be a schedule of lessons for the day</string>
-    <string name="start_screen_activity_help_text_18">2. Click on the corresponding lesson - the third</string>
-    <string name="start_screen_activity_help_text_19">Before you will appear the menu» creating a lesson»</string>
-    <string name="start_screen_activity_help_text_20">3. Select the already created class - 7 «b» and cabinet 45. And create for this class a subject of mathematics.</string>
-    <string name="start_screen_activity_help_text_21">If you have not yet created a list of students and classrooms, you can do this in the sections «My students» and «My classrooms»</string>
-    <string name="start_screen_activity_help_text_22">4. Ask if this lesson will repeat: \n
-        For example, if the lesson is held every week, select» Repeat lesson»: weekly. </string>
-    <string name="start_screen_activity_help_text_23">If the lesson is repeated several times a week, then it is enough to create the same one on the next day of the week.</string>
-    <string name="start_screen_activity_help_text_24">5. After that, clicking on the lesson in the timetable you can start it</string>
-    <string name="start_screen_activity_help_text_25">P.S. If you need to edit an existing lesson, click on it and hold it.</string>
-    <string name="start_screen_activity_help_text_26">How can we seat the students?</string>
-    <string name="start_screen_activity_help_text_27">In the «My Schedule» section of the «Create a lesson» menu, you can edit the students\' seating at the desks (the button is to seat the students).</string>
-    <string name="start_screen_activity_help_text_28">That is, you can put the children on the desks in the way they sit in reality and then put the answers or points will be easy - you do not have to look for anyone in the list, you just need to poke a finger at Vasya Ivanov sitting at the second desk.</string>
-    <string name="start_screen_activity_help_text_29">Also, it can be done in the lesson by selecting from the top in the menu the item to seat the students</string>
-    <string name="start_screen_activity_help_text_30">How to set up desks?</string>
-    <string name="start_screen_activity_help_text_31">«Current lesson»</string>
-    <string name="start_screen_activity_help_text_32">If you just started using the application, you\'ll notice that when you click on the «Current lesson» section, nothing happens, it\'s very simple, this section is directly related to your schedule .If you have a scheduled lesson scheduled for the current time, Clicking on this button, the Teacher\'s Assistant will find it. </string>
-    <string name="start_screen_activity_help_text_33">In the lesson you can put the answers (which you can see later in the section «My students» ), you can simply record how many times and what student answered.You will not need to remember anything, you will not need a pen or paper. </string>
-    <string name="start_screen_activity_help_text_34">«Settings»</string>
-    <string name="start_screen_activity_help_text_35">In the «Settings» section you can adjust the value of the desks depending on the size of the screen of your device. In the same place, you can delete all the data you added to the application (we have protection against accidental deletion, so do not worry). </string>
+    ЗДЕСЬ БЫЛА ПОМОЩЬ НА АНГЛИЙСКОМ И ЗАЧЕМ ТЕБЕ АНГЛИЙСКАЯ ПОЧТА
 
 
     <!-- активность списка классов-->
     <!-- заголовок активности -->
-    <string name="title_activity_learners_classes_out">My classes</string>
+    <string name="title_activity_learners_classes_out">My groups</string>
     <!-- диалоги -->
-    <string name="learners_classes_out_activity_dialog_title_create_class">Adding a class</string>
-    <string name="learners_classes_out_activity_dialog_title_edit_class">Class editing</string>
-    <string name="learners_classes_out_activity_dialog_hint_class_name">Class name</string>
-    <string name="learners_classes_out_activity_dialog_button_add">add</string>
-    <string name="learners_classes_out_activity_dialog_button_save">save</string>
-    <string name="learners_classes_out_activity_dialog_button_delete">remove</string>
-    <string name="learners_classes_out_activity_dialog_button_cancel">cancel</string>
+    <string name="learners_classes_out_activity_dialog_title_create_class">Adding a group</string>
+    <string name="learners_classes_out_activity_dialog_title_edit_class">Group editing</string>
+    <string name="learners_classes_out_activity_dialog_hint_class_name">Group name</string>
+    <string name="learners_classes_out_activity_dialog_button_add">Add</string>
+    <string name="learners_classes_out_activity_dialog_button_save">Save</string>
+    <string name="learners_classes_out_activity_dialog_button_delete">Remove</string>
+    <string name="learners_classes_out_activity_dialog_button_cancel">Cancel</string>
     <!-- подсказка на экране -->
-    <string name="learners_classes_out_activity_text_help">To create a class, press + and enter its name. \nTo see the list of students and their grades, click on the class you need. \nTo rename or delete a class with students, click on it and hold it. </string>
+    <string name="learners_classes_out_activity_text_help">To create a class, press + and enter its name. \nTo see the list of students and their grades, click on the class you need. \nTo rename or delete a class with students, press on it and hold it. </string>
 
 
     <!-- активность списка учеников-->
@@ -94,37 +55,35 @@ Thank you for your feedback - it was they who helped us make the application bet
     <!-- тексты  -->
     <string name="learners_and_grades_out_activity_title_subject">Subject</string>
     <string name="learners_and_grades_out_activity_title_table_names">Name</string>
-    <string name="learners_and_grades_out_activity_title_grade_n">abs</string>
+    <string name="learners_and_grades_out_activity_title_grade_n">Abs</string>
     <string name="learners_and_grades_out_activity_title_grade_no_answers">no answers</string>
     <string name="learners_and_grades_out_activity_text_create_subject">Create new?</string>
     <string name="learners_and_grades_out_activity_text_add_learner">+ Add learner</string>
     <!-- меню сверху -->
     <string name="learners_and_grades_out_activity_menu_title_statistics">statistics</string>
     <!-- диалоги -->
-    <string name="learners_and_grades_out_activity_dialog_title_create_learner">Adding a student</string>
-    <string name="learners_and_grades_out_activity_dialog_title_edit_learner">Student editing</string>
-    <string name="learners_and_grades_out_activity_dialog_title_edit_grade">Editing an answers</string>
-    <string name="learners_and_grades_out_activity_dialog_hint_learner_name">Name</string>
-    <string name="learners_and_grades_out_activity_dialog_hint_learner_second_name">Surname</string>
+    <string name="learners_and_grades_out_activity_dialog_title_create_learner">Add a student</string>
+    <string name="learners_and_grades_out_activity_dialog_title_edit_learner">Edit student</string>
+    <string name="learners_and_grades_out_activity_dialog_title_edit_grade">Edit answers</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_learner_name">First name</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_learner_second_name">Last name</string>
     <string name="learners_and_grades_out_activity_dialog_button_add">+ Add</string>
     <string name="learners_and_grades_out_activity_dialog_button_save">Save</string>
     <string name="learners_and_grades_out_activity_dialog_button_create">Create</string>
     <string name="learners_and_grades_out_activity_dialog_button_change">Change</string>
     <string name="learners_and_grades_out_activity_dialog_button_delete">Remove</string>
-    <string name="learners_and_grades_out_activity_dialog_button_cancel">cancel</string>
+    <string name="learners_and_grades_out_activity_dialog_button_cancel">Cancel</string>
     <string name="learners_and_grades_out_activity_dialog_title_choose_subject">Choose subject:</string>
     <string name="learners_and_grades_out_activity_dialog_title_enter_subject_name">Enter subject name:</string>
     <string name="learners_and_grades_out_activity_dialog_hint_subject_name">Subject name</string>
-    <string name="learners_and_grades_out_activity_dialog_title_lesson">lesson</string>
+    <string name="learners_and_grades_out_activity_dialog_title_lesson">Lesson</string>?
     <!-- уведомления диалогов -->
-    <string name="learners_and_grades_out_activity_dialog_toast_no_name">No name entered</string>
-    <string name="learners_and_grades_out_activity_dialog_toast_no_last_name">No surname entered</string>
+    <string name="learners_and_grades_out_activity_dialog_toast_no_name">No first name entered</string>
+    <string name="learners_and_grades_out_activity_dialog_toast_no_last_name">No last name entered</string>
     <!-- подсказка на экране -->
-    <string name="learners_and_grades_out_activity_text_help">This is your e-zine: a list of students and their answers by dates. \nSelect the subject and month. \nThe white number next to the date is the lesson number (1st, 2nd, etc.) that you spent in this day (the previous digit). \nClick on +, so you add the student. \nHold the name of the student - a menu will open where you can delete it or rename it.</string>
+    <string name="learners_and_grades_out_activity_text_help">This is your grade book: a list of students and their answers by dates. \nSelect the subject and month. \nThe white number next to the date is the lesson number (1st, 2nd, etc.) that you spent in this day (the previous number). \nClick on + to add the student. \nHold the name of the student - a menu will open where you can delete it or rename it.</string>
     <!-- уведомления -->
     <string name="learners_and_grades_out_activity_load_text">Loading…</string>
-    <string name="learners_and_grades_out_activity_toast_grades_saved">Answers saved</string>
-    <string name="learners_and_grades_out_activity_toast_grades_not_saved">Error! The answers not saved</string>
 
 
     <!-- активность списка статистик -->
@@ -154,94 +113,90 @@ Thank you for your feedback - it was they who helped us make the application bet
     <string name="learners_and_grades_statistics_activity_dialog_button_save">Save</string>
     <string name="learners_and_grades_statistics_activity_dialog_button_delete">Delete</string>
     <!-- подсказка на экране -->
-    <string name="learners_and_grades_statistics_activity_text_help">Here you can see the total average result by the number of answers and number of miss of your students for a certain period, which you can enter in the field from the top.</string>
+    <string name="learners_and_grades_statistics_activity_text_help">Here you can see the total average result by the answers and miss of your students for a certain period. This period you can enter in the field on the top.</string>
 
 
     <!-- активность списка кабинетов -->
     <!-- заголовок активности -->
-    <string name="title_activity_cabinets_out">My cabinets</string>
+    <string name="title_activity_cabinets_out">My classrooms</string>
     <!-- диалоги -->
-    <string name="cabinets_out_activity_dialog_title_create_cabinet">New cabinet</string>
-    <string name="cabinets_out_activity_dialog_title_edit_cabinet">Editing cabinet</string>
-    <string name="cabinets_out_activity_dialog_hint_cabinet_name">Name/cabinet</string>
-    <string name="cabinets_out_activity_dialog_button_add">add</string>
-    <string name="cabinets_out_activity_dialog_button_save">save</string>
+    <string name="cabinets_out_activity_dialog_title_create_cabinet">New classroom</string>
+    <string name="cabinets_out_activity_dialog_title_edit_cabinet">Edit classroom</string>
+    <string name="cabinets_out_activity_dialog_hint_cabinet_name">Title/number</string>
+    <string name="cabinets_out_activity_dialog_button_add">Add</string>
+    <string name="cabinets_out_activity_dialog_button_save">Save</string>
     <string name="cabinets_out_activity_dialog_button_delete">Remove</string>
-    <string name="cabinets_out_activity_dialog_button_cancel">cancel</string>
+    <string name="cabinets_out_activity_dialog_button_cancel">Cancel</string>
     <!-- подсказка на экране -->
-    <string name="cabinets_out_activity_text_help">To create a cabinet, press + and enter its name. \nTo arrange the desks, click on the cabinet you need. \nTo rename or delete the cabinet, press and hold it.</string>
+    <string name="cabinets_out_activity_text_help">To create a classroom, press + and enter its name. \nTo arrange the desks, click on the classroom you need. \nTo rename or delete the classroom, press and hold it.</string>
 
 
     <!-- активность редактор кабинетов -->
-    <!-- заголовок активности -->
-    <string name="title_activity_cabinet_redactor">Desks in </string>
     <!-- меню сверху -->
-    <string name="cabinet_redactor_activity_menu_text_gird">LEVELING THE PART</string>
-    <string name="cabinet_redactor_activity_menu_text_gird_lines">GRID</string>
+    <string name="cabinet_redactor_activity_menu_text_gird">Desk alignment</string>
+    <string name="cabinet_redactor_activity_menu_text_gird_lines">Grid</string>
     <!-- подсказка на экране -->
-    <string name="cabinet_redactor_activity_text_help">Click on + to add a desk. \nMove it as it stands in the cabinet, \nHold + to add a single desk. \nTo remove the desk, drag it to the basket that appeared in place of +.</string>
+    <string name="cabinet_redactor_activity_text_help">Click on + to add a desk. \nMove it  the way it\'s stands in the classroom, \nHold + to add a single desk. \nTo remove the desk, drag it to the basket that appeared in place of +.</string>
 
 
     <!-- активность календаря на месяц-->
     <!-- заголовок активности -->
     <string name="title_activity_schedule_month">SCHEDULE</string>
-    <string name="schedule_month_activity_ad_preview_title">Ad</string>
 
 
     <!-- активность календаря на день-->
     <!-- заголовок активности -->
     <string name="title_activity_schedule_day">Schedule for</string>
     <!-- тексты -->
-    <string name="schedule_day_activity_table_time_string_no_working_time">after-hours</string>
+    <string name="schedule_day_activity_table_time_string_no_working_time">overtime</string>
 
     <string name="schedule_day_activity_table_additional_title_empty">no lesson, add?</string>
-    <string name="schedule_day_activity_table_additional_title_learners">Seed the students!</string>
-    <string name="schedule_day_activity_table_additional_title_ready">ready, start a lesson?</string>
+    <string name="schedule_day_activity_table_additional_title_learners">Seat the students!</string>
+    <string name="schedule_day_activity_table_additional_title_ready">Ready, start the lesson?</string>
     <!-- уведомления -->
-    <string name="schedule_day_activity_toast_learners">You can not start a lesson until you have seated the learners!</string>
-    <string name="schedule_day_activity_toast_develop">"In process ¯\\_(ツ)_/¯"</string>
+    <string name="schedule_day_activity_toast_learners">You can\'t start a lesson until you have seated the students!</string>
 
 
     <!-- активность редактора уроков-->
     <!-- заголовок активности -->
-    <string name="title_activity_lesson_redactor_create">Creating a lesson</string>
-    <string name="title_activity_lesson_redactor_edit">Editing a lesson</string>
+    <string name="title_activity_lesson_redactor_create">Create a lesson</string>
+    <string name="title_activity_lesson_redactor_edit">Edit a lesson</string>
     <!-- тексты спиннеров -->
-    <string name="lesson_redactor_activity_spinner_text_create_subject">+ create an subject for this class</string>
-    <string name="lesson_redactor_activity_spinner_text_remove_subject">- delete subject(s)</string>
-    <string name="lesson_redactor_activity_spinner_text_select_subject">select an subject:</string>
+    <string name="lesson_redactor_activity_spinner_text_create_subject">+ create a subject for this class</string>
+    <string name="lesson_redactor_activity_spinner_text_remove_subject">- delete subjects</string>
+    <string name="lesson_redactor_activity_spinner_text_select_subject">select a subject:</string>
     <string name="lesson_redactor_activity_spinner_text_repeat_never">never</string>
     <string name="lesson_redactor_activity_spinner_text_repeat_daily">daily</string>
     <string name="lesson_redactor_activity_spinner_text_repeat_weekly">weekly</string>
     <!-- тексты -->
     <string name="lesson_redactor_activity_title_class">Class</string>
     <string name="lesson_redactor_activity_title_subject">Subject</string>
-    <string name="lesson_redactor_activity_title_cabinet">Cabinet</string>
+    <string name="lesson_redactor_activity_title_cabinet">Classroom</string>
     <string name="lesson_redactor_activity_title_time">Time</string>
-    <string name="lesson_redactor_activity_spinner_title_lesson">lesson</string>
+    <string name="lesson_redactor_activity_spinner_title_lesson">Lesson</string>
     <string name="lesson_redactor_activity_title_repeat">Repeat lesson</string>
     <string name="lesson_redactor_activity_toast_subject_not_select">No subject selected!</string>
     <!-- уведомления -->
-    <string name="lesson_redactor_activity_text_learners_ready">Students are seated in this cabinet</string>
-    <string name="lesson_redactor_activity_text_learners_not_ready">The students are not seated!</string>
-    <string name="lesson_redactor_activity_toast_text_subject_not_chosen">Subject not chosen, you can create class in «My students», then create subject in created class</string>
-    <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">Cabinet not chosen, you can create it in «My cabinets»</string>
+    <string name="lesson_redactor_activity_text_learners_ready">Students are seated in this classroom.</string>
+    <string name="lesson_redactor_activity_text_learners_not_ready">Students are not seated!</string>
+    <string name="lesson_redactor_activity_toast_text_subject_not_chosen">Subject not chosen. You must create class in «Students», go in it and create a subject.</string>
+    <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">Classroom not chosen, you can create it in «Classrooms»</string>
     <!-- кнопки -->
-    <string name="lesson_redactor_activity_button_edit_seating">Edit students arrangements</string>
+    <string name="lesson_redactor_activity_button_edit_seating">Seat the students</string>
     <string name="lesson_redactor_activity_button_remove">Remove lesson</string>
     <string name="lesson_redactor_activity_button_save">Save</string>
     <string name="lesson_redactor_activity_button_cancel">Cancel</string>
     <!-- диалоги -->
-    <string name="lesson_redactor_activity_dialog_button_remove">remove</string>
-    <string name="lesson_redactor_activity_dialog_button_cancel">cancel</string>
-    <string name="lesson_redactor_activity_dialog_button_add">create</string>
+    <string name="lesson_redactor_activity_dialog_button_remove">Remove</string>
+    <string name="lesson_redactor_activity_dialog_button_cancel">Cancel</string>
+    <string name="lesson_redactor_activity_dialog_button_add">Create</string>
     <string name="lesson_redactor_activity_dialog_title_remove_subjects">Select subjects to remove</string>
-    <string name="lesson_redactor_activity_dialog_title_add_subject">Adding an Item</string>
-    <string name="lesson_redactor_activity_dialog_hint_subject_name">SUBJECT</string>
+    <string name="lesson_redactor_activity_dialog_title_add_subject">Adding a subject</string>
+    <string name="lesson_redactor_activity_dialog_hint_subject_name">Title</string>
 
 
     <!-- активность редактора рассадки-->
-    <string name="lesson_redactor_activity_text_choose_learner">Choose learner:</string>
+    <string name="lesson_redactor_activity_text_choose_learner">Choose student:</string>
 
 
     <!-- активность урока-->
@@ -255,41 +210,13 @@ Thank you for your feedback - it was they who helped us make the application bet
     <!-- меню сверху -->
     <string name="lesson_activity_menu_text_help">help</string>
     <string name="lesson_activity_menu_text_desks">arrange desks</string>
-    <string name="lesson_activity_menu_text_learners">seating students</string>
+    <string name="lesson_activity_menu_text_learners">seat the students</string>
     <string name="lesson_activity_menu_text_end_lesson">end the lesson</string>
     <!-- диалоговое окно -->
     <string name="lesson_activity_learner_absent_text">Absent</string>
-    <string name="lesson_activity_learner_dialog_out_text">You definitely want to leave the lesson without saving?</string>
+    <string name="lesson_activity_learner_dialog_out_text">Do you really want to leave the lesson without saving?</string>
     <string name="lesson_activity_learner_dialog_out_yes">Yes</string>
     <string name="lesson_activity_learner_dialog_out_no">No!</string>
-
-
-
-    <!-- активность  помощи на уроке-->
-    <!-- заголовок -->
-    <string name="lesson_help_activity_title">HELP</string>
-    <!-- текст -->
-    <string name="lesson_help_activity_text_1">Screen description </string>   
-    <string name="lesson_help_activity_text_2">1 Back to schedule button </string>    
-    <string name="lesson_help_activity_text_3">2 Lesson title </string>    
-    <string name="lesson_help_activity_text_4">3 Finish the lesson and proceed to save the estimates </string>
-    <string name="lesson_help_activity_text_5">4 Menus with a hint </string>    
-    <string name="lesson_help_activity_text_6">5 Part with student </string>    
-    <string name="lesson_help_activity_text_7">6 Student\'s name </string>    
-    <string name="lesson_help_activity_text_8">Adding points </string>    
-    <string name="lesson_help_activity_text_9">When you click on the student, he is credited with one answer (there can be no more than five) </string>
-     
-    <string name="lesson_help_activity_text_10">Edit the score </string>    
-    <string name="lesson_help_activity_text_11">After a long click on the student, a dialog box appears: </string>
-        
-    <string name="lesson_help_activity_text_12">1 The «Missing» item marks the selected student as missing:) </string>
-        
-    <string name="lesson_help_activity_text_13">In points 2 and 3 you can choose an estimate (any other than the one already selected) </string>
-        
-    <string name="lesson_help_activity_text_14">4 The «New score» item remembers the rating (if there is no estimate, the item is not displayed), and allows you to put a new one (maximum three): </string>
-       
-    <string name="lesson_help_activity_text_15">You can put further estimates as usual: </string>  
-    <string name="lesson_help_activity_text_16">After saving the ratings (the «finish» button), you can see them in the «My students» -> «class» </string>
 
 
     <!-- активность окончания урока-->

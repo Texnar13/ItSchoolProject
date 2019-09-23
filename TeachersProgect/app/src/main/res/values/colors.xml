@@ -22,11 +22,11 @@
 
     <color name="dopDarkBlue">#1D7CBC</color>
 
-    <!-- цвета оценок -->
+    <!-- цвета оценок #fff74a -->
     <color name="grade1">#ea5757</color>
-    <color name="grade2">#f9ba2d</color>
-    <color name="grade3">#fff74a</color>
-    <color name="grade4">#ceff00</color>
+    <color name="grade2">#F9892D</color>
+    <color name="grade3">#f9ba2d</color>
+    <color name="grade4">#AED600</color>
     <color name="grade5">#8bc837</color>
     <color name="gradeMix">#8ab5f9</color>
 

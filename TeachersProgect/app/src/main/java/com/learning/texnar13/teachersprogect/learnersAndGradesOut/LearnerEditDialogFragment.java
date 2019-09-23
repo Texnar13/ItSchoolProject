@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
@@ -35,6 +36,9 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        // настраиваем программный вывод векторных изображений
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // layout диалога
         LinearLayout linear = new LinearLayout(getActivity());
@@ -85,7 +89,7 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
 
         // картинка
         ImageView imageBackground = new ImageView(getActivity());
-        imageBackground.setBackgroundResource(R.drawable.__background_add_learner_image);
+        imageBackground.setImageResource(R.drawable.__background_add_learner_image);
         imageBackground.setAdjustViewBounds(true);
         RelativeLayout.LayoutParams imageBackgroundParams = new RelativeLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.learners_and_grades_add_learner_image_width),
@@ -97,7 +101,7 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
 
         // кнопка назад
         ImageView backImage = new ImageView(getActivity());
-        backImage.setBackgroundResource(R.drawable.__button_back_arrow_dark_gray);
+        backImage.setImageResource(R.drawable.__button_back_arrow_dark_gray);
         backImage.setAdjustViewBounds(true);
         RelativeLayout.LayoutParams backImageParams = new RelativeLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),

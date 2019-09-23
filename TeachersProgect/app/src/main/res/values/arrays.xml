@@ -6,12 +6,14 @@
         <item>Auto-detection</item>
         <item>Русский</item>
         <item>English</item>
+        <item>简体中文</item>
     </string-array>
     <!-- коды для них в бд-->
     <string-array name="locale_code">
         <item>defaultLocale</item>        
         <item>ru</item>        
         <item>en</item>
+        <item>zh</item>
     </string-array>
 
 

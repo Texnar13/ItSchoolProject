@@ -21,6 +21,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
@@ -31,6 +32,9 @@ public class LearnerCreateDialogFragment extends DialogFragment {
         Log.i("TeachersApp", "LearnerCreateDialogFragment - onCreateDialog");
         // начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        // настраиваем программный вывод векторных изображений
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // layout диалога
         LinearLayout linear = new LinearLayout(getActivity());
