@@ -16,6 +16,7 @@
     <string name="start_screen_activity_title_now">现在:</string>
     <string name="start_screen_activity_title_current_no_lesson">现在没有教训。</string>
     <string name="start_screen_activity_title_current_start_lesson">开始上课？</string>
+    <string name="start_screen_activity_title_current_create_lesson">创建一个教训？</string>
     <!-- диалог -->
     <string name="start_screen_activity_dialog_title_rate">请评价我们的应用!</string>
     <string name="start_screen_activity_dialog_button_rate_now">评价!</string>
@@ -145,7 +146,7 @@ Thank you for your feedback - it helped us make the application better! If you h
     <!-- заголовок активности -->
     <string name="title_activity_schedule_day">时间表</string>
     <!-- тексты -->
-    <string name="schedule_day_activity_table_time_string_no_working_time">课外时候</string>
+    <string name="schedule_day_activity_table_time_string_no_working_time">加班时间</string>
 
     <string name="schedule_day_activity_table_additional_title_empty">没有教训，添加？</string>
     <string name="schedule_day_activity_table_additional_title_learners">给学生安排坐位!</string>
@@ -169,7 +170,7 @@ Thank you for your feedback - it helped us make the application better! If you h
     <string name="lesson_redactor_activity_title_class">班级</string>
     <string name="lesson_redactor_activity_title_subject">学科</string>
     <string name="lesson_redactor_activity_title_cabinet">课堂</string>
-    <string name="lesson_redactor_activity_title_time">时间</string>
+    <string name="lesson_redactor_activity_title_time">日期</string>
     <string name="lesson_redactor_activity_spinner_title_lesson">课</string>
     <string name="lesson_redactor_activity_title_repeat">课的重复性</string>
     <string name="lesson_redactor_activity_toast_subject_not_select">课不选择！</string>
@@ -180,7 +181,7 @@ Thank you for your feedback - it helped us make the application better! If you h
     <string name="lesson_redactor_activity_toast_text_subject_not_chosen">没有选择的学科，您可以在"学生"部分创建一个班级，然后转到它并创建一个学科</string>
     <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">没有选择课堂，您可以在部分中创建它 «课堂»</string>
     <!-- кнопки -->
-    <string name="lesson_redactor_activity_button_edit_seating">Рассадить учеников</string>
+    <string name="lesson_redactor_activity_button_edit_seating">让学生们坐下</string>
     <string name="lesson_redactor_activity_button_remove">删除课</string>
     <string name="lesson_redactor_activity_button_save">保存</string>
     <string name="lesson_redactor_activity_button_cancel">取消</string>
@@ -200,15 +201,9 @@ Thank you for your feedback - it helped us make the application better! If you h
     <!-- активность урока-->
     <!-- контекстное меню -->
     <string name="lesson_activity_context_menu_text_no_learner">缺席</string>
-    <string name="lesson_activity_context_menu_text_no_answers"></string>
-    <string name="lesson_activity_context_menu_text_last_answers">предыдущие ответы</string>
-    <string name="lesson_activity_context_menu_text_new_answers">новые ответы</string>
-    <string name="lesson_activity_context_menu_text_add_answer"> + добавить 1 ответ</string>
-    <string name="lesson_activity_context_menu_text_delete_answer"> - 删除 удалить 1 ответ</string>
     <!-- меню сверху -->
-    <string name="lesson_activity_menu_text_help">помощь</string>
-    <string name="lesson_activity_menu_text_desks">расставить парты</string>
-    <string name="lesson_activity_menu_text_learners">посадить учеников</string>
+    <string name="lesson_activity_menu_text_desks">摆好课桌</string>
+    <string name="lesson_activity_menu_text_learners">让学生们坐下</string>
     <string name="lesson_activity_menu_text_end_lesson">完成</string>
     <!-- диалоговое окно -->
     <string name="lesson_activity_learner_absent_text">学生缺席</string>

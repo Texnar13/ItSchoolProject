@@ -17,6 +17,7 @@ import android.view.View;
 import com.learning.texnar13.teachersprogect.R;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 
 public class LearnersAndGradesTableView extends View {
@@ -131,7 +132,7 @@ public class LearnersAndGradesTableView extends View {
     // здесь происходит определение размеров view, так же их можно задать жестко
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        Log.e("TeachersApp", "LearnersAndGradesTableView: onMeasure");
+        //Log.e("TeachersApp", "LearnersAndGradesTableView: onMeasure");
         // и поставим view размеры
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
@@ -139,7 +140,7 @@ public class LearnersAndGradesTableView extends View {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        Log.e("TeachersApp", "LearnersAndGradesTableView: onLayout");
+        //Log.e("TeachersApp", "LearnersAndGradesTableView: onLayout");
         super.onLayout(changed, left, top, right, bottom);
         // считаем размеры этого view
         this.viewWidth = right - left;
@@ -155,14 +156,22 @@ public class LearnersAndGradesTableView extends View {
     }
 
     // метод получения значений
-    void setData(ArrayList<NewLearnerAndHisGrades> tData) {
-        Log.e("TeachersApp", "LearnersAndGradesTableView: setData");
+    void setData(DataObject tData) {
+        //Log.e("TeachersApp", "LearnersAndGradesTableView: setData");
 
         // запрещаем выводить графику пока заполняем данные
         canDraw = false;
 
         // копируем сюда список, тк его можно поменять извне
-        ArrayList<NewLearnerAndHisGrades> data = (ArrayList<NewLearnerAndHisGrades>) tData.clone();
+        // todo в период копирования переменную tData можно изменить/обнулить что приводит к ошибкам
+        tData.isInCopyProcess = true;
+        ArrayList<NewLearnerAndHisGrades> data = new ArrayList<>();
+        for (int learnersI = 0; learnersI < tData.learnersAndHisGrades.size(); learnersI++) {
+                    data.add(
+                    new NewLearnerAndHisGrades(tData.learnersAndHisGrades.get(learnersI))
+            );
+        }
+        tData.isInCopyProcess = false;
 
 
         // назначаем размер листу во view чтобы потом скопировать в него данные
@@ -405,7 +414,7 @@ public class LearnersAndGradesTableView extends View {
     // отрисовка вызываемая через invalidate();
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.e("TeachersApp", "LearnersAndGradesTableView: onDraw canDraw=" + canDraw);
+        //Log.e("TeachersApp", "LearnersAndGradesTableView: onDraw canDraw=" + canDraw);
 
         // переменная запрещающая вывод графики
         if (canDraw && learnersAndGradesDataAndSizes != null) {
@@ -846,7 +855,7 @@ public class LearnersAndGradesTableView extends View {
 
     // метод обрабатывающий нажатие на view
     int[] touch(PointF downPoint, boolean longClick) {
-        Log.e(TAG, "LearnersAndGradesTableView: touch(" + downPoint + ", " + longClick + ")");
+        //Log.e(TAG, "LearnersAndGradesTableView: touch(" + downPoint + ", " + longClick + ")");
 
         if (learnersAndGradesDataAndSizes.size() != 0) {
 

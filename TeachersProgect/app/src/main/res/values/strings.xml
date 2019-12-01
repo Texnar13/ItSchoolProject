@@ -16,6 +16,7 @@
     <string name="start_screen_activity_title_now">Now:</string>
     <string name="start_screen_activity_title_current_no_lesson">Now there is no lesson.</string>
     <string name="start_screen_activity_title_current_start_lesson">Start the lesson?</string>
+    <string name="start_screen_activity_title_current_create_lesson">Create a lesson?</string>
     <!-- диалог -->
     <string name="start_screen_activity_dialog_title_rate">Please rate our app!</string>
     <string name="start_screen_activity_dialog_button_rate_now">Rate!</string>
@@ -154,13 +155,13 @@ Thank you for your feedback - it helped us make the application better! If you h
     <string name="schedule_day_activity_table_additional_title_learners">Seat the students!</string>
     <string name="schedule_day_activity_table_additional_title_ready">Ready, start the lesson?</string>
     <!-- уведомления -->
-    <string name="schedule_day_activity_toast_learners">You can\'t start a lesson until you have seated the students!</string>
+    <string name="schedule_day_activity_toast_learners">You can\'t start the lesson until you have seated the students!</string>
 
 
     <!-- активность редактора уроков-->
     <!-- заголовок активности -->
     <string name="title_activity_lesson_redactor_create">Create a lesson</string>
-    <string name="title_activity_lesson_redactor_edit">Edit a lesson</string>
+    <string name="title_activity_lesson_redactor_edit">Edit the lesson</string>
     <!-- тексты спиннеров -->
     <string name="lesson_redactor_activity_spinner_text_create_subject">+ create a subject for this class</string>
     <string name="lesson_redactor_activity_spinner_text_remove_subject">- delete subjects</string>
@@ -202,13 +203,7 @@ Thank you for your feedback - it helped us make the application better! If you h
     <!-- активность урока-->
     <!-- контекстное меню -->
     <string name="lesson_activity_context_menu_text_no_learner">absent</string>
-    <string name="lesson_activity_context_menu_text_no_answers">no answers</string>
-    <string name="lesson_activity_context_menu_text_last_answers">last answers</string>
-    <string name="lesson_activity_context_menu_text_new_answers">new answers</string>
-    <string name="lesson_activity_context_menu_text_add_answer"> + add 1 answer</string>
-    <string name="lesson_activity_context_menu_text_delete_answer"> - remove 1 answer</string>
     <!-- меню сверху -->
-    <string name="lesson_activity_menu_text_help">help</string>
     <string name="lesson_activity_menu_text_desks">arrange desks</string>
     <string name="lesson_activity_menu_text_learners">seat the students</string>
     <string name="lesson_activity_menu_text_end_lesson">end the lesson</string>

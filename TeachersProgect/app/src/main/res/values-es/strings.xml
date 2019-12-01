@@ -1,0 +1,274 @@
+<resources>
+    <string name="title_activity_lesson">Lesson</string>
+
+    <!--\n gthtyjc-->
+    <!-- название приложения -->
+    <string name="app_name">Teacher\'s assistant</string>
+    <string name="button_save">Guardar</string>
+
+
+    <!-- активность главный экран -->
+    <!-- тексты кнопок -->
+    <string name="start_screen_activity_title_my_learners">Alumnos</string>
+    <string name="start_screen_activity_title_my_cabinets">Aulas</string>
+    <string name="start_screen_activity_title_my_schedule">Horario</string>
+    <string name="start_screen_activity_title_settings">Ajustes</string>
+    <string name="start_screen_activity_title_now">Ahora:</string>
+    <string name="start_screen_activity_title_current_no_lesson">Ahora no hay clase.</string>
+    <string name="start_screen_activity_title_current_start_lesson">¿Сomience la clase?</string>
+    <string name="start_screen_activity_title_current_create_lesson">¿Crear una lección?</string>
+    <!-- диалог -->
+    <string name="start_screen_activity_dialog_title_rate">¡Por favor califique nuestra aplicación!</string>
+    <string name="start_screen_activity_dialog_button_rate_now">Evaluar!</string>
+    <string name="start_screen_activity_dialog_button_later">Más tarde.</string>
+
+    <string name="start_screen_activity_dialog_whats_new_title">Qué hay de nuevo:</string>
+    <string name="start_screen_activity_dialog_whats_new_text">Felicidades por el comienzo del año escolar, queridos usuarios!</string>Здесь текст чего нового от разработчика
+    <string name="start_screen_activity_dialog_whats_new_button_ok">Muy bien.</string>
+    <!-- уведомления -->
+    <string name="start_screen_activity_toast_no_lessons">En este momento, las lecciones no están programadas.</string>
+
+
+    <!-- активность списка классов-->
+    <!-- заголовок активности -->
+    <string name="title_activity_learners_classes_out">Alumnos</string>
+    <!-- диалоги -->
+    <string name="learners_classes_out_activity_dialog_title_create_class">Nuevo grupo</string>
+    <string name="learners_classes_out_activity_dialog_title_edit_class">Edita el grupo</string>
+    <string name="learners_classes_out_activity_dialog_hint_class_name">Nombre</string>
+    <string name="learners_classes_out_activity_dialog_button_add">agregar</string>
+    <string name="learners_classes_out_activity_dialog_button_save">guardar</string>
+    <string name="learners_classes_out_activity_dialog_button_delete">eliminar</string>
+    <string name="learners_classes_out_activity_dialog_button_cancel">cancelar</string>
+    <!-- подсказка на экране -->
+    <string name="learners_classes_out_activity_text_help">Para crear un grupo, haga clic en + y escriba un nombre. \nPara ver la lista de alumnos y sus respuestas, haga clic en la clase que desee. \nPara cambiar el nombre o eliminar un grupo de alumnos, mantén presionado el grupo.</string>
+
+
+    <!-- активность списка учеников-->
+    <!-- заголовок активности -->
+    <string name="title_activity_learners_and_grades">Alumnos en clase</string>
+    <!-- тексты  -->
+    <string name="learners_and_grades_out_activity_title_subject">Asignatura</string>
+    <string name="learners_and_grades_out_activity_title_table_names">NOMBRE</string>
+    <string name="learners_and_grades_out_activity_title_grade_n">AUS</string>
+    <string name="learners_and_grades_out_activity_title_grade_no_answers">—</string>
+    <string name="learners_and_grades_out_activity_text_create_subject">¿Crear uno nuevo?</string>
+    <string name="learners_and_grades_out_activity_text_add_learner">+ agregar un alumno</string>
+    <!-- меню сверху -->
+    <string name="learners_and_grades_out_activity_menu_title_statistics">Estadísticas sobre el asignatura</string>
+    <!-- диалоги -->
+    <string name="learners_and_grades_out_activity_dialog_title_create_learner">agregar un alumno</string>
+    <string name="learners_and_grades_out_activity_dialog_title_edit_learner">Edita al alumno</string>
+    <string name="learners_and_grades_out_activity_dialog_title_edit_grade">Editar respuestas</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_learner_name">Nombre</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_learner_second_name">Apellidos</string>
+    <string name="learners_and_grades_out_activity_dialog_button_add">+ Agregar</string>
+    <string name="learners_and_grades_out_activity_dialog_button_save">Guardar</string>
+    <string name="learners_and_grades_out_activity_dialog_button_change">Cambiar</string>
+    <string name="learners_and_grades_out_activity_dialog_button_create">Crear</string>
+    <string name="learners_and_grades_out_activity_dialog_button_delete">Eliminar</string>
+    <string name="learners_and_grades_out_activity_dialog_button_cancel">Сancelar</string>
+    <string name="learners_and_grades_out_activity_dialog_title_choose_subject">Seleccione una asignatura</string>
+    <string name="learners_and_grades_out_activity_dialog_title_enter_subject_name">Seleccione una asignatura</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_subject_name">Nombre de la asignatura</string>
+    <string name="learners_and_grades_out_activity_dialog_title_lesson">clase</string>
+    <!-- уведомления диалогов -->
+    <string name="learners_and_grades_out_activity_dialog_toast_no_name">Nombre no introducido</string>
+    <string name="learners_and_grades_out_activity_dialog_toast_no_last_name">Apellidos no introducido</string>
+    <!-- подсказка на экране -->
+    <string name="learners_and_grades_out_activity_text_help">Esta es su lista de clase electrónica: una lista de estudiantes y sus respuestas por fecha.\nElija una asignatura y un mes.\nEl dígito Blanco al lado de la fecha es el número de lección (1, 2, etc.) que pasó ese día (el dígito anterior).\nHaga clic en + para agregar al alumno.\nPoner el nombre del alumno-se abre un menú donde se puede eliminar o cambiar el nombre.</string>
+    <!-- уведомления -->
+    <string name="learners_and_grades_out_activity_load_text">Cargando…</string>
+
+
+    <!-- активность списка статистик -->
+    <!-- заголовок активности -->
+    <string name="title_activity_learners_and_grades_statistics">Estadísticas por período</string>
+    <!-- тексты -->
+    <string name="learners_and_grades_statistics_activity_title_column_learner_name">Nombre</string>
+    <string name="learners_and_grades_statistics_activity_title_column_grade">PUNTO</string>
+    <string name="learners_and_grades_statistics_activity_title_column_absent">AUS</string>
+    <string name="learners_and_grades_statistics_activity_hint_date_day">DÍA</string>
+    <string name="learners_and_grades_statistics_activity_hint_date_month">MES</string>
+    <string name="learners_and_grades_statistics_activity_hint_date_year">AÑO</string>
+    <string name="learners_and_grades_statistics_activity_spinner_text_add">+ Agregar un período de aprendizaje</string>
+    <string name="learners_and_grades_statistics_activity_spinner_text_remove">- Eliminar un período de aprendizaje</string>
+    <!-- диалог -->
+    <string name="learners_and_grades_statistics_activity_dialog_title_add_statistic">Crear un período de aprendizaje</string>
+    <string name="learners_and_grades_statistics_activity_dialog_title_remove_statistic">Eliminar un período de aprendizaje</string>
+    <string name="learners_and_grades_statistics_activity_dialog_title_edit_statistic">Editar un período de aprendizaje</string>
+    <string name="learners_and_grades_statistics_activity_dialog_title_choose_period">Seleccione el período:</string>
+    <string name="learners_and_grades_statistics_activity_dialog_text_time_before">de:</string>
+    <string name="learners_and_grades_statistics_activity_dialog_text_time_after">а:</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_name">Nombre del período</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_year">año</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_month">mes</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_day">día</string>
+    <string name="learners_and_grades_statistics_activity_dialog_button_cancel">Cancelar</string>
+    <string name="learners_and_grades_statistics_activity_dialog_button_save">Guardar</string>
+    <string name="learners_and_grades_statistics_activity_dialog_button_delete">Eliminar</string>
+    <!-- подсказка на экране -->
+    <string name="learners_and_grades_statistics_activity_text_help">Aquí puede ver el resultado promedio final de las respuestas y el número de ausencias de sus alumnos durante un período específico que puede ingresar en los campos en la parte superior.</string>
+
+
+    <!-- активность списка кабинетов -->
+    <!-- заголовок активности -->
+    <string name="title_activity_cabinets_out">Aulas</string>
+    <!-- диалоги -->
+    <string name="cabinets_out_activity_dialog_title_create_cabinet">Nuevas aulas</string>
+    <string name="cabinets_out_activity_dialog_title_edit_cabinet">Editar aulas</string>
+    <string name="cabinets_out_activity_dialog_hint_cabinet_name">Nombre/número</string>
+    <string name="cabinets_out_activity_dialog_button_add">agregar</string>
+    <string name="cabinets_out_activity_dialog_button_save">guardar</string>
+    <string name="cabinets_out_activity_dialog_button_delete">eliminar</string>
+    <string name="cabinets_out_activity_dialog_button_cancel">сancelar</string>
+    <!-- подсказка на экране -->
+    <string name="cabinets_out_activity_text_help">Para crear una cuenta, haga clic en + y escriba su nombre. \n Para organizar los escritorios haga clic en el aula que desea. \n Para cambiar el nombre o eliminar un aula, mantén presionado.</string>
+
+
+    <!-- активность редактор кабинетов -->
+    <!-- заголовок активности -->
+    <!-- меню сверху -->
+    <string name="cabinet_redactor_activity_menu_text_gird">Alineación del escritorios</string>
+    <string name="cabinet_redactor_activity_menu_text_gird_lines">Сuadrícula</string>
+    <!-- подсказка на экране -->
+    <string name="cabinet_redactor_activity_text_help">Haga clic en + para añadir un escritorio.\n Muévalo de la manera en que se encuentra en el aula, \n Mantenga pulsado + para agregar un escritorio individual.\n para eliminar un escritorio, arrástrelo a la papelera de reciclaje que aparece en el lugar +.</string>
+
+
+    <!-- активность календаря на месяц-->
+    <!-- заголовок активности -->
+    <string name="title_activity_schedule_month">HORARIO</string>
+
+
+    <!-- активность календаря на день-->
+    <!-- заголовок активности -->
+    <string name="title_activity_schedule_day">Horario</string>
+    <!-- тексты -->
+    <string name="schedule_day_activity_table_time_string_no_working_time">horas extraordinarias</string>
+
+    <string name="schedule_day_activity_table_additional_title_empty">¿No hay clase, agregar?</string>
+    <string name="schedule_day_activity_table_additional_title_learners">Colocar a los alumnos detrás de las escritorios.</string>
+    <string name="schedule_day_activity_table_additional_title_ready">¿Listo, comience la clase?</string>
+    <!-- уведомления -->
+    <string name="schedule_day_activity_toast_learners">¡No puedes comenzar la clase hasta que los alumnos se sientan!</string>
+
+
+    <!-- активность редактора уроков-->
+    <!-- заголовок активности -->
+    <string name="title_activity_lesson_redactor_create">Сrear clase</string>
+    <string name="title_activity_lesson_redactor_edit">Editar clase</string>
+    <!-- тексты спиннеров -->
+    <string name="lesson_redactor_activity_spinner_text_create_subject">+ Crear una asignatura para este grupo</string>
+    <string name="lesson_redactor_activity_spinner_text_remove_subject">- Eliminar la asignatura</string>
+    <string name="lesson_redactor_activity_spinner_text_select_subject">Seleccione una asignatura:</string>
+    <string name="lesson_redactor_activity_spinner_text_repeat_never">No repetir</string>
+    <string name="lesson_redactor_activity_spinner_text_repeat_daily">Diario</string>
+    <string name="lesson_redactor_activity_spinner_text_repeat_weekly">Semanalmente</string>
+    <!-- тексты -->
+    <string name="lesson_redactor_activity_title_class">Grupo</string>
+    <string name="lesson_redactor_activity_title_subject">Asignatura</string>
+    <string name="lesson_redactor_activity_title_cabinet">Aulas</string>
+    <string name="lesson_redactor_activity_title_time">Tiempo</string>
+    <string name="lesson_redactor_activity_spinner_title_lesson">Clase</string>
+    <string name="lesson_redactor_activity_title_repeat">Repetir clase</string>
+    <string name="lesson_redactor_activity_toast_subject_not_select">¡La clase no está seleccionada!</string>
+    <!-- уведомления -->
+    <string name="lesson_redactor_activity_text_learners_ready">Los estudiantes están sentados en esta aula.</string>
+    <string name="lesson_redactor_activity_text_learners_not_ready">¡Los estudiantes no están sentados!</string>
+
+    <string name="lesson_redactor_activity_toast_text_subject_not_chosen">¡No elegiste la asignatura! Puede crear una clase en la sección "ALUMNOS", luego vaya a ella y cree una asignatura.</string>
+    <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">¡No elegiste la aula! Puede crearlo en la sección "AULAS".</string>
+    <!-- кнопки -->
+    <string name="lesson_redactor_activity_button_edit_seating">Debes sentar a los alumnos</string>
+    <string name="lesson_redactor_activity_button_remove">Eliminar clase</string>
+    <string name="lesson_redactor_activity_button_save">Guardar</string>
+    <string name="lesson_redactor_activity_button_cancel">Cancelar</string>
+    <!-- диалоги -->
+    <string name="lesson_redactor_activity_dialog_button_remove">eliminar</string>
+    <string name="lesson_redactor_activity_dialog_button_cancel">сancelar</string>
+    <string name="lesson_redactor_activity_dialog_button_add">agregar</string>
+    <string name="lesson_redactor_activity_dialog_title_remove_subjects">Seleccione las asignaturas que desea eliminar</string>
+    <string name="lesson_redactor_activity_dialog_title_add_subject">Agregar una asignatura</string>
+    <string name="lesson_redactor_activity_dialog_hint_subject_name">NOMBRE</string>
+
+
+    <!-- активность редактора рассадки-->
+    <string name="lesson_redactor_activity_text_choose_learner">Seleccione un alumno:</string>
+
+
+    <!-- активность урока-->
+    <!-- контекстное меню -->
+    <string name="lesson_activity_context_menu_text_no_learner">ausente</string>
+    <!-- меню сверху -->
+    <string name="lesson_activity_menu_text_desks">organizar los pupitres</string>
+    <string name="lesson_activity_menu_text_learners">sentar a los alumnos</string>
+    <string name="lesson_activity_menu_text_end_lesson">terminar</string>
+    <!-- диалоговое окно -->
+    <string name="lesson_activity_learner_absent_text">Falta en la lección</string>
+    <string name="lesson_activity_learner_dialog_out_text">¿Estás seguro de querer salir de la lección sin guardar?</string>
+    <string name="lesson_activity_learner_dialog_out_yes">Sí.</string>
+    <string name="lesson_activity_learner_dialog_out_no">No hay!</string>
+
+
+    <!-- активность окончания урока-->
+    <!-- заголовок активности -->
+    <string name="title_activity_lesson_list">RESUMEN DE LA LECCIÓN</string>
+    <!-- меню сверху -->
+    <string name="lesson_list_activity_menu_text_save">guardar</string>
+    <!-- уведомления -->
+    <string name="lesson_list_activity_menu_toast_grades_saved">Todas las respuestas se guardan con éxito!</string>
+    <!-- диалоги -->
+    <string name="lesson_list_activity_dialog_title">Editar las respuestas</string>
+    <string name="lesson_list_activity_dialog_button_save">guardar</string>
+    <string name="lesson_list_activity_dialog_button_cancel">сancelar</string>
+    <!-- подсказка на экране -->
+    <string name="lesson_list_activity_text_help">Aquí se muestran los resultados de la lección. \n Para cambiar las respuestas, haga clic en ellas. \n Para guardar las respuestas, haga clic en el botón GUARDAR (arriba). \n Si no desea guardar las respuestas, haga clic en el botón atrás en su dispositivo.</string>
+
+
+    <!-- активность настроек-->
+    <!-- заголовок активности -->
+    <string name="title_activity_settings">Ajustes</string>
+    <!-- тексты -->
+    <string name="settings_activity_hint_max_answer">Número de respuestas</string>
+    <string name="settings_activity_title_desk_size">Ajuste del tamaño de los pupitres</string>
+    <string name="settings_activity_title_max_answer">Puntuación máxima/número de respuestas</string>
+    <string name="settings_activity_title_grades_type">Tipos de trabajo en la lección</string>
+    <string name="settings_activity_title_colored_grades">Calificaciónes de colores</string>
+    <!-- кнопки -->
+    <string name="settings_activity_button_edit_max_answer" formatted="true">Puntuación máxima/número de respuestas: %1$s</string>
+    <string name="settings_activity_button_edit_time">Tiempo de lecciones</string>
+    <string name="settings_activity_button_remove_data">Eliminar todos los datos</string>
+    <string name="settings_activity_button_rate_us">CALIFIQUE NUESTRA APLICACIÓN!</string>
+    <string name="settings_activity_button_edit_locale">Idioma</string>
+    <!-- уведомления -->
+    <string name="settings_activity_toast_data_delete_success">Los datos se eliminan con éxito!</string>
+    <string name="settings_activity_toast_data_delete_falture">Usted ha introducido un número incorrecto, los datos no se eliminan!</string>
+    <string name="settings_activity_toast_grade_no_entered">No se ha ingresado una calificación.</string>
+    <string name="settings_activity_toast_grade_saved">Guardado</string>
+    <string name="settings_activity_toast_grade_too_match">Se ha introducido un valor demasiado alto (no debe haber más de 100)</string>
+    <string name="settings_activity_toast_grade_too_min">Se ha introducido un valor demasiado pequeño (debe haber al menos 1)</string>
+    <string name="settings_activity_toast_time_successfully_saved">Tiempo guardado</string>
+    <string name="settings_activity_toast_time_no_saved">Error, tiempo no guardado</string>
+    <!-- диалоги -->
+    <string name="settings_activity_dialog_delete_title">¿Quieres borrar todos los datos de la aplicación?</string>
+    <string name="settings_activity_dialog_add_type_title">+ Agregar nueva tipo de calificaciónes</string>
+    <string name="settings_activity_dialog_new_type_title">Nueva clase</string>
+    <string name="settings_activity_dialog_delete_text_confirm_delete">Para confirmar, escriba un número </string>
+    <string name="settings_activity_dialog_hint_number">Número</string>
+    <string name="settings_activity_dialog_button_remove">Eliminar</string>
+    <string name="settings_activity_dialog_button_cancel">Cancelar</string>
+    <string name="settings_activity_dialog_button_save">Guardar</string>
+    <string name="settings_activity_dialog_edit_time_title">Tiempo de lecciones</string>
+    <string name="settings_activity_dialog_hint_hour">HORA</string>
+    <string name="settings_activity_dialog_hint_minute">MIN</string>
+    <string name="settings_activity_dialog_text_time_dot">.</string>
+    <string name="settings_activity_dialog_text_time_colon">:</string>
+    <string name="settings_activity_dialog_text_time_dash">—</string>
+    <string name="settings_activity_dialog_edit_locale_title">Seleccione un idioma:</string>
+
+
+    <!-- база данных -->
+    <!-- значение по умолчанию -->
+    <string name="db_table_grade_text_first_default_value">trabajo en la lección</string>
+
+</resources>

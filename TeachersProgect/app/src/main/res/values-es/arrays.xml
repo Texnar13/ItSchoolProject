@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- локализация -->
+    <!-- названия языков -->
+    <string-array name="locale_names">
+        <item>Autodetección</item>
+        <item>Русский</item>
+        <item>English</item>
+        <item>简体中文</item>
+        <item>Español</item>
+    </string-array>
+
+    <string-array name="months_names">
+        <item>ENERO</item>
+        <item>FEBRERO</item>
+        <item>MARZO</item>
+        <item>ABRIL</item>
+        <item>MAYO</item>
+        <item>JUNIO</item>
+        <item>JULIO</item>
+        <item>AGOSTO</item>
+        <item>SEPTRIEMBRE</item>
+        <item>OCTUBRE</item>
+        <item>NOVIEMBRE</item>
+        <item>DICIEMBRE</item>
+    </string-array>
+
+    <string-array name="months_names_low_case">
+        <item>enero</item>        
+        <item>febrero</item>
+        <item>marzo</item>        
+        <item>abril</item>       
+        <item>mayo</item>        
+        <item>junio</item>        
+        <item>julio</item>        
+        <item>agosto</item>       
+        <item>septriembre</item>        
+        <item>octubre</item>        
+        <item>noviembre</item>        
+        <item>diciembre</item>
+    </string-array>
+
+    <string-array name="week_days_simple">        
+        <item>domingo</item> 
+        <item>lunes</item>        
+        <item>martes</item>  
+        <item>miércoles</item>        
+        <item>jueves</item>       
+        <item>viernes</item>       
+        <item>sábado</item>   
+    </string-array>
+
+    <!-- активность календаря на день-->
+    <!-- шапка таблицы -->
+    <string-array name="schedule_day_activity_table_titles_array">
+        <item>№</item>
+        <item>Tiempo</item>
+        <item>Groupe</item>
+        <item>Asignatura</item>
+        <item>Aula</item>
+        <item>Extra</item>
+    </string-array>
+
+    <!-- активность календаря на месяц-->
+    <!-- шапка таблицы -->
+    <string-array name="schedule_month_activity_week_days_short_array">
+        <item>lun</item>
+        <item>mar</item>
+        <item>mié</item>
+        <item>jue</item>
+        <item>vie</item>
+        <item>sáb</item>
+        <item>dom</item>
+    </string-array>
+</resources>

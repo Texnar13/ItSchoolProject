@@ -7,6 +7,7 @@
         <item>Русский</item>
         <item>English</item>
         <item>简体中文</item>
+        <item>Español</item>
     </string-array>
     <!-- коды для них в бд-->
     <string-array name="locale_code">
@@ -14,6 +15,7 @@
         <item>ru</item>        
         <item>en</item>
         <item>zh</item>
+        <item>es</item>
     </string-array>
 
 

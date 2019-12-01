@@ -6,15 +6,16 @@
     android:layout_height="match_parent"
     tools:context="com.learning.texnar13.teachersprogect.learnersClassesOut.LearnersClassesOutActivity">
 
-    <include layout="@layout/content_learners_classes_out" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/learners_classes_out_add_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/__button_add"
-        app:backgroundTint="@color/baseBlue"/>
+        app:backgroundTint="@color/baseBlue"
+        app:elevation="0.1dp"
+        app:srcCompat="@drawable/__button_add" />
+
+    <include layout="@layout/content_learners_classes_out" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

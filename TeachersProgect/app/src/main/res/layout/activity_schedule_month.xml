@@ -72,14 +72,14 @@
 
 
 
-        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        <!--com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/shedule_month_ad_banner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="center"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="ca-app-pub-5709922862247260/2292332710"/>
+            ads:adUnitId="ca-app-pub-5709922862247260/2292332710"/-->
         <!-- testId BANNER ca-app-pub-3940256099942544/6300978111 -->
         <!-- testId SMART_BANNER ca-app-pub-3940256099942544/2247696110 -->
         <!-- testId Interstitial ca-app-pub-3940256099942544/1033173712 -->

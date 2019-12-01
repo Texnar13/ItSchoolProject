@@ -29,11 +29,13 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.learning.texnar13.teachersprogect.CreateLessonDialog;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.ScheduleMonthActivity;
 import com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.learnersClassesOut.CreateLearnersClassDialogFragment;
 import com.learning.texnar13.teachersprogect.learnersClassesOut.LearnersClassesOutActivity;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.settings.SettingsActivity;
@@ -196,6 +198,27 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 // убираем кнопку
                 ((LinearLayout) (findViewById(R.id.start_screen_button_start_lesson_background))).setBackgroundResource(android.R.color.transparent);
                 ((TextView) (findViewById(R.id.start_screen_button_start_lesson_text))).setText("");
+
+//                // меняем кнопку на создание урока todo
+//                ((LinearLayout) (findViewById(R.id.start_screen_button_start_lesson_background))).setBackgroundResource(R.drawable._button_round_background_green);
+//                ((TextView) (findViewById(R.id.start_screen_button_start_lesson_text))).setText(R.string.start_screen_activity_title_current_create_lesson);
+//
+//                // назначаем создание при нажатии
+//                View.OnClickListener clickListener = new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        // создаем диалог
+//                        CreateLessonDialog createLessonDialog = new CreateLessonDialog();
+//                        // показываем диалог
+//                        createLessonDialog.show(getFragmentManager(), "createLessonDialog");
+//                    }
+//                };
+//                // нажатие на контейнер с датой
+//                containerNow.setOnClickListener(clickListener);
+//                // и кнопку урока
+//                findViewById(R.id.start_screen_button_start_lesson_background)
+//                        .setOnClickListener(clickListener);
+
             } else {// если урок есть
 
                 // получаем поля урока
@@ -307,8 +330,11 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 cabinetTextParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
                 containerNow.addView(cabinetText, cabinetTextParams);
 
+                // делаем кнопку видимой если она была скрыта
+                ((LinearLayout) (findViewById(R.id.start_screen_button_start_lesson_background))).setBackgroundResource(R.drawable._button_round_background_pink);
+                ((TextView) (findViewById(R.id.start_screen_button_start_lesson_text))).setText(R.string.start_screen_activity_title_current_start_lesson);
 
-                // назначаем открытие при нажатии
+                // назначаем открытие урока при нажатии
                 View.OnClickListener clickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -338,7 +364,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 };
                 // нажатие на контейнер с датой
                 containerNow.setOnClickListener(clickListener);
-                // и кнопку создать урок
+                // и кнопку урока
                 findViewById(R.id.start_screen_button_start_lesson_background)
                         .setOnClickListener(clickListener);
             }
@@ -468,4 +494,9 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
 Используйте это свойство внутри своего тега activity чтобы избежать появления activity в списке недавно использованных приложений.
  android:excludeFromRecents="true"
+
+
+  Надо отследить что пользователь открыл приложение, а не (например) повернул. Это можно сделать проверив
+  if(savedInstanceState==null) это аргумент в onCreate методе активити. После её поворота (пересоздания)
+  этот аргумент уже не null и условие выполнено не будет.
 * */

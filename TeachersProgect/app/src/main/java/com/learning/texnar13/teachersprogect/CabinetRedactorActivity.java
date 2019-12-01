@@ -209,7 +209,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_cabinet_redactor);
 
         // цвет кнопки меню
-        getSupportActionBar().getThemedContext().setTheme(R.style.LessonStyle);
+        getSupportActionBar().getThemedContext().setTheme(R.style.cabinetRedactorStyle);
 
         // вставляем в actionBar заголовок активности
         LinearLayout titleContainer = new LinearLayout(this);

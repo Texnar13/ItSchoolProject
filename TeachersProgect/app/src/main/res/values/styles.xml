@@ -44,5 +44,15 @@
         <item name="actionMenuTextColor">@color/basePink</item>
     </style>
 
+    <!-- стиль ActionBar редактора кабинетов -->
+    <style name="cabinetRedactorStyle">
+        <!-- цвет иконок навигации -->
+        <item name="colorControlNormal">@color/baseOrange</item>
+        <!-- color of the menu overflow icon -->
+        <item name="android:textColorSecondary">@color/baseOrange</item>
+
+        <item name="actionMenuTextColor">@color/baseOrange</item>
+    </style>
+
 
 </resources>

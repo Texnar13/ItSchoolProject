@@ -16,16 +16,14 @@
     <string name="start_screen_activity_title_now">Сейчас:</string>
     <string name="start_screen_activity_title_current_no_lesson">Сейчас урока нет.</string>
     <string name="start_screen_activity_title_current_start_lesson">Начать урок?</string>
+    <string name="start_screen_activity_title_current_create_lesson">Создать урок?</string>
     <!-- диалог -->
     <string name="start_screen_activity_dialog_title_rate">Пожалуйста, оцените наше приложение)</string>
     <string name="start_screen_activity_dialog_button_rate_now">оценить!</string>
     <string name="start_screen_activity_dialog_button_later">позже</string>
 
     <string name="start_screen_activity_dialog_whats_new_title">Что нового:</string>
-    <string name="start_screen_activity_dialog_whats_new_text">Поздравляем Вас с началом учебного года, дорогие пользователи!\n\n<b>Представляем обещанное глобальное обновление</b>: теперь все гораздо удобнее и красивее. С новым дизайном пришли и новые возможности (к примеру, типы оценок: тест, контрольная, четвертная). Не забудьте залезть в Настройки – они позволяют сделать приложение 100 % подходящим для вас.
-Спасибо за ваши отзывы – именно они помогают нам сделать приложение лучше! Если у вас есть предложения – пишите, у нас грандиозные планы по дальнейшему улучшению Помощника учителя!
-
-    </string>
+    <string name="start_screen_activity_dialog_whats_new_text">Поздравляем Вас с началом учебного года, дорогие пользователи!\n\n<b>Представляем обещанное глобальное обновление</b>: теперь все гораздо удобнее и красивее. С новым дизайном пришли и новые возможности (к примеру, типы оценок: тест, контрольная, четвертная). Не забудьте залезть в Настройки – они позволяют сделать приложение 100 % подходящим для вас. Спасибо за ваши отзывы – именно они помогают нам сделать приложение лучше! Если у вас есть предложения – пишите, у нас грандиозные планы по дальнейшему улучшению Помощника учителя!</string>
     <string name="start_screen_activity_dialog_whats_new_button_ok">Понятно</string>
     <!-- уведомления -->
     <string name="start_screen_activity_toast_no_lessons">На текущий момент уроков не запланировано</string>
@@ -169,7 +167,7 @@
     <string name="lesson_redactor_activity_title_class">Класс</string>
     <string name="lesson_redactor_activity_title_subject">Предмет</string>
     <string name="lesson_redactor_activity_title_cabinet">Кабинет</string>
-    <string name="lesson_redactor_activity_title_time">Время</string>
+    <string name="lesson_redactor_activity_title_time">Дата</string>
     <string name="lesson_redactor_activity_spinner_title_lesson">урок</string>
     <string name="lesson_redactor_activity_title_repeat">Повторять урок</string>
     <string name="lesson_redactor_activity_toast_subject_not_select">Не выбран урок!</string>
@@ -200,13 +198,7 @@
     <!-- активность урока-->
     <!-- контекстное меню -->
     <string name="lesson_activity_context_menu_text_no_learner">отсутствует</string>
-    <string name="lesson_activity_context_menu_text_no_answers">нет ответов</string>
-    <string name="lesson_activity_context_menu_text_last_answers">предыдущие ответы</string>
-    <string name="lesson_activity_context_menu_text_new_answers">новые ответы</string>
-    <string name="lesson_activity_context_menu_text_add_answer"> + добавить 1 ответ</string>
-    <string name="lesson_activity_context_menu_text_delete_answer"> - удалить 1 ответ</string>
     <!-- меню сверху -->
-    <string name="lesson_activity_menu_text_help">помощь</string>
     <string name="lesson_activity_menu_text_desks">расставить парты</string>
     <string name="lesson_activity_menu_text_learners">посадить учеников</string>
     <string name="lesson_activity_menu_text_end_lesson">закончить</string>

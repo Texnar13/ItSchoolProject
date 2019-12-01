@@ -29,9 +29,10 @@ import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
-public class LessonListActivity extends AppCompatActivity implements GradesDialogInterface,EndLessonInterface {
+public class LessonListActivity extends AppCompatActivity implements GradesDialogInterface, EndLessonInterface {
 
     public static final String LESSON_TIME = "startTime";
     public static final String SUBJECT_ID = "subjectId";
@@ -47,6 +48,8 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
     public static final String FIRST_GRADES_TYPES = "gradesTypes1";
     public static final String SECOND_GRADES_TYPES = "gradesTypes2";
     public static final String THIRD_GRADES_TYPES = "gradesTypes3";
+
+    public static final String ADD_BANNER = "AdBanner";
 
 //    public static final String LIST_ID = "listId";
 
@@ -87,7 +90,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
 
     // межстраничный баннер открывающийся при сохранении оценок
-    InterstitialAd lessonEndBanner;
+    //InterstitialAd lessonEndBanner;
 
 
     // ---------
@@ -140,10 +143,11 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
                 finish();
 
 
-                // выводим рекламу при закрытии активности конца урока
-                if(lessonEndBanner.isLoaded()){
-                    lessonEndBanner.show();
-                }
+//                // выводим рекламу при закрытии активности конца урока
+//                if (lessonEndBanner != null)
+//                    if (lessonEndBanner.isLoaded()) {
+//                        lessonEndBanner.show();
+//                    }
 
 
                 //очистка данных
@@ -161,15 +165,15 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // загружаем межстраничный баннер конца урока
-        lessonEndBanner = new InterstitialAd(this);
-        lessonEndBanner.setAdUnitId("ca-app-pub-5709922862247260/2817934566");// работает
-        // создаем запрос
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
-                .addTestDevice("239C7C3FF5E172E5131C0FAA9994FDBF")// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
-                .build();
-        lessonEndBanner.loadAd(adRequest);
+
+//        if (getIntent().getExtras() != null) {
+//            // полуаем контейнер с данными
+//            EndLessonIntentContainer intentContainer = (EndLessonIntentContainer) getIntent().getExtras().getSerializable(ADD_BANNER);
+//            if (intentContainer != null) {
+//                // полуаем рекламмный блок из контейнера
+//                //lessonEndBanner = intentContainer.addBanner;
+//            } else lessonEndBanner = null;
+//        }
 
 
         // базовый скролящийся контейнер
@@ -599,6 +603,11 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
     private int pxFromDp(float px) {
         return (int) (px * getResources().getDisplayMetrics().density);
+    }
+
+    // класс для передачи данных в эту активность
+    static class EndLessonIntentContainer implements Serializable {
+        //InterstitialAd addBanner;
     }
 
 

@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.learnersClassesOut;
+package com.learning.texnar13.teachersprogect;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,12 +7,10 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,9 +20,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.learning.texnar13.teachersprogect.R;
-
-public class CreateLearnersClassDialogFragment extends DialogFragment {
+public class CreateLessonDialog extends DialogFragment { //TODO
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //начинаем строить диалог
@@ -180,24 +176,27 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
         createTextButtonParams.gravity = Gravity.CENTER;
         createButtonContainer.addView(createTextButton, createTextButtonParams);
 
+
+
+
         // при нажатии...
         // создание
         createTextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    //вызываем в активности метод по созданию класса и передаем ей имя
-                    ((com.learning.texnar13.teachersprogect.learnersClassesOut.CreateLearnersClassDialogInterface) getActivity()).createLearnersClass(
-                            editName.getText().toString()
-                    );
-                } catch (java.lang.ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован класс CreateLearnersClassInterface
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "CreateLearnersClassDialogFragment: you must implements CreateLearnersClassInterface in your activity"
-                    );
-                }
+//                try {
+//                    //вызываем в активности метод по созданию класса и передаем ей имя
+//                    ((com.learning.texnar13.teachersprogect.learnersClassesOut.CreateLessonDialogInterface) getActivity()).createLearnersClass(
+//                            editName.getText().toString()
+//                    );
+//                } catch (java.lang.ClassCastException e) {
+//                    //в вызвающей активности должен быть имплементирован класс CreateLearnersClassInterface
+//                    e.printStackTrace();
+//                    Log.i(
+//                            "TeachersApp",
+//                            "CreateLearnersClassDialogFragment: you must implements CreateLearnersClassInterface in your activity"
+//                    );
+//                }
                 dismiss();
             }
         });
@@ -225,6 +224,6 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
     }
 }
 
-interface CreateLearnersClassDialogInterface {
-    void createLearnersClass(String name);
+interface CreateLessonDialogInterface {
+    void createLesson(String name);
 }

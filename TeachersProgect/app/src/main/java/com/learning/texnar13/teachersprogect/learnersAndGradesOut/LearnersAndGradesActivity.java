@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface, UpdateTableInterface, View.OnTouchListener, SubjectsDialogInterface {
 
@@ -39,12 +40,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     // id класса полученное через intent
     static long classId = -1;
 
-    // массив с учениками и их оценками
-    static ArrayList<NewLearnerAndHisGrades> newLearnersAndHisGrades;
-    // номер выбранного ученика
-    static int chosenLearnerPosition;
-    // позиция выбранной оценки (ученик,день,урок)
-    static int[] chosenGradePosition;
+    static DataObject dataLearnersAndGrades;
 
     // массив с предметами
     static NewSubjectUnit[] subjects;
@@ -185,9 +181,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         // находим view с таблицей
         learnersAndGradesTableView = findViewById(R.id.learners_and_grades_activity_table_view);
         // получаем размер максимальной оценки
-        if(db.getSettingsAreTheGradesColoredByProfileId(1)){
+        if (db.getSettingsAreTheGradesColoredByProfileId(1)) {
             learnersAndGradesTableView.setMaxAnswersCount(maxGrade);
-        }else{
+        } else {
             // не раскрашиваем оценки в таблице
             learnersAndGradesTableView.setMaxAnswersCount(-1);
         }
@@ -316,6 +312,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         });
 
 
+        if (dataLearnersAndGrades == null) {
+            dataLearnersAndGrades = new DataObject();
+        }
+
         // проводим различные проверки, чтобы не перезагружать данные если например экран перевернулся
         if (subjects == null) {
             // получаем предметы
@@ -343,7 +343,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             }
 
             // не пустой ли массив учеников
-            if (newLearnersAndHisGrades == null) {
+            if (dataLearnersAndGrades.learnersAndHisGrades == null) {
+
                 // получаем учеников только здесь
                 getLearnersFromDB();
 
@@ -353,7 +354,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 // получаем оценки из базы данных (отрисоввываться они будут по handler-у)
                 getGradesFromDB();
             } else {
-                learnersAndGradesTableView.setData(newLearnersAndHisGrades);
+                learnersAndGradesTableView.setData(dataLearnersAndGrades);
             }
         }
     }
@@ -405,19 +406,24 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     // метод получения учеников из базы данных (которые потом передаются во view)
     void getLearnersFromDB() {
         Log.i(TAG, "LearnersAndGradesActivity - getLearnersFromDB");
+
+        // ждем пока копирование переменных завершится
+        while (dataLearnersAndGrades.isInCopyProcess);
+
         // запрещаем пользователю редактировать учеников
-        chosenLearnerPosition = 0;
+        dataLearnersAndGrades.chosenLearnerPosition = 0;
+
 
         // получаем учеников из базы данных
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         Cursor learnersCursor = db.getLearnersByClassId(classId);
 
         // чистим лист от старых учеников
-        newLearnersAndHisGrades = new ArrayList<>();
+        dataLearnersAndGrades.learnersAndHisGrades = new ArrayList<>();
         // и заполняем новыми
         while (learnersCursor.moveToNext()) {
             // создаем нового ученика
-            newLearnersAndHisGrades.add(new NewLearnerAndHisGrades(
+            dataLearnersAndGrades.learnersAndHisGrades.add(new NewLearnerAndHisGrades(
                     learnersCursor.getLong(learnersCursor.getColumnIndex(
                             SchoolContract.TableLearners.KEY_LEARNER_ID)),
                     learnersCursor.getString(learnersCursor.getColumnIndex(
@@ -431,10 +437,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         db.close();
 
         // передаем данные во view (пока только ученики)
-        learnersAndGradesTableView.setData(newLearnersAndHisGrades);
+        learnersAndGradesTableView.setData(dataLearnersAndGrades);
 
         //разрешаем редактировать учеников, когда все вывели
-        chosenLearnerPosition = -1;
+        dataLearnersAndGrades.chosenLearnerPosition = -1;
     }
 
 
@@ -444,14 +450,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         public void handleMessage(Message msg) {
 
             // вывод оценок по завершении получения данных
-            if (msg.what == 0) {
+            if (msg.what == 10) {
                 // обновляем данные в таблице
-                learnersAndGradesTableView.setData(newLearnersAndHisGrades);
+                learnersAndGradesTableView.setData(dataLearnersAndGrades);
                 // перерисоввываем окно
                 learnersAndGradesTableView.invalidate();
 
                 // разрешаем менять оценки
-                chosenGradePosition = new int[]{-1, -1, -1};
+                dataLearnersAndGrades.chosenGradePosition = new int[]{-1, -1, -1};
             }
         }
     }
@@ -475,7 +481,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             runFlag = true;
 
             // копируем оригинальный массив с учениками чтобы пока изменять только копию
-            ArrayList<NewLearnerAndHisGrades> copy = (ArrayList<NewLearnerAndHisGrades>) newLearnersAndHisGrades.clone();
+            dataLearnersAndGrades.isInCopyProcess = true;
+            ArrayList<NewLearnerAndHisGrades> copy = new ArrayList<>();
+            for (int learnersI = 0; learnersI < dataLearnersAndGrades.learnersAndHisGrades.size(); learnersI++) {
+                copy.add(
+                        new NewLearnerAndHisGrades(dataLearnersAndGrades.learnersAndHisGrades.get(learnersI))
+                );
+            }
+            dataLearnersAndGrades.isInCopyProcess = false;
 
 //                try {
 //                    Log.e(TAG, "остановлен");
@@ -546,7 +559,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         if (!runFlag) {// если была команда закрыть поток без подгрузки
                             // выходим  из метода подгрузки
                             return;
-                        }
+                        }// todo надо чтобы новый поток ждал завенршения старого прежде чем начать загрузку данных
 
                         // чистим поля от предыдущих дат
                         startTime.delete(0, startTime.length());
@@ -684,9 +697,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             // если этот поток не был прерван ранее
             if (runFlag) {
                 // присваиваем измененную копию
-                newLearnersAndHisGrades = copy;
+                dataLearnersAndGrades.learnersAndHisGrades = copy;
                 // говорим активности что закончили подгрузку
-                updateTableHandler.sendEmptyMessage(0);
+                updateTableHandler.sendEmptyMessage(10);
             }
 
             Log.i(TAG, "threadRunEnded");
@@ -701,7 +714,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         loadGradesThread = new GetGradesThread();
 
         // запрещаем изменение оценок
-        chosenGradePosition = new int[]{0, -1, -1};
+        dataLearnersAndGrades.chosenGradePosition = new int[]{0, -1, -1};
 
         // запускаем поток
         loadGradesThread.setName("loadGradesThread - hello");
@@ -788,9 +801,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         if (touchData[0] == -2) {
 
                             // чтобы не было нескольких вызовов одновременно
-                            if (chosenLearnerPosition == -1) {
+                            if (dataLearnersAndGrades.chosenLearnerPosition == -1) {
                                 // запрещаем пока работать с учениками
-                                chosenLearnerPosition = 0;
+                                dataLearnersAndGrades.chosenLearnerPosition = 0;
 
                                 // создаем диалог добавления ученика
                                 LearnerCreateDialogFragment createLearnerDialog = new LearnerCreateDialogFragment();
@@ -820,10 +833,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 } else {
 
                                     // чтобы не было нескольких вызовов одновременно
-                                    if (chosenGradePosition[0] == -1) {
+                                    if (dataLearnersAndGrades.chosenGradePosition[0] == -1) {
 
                                         // ставим полученные координаты оценки как выбранные
-                                        chosenGradePosition = touchData;
+                                        dataLearnersAndGrades.chosenGradePosition = touchData;
 
                                         // вызываем диалог изменения оценок
                                         GradeEditDialogFragment editGrade = new GradeEditDialogFragment();
@@ -833,7 +846,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                         // имя ученика
                                         bundle.putString(
                                                 GradeEditDialogFragment.ARGS_LEARNER_NAME,
-                                                newLearnersAndHisGrades.get(touchData[0]).surname + " " + newLearnersAndHisGrades.get(touchData[0]).name
+                                                dataLearnersAndGrades.learnersAndHisGrades.get(touchData[0]).surname + " " + dataLearnersAndGrades.learnersAndHisGrades.get(touchData[0]).name
                                         );
 
                                         // названия типов оценок в массиве
@@ -849,7 +862,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                         // массив оценок
                                         bundle.putIntArray(
                                                 GradeEditDialogFragment.ARGS_INT_GRADES_ARRAY,
-                                                newLearnersAndHisGrades.get(touchData[0]).learnerGrades[touchData[1]][touchData[2]].grades.clone()
+                                                dataLearnersAndGrades.learnersAndHisGrades.get(touchData[0]).learnerGrades[touchData[1]][touchData[2]].grades.clone()
                                         );
 
                                         // максимальный размер оценки
@@ -861,7 +874,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                         // массив с номерами выбранных типов
                                         bundle.putIntArray(
                                                 GradeEditDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY,
-                                                newLearnersAndHisGrades.get(touchData[0]).learnerGrades[touchData[1]][touchData[2]].gradesTypesIndexes.clone()
+                                                dataLearnersAndGrades.learnersAndHisGrades.get(touchData[0]).learnerGrades[touchData[1]][touchData[2]].gradesTypesIndexes.clone()
                                         );
 
                                         // текущая дата в строке
@@ -885,9 +898,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                                 // чтобы не было нескольких вызовов одновременно
                                 // и учеников меняем по долгому нажатию
-                                if (chosenLearnerPosition == -1 && isLongClick) {
+                                if (dataLearnersAndGrades.chosenLearnerPosition == -1 && isLongClick) {
                                     // выбираем ученика
-                                    chosenLearnerPosition = touchData[0];
+                                    dataLearnersAndGrades.chosenLearnerPosition = touchData[0];
 
 
                                     // останавливаем поток загрузки оценок и уничтожаем все его данные
@@ -902,9 +915,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     // создаем обьект с данными для диалога
                                     Bundle args = new Bundle();
                                     args.putString(LearnerEditDialogFragment.ARGS_LEARNER_NAME,
-                                            newLearnersAndHisGrades.get(touchData[0]).name);
+                                            dataLearnersAndGrades.learnersAndHisGrades.get(touchData[0]).name);
                                     args.putString(LearnerEditDialogFragment.ARGS_LEARNER_LAST_NAME,
-                                            newLearnersAndHisGrades.get(touchData[0]).surname);
+                                            dataLearnersAndGrades.learnersAndHisGrades.get(touchData[0]).surname);
 
                                     // передаем данные диалогу
                                     editDialog.setArguments(args);
@@ -979,14 +992,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         // добавляем ученика в локальный список
         // сравниваем этого ученика поочереди со всеми остальными
         int poz = -1;
-        for (int learnerI = 0; learnerI < newLearnersAndHisGrades.size(); learnerI++) {
+        for (int learnerI = 0; learnerI < dataLearnersAndGrades.learnersAndHisGrades.size(); learnerI++) {
             // если полученное имя лексикографически меньше текущего в списке то ставим полученное перед текущим
-            if ((lastName.compareTo(newLearnersAndHisGrades.get(learnerI).surname) < 0) ||
+            if ((lastName.compareTo(dataLearnersAndGrades.learnersAndHisGrades.get(learnerI).surname) < 0) ||
                     // при равных фамилиях сравниваем имена
-                    (lastName.compareTo(newLearnersAndHisGrades.get(learnerI).surname) == 0 &&
-                            name.compareTo(newLearnersAndHisGrades.get(learnerI).name) < 0)
+                    (lastName.compareTo(dataLearnersAndGrades.learnersAndHisGrades.get(learnerI).surname) == 0 &&
+                            name.compareTo(dataLearnersAndGrades.learnersAndHisGrades.get(learnerI).name) < 0)
             ) {
-                newLearnersAndHisGrades.add(learnerI, new NewLearnerAndHisGrades(
+                dataLearnersAndGrades.learnersAndHisGrades.add(learnerI, new NewLearnerAndHisGrades(
                         db.createLearner(lastName, name, classId),
                         name,
                         lastName,
@@ -999,7 +1012,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         // если строка больше всех других строк, помещаем в конец списка
         if (poz == -1) {
 
-            newLearnersAndHisGrades.add(new NewLearnerAndHisGrades(
+            dataLearnersAndGrades.learnersAndHisGrades.add(new NewLearnerAndHisGrades(
                     db.createLearner(lastName, name, classId),
                     name,
                     lastName,
@@ -1010,20 +1023,19 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
 
         // выводим изменившихся учеников во view
-        learnersAndGradesTableView.setData(newLearnersAndHisGrades);
+        learnersAndGradesTableView.setData(dataLearnersAndGrades);
         learnersAndGradesTableView.invalidate();
 
         // разрешаем редактировать учеников
-        chosenLearnerPosition = -1;
+        dataLearnersAndGrades.chosenLearnerPosition = -1;
     }
 
-    // todo не костыль часом?
     @Override
     public void allowUserEditLearners() {
         Log.i(TAG, "fromDialog-allowUserEditLearners");
 
         // разрешаем редактировать учеников
-        chosenLearnerPosition = -1;
+        dataLearnersAndGrades.chosenLearnerPosition = -1;
     }
 
     // метод переименования ученика вызываемый из диалога LearnerEditDialogFragment
@@ -1038,23 +1050,23 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 //        } todo останавливать поток можно только если после изменений его продолжишь например перезагрузкой учеников
 
         // на всякий случай
-        if (chosenLearnerPosition != -1) {
+        if (dataLearnersAndGrades.chosenLearnerPosition != -1) {
 
             // меняем имя и фамилию ученика в базе данных
             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-            db.setLearnerNameAndLastName(newLearnersAndHisGrades.get(chosenLearnerPosition).id, name, lastName);
+            db.setLearnerNameAndLastName(dataLearnersAndGrades.learnersAndHisGrades.get(dataLearnersAndGrades.chosenLearnerPosition).id, name, lastName);
             db.close();
 
             // меняем локальный список учеников todo сортировка
-            newLearnersAndHisGrades.get(chosenLearnerPosition).name = name;
-            newLearnersAndHisGrades.get(chosenLearnerPosition).surname = lastName;
+            dataLearnersAndGrades.learnersAndHisGrades.get(dataLearnersAndGrades.chosenLearnerPosition).name = name;
+            dataLearnersAndGrades.learnersAndHisGrades.get(dataLearnersAndGrades.chosenLearnerPosition).surname = lastName;
 
             // выводим изменившихся учеников во view
-            learnersAndGradesTableView.setData(newLearnersAndHisGrades);
+            learnersAndGradesTableView.setData(dataLearnersAndGrades);
             learnersAndGradesTableView.invalidate();
 
             // разрешаем редактировать учеников
-            chosenLearnerPosition = -1;
+            dataLearnersAndGrades.chosenLearnerPosition = -1;
         }
     }
 
@@ -1071,18 +1083,18 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
         // удаляем ученика из базы данных
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        db.deleteLearner(newLearnersAndHisGrades.get(chosenLearnerPosition).id);
+        db.deleteLearner(dataLearnersAndGrades.learnersAndHisGrades.get(dataLearnersAndGrades.chosenLearnerPosition).id);
         db.close();
 
         // удаляем ученика из списка
-        newLearnersAndHisGrades.remove(chosenLearnerPosition);
+        dataLearnersAndGrades.learnersAndHisGrades.remove(dataLearnersAndGrades.chosenLearnerPosition);
 
         // выводим изменившихся учеников во view
-        learnersAndGradesTableView.setData(newLearnersAndHisGrades);
+        learnersAndGradesTableView.setData(dataLearnersAndGrades);
         learnersAndGradesTableView.invalidate();
 
         // разрешаем редактировать учеников
-        chosenLearnerPosition = -1;
+        dataLearnersAndGrades.chosenLearnerPosition = -1;
     }
 
     // метод редактирования оценки ученика из диалога GradeEditDialogFragment
@@ -1090,14 +1102,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     public void editGrades(int[] grades, int[] chosenTypesNumbers, int lessonPoz) {
         Log.i(TAG, "fromDialog-editGrade");
         // проверяем выбрана ли все еще дата
-        if (chosenGradePosition[0] != -1 && chosenGradePosition[1] != -1 && lessonPoz != -1) {
+        if (dataLearnersAndGrades.chosenGradePosition[0] != -1 && dataLearnersAndGrades.chosenGradePosition[1] != -1 && lessonPoz != -1) {
 
             // сохраняем оценки в массив
-            newLearnersAndHisGrades.get(chosenGradePosition[0]).
-                    learnerGrades[chosenGradePosition[1]][lessonPoz].grades = grades;
+            dataLearnersAndGrades.learnersAndHisGrades.get(dataLearnersAndGrades.chosenGradePosition[0]).
+                    learnerGrades[dataLearnersAndGrades.chosenGradePosition[1]][lessonPoz].grades = grades;
             // и типы
-            newLearnersAndHisGrades.get(chosenGradePosition[0]).
-                    learnerGrades[chosenGradePosition[1]][lessonPoz].gradesTypesIndexes = chosenTypesNumbers;
+            dataLearnersAndGrades.learnersAndHisGrades.get(dataLearnersAndGrades.chosenGradePosition[0]).
+                    learnerGrades[dataLearnersAndGrades.chosenGradePosition[1]][lessonPoz].gradesTypesIndexes = chosenTypesNumbers;
 
             // сохраняем оценки в бд
             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
@@ -1106,7 +1118,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             int[][] timeOfLessons = db.getSettingsTime(1);
             StringBuilder gradeTime = (new StringBuilder()).append(viewCalendar.get(Calendar.YEAR)).append('-')
                     .append(getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1)).append('-')
-                    .append(getTwoSymbols(chosenGradePosition[1] + 1))
+                    .append(getTwoSymbols(dataLearnersAndGrades.chosenGradePosition[1] + 1))
                     .append(' ').append(getTwoSymbols(timeOfLessons[lessonPoz][0])).append(':')
                     .append(getTwoSymbols(timeOfLessons[lessonPoz][1])).append(":00");
 
@@ -1115,16 +1127,16 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             for (int gradeI = 0; gradeI < grades.length; gradeI++) {
 
                 // id оценки -1, значит оценка новая
-                if (newLearnersAndHisGrades.get(chosenGradePosition[0]).
-                        learnerGrades[chosenGradePosition[1]][lessonPoz].gradesId[gradeI] == -1) {
+                if (dataLearnersAndGrades.learnersAndHisGrades.get(dataLearnersAndGrades.chosenGradePosition[0]).
+                        learnerGrades[dataLearnersAndGrades.chosenGradePosition[1]][lessonPoz].gradesId[gradeI] == -1) {
 
                     // если оценка не нулевая то создаем ее
                     if (grades[gradeI] != 0) {
                         // и сохраняем id в массив
-                        newLearnersAndHisGrades.get(chosenGradePosition[0]).
-                                learnerGrades[chosenGradePosition[1]][lessonPoz].gradesId[gradeI] =
+                        dataLearnersAndGrades.learnersAndHisGrades.get(dataLearnersAndGrades.chosenGradePosition[0]).
+                                learnerGrades[dataLearnersAndGrades.chosenGradePosition[1]][lessonPoz].gradesId[gradeI] =
                                 db.createGrade(
-                                        newLearnersAndHisGrades.get(chosenGradePosition[0]).id,
+                                        dataLearnersAndGrades.learnersAndHisGrades.get(dataLearnersAndGrades.chosenGradePosition[0]).id,
                                         grades[gradeI],
                                         answersTypes[chosenTypesNumbers[gradeI]].id,
                                         subjects[chosenSubjectPosition].getSubjectId(),
@@ -1137,16 +1149,16 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     // нулевую оценку с id удаляем
                     if (grades[gradeI] == 0) {
                         // а потом из бд
-                        db.removeGrade(newLearnersAndHisGrades.get(chosenGradePosition[0]).
-                                learnerGrades[chosenGradePosition[1]][lessonPoz].gradesId[gradeI]);
+                        db.removeGrade(dataLearnersAndGrades.learnersAndHisGrades.get(dataLearnersAndGrades.chosenGradePosition[0]).
+                                learnerGrades[dataLearnersAndGrades.chosenGradePosition[1]][lessonPoz].gradesId[gradeI]);
                         // удаляем сначала из списка
-                        newLearnersAndHisGrades.get(chosenGradePosition[0]).
-                                learnerGrades[chosenGradePosition[1]][lessonPoz].gradesId[gradeI] = -1;
+                        dataLearnersAndGrades.learnersAndHisGrades.get(dataLearnersAndGrades.chosenGradePosition[0]).
+                                learnerGrades[dataLearnersAndGrades.chosenGradePosition[1]][lessonPoz].gradesId[gradeI] = -1;
                     } else {
                         // не нулевую меняем в бд
                         db.editGrade(
-                                newLearnersAndHisGrades.get(chosenGradePosition[0]).
-                                        learnerGrades[chosenGradePosition[1]][lessonPoz].gradesId[gradeI],
+                                dataLearnersAndGrades.learnersAndHisGrades.get(dataLearnersAndGrades.chosenGradePosition[0]).
+                                        learnerGrades[dataLearnersAndGrades.chosenGradePosition[1]][lessonPoz].gradesId[gradeI],
                                 grades[gradeI],
                                 answersTypes[chosenTypesNumbers[gradeI]].id
                         );
@@ -1156,11 +1168,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
 
             // выводим изменившиеся данные во view
-            learnersAndGradesTableView.setData(newLearnersAndHisGrades);
+            learnersAndGradesTableView.setData(dataLearnersAndGrades);
             learnersAndGradesTableView.invalidate();
         }
         //разрешаем пользователю менять оценки
-        chosenGradePosition = new int[]{-1, -1, -1};
+        dataLearnersAndGrades.chosenGradePosition = new int[]{-1, -1, -1};
     }
 
     // метод разрешающий пользователю изменять оценки из диалога GradeEditDialogFragment
@@ -1169,7 +1181,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         Log.i(TAG, "fromDialog-allowUserEditGrades");
 
         //разрешаем пользователю менять оценки
-        chosenGradePosition = new int[]{-1, -1, -1};
+        dataLearnersAndGrades.chosenGradePosition = new int[]{-1, -1, -1};
 
         // и обновляем таблицу, чтобы исчезли синие квадраты
         learnersAndGradesTableView.invalidate();
@@ -1344,9 +1356,10 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     public void onBackPressed() {
         // сначала чистим все данные
         classId = -1;
-        newLearnersAndHisGrades = null;
-        chosenLearnerPosition = -1;
-        chosenGradePosition = new int[]{-1, -1, -1};
+        dataLearnersAndGrades.learnersAndHisGrades = null;
+        dataLearnersAndGrades.chosenLearnerPosition = -1;
+        dataLearnersAndGrades.chosenGradePosition = new int[]{-1, -1, -1};
+        dataLearnersAndGrades = null;
         subjects = null;
         chosenSubjectPosition = -1;
         viewCalendar = null;
@@ -1408,10 +1421,34 @@ class NewGradeUnit {
         this.gradesId = gradesId;
         this.gradesTypesIndexes = gradesTypesIndexes;
     }
+
+    // конструктор копии
+    NewGradeUnit(NewGradeUnit other) {
+        // todo добавить проверку на нулевые входные значения
+        this.grades = other.grades.clone();
+        this.gradesId = other.gradesId.clone();
+        this.gradesTypesIndexes = other.gradesTypesIndexes.clone();
+    }
+}
+
+// класс который хранит все данные
+class DataObject {
+
+    // массив с учениками и их оценками
+    ArrayList<NewLearnerAndHisGrades> learnersAndHisGrades;
+    // не занят ли массив копированием
+    boolean isInCopyProcess;
+
+    // номер выбранного ученика
+    int chosenLearnerPosition;
+    // позиция выбранной оценки (ученик,день,урок)
+    int[] chosenGradePosition;
 }
 
 // данные об одном ученике в таблице
 class NewLearnerAndHisGrades {
+
+
     // ученик
     long id;
     String name;
@@ -1424,6 +1461,22 @@ class NewLearnerAndHisGrades {
         this.name = name;
         this.surname = surname;
         this.learnerGrades = learnerGrades;
+    }
+
+    // конструктор копии
+    NewLearnerAndHisGrades(NewLearnerAndHisGrades other) {
+        this.id = other.id;
+        this.name = "" + other.name;
+        this.surname = "" + other.surname;
+
+        this.learnerGrades = new NewGradeUnit[other.learnerGrades.length][];
+        for (int dayI = 0; dayI < other.learnerGrades.length; dayI++) {
+            this.learnerGrades[dayI] = new NewGradeUnit[other.learnerGrades[dayI].length];
+            for (int lessonI = 0; lessonI < other.learnerGrades[dayI].length; lessonI++) {
+                // клонируем обьект
+                this.learnerGrades[dayI][lessonI] = new NewGradeUnit(other.learnerGrades[dayI][lessonI]);
+            }
+        }
     }
 }
 

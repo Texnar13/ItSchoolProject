@@ -441,16 +441,16 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 // закончили переделку
                 db.execSQL("PRAGMA foreign_keys = ON");
 
-
+                // todo проверить эти команды (заменил "DEFAULT \"1\"" на "DEFAULT 1;") (проверить оба варианта)
                 // -- добавляем кабинетам свои значения смещения и мультипликатора хранящиеся в таблице --
                 db.execSQL("ALTER TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS +
-                        " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER + " INTEGER DEFAULT \"1\""
+                        " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER + " INTEGER DEFAULT 1;"
                 );
                 db.execSQL("ALTER TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS +
-                        " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X + " INTEGER DEFAULT \"0\""
+                        " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X + " INTEGER DEFAULT 0;"
                 );
                 db.execSQL("ALTER TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS +
-                        " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y + " INTEGER DEFAULT \"0\""
+                        " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y + " INTEGER DEFAULT 0;"
                 );
 
 

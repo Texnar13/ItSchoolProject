@@ -29,6 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
@@ -62,6 +64,11 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     private static final int NO_ZOOMED_DESK_SIZE = 40;
     // ширина границы вокруг клетки ученика на парте
     private static final int NO_ZOOMED_LEARNER_BORDER_SIZE = NO_ZOOMED_DESK_SIZE / 20;
+
+
+    // межстраничный баннер открывающийся на экране вывода всех оценок при их сохранении
+    InterstitialAd lessonEndBanner;
+
 
     // лист с партами
     static ArrayList<DeskUnit> desksList = new ArrayList<>();
@@ -194,6 +201,18 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
                 // передаем полученную дату урока
                 intent.putExtra(LESSON_TIME, getIntent().getStringExtra(LESSON_TIME));
+
+                // передаем загруженный баннер в контейнер
+                //LessonListActivity.EndLessonIntentContainer intentContainer = new LessonListActivity.EndLessonIntentContainer();
+                //  intentContainer.addBanner = lessonEndBanner;
+                // передаем контейнер
+                //intent.putExtra(LessonListActivity.ADD_BANNER, intentContainer);
+
+                // выводим рекламму
+                if(lessonEndBanner.isLoaded()){
+                    lessonEndBanner.show();
+                }
+
                 startActivity(intent);
 
 
@@ -206,6 +225,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                 subjectName = null;
                 learnersAndTheirGrades = null;
                 finish();
+
                 return true;
             }
         });
@@ -246,6 +266,17 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_main);
+
+        // начинаем загрузку межстраничного баннера конца урока
+        lessonEndBanner = new InterstitialAd(this);
+        lessonEndBanner.setAdUnitId("ca-app-pub-5709922862247260/2817934566");// работает
+        // создаем запрос
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("239C7C3FF5E172E5131C0FAA9994FDBF")// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
+                .build();
+        lessonEndBanner.loadAd(adRequest);
+
 
         // цвет кнопки меню
         getSupportActionBar().getThemedContext().setTheme(R.style.LessonStyle);
@@ -407,7 +438,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         } else
             shortSubjectName = subjectName;
         if (className.length() > 4) {
-            shortClassName = className.substring(0, 3) + "…";// absde -> abc…  abcd->abcd
+            shortClassName = className.substring(0, 3) + "…";// abcde -> abc…  abcd->abcd
         } else
             shortClassName = className;
         if (cabinetName.length() > 4) {

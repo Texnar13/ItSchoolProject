@@ -6,16 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity">
 
-    <include layout="@layout/content_cabinets_out" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
-        app:borderWidth="0dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/__button_add"
-        app:backgroundTint="@color/baseOrange"/>
+        app:backgroundTint="@color/baseOrange"
+        app:borderWidth="0dp"
+        app:elevation="0.1dp"
+        app:srcCompat="@drawable/__button_add" />
+
+    <include layout="@layout/content_cabinets_out" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
