@@ -5,16 +5,18 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
 
@@ -42,7 +44,7 @@ public class StartScreenRateUsDialog extends DialogFragment {
         TextView title = new TextView(getActivity());
         title.setText(R.string.start_screen_activity_dialog_title_rate);
         title.setTextColor(Color.BLACK);
-        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_title_size));
         title.setAllCaps(true);
         title.setGravity(Gravity.CENTER);
 
@@ -50,7 +52,7 @@ public class StartScreenRateUsDialog extends DialogFragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        titleParams.setMargins((int) pxFromDp(15), (int) pxFromDp(15), (int) pxFromDp(15), 0);
+        titleParams.setMargins((int) pxFromDp(15), (int) pxFromDp(15), (int) pxFromDp(15), (int) pxFromDp(10));
         linearLayout.addView(title, titleParams);
 
 
@@ -60,56 +62,75 @@ public class StartScreenRateUsDialog extends DialogFragment {
         ratingBarFive.setRating(5);
         linearLayout.addView(ratingBarFive, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-//        RatingBar ratingBarThree = new RatingBar(getActivity());
-//        ratingBarThree.setIsIndicator(true);
-//        ratingBarThree.setNumStars(5);
-//        ratingBarThree.setRating(2.5F);
-//        linearLayout.addView(ratingBarThree, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
 //--кнопки согласия/отмены--
-        //контейнер для них
-        LinearLayout container = new LinearLayout(getActivity());
-        container.setOrientation(LinearLayout.HORIZONTAL);
-        container.setGravity(Gravity.CENTER);
 
-        //кнопка отмены
-        Button neutralButton = new Button(getActivity());
-        neutralButton.setBackgroundResource(R.drawable._button_round_background_pink);
-        neutralButton.setText(R.string.start_screen_activity_dialog_button_later);
-        neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-        neutralButton.setTextColor(Color.WHITE);
-        LinearLayout.LayoutParams neutralButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+        // контейнер кнопки оценить
+        LinearLayout positiveButtonContainer = new LinearLayout(getActivity());
+        positiveButtonContainer.setBackgroundResource(R.drawable._button_round_background_green);
+        // параметры контейнера
+        LinearLayout.LayoutParams positiveButtonContainerParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        neutralButtonParams.weight = 1;
-        neutralButtonParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(5), (int) pxFromDp(10));
-
-        //кнопка согласия
-        Button positiveButton = new Button(getActivity());
-        positiveButton.setBackgroundResource(R.drawable.__background_round_simple_full_blue);
-        positiveButton.setText(R.string.start_screen_activity_dialog_button_rate_now);
-        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-        positiveButton.setTextColor(Color.WHITE);
-        LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (int)getResources().getDimension(R.dimen.my_buttons_height_size)
+        positiveButtonContainerParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.half_margin)
         );
-        positiveButtonParams.weight = 1;
-        positiveButtonParams.setMargins((int) pxFromDp(5), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
+        positiveButtonContainerParams.gravity = Gravity.CENTER;
+        linearLayout.addView(positiveButtonContainer, positiveButtonContainerParams);
+
+        // кнопка сохранить
+        TextView positiveTextButton = new TextView(getActivity());
+        positiveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        positiveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        positiveTextButton.setText(R.string.start_screen_activity_dialog_button_rate_now);
+        positiveTextButton.setGravity(Gravity.CENTER);
+        positiveTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        positiveTextButton.setTextColor(getResources().getColor(R.color.backgroundWhite));
+        // параметры кнопки
+        LinearLayout.LayoutParams positiveTextButtonParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        positiveTextButtonParams.setMargins(
+                (int) getResources().getDimension(R.dimen.forth_margin)+(int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.forth_margin)+(int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin)
+        );
+        positiveTextButtonParams.gravity = Gravity.CENTER;
+        positiveButtonContainer.addView(positiveTextButton, positiveTextButtonParams);
 
 
-        //кнопки в контейнер
-        container.addView(neutralButton, neutralButtonParams);
-        container.addView(positiveButton, positiveButtonParams);
-
-        //контейнер в диалог
-        linearLayout.addView(container);
+        // кнопка отмены
+        TextView negativeTextButton = new TextView(getActivity());
+        negativeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        negativeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        negativeTextButton.setText(R.string.start_screen_activity_dialog_button_later);
+        negativeTextButton.setGravity(Gravity.CENTER);
+        negativeTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+        negativeTextButton.setTextColor(getResources().getColor(R.color.signalRed));
+        negativeTextButton.setPaintFlags(negativeTextButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        // параметры кнопки
+        LinearLayout.LayoutParams negativeTextButtonParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        negativeTextButtonParams.setMargins(
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.half_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.double_margin)
+        );
+        negativeTextButtonParams.gravity = Gravity.CENTER;
+        linearLayout.addView(negativeTextButton, negativeTextButtonParams);
 
 
         //при нажатии...
         //согласие
-        positiveButton.setOnClickListener(new View.OnClickListener() {
+        positiveButtonContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -130,7 +151,7 @@ public class StartScreenRateUsDialog extends DialogFragment {
         });
 
         //отмена
-        neutralButton.setOnClickListener(new View.OnClickListener() {
+        negativeTextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {

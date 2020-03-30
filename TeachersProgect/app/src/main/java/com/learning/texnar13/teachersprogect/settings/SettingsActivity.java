@@ -42,8 +42,10 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
     protected void onCreate(Bundle savedInstanceState) {
 
 
-        // отключаем поворот
+
+        // разрешаем только вертикальную ориентацию
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
 
         // загружаем межстраничный баннер настроек
         mInterstitialAd = new InterstitialAd(this);
@@ -58,7 +60,15 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//кнопка назад в actionBar
+
+        // кнопка назад
+        findViewById(R.id.activity_settings_back_arrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // выходим из активности
+                onBackPressed();
+            }
+        });
 
         final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 

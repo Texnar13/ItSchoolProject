@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -86,6 +87,16 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 */
             }
         });
+
+        // находим рекламмный баннер
+        AdView scheduleMonthAdView = findViewById(R.id.start_screen_ad_banner);
+        // создаем запрос для рекламмы
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
+                .addTestDevice("239C7C3FF5E172E5131C0FAA9994FDBF")
+                .build();
+        // загружаем рекламму запросом
+        scheduleMonthAdView.loadAd(adRequest);
 
         // расписание
         ImageView relButtonSchedule = findViewById(R.id.start_screen_button_schedule);

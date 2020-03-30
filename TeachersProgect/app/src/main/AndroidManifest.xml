@@ -41,7 +41,8 @@
         <activity
             android:name=".ScheduleMonthActivity"
             android:configChanges="locale"
-            android:label="@string/title_activity_schedule_month" />
+            android:label="@string/title_activity_schedule_month"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ScheduleDayActivity"
             android:configChanges="locale"
@@ -53,6 +54,7 @@
             android:name=".settings.SettingsActivity"
             android:configChanges="locale"
             android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan"
             />
         <activity

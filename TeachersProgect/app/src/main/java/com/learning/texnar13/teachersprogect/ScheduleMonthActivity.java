@@ -65,21 +65,25 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         setContentView(gestureOverlayView);
 
 
-//        // находим рекламмный баннер
-//        AdView sheduleMonthAdView = findViewById(R.id.shedule_month_ad_banner);
-//        // создаем запрос для рекламмы
-//        AdRequest adRequest = new AdRequest.Builder()
-//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
-//                .addTestDevice("239C7C3FF5E172E5131C0FAA9994FDBF")
-//                .build();
-//        // загружаем рекламму запросом
-//        sheduleMonthAdView.loadAd(adRequest);
+        // находим рекламмный баннер
+        AdView scheduleMonthAdView = findViewById(R.id.shedule_month_ad_banner);
+        // создаем запрос для рекламмы
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
+                .addTestDevice("239C7C3FF5E172E5131C0FAA9994FDBF")
+                .build();
+        // загружаем рекламму запросом
+        scheduleMonthAdView.loadAd(adRequest);
 
-        //кнопка назад в actionBar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_white));
-        }
+
+        //кнопка назад
+        findViewById(R.id.schedule_month_back_arrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // выходим из активности
+                onBackPressed();
+            }
+        });
 
         linearLayout = (LinearLayout) findViewById(R.id.schedule_month_table);
 

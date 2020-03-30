@@ -9,13 +9,14 @@
     tools:context="com.learning.texnar13.teachersprogect.startScreen.StartScreenActivity">
 
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/start_screen_top_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -30,18 +31,18 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <LinearLayout
                 android:id="@+id/start_screen_layout_now"
-                android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/simple_margin"
-                android:layout_marginRight="@dimen/simple_margin"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
                 android:layout_marginBottom="@dimen/begin_lesson_start_screen_button_height_plus"
                 android:background="@drawable/_background_start_screen_current"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -84,11 +85,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/half_margin"
+                android:layout_marginRight="@dimen/half_margin"
+                android:layout_marginBottom="@dimen/half_margin"
                 android:gravity="bottom"
                 android:text="@string/start_screen_activity_title_now"
                 android:textColor="@color/backgroundWhite"
-                android:textSize="@dimen/text_simple_size"
-                android:layout_margin="@dimen/half_margin"
+                android:textSize="@dimen/text_subtitle_size"
                 app:layout_constraintBottom_toTopOf="@+id/start_screen_layout_now"
                 app:layout_constraintLeft_toLeftOf="@+id/start_screen_layout_now"
                 app:layout_constraintTop_toBottomOf="@+id/start_screen_text_day_of_week"
@@ -99,7 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/simple_margin"
+                android:layout_marginTop="@dimen/double_margin"
                 android:text="*10:35*"
                 android:textColor="#000000"
                 android:textSize="@dimen/text_title_size"
@@ -122,30 +125,32 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
-            android:layout_marginBottom="@dimen/simple_margin"
-            android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/start_screen_top_container"
+            android:layout_above="@+id/start_screen_ad_banner"
+            android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:weightSum="2">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/double_margin"
                 android:layout_marginTop="@dimen/simple_margin"
                 android:layout_marginRight="@dimen/simple_margin"
-                android:layout_marginBottom="@dimen/simple_margin"
+                android:layout_marginBottom="@dimen/double_margin"
                 android:layout_weight="1"
-                android:orientation="vertical"
                 android:weightSum="2"
+                android:orientation="vertical"
                 tools:ignore="RtlHardcoded">
 
                 <RelativeLayout
-                    android:layout_marginBottom="@dimen/double_margin"
                     android:layout_weight="1"
+                    android:layout_gravity="right"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="@dimen/double_margin">
 
                     <ImageView
                         android:id="@+id/start_screen_button_schedule"
@@ -179,8 +184,9 @@
 
                 <RelativeLayout
                     android:layout_weight="1"
+                    android:layout_gravity="right"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="0dp">
 
                     <ImageView
                         android:id="@+id/start_screen_button_my_cabinets"
@@ -216,21 +222,22 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/simple_margin"
                 android:layout_marginTop="@dimen/simple_margin"
                 android:layout_marginRight="@dimen/double_margin"
-                android:layout_marginBottom="@dimen/simple_margin"
+                android:layout_marginBottom="@dimen/double_margin"
                 android:layout_weight="1"
-                android:orientation="vertical"
                 android:weightSum="2"
+                android:orientation="vertical"
                 tools:ignore="RtlHardcoded">
 
                 <RelativeLayout
-                    android:layout_marginBottom="@dimen/double_margin"
                     android:layout_weight="1"
+                    android:layout_gravity="left"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="@dimen/double_margin">
 
                     <ImageView
                         android:id="@+id/start_screen_button_my_classes"
@@ -263,8 +270,9 @@
 
                 <RelativeLayout
                     android:layout_weight="1"
+                    android:layout_gravity="left"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="0dp">
 
                     <ImageView
                         android:id="@+id/start_screen_button_reload"
@@ -301,257 +309,15 @@
 
 
 
-    </LinearLayout>
+            <com.google.android.gms.ads.AdView
+                android:layout_alignParentBottom="true"
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/start_screen_ad_banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                ads:adSize="SMART_BANNER"
+                ads:adUnitId="ca-app-pub-5709922862247260/7587553970"/>
 
-
-
-
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_alignParentLeft="true"-->
-<!--        android:layout_alignParentStart="true"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        android:orientation="vertical">-->
-
-
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/start_screen_button_my_classes"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="1">-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/start_screen_image_view_my_learners_background"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_centerInParent="true"-->
-<!--                android:layout_marginEnd="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginLeft="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginRight="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginStart="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginTop="@dimen/start_screen_button_margins"-->
-<!--                app:srcCompat="@drawable/start_screen_3_1_blue_spot" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/start_screen_text_view_my_learners"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_alignLeft="@+id/start_screen_image_view_my_learners_background"-->
-<!--                android:layout_alignStart="@+id/start_screen_image_view_my_learners_background"-->
-<!--                android:layout_marginLeft="@dimen/start_screen_text_margins"-->
-<!--                android:layout_marginStart="@dimen/start_screen_text_margins"-->
-<!--                android:layout_toLeftOf="@+id/start_screen_image_view_my_learners"-->
-<!--                android:layout_toStartOf="@+id/start_screen_image_view_my_learners"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:text="@string/start_screen_activity_title_my_learners"-->
-<!--                android:textAllCaps="true"-->
-<!--                android:textColor="#ffffff"-->
-<!--                android:textSize="@dimen/text_title_size" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/start_screen_image_view_my_learners"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_alignParentBottom="true"-->
-<!--                android:layout_alignParentEnd="true"-->
-<!--                android:layout_alignParentRight="true"-->
-<!--                android:layout_alignParentTop="true"-->
-<!--                android:layout_marginEnd="@dimen/start_screen_image_margins"-->
-<!--                android:layout_marginRight="@dimen/start_screen_image_margins"-->
-<!--                android:adjustViewBounds="true"-->
-<!--                android:scaleType="fitEnd"-->
-<!--                app:srcCompat="@drawable/start_screen_3_1_girl_vector" />-->
-
-<!--        </RelativeLayout>-->
-
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/start_screen_button_my_cabinets"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="1">-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/start_screen_image_view_my_cabinets_background"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_centerInParent="true"-->
-<!--                android:layout_marginEnd="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginLeft="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginRight="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginStart="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginTop="@dimen/start_screen_button_margins"-->
-<!--                app:srcCompat="@drawable/start_screen_3_2_yellow_spot" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/start_screen_image_view_my_cabinets"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_marginLeft="@dimen/start_screen_image_margins"-->
-<!--                android:layout_marginStart="@dimen/start_screen_image_margins"-->
-<!--                android:adjustViewBounds="true"-->
-<!--                android:scaleType="fitEnd"-->
-<!--                app:srcCompat="@drawable/start_screen_3_2_cabinet_vector" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/start_screen_text_view_my_cabinets"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_alignEnd="@+id/start_screen_image_view_my_cabinets_background"-->
-<!--                android:layout_alignRight="@+id/start_screen_image_view_my_cabinets_background"-->
-<!--                android:layout_marginEnd="@dimen/start_screen_text_margins"-->
-<!--                android:layout_marginRight="@dimen/start_screen_text_margins"-->
-<!--                android:layout_toEndOf="@+id/start_screen_image_view_my_cabinets"-->
-<!--                android:layout_toRightOf="@+id/start_screen_image_view_my_cabinets"-->
-<!--                android:gravity="center_vertical|right"-->
-<!--                android:text="@string/start_screen_activity_title_my_cabinets"-->
-<!--                android:textAllCaps="true"-->
-<!--                android:textColor="#ffffff"-->
-<!--                android:textSize="@dimen/text_title_size" />-->
-
-<!--        </RelativeLayout>-->
-
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/start_screen_button_schedule"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="1">-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/start_screen_image_view_my_schedule_background"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_centerInParent="true"-->
-<!--                android:layout_marginEnd="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginLeft="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginRight="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginStart="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginTop="@dimen/start_screen_button_margins"-->
-<!--                app:srcCompat="@drawable/start_screen_3_3_green_spot" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/start_screen_text_view_my_schedule"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_alignLeft="@+id/start_screen_image_view_my_schedule_background"-->
-<!--                android:layout_alignStart="@+id/start_screen_image_view_my_schedule_background"-->
-<!--                android:layout_marginLeft="@dimen/start_screen_text_margins"-->
-<!--                android:layout_marginStart="@dimen/start_screen_text_margins"-->
-<!--                android:layout_toLeftOf="@+id/start_screen_image_view_my_schedule"-->
-<!--                android:layout_toStartOf="@+id/start_screen_image_view_my_schedule"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:text="@string/start_screen_activity_title_my_schedule"-->
-<!--                android:textAllCaps="true"-->
-<!--                android:textColor="#ffffff"-->
-<!--                android:textSize="@dimen/text_title_size" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/start_screen_image_view_my_schedule"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_alignParentEnd="true"-->
-<!--                android:layout_alignParentRight="true"-->
-<!--                android:layout_marginEnd="@dimen/start_screen_image_margins"-->
-<!--                android:layout_marginRight="@dimen/start_screen_image_margins"-->
-<!--                android:adjustViewBounds="true"-->
-<!--                android:scaleType="fitEnd"-->
-<!--                app:srcCompat="@drawable/start_screen_3_3_calendar_vector" />-->
-<!--        </RelativeLayout>-->
-
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/start_screen_button_now"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="1">-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/start_screen_image_view_current_lesson_background"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_centerInParent="true"-->
-<!--                android:layout_marginEnd="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginLeft="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginRight="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginStart="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginTop="@dimen/start_screen_button_margins"-->
-<!--                app:srcCompat="@drawable/start_screen_3_4_pink_spot" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/start_screen_image_view_current_lesson"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_marginLeft="@dimen/start_screen_image_margins"-->
-<!--                android:layout_marginStart="@dimen/start_screen_image_margins"-->
-<!--                android:adjustViewBounds="true"-->
-<!--                android:scaleType="fitEnd"-->
-<!--                app:srcCompat="@drawable/start_screen_3_4_book_vector" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/start_screen_text_view_current_lesson"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_alignEnd="@+id/start_screen_image_view_current_lesson_background"-->
-<!--                android:layout_alignRight="@+id/start_screen_image_view_current_lesson_background"-->
-<!--                android:layout_marginEnd="@dimen/start_screen_text_margins"-->
-<!--                android:layout_marginRight="@dimen/start_screen_text_margins"-->
-<!--                android:layout_toEndOf="@+id/start_screen_image_view_current_lesson"-->
-<!--                android:layout_toRightOf="@+id/start_screen_image_view_current_lesson"-->
-<!--                android:gravity="center_vertical|right"-->
-<!--                android:text="@string/start_screen_activity_title_current_lesson"-->
-<!--                android:textAllCaps="true"-->
-<!--                android:textColor="#ffffff"-->
-<!--                android:textSize="@dimen/text_title_size" />-->
-
-
-<!--        </RelativeLayout>-->
-
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/start_screen_button_reload"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="1">-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/start_screen_image_view_settings_background"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_centerInParent="true"-->
-<!--                android:layout_marginBottom="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginEnd="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginLeft="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginRight="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginStart="@dimen/start_screen_button_margins"-->
-<!--                android:layout_marginTop="@dimen/start_screen_button_margins"-->
-<!--                app:srcCompat="@drawable/start_screen_3_5_magenta_spot" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/start_screen_text_view_settings"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_alignLeft="@+id/start_screen_image_view_settings_background"-->
-<!--                android:layout_alignStart="@+id/start_screen_image_view_settings_background"-->
-<!--                android:layout_marginLeft="@dimen/start_screen_text_margins"-->
-<!--                android:layout_marginStart="@dimen/start_screen_text_margins"-->
-<!--                android:layout_toLeftOf="@+id/start_screen_image_view_settings"-->
-<!--                android:layout_toStartOf="@+id/start_screen_image_view_settings"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:text="@string/start_screen_activity_title_settings"-->
-<!--                android:textAllCaps="true"-->
-<!--                android:textColor="#ffffff"-->
-<!--                android:textSize="@dimen/text_title_size" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/start_screen_image_view_settings"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_alignParentEnd="true"-->
-<!--                android:layout_alignParentRight="true"-->
-<!--                android:layout_marginEnd="@dimen/start_screen_image_margins"-->
-<!--                android:layout_marginRight="@dimen/start_screen_image_margins"-->
-<!--                android:adjustViewBounds="true"-->
-<!--                android:scaleType="fitEnd"-->
-<!--                app:srcCompat="@drawable/start_screen_3_5_settings_vector" />-->
-<!--        </RelativeLayout>-->
-<!--    </LinearLayout>-->
+    </RelativeLayout>
 </RelativeLayout>

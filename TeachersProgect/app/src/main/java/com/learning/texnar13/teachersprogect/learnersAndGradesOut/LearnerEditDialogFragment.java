@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -207,13 +208,13 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
 
         // кнопка удалить
         TextView negativeTextButton = new TextView(getActivity());
-        negativeTextButton.setBackgroundResource(R.drawable._dialog_body_background_white_underlined);
         negativeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
         negativeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
         negativeTextButton.setText(R.string.learners_and_grades_out_activity_dialog_button_delete);
         negativeTextButton.setGravity(Gravity.CENTER);
         negativeTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         negativeTextButton.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+        negativeTextButton.setPaintFlags(negativeTextButton.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
         // параметры кнопки
         LinearLayout.LayoutParams negativeTextButtonParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,

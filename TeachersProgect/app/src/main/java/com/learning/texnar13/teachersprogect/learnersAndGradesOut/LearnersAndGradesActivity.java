@@ -3,6 +3,7 @@ package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
 
 public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface, UpdateTableInterface, View.OnTouchListener, SubjectsDialogInterface {
 
@@ -143,6 +143,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         // кнопка назад
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_blue));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            toolbar.getOverflowIcon().setColorFilter(getColor(R.color.baseBlue), PorterDuff.Mode.SRC_ATOP);
+
 
         // получаем id класса
         classId = getIntent().getLongExtra(CLASS_ID, -1);
@@ -408,7 +411,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         Log.i(TAG, "LearnersAndGradesActivity - getLearnersFromDB");
 
         // ждем пока копирование переменных завершится
-        while (dataLearnersAndGrades.isInCopyProcess);
+        while (dataLearnersAndGrades.isInCopyProcess) ;
 
         // запрещаем пользователю редактировать учеников
         dataLearnersAndGrades.chosenLearnerPosition = 0;

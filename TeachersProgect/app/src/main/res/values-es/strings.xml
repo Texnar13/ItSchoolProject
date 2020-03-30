@@ -137,7 +137,7 @@
 
     <!-- активность календаря на месяц-->
     <!-- заголовок активности -->
-    <string name="title_activity_schedule_month">HORARIO</string>
+    <string name="title_activity_schedule_month">Horario</string>
 
 
     <!-- активность календаря на день-->

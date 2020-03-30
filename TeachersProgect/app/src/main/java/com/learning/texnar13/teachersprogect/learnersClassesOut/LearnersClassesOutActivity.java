@@ -5,11 +5,13 @@ import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -102,17 +104,24 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
             }
         });
 
-        //------плавающая кнопка с низу--------
-        findViewById(R.id.learners_classes_out_add_fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //-----диалог создания-----
-                //инициализируем диалог
-                CreateLearnersClassDialogFragment createClassDialog = new CreateLearnersClassDialogFragment();
-                //показать диалог
-                createClassDialog.show(getFragmentManager(), "createClassDialog");
-            }
-        });
+        // ------ кнопка добавления класса ------
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+            // плавающая кнопка с низу
+            findViewById(R.id.learners_classes_out_add_fab).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // диалог создания
+                    // инициализируем диалог
+                    CreateLearnersClassDialogFragment createClassDialog = new CreateLearnersClassDialogFragment();
+                    // показать диалог
+                    createClassDialog.show(getFragmentManager(), "createClassDialog");
+                }
+            });
+        } else {
+            // настраиваем программный вывод векторных изображений
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        }
+
 
         //--------экран со списком---------
         //создание
@@ -185,13 +194,15 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
                     RelativeLayout.LayoutParams.MATCH_PARENT,//ш
                     RelativeLayout.LayoutParams.WRAP_CONTENT//в
             );
+            itemParams.addRule(RelativeLayout.CENTER_VERTICAL);
             itemParams.setMargins(
                     (int) getResources().getDimension(R.dimen.double_margin),
-                    (int) getResources().getDimension(R.dimen.double_margin),
+                    0,
                     (int) (getResources().getDimension(R.dimen.my_icon_small_size)
                             + 2 * getResources().getDimension(R.dimen.simple_margin)),
-                    (int) getResources().getDimension(R.dimen.double_margin)
+                    0
             );
+
             learnersClassContainer.addView(item, itemParams);
 
             // стрелочка
@@ -205,9 +216,9 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
             arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
             arrowParams.setMargins(
                     (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
                     (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin)
+                    (int) getResources().getDimension(R.dimen.double_margin)
             );
             learnersClassContainer.addView(arrow, arrowParams);
 
@@ -256,7 +267,79 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
             });
         }
 
-//------в конце выводим текст с подсказкой------
+// ------ в конце выводим текст с подсказкой и кнопку ------
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+
+            // создаем контейнер
+            RelativeLayout learnersClassContainer = new RelativeLayout(this);
+            learnersClassContainer.setBackgroundResource(R.drawable.__background_round_simple_full_dark_white);
+            // параметры контейнера
+            LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,//ш
+                    ViewGroup.LayoutParams.WRAP_CONTENT//в
+            );
+            containerParams.setMargins(
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    0
+            );
+            room.addView(learnersClassContainer, containerParams);
+
+            // создаём текст
+            TextView item = new TextView(this);
+            item.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
+            item.setGravity(Gravity.CENTER_VERTICAL);
+            item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            item.setTextColor(Color.BLACK);
+            item.setText(R.string.learners_classes_out_activity_dialog_title_create_class);
+            // параметры пункта
+            RelativeLayout.LayoutParams itemParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,//ш
+                    RelativeLayout.LayoutParams.WRAP_CONTENT//в
+            );
+            itemParams.addRule(RelativeLayout.CENTER_VERTICAL);
+            itemParams.setMargins(
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    0,
+                    (int) (getResources().getDimension(R.dimen.my_icon_small_size)
+                            + 2 * getResources().getDimension(R.dimen.simple_margin)),
+                    0
+            );
+            learnersClassContainer.addView(item, itemParams);
+
+            // стрелочка
+            ImageView arrow = new ImageView(this);
+            arrow.setImageResource(R.drawable.__button_circle_plus);
+            RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
+                    (int) getResources().getDimension(R.dimen.my_icon_small_size),
+                    (int) getResources().getDimension(R.dimen.my_icon_small_size)
+            );
+            arrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
+            arrowParams.setMargins(
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin)
+            );
+            learnersClassContainer.addView(arrow, arrowParams);
+
+
+            // нажатие на пункт списка
+            learnersClassContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // диалог создания
+                    // инициализируем диалог
+                    CreateLearnersClassDialogFragment createClassDialog = new CreateLearnersClassDialogFragment();
+                    // показать диалог
+                    createClassDialog.show(getFragmentManager(), "createClassDialog");
+                }
+            });
+        }
+
 
         //экран
         //-...

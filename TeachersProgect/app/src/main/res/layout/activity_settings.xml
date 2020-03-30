@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context="com.learning.texnar13.teachersprogect.settings.SettingsActivity">
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -32,6 +33,16 @@
                     android:layout_height="@dimen/settings_title_round_image_size"
                     android:adjustViewBounds="true"
                     app:srcCompat="@drawable/__image_settings" />
+                <ImageView
+                    android:id="@+id/activity_settings_back_arrow"
+                    android:layout_width="@dimen/my_icon_size"
+                    android:layout_height="@dimen/my_icon_size"
+                    android:layout_alignParentTop="true"
+                    android:adjustViewBounds="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_margin="@dimen/simple_margin"
+                    app:srcCompat="@drawable/__button_back_arrow_dark_gray"/>
             </RelativeLayout>
 
 

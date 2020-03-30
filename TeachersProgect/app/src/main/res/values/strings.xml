@@ -142,7 +142,7 @@ Thank you for your feedback - it helped us make the application better! If you h
 
     <!-- активность календаря на месяц-->
     <!-- заголовок активности -->
-    <string name="title_activity_schedule_month">SCHEDULE</string>
+    <string name="title_activity_schedule_month">Schedule</string>
 
 
     <!-- активность календаря на день-->
