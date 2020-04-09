@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- getResources().getBoolean(R.bool.isTablet) -->
+    <bool name="isTablet">false</bool>
+
+    <!-- рекламные блоки -->
+    <string name="banner_id_start_screen" translatable="false">R-M-DEMO-320x50</string><!-- R-M-450642-2 -->
+    <string name="banner_id_calendar" translatable="false">R-M-DEMO-320x50</string><!-- R-M-450642-3 -->
+    <string name="banner_id_calendar_big" translatable="false">R-M-DEMO-320x100-context</string><!-- R-M-450642-6 -->
+    <string name="banner_id_after_lesson" translatable="false">R-M-DEMO-320x480</string><!-- R-M-450642-4 -->
+    <string name="banner_id_after_settings" translatable="false">R-M-DEMO-320x480</string><!-- R-M-450642-5 -->
+
+    <!-- а также: -->
+    <!--  номер версии приложения -->
+    <!--  что нового -->
+    <!--  логи в бд и номер версии бд) -->
+
+</resources>

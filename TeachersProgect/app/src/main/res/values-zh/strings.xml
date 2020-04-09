@@ -28,6 +28,8 @@ We present the promised global update: now everything is much more convenient an
 Thank you for your feedback - it helped us make the application better! If you have any suggestions - write, we have ambitious plans to further improve the Teacher Assistant!
     </string>
     <string name="start_screen_activity_dialog_whats_new_button_ok">知道了</string>
+
+    <string name="start_screen_activity_dialog_deprecated_device_text">注意!\n不支持该设备。\n某些界面元素可能无法正确显示。</string>
     <!-- уведомления -->
     <string name="start_screen_activity_toast_no_lessons">现在没有教训。</string>
 

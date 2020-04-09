@@ -20,6 +20,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,8 +30,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
@@ -42,7 +41,7 @@ import java.util.ArrayList;
 /*
  * onCreate(),
  * подгружаются все ученики, id кабинета, класса, предмета, зав. урок-время
- * создаются массивы с оценками//todo (или подгружаются;)),
+ * создаются массивы с оценками //todo (или подгружаются;)),
  *
  * эти поля должны быть статичными, и с проверкой на существование(для переворота)
  * при переходе удалить
@@ -67,7 +66,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
 
     // межстраничный баннер открывающийся на экране вывода всех оценок при их сохранении
-    InterstitialAd lessonEndBanner;
+    com.yandex.mobile.ads.InterstitialAd lessonEndBanner;
 
 
     // лист с партами
@@ -100,7 +99,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     // константа по которой получаеми id зависимости
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
     // константа по которой получаем время урока (для повторяющихся уроков)//todo костылище!!!!!!!!!!!!!!!!!!!!!!!!!!
-    public static final String LESSON_TIME = "startTime";
+    //public static final String LESSON_TIME = "startTime";
+    public static final String LESSON_DATE = "lessonDate";
+    public static final String LESSON_NUMBER = "lessonNumber";
 
     // id зависимости
     static long lessonAttitudeId;
@@ -129,6 +130,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.lesson_menu, menu);
+        super.onCreateOptionsMenu(menu);
         return true;
     }
 
@@ -200,16 +202,11 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
 
                 // передаем полученную дату урока
-                intent.putExtra(LESSON_TIME, getIntent().getStringExtra(LESSON_TIME));
-
-                // передаем загруженный баннер в контейнер
-                //LessonListActivity.EndLessonIntentContainer intentContainer = new LessonListActivity.EndLessonIntentContainer();
-                //  intentContainer.addBanner = lessonEndBanner;
-                // передаем контейнер
-                //intent.putExtra(LessonListActivity.ADD_BANNER, intentContainer);
+                intent.putExtra(LessonListActivity.LESSON_DATE, getIntent().getStringExtra(LESSON_DATE));
+                intent.putExtra(LessonListActivity.LESSON_NUMBER, getIntent().getStringExtra(LESSON_NUMBER));
 
                 // выводим рекламму
-                if(lessonEndBanner.isLoaded()){
+                if (lessonEndBanner.isLoaded()) {
                     lessonEndBanner.show();
                 }
 
@@ -227,6 +224,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                 finish();
 
                 return true;
+
             }
         });
         // посадить учеников
@@ -267,14 +265,14 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_main);
 
-        // начинаем загрузку межстраничного баннера конца урока
-        lessonEndBanner = new InterstitialAd(this);
-        lessonEndBanner.setAdUnitId("ca-app-pub-5709922862247260/2817934566");// работает
-        // создаем запрос
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .addTestDevice("239C7C3FF5E172E5131C0FAA9994FDBF")// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
-                .build();
+
+        // ================ начинаем загрузку межстраничного баннера конца урока ================
+        lessonEndBanner = new com.yandex.mobile.ads.InterstitialAd(this);
+        lessonEndBanner.setBlockId(getResources().getString(R.string.banner_id_after_lesson));
+        // Создание объекта таргетирования рекламы.
+        final com.yandex.mobile.ads.AdRequest adRequest =
+                new com.yandex.mobile.ads.AdRequest.Builder().build();
+        // Загрузка объявления
         lessonEndBanner.loadAd(adRequest);
 
 
@@ -323,7 +321,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_pink));
 
 
-        // для того, чтобы векторные изображения созданные в коде отображались нормально todo разобраться бы что это
+        // для того, чтобы векторные изображения созданные в коде отображались нормально
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
 
@@ -449,80 +447,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         // выставляем название предмета и класса в заголовок
         title.setText(shortSubjectName + ", " + shortClassName + ", " + shortCabinetName);
 
-
-        /*
-         * подгружаются все ученики, id кабинета, класса, предмета, зав. урок-время
-         * создаются массивы с оценками(или подгружаются;)),
-         *
-         * эти поля должны быть статичными, и с проверкой на существование(для переворота)
-         * при переходе (окончании урока) удалить
-         */
-        //3 это класс урока
-//        * вывод учеников, парт и мест, по нажатию на ученика открывается доп.меню*
-//        где можно выбрать оценку, нет оценки/1/2/3/4/5
-//        после окончания урока учитель нажимает закончить урок
-//        выводим стастику за весь урок(2)
-//        *
-//        *
-//        *
-//        *    _________________________________
-//        *   |название урока     закончить урок|
-//        *   |_________________________________|
-//        *   |                                 |
-//        *   |                                 |
-//        *   |    _______         _______      |
-//        *   |   |имя|имя|       |имя|имя|     |
-//        *   |   |фам|фам|       |фам|фам|     |
-//        *   |    _______         _______      |
-//        *   |   |имя|имя|       |имя|имя|     |
-//        *   |   |фам|фам|       |фам|фам|     |
-//        *   |    _______         _______      |
-//        *   |   |имя|имя|       |имя|имя|     |
-//        *   |   |фам|фам|       |фам|фам|     |
-//        *   |    _______         _______      |
-//        *   |   |имя|имя|       |имя|имя|     |
-//        *   |   |фам|фам|       |фам|фам|     |
-//        *   |                                 |
-//        *   |                                 |
-//        *   |                                 |
-//        *   |                                 |
-//        *   |_________________________________|
-//        *
-//        *
-//        *
-//        * (2)
-//        *    _________________________________
-//        *   |  имя урока            сохранить |
-//        *   |_________________________________|
-//        *   |                                 |
-//        *   |   имя фамилия            оценка |
-//        *   |_________________________________|
-//        *   |                                 |
-//        *   |   имя фамилия            оценка |
-//        *   |_________________________________|
-//        *   |                                 |
-//        *   |   имя фамилия            оценка |
-//        *   |_________________________________|
-//        *   |                                 |
-//        *   |   имя фамилия            оценка |
-//        *   |_________________________________|
-//        *   |                                 |
-//        *   |   имя фамилия            оценка |
-//        *   |_________________________________|
-//        *   |                                 |
-//        *   |   имя фамилия            оценка |
-//        *   |_________________________________|
-//        *   |                                 |
-//        *   |   имя фамилия            оценка |
-//        *   |_________________________________|
-//        *   |                                 |
-//        *   |   имя фамилия            оценка |
-//        *   |_________________________________|
-//        *   |                                 |
-//        *   |_________________________________|
-//        *
-//        *
-//        * нажимаем сохранить и сохраняем в таблицу ученик-оценка
     }
 
     // при каждом запуске экрана
@@ -549,7 +473,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
         // получаем множитель  (0.25 <-> 4)
         multiplier = 0.0375F *
-                cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER))
+                cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER))///////todo--------------------------------
                 + 0.25F;
         // и отступы
         xAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X));

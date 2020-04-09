@@ -308,16 +308,11 @@
         </LinearLayout>
 
 
-
-            <com.google.android.gms.ads.AdView
-                android:layout_alignParentBottom="true"
-                xmlns:ads="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/start_screen_ad_banner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                ads:adSize="SMART_BANNER"
-                ads:adUnitId="ca-app-pub-5709922862247260/7587553970"/>
+        <com.yandex.mobile.ads.AdView
+            android:layout_alignParentBottom="true"
+            android:id="@+id/start_screen_ad_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     </RelativeLayout>
 </RelativeLayout>

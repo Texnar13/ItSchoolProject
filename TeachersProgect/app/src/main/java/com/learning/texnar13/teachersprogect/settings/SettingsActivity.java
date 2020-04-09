@@ -6,21 +6,17 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -35,7 +31,8 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
     TextView maxGradeText;
 
     // межстраничный баннер открывающийся при выходе из настроек
-    InterstitialAd mInterstitialAd;
+    //InterstitialAd settingsBack;
+    com.yandex.mobile.ads.InterstitialAd settingsBack;
 
     // создание экрана
     @Override
@@ -47,15 +44,14 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
 
-        // загружаем межстраничный баннер настроек
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-5709922862247260/3501279089");// работает
-        // создаем запрос
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
-                .addTestDevice("239C7C3FF5E172E5131C0FAA9994FDBF")
-                .build();
-        mInterstitialAd.loadAd(adRequest);
+        // ================ начинаем загрузку межстраничного баннера конца урока ================
+        settingsBack = new com.yandex.mobile.ads.InterstitialAd(this);
+        settingsBack.setBlockId(getResources().getString(R.string.banner_id_after_settings));
+        // Создание объекта таргетирования рекламы.
+        final com.yandex.mobile.ads.AdRequest adRequest =
+                new com.yandex.mobile.ads.AdRequest.Builder().build();
+        // Загрузка объявления.
+        settingsBack.loadAd(adRequest);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
@@ -331,9 +327,7 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
         long lessonId = dbOpenHelper.createSubject("физика", classId
                 //, cabinetId
         );
-        Date startLessonTime = new GregorianCalendar(2017, 10, 17, 8, 30).getTime();//1502343000000 --10 августа
-        Date endLessonTime = new GregorianCalendar(2017, 10, 17, 9, 15).getTime();//на 7 месяц  1502345700000
-        dbOpenHelper.setLessonTimeAndCabinet(lessonId, cabinetId, startLessonTime, endLessonTime, SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER);
+        dbOpenHelper.setLessonTimeAndCabinet(lessonId, cabinetId, "2017-10-17", 1, SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER);
 
         //создание настроек после удаления таблицы
         //db.createNewSettingsProfileWithId1("default", 50);
@@ -460,8 +454,8 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
         super.onBackPressed();
 
         // выводим рекламу при закрытии активности настроек
-        if(mInterstitialAd.isLoaded()){
-            mInterstitialAd.show();
+        if(settingsBack.isLoaded()){
+            settingsBack.show();
         }
     }
 }

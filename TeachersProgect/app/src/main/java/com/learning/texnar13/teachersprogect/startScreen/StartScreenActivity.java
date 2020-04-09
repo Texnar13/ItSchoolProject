@@ -7,16 +7,10 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.res.ResourcesCompat;
-
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,27 +18,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.learning.texnar13.teachersprogect.CreateLessonDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.ScheduleMonthActivity;
 import com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
-import com.learning.texnar13.teachersprogect.learnersClassesOut.CreateLearnersClassDialogFragment;
 import com.learning.texnar13.teachersprogect.learnersClassesOut.LearnersClassesOutActivity;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.settings.SettingsActivity;
+import com.yandex.mobile.ads.AdSize;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class StartScreenActivity extends AppCompatActivity implements View.OnClickListener, RateInterface {
 
@@ -59,6 +50,9 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
     static int i = 0;
 
+    // обьект для преобразования календаря в строку
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
 
     // при создании
     @Override
@@ -68,35 +62,18 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         // отключаем поворот
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
-
         setContentView(R.layout.activity_start_screen);
 
 
-        // отключаем туллбар
-        getSupportActionBar().hide();
+        // ================ реклама яндекса на главном экране ================
+        com.yandex.mobile.ads.AdView mAdView = findViewById(R.id.start_screen_ad_banner);
+        mAdView.setBlockId(getResources().getString(R.string.banner_id_start_screen));
+        mAdView.setAdSize(AdSize.BANNER_320x50);
+        // Создание объекта таргетирования рекламы.
+        final com.yandex.mobile.ads.AdRequest adRequest = new com.yandex.mobile.ads.AdRequest.Builder().build();
+        // Загрузка объявления.
+        mAdView.loadAd(adRequest);
 
-
-        // при запуске приложения инициализируем рекламные сервисы
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-                /*
-                Если вы используете mediation(посредничество), дождитесь вызова обработчика завершения,
-                прежде чем загружать объявления, поскольку это обеспечит инициализацию всех
-                адаптеров посредничества.
-                */
-            }
-        });
-
-        // находим рекламмный баннер
-        AdView scheduleMonthAdView = findViewById(R.id.start_screen_ad_banner);
-        // создаем запрос для рекламмы
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)// тестовая реклама"239C7C3FF5E172E5131C0FAA9994FDBF"
-                .addTestDevice("239C7C3FF5E172E5131C0FAA9994FDBF")
-                .build();
-        // загружаем рекламму запросом
-        scheduleMonthAdView.loadAd(adRequest);
 
         // расписание
         ImageView relButtonSchedule = findViewById(R.id.start_screen_button_schedule);
@@ -114,17 +91,24 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         relButtonSettings.setOnClickListener(this);
 
 
-//------сохраненные параметры------
+        // ------ сохраненные параметры ------
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         //начинаем редактировать
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         //todo перенести все подсчеты в создание самого класса, а то при перевороте срабатывают
 
-//----счетчик "оцените нас"----
+        // ---- счетчик "оцените нас" ----
         // через семь заходов в приложение открывает диалог 'оцените'
         if (!sharedPreferences.getBoolean(IS_RATE, false)) {
             editor.putInt(ENTERS_COUNT, sharedPreferences.getInt(ENTERS_COUNT, 0) + 1);
+            if(sharedPreferences.getInt(ENTERS_COUNT, 0) == 1){
+                // показываем диалог устаревшего устройства
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                    DeviseDeprecatedDialogFragment dialog = new DeviseDeprecatedDialogFragment();
+                    dialog.show(getFragmentManager(),"device api deprecated");
+                }
+            }
             if (sharedPreferences.getInt(ENTERS_COUNT, 0) == 10) {
                 //на всякий случай обнуляем счетчик
                 editor.putInt(ENTERS_COUNT, 1);
@@ -135,12 +119,12 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 startScreenRateUsDialog.show(getFragmentManager(), IS_RATE);
             }
         }
-//----диалог что нового----
+
+        // ---- диалог что нового ----
         //если уже создано
         if (sharedPreferences.contains(WHATS_NEW)) {
             //если версия старая
             if (sharedPreferences.getInt(WHATS_NEW, -1) < NOW_VERSION) {
-                Log.e("TeachersApp", "onCreate:  ------------------------"+i);
                 i = -1;
                 // меняем версию
                 editor.putInt(WHATS_NEW, NOW_VERSION);
@@ -174,7 +158,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         // текст даты
         ((TextView) findViewById(R.id.start_screen_text_date)).setText(nowCalendar.get(Calendar.DAY_OF_MONTH) + " " + getResources().getStringArray(R.array.months_names_low_case)[nowCalendar.get(Calendar.MONTH)]);
         // текст дня недели
-        ((TextView) findViewById(R.id.start_screen_text_day_of_week)).setText(getResources().getStringArray(R.array.week_days_simple)[nowCalendar.get(Calendar.DAY_OF_WEEK)-1]);
+        ((TextView) findViewById(R.id.start_screen_text_day_of_week)).setText(getResources().getStringArray(R.array.week_days_simple)[nowCalendar.get(Calendar.DAY_OF_WEEK) - 1]);
 
 
         // выводим текущий урок
@@ -183,12 +167,30 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
             LinearLayout containerNow = findViewById(R.id.start_screen_layout_now);
             containerNow.removeAllViews();
 
+            final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+
+            // получаем стандартное время уроков
+            int[][] times = db.getSettingsTime(1);
+
+            // определяем текущий урок
+            int lessonNumber = -1;
+            for (int lessonI = 0; lessonI < times.length; lessonI++) {
+                if ((nowCalendar.get(Calendar.HOUR_OF_DAY) > times[lessonI][0] ||
+                        (nowCalendar.get(Calendar.HOUR_OF_DAY) == times[lessonI][0] && nowCalendar.get(Calendar.MINUTE) >= times[lessonI][1])) &&
+                        (nowCalendar.get(Calendar.HOUR_OF_DAY) < times[lessonI][2] || (nowCalendar.get(Calendar.HOUR_OF_DAY) == times[lessonI][2] && nowCalendar.get(Calendar.MINUTE) <= times[lessonI][3]))
+                ) {
+                    lessonNumber = lessonI;
+                }
+            }
+
             // получаем сведения о текущем уроке
-            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-            final long attitudeId = db.getSubjectAndTimeCabinetAttitudeIdByTime(nowCalendar);
+            final Cursor attitude = db.getSubjectAndTimeCabinetAttitudeByDateAndLessonNumber(
+                    dateFormat.format(nowCalendar.getTime()),
+                    lessonNumber
+            );
 
             // если урока нет
-            if (attitudeId == -1) {
+            if (attitude.getCount() == 0) {
 
                 // текст пустоты
                 TextView absText = new TextView(this);
@@ -207,7 +209,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
 
                 // убираем кнопку
-                ((LinearLayout) (findViewById(R.id.start_screen_button_start_lesson_background))).setBackgroundResource(android.R.color.transparent);
+                findViewById(R.id.start_screen_button_start_lesson_background).setBackgroundResource(android.R.color.transparent);
                 ((TextView) (findViewById(R.id.start_screen_button_start_lesson_text))).setText("");
 
 //                // меняем кнопку на создание урока todo
@@ -233,13 +235,11 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
             } else {// если урок есть
 
                 // получаем поля урока
-                Cursor attitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(attitudeId);
-                attitudeCursor.moveToFirst();
-                long subjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
-                long cabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
-                String dateBegin = attitudeCursor.getString(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN));
-                String dateEnd = attitudeCursor.getString(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END));
-                attitudeCursor.close();
+                attitude.moveToFirst();
+                final long lessonId = attitude.getLong(attitude.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID));
+                long subjectId = attitude.getLong(attitude.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
+                long cabinetId = attitude.getLong(attitude.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
+                final String lessonDate = attitude.getString(attitude.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE));
                 // имя предмета
                 Cursor subjectCursor = db.getSubjectById(subjectId);
                 subjectCursor.moveToFirst();
@@ -284,7 +284,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 // первое время
                 TextView firstTime = new TextView(this);
                 firstTime.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
-                firstTime.setText(dateBegin.substring(11, 16));
+                firstTime.setText(times[lessonNumber][0] + ":" + times[lessonNumber][1]);
                 firstTime.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
                 firstTime.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
                 timeContainer.addView(firstTime,
@@ -294,7 +294,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 // второе время
                 TextView secondTime = new TextView(this);
                 secondTime.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
-                secondTime.setText(dateEnd.substring(11, 16));
+                secondTime.setText(times[lessonNumber][2] + ":" + times[lessonNumber][3]);
                 secondTime.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
                 secondTime.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
                 timeContainer.addView(secondTime,
@@ -346,29 +346,19 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 ((TextView) (findViewById(R.id.start_screen_button_start_lesson_text))).setText(R.string.start_screen_activity_title_current_start_lesson);
 
                 // назначаем открытие урока при нажатии
+                final int finalLessonNumber = lessonNumber;
                 View.OnClickListener clickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // создаем намерение
                         Intent intent = new Intent(getApplicationContext(), LessonActivity.class);
 
-                        //получаем предмет
-                        DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                        Cursor attitude = db.getSubjectAndTimeCabinetAttitudeById(attitudeId);
-                        attitude.moveToFirst();
-                        //берем его время
-                        String dBTime = attitude.getString(attitude.getColumnIndex(
-                                SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN
-                        ));
-                        attitude.close();
-                        db.close();
-                        //получаем текущий месяц и год
-                        SimpleDateFormat nowDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        String nowDate = nowDateFormat.format(new Date());
+
                         //соединяем и отправляем
-                        intent.putExtra(LessonActivity.LESSON_TIME, nowDate + dBTime.substring(10, 19));
+                        intent.putExtra(LessonActivity.LESSON_DATE, lessonDate);
+                        intent.putExtra(LessonActivity.LESSON_NUMBER, finalLessonNumber);
                         //отправляем id
-                        intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, attitudeId);
+                        intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, lessonId);
 
                         startActivity(intent);
                     }
@@ -379,6 +369,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 findViewById(R.id.start_screen_button_start_lesson_background)
                         .setOnClickListener(clickListener);
             }
+            attitude.close();
             db.close();
         }
 

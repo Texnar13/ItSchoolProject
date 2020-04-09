@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- xlarge -->
+
 
     <dimen name="activity_horizontal_margin">0dp</dimen>
     <dimen name="activity_vertical_margin">0dp</dimen>
@@ -14,20 +13,20 @@
     <dimen name="spinner_height_size">48dp</dimen>
     <dimen name="my_toolbar_text_container_height_size">36sp</dimen>
 
-    <dimen name="my_icon_size">80dp</dimen>
-    <dimen name="my_icon_small_size">60dp</dimen>
-    <dimen name="my_icon_small_half_size">30dp</dimen>
+    <dimen name="my_icon_size">40dp</dimen>
+    <dimen name="my_icon_small_size">30dp</dimen>
+    <dimen name="my_icon_small_half_size">15dp</dimen>
 
     <dimen name="begin_lesson_start_screen_button_height_plus">50dp</dimen>
     <dimen name="begin_lesson_start_screen_button_height">36dp</dimen>
     <dimen name="begin_lesson_start_screen_button_height_half">18dp</dimen>
 
 
-    <dimen name="forth_margin">80dp</dimen>
-    <dimen name="double_margin">40dp</dimen>
-    <dimen name="half_more_margin">30dp</dimen>
-    <dimen name="simple_margin">20dp</dimen>
-    <dimen name="half_margin">10dp</dimen>
+    <dimen name="forth_margin">40dp</dimen>
+    <dimen name="double_margin">20dp</dimen>
+    <dimen name="half_more_margin">15dp</dimen>
+    <dimen name="simple_margin">10dp</dimen>
+    <dimen name="half_margin">5dp</dimen>
 
     <dimen name="gird_lines_width">1dp</dimen>
 
@@ -37,10 +36,10 @@
     <dimen name="my_buttons_rounding_radius_size_half">5dp</dimen>
 
     <!--размеры текста-->
-    <dimen name="text_title_size">56sp</dimen>
-    <dimen name="text_subtitle_size">40sp</dimen>
-    <dimen name="text_simple_size">30sp</dimen>
-    <dimen name="text_small_size">20sp</dimen>
+    <dimen name="text_title_size">28dp</dimen><!--28-->
+    <dimen name="text_subtitle_size">20dp</dimen><!--20-->
+    <dimen name="text_simple_size">15sp</dimen>
+    <dimen name="text_small_size">10sp</dimen>
 
     <!--  ширина текстовых полей -->
     <dimen name="text_field_two_simple_symbols_width">35dp</dimen>
@@ -73,6 +72,5 @@
     <dimen name="settings_title_height">180dp</dimen>
     <dimen name="settings_title_background_image_height">130dp</dimen>
     <dimen name="settings_title_round_image_size">140dp</dimen>
-
 
 </resources>

@@ -1,6 +1,7 @@
 package com.learning.texnar13.teachersprogect.learnersAndGradesOut.learnersAndGradesStatistics;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
@@ -101,6 +103,22 @@ public class PeriodDialogFragment extends DialogFragment {
         Dialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         return dialog;
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        // говорим активности, что диалог закрыт
+        try {
+            // вызываем в активности метод по созданию предмета
+            ((PeriodsDialogInterface) getActivity()).onPeriodDialogClosed();
+        } catch (java.lang.ClassCastException e) {
+            e.printStackTrace();
+            Log.i("TeachersApp",
+                    "PeriodsDialogFragment: you must implements PeriodsDialogInterface in your activity"
+            );
+        }
     }
 
     // метод вывода главного меню
@@ -700,4 +718,7 @@ interface PeriodsDialogInterface {
 
     // переименовать предметы
     void renamePeriods(String[] newPeriodsNames);
+
+    // переименовать предметы
+    void onPeriodDialogClosed();
 }

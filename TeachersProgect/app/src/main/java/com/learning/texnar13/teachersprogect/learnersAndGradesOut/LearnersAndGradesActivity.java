@@ -20,14 +20,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.R;
+import com.learning.texnar13.teachersprogect.ScheduleMonthActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.learnersAndGradesOut.learnersAndGradesStatistics.LearnersGradesStatisticsActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface, UpdateTableInterface, View.OnTouchListener, SubjectsDialogInterface {
 
@@ -225,6 +228,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             viewCalendar = new GregorianCalendar();
             viewCalendar.setTime(new Date());
             viewCalendar.setLenient(false);
+            viewCalendar.set(Calendar.MILLISECOND, 0);
             // выствляем первый день, чтобы небыло путанницы с днями при переключении даты
             viewCalendar.set(Calendar.DAY_OF_MONTH, 1);
         }
@@ -465,8 +469,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         }
     }
 
+
     // handler активности для обращения из сторонних потоков
     UpdateTableHandler updateTableHandler = new UpdateTableHandler();
+
+    // парсинг дат из календаря
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     // сторонний поток для загрузки оценок
     class GetGradesThread extends Thread {
@@ -493,6 +501,15 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             }
             dataLearnersAndGrades.isInCopyProcess = false;
 
+            // а также копируем календарь
+            GregorianCalendar loadGradesTempCalendar = new GregorianCalendar();
+            loadGradesTempCalendar.set(
+                    viewCalendar.get(Calendar.YEAR),
+                    viewCalendar.get(Calendar.MONTH),
+                    viewCalendar.get(Calendar.DAY_OF_MONTH)
+            );
+
+
 //                try {
 //                    Log.e(TAG, "остановлен");
 //                    Thread.sleep(5000);
@@ -512,7 +529,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                     // инициализируем по дням
                     copy.get(learnerI).learnerGrades =
-                            new NewGradeUnit[viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)][];
+                            new NewGradeUnit[loadGradesTempCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)][];
                     // пробегаемся по дням копируя
                     for (int dayI = 0; dayI < copy.get(learnerI).learnerGrades.length; dayI++) {
                         if (!runFlag) {// если была команда закрыть поток без подгрузки
@@ -530,12 +547,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                             }
 
                             // заполняем ячейки уроков пустыми оценками
-                            copy.get(learnerI).learnerGrades[dayI][lessonI] =
-                                    new NewGradeUnit(
-                                            new int[]{0, 0, 0},
-                                            new long[]{-1, -1, -1},
-                                            new int[]{0, 0, 0}
-                                    );
+                            copy.get(learnerI).learnerGrades[dayI][lessonI] = new NewGradeUnit(
+                                    new int[]{0, 0, 0},
+                                    new long[]{-1, -1, -1},
+                                    new int[]{0, 0, 0}
+                            );
                         }
                     }
                 }
@@ -546,16 +562,13 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 // получаем время уроков
                 int[][] timeOfLessons = db.getSettingsTime(1);
 
-                // строки для запросов времени
-                StringBuilder startTime = new StringBuilder();
-                StringBuilder endTime = new StringBuilder();
-
                 // пробегаемся по ученикам
                 for (int learnerI = 0; learnerI < copy.size(); learnerI++) {
 
                     // инициализируем по дням
                     copy.get(learnerI).learnerGrades =
-                            new NewGradeUnit[viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)][];
+                            new NewGradeUnit[loadGradesTempCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)][];
+
                     // пробегаемся по дням копируя
                     for (int dayI = 0; dayI < copy.get(learnerI).learnerGrades.length; dayI++) {
 
@@ -564,34 +577,37 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                             return;
                         }// todo надо чтобы новый поток ждал завенршения старого прежде чем начать загрузку данных
 
-                        // чистим поля от предыдущих дат
-                        startTime.delete(0, startTime.length());
-                        endTime.delete(0, endTime.length());
-                        // сделаем запрос всего дня и если он пуст заполним его нулевыми значениями
-                        startTime.append(viewCalendar.get(Calendar.YEAR))
-                                .append('-').append(getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1))
-                                .append('-').append(getTwoSymbols(dayI + 1)).append(" 00:00:00");
-                        endTime.append(viewCalendar.get(Calendar.YEAR))
-                                .append('-').append(getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1))
-                                .append('-').append(getTwoSymbols(dayI + 1)).append(" 23:59:00");
 
-                        Cursor allDayGradesCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
+                        // сделаем запрос всего дня и если он пуст заполним его нулевыми значениями
+                        loadGradesTempCalendar.set(Calendar.DAY_OF_MONTH, dayI + 1);
+
+                        Cursor allDayGradesCursor = db.getGradesByLearnerIdSubjectDateAndLessonsPeriod(
                                 copy.get(learnerI).id,
                                 subjects[chosenSubjectPosition].getSubjectId(),
-                                startTime.toString(),
-                                endTime.toString()
+                                dateFormat.format(loadGradesTempCalendar.getTime()),
+                                0,
+                                10 // todo получать количество из бд
                         );
 
 
                         // инициализируем по урокам
-                        copy.get(learnerI).learnerGrades[dayI] =
-                                new NewGradeUnit[9];
+                        copy.get(learnerI).learnerGrades[dayI] = new NewGradeUnit[9];
 
                         // если в дне есть оценки
                         if (allDayGradesCursor.getCount() != 0) {
 
+
+//                            allDayGradesCursor.moveToFirst();
+//                            allDayGradesCursor.moveToNext();
+//                            Log.e(TAG, "run: " + dateFormat.format(loadGradesTempCalendar.getTime()) +
+//                                    " " + allDayGradesCursor.getCount() + " --- " +
+//                                    allDayGradesCursor.getInt(allDayGradesCursor.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER))
+//                            );
+
+
                             if (!runFlag) {// если была команда закрыть поток без подгрузки
                                 // выходим  из метода подгрузки
+                                allDayGradesCursor.close();
                                 return;
                             }
 
@@ -600,39 +616,27 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                                 if (!runFlag) {// если была команда закрыть поток без подгрузки
                                     // выходим  из метода подгрузки
+                                    allDayGradesCursor.close();
                                     return;
                                 }
 
-                                // чистим поля от предыдущих дат
-                                startTime.delete(0, startTime.length());
-                                endTime.delete(0, endTime.length());
                                 // задаем время урока по которому будем запрашивать оценки
-                                startTime.append(viewCalendar.get(Calendar.YEAR)).append('-')
-                                        .append(getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1)).append('-')
-                                        .append(getTwoSymbols(dayI + 1))
-                                        .append(' ').append(getTwoSymbols(timeOfLessons[lessonI][0])).append(':')
-                                        .append(getTwoSymbols(timeOfLessons[lessonI][1])).append(":00");
-                                endTime.append(viewCalendar.get(Calendar.YEAR)).append('-')
-                                        .append(getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1)).append('-')
-                                        .append(getTwoSymbols(dayI + 1))
-                                        .append(' ').append(getTwoSymbols(timeOfLessons[lessonI][2])).append(':')
-                                        .append(getTwoSymbols(timeOfLessons[lessonI][3])).append(":00");
+                                loadGradesTempCalendar.set(Calendar.DAY_OF_MONTH, dayI + 1);
 
                                 // получаем оценки по времени и предмету
-                                Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectAndTimePeriod(
+                                Cursor gradesLessonCursor = db.getGradesByLearnerIdSubjectDateAndLesson(
                                         copy.get(learnerI).id,
                                         subjects[chosenSubjectPosition].getSubjectId(),//todo !!!!!!!!!!!! здесь все еще есть ошибка !!!!!!!!!!!!!!! здесь ошибка java.lang.ArrayIndexOutOfBoundsException
-                                        startTime.toString(),
-                                        endTime.toString()
+                                        dateFormat.format(loadGradesTempCalendar.getTime()),
+                                        lessonI
                                 );
 
                                 // брать будем первые три оценки (первые в курсоре соответствуют последним добавленным в бд)
-                                copy.get(learnerI).learnerGrades[dayI][lessonI] =
-                                        new NewGradeUnit(
-                                                new int[3],
-                                                new long[3],
-                                                new int[3]
-                                        );
+                                copy.get(learnerI).learnerGrades[dayI][lessonI] = new NewGradeUnit(
+                                        new int[3],
+                                        new long[3],
+                                        new int[3]
+                                );
 
                                 // проходимся по оценкам в курсоре
                                 for (int gradeI = 0; gradeI < 3; gradeI++) {
@@ -672,6 +676,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                             if (!runFlag) {// если была команда закрыть поток без подгрузки
                                 // выходим  из метода подгрузки
+                                allDayGradesCursor.close();
                                 return;
                             }
 
@@ -680,16 +685,16 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                                 if (!runFlag) {// если была команда закрыть поток без подгрузки
                                     // выходим  из метода подгрузки
+                                    allDayGradesCursor.close();
                                     return;
                                 }
 
                                 // заполняем ячейки уроков пустыми оценками
-                                copy.get(learnerI).learnerGrades[dayI][lessonI] =
-                                        new NewGradeUnit(
-                                                new int[]{0, 0, 0},
-                                                new long[]{-1, -1, -1},
-                                                new int[]{0, 0, 0}
-                                        );
+                                copy.get(learnerI).learnerGrades[dayI][lessonI] = new NewGradeUnit(
+                                        new int[]{0, 0, 0},
+                                        new long[]{-1, -1, -1},
+                                        new int[]{0, 0, 0}
+                                );
                             }
                         }
                         allDayGradesCursor.close();
@@ -945,17 +950,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     }
 
 
-    //
-
-    //
-
-    //
-
-    //
-
-    // todo запрет на переключение даты?
-
-
 // -------------------------- обратная связь диалогов --------------------------
 
     // метод создания ученика вызываемый из диалога LearnerCreateDialogFragment
@@ -1119,11 +1113,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
             // по индексам вычисляем время когда оценка была поставлена
             int[][] timeOfLessons = db.getSettingsTime(1);
-            StringBuilder gradeTime = (new StringBuilder()).append(viewCalendar.get(Calendar.YEAR)).append('-')
-                    .append(getTwoSymbols(viewCalendar.get(Calendar.MONTH) + 1)).append('-')
-                    .append(getTwoSymbols(dataLearnersAndGrades.chosenGradePosition[1] + 1))
-                    .append(' ').append(getTwoSymbols(timeOfLessons[lessonPoz][0])).append(':')
-                    .append(getTwoSymbols(timeOfLessons[lessonPoz][1])).append(":00");
+
+            viewCalendar.set(Calendar.DAY_OF_MONTH, dataLearnersAndGrades.chosenGradePosition[1] + 1);
+            String gradeDate = dateFormat.format(viewCalendar.getTime());
 
 
             // пробегаемся по массиву оценок
@@ -1143,7 +1135,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                         grades[gradeI],
                                         answersTypes[chosenTypesNumbers[gradeI]].id,
                                         subjects[chosenSubjectPosition].getSubjectId(),
-                                        gradeTime.toString()
+                                        gradeDate,
+                                        lessonPoz
                                 );
                     }
 

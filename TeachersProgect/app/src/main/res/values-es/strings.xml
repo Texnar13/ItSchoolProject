@@ -25,6 +25,8 @@
     <string name="start_screen_activity_dialog_whats_new_title">Qué hay de nuevo:</string>
     <string name="start_screen_activity_dialog_whats_new_text">Felicidades por el comienzo del año escolar, queridos usuarios!</string>Здесь текст чего нового от разработчика
     <string name="start_screen_activity_dialog_whats_new_button_ok">Muy bien.</string>
+
+    <string name="start_screen_activity_dialog_deprecated_device_text">¡Atención!\nEste dispositivo no es compatible.\nAlgunos elementos de la interfaz pueden no mostrarse correctamente.</string>
     <!-- уведомления -->
     <string name="start_screen_activity_toast_no_lessons">En este momento, las lecciones no están programadas.</string>
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.learning.texnar13.teachersprogect"
     android:versionCode="50"
     android:versionName="tera3.060">
@@ -10,18 +11,33 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-5709922862247260~7347771743"/>
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+
+
 
         <activity
             android:name=".startScreen.StartScreenActivity"
-            android:configChanges="locale">
+            android:configChanges="locale"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
+                <!--action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" /-->
+
+                <!-- Accepts URIs that begin with "http://www.my-site.com/my-app..." -->
+                <!--data
+                    android:host="http"
+                    android:scheme="www.my-site.com"
+                    android:pathPrefix="/my-app" />
+                <data android:scheme="my-site"
+                    android:host="my-app" /-->
+
+
             </intent-filter>
         </activity>
         <activity
@@ -55,8 +71,7 @@
             android:configChanges="locale"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"
-            />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".learnersAndGradesOut.LearnersAndGradesActivity"
             android:configChanges="locale"

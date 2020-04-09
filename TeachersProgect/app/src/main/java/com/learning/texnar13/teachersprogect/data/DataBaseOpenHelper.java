@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,8 +22,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
-    private static final boolean IS_DEBUG = true;
-    private static final int DB_VERSION = 16;
+    private static final boolean IS_DEBUG = false;
+    private static final int DB_VERSION = 18;
     private Context context;
 
 
@@ -143,9 +144,11 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER, " +
                     SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
                     SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " INTEGER, " +
-                    SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TIMESTRING DEFAULT \"0000-00-00 00:00:00\", " +
+                    SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0," +
+                    SchoolContract.TableLearnersGrades.COLUMN_DATE + " TIMESTRING DEFAULT \"0000-00-00\" NOT NULL," +
+                    //"time TIMESTRING DEFAULT \"0000-00-00 00:00:00\", " +
                     // начальное значение заголовка единица
-                    SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID + " INTEGER DEFAULT 1, " +//todo not null
+                    SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID + " INTEGER DEFAULT 1 NOT NULL, " +//todo not null in update
                     "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE, " +
                     "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE, " +
                     "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID + ") REFERENCES " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); "
@@ -161,8 +164,10 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             sql = "CREATE TABLE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " ( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + " INTEGER, " +
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + " INTEGER, " +
-                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " TIMESTRING, " +
-                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + " TIMESTRING, " +
+                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0," +
+                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " TIMESTRING DEFAULT \"0000-00-00\" NOT NULL," +
+                    //"lessonDateBegin TIMESTRING, " +
+                    //"lessonDateEnd TIMESTRING, " +
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " INTEGER DEFAULT " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER + ", " +
                     "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + " (" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ON DELETE CASCADE ," +
                     "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE ); ";
@@ -170,8 +175,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             // профили статистики
             db.execSQL("CREATE TABLE " + SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES + " ( " + SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME + " TEXT, " +
-                    SchoolContract.TableStatisticsProfiles.COLUMN_START_PERIOD_TIME + " TEXT, " +
-                    SchoolContract.TableStatisticsProfiles.COLUMN_END_PERIOD_TIME + " TEXT); ");
+                    SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE + " TIMESTRING DEFAULT \"1000-00-00\" NOT NULL, " +
+                    SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE + " TIMESTRING DEFAULT \"1000-00-00\" NOT NULL); ");
             // типы оценок
             db.execSQL(
                     "CREATE TABLE " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES +
@@ -268,8 +273,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 sql = "CREATE TABLE lessonsAnd ( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "lessonId INTEGER, " +
                         SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + " INTEGER, " +
-                        SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " INTEGER, " +
-                        SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + " INTEGER, " +
+                        "lessonDateBegin INTEGER, " +
+                        "lessonDateEnd INTEGER, " +
                         "FOREIGN KEY(lessonId) REFERENCES lessons (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE ); ";
                 db.execSQL(sql);
             }
@@ -277,7 +282,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE lessonsAnd ADD COLUMN " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " INTEGER DEFAULT " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER + ";");//колонка для повторения уроков
             }
             if (oldVersion < 7) {
-                db.execSQL("ALTER TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ADD COLUMN " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TEXT DEFAULT '0000-00-00 00:00:00';");//время поставленной оценки
+                db.execSQL("ALTER TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ADD COLUMN time TEXT DEFAULT '0000-00-00 00:00:00';");//время поставленной оценки
             }
             if (oldVersion < 8) {//добавляем foreign key
                 db.execSQL("PRAGMA foreign_keys = OFF;");
@@ -289,8 +294,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 db.execSQL("CREATE TABLE lessonsAnd ( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "lessonId INTEGER, " +
                         SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + " INTEGER, " +
-                        SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " INTEGER, " +
-                        SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + " INTEGER, " +
+                        "lessonDateBegin INTEGER, " +
+                        "lessonDateEnd INTEGER, " +
                         SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " INTEGER DEFAULT " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER + ", " +
                         "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + " (" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ON DELETE CASCADE ," +
                         "FOREIGN KEY(lessonId) REFERENCES lessons (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE ); "
@@ -305,7 +310,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 String sql = "CREATE TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ( " + SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER, " +
                         SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
-                        SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TEXT DEFAULT '0000-00-00 00:00:00', " +
+                        "time TEXT DEFAULT '0000-00-00 00:00:00', " +
                         "lessonId INTEGER, " +
                         "FOREIGN KEY(lessonId) REFERENCES lessons ( _id ) ON DELETE CASCADE, " +
                         "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); ";
@@ -323,8 +328,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 db.execSQL("CREATE TABLE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " ( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + " INTEGER, " +
                         SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + " INTEGER, " +
-                        SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " INTEGER, " +
-                        SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + " INTEGER, " +
+                        "lessonDateBegin INTEGER, " +
+                        "lessonDateEnd INTEGER, " +
                         SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " INTEGER DEFAULT " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER + ", " +
                         "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + " (" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ON DELETE CASCADE ," +
                         "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE ); "
@@ -348,7 +353,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER, " +
                         SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
                         SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " INTEGER, " +
-                        SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TEXT DEFAULT '0000-00-00 00:00:00', " +
+                        "time TEXT DEFAULT '0000-00-00 00:00:00', " +
                         "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE, " +
                         "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); ";
                 db.execSQL(sql);
@@ -383,8 +388,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             if (oldVersion < 14) {// добавляем таблицу с профилями статистики
                 db.execSQL("CREATE TABLE " + SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES + " ( " + SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME + " TEXT, " +
-                        SchoolContract.TableStatisticsProfiles.COLUMN_START_PERIOD_TIME + " TEXT, " +
-                        SchoolContract.TableStatisticsProfiles.COLUMN_END_PERIOD_TIME + " TEXT); ");
+                        "startTime TEXT, " +
+                        "endTime TEXT); ");
             }
             if (oldVersion < 15) {// переменная отвечающая за цветные оценки
                 db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS +
@@ -422,7 +427,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER, " +
                         SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
                         SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " INTEGER, " +
-                        SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " TIMESTRING DEFAULT \"0000-00-00 00:00:00\", " +
+                        "time TIMESTRING DEFAULT \"0000-00-00 00:00:00\", " +
                         // начальное значение заголовка единица
                         SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID + " INTEGER DEFAULT 1, " +//todo not null
                         "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID +
@@ -456,6 +461,294 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
                 // -- таблица расписаний? --
             }
+
+            if (oldVersion < 17) {
+
+                // -- добавляем колонку номера урока и даты урока, заменяющие собой время урока --
+                db.execSQL("ALTER TABLE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE +
+                        " ADD COLUMN " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0 NOT NULL;"
+                );
+                db.execSQL("ALTER TABLE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE +
+                        " ADD COLUMN " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " TIMESTRING DEFAULT \"0000-00-00\" NOT NULL;"
+                );
+
+                // получаем время уроков
+                int[][] time;
+                {
+                    Cursor timeCursor = db.query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " = 1", null, null, null, null);
+                    if (timeCursor.getCount() == 0) {
+                        timeCursor.close();
+                        time = new int[][]{};
+                    } else {
+                        time = new int[9][4];
+                        timeCursor.moveToFirst();
+
+                        JSONObject json;
+                        JSONArray beginHour;
+                        JSONArray beginMinute;
+                        JSONArray endHour;
+                        JSONArray endMinute;
+                        try {
+                            json = new JSONObject(
+                                    timeCursor.getString(timeCursor.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_TIME))
+                            );
+
+                            beginHour = json.getJSONArray(SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_HOUR_NAME);
+                            beginMinute = json.getJSONArray(SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_MINUTE_NAME);
+                            endHour = json.getJSONArray(SchoolContract.TableSettingsData.COLUMN_TIME_END_HOUR_NAME);
+                            endMinute = json.getJSONArray(SchoolContract.TableSettingsData.COLUMN_TIME_END_MINUTE_NAME);
+
+                            for (int i = 0; i < 9; i++) {
+                                time[i][0] = beginHour.getInt(i);
+                                time[i][1] = beginMinute.getInt(i);
+                                time[i][2] = endHour.getInt(i);
+                                time[i][3] = endMinute.getInt(i);
+                            }
+                        } catch (JSONException e) {
+                            time = new int[][]{};
+                        }
+                        timeCursor.close();
+                    }
+                }
+                SimpleDateFormat timeDateFormat = new SimpleDateFormat(SchoolContract.DECODING_TIMES_STRING);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+
+                // получаем все уроки
+                Cursor cursor = db.query(
+                        SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                );
+
+                // пробегаемся по урокам
+                while (cursor.moveToNext()) {
+
+                    // получаем время этого урока
+                    GregorianCalendar beginDate = new GregorianCalendar();
+                    GregorianCalendar endDate = new GregorianCalendar();
+
+
+                    try {
+                        beginDate.setTime(timeDateFormat.parse(
+                                cursor.getString(
+                                        cursor.getColumnIndex(
+                                                "lessonDateBegin"
+                                        )
+                                )
+                        ));
+                        endDate.setTime(timeDateFormat.parse(
+                                cursor.getString(
+                                        cursor.getColumnIndex(
+                                                "lessonDateEnd"
+                                        )
+                                )
+                        ));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // в случае ошибок дату берем текущую
+                        beginDate.setTime(new Date());
+                        endDate.setTime(new Date());
+                    }
+
+                    // сравниваем полученное врекмя, с записанным в настройках
+                    for (int i = 0; i < time.length; i++) {
+
+                        if (time[i][0] == beginDate.get(Calendar.HOUR_OF_DAY) &&
+                                time[i][1] == beginDate.get(Calendar.MINUTE) &&
+                                time[i][2] == endDate.get(Calendar.HOUR_OF_DAY) &&
+                                time[i][3] == endDate.get(Calendar.MINUTE)
+                        ) {
+                            ContentValues values = new ContentValues();
+                            values.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER, i);
+                            db.update(
+                                    SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE,
+                                    values,
+                                    SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " = ?",
+                                    new String[]{"" + cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID))}
+                            );
+                            break;
+                        }
+                    }
+                    // если вдруг время не нашлось, оставляем номер урока нулевым
+                    // а дату ставим просто из полученного календаря
+                    ContentValues values = new ContentValues();
+                    values.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE, dateFormat.format(beginDate.getTime()));
+                    db.update(
+                            SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE,
+                            values,
+                            SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " = ?",
+                            new String[]{"" + cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID))}
+                    );
+
+
+                }
+
+                cursor.close();
+
+
+                // -- добавляем оценкам эти поля --
+                db.execSQL("ALTER TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES +
+                        " ADD COLUMN " + SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0 NOT NULL;"
+                );
+                db.execSQL("ALTER TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES +
+                        " ADD COLUMN " + SchoolContract.TableLearnersGrades.COLUMN_DATE + " TIMESTRING DEFAULT \"0000-00-00\" NOT NULL;"
+                );
+
+                // заполняем поля даты и номера урока в оценках
+
+                // получаем все оценки
+                Cursor gradesCursor = db.query(
+                        SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                );
+
+                // пробегаемся по оценкам
+                while (gradesCursor.moveToNext()) {
+
+                    // получаем время этого урока
+                    GregorianCalendar date = new GregorianCalendar();
+
+                    try {
+                        date.setTime(timeDateFormat.parse(
+                                gradesCursor.getString(gradesCursor.getColumnIndex("time"))
+                        ));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // в случае ошибок дату берем текущую
+                        date.setTime(new Date());
+                    }
+
+
+                    // сравниваем полученное врекмя, с записанным в настройках
+                    for (int i = 0; i < time.length; i++) {
+
+                        if (time[i][0] == date.get(Calendar.HOUR_OF_DAY) &&
+                                time[i][1] == date.get(Calendar.MINUTE)
+                        ) {
+                            ContentValues values = new ContentValues();
+                            values.put(SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER, i);
+                            db.update(
+                                    SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
+                                    values,
+                                    SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " = ?", new String[]{"" + gradesCursor.getLong(gradesCursor.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID))}
+                            );
+                            break;
+                        }
+                    }
+
+                    // если вдруг время не нашлось, оставляем номер урока нулевым
+                    // а дату ставим просто из полученного календаря
+                    ContentValues values = new ContentValues();
+                    values.put(
+                            SchoolContract.TableLearnersGrades.COLUMN_DATE,
+                            dateFormat.format(date.getTime())
+                    );
+                    db.update(
+                            SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
+                            values,
+                            SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " = ?",
+                            new String[]{"" + cursor.getLong(gradesCursor.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID))}
+                    );
+                }
+
+                gradesCursor.close();
+
+
+            }
+
+            if (oldVersion < 18) {
+                SimpleDateFormat timeDateFormat = new SimpleDateFormat(SchoolContract.DECODING_TIMES_STRING);
+                // меняем в статистике
+
+                // -- добавляем статистике эти поля --
+                db.execSQL("ALTER TABLE " + SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES +
+                        " ADD COLUMN " + SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE + " TIMESTRING DEFAULT \"1000-00-00\" NOT NULL;"
+                );
+                db.execSQL("ALTER TABLE " + SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES +
+                        " ADD COLUMN " + SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE + " TIMESTRING DEFAULT \"1000-00-00\" NOT NULL;"
+                );
+
+
+                // получаем все статистики
+                Cursor statCursor = db.query(
+                        SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                );
+
+
+                // пробегаемся по статистикам
+                while (statCursor.moveToNext()) {
+
+                    // -- начальная дата --
+
+                    // проверяем строку
+                    String startDate = statCursor.getString(statCursor.getColumnIndex("startTime"));
+                    try {
+                        timeDateFormat.parse(startDate);
+                        // если ошибок нет
+                        startDate = startDate.substring(0, 10);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        // если дата неправильная, берем по умолчанию
+                        startDate = "1000-00-00";
+
+                    }
+
+                    // сохраняем полученное в бд
+                    ContentValues values = new ContentValues();
+                    values.put(SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE, startDate);
+                    db.update(
+                            SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES,
+                            values,
+                            SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID + " = ?",
+                            new String[]{"" + statCursor.getLong(statCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID))}
+                    );
+
+
+                    // -- конечная дата --
+
+                    // проверяем строку
+                    String endDate = statCursor.getString(statCursor.getColumnIndex("endTime"));
+                    try {
+                        timeDateFormat.parse(endDate);
+                        // если ошибок нет
+                        endDate = endDate.substring(0, 10);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        // если дата неправильная, берем по умолчанию
+                        endDate = "1000-00-00";
+                    }
+
+                    // сохраняем полученное в бд
+                    ContentValues valuesEnd = new ContentValues();
+                    valuesEnd.put(SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE, endDate);
+                    db.update(
+                            SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES,
+                            valuesEnd,
+                            SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID + " = ?",
+                            new String[]{"" + statCursor.getLong(statCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID))}
+                    );
+
+                    Log.e("TAG", "updateDatabase: 18 s:" + startDate + " e:" + endDate + " id:" + statCursor.getLong(statCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID)));
+                }
+                statCursor.close();
+            }
+
         }
 
         //db.close();
@@ -553,79 +846,79 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return answer;
     }
 
-    //необходимо переделать уроки (подогнать их под новое время)
-    public void setNewTimeForLessons(int[][] lastTime, int[][] newTime) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        SimpleDateFormat timeDateFormat = new SimpleDateFormat("HH:mm:ss");
-        if (IS_DEBUG)
-            Log.i("DBOpenHelper", "setNewTimeForLessons lastTime= " + Arrays.toString(lastTime) + "; newTime= " + Arrays.toString(newTime));
-        for (int i = 0; i < lastTime.length; i++) {
-            //предыдущее время в календарях
-            GregorianCalendar lastStart = new GregorianCalendar(
-                    0, 0, 0, lastTime[i][0], lastTime[i][1]
-            );
-            GregorianCalendar lastEnd = new GregorianCalendar(
-                    0, 0, 0, lastTime[i][2], lastTime[i][3]
-            );
-            //новое время в календарях
-            GregorianCalendar newStart = new GregorianCalendar(
-                    0, 0, 0, newTime[i][0], newTime[i][1]
-            );
-            GregorianCalendar newEnd = new GregorianCalendar(
-                    0, 0, 0, newTime[i][2], newTime[i][3]
-            );
+//    //необходимо переделать уроки (подогнать их под новое время)
+//    public void setNewTimeForLessons(int[][] lastTime, int[][] newTime) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        SimpleDateFormat timeDateFormat = new SimpleDateFormat("HH:mm:ss");
+//        if (IS_DEBUG)
+//            Log.i("DBOpenHelper", "setNewTimeForLessons lastTime= " + Arrays.toString(lastTime) + "; newTime= " + Arrays.toString(newTime));
+//        for (int i = 0; i < lastTime.length; i++) {
+//            //предыдущее время в календарях
+//            GregorianCalendar lastStart = new GregorianCalendar(
+//                    0, 0, 0, lastTime[i][0], lastTime[i][1]
+//            );
+//            GregorianCalendar lastEnd = new GregorianCalendar(
+//                    0, 0, 0, lastTime[i][2], lastTime[i][3]
+//            );
+//            //новое время в календарях
+//            GregorianCalendar newStart = new GregorianCalendar(
+//                    0, 0, 0, newTime[i][0], newTime[i][1]
+//            );
+//            GregorianCalendar newEnd = new GregorianCalendar(
+//                    0, 0, 0, newTime[i][2], newTime[i][3]
+//            );
+//
+//            //парсим его в текст вида '00:00:00'
+//            String lastStartText = timeDateFormat.format(lastStart.getTime());
+//            String lastEndText = timeDateFormat.format(lastEnd.getTime());
+//            String newStartText = timeDateFormat.format(newStart.getTime());
+//            String newEndText = timeDateFormat.format(newEnd.getTime());
+//
+//            db.execSQL("UPDATE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " " +
+//                    "SET " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + "))||(\" " + newStartText + "\"))," +
+//                    " " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + "))||(\" " + newEndText + "\"))" +
+//                    " WHERE (time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") == \"" + lastStartText + "\" " +
+//                    "AND time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + ") == \"" + lastEndText + "\");"
+//            );
+//
+//        }
+//    }
 
-            //парсим его в текст вида '00:00:00'
-            String lastStartText = timeDateFormat.format(lastStart.getTime());
-            String lastEndText = timeDateFormat.format(lastEnd.getTime());
-            String newStartText = timeDateFormat.format(newStart.getTime());
-            String newEndText = timeDateFormat.format(newEnd.getTime());
-
-            db.execSQL("UPDATE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " " +
-                    "SET " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + "))||(\" " + newStartText + "\"))," +
-                    " " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + " = ((date(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + "))||(\" " + newEndText + "\"))" +
-                    " WHERE (time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") == \"" + lastStartText + "\" " +
-                    "AND time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + ") == \"" + lastEndText + "\");"
-            );
-
-        }
-    }
-
-    //переделать оценки (подогнать их под новое время)
-    public void setNewTimeForGrades(int[][] lastTime, int[][] newTime) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        SimpleDateFormat timeDateFormat = new SimpleDateFormat("HH:mm:ss");
-
-        for (int i = 0; i < lastTime.length; i++) {
-            //предыдущее время в календарях
-            GregorianCalendar lastStart = new GregorianCalendar(
-                    0, 0, 0, lastTime[i][0], lastTime[i][1]
-            );
-            //новое время в календарях
-            GregorianCalendar newStart = new GregorianCalendar(
-                    0, 0, 0, newTime[i][0], newTime[i][1]
-            );
-
-            //парсим его в текст вида '00:00:00'
-            String lastStartText = timeDateFormat.format(lastStart.getTime());
-            String newStartText = timeDateFormat.format(newStart.getTime());
-
-            db.execSQL("UPDATE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " " +
-                    "SET " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " = ((date(" + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + "))||(\" " + newStartText + "\"))" +
-                    " WHERE (time(" + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + ") == \"" + lastStartText + "\");"
-            );
-
-        }
-    }
+//    //переделать оценки (подогнать их под новое время)
+//    public void setNewTimeForGrades(int[][] lastTime, int[][] newTime) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        SimpleDateFormat timeDateFormat = new SimpleDateFormat("HH:mm:ss");
+//
+//        for (int i = 0; i < lastTime.length; i++) {
+//            //предыдущее время в календарях
+//            GregorianCalendar lastStart = new GregorianCalendar(
+//                    0, 0, 0, lastTime[i][0], lastTime[i][1]
+//            );
+//            //новое время в календарях
+//            GregorianCalendar newStart = new GregorianCalendar(
+//                    0, 0, 0, newTime[i][0], newTime[i][1]
+//            );
+//
+//            //парсим его в текст вида '00:00:00'
+//            String lastStartText = timeDateFormat.format(lastStart.getTime());
+//            String newStartText = timeDateFormat.format(newStart.getTime());
+//
+//            db.execSQL("UPDATE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " " +
+//                    "SET " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " = ((date(" + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + "))||(\" " + newStartText + "\"))" +
+//                    " WHERE (time(" + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + ") == \"" + lastStartText + "\");"
+//            );
+//
+//        }
+//    }
 
 
     public int setSettingsTime(long profileId, int[][] time) {//{{hh,mm,hh,mm},{hh,mm,hh,mm},...}
         SQLiteDatabase db = this.getWritableDatabase();
 
-//перед переделыванием расписания необходимо переделать уроки (подогнать их под новое время)
-        setNewTimeForLessons(getSettingsTime(profileId), time);
-//и оценки
-        setNewTimeForGrades(getSettingsTime(profileId), time);
+////перед переделыванием расписания необходимо переделать уроки (подогнать их под новое время)
+//        setNewTimeForLessons(getSettingsTime(profileId), time);
+////и оценки
+//        setNewTimeForGrades(getSettingsTime(profileId), time);
 
 //переделываем расписание
         //парсим в json для проверки
@@ -735,6 +1028,27 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return answer;
     }
 
+    public int getLessonNumberByTime(GregorianCalendar calendarTime) {
+        int[][] times = getSettingsTime(1);
+        int answer = -1;
+
+
+        // определяем текущий урок
+        for (int lessonI = 0; lessonI < times.length; lessonI++) {
+            if ((calendarTime.get(Calendar.HOUR_OF_DAY) > times[lessonI][0] ||
+                    (calendarTime.get(Calendar.HOUR_OF_DAY) == times[lessonI][0] && calendarTime.get(Calendar.MINUTE) >= times[lessonI][1])
+            ) &&
+                    (calendarTime.get(Calendar.HOUR_OF_DAY) < times[lessonI][2] ||
+                            (calendarTime.get(Calendar.HOUR_OF_DAY) == times[lessonI][2] && calendarTime.get(Calendar.MINUTE) <= times[lessonI][3])
+                    )
+            ) {
+                answer = lessonI;
+            }
+        }
+
+        return answer;
+    }
+
     public long getInterfaceSizeBySettingsProfileId(long profileId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {profileId + ""};
@@ -804,15 +1118,15 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public long createStatistic(String name, String startTime, String endTime) {
+    public long createStatistic(String name, String startDate, String endDate) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME, name);
-        values.put(SchoolContract.TableStatisticsProfiles.COLUMN_START_PERIOD_TIME, startTime);
-        values.put(SchoolContract.TableStatisticsProfiles.COLUMN_END_PERIOD_TIME, endTime);
+        values.put(SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE, startDate);
+        values.put(SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE, endDate);
         long temp = db.insert(SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES, null, values);//-1 = ошибка ввода
         if (IS_DEBUG)
-            Log.i("DBOpenHelper", "createStatisticProfile returnId = " + temp + " name= " + name + " startTime= " + startTime + " endTime= " + endTime);
+            Log.i("DBOpenHelper", "createStatisticProfile returnId = " + temp + " name= " + name + " startDate= " + startDate + " endDate= " + endDate);
         //db.close();
         return temp;
     }
@@ -821,8 +1135,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME, newName);
-        values.put(SchoolContract.TableStatisticsProfiles.COLUMN_START_PERIOD_TIME, startDate);
-        values.put(SchoolContract.TableStatisticsProfiles.COLUMN_END_PERIOD_TIME, endDate);
+        values.put(SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE, startDate);
+        values.put(SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE, endDate);
         int temp = db.update(SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES, values, SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID + " = ?", new String[]{"" + id});//-1 = ошибка ввода
         db.close();
         if (IS_DEBUG)
@@ -832,8 +1146,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public void setStatisticTime(long id, String startDate, String endDate) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(SchoolContract.TableStatisticsProfiles.COLUMN_START_PERIOD_TIME, startDate);
-        values.put(SchoolContract.TableStatisticsProfiles.COLUMN_END_PERIOD_TIME, endDate);
+        values.put(SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE, startDate);
+        values.put(SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE, endDate);
         int temp = db.update(SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES, values, SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID + " = ?", new String[]{"" + id});//-1 = ошибка ввода
         db.close();
         if (IS_DEBUG)
@@ -1047,7 +1361,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         );
 
         if (IS_DEBUG)
-            Log.i("DBOpenHelper", "setLearnerNameAndLastName name= " + name + " lastName= " + lastName + " id= " + learnerId+ " return = " + answer);
+            Log.i("DBOpenHelper", "setLearnerNameAndLastName name= " + name + " lastName= " + lastName + " id= " + learnerId + " return = " + answer);
         //db.close();
         return answer;
     }
@@ -1277,14 +1591,15 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
 
     //оценки учеников
-    public long createGrade(long learnerId, long grade, long typeId, long subjectId, String date) {
+    public long createGrade(long learnerId, long grade, long typeId, long subjectId, String date, long lessonNumber) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableLearnersGrades.KEY_LEARNER_ID, learnerId);
         values.put(SchoolContract.TableLearnersGrades.COLUMN_GRADE, grade);
         values.put(SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID, typeId);
         values.put(SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID, subjectId);
-        values.put(SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP, date);
+        values.put(SchoolContract.TableLearnersGrades.COLUMN_DATE, date);
+        values.put(SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER, lessonNumber);
         long temp = db.insert(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, values);//-1 = ошибка ввода
         //db.close();
         if (IS_DEBUG)
@@ -1301,14 +1616,60 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getGradesByLearnerIdSubjectAndTimePeriod(long learnerId, long subjectId, String startTame, String endTime) {
+    public Cursor getGradesByLearnerIdSubjectDate(long learnerId, long subjectId, String startDate, String endDate) {
         SQLiteDatabase db = this.getReadableDatabase();
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//%Y-%m-%d %H:%M:%S// date 0-10 time 11-19
         //запрашиваем оценки ученика по уроку находящиеся между startTime и endTime
-        Cursor cursor = db.query(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " = ? AND " + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " = ? AND " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " BETWEEN \"" + startTame + "\" AND \"" + endTime + "\"", new String[]{Long.toString(learnerId), Long.toString(subjectId)}, null, null, null);
-        if (IS_DEBUG)
-            Log.i("DBOpenHelper", "" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " = ? AND " + SchoolContract.TableLearnersGrades.COLUMN_TIME_STAMP + " BETWEEN \"" + startTame + "\" AND \"" + endTime + "\"" + "getGradesByLearnerIdAndTimePeriod learnerId=" + learnerId + " subjectId=" + subjectId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames()));
-        return cursor;
+        return db.query(
+                SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
+                null,
+                SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " = " + learnerId + " AND " +
+                        SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " = " + subjectId + " AND (" +
+                        SchoolContract.TableLearnersGrades.COLUMN_DATE + " BETWEEN \"" + startDate + "\" AND  \"" + endDate + "\")",
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    public Cursor getGradesByLearnerIdSubjectDateAndLessonsPeriod(long learnerId, long subjectId, String date, int startLessonNumber, int endLessonNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        // запрашиваем оценки ученика по уроку и дате
+        return db.query(
+                SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
+                null,
+
+                SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " = " + learnerId + " AND " +
+                        SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " = " + subjectId + " AND " +
+                        SchoolContract.TableLearnersGrades.COLUMN_DATE + " = \"" + date + "\" AND " +
+                        SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER + " >= \"" + startLessonNumber + "\" AND " +
+                        SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER + " <= \"" + endLessonNumber + "\""
+                //null
+                ,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    public Cursor getGradesByLearnerIdSubjectDateAndLesson(long learnerId, long subjectId, String date, int lessonNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        // запрашиваем оценки ученика по уроку и дате
+        return db.query(
+                SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
+                null,
+                SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " = " + learnerId + " AND " +
+                        SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " = " + subjectId + " AND " +
+                        SchoolContract.TableLearnersGrades.COLUMN_DATE + " = \"" + date + "\" AND " +
+                        SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER + " = \"" + lessonNumber + "\""
+                //null
+                ,
+                null,
+                null,
+                null,
+                null
+        );
     }
 
     private Cursor getGradesWhereTypeIs(long gradeTypeId) {
@@ -1420,8 +1781,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
 
     //уроки(предметы)
-    public long createSubject(String name, long classId//,long cabinetId
-    ) {
+    public long createSubject(String name, long classId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableSubjects.COLUMN_NAME, name);
@@ -1429,10 +1789,10 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         //values.put(SchoolContract.TableSubjects.KEY_CABINET_ID, cabinetId);
         long temp = db.insert(SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS, null, values);//-1 = ошибка ввода
         //db.close();
-        if (IS_DEBUG) Log.i("DBOpenHelper", "createSubject returnId = " + temp + " name= " + name +
-                        " classId=" + classId
-                //+ " cabinetId=" + cabinetId
-        );
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "createSubject returnId = " + temp + " name= " + name + " classId=" + classId
+                    //+ " cabinetId=" + cabinetId
+            );
         return temp;
     }
 
@@ -1490,37 +1850,36 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
 
     //урок и его время проведения
-    public long setLessonTimeAndCabinet(long subjectId, long cabinetId, Date startTime, Date endTime, long repeatPeriod) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SchoolContract.DECODING_TIMES_STRING);
+    public long setLessonTimeAndCabinet(long subjectId, long cabinetId, String date, long lessonNumber, long repeatPeriod) {
         //date и database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID, subjectId);
         contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID, cabinetId);
-        contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN, simpleDateFormat.format(startTime));
-        contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END, simpleDateFormat.format(endTime));
+        contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE, date);
+        contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER, lessonNumber);
         contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT, repeatPeriod);
         long answer = db.insert(SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE, null, contentValues);
         if (IS_DEBUG)
-            Log.i("DBOpenHelper", "setLessonTime subjectId= " + subjectId + " cabinetId= " + cabinetId + " startTime= " + simpleDateFormat.format(startTime) + " endTime= " + simpleDateFormat.format(endTime) + " repeatPeriod= " + repeatPeriod + " return = " + answer);
+            Log.i("DBOpenHelper", "setLessonTime subjectId= " + subjectId + " cabinetId= " + cabinetId + " lessonNumber= " + lessonNumber + " lessonNumber= " + lessonNumber + " repeatPeriod= " + repeatPeriod + " return = " + answer);
         //db.close();
         return answer;
     }
 
-    public int editLessonTimeAndCabinet(long attitudeId, long subjectId, long cabinetId, Date startTime, Date endTime, long repeatPeriod) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SchoolContract.DECODING_TIMES_STRING);
+    public int editLessonTimeAndCabinet(long attitudeId, long subjectId, long cabinetId, String date, long lessonNumber, long repeatPeriod) {
+
         //date и database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID, subjectId);
         contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID, cabinetId);
-        contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN, simpleDateFormat.format(startTime));
-        contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END, simpleDateFormat.format(endTime));
+        contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE, date);
+        contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER, lessonNumber);
         contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT, repeatPeriod);
         int answer = db.update(SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE, contentValues, SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " = ?", new String[]{Long.toString(attitudeId)});
         //db.close();
         if (IS_DEBUG)
-            Log.i("DBOpenHelper", "editLessonTimeAndCabinet attitudeId= " + attitudeId + " subjectId= " + subjectId + " cabinetId= " + cabinetId + " startTime= " + simpleDateFormat.format(startTime) + " endTime= " + simpleDateFormat.format(endTime) + " return = " + answer);
+            Log.i("DBOpenHelper", "editLessonTimeAndCabinet attitudeId= " + attitudeId + " subjectId= " + subjectId + " cabinetId= " + cabinetId + " lessonNumber= " + lessonNumber + " endTime= " + date + " return = " + answer);
         return answer;
     }
 
@@ -1533,63 +1892,56 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public ArrayList<Long> getSubjectAndTimeCabinetAttitudesIdByTimePeriod(GregorianCalendar periodStart, GregorianCalendar periodEnd) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SchoolContract.DECODING_TIMES_STRING);
-        SimpleDateFormat timeDateFormat = new SimpleDateFormat("HH:mm:ss");
-        //проверяется только дата начала уроков
+
+//    SimpleDateFormat timeDateFormat = new SimpleDateFormat(SchoolContract.DECODING_TIMES_STRING);
+//    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    public Cursor getSubjectAndTimeCabinetAttitudesByDateAndLessonNumbersPeriod(String date, long startLessonNumber, long endLessonNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery("SELECT * FROM " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE +
-                        " WHERE ((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " >= \"" + simpleDateFormat.format(periodStart.getTime()) + "\" AND " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " <= \"" + simpleDateFormat.format(periodEnd.getTime()) + "\") OR ((" +
-                        // strftime(\"%w-%H:%M:%S\","++")
-                        SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY + ") AND (time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") >= \"" + timeDateFormat.format(periodStart.getTime()) + "\") AND (time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") <= \"" + timeDateFormat.format(periodEnd.getTime()) + "\")) OR ((" +
-                        SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY + ") AND (strftime(\"%w\"," + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") == \"" + (periodStart.get(Calendar.DAY_OF_WEEK) - 1) + "\") AND (time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") >= \"" + timeDateFormat.format(periodStart.getTime()) + "\") AND (strftime(\"%w\", " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") == \"" + (periodEnd.get(Calendar.DAY_OF_WEEK) - 1) + "\") AND (time( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") <= \"" + timeDateFormat.format(periodEnd.getTime()) + "\")))"
-                , null);
-
-        ArrayList<Long> answer = new ArrayList<>();
-        StringBuilder stringSubjectAndTimeCabinetAttitudesId = new StringBuilder();
-        while (cursor.moveToNext()) {
-            long id = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID));
-            stringSubjectAndTimeCabinetAttitudesId.append(id);
-            stringSubjectAndTimeCabinetAttitudesId.append(" | ");
-            answer.add(id);
-        }
-        cursor.close();
-        if (IS_DEBUG)
-            Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudesIdByTimePeriod periodStart=" + periodStart.getTime().getTime() + " periodEnd=" + periodEnd.getTime().getTime() + " answer=" + stringSubjectAndTimeCabinetAttitudesId);
-        //db.close();
-        return answer;
+        return db.rawQuery("SELECT * FROM " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE +
+                        " WHERE ((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " BETWEEN ? AND ?) AND (" +
+                        "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " = ?) OR " +
+                        "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) OR " +
+                        "((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) AND (strftime(\"%w\"," + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + ") == strftime(\"%w\", ?)))" +
+                        "))",
+                new String[]{
+                        "" + startLessonNumber,
+                        "" + endLessonNumber,
+                        date,
+                        "" + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY,
+                        "" + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY,
+                        date
+                });
+//        ArrayList<Long> answer = new ArrayList<>();
+//        StringBuilder stringSubjectAndTimeCabinetAttitudesId = new StringBuilder();
+//        while (cursor.moveToNext()) {
+//            long id = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID));
+//            stringSubjectAndTimeCabinetAttitudesId.append(id);
+//            stringSubjectAndTimeCabinetAttitudesId.append(" | ");
+//            answer.add(id);
+//        }
+//        cursor.close();
+//        if (IS_DEBUG)
+//            Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudesIdByTimePeriod periodStart=" + periodStart.getTime().getTime() + " periodEnd=" + periodEnd.getTime().getTime() + " answer=" + stringSubjectAndTimeCabinetAttitudesId);
+//        //db.close();
     }
 
-    public long getSubjectAndTimeCabinetAttitudeIdByTime(Calendar time) {//попадает ли переданное время в какой-либо из уроков
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SchoolContract.DECODING_TIMES_STRING);
-        SimpleDateFormat timeDateFormat = new SimpleDateFormat("HH:mm:ss");
 
-        SQLiteDatabase db = this.getReadableDatabase();
-//
-        Cursor cursor = db.rawQuery("SELECT * FROM " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE +
-                        " WHERE (((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + " <= \"" + simpleDateFormat.format(time.getTime()) + "\") AND (" +
-                        SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + " >= \"" + simpleDateFormat.format(time.getTime()) + "\")) OR ((" +
-                        SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY + ") AND (time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") <= \"" + timeDateFormat.format(time.getTime()) + "\") AND (time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + ")>= \"" + timeDateFormat.format(time.getTime()) + "\")) OR ((" +
-                        SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY + ") AND (strftime(\"%w\"," + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") == \"" + (time.get(Calendar.DAY_OF_WEEK) - 1) + "\") AND (time(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_BEGIN + ") <= \"" + timeDateFormat.format(time.getTime()) + "\") AND (strftime(\"%w\", " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + ") == \"" + (time.get(Calendar.DAY_OF_WEEK) - 1) + "\") AND (time( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_DATE_END + ") >= \"" + timeDateFormat.format(time.getTime()) + "\")))"
-                , null);
-        long answer;
-        if (IS_DEBUG) Log.i("TeachersApp", "" + cursor.getCount());
-        if (cursor.getCount() != 0) {
-            cursor.moveToFirst();
-            answer = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID));
-            cursor.close();
-            if (IS_DEBUG)
-                Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudesIdByTimePeriod time=" + time.getTime().getTime() + " answer=" + answer);
-            //db.close();
-            return answer;
-        } else {
-            cursor.close();
-            if (IS_DEBUG)
-                Log.i("DBOpenHelper", "getSubjectAndTimeCabinetAttitudesIdByTimePeriod time=" + time.getTime().getTime() + " answer=" + (-1));
-            //db.close();
-            return -1;
-        }
+    public Cursor getSubjectAndTimeCabinetAttitudeByDateAndLessonNumber(String date, long lessonNumber) {//попадает ли переданное время в какой-либо из уроков
+        return this.getReadableDatabase().rawQuery(
+                "SELECT * FROM " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE +
+                        " WHERE ((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " = ?) AND (" +
+                        "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " = ?) OR " +
+                        "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) OR " +
+                        "((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) AND (strftime(\"%w\"," + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + ") == strftime(\"%w\", ?)))" +
+                        "))",
+                new String[]{
+                        "" + lessonNumber,
+                        date,
+                        "" + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY,
+                        "" + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY,
+                        date
+                });
     }
 
     public int deleteSubjectAndTimeCabinetAttitude(long attitudeId) {
@@ -1605,8 +1957,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public void restartTable() {//создание бд заново
         onUpgrade(this.getReadableDatabase(), 0, 100);
     }
-
-
 
 
 //    String format(int i) {

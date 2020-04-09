@@ -56,9 +56,9 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/shedule_month_body_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/shedule_month_ad_banner"
         android:layout_below="@+id/schedule_month_title_container"
         android:orientation="vertical">
 
@@ -102,7 +102,6 @@
                 android:fontFamily="@font/geometria_bold"
                 android:text="TextView"
                 android:textAllCaps="true"
-
                 android:textColor="@color/baseBlue"
                 android:textSize="@dimen/text_title_size" />
 
@@ -111,7 +110,7 @@
         <LinearLayout
             android:id="@+id/schedule_month_table"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="400dp"
             android:layout_marginTop="@dimen/double_margin"
             android:orientation="vertical"
             tools:layout_editor_absoluteX="8dp"
@@ -120,14 +119,27 @@
     </LinearLayout>
 
 
-    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
+        android:id="@+id/shedule_month_ad_banner_place"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@+id/shedule_month_body_container"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        android:orientation="vertical" />
+
+
+    <!-- android:layout_below="@+id/shedule_month_body_container"-->
+
+    <!--com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/shedule_month_ad_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center"
         ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-5709922862247260/2292332710" />
+        ads:adUnitId="ca-app-pub-5709922862247260/2292332710" /-->
     <!-- testId BANNER ca-app-pub-3940256099942544/6300978111 -->
     <!-- testId SMART_BANNER ca-app-pub-3940256099942544/2247696110 -->
     <!-- testId Interstitial ca-app-pub-3940256099942544/1033173712 -->

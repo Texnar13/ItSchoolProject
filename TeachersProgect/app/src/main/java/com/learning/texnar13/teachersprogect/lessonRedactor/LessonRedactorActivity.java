@@ -25,17 +25,22 @@ import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActi
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class LessonRedactorActivity extends AppCompatActivity implements SubjectNameDialogInterface, RemoveSubjectDialogFragmentInterface {
 
     // id передаваемых данных (трансферные константы)
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
-    public static final String LESSON_START_TIME = "lessonStartTime";
-    public static final String LESSON_END_TIME = "lessonEndTime";
+    //    public static final String LESSON_START_TIME = "lessonStartTime";
+//    public static final String LESSON_END_TIME = "lessonEndTime";
+    public static final String LESSON_DATE = "lessonDate";
+    public static final String LESSON_NUMBER = "lessonNumber";
 
     // ----- id и полученные данные-----
     //id главной зависимости
@@ -46,8 +51,10 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
     //урок
     long chosenSubjectId = -1;
     // время урока в календарях (берем не из урока, тк если урок не создан то выбранного времени в бд нет)
-    GregorianCalendar calendarStartTime;
-    GregorianCalendar calendarEndTime;
+    String lessonDate;
+    int lessonNumber;
+    //    GregorianCalendar calendarStartTime;
+//    GregorianCalendar calendarEndTime;
     //какие повторения
     long repeat = 0;
 
@@ -94,20 +101,22 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
 // ******************** загружаем данные ********************
 
         // -- id зависимости --
-        attitudeId = getIntent().getLongExtra(LESSON_ATTITUDE_ID, -2);
+        attitudeId = getIntent().getLongExtra(LESSON_ATTITUDE_ID, -2L);
         if (attitudeId == -2) {
-            Toast toast = Toast.makeText(this, R.string.lesson_redactor_activity_toast_subject_not_select, Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this, "error", Toast.LENGTH_SHORT);
             toast.show();
             finish();
             return;
         }
-        calendarStartTime = new GregorianCalendar();
-        calendarEndTime = new GregorianCalendar();
+
+        // получаем время из intent
+        lessonDate = getIntent().getStringExtra(LESSON_DATE);
+        lessonNumber = getIntent().getIntExtra(LESSON_NUMBER, 0);
+
+
         if (attitudeId == -1) {
             //заголовок
             setTitle(getResources().getString(R.string.title_activity_lesson_redactor_create));
-            calendarStartTime.setTime(new Date(getIntent().getLongExtra(LESSON_START_TIME, 1)));
-            calendarEndTime.setTime(new Date(getIntent().getLongExtra(LESSON_END_TIME, 1)));
         } else {
             // -- заголовок --
             setTitle(getString(R.string.title_activity_lesson_redactor_edit));
@@ -118,7 +127,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
             // -- главная зависимость(урок) --
             Cursor attitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(attitudeId);
             attitudeCursor.moveToFirst();
-            attitudeId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID));
+//            attitudeId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID));
             // -- id предмета --
             chosenSubjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
             Cursor subjectCursor = db.getSubjectById(chosenSubjectId);
@@ -129,9 +138,6 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
             subjectPosition = -1;
             // -- id кабинета --
             cabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
-            // -- время --
-            calendarStartTime.setTime(new Date(getIntent().getLongExtra(LESSON_START_TIME, 1)));
-            calendarEndTime.setTime(new Date(getIntent().getLongExtra(LESSON_END_TIME, 1)));
             // -- повторы --
             repeat = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT));
 
@@ -160,10 +166,20 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         LinearLayout removeButton = findViewById(R.id.activity_lesson_redactor_remove_button);
         LinearLayout saveButton = findViewById(R.id.activity_lesson_redactor_save_button);
         // текст текущей даты
-        ((TextView) findViewById(R.id.activity_lesson_redactor_current_date_text)).setText(
-                getResources().getTextArray(R.array.week_days_simple)[calendarStartTime.get(Calendar.DAY_OF_WEEK)-1] + ", "
-                        + calendarStartTime.get(Calendar.DAY_OF_MONTH) + " " + getResources().getTextArray(R.array.months_names_low_case)[calendarStartTime.get(Calendar.MONTH)]
-        );
+        {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            GregorianCalendar calendar = new GregorianCalendar();
+            try {
+                calendar.setTime(simpleDateFormat.parse(lessonDate));
+            } catch (ParseException e) {
+                e.printStackTrace();
+                calendar.setTime(new Date());
+            }
+            ((TextView) findViewById(R.id.activity_lesson_redactor_current_date_text)).setText(
+                    getResources().getTextArray(R.array.week_days_simple)[calendar.get(Calendar.DAY_OF_WEEK) - 1] + ", "
+                            + calendar.get(Calendar.DAY_OF_MONTH) + " " + getResources().getTextArray(R.array.months_names_low_case)[calendar.get(Calendar.MONTH)]
+            );
+        }
 
 
         // кнопка не повторять урок
@@ -279,15 +295,28 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
                 if (cabinetId != -1) {//выбран ли кабинет
                     if (chosenSubjectId != -1) {//выбран ли предмет
                         if (attitudeId == -1) {//создание
-                            Log.i("TeachersApp", "LessonRedactorActivity - create lesson chosenSubjectId =" + chosenSubjectId + " cabinetId =" + cabinetId + " calendarStartTime =" + calendarStartTime.getTime().getTime() + " calendarEndTime =" + calendarEndTime.getTime().getTime());
+                            Log.i("TeachersApp", "LessonRedactorActivity - create lesson chosenSubjectId =" + chosenSubjectId + " cabinetId =" + cabinetId + " lessonDate =" + lessonDate + " lessonNumber =" + lessonNumber);
                             DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                            db.setLessonTimeAndCabinet(chosenSubjectId, cabinetId, calendarStartTime.getTime(), calendarEndTime.getTime(), repeat);
+                            db.setLessonTimeAndCabinet(
+                                    chosenSubjectId,
+                                    cabinetId,
+                                    lessonDate,
+                                    lessonNumber,
+                                    repeat
+                            );
                             db.close();
                             finish();
                         } else {//или изменение
-                            Log.i("TeachersApp", "LessonRedactorActivity - edit lesson chosenSubjectId =" + chosenSubjectId + " cabinetId =" + cabinetId + " calendarStartTime =" + calendarStartTime.getTime().getTime() + " calendarEndTime =" + calendarEndTime.getTime().getTime());
+                            Log.i("TeachersApp", "LessonRedactorActivity - edit lesson chosenSubjectId =" + chosenSubjectId + " cabinetId =" + cabinetId + " lessonDate =" + lessonDate + " lessonNumber =" + lessonNumber);
                             DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                            db.editLessonTimeAndCabinet(attitudeId, chosenSubjectId, cabinetId, calendarStartTime.getTime(), calendarEndTime.getTime(), repeat);
+                            db.editLessonTimeAndCabinet(
+                                    attitudeId,
+                                    chosenSubjectId,
+                                    cabinetId,
+                                    lessonDate,
+                                    lessonNumber,
+                                    repeat
+                            );
                             db.close();
                             finish();
                         }
@@ -509,23 +538,8 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                //при выборе пункта ставим в календари новое время
-                calendarStartTime = new GregorianCalendar(
-                        calendarStartTime.get(GregorianCalendar.YEAR),
-                        calendarStartTime.get(GregorianCalendar.MONTH),
-                        calendarStartTime.get(GregorianCalendar.DAY_OF_MONTH),
-                        time[i][0],
-                        time[i][1],
-                        0
-                );
-                calendarEndTime = new GregorianCalendar(
-                        calendarEndTime.get(GregorianCalendar.YEAR),
-                        calendarEndTime.get(GregorianCalendar.MONTH),
-                        calendarEndTime.get(GregorianCalendar.DAY_OF_MONTH),
-                        time[i][2],
-                        time[i][3],
-                        0
-                );
+                // при выборе пункта меняем выбранный урок
+                lessonNumber = i;
                 Log.i("TeachersApp", "chooseStandardLesson :" + textTime[i]);
             }
 
@@ -534,17 +548,11 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
 
             }
         });
-        //ставим выбранное время
-        for (int i = 0; i < time.length; i++) {
-            if (calendarStartTime.get(Calendar.HOUR_OF_DAY) == time[i][0] &&
-                    calendarStartTime.get(Calendar.MINUTE) == time[i][1] &&
-                    calendarEndTime.get(Calendar.HOUR_OF_DAY) == time[i][2] &&
-                    calendarEndTime.get(Calendar.MINUTE) == time[i][3]
-            ) {
-                Log.i("TeachersApp", "outTime:chooseTime:" + (i + 1));
-                timeSpinner.setSelection(i, false);
-            }
-        }
+        // ставим выбранное время
+        Log.i("TeachersApp", "outTime:chooseTime:" + (lessonNumber + 1));
+        timeSpinner.setSelection(lessonNumber, false);
+
+
     }
 
 

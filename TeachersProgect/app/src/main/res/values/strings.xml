@@ -28,7 +28,9 @@ We present the promised global update: now everything is much more convenient an
 Thank you for your feedback - it helped us make the application better! If you have any suggestions - write, we have ambitious plans to further improve the Teacher Assistant!
     </string>
     <string name="start_screen_activity_dialog_whats_new_button_ok">OK</string>
-    <!-- тост -->
+
+    <string name="start_screen_activity_dialog_deprecated_device_text">Attention!\nThis device is not supported.\nSome interface elements may not display correctly.\n</string>
+    <!-- уведомления -->
     <string name="start_screen_activity_toast_no_lessons">At the moment there are no lessons planned</string>
 
 
@@ -55,7 +57,7 @@ Thank you for your feedback - it helped us make the application better! If you h
     <string name="title_activity_learners_and_grades">students in the </string>
     <!-- тексты  -->
     <string name="learners_and_grades_out_activity_title_subject">Subject</string>
-    <string name="learners_and_grades_out_activity_title_table_names">Name</string>
+    <string name="learners_and_grades_out_activity_title_table_names">NAME</string>
     <string name="learners_and_grades_out_activity_title_grade_n">Abs</string>
     <string name="learners_and_grades_out_activity_title_grade_no_answers">no answers</string>
     <string name="learners_and_grades_out_activity_text_create_subject">Create new?</string>

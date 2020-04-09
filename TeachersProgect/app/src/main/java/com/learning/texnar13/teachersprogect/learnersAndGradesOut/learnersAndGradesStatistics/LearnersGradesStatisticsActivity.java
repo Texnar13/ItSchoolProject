@@ -53,6 +53,9 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
     // переменная разрешающая проверять поля дат и сохранять даты
     private static boolean isTextCheckRun = true;
 
+    // показщывается ли сейчас диалог
+    static boolean isDialogShowed;
+
 
     // текстовые поля времени
     private EditText startDayEditText;
@@ -112,9 +115,9 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             periods = new ArrayList<>(periodsCursor.getCount());
             while (periodsCursor.moveToNext()) {
                 // дата начала
-                String startDate = periodsCursor.getString(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_START_PERIOD_TIME));
+                String startDate = periodsCursor.getString(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE));
                 // дата конца
-                String endDate = periodsCursor.getString(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_END_PERIOD_TIME));
+                String endDate = periodsCursor.getString(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE));
                 // переводим дату из строки в числа
                 int[] dates = new int[6];
                 dates[0] = Integer.parseInt(startDate.substring(8, 10));
@@ -197,8 +200,8 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                             DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                             db.setStatisticTime(
                                     periods.get(periodPosition).periodId,
-                                    "" + periods.get(periodPosition).dates[2] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[0]) + " 00:00:00",
-                                    "" + periods.get(periodPosition).dates[5] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[3]) + " 23:59:59"
+                                    "" + periods.get(periodPosition).dates[2] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[0]),
+                                    "" + periods.get(periodPosition).dates[5] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[3])
                             );
                             db.close();
                             // выводим оценки
@@ -207,6 +210,22 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                     } else {
                         // если нет периода, не даем редактировать дату
                         s.clear();
+
+                        if (!isDialogShowed) {
+                            isDialogShowed = true;
+
+                            // и вызываем диалог создания периода
+                            PeriodDialogFragment periodDialog = new PeriodDialogFragment();
+                            // аргументы массив названий предметов
+                            String[] periodsNames = new String[periods.size()];
+                            for (int periodI = 0; periodI < periods.size(); periodI++) {
+                                periodsNames[periodI] = periods.get(periodI).periodName;
+                            }
+                            Bundle args = new Bundle();
+                            args.putStringArray(PeriodDialogFragment.ARGS_PERIODS_STRING_ARRAY, periodsNames);
+                            periodDialog.setArguments(args);
+                            periodDialog.show(getSupportFragmentManager(), "periodDialog - Hello");
+                        }
                     }
             }
         };
@@ -270,17 +289,21 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             @Override
             public void onClick(View v) {
 
-                // вызываем диалог предметов
-                PeriodDialogFragment periodDialog = new PeriodDialogFragment();
-                // аргументы массив названий предметов
-                String[] periodsNames = new String[periods.size()];
-                for (int periodI = 0; periodI < periods.size(); periodI++) {
-                    periodsNames[periodI] = periods.get(periodI).periodName;
+                if (!isDialogShowed) {
+                    isDialogShowed = true;
+
+                    // вызываем диалог периодов
+                    PeriodDialogFragment periodDialog = new PeriodDialogFragment();
+                    // аргументы массив названий предметов
+                    String[] periodsNames = new String[periods.size()];
+                    for (int periodI = 0; periodI < periods.size(); periodI++) {
+                        periodsNames[periodI] = periods.get(periodI).periodName;
+                    }
+                    Bundle args = new Bundle();
+                    args.putStringArray(PeriodDialogFragment.ARGS_PERIODS_STRING_ARRAY, periodsNames);
+                    periodDialog.setArguments(args);
+                    periodDialog.show(getSupportFragmentManager(), "periodDialog - Hello");
                 }
-                Bundle args = new Bundle();
-                args.putStringArray(PeriodDialogFragment.ARGS_PERIODS_STRING_ARRAY, periodsNames);
-                periodDialog.setArguments(args);
-                periodDialog.show(getSupportFragmentManager(), "periodDialog - Hello");
             }
         });
 
@@ -318,6 +341,20 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             endMonthEditText.setBackgroundResource(R.drawable._underlined_black);
             endYearEditText.setText("" + periods.get(periodPosition).dates[5]);
             endYearEditText.setBackgroundResource(R.drawable._underlined_black);
+        }else{
+            startDayEditText.setText("");
+            startDayEditText.setBackgroundResource(R.drawable._underlined_black);
+            startMonthEditText.setText("");
+            startMonthEditText.setBackgroundResource(R.drawable._underlined_black);
+            startYearEditText.setText("");
+            startYearEditText.setBackgroundResource(R.drawable._underlined_black);
+            endDayEditText.setText("");
+            endDayEditText.setBackgroundResource(R.drawable._underlined_black);
+            endMonthEditText.setText("");
+            endMonthEditText.setBackgroundResource(R.drawable._underlined_black);
+            endYearEditText.setText("");
+            endYearEditText.setBackgroundResource(R.drawable._underlined_black);
+
         }
         // разрешаем проверку
         isTextCheckRun = true;
@@ -344,11 +381,11 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             // проверяем, можем ли получать оценки
             if (periodPosition != -1) {
                 // получаем оценки за указанный период по выбранному ученику
-                Cursor grades = db.getGradesByLearnerIdSubjectAndTimePeriod(
+                Cursor grades = db.getGradesByLearnerIdSubjectDate(
                         learner.learnerId,
                         subjectId,
-                        periods.get(periodPosition).dates[2] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[0]) + " 00:00:00",
-                        periods.get(periodPosition).dates[5] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[3]) + " 23:59:59"
+                        periods.get(periodPosition).dates[2] + "-" + getTwoSymbols(periods.get(periodPosition).dates[1]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[0]),
+                        periods.get(periodPosition).dates[5] + "-" + getTwoSymbols(periods.get(periodPosition).dates[4]) + "-" + getTwoSymbols(periods.get(periodPosition).dates[3])
                 );
 
                 for (int j = 0; j < grades.getCount(); j++) {
@@ -644,8 +681,8 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         dates[4] = (nowCalendar.get(GregorianCalendar.MONTH) + 1);
         dates[5] = nowCalendar.get(GregorianCalendar.YEAR);
 
-        String startDate = dates[2] + "-" + getTwoSymbols(dates[1]) + "-" + getTwoSymbols(dates[0]) + " 00:00:00";
-        String endDate = dates[5] + "-" + getTwoSymbols(dates[4]) + "-" + getTwoSymbols(dates[3]) + " 23:59:59";
+        String startDate = dates[2] + "-" + getTwoSymbols(dates[1]) + "-" + getTwoSymbols(dates[0]);
+        String endDate = dates[5] + "-" + getTwoSymbols(dates[4]) + "-" + getTwoSymbols(dates[3]);
 
         long periodId = db.createStatistic(name, startDate, endDate);
 
@@ -693,6 +730,8 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             periodPosition = -1;
             ((TextView) findViewById(R.id.learners_grades_statistics_period_button_text)).
                     setText(R.string.learners_and_grades_statistics_activity_spinner_text_add);
+            // и пустые даты
+            outDates();
         } else {
             // ставим выбор на первом предмете
             periodPosition = 0;
@@ -734,6 +773,11 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         }
         outDates();
         getAndOutGrades();
+    }
+
+    @Override
+    public void onPeriodDialogClosed() {
+        isDialogShowed = false;
     }
 
 

@@ -245,7 +245,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
             item.setGravity(Gravity.CENTER_VERTICAL);
             item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             item.setTextColor(Color.BLACK);
-            item.setText(R.string.learners_classes_out_activity_dialog_title_create_class);
+            item.setText(R.string.cabinets_out_activity_dialog_title_create_cabinet);
             // параметры пункта
             RelativeLayout.LayoutParams itemParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,//ш

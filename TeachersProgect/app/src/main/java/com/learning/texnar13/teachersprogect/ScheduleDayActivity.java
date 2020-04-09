@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -12,7 +11,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -32,20 +30,27 @@ import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivi
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class ScheduleDayActivity extends AppCompatActivity {
 
-    public static final String INTENT_DAY = "day";
-    public static final String INTENT_MONTH = "month";
-    public static final String INTENT_YEAR = "year";
+    //    public static final String INTENT_DAY = "day";
+//    public static final String INTENT_MONTH = "month";
+//    public static final String INTENT_YEAR = "year";
+    public static final String INTENT_DATE = "intentDate";
 
-    int day = -1;
-    int month = -1;
-    int year = -1;
+    // переданные данные
+    String lessonDate;
+
+    // текущий номер урока (-1 - не сегодня)
+    int currentLesson = -1;
+
+    // парсинг дат из календаря
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
 
     // главный контенйнер уроков
     TableLayout outLayout;
@@ -54,6 +59,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //  ====== ====== ====== разметка ====== ====== ======
         // вставляем в actionBar заголовок активности
         LinearLayout titleContainer = new LinearLayout(this);
         titleContainer.setGravity(Gravity.CENTER);
@@ -99,15 +105,19 @@ public class ScheduleDayActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
 
+        // ====== ====== ====== получение данных ====== ====== ======
         // получаем данные из intent
-        day = getIntent().getIntExtra(INTENT_DAY, -1);
-        month = getIntent().getIntExtra(INTENT_MONTH, -1);
-        year = getIntent().getIntExtra(INTENT_YEAR, -1);
-        if (day == -1 || month == -1 || year == -1) {
+        lessonDate = getIntent().getStringExtra(INTENT_DATE);
+        if (lessonDate == null) {
             finish();
         }
+
+
         // выводим заголовок
-        title.setText(day + " " + getResources().getStringArray(R.array.months_names_low_case)[month] + " " + year);
+        title.setText(Integer.parseInt(lessonDate.substring(8, 10)) + " " +
+                getResources().getStringArray(R.array.months_names_low_case)[Integer.parseInt(lessonDate.substring(5, 7))] + " " +
+                Integer.parseInt(lessonDate.substring(0, 4))
+        );
 
 
         // выводим поля в таблицу
@@ -121,10 +131,6 @@ public class ScheduleDayActivity extends AppCompatActivity {
         scrollView.addView(outLayout, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
 
-
-
-
-
     }
 
     @Override
@@ -133,24 +139,46 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
         outLayout.removeAllViews();
 
-        // получаем стандартное время уроков
+
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        // получаем стандартное время уроков
         int[][] standartLessonsPeriods = db.getSettingsTime(1);
+
+
+        // если просматриваем сегодняшний день
+        if (dateFormat.format(new Date()).equals(lessonDate)) {
+
+            GregorianCalendar now = new GregorianCalendar();
+            now.setTime(new Date());
+            // определяем текущий урок
+            for (int lessonI = 0; lessonI < standartLessonsPeriods.length; lessonI++) {
+                if ((now.get(Calendar.HOUR_OF_DAY) > standartLessonsPeriods[lessonI][0] ||
+                        (now.get(Calendar.HOUR_OF_DAY) == standartLessonsPeriods[lessonI][0] && now.get(Calendar.MINUTE) >= standartLessonsPeriods[lessonI][1])
+                ) &&
+                        (now.get(Calendar.HOUR_OF_DAY) < standartLessonsPeriods[lessonI][2] ||
+                                (now.get(Calendar.HOUR_OF_DAY) == standartLessonsPeriods[lessonI][2] && now.get(Calendar.MINUTE) <= standartLessonsPeriods[lessonI][3])
+                        )
+                ) {
+                    currentLesson = lessonI;
+                }
+            }
+        }
 
 
         // пробегаемся по урокам
         for (int lessonI = 0; lessonI < standartLessonsPeriods.length; lessonI++) {
+            final int finalLessonI = lessonI;
 
             // преобразуем дату к нужному времени
-            final GregorianCalendar currentCalendar = new GregorianCalendar(year, month, day, standartLessonsPeriods[lessonI][0],standartLessonsPeriods[lessonI][1]);
-            final GregorianCalendar endTimeCalendar = new GregorianCalendar(year, month, day, standartLessonsPeriods[lessonI][2],standartLessonsPeriods[lessonI][3]);
+            //final GregorianCalendar currentCalendar = new GregorianCalendar(year, month, day, standartLessonsPeriods[lessonI][0], standartLessonsPeriods[lessonI][1]);
+            //final GregorianCalendar endTimeCalendar = new GregorianCalendar(year, month, day, standartLessonsPeriods[lessonI][2], standartLessonsPeriods[lessonI][3]);
 
             // ищем в базе данных урок
-            final long attitudeId = db.getSubjectAndTimeCabinetAttitudeIdByTime(currentCalendar);
+            Cursor attitudeId = db.getSubjectAndTimeCabinetAttitudeByDateAndLessonNumber(lessonDate, lessonI);
 
 
             // если не нашли зависимость урока
-            if (attitudeId == -1) {
+            if (attitudeId.getCount() == 0) {
 
                 // выводим пустую разметку
 
@@ -160,10 +188,8 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 lessonContainer.setOrientation(LinearLayout.HORIZONTAL);
                 outLayout.addView(lessonContainer, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 // если урок текущй
-                GregorianCalendar currentTime = new GregorianCalendar();
-                currentTime.setTime(new Date());
-                if (currentTime.getTime().getTime() >= currentCalendar.getTime().getTime() &&
-                        currentTime.getTime().getTime() <= endTimeCalendar.getTime().getTime()) {
+
+                if (currentLesson == lessonI) {
                     lessonContainer.setBackgroundResource(R.drawable.__current_lesson_background_uplined_orange);
                 } else
                     lessonContainer.setBackgroundResource(R.drawable.__current_lesson_background_uplined_white);
@@ -216,23 +242,23 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         //создание/редактирование урока
                         Intent intentForLessonEditor = new Intent(getApplicationContext(), LessonRedactorActivity.class);
-                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, attitudeId);
-                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_START_TIME, currentCalendar.getTime().getTime());
-                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_END_TIME, endTimeCalendar.getTime().getTime());
+                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, -1L);
+                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_DATE, lessonDate);
+                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_NUMBER, finalLessonI);
                         startActivity(intentForLessonEditor);
                     }
                 });
 
             } else {// если нашли
+                attitudeId.moveToFirst();
 
-                // получаем его данные
-                Cursor attitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(attitudeId);
-                attitudeCursor.moveToFirst();
+                // получаем id самого урока
+                final long lessonId = attitudeId.getLong(attitudeId.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID));
                 // получаем id предмета
-                long subjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
+                long subjectId = attitudeId.getLong(attitudeId.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
                 // получаем id кабинета
-                final long cabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
-                attitudeCursor.close();
+                final long cabinetId = attitudeId.getLong(attitudeId.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
+                attitudeId.close();
 
                 // получаем предмет
                 Cursor subjectCursor = db.getSubjectById(subjectId);
@@ -279,8 +305,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 // если урок текущй
                 GregorianCalendar currentTime = new GregorianCalendar();
                 currentTime.setTime(new Date());
-                if (currentTime.getTime().getTime() >= currentCalendar.getTime().getTime() &&
-                        currentTime.getTime().getTime() <= endTimeCalendar.getTime().getTime()) {
+                if (currentLesson == lessonI) {
                     lessonContainer.setBackgroundResource(R.drawable.__current_lesson_background_uplined_orange);
                 } else
                     lessonContainer.setBackgroundResource(R.drawable.__current_lesson_background_uplined_white);
@@ -384,10 +409,11 @@ public class ScheduleDayActivity extends AppCompatActivity {
                             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             //начать урок
                             Intent intentForStartLesson = new Intent(getApplicationContext(), LessonActivity.class);
-                            intentForStartLesson.putExtra(LessonActivity.LESSON_ATTITUDE_ID, attitudeId);
-                            intentForStartLesson.putExtra(LessonActivity.LESSON_TIME, dateFormat.format(currentCalendar.getTime()));
+                            intentForStartLesson.putExtra(LessonActivity.LESSON_ATTITUDE_ID, lessonId);
+                            intentForStartLesson.putExtra(LessonActivity.LESSON_DATE, lessonDate);
+                            intentForStartLesson.putExtra(LessonActivity.LESSON_NUMBER, finalLessonI);
                             startActivity(intentForStartLesson);
-                        }else{
+                        } else {
                             // тост о не рассаженных учениках
                             Toast.makeText(getApplicationContext(), R.string.schedule_day_activity_toast_learners, Toast.LENGTH_LONG).show();
                             //редактировать рассадку
@@ -405,9 +431,9 @@ public class ScheduleDayActivity extends AppCompatActivity {
                     public boolean onLongClick(View v) {
                         //создание/редактирование урока
                         final Intent intentForLessonEditor = new Intent(getApplicationContext(), LessonRedactorActivity.class);
-                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, attitudeId);
-                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_START_TIME, currentCalendar.getTime().getTime());
-                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_END_TIME, endTimeCalendar.getTime().getTime());
+                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, lessonId);
+                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_DATE, lessonDate);
+                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_NUMBER, finalLessonI);
                         startActivity(intentForLessonEditor);
                         return true;
                     }
