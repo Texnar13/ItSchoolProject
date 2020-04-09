@@ -657,7 +657,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
                             values,
                             SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " = ?",
-                            new String[]{"" + cursor.getLong(gradesCursor.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID))}
+                            new String[]{"" + gradesCursor.getLong(gradesCursor.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID))}
                     );
                 }
 
@@ -744,7 +744,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             new String[]{"" + statCursor.getLong(statCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID))}
                     );
 
-                    Log.e("TAG", "updateDatabase: 18 s:" + startDate + " e:" + endDate + " id:" + statCursor.getLong(statCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID)));
                 }
                 statCursor.close();
             }
