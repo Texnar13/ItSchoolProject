@@ -103,7 +103,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             //кабинет
             sql = "CREATE TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "( " + SchoolContract.TableCabinets.KEY_CABINET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableCabinets.COLUMN_NAME + " VARCHAR, " +
-                    SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER + " INTEGER DEFAULT \"1\", " +
+                    SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER + " INTEGER DEFAULT \"15\", " +
                     SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X + " INTEGER DEFAULT \"0\", " +
                     SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y + " INTEGER DEFAULT \"0\" ); ";
             db.execSQL(sql);
@@ -1386,6 +1386,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SchoolContract.TableCabinets.COLUMN_NAME, name);
+        values.put(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER, 15);
         long temp = db.insert(SchoolContract.TableCabinets.NAME_TABLE_CABINETS, null, values);//-1 = ошибка ввода
         //db.close();
         if (IS_DEBUG) Log.i("DBOpenHelper", "createCabinet returnId = " + temp + " name= " + name);

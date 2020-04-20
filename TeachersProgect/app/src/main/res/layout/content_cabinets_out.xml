@@ -38,15 +38,16 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/my_toolbar_text_container_height_size"
             android:background="@drawable/_button_round_background_orange">
+
             <TextView
-                android:textSize="@dimen/text_subtitle_size"
-                android:textColor="@color/backgroundWhite"
-                android:layout_marginLeft="@dimen/double_margin"
-                android:layout_marginRight="@dimen/double_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:fontFamily="@font/geometria_medium"
                 android:text="@string/title_activity_cabinets_out"
-                android:fontFamily="@font/geometria"/>
+                android:textColor="@color/backgroundWhite"
+                android:textSize="@dimen/text_subtitle_size" />
         </LinearLayout>
 
     </RelativeLayout>

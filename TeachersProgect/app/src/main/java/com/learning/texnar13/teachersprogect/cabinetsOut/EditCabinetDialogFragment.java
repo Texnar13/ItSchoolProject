@@ -44,8 +44,6 @@ public class EditCabinetDialogFragment extends DialogFragment {
         builder.setView(linearLayout);
 
 
-
-
         // контейнер каритнки и кнопки назад
         RelativeLayout imageContainer = new RelativeLayout(getActivity());
         LinearLayout.LayoutParams imageContainerParams = new LinearLayout.LayoutParams(
@@ -70,12 +68,11 @@ public class EditCabinetDialogFragment extends DialogFragment {
                 (int) getResources().getDimension(R.dimen.cabinets_out_add_cabinet_image_height)
         );
         imageBackgroundParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        imageBackgroundParams.topMargin = (int) getResources().getDimension(R.dimen.double_margin);
         imageContainer.addView(imageBackground, imageBackgroundParams);
 
         // кнопка назад
         ImageView backImage = new ImageView(getActivity());
-        backImage.setImageResource(R.drawable.__button_back_arrow_dark_gray);
+        backImage.setImageResource(R.drawable.__button_back_arrow_orange);
         backImage.setAdjustViewBounds(true);
         RelativeLayout.LayoutParams backImageParams = new RelativeLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),
@@ -104,7 +101,7 @@ public class EditCabinetDialogFragment extends DialogFragment {
         );
         titleParams.setMargins(
                 (int) getResources().getDimension(R.dimen.double_margin),
-                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.double_margin),
                 0
         );
@@ -128,6 +125,7 @@ public class EditCabinetDialogFragment extends DialogFragment {
         // текстовое поле имени
         final EditText editName = new EditText(getActivity());
         editName.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        editName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         editName.setTextColor(Color.BLACK);
         editName.setHint(R.string.cabinets_out_activity_dialog_hint_cabinet_name);
         editName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -149,13 +147,12 @@ public class EditCabinetDialogFragment extends DialogFragment {
 
         // кнопка удалить
         TextView negativeTextButton = new TextView(getActivity());
-        negativeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-        negativeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        negativeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_medium));
         negativeTextButton.setText(R.string.cabinets_out_activity_dialog_button_delete);
         negativeTextButton.setGravity(Gravity.CENTER);
-        negativeTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-        negativeTextButton.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-        negativeTextButton.setPaintFlags(negativeTextButton.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+        negativeTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+        negativeTextButton.setTextColor(getResources().getColor(R.color.signalRed));
+        negativeTextButton.setPaintFlags(negativeTextButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         // параметры кнопки
         LinearLayout.LayoutParams negativeTextButtonParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -165,7 +162,7 @@ public class EditCabinetDialogFragment extends DialogFragment {
                 (int) getResources().getDimension(R.dimen.double_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.double_margin),
-                (int) getResources().getDimension(R.dimen.simple_margin)
+                0
         );
         negativeTextButtonParams.gravity = Gravity.CENTER;
         linearLayout.addView(negativeTextButton, negativeTextButtonParams);
@@ -202,14 +199,13 @@ public class EditCabinetDialogFragment extends DialogFragment {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         saveTextButtonParams.setMargins(
-                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.forth_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.forth_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin)
         );
         saveTextButtonParams.gravity = Gravity.CENTER;
         saveButtonContainer.addView(saveTextButton, saveTextButtonParams);
-
 
 
 //при нажатии...
@@ -295,5 +291,6 @@ public class EditCabinetDialogFragment extends DialogFragment {
 
 interface EditCabinetDialogInterface {
     void editCabinet(String name, long cabinetId);
+
     void removeCabinet(long cabinetId);
 }

@@ -35,14 +35,10 @@
     <dimen name="spinner_height_size">48dp</dimen>
     <dimen name="my_toolbar_text_container_height_size">36sp</dimen>
 
+    <dimen name="my_toolbar_size">60dp</dimen>
     <dimen name="my_icon_size">40dp</dimen>
     <dimen name="my_icon_small_size">30dp</dimen>
     <dimen name="my_icon_small_half_size">15dp</dimen>
-
-    <dimen name="begin_lesson_start_screen_button_height_plus">50dp</dimen>
-    <dimen name="begin_lesson_start_screen_button_height">36dp</dimen>
-    <dimen name="begin_lesson_start_screen_button_height_half">18dp</dimen>
-
 
     <dimen name="forth_margin">40dp</dimen>
     <dimen name="double_margin">20dp</dimen>
@@ -68,6 +64,9 @@
     <dimen name="text_field_four_simple_symbols_width">60dp</dimen>
 
     <!--главный экран-->
+    <dimen name="begin_lesson_start_screen_button_height_plus">50dp</dimen>
+    <dimen name="begin_lesson_start_screen_button_height">36dp</dimen>
+    <dimen name="begin_lesson_start_screen_button_height_half">18dp</dimen>
     <dimen name="start_screen_button_margins">8dp</dimen>
     <dimen name="start_screen_text_margins">7dp</dimen>
     <dimen name="start_screen_image_margins">14dp</dimen>
@@ -87,6 +86,7 @@
     <dimen name="learners_and_grades_out_name_margin">140dp</dimen>
 
     <!--редактор кабинета-->
+    <dimen name="cabinet_redactor_button_add_bottom_margin">30dp</dimen>
     <dimen name="cabinet_redactor_button_add_size">50dp</dimen>
     <dimen name="cabinet_redactor_button_add_image_size">30dp</dimen>
 

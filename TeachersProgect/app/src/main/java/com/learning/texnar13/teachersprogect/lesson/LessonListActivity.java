@@ -14,6 +14,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -116,7 +117,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
                                 gradesTypesId[0],
                                 subjectId,
                                 getIntent().getStringExtra(LESSON_DATE),
-                                getIntent().getIntExtra(LESSON_NUMBER,0)
+                                getIntent().getIntExtra(LESSON_NUMBER, 0)
                         );
                     } else
                         for (int gradeI = 0; gradeI < 3; gradeI++) {
@@ -127,7 +128,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
                                         gradesTypesId[gradesTypesIndexes[learnerI][gradeI]],
                                         subjectId,
                                         getIntent().getStringExtra(LESSON_DATE),
-                                        getIntent().getIntExtra(LESSON_NUMBER,0)
+                                        getIntent().getIntExtra(LESSON_NUMBER, 0)
                                 );
                             }
                         }
@@ -135,7 +136,6 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
                 }
                 db.close();
                 finish();
-
 
 
                 //очистка данных
@@ -153,9 +153,24 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // правим заголовок
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setElevation(0);
+            TextView title = new TextView(this);
+            title.setText(R.string.title_activity_lesson_list);
+            title.setTextColor(getResources().getColor(R.color.backgroundWhite));
+            title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            title.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_medium));
+            actionBar.setCustomView(title);
+            actionBar.setDisplayShowCustomEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
+
 
         // базовый скролящийся контейнер
         ScrollView scrollView = new ScrollView(this);
+        scrollView.setBackgroundResource(R.color.backgroundWhite);
         setContentView(scrollView);
 
         // поле вывода данных
@@ -315,7 +330,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         helpText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
         helpText.setTextColor(getResources().getColor(R.color.backgroundGray));
         helpText.setGravity(Gravity.CENTER);
-        helpText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+        helpText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         helpText.setText(R.string.lesson_list_activity_text_help);
         //параметры
         LinearLayout.LayoutParams helpTextParams = new LinearLayout.LayoutParams(

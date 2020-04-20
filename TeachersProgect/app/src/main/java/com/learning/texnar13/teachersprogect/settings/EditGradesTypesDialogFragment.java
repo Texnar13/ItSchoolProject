@@ -95,8 +95,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     LinearLayout newTypeContainer = new LinearLayout(getActivity());
                     newTypeContainer.setGravity(Gravity.CENTER_VERTICAL);
                     newTypeContainer.setOrientation(LinearLayout.VERTICAL);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                        newTypeContainer.setBackground(getActivity().getResources().getDrawable(R.drawable.button_lite_gray));
+                    newTypeContainer.setBackground(getActivity().getResources().getDrawable(R.drawable.__background_round_simple_full_dark_white));
                     // параметры контейнера
                     LinearLayout.LayoutParams newTypeContainerParams = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -161,8 +160,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             LinearLayout item = new LinearLayout(getActivity());
             item.setGravity(Gravity.CENTER_VERTICAL);
             item.setOrientation(LinearLayout.VERTICAL);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                item.setBackground(getActivity().getResources().getDrawable(R.drawable.button_lite_gray));
+            item.setBackground(getActivity().getResources().getDrawable(R.drawable.__background_round_simple_full_dark_white));
             // параметры контейнера
             LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -195,6 +193,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             // -- вставляем текстовое поле --
             final EditText editText = new EditText(getActivity());
             editText.setText(typeRecord.typeName);
+            editText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             editText.setTextSize(
                     TypedValue.COMPLEX_UNIT_PX,
                     getActivity().getResources().getDimension(R.dimen.text_subtitle_size)
@@ -256,7 +255,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                 TextView removeText = new TextView(getActivity());
                 removeText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
                 removeText.setText(R.string.settings_activity_dialog_button_remove);
-                removeText.setTextColor(getResources().getColor(R.color.backgroundWhite));
+                removeText.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
                 removeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                 LinearLayout.LayoutParams removeTextParams = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -317,7 +316,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             TextView saveText = new TextView(getActivity());
             saveText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             saveText.setText(R.string.settings_activity_dialog_button_save);
-            saveText.setTextColor(getResources().getColor(R.color.backgroundWhite));
+            saveText.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
             saveText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             LinearLayout.LayoutParams saveTextParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -374,6 +373,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             // --- текстовое поле элемента ---
             TextView textView = new TextView(getActivity());
             textView.setText(typeRecord.typeName);
+            textView.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getActivity().getResources().getDimension(R.dimen.text_subtitle_size));
             textView.setTextColor(Color.BLACK);
             textView.setGravity(Gravity.CENTER_VERTICAL);

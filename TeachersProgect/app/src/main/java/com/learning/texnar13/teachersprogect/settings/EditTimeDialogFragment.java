@@ -2,7 +2,7 @@ package com.learning.texnar13.teachersprogect.settings;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -60,7 +61,7 @@ public class EditTimeDialogFragment extends DialogFragment {
         closeImageViewParams.setMargins(
                 (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin));
         headLayout.addView(closeImageView, closeImageViewParams);
         // при нажатии на кнопку закрыть
@@ -74,10 +75,10 @@ public class EditTimeDialogFragment extends DialogFragment {
 
         // текст заголовка
         TextView title = new TextView(getActivity());
-        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_medium));
         title.setText(R.string.settings_activity_dialog_edit_time_title);
         title.setGravity(Gravity.CENTER_VERTICAL);
-        title.setTextColor(Color.WHITE);
+        title.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
         title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
 
         LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
@@ -108,7 +109,14 @@ public class EditTimeDialogFragment extends DialogFragment {
         LinearLayout timesOut = new LinearLayout(getActivity());
         timesOut.setGravity(Gravity.CENTER);
         timesOut.setOrientation(LinearLayout.VERTICAL);
-        scrollView.addView(timesOut);
+
+
+        ScrollView.LayoutParams timesOutParams = new ScrollView.LayoutParams(
+                ScrollView.LayoutParams.MATCH_PARENT,
+                ScrollView.LayoutParams.WRAP_CONTENT
+        );
+        timesOutParams.topMargin = (int) getResources().getDimension(R.dimen.double_margin);
+        scrollView.addView(timesOut, timesOutParams);
 
 
 //--поля времени--
@@ -159,14 +167,14 @@ public class EditTimeDialogFragment extends DialogFragment {
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
             itemParams.bottomMargin = 8;
-            timesOut.addView(item,itemParams);
+            timesOut.addView(item, itemParams);
 
             //--цифра
             TextView number = new TextView(getActivity());
-            number.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+            number.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_medium));
             number.setText((i + 1) + ".");
             number.setTextSize(TypedValue.COMPLEX_UNIT_PX, getActivity().getResources().getDimension(R.dimen.text_subtitle_size));
-            number.setTextColor(Color.BLACK);
+            number.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
             item.addView(number);
 
             //--контейнер времени
@@ -183,7 +191,6 @@ public class EditTimeDialogFragment extends DialogFragment {
             fields[i][0].setText("" + array[i][0]);
             fields[i][0].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][0].setInputType(InputType.TYPE_CLASS_NUMBER);
-            fields[i][0].setBackgroundResource(R.drawable._underlined_black);
             LinearLayout.LayoutParams fieldOneParams = new LinearLayout.LayoutParams(
                     (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width),
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -207,7 +214,6 @@ public class EditTimeDialogFragment extends DialogFragment {
             fields[i][1].setText("" + getTwoSymbols(array[i][1]));
             fields[i][1].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][1].setInputType(InputType.TYPE_CLASS_NUMBER);
-            fields[i][1].setBackgroundResource(R.drawable._underlined_black);
             timeContainer.addView(fields[i][1], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
 
             //---- --
@@ -222,7 +228,7 @@ public class EditTimeDialogFragment extends DialogFragment {
             );
             pointerMidParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
             pointerMidParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-            timeContainer.addView(pointerMid,pointerMidParams);
+            timeContainer.addView(pointerMid, pointerMidParams);
 
             //----поле ввода endHour
             fields[i][2] = new EditText(getActivity());
@@ -232,7 +238,6 @@ public class EditTimeDialogFragment extends DialogFragment {
             fields[i][2].setText("" + array[i][2]);
             fields[i][2].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][2].setInputType(InputType.TYPE_CLASS_NUMBER);
-            fields[i][2].setBackgroundResource(R.drawable._underlined_black);
             timeContainer.addView(fields[i][2], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
 
             //----:
@@ -251,11 +256,9 @@ public class EditTimeDialogFragment extends DialogFragment {
             fields[i][3].setText("" + getTwoSymbols(array[i][3]));
             fields[i][3].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             fields[i][3].setInputType(InputType.TYPE_CLASS_NUMBER);
-            fields[i][3].setBackgroundResource(R.drawable._underlined_black);
             timeContainer.addView(fields[i][3], (int) getResources().getDimension(R.dimen.text_field_two_simple_symbols_width), LinearLayout.LayoutParams.WRAP_CONTENT);
 
         }
-
 
 
         //контейнер для кнопки
@@ -268,10 +271,10 @@ public class EditTimeDialogFragment extends DialogFragment {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         containerParams.setMargins(
-                (int) getResources().getDimension(R.dimen.double_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.double_margin),
-                (int) getResources().getDimension(R.dimen.simple_margin));
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.half_more_margin));
         //контейнер в диалог
         timesOut.addView(container, containerParams);
 
@@ -284,13 +287,13 @@ public class EditTimeDialogFragment extends DialogFragment {
         positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         positiveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams positiveButtonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
         );
         positiveButtonParams.setMargins(
+                (int) getResources().getDimension(R.dimen.forth_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.half_margin),
-                (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.half_margin));
+                (int) getResources().getDimension(R.dimen.forth_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin));
         container.addView(positiveButton, positiveButtonParams);
 
 
@@ -310,11 +313,11 @@ public class EditTimeDialogFragment extends DialogFragment {
                         //----проверяем отдельную клетку----
                         if (!(fields[i][j].getText().toString().length() > 2) && //не слишком большое по длинне
                                 !(fields[i][j].getText().toString().length() == 0)//не слишком маленькое по длинне
-                                ) {
+                        ) {
                             if (((Integer.parseInt(fields[i][j].getText().toString()) > 23) && (j % 2 == 0)) ||//не слишком большое численно
                                     ((Integer.parseInt(fields[i][j].getText().toString()) > 59) && (j % 2 == 1)) ||
                                     (Integer.parseInt(fields[i][j].getText().toString()) < 0)//не слишком маленькое численно
-                                    ) {
+                            ) {
                                 flag = false;
                                 fields[i][j].setBackgroundResource(R.drawable._underlined_black_pink);
                             }

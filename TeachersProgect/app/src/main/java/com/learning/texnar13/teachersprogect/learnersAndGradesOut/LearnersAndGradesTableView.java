@@ -659,6 +659,7 @@ public class LearnersAndGradesTableView extends View {
             String addButtonText = getResources().getString(R.string.learners_and_grades_out_activity_text_add_learner);
             drawTextPaint.setColor(Color.BLACK);
             drawTextPaint.getTextBounds(addButtonText, 0, addButtonText.length(), headTextRect);
+            drawTextPaint.setUnderlineText(true);
             if (learnersAndGradesDataAndSizes.size() != 0) {
                 canvas.drawText(
                         addButtonText,
@@ -675,6 +676,7 @@ public class LearnersAndGradesTableView extends View {
                         addLearnerButtonHeight / 2F + (headTextRect.bottom - headTextRect.top) / 2F + learnersAndGradesOffsetForTitle,
                         drawTextPaint
                 );
+            drawTextPaint.setUnderlineText(false);
 
             // ---------- выводим шапку ----------
             if (learnersAndGradesDataAndSizes.size() != 0) {
@@ -1099,3 +1101,7 @@ class LearnerAndHisGradesWithSize {
  * всегда три - количество оценок
  *
  * */
+
+
+// todo подчеркнутый текст добавить ученика
+// negativeTextButton.setPaintFlags(negativeTextButton.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);

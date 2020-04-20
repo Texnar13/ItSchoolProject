@@ -22,22 +22,23 @@
 
 
         <LinearLayout
-            android:gravity="center"
-            android:layout_marginLeft="@dimen/my_icon_size"
-            android:layout_marginRight="@dimen/my_icon_size"
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/my_toolbar_text_container_height_size"
-            android:background="@drawable/_button_round_background_pink">
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/my_icon_size"
+            android:layout_marginRight="@dimen/my_icon_size"
+            android:background="@drawable/_button_round_background_pink"
+            android:gravity="center">
+
             <TextView
-                android:textSize="@dimen/text_subtitle_size"
+                android:textSize="@dimen/text_simple_size"
                 android:textColor="@color/backgroundWhite"
                 android:layout_marginLeft="@dimen/double_margin"
                 android:layout_marginRight="@dimen/double_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/title_activity_learners_and_grades_statistics"
-                android:fontFamily="@font/geometria_light"/>
+                android:fontFamily="@font/geometria_medium"/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -52,11 +53,14 @@
             android:orientation="vertical">
 
             <ImageView
-            android:layout_margin="@dimen/double_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            app:srcCompat="@drawable/__statistic_background_image"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginTop="@dimen/simple_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:layout_marginBottom="@dimen/simple_margin"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/__statistic_background_image" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -74,7 +78,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/simple_margin"
                         android:layout_marginRight="@dimen/simple_margin"
-                        android:layout_marginBottom="@dimen/double_margin"
+                        android:layout_marginBottom="@dimen/simple_margin"
                         android:layout_marginTop="@dimen/begin_lesson_start_screen_button_height_half"
                         android:gravity="center"
                         android:orientation="horizontal">
@@ -84,6 +88,7 @@
                             android:layout_width="@dimen/text_field_two_simple_symbols_width"
                             android:layout_height="wrap_content"
                             android:background="@drawable/_underlined_black"
+                            android:fontFamily="@font/geometria_family"
                             android:gravity="center"
                             android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_day"
                             android:inputType="number"
@@ -111,6 +116,7 @@
                             android:layout_marginEnd="5dp"
                             android:layout_marginRight="5dp"
                             android:background="@drawable/_underlined_black"
+                            android:fontFamily="@font/geometria_family"
                             android:gravity="center"
                             android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_month"
                             android:inputType="number"
@@ -140,6 +146,7 @@
                             android:paddingBottom="@dimen/half_margin"
                             android:ems="3"
                             android:gravity="center"
+                            android:fontFamily="@font/geometria_family"
                             android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
                             android:inputType="number"
                             android:singleLine="true"
@@ -158,8 +165,9 @@
                         <EditText
                             android:id="@+id/learners_grades_statistics_end_day"
                             android:layout_width="@dimen/text_field_two_simple_symbols_width"
-                            android:background="@drawable/_underlined_black"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/_underlined_black"
+                            android:fontFamily="@font/geometria_family"
                             android:gravity="center"
                             android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_day"
                             android:inputType="number"
@@ -181,19 +189,20 @@
                         <EditText
                             android:id="@+id/learners_grades_statistics_end_month"
                             android:layout_width="@dimen/text_field_two_simple_symbols_width"
-                            android:background="@drawable/_underlined_black"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
                             android:layout_marginLeft="5dp"
                             android:layout_marginEnd="5dp"
                             android:layout_marginRight="5dp"
+                            android:background="@drawable/_underlined_black"
+                            android:fontFamily="@font/geometria_family"
+                            android:gravity="center"
+                            android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_month"
+                            android:inputType="number"
                             android:paddingLeft="@dimen/half_margin"
                             android:paddingTop="@dimen/half_margin"
                             android:paddingRight="@dimen/half_margin"
                             android:paddingBottom="@dimen/half_margin"
-                            android:gravity="center"
-                            android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_month"
-                            android:inputType="number"
                             android:singleLine="true"
                             android:textColor="#000000"
                             android:textSize="@dimen/text_subtitle_size" />
@@ -208,19 +217,20 @@
                         <EditText
                             android:id="@+id/learners_grades_statistics_end_year"
                             android:layout_width="@dimen/text_field_four_simple_symbols_width"
-                            android:background="@drawable/_underlined_black"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/_underlined_black"
+                            android:ems="3"
+                            android:fontFamily="@font/geometria_family"
+                            android:gravity="center"
+                            android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
+                            android:inputType="number"
                             android:paddingLeft="@dimen/half_margin"
                             android:paddingTop="@dimen/half_margin"
                             android:paddingRight="@dimen/half_margin"
                             android:paddingBottom="@dimen/half_margin"
-                            android:ems="3"
-                            android:gravity="center"
-                            android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
-                            android:inputType="number"
                             android:singleLine="true"
                             android:textColor="#000000"
-                            android:textSize="@dimen/text_subtitle_size"  />
+                            android:textSize="@dimen/text_subtitle_size" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -236,13 +246,14 @@
                             android:background="@color/backgroundLiteGray"
                             android:orientation="vertical">
                             <TextView
+                                android:textAllCaps="true"
                                 android:singleLine="true"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:padding="@dimen/simple_margin"
                                 android:gravity="center"
                                 android:text="@string/learners_and_grades_statistics_activity_title_column_learner_name"
-                                android:textColor="#000000"
+                                android:textColor="@color/backgroundGray"
                                 android:textSize="@dimen/text_subtitle_size"
                                 tools:ignore="RtlHardcoded" />
 
@@ -268,13 +279,14 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:textAllCaps="true"
                                 android:singleLine="true"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:padding="@dimen/simple_margin"
                                 android:gravity="center"
                                 android:text="@string/learners_and_grades_statistics_activity_title_column_grade"
-                                android:textColor="#000000"
+                                android:textColor="@color/backgroundGray"
                                 android:textSize="@dimen/text_subtitle_size"
                                 tools:ignore="RtlHardcoded" />
                             <LinearLayout
@@ -292,13 +304,14 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:textAllCaps="true"
                                 android:singleLine="true"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:padding="@dimen/simple_margin"
                                 android:text="@string/learners_and_grades_statistics_activity_title_column_absent"
-                                android:textColor="#000000"
+                                android:textColor="@color/backgroundGray"
                                 android:textSize="@dimen/text_subtitle_size"
                                 tools:ignore="RtlHardcoded" />
 
@@ -311,9 +324,11 @@
                     </LinearLayout>
 
                     <TextView
+                        android:gravity="center_horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
+                        android:fontFamily="@font/geometria_light"
                         android:text="@string/learners_and_grades_statistics_activity_text_help"
                         android:textColor="@color/backgroundLiteGray"
                         android:textSize="@dimen/text_subtitle_size" />
@@ -338,6 +353,7 @@
                         android:layout_marginLeft="@dimen/double_margin"
                         android:layout_marginRight="@dimen/double_margin"
                        android:text="1-я четверть"
+                        android:fontFamily="@font/geometria_medium"
                         android:textColor="@color/backgroundWhite"
                      android:textSize="@dimen/text_subtitle_size" />
                 </LinearLayout>

@@ -42,9 +42,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/double_margin"
-            android:layout_marginRight="@dimen/double_margin"
-            android:fontFamily="@font/geometria"
+            android:layout_marginLeft="@dimen/forth_margin"
+            android:layout_marginRight="@dimen/forth_margin"
+            android:fontFamily="@font/geometria_medium"
             android:text="@string/title_activity_learners_classes_out"
             android:textColor="@color/backgroundWhite"
             android:textSize="@dimen/text_subtitle_size" />

@@ -19,7 +19,7 @@
             app:popupTheme="@style/AppTheme.PopupOverlay">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/my_toolbar_text_container_height_size"
                 android:layout_centerInParent="true"
                 android:layout_marginLeft="24dp"
                 android:layout_marginRight="24dp"
@@ -28,7 +28,6 @@
                 tools:ignore="RtlHardcoded">
 
                 <TextView
-                    android:fontFamily="@font/geometria"
                     android:id="@+id/learners_and_grades_activity_text_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -36,6 +35,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/geometria_medium"
                     android:maxLines="1"
                     android:textColor="@color/backgroundWhite"
                     android:textSize="@dimen/text_subtitle_size" />

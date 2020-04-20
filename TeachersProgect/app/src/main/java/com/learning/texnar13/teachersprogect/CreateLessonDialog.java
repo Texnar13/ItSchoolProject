@@ -147,9 +147,9 @@ public class CreateLessonDialog extends DialogFragment { //TODO
         );
         saveTextButtonContainerParams.setMargins(
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.double_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.double_margin)
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin)
         );
         saveTextButtonContainerParams.gravity = Gravity.CENTER;
         linearLayout.addView(createButtonContainer, saveTextButtonContainerParams);

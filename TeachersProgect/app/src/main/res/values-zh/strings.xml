@@ -181,10 +181,11 @@ Thank you for your feedback - it helped us make the application better! If you h
     <string name="lesson_redactor_activity_text_learners_not_ready">学生没有坐在教室里。</string>
 
     <string name="lesson_redactor_activity_toast_text_subject_not_chosen">没有选择的学科，您可以在"学生"部分创建一个班级，然后转到它并创建一个学科</string>
-    <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">没有选择课堂，您可以在部分中创建它 «课堂»</string>
+    <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">未选择教室，您可以在部分中创建它 «课堂»</string>
+    <string name="lesson_redactor_activity_toast_text_class_not_chosen">没有选择课堂，您可以在 «学生» 中创建</string>
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">让学生们坐下</string>
-    <string name="lesson_redactor_activity_button_remove">删除课</string>
+    <string name="lesson_redactor_activity_button_remove"><u>删除课</u></string>
     <string name="lesson_redactor_activity_button_save">保存</string>
     <string name="lesson_redactor_activity_button_cancel">取消</string>
     <!-- диалоги -->
@@ -233,8 +234,6 @@ Thank you for your feedback - it helped us make the application better! If you h
     <!-- заголовок активности -->
     <string name="title_activity_settings">设置</string>
     <!-- тексты -->
-    <string name="settings_activity_hint_max_answer"></string>
-    <string name="settings_activity_title_desk_size"></string>
     <string name="settings_activity_title_max_answer">量分数/最高得分</string>
     <string name="settings_activity_title_grades_type">课的工作类型</string>
     <string name="settings_activity_title_colored_grades">颜色分数</string>

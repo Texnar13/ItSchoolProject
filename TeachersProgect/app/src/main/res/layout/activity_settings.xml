@@ -66,7 +66,8 @@
                         android:layout_height="@dimen/my_buttons_height_size"
                         android:gravity="center_vertical"
                         android:text="@string/settings_activity_button_edit_locale"
-                        android:textColor="#000000"
+                        android:fontFamily="@font/geometria_medium"
+                        android:textColor="@color/backgroundDarkGray"
                         android:textSize="@dimen/text_subtitle_size" />
                 </LinearLayout>
 
@@ -103,7 +104,8 @@
                     android:layout_marginRight="@dimen/my_icon_size"
                     android:gravity="center_vertical"
                     android:text="@string/settings_activity_button_edit_time"
-                    android:textColor="#000000"
+                    android:fontFamily="@font/geometria_medium"
+                    android:textColor="@color/backgroundDarkGray"
                     android:textSize="@dimen/text_subtitle_size"
                     tools:ignore="RtlHardcoded" />
 
@@ -111,8 +113,8 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/simple_margin"
-                    android:layout_width="@dimen/my_icon_size"
-                    android:layout_height="@dimen/my_icon_size"
+                    android:layout_width="@dimen/my_icon_small_size"
+                    android:layout_height="@dimen/my_icon_small_size"
                     android:adjustViewBounds="true"
                     app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
 
@@ -136,7 +138,8 @@
                     android:layout_marginRight="@dimen/my_icon_size"
                     android:gravity="center_vertical"
                     android:text="@string/settings_activity_button_edit_max_answer"
-                    android:textColor="#000000"
+                    android:fontFamily="@font/geometria_medium"
+                    android:textColor="@color/backgroundDarkGray"
                     android:textSize="@dimen/text_subtitle_size"
                     tools:ignore="RtlHardcoded" />
 
@@ -144,8 +147,8 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/simple_margin"
-                    android:layout_width="@dimen/my_icon_size"
-                    android:layout_height="@dimen/my_icon_size"
+                    android:layout_width="@dimen/my_icon_small_size"
+                    android:layout_height="@dimen/my_icon_small_size"
                     android:adjustViewBounds="true"
                     app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
 
@@ -170,7 +173,8 @@
                     android:layout_marginRight="@dimen/my_icon_size"
                     android:gravity="center_vertical"
                     android:text="@string/settings_activity_title_grades_type"
-                    android:textColor="#000000"
+                    android:fontFamily="@font/geometria_medium"
+                    android:textColor="@color/backgroundDarkGray"
                     android:textSize="@dimen/text_subtitle_size"
                     tools:ignore="RtlHardcoded" />
 
@@ -178,8 +182,8 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/simple_margin"
-                    android:layout_width="@dimen/my_icon_size"
-                    android:layout_height="@dimen/my_icon_size"
+                    android:layout_width="@dimen/my_icon_small_size"
+                    android:layout_height="@dimen/my_icon_small_size"
                     android:adjustViewBounds="true"
                     app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
 
@@ -205,7 +209,8 @@
                     android:layout_marginRight="@dimen/my_icon_size"
                     android:gravity="center_vertical"
                     android:text="@string/settings_activity_title_colored_grades"
-                    android:textColor="#000000"
+                    android:fontFamily="@font/geometria_medium"
+                    android:textColor="@color/backgroundDarkGray"
                     android:textSize="@dimen/text_subtitle_size"
                     tools:ignore="RtlHardcoded" />
 
@@ -238,18 +243,19 @@
                     android:layout_marginRight="@dimen/my_icon_size"
                     android:gravity="center_vertical"
                     android:text="@string/settings_activity_button_remove_data"
-                    android:textColor="#000000"
+                    android:fontFamily="@font/geometria_medium"
+                    android:textColor="@color/backgroundDarkGray"
                     android:textSize="@dimen/text_subtitle_size"
                     tools:ignore="RtlHardcoded" />
 
                 <ImageView
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/simple_margin"
+                    android:layout_marginRight="@dimen/double_margin"
                     android:layout_width="@dimen/my_icon_size"
                     android:layout_height="@dimen/my_icon_size"
                     android:adjustViewBounds="true"
-                    app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
+                    app:srcCompat="@drawable/__icon_settings_key"/>
 
             </RelativeLayout>
 
@@ -273,7 +279,7 @@
                     android:gravity="center"
                     android:text="@string/settings_activity_button_rate_us"
                     android:textColor="@color/backgroundWhite"
-                    android:textSize="@dimen/text_simple_size"
+                    android:textSize="@dimen/text_subtitle_size"
                     tools:ignore="RtlHardcoded" />
 
             </RelativeLayout>

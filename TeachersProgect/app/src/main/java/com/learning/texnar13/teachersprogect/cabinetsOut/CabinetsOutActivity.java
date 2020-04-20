@@ -15,6 +15,8 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -44,6 +46,13 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
 
         // вертикальная ориентация
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
 
         //кнопка назад
         findViewById(R.id.cabinets_out_toolbar_back_arrow).setOnClickListener(new View.OnClickListener() {
@@ -135,7 +144,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
 
             // создаём текст
             TextView item = new TextView(this);
-            item.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
+            item.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
             item.setGravity(Gravity.CENTER_VERTICAL);
             item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             item.setTextColor(Color.BLACK);
@@ -166,9 +175,9 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
             arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
             arrowParams.setMargins(
                     (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.double_margin),
+                    (int) getResources().getDimension(R.dimen.half_more_margin),
                     (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.double_margin)
+                    (int) getResources().getDimension(R.dimen.half_more_margin)
             );
             cabinetContainer.addView(arrow, arrowParams);
 
@@ -241,7 +250,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
 
             // создаём текст
             TextView item = new TextView(this);
-            item.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
+            item.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
             item.setGravity(Gravity.CENTER_VERTICAL);
             item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             item.setTextColor(Color.BLACK);
@@ -263,7 +272,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
 
             // стрелочка
             ImageView arrow = new ImageView(this);
-            arrow.setImageResource(R.drawable.__button_circle_plus);
+            arrow.setImageResource(R.drawable.__button_add_orange);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
                     (int) getResources().getDimension(R.dimen.my_icon_small_size),
                     (int) getResources().getDimension(R.dimen.my_icon_small_size)
@@ -272,9 +281,9 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
             arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
             arrowParams.setMargins(
                     (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.half_more_margin),
                     (int) getResources().getDimension(R.dimen.double_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.double_margin)
+                    (int) getResources().getDimension(R.dimen.half_more_margin)
             );
             learnersClassContainer.addView(arrow, arrowParams);
 
@@ -308,10 +317,10 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
                 (int) getResources().getDimension(R.dimen.simple_margin)
         );
 
-        //---1 текст---
+        // подсказка
         //создаем
         TextView helpText = new TextView(this);
-        helpText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
+        helpText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
         helpText.setGravity(Gravity.CENTER);
         helpText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         helpText.setTextColor(getResources().getColor(R.color.backgroundLiteGray));

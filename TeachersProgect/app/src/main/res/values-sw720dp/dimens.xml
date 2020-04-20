@@ -1,27 +1,4 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <!--
-    values-sw720dp          10.1” tablet 1280x800 mdpi
-    values-sw600dp          7.0”  tablet 1024x600 mdpi
-
-    values-sw480dp          5.4”  480x854 mdpi
-    values-sw480dp          5.1”  480x800 mdpi
-
-    values-xxhdpi           5.5"  1080x1920 xxhdpi
-    values-xxxhdpi          5.5" 1440x2560 xxxhdpi
-
-    values-xhdpi            4.7”   1280x720 xhdpi
-    values-xhdpi            4.65”  720x1280 xhdpi
-
-    values-hdpi             4.0” 480x800 hdpi
-    values-hdpi             3.7” 480x854 hdpi
-
-    values-mdpi             3.2” 320x480 mdpi
-
-    values-ldpi             3.4” 240x432 ldpi
-    values-ldpi             3.3” 240x400 ldpi
-    values-ldpi             2.7” 240x320 ldpi
-    -->
 
     <dimen name="activity_horizontal_margin">0dp</dimen>
     <dimen name="activity_vertical_margin">0dp</dimen>
@@ -35,14 +12,10 @@
     <dimen name="spinner_height_size">48dp</dimen>
     <dimen name="my_toolbar_text_container_height_size">36sp</dimen>
 
+    <dimen name="my_toolbar_size">60dp</dimen>
     <dimen name="my_icon_size">40dp</dimen>
     <dimen name="my_icon_small_size">30dp</dimen>
     <dimen name="my_icon_small_half_size">15dp</dimen>
-
-    <dimen name="begin_lesson_start_screen_button_height_plus">50dp</dimen>
-    <dimen name="begin_lesson_start_screen_button_height">36dp</dimen>
-    <dimen name="begin_lesson_start_screen_button_height_half">18dp</dimen>
-
 
     <dimen name="forth_margin">40dp</dimen>
     <dimen name="double_margin">20dp</dimen>
@@ -68,6 +41,9 @@
     <dimen name="text_field_four_simple_symbols_width">60dp</dimen>
 
     <!--главный экран-->
+    <dimen name="begin_lesson_start_screen_button_height_plus">50dp</dimen>
+    <dimen name="begin_lesson_start_screen_button_height">36dp</dimen>
+    <dimen name="begin_lesson_start_screen_button_height_half">18dp</dimen>
     <dimen name="start_screen_button_margins">8dp</dimen>
     <dimen name="start_screen_text_margins">7dp</dimen>
     <dimen name="start_screen_image_margins">14dp</dimen>
@@ -87,6 +63,7 @@
     <dimen name="learners_and_grades_out_name_margin">140dp</dimen>
 
     <!--редактор кабинета-->
+    <dimen name="cabinet_redactor_button_add_bottom_margin">30dp</dimen>
     <dimen name="cabinet_redactor_button_add_size">50dp</dimen>
     <dimen name="cabinet_redactor_button_add_image_size">30dp</dimen>
 

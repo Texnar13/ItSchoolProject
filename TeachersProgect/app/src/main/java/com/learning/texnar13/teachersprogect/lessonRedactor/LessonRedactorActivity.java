@@ -1,16 +1,17 @@
 package com.learning.texnar13.teachersprogect.lessonRedactor;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
-import android.graphics.Color;
+import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -20,10 +21,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+
 import com.learning.texnar13.teachersprogect.R;
-import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
+import com.yandex.mobile.ads.AdSize;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,12 +38,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class LessonRedactorActivity extends AppCompatActivity implements SubjectNameDialogInterface, RemoveSubjectDialogFragmentInterface {
+public class LessonRedactorActivity extends AppCompatActivity implements SubjectsDialogInterface {
 
     // id передаваемых данных (трансферные константы)
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
-    //    public static final String LESSON_START_TIME = "lessonStartTime";
-//    public static final String LESSON_END_TIME = "lessonEndTime";
     public static final String LESSON_DATE = "lessonDate";
     public static final String LESSON_NUMBER = "lessonNumber";
 
@@ -48,57 +51,58 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
     //выбранные класс и кабинет//todo предусмотреть вариант если уроков вобще нет. проверка нет ли на этом времени урока.
     long classId = -1;
     long cabinetId = -1;
-    //урок
-    long chosenSubjectId = -1;
     // время урока в календарях (берем не из урока, тк если урок не создан то выбранного времени в бд нет)
     String lessonDate;
     int lessonNumber;
-    //    GregorianCalendar calendarStartTime;
-//    GregorianCalendar calendarEndTime;
-    //какие повторения
+    // какие повторения
     long repeat = 0;
 
-    // номер выбранного предмета в списке
-    int subjectPosition = 0;
+    // массив с предметами
+    static ArrayList<SubjectUnit> subjects;
+    // номер выбранного предмета в массиве
+    int chosenSubjectPosition = -1;
 
-
-    //индикатор состояния рассадки
+    // текстовое поле предмета
+    TextView subjectText;
+    // индикатор состояния рассадки
     ImageView seatingStateImage;
-    // текст текущей даты
-    TextView currentDateText;
     // --- спиннеры ---
-    // -- спиннер классов --
     Spinner classSpinner;
-    // -- спиннер кабинетов --
     Spinner cabinetSpinner;
-    // -- спиннер предметов --
-    Spinner subjectSpinner;
-    // -- спиннер времени --
     Spinner timeSpinner;
 
 
+
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_redactor);
-        // Убираем заголовок
-        getSupportActionBar().hide();
-
-        setTheme(android.R.style.Theme_Dialog);
-
         // вертикальная ориентация
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
-        // кнопка назад
-        findViewById(R.id.activity_lesson_redactor_back_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        // цвета статус бара
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+
+        //setTheme(android.R.style.Theme_Dialog);
 
 
-// ******************** загружаем данные ********************
+        // ******************** загружаем данные ********************
+
+        // ================ загрузка рекламы яндекса ================
+        com.yandex.mobile.ads.AdView mAdView = findViewById(R.id.activity_lesson_redactor_banner);
+        mAdView.setBlockId(getResources().getString(R.string.banner_id_lesson_redactor));
+        mAdView.setAdSize(AdSize.BANNER_320x50);
+        // Создание объекта таргетирования рекламы.
+        final com.yandex.mobile.ads.AdRequest adRequest = new com.yandex.mobile.ads.AdRequest.Builder().build();
+        // Загрузка объявления.
+        mAdView.loadAd(adRequest);
+
 
         // -- id зависимости --
         attitudeId = getIntent().getLongExtra(LESSON_ATTITUDE_ID, -2L);
@@ -127,15 +131,12 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
             // -- главная зависимость(урок) --
             Cursor attitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(attitudeId);
             attitudeCursor.moveToFirst();
-//            attitudeId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID));
-            // -- id предмета --
-            chosenSubjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
+            // -- предмет --
+            long chosenSubjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
             Cursor subjectCursor = db.getSubjectById(chosenSubjectId);
             subjectCursor.moveToFirst();
             // -- id класса(получаем из предмета) --
             classId = subjectCursor.getLong(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
-            // выбираем переданный предмет в спиннере(-1 говорит об этом методу)
-            subjectPosition = -1;
             // -- id кабинета --
             cabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
             // -- повторы --
@@ -148,22 +149,23 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
 
 
         // ------ спиннеры и кнопки ------
+        // текстовое поле предмета
+        subjectText = findViewById(R.id.activity_lesson_redactor_lesson_name_text_button);
+        subjectText.setPaintFlags(subjectText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         // -- спиннер классов --
-        classSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_class_spinner);
+        classSpinner = findViewById(R.id.activity_lesson_redactor_class_spinner);
         // -- спиннер кабинетов --
-        cabinetSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_cabinet_spinner);
-        // -- спиннер предметов --
-        subjectSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_lesson_name_spinner);
+        cabinetSpinner = findViewById(R.id.activity_lesson_redactor_cabinet_spinner);
         // -- спиннер времени --
-        timeSpinner = (Spinner) findViewById(R.id.activity_lesson_redactor_time_spinner);
+        timeSpinner = findViewById(R.id.activity_lesson_redactor_time_spinner);
         // - рассадка -
         RelativeLayout editSeatingButton = findViewById(R.id.activity_lesson_redactor_seating_redactor_button);
 
 
-        // картинка сишнализирующая о рассадке
+        // картинка сигнализирующая о рассадке
         seatingStateImage = findViewById(R.id.activity_lesson_redactor_seating_state);
         // кнопки сохранения удаления
-        LinearLayout removeButton = findViewById(R.id.activity_lesson_redactor_remove_button);
+        TextView removeButton = findViewById(R.id.activity_lesson_redactor_remove_button);
         LinearLayout saveButton = findViewById(R.id.activity_lesson_redactor_save_button);
         // текст текущей даты
         {
@@ -189,10 +191,16 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
                 // переключаем цвета
                 ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
                         setTextColor(getResources().getColor(R.color.baseGreen));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
                 ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
                         setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
                 ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
                         setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
                 // и переменные
                 repeat = SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER;
             }
@@ -204,10 +212,16 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
                 // переключаем цвета
                 ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
                         setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
-                        setTextColor(getResources().getColor(R.color.baseGreen));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
                 ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
                         setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+                        setTextColor(getResources().getColor(R.color.baseGreen));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
                 // и переменные
                 repeat = SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY;
 
@@ -220,26 +234,38 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
                 // переключаем цвета
                 ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
                         setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
-                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
                 ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
                         setTextColor(getResources().getColor(R.color.baseGreen));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
                 // и переменные
                 repeat = SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY;
 
             }
         });
 
-        // закрашиваем выбранный тип повторов
+        // закрашиваем выбранный тип повторов при старте активности
         if (repeat == SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER) {
             ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
                     setTextColor(getResources().getColor(R.color.baseGreen));
+            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+                    setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
         } else if (repeat == SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY) {
             ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
                     setTextColor(getResources().getColor(R.color.baseGreen));
+            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+                    setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
         } else {
             ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
                     setTextColor(getResources().getColor(R.color.baseGreen));
+            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+                    setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
         }
 
 // ******************** вывод данных в поля ********************
@@ -247,11 +273,9 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         // -- спиннер классов --
         outClasses();
         // -- спиннер кабинетов --
-        outCabinets();
-        // -- спиннер предметов --
-
+        getAndOutCabinets();
         // -- спиннер времени --
-        outTime();
+        getAndOutTime();
         // - рассадка -
         // ------ обновляем текст с информацией о рассадке ------
         seatingTextUpdate();
@@ -260,9 +284,8 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
 // ******************** настраиваем кнопки ********************
 
         // ---- удаляем лишние кнопки ----
-
         if (attitudeId == -1) {
-            removeButton.removeAllViews();
+            ((LinearLayout)findViewById(R.id.activity_lesson_redactor_buttons_container)).removeView(removeButton);
         } else {
             //buttonsOut.removeView(backButton);
             //удаление урока
@@ -277,14 +300,45 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
             });
         }
 
+        // ---- кнопка выбора предмета ----
+        subjectText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (classId != -1) {
+                    // создаем диалог работы с предметами
+                    SubjectsDialogFragment subjectsDialogFragment = new SubjectsDialogFragment();
+                    // готоим и передаем массив названий предметов и позицию выбранного предмета
+                    Bundle args = new Bundle();
+                    String[] subjectsArray = new String[subjects.size()];
+                    for (int subjectI = 0; subjectI < subjectsArray.length; subjectI++) {
+                        subjectsArray[subjectI] = subjects.get(subjectI).getSubjectName();
+                    }
+                    args.putStringArray(SubjectsDialogFragment.ARGS_LEARNERS_NAMES_STRING_ARRAY, subjectsArray);
+                    subjectsDialogFragment.setArguments(args);
+
+                    // показываем диалог
+                    subjectsDialogFragment.show(getFragmentManager(), "subjectsDialogFragment - hello");
+                }
+            }
+        });
+
         // ---- кнопка рассадить учеников ----
         editSeatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), SeatingRedactorActivity.class);
-                intent.putExtra(SeatingRedactorActivity.CLASS_ID, classId);
-                intent.putExtra(SeatingRedactorActivity.CABINET_ID, cabinetId);
-                startActivityForResult(intent, 1);
+
+                if (classId == -1) {
+                    Toast toast = Toast.makeText(getApplicationContext(), R.string.lesson_redactor_activity_toast_text_class_not_chosen, Toast.LENGTH_LONG);
+                    toast.show();
+                } else if (cabinetId == -1) {
+                    Toast toast = Toast.makeText(getApplicationContext(), R.string.lesson_redactor_activity_toast_text_cabinet_not_chosen, Toast.LENGTH_LONG);
+                    toast.show();
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), SeatingRedactorActivity.class);
+                    intent.putExtra(SeatingRedactorActivity.CLASS_ID, classId);
+                    intent.putExtra(SeatingRedactorActivity.CABINET_ID, cabinetId);
+                    startActivityForResult(intent, 1);
+                }
             }
         });
 
@@ -293,12 +347,12 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
             @Override
             public void onClick(View view) {
                 if (cabinetId != -1) {//выбран ли кабинет
-                    if (chosenSubjectId != -1) {//выбран ли предмет
+                    if (chosenSubjectPosition != -1) {//выбран ли предмет
                         if (attitudeId == -1) {//создание
-                            Log.i("TeachersApp", "LessonRedactorActivity - create lesson chosenSubjectId =" + chosenSubjectId + " cabinetId =" + cabinetId + " lessonDate =" + lessonDate + " lessonNumber =" + lessonNumber);
+                            Log.i("TeachersApp", "LessonRedactorActivity - create lesson chosenSubjectId =" + subjects.get(chosenSubjectPosition).getSubjectId() + " cabinetId =" + cabinetId + " lessonDate =" + lessonDate + " lessonNumber =" + lessonNumber);
                             DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                             db.setLessonTimeAndCabinet(
-                                    chosenSubjectId,
+                                    subjects.get(chosenSubjectPosition).getSubjectId(),
                                     cabinetId,
                                     lessonDate,
                                     lessonNumber,
@@ -307,11 +361,11 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
                             db.close();
                             finish();
                         } else {//или изменение
-                            Log.i("TeachersApp", "LessonRedactorActivity - edit lesson chosenSubjectId =" + chosenSubjectId + " cabinetId =" + cabinetId + " lessonDate =" + lessonDate + " lessonNumber =" + lessonNumber);
+                            Log.i("TeachersApp", "LessonRedactorActivity - edit lesson chosenSubjectId =" + subjects.get(chosenSubjectPosition).getSubjectId() + " cabinetId =" + cabinetId + " lessonDate =" + lessonDate + " lessonNumber =" + lessonNumber);
                             DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                             db.editLessonTimeAndCabinet(
                                     attitudeId,
-                                    chosenSubjectId,
+                                    subjects.get(chosenSubjectPosition).getSubjectId(),
                                     cabinetId,
                                     lessonDate,
                                     lessonNumber,
@@ -331,15 +385,15 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
             }
         });
 
+        // кнопка назад
+        findViewById(R.id.activity_lesson_redactor_back_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
-    // -- спиннер классов --
-    // -- спиннер кабинетов --
-    // -- спиннер предметов --
-    // -- спиннер времени --
-    // -- спиннер повторов --
-    // - рассадка -
-    // - обратная связь от диалогов -
 
 // ==================== методы обновления ====================
 
@@ -368,11 +422,8 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 // меняем id класса
                 classId = classesId[pos];
-                // переводим спинер предметов в начальное положение
-                if (subjectPosition != -1)// в начале не обнуляем переменную, чтобы вывести предыдущий предмет
-                    subjectPosition = 0;
                 // выводим предметы
-                outSubjects();
+                getAndOutSubjects();
                 Log.i("TeachersApp", "LessonRedactorActivity - class spinner onItemSelected pos =" + pos + " id =" + classesId[pos]);
                 seatingTextUpdate();
             }
@@ -386,7 +437,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
     }
 
     // ------ вывод кабинетов в спиннер ------
-    void outCabinets() {
+    void getAndOutCabinets() {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         Cursor cabinetsCursor = db.getCabinets();
         String[] stringCabinets = new String[cabinetsCursor.getCount()];
@@ -422,100 +473,131 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
     }
 
     // -- спиннер предметов --
-    void outSubjects() {
+    void getAndOutSubjects() {
 
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        // получаем id предмета из урока
+        Cursor attitude = db.getSubjectAndTimeCabinetAttitudeById(attitudeId);
+        long chosenSubjectId = -1;
+        if (attitude.getCount() != 0) {
+            attitude.moveToFirst();
+            chosenSubjectId = attitude.getLong(attitude.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
+        }
+        attitude.close();
+
         // получаем предметы из бд
-        Cursor cursor = db.getSubjectsByClassId(classId);
+        Cursor subjectsCursor = db.getSubjectsByClassId(classId);
+        subjects = new ArrayList<>();
+        chosenSubjectPosition = 0;
+        while (subjectsCursor.moveToNext()) {
+            subjects.add(new SubjectUnit(
+                    subjectsCursor.getLong(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID)),
+                    subjectsCursor.getString(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME))
+            ));
+            // получаем выбранный предмет для текущего класса
+            if (chosenSubjectId == subjectsCursor.getLong(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID))) {
+                chosenSubjectPosition = subjects.size() - 1;
+            }
+        }
+        subjectsCursor.close();
 
-        // количество предметов
-        final int count = cursor.getCount();
-        // все тексты
-        final String[] stringLessons;
-        // тексты уроков
-        final String[] stringOnlyLessons = new String[cursor.getCount()];
-        // id уроков
-        final long[] lessonsId = new long[cursor.getCount()];
-
-        // дополнительные кнопки
-        if (count == 0) {
-            stringLessons = new String[cursor.getCount() + 2];
-            stringLessons[stringLessons.length - 1] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_create_subject);
+        if (subjects.size() == 0) {
+            subjectText.setText(R.string.lesson_redactor_activity_spinner_text_create_subject);
+            chosenSubjectPosition = -1;
         } else {
-            stringLessons = new String[cursor.getCount() + 3];
-            stringLessons[stringLessons.length - 1] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_remove_subject);
-            stringLessons[stringLessons.length - 2] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_create_subject);
+            subjectText.setText(subjects.get(chosenSubjectPosition).getSubjectName());
         }
-        // и нулевая строка
-        stringLessons[0] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_select_subject);
 
-        // получаем данные из курсора
-        for (int i = 1; i < stringLessons.length - 2; i++) {
-            cursor.moveToNext();
-            lessonsId[i - 1] = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID));
-            stringLessons[i] = cursor.getString(cursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME));
-            stringOnlyLessons[i - 1] = stringLessons[i];
-        }
-        cursor.close();
-        db.close();
 
-        // адаптер для спиннера
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_title, stringLessons);
-        subjectSpinner.setAdapter(adapter);
-        // позиция
-        if (subjectPosition == -1) {
-            for (int i = 0; i < lessonsId.length; i++) {
-                if (chosenSubjectId == lessonsId[i]) {
-                    subjectPosition = i + 1;
-                }
-            }
-        }
-        subjectSpinner.setSelection(subjectPosition, false);
-        // слушатель
-        subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                Log.i("TeachersApp", "LessonRedactorActivity - outSubjects onItemSelected " + pos);
-                if (count != 0 && pos == stringLessons.length - 1) {
-                    // вызываем диалог удаления предмета
-                    Log.i("TeachersApp", "LessonRedactorActivity - remove subject");
-                    //данные передаваемые в диалог
-                    Bundle args = new Bundle();
-                    args.putStringArray("stringOnlyLessons", stringOnlyLessons);
-                    args.putLongArray("lessonsId", lessonsId);
-                    //диалог по удалению предмета
-                    RemoveSubjectDialogFragment removeDialog = new RemoveSubjectDialogFragment();
-                    removeDialog.setArguments(args);
-                    removeDialog.show(getFragmentManager(), "removeLessons");
-
-                } else if ((count != 0 && stringLessons.length - 2 == pos) || (count == 0 && stringLessons.length - 1 == pos)) {
-                    //диалог создания предмета
-                    Log.i("TeachersApp", "LessonRedactorActivity - new lesson");
-                    //данные для диалога
-                    Bundle args = new Bundle();
-                    // передаем длинну списка, чтобы при создании переместиться на последний созданный
-                    args.putStringArray("stringLessons", stringLessons);
-                    //диалог по созданию нового предмета
-                    CreateSubjectDialogFragment subjectNameDialogFragment = new CreateSubjectDialogFragment();
-                    subjectNameDialogFragment.setArguments(args);
-                    subjectNameDialogFragment.show(getFragmentManager(), "createSubject");
-                } else if (pos != 0) {
-                    Log.i("TeachersApp", "LessonRedactorActivity - chosen lesson id = " + lessonsId[pos - 1]);
-                    chosenSubjectId = lessonsId[pos - 1];
-                } else {
-                    Log.i("TeachersApp", "LessonRedactorActivity - no lesson selected");
-                    chosenSubjectId = -1;
-                }
-            }
-        });
+//
+//        // количество предметов
+//        final int count = cursor.getCount();
+//        // все тексты
+//        final String[] stringLessons;
+//        // тексты уроков
+//        final String[] stringOnlyLessons = new String[cursor.getCount()];
+//        // id уроков
+//        final long[] lessonsId = new long[cursor.getCount()];
+//
+//        // дополнительные кнопки
+//        if (count == 0) {
+//            stringLessons = new String[cursor.getCount() + 2];
+//            stringLessons[stringLessons.length - 1] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_create_subject);
+//        } else {
+//            stringLessons = new String[cursor.getCount() + 3];
+//            stringLessons[stringLessons.length - 1] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_remove_subject);
+//            stringLessons[stringLessons.length - 2] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_create_subject);
+//        }
+//        // и нулевая строка
+//        stringLessons[0] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_select_subject);
+//
+//        // получаем данные из курсора
+//        for (int i = 1; i < stringLessons.length - 2; i++) {
+//            cursor.moveToNext();
+//            lessonsId[i - 1] = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID));
+//            stringLessons[i] = cursor.getString(cursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME));
+//            stringOnlyLessons[i - 1] = stringLessons[i];
+//        }
+//        cursor.close();
+//        db.close();
+//
+//        // адаптер для спиннера
+//        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_title, stringLessons);
+//        subjectSpinner.setAdapter(adapter);
+//        // позиция
+//        if (subjectPosition == -1) {
+//            for (int i = 0; i < lessonsId.length; i++) {
+//                if (chosenSubjectId == lessonsId[i]) {
+//                    subjectPosition = i + 1;
+//                }
+//            }
+//        }
+//        subjectSpinner.setSelection(subjectPosition, false);
+//        // слушатель
+//        subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//            }
+//
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+//                Log.i("TeachersApp", "LessonRedactorActivity - outSubjects onItemSelected " + pos);
+//                if (count != 0 && pos == stringLessons.length - 1) {
+//                    // вызываем диалог удаления предмета
+//                    Log.i("TeachersApp", "LessonRedactorActivity - remove subject");
+//                    //данные передаваемые в диалог
+//                    Bundle args = new Bundle();
+//                    args.putStringArray("stringOnlyLessons", stringOnlyLessons);
+//                    args.putLongArray("lessonsId", lessonsId);
+//                    //диалог по удалению предмета
+//                    RemoveSubjectDialogFragment removeDialog = new RemoveSubjectDialogFragment();
+//                    removeDialog.setArguments(args);
+//                    removeDialog.show(getFragmentManager(), "removeLessons");
+//
+//                } else if ((count != 0 && stringLessons.length - 2 == pos) || (count == 0 && stringLessons.length - 1 == pos)) {
+//                    //диалог создания предмета
+//                    Log.i("TeachersApp", "LessonRedactorActivity - new lesson");
+//                    //данные для диалога
+//                    Bundle args = new Bundle();
+//                    // передаем длинну списка, чтобы при создании переместиться на последний созданный
+//                    args.putStringArray("stringLessons", stringLessons);
+//                    //диалог по созданию нового предмета
+//                    CreateSubjectDialogFragment subjectNameDialogFragment = new CreateSubjectDialogFragment();
+//                    subjectNameDialogFragment.setArguments(args);
+//                    subjectNameDialogFragment.show(getFragmentManager(), "createSubject");
+//                } else if (pos != 0) {
+//                    Log.i("TeachersApp", "LessonRedactorActivity - chosen lesson id = " + lessonsId[pos - 1]);
+//                    chosenSubjectId = lessonsId[pos - 1];
+//                } else {
+//                    Log.i("TeachersApp", "LessonRedactorActivity - no lesson selected");
+//                    chosenSubjectId = -1;
+//                }
+//            }
+//        });
     }
 
     // -- спиннер времени --
-    void outTime() {
+    void getAndOutTime() {
         //получаем стандартное время уроков
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         final int[][] time = db.getSettingsTime(1);
@@ -526,7 +608,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         //SimpleDateFormat textTimeFormat = new SimpleDateFormat("H:m", Locale.getDefault());
         for (int i = 0; i < textTime.length; i++) {
             //'  4 урок 11:30 - 12:15  '
-            textTime[i] = "" + (i + 1) + " " + getResources().getString(R.string.lesson_redactor_activity_spinner_title_lesson) + " " +
+            textTime[i] = "" + (i + 1) + " " + getResources().getString(R.string.lesson_redactor_activity_spinner_title_lesson) + ": " +
                     time[i][0] + ":" + time[i][1] + " - " +
                     time[i][2] + ":" + time[i][3] + "  ";
         }
@@ -589,30 +671,134 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
     }
 
 
-    // ----- обратная связь от диалога переименования предметов -----
+    // ----- обратная связь от диалога предметов -----
+
     @Override
-    public void lessonNameDialogMethod(int code, int position, String classNameText) {
-        if (code == 1) {
-            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-            db.createSubject(classNameText, classId);
-            db.close();
-            // выбираем последний созданный урок
-            subjectPosition = position;
-        }
-        // выводим предметы
-        outSubjects();
+    public void setSubjectPosition(int position) {
+        chosenSubjectPosition = position;
+        subjectText.setText(subjects.get(position).getSubjectName());
     }
 
-    // ----- обратная связь от диалога удаления предметов -----
     @Override
-    public void removeSubjects(int message, ArrayList<Long> deleteList) {
-        if (message == 0) {
-            (new DataBaseOpenHelper(this)).deleteSubjects(deleteList);
-            subjectPosition = 0;
-            outSubjects();
-        } else {
-            outSubjects();
+    public void createSubject(String name, int position) {
+        // создаем предмет в базе данных
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        long createdSubjectId = db.createSubject(name, classId);
+        db.close();
+        // добавляем предмет в список под нужным номером
+        subjects.add(position, new SubjectUnit(createdSubjectId, name));
+        // выбираем этот предмет и ставим его имя в заголовок
+        chosenSubjectPosition = position;
+        subjectText.setText(subjects.get(chosenSubjectPosition).getSubjectName());
+    }
+
+    @Override
+    public void deleteSubjects(boolean[] deleteList) {
+        // удаляем предметы
+        ArrayList<Long> deleteId = new ArrayList<>();
+        // пробегаемся в обратном направлении, для того, чтобы  параллельно удалять из листа
+        for (int subjectI = subjects.size() - 1; subjectI >= 0; subjectI--) {
+            if (deleteList[subjectI]) {
+                // добавляем id предмета в расстрельный список
+                deleteId.add(0, subjects.get(subjectI).getSubjectId());
+                // удаляем предмет из листа
+                subjects.remove(subjectI);
+
+                // смотрим не удален ли выбранный предмет
+                if (chosenSubjectPosition == subjectI) {
+                    chosenSubjectPosition = -1;
+                    // ставим выбор на первом предмете
+                    if (subjects.size() != 0) {
+                        chosenSubjectPosition = 0;
+                        // выводим название предмета
+                        subjectText.setText(subjects.get(chosenSubjectPosition).getSubjectName());
+
+                    } else { // если проедметов в базе данных нет не выбираем ничего
+                        // выводим текст о том, что предмета нет
+                        subjectText.setText(getResources().getString(R.string.lesson_redactor_activity_spinner_text_create_subject));
+                    }
+                }
+            }
         }
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        // прежде чем удалить предметы, заменим в текущем уроке предмет на первый в списке
+        if ((cabinetId != -1) && (chosenSubjectPosition != -1) && (attitudeId != -1)) {
+            db.editLessonTimeAndCabinet(
+                    attitudeId,
+                    subjects.get(chosenSubjectPosition).getSubjectId(),
+                    cabinetId,
+                    lessonDate,
+                    lessonNumber,
+                    repeat
+            );
+        }
+        db.deleteSubjects(deleteId);
+        db.close();
+    }
+
+    @Override
+    public void renameSubjects(String[] newSubjectsNames) {
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+
+        // в цикле переименовываем все предметы в массиве активности
+        for (int subjectI = 0; subjectI < subjects.size(); subjectI++) {
+
+            subjects.get(subjectI).setSubjectName(newSubjectsNames[subjectI]);
+
+            // и сохраняем все изменения в базу данных
+            db.setSubjectName(
+                    subjects.get(subjectI).getSubjectId(),
+                    subjects.get(subjectI).getSubjectName()
+            );
+        }
+        db.close();
+
+        // сортируем текущий список (пузырьком)
+        for (int out = subjects.size() - 1; out > 0; out--) {
+            for (int in = 0; in < out; in++) {
+                if (subjects.get(in).getSubjectName().compareTo(subjects.get(in + 1).getSubjectName()) > 0) {
+                    if (chosenSubjectPosition == in) {
+                        chosenSubjectPosition = in + 1;
+                    } else if (chosenSubjectPosition == in + 1) {
+                        chosenSubjectPosition = in;
+                    }
+                    SubjectUnit temp = subjects.get(in + 1);
+                    subjects.set(in + 1, subjects.get(in));
+                    subjects.set(in, temp);
+                }
+            }
+        }
+
+        // обновляем надпись на тексте с названием предмета
+        if (subjects.size() == 0) {
+            subjectText.setText(R.string.lesson_redactor_activity_spinner_text_create_subject);
+            chosenSubjectPosition = -1;
+        } else {
+            subjectText.setText(subjects.get(chosenSubjectPosition).getSubjectName());
+        }
+    }
+}
+
+// класс для хранения предмета
+class SubjectUnit {
+    private long subjectId;
+    private String subjectName;
+
+    SubjectUnit(long subjectId, String subjectName) {
+        this.subjectId = subjectId;
+        this.subjectName = subjectName;
+    }
+
+    long getSubjectId() {
+        return subjectId;
+    }
+
+    String getSubjectName() {
+        return subjectName;
+    }
+
+    void setSubjectName(String newSubjectName) {
+        this.subjectName = newSubjectName;
     }
 }
 

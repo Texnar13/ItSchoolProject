@@ -45,9 +45,10 @@
                 android:layout_centerVertical="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:fontFamily="@font/geometria_bold"
                 android:text="TextView"
-                android:textColor="@color/backgroundWhite"
-                android:textSize="@dimen/text_subtitle_size" />
+                android:textColor="@color/baseBlue"
+                android:textSize="@dimen/text_title_size" />
 
             <ImageView
                 android:id="@+id/learners_and_grades_activity_button_next"
@@ -85,10 +86,11 @@
                 android:id="@+id/learners_and_grades_activity_subject_text_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/_underlined_white_shape"
+                android:fontFamily="@font/geometria_bold"
                 android:gravity="center|right"
                 android:text="@string/learners_and_grades_out_activity_title_subject"
                 android:textColor="@color/backgroundWhite"

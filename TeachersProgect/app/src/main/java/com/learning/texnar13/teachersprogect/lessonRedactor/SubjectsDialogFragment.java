@@ -1,12 +1,9 @@
-package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
+package com.learning.texnar13.teachersprogect.lessonRedactor;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.res.ResourcesCompat;
-
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -19,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
 
@@ -212,7 +212,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                         try {
                             // вызываем в активности метод по выбору предмета
                             ((SubjectsDialogInterface) getActivity()).setSubjectPosition(finalPosition);
-                        } catch (java.lang.ClassCastException e) {
+                        } catch (ClassCastException e) {
                             e.printStackTrace();
                             Log.i("TeachersApp",
                                     "SubjectsDialogFragment: you must implements SubjectsDialogInterface in your activity"
@@ -315,6 +315,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                 (int)getResources().getDimension(R.dimen.my_icon_size),
                 (int)getResources().getDimension(R.dimen.my_icon_size)
         );
+        closeImageViewParams.gravity = Gravity.CENTER_VERTICAL;
         closeImageViewParams.setMargins(
                 (int)getResources().getDimension(R.dimen.simple_margin),
                 (int)getResources().getDimension(R.dimen.simple_margin),
@@ -369,7 +370,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                 (int)getResources().getDimension(R.dimen.double_margin),
                 (int)getResources().getDimension(R.dimen.simple_margin),
                 (int)getResources().getDimension(R.dimen.double_margin),
-                (int)getResources().getDimension(R.dimen.half_margin));
+                0);
         bodyLayout.addView(subjectNameField, subjectNameFieldParams);
 
 
@@ -383,9 +384,9 @@ public class SubjectsDialogFragment extends DialogFragment {
         );
         saveTextButtonContainerParams.setMargins(
                 (int)getResources().getDimension(R.dimen.simple_margin),
+                (int)getResources().getDimension(R.dimen.half_more_margin),
                 (int)getResources().getDimension(R.dimen.simple_margin),
-                (int)getResources().getDimension(R.dimen.simple_margin),
-                (int)getResources().getDimension(R.dimen.half_more_margin)
+                (int)getResources().getDimension(R.dimen.double_margin)
         );
         saveTextButtonContainerParams.gravity = Gravity.CENTER;
         bottomLayout.addView(createButtonContainer, saveTextButtonContainerParams);
@@ -438,7 +439,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                 try {
                     // вызываем в активности метод по созданию предмета
                     ((SubjectsDialogInterface) getActivity()).createSubject(subjectNameField.getText().toString(), position);
-                } catch (java.lang.ClassCastException e) {
+                } catch (ClassCastException e) {
                     e.printStackTrace();
                     Log.i("TeachersApp",
                             "SubjectsDialogFragment: you must implements SubjectsDialogInterface in your activity"
@@ -616,7 +617,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                 try {
                     // вызываем в активности метод по удалению предметов
                     ((SubjectsDialogInterface) getActivity()).deleteSubjects(deleteList);
-                } catch (java.lang.ClassCastException e) {
+                } catch (ClassCastException e) {
                     e.printStackTrace();
                     Log.i("TeachersApp",
                             "SubjectsDialogFragment: you must implements SubjectsDialogInterface in your activity"
@@ -641,7 +642,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                 (int)getResources().getDimension(R.dimen.simple_margin),
                 (int)getResources().getDimension(R.dimen.simple_margin),
                 (int)getResources().getDimension(R.dimen.simple_margin),
-                (int)getResources().getDimension(R.dimen.half_more_margin)
+                (int)getResources().getDimension(R.dimen.simple_margin)
         );
         saveTextButtonContainerParams.gravity = Gravity.CENTER;
         bottomLayout.addView(saveButtonContainer, saveTextButtonContainerParams);

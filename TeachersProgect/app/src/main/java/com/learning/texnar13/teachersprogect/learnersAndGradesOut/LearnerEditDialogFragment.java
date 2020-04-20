@@ -97,12 +97,11 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
                 (int) getResources().getDimension(R.dimen.learners_and_grades_add_learner_image_height)
         );
         imageBackgroundParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        imageBackgroundParams.topMargin = (int) getResources().getDimension(R.dimen.double_margin);
         imageContainer.addView(imageBackground, imageBackgroundParams);
 
         // кнопка назад
         ImageView backImage = new ImageView(getActivity());
-        backImage.setImageResource(R.drawable.__button_back_arrow_dark_gray);
+        backImage.setImageResource(R.drawable.__button_back_arrow_blue);
         backImage.setAdjustViewBounds(true);
         RelativeLayout.LayoutParams backImageParams = new RelativeLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),
@@ -142,7 +141,7 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
         );
         titleParams.setMargins(
                 (int) getResources().getDimension(R.dimen.double_margin),
-                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.double_margin),
                 0
         );
@@ -212,8 +211,8 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
         negativeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
         negativeTextButton.setText(R.string.learners_and_grades_out_activity_dialog_button_delete);
         negativeTextButton.setGravity(Gravity.CENTER);
-        negativeTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-        negativeTextButton.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+        negativeTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+        negativeTextButton.setTextColor(getResources().getColor(R.color.signalRed));
         negativeTextButton.setPaintFlags(negativeTextButton.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
         // параметры кнопки
         LinearLayout.LayoutParams negativeTextButtonParams = new LinearLayout.LayoutParams(
@@ -224,7 +223,7 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
                 (int) getResources().getDimension(R.dimen.double_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.double_margin),
-                (int) getResources().getDimension(R.dimen.simple_margin)
+                0
         );
         negativeTextButtonParams.gravity = Gravity.CENTER;
         linearLayout.addView(negativeTextButton, negativeTextButtonParams);
@@ -261,9 +260,9 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         createTextButtonParams.setMargins(
-                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.forth_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.forth_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin)
         );
         createTextButtonParams.gravity = Gravity.CENTER;

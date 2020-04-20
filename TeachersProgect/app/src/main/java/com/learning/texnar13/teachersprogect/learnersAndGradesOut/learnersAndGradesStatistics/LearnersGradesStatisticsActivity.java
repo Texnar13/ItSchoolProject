@@ -1,8 +1,10 @@
 package com.learning.texnar13.teachersprogect.learnersAndGradesOut.learnersAndGradesStatistics;
 
+import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,6 +13,8 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -71,13 +75,19 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
     private LinearLayout absentsColumn;
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // ставим содержимое экрана
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learners_grades_statistics);
-        // Убираем заголовок
-        getSupportActionBar().hide();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.baseBlue));
+        }
+
 
         // вертикальная ориентация
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
@@ -460,7 +470,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                                         gradeText.setTextColor(getResources().getColor(R.color.grade5));
                                     } else
                                         // за пределами значений
-                                        gradeText.setTextColor(getResources().getColor(R.color.backgroundGray));
+                                        gradeText.setTextColor(Color.BLACK);
                 }
             }
 
@@ -469,6 +479,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             TextView absText = new TextView(this);
             absText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
             absText.setGravity(Gravity.CENTER);
+            absText.setTextColor(Color.BLACK);
             absText.setBackgroundColor(getResources().getColor(R.color.backgroundWhite));
             absText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             absText.setPadding(

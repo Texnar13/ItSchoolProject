@@ -10,6 +10,7 @@ import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -17,6 +18,8 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -64,6 +67,13 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
         // вертикальная ориентация
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
 
 
         // задаем слой жестов
@@ -272,7 +282,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         String[] weekDaysNames = getResources().getStringArray(R.array.schedule_month_activity_week_days_short_array);
         for (int i = 0; i < 7; i++) {
             TextView day = new TextView(this);
-            day.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
+            day.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
             day.setText(weekDaysNames[i]);
             day.setAllCaps(true);
             day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
@@ -298,7 +308,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
             //---текст---//на заднюю часть текста можно поставить drawable
             TextView day = new TextView(this);
-            day.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
+            day.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
             day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             day.setTextColor(Color.BLACK);
             day.setGravity(Gravity.CENTER);

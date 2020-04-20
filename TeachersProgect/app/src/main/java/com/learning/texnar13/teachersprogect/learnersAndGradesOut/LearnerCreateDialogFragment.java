@@ -92,12 +92,11 @@ public class LearnerCreateDialogFragment extends DialogFragment {
                 (int) getResources().getDimension(R.dimen.learners_and_grades_add_learner_image_height)
         );
         imageBackgroundParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        imageBackgroundParams.topMargin = (int) getResources().getDimension(R.dimen.double_margin);
         imageContainer.addView(imageBackground, imageBackgroundParams);
 
         // кнопка назад
         ImageView backImage = new ImageView(getActivity());
-        backImage.setImageResource(R.drawable.__button_back_arrow_dark_gray);
+        backImage.setImageResource(R.drawable.__button_back_arrow_blue);
         backImage.setAdjustViewBounds(true);
         RelativeLayout.LayoutParams backImageParams = new RelativeLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),
@@ -138,7 +137,7 @@ public class LearnerCreateDialogFragment extends DialogFragment {
         );
         titleParams.setMargins(
                 (int) getResources().getDimension(R.dimen.double_margin),
-                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.double_margin),
                 0
         );
@@ -201,7 +200,7 @@ public class LearnerCreateDialogFragment extends DialogFragment {
         );
         saveTextButtonContainerParams.setMargins(
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.double_margin)
         );
@@ -222,9 +221,9 @@ public class LearnerCreateDialogFragment extends DialogFragment {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         createTextButtonParams.setMargins(
-                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.forth_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.forth_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin)
         );
         createTextButtonParams.gravity = Gravity.CENTER;

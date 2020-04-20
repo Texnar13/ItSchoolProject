@@ -14,20 +14,23 @@
 
         <ImageView
             android:id="@+id/dialog_fragment_layout_settings_edit_maximum_grade_button_cancel"
-            android:layout_margin="@dimen/simple_margin"
+            android:layout_marginLeft="@dimen/simple_margin"
+            android:layout_marginTop="@dimen/simple_margin"
+            android:layout_marginRight="@dimen/double_margin"
+            android:layout_marginBottom="@dimen/simple_margin"
             android:layout_width="@dimen/my_icon_size"
             android:layout_height="@dimen/my_icon_size"
             android:adjustViewBounds="true"
             app:srcCompat="@drawable/__button_close"/>
         <TextView
             android:layout_marginRight="@dimen/simple_margin"
-            android:fontFamily="@font/geometria"
+            android:fontFamily="@font/geometria_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
             android:text="@string/settings_activity_title_max_answer"
-            android:textColor="@color/backgroundWhite"
+            android:textColor="@color/backgroundDarkGray"
             android:textSize="@dimen/text_subtitle_size" />
 
     </LinearLayout>
@@ -42,15 +45,17 @@
 
         <EditText
             android:id="@+id/dialog_fragment_layout_settings_edit_maximum_grade_edit_text"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/text_field_four_simple_symbols_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:paddingTop="@dimen/simple_margin"
+            android:paddingBottom="@dimen/simple_margin"
             android:layout_marginLeft="@dimen/simple_margin"
-            android:layout_marginTop="@dimen/simple_margin"
+            android:layout_marginTop="@dimen/double_margin"
             android:layout_marginRight="@dimen/simple_margin"
             android:layout_marginBottom="@dimen/simple_margin"
+            android:background="@color/backgroundLiteGray"
             android:gravity="center"
-            android:hint="@string/settings_activity_hint_max_answer"
             android:inputType="number"
             android:textSize="@dimen/text_subtitle_size" />
 
@@ -61,7 +66,7 @@
             android:layout_marginLeft="@dimen/simple_margin"
             android:layout_marginTop="@dimen/simple_margin"
             android:layout_marginRight="@dimen/simple_margin"
-            android:layout_marginBottom="@dimen/simple_margin"
+            android:layout_marginBottom="@dimen/double_margin"
             android:background="@drawable/_button_round_background_green"
             android:gravity="center"
             android:orientation="horizontal">
@@ -69,10 +74,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/simple_margin"
-                android:layout_marginTop="@dimen/half_margin"
-                android:layout_marginRight="@dimen/simple_margin"
-                android:layout_marginBottom="@dimen/half_margin"
+                android:layout_marginLeft="@dimen/forth_margin"
+                android:layout_marginTop="@dimen/simple_margin"
+                android:layout_marginRight="@dimen/forth_margin"
+                android:layout_marginBottom="@dimen/simple_margin"
                 android:text="@string/button_save"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/text_subtitle_size" />

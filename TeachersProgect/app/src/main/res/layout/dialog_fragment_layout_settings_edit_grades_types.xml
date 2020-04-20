@@ -15,7 +15,10 @@
             android:id="@+id/dialog_fragment_layout_settings_edit_grades_types_cancel_button"
             android:layout_width="@dimen/my_icon_size"
             android:layout_height="@dimen/my_icon_size"
-            android:layout_margin="@dimen/simple_margin"
+            android:layout_marginLeft="@dimen/simple_margin"
+            android:layout_marginTop="@dimen/simple_margin"
+            android:layout_marginRight="@dimen/double_margin"
+            android:layout_marginBottom="@dimen/simple_margin"
             android:adjustViewBounds="true"
             app:srcCompat="@drawable/__button_close" />
 
@@ -24,10 +27,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/simple_margin"
-            android:fontFamily="@font/geometria"
+            android:fontFamily="@font/geometria_medium"
             android:gravity="center"
             android:text="@string/settings_activity_title_grades_type"
-            android:textColor="@color/backgroundWhite"
+            android:textColor="@color/backgroundDarkGray"
             android:textSize="@dimen/text_subtitle_size" />
 
     </LinearLayout>
@@ -51,6 +54,9 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:layout_marginTop="@dimen/simple_margin"
+                    android:layout_marginLeft="@dimen/simple_margin"
+                    android:layout_marginRight="@dimen/simple_margin"
                     android:id="@+id/dialog_fragment_layout_settings_edit_grades_types_list_out"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -63,11 +69,13 @@
                     android:id="@+id/dialog_fragment_layout_settings_edit_grades_types_text_button_add"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_marginTop="@dimen/simple_margin"
-                    android:layout_marginBottom="@dimen/simple_margin"
+                    android:layout_marginBottom="@dimen/double_margin"
+                    android:fontFamily="@font/geometria"
+                    android:gravity="center"
                     android:text="@string/settings_activity_dialog_add_type_title"
-                    android:textSize="@dimen/text_subtitle_size"/>
+                    android:textSize="@dimen/text_subtitle_size"
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </ScrollView>

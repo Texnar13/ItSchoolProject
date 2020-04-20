@@ -85,7 +85,7 @@
 
     <!-- активность списка статистик -->
     <!-- заголовок активности -->
-    <string name="title_activity_learners_and_grades_statistics">Estadísticas por período</string>
+    <string name="title_activity_learners_and_grades_statistics">Estadísticas por período:</string>
     <!-- тексты -->
     <string name="learners_and_grades_statistics_activity_title_column_learner_name">Nombre</string>
     <string name="learners_and_grades_statistics_activity_title_column_grade">PUNTO</string>
@@ -171,18 +171,19 @@
     <string name="lesson_redactor_activity_title_subject">Asignatura</string>
     <string name="lesson_redactor_activity_title_cabinet">Aulas</string>
     <string name="lesson_redactor_activity_title_time">Tiempo</string>
-    <string name="lesson_redactor_activity_spinner_title_lesson">Clase</string>
+    <string name="lesson_redactor_activity_spinner_title_lesson">clase</string>
     <string name="lesson_redactor_activity_title_repeat">Repetir clase</string>
     <string name="lesson_redactor_activity_toast_subject_not_select">¡La clase no está seleccionada!</string>
     <!-- уведомления -->
     <string name="lesson_redactor_activity_text_learners_ready">Los estudiantes están sentados en esta aula.</string>
     <string name="lesson_redactor_activity_text_learners_not_ready">¡Los estudiantes no están sentados!</string>
 
-    <string name="lesson_redactor_activity_toast_text_subject_not_chosen">¡No elegiste la asignatura! Puede crear una clase en la sección "ALUMNOS", luego vaya a ella y cree una asignatura.</string>
-    <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">¡No elegiste la aula! Puede crearlo en la sección "AULAS".</string>
+    <string name="lesson_redactor_activity_toast_text_subject_not_chosen">¡No elegiste la asignatura! Puede crear una clase en la sección "ALUMNOS", luego vaya a ella y cree una asignatura</string>
+    <string name="lesson_redactor_activity_toast_text_cabinet_not_chosen">¡No elegiste la aula! Puede crearlo en la sección "AULAS"</string>
+    <string name="lesson_redactor_activity_toast_text_class_not_chosen">¡No elegiste los alumnos! Puede crearlo en la sección "Alumnos"</string>
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">Debes sentar a los alumnos</string>
-    <string name="lesson_redactor_activity_button_remove">Eliminar clase</string>
+    <string name="lesson_redactor_activity_button_remove"><u>Eliminar clase</u></string>
     <string name="lesson_redactor_activity_button_save">Guardar</string>
     <string name="lesson_redactor_activity_button_cancel">Cancelar</string>
     <!-- диалоги -->
@@ -202,9 +203,9 @@
     <!-- контекстное меню -->
     <string name="lesson_activity_context_menu_text_no_learner">ausente</string>
     <!-- меню сверху -->
-    <string name="lesson_activity_menu_text_desks">organizar los pupitres</string>
-    <string name="lesson_activity_menu_text_learners">sentar a los alumnos</string>
-    <string name="lesson_activity_menu_text_end_lesson">terminar</string>
+    <string name="lesson_activity_menu_text_desks">Organizar los pupitres</string>
+    <string name="lesson_activity_menu_text_learners">Sentar a los alumnos</string>
+    <string name="lesson_activity_menu_text_end_lesson">Terminar</string>
     <!-- диалоговое окно -->
     <string name="lesson_activity_learner_absent_text">Falta en la lección</string>
     <string name="lesson_activity_learner_dialog_out_text">¿Estás seguro de querer salir de la lección sin guardar?</string>
@@ -214,7 +215,7 @@
 
     <!-- активность окончания урока-->
     <!-- заголовок активности -->
-    <string name="title_activity_lesson_list">RESUMEN DE LA LECCIÓN</string>
+    <string name="title_activity_lesson_list">Resumen de la lección</string>
     <!-- меню сверху -->
     <string name="lesson_list_activity_menu_text_save">guardar</string>
     <!-- уведомления -->
@@ -231,8 +232,6 @@
     <!-- заголовок активности -->
     <string name="title_activity_settings">Ajustes</string>
     <!-- тексты -->
-    <string name="settings_activity_hint_max_answer">Número de respuestas</string>
-    <string name="settings_activity_title_desk_size">Ajuste del tamaño de los pupitres</string>
     <string name="settings_activity_title_max_answer">Puntuación máxima/número de respuestas</string>
     <string name="settings_activity_title_grades_type">Tipos de trabajo en la lección</string>
     <string name="settings_activity_title_colored_grades">Calificaciónes de colores</string>
@@ -252,12 +251,12 @@
     <string name="settings_activity_toast_time_successfully_saved">Tiempo guardado</string>
     <string name="settings_activity_toast_time_no_saved">Error, tiempo no guardado</string>
     <!-- диалоги -->
-    <string name="settings_activity_dialog_delete_title">¿Quieres borrar todos los datos de la aplicación?</string>
-    <string name="settings_activity_dialog_add_type_title">+ Agregar nueva tipo de calificaciónes</string>
+    <string name="settings_activity_dialog_delete_title">¿Quieres borrar todos los datos?</string>
+    <string name="settings_activity_dialog_add_type_title">+ agregar nueva tipo de calificaciónes</string>
     <string name="settings_activity_dialog_new_type_title">Nueva clase</string>
     <string name="settings_activity_dialog_delete_text_confirm_delete">Para confirmar, escriba un número </string>
     <string name="settings_activity_dialog_hint_number">Número</string>
-    <string name="settings_activity_dialog_button_remove">Eliminar</string>
+    <string name="settings_activity_dialog_button_remove">Eliminar los datos</string>
     <string name="settings_activity_dialog_button_cancel">Cancelar</string>
     <string name="settings_activity_dialog_button_save">Guardar</string>
     <string name="settings_activity_dialog_edit_time_title">Tiempo de lecciones</string>
@@ -271,6 +270,6 @@
 
     <!-- база данных -->
     <!-- значение по умолчанию -->
-    <string name="db_table_grade_text_first_default_value">trabajo en la lección</string>
+    <string name="db_table_grade_text_first_default_value">Trabajo en la lección</string>
 
 </resources>

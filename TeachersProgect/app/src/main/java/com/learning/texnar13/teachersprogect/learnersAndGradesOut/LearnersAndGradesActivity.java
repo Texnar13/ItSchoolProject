@@ -2,6 +2,7 @@ package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.ColorFilter;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -144,11 +145,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         // кнопка назад в actionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // кнопка назад
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_blue));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            toolbar.getOverflowIcon().setColorFilter(getColor(R.color.baseBlue), PorterDuff.Mode.SRC_ATOP);
-
+            if (toolbar.getOverflowIcon() != null)
+                toolbar.getOverflowIcon().setColorFilter(getResources().getColor(R.color.baseBlue), PorterDuff.Mode.SRC_ATOP);
+        }
 
         // получаем id класса
         classId = getIntent().getLongExtra(CLASS_ID, -1);

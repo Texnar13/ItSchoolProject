@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- НОВЫЕ ЦВЕТА -->
     <!-- базовые цвета -->
     <color name="baseBlue">#7fade5</color>
     <color name="basePink">#c477a9</color>
@@ -21,6 +20,7 @@
 
 
     <color name="dopDarkBlue">#1D7CBC</color>
+    <color name="transparent">#00000000</color>
 
     <!-- цвета оценок #fff74a -->
     <color name="grade1">#ea5757</color>

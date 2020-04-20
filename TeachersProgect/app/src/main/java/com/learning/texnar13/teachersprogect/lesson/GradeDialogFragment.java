@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.graphics.Color;
 import android.os.Bundle;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
@@ -162,18 +163,22 @@ public class GradeDialogFragment extends DialogFragment {
 
                         // ставим выбор на первых позициях в спиннерах и адаптеры с оценками и типами
                         gradesSpinners[gradeI].setSelection(0, false);
-                        gradesSpinners[gradeI].setAdapter(new ArrayAdapter<>(
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(
                                 getActivity(),
-                                R.layout.spinner_dropdown_element_subtitle,
+                                R.layout.spinner_dropdown_element_subtitle_transparent,
                                 gradesString
-                        ));
+                        );
+                        gradesSpinners[gradeI].setAdapter(adapter);
+                        adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
 
                         typesSpinners[gradeI].setSelection(0, false);
-                        typesSpinners[gradeI].setAdapter(new ArrayAdapter<>(
+                        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(
                                 getActivity(),
-                                R.layout.spinner_dropdown_element_subtitle,
+                                R.layout.spinner_dropdown_element_subtitle_transparent,
                                 gradesTypesNames
-                        ));
+                        );
+                        typesSpinners[gradeI].setAdapter(adapter2);
+                        adapter2.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
                     }
 
                 } else {// иначе активируем его
@@ -183,16 +188,22 @@ public class GradeDialogFragment extends DialogFragment {
                         grades[gradeI] = -2;
                         chosenTypes[gradeI] = -2;
                         // и дизактивируем спиннеры
-                        gradesSpinners[gradeI].setAdapter(new ArrayAdapter<>(
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(
                                 getActivity(),
-                                R.layout.spinner_dropdown_element_subtitle,
+                                R.layout.spinner_dropdown_element_subtitle_transparent,
                                 new String[]{" "}
-                        ));
-                        typesSpinners[gradeI].setAdapter(new ArrayAdapter<>(
+                        );
+                        gradesSpinners[gradeI].setAdapter(adapter);
+                        adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
+
+                        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(
                                 getActivity(),
-                                R.layout.spinner_dropdown_element_subtitle,
+                                R.layout.spinner_dropdown_element_subtitle_transparent,
                                 new String[]{" "}
-                        ));
+                        );
+                        typesSpinners[gradeI].setAdapter(adapter2);
+                        adapter2.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
+
                     }
 
 
@@ -231,7 +242,7 @@ public class GradeDialogFragment extends DialogFragment {
             // создаем горизонтальный контейнер под спиннеры одной оценки
             LinearLayout gradeContainer = new LinearLayout(getActivity());
             // закрашиваем фон выбранной оценки
-            if(chosenGradePosition == gradeI){
+            if (chosenGradePosition == gradeI) {
                 gradeContainer.setBackgroundColor(getResources().getColor(R.color.backgroundLiteGray));
             }
             gradeContainer.setOrientation(LinearLayout.HORIZONTAL);
@@ -248,21 +259,26 @@ public class GradeDialogFragment extends DialogFragment {
             // ставим адаптер и выбор спиннеру в соответствии с текущей оценкой
             if (grades[gradeI] >= 0) {
                 // адаптер спиннера
-                gradesSpinners[gradeI].setAdapter(new ArrayAdapter<>(
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
                         getActivity(),
-                        R.layout.spinner_dropdown_element_subtitle,
+                        R.layout.spinner_dropdown_element_subtitle_transparent,
                         gradesString
-                ));
+                );
+                gradesSpinners[gradeI].setAdapter(adapter);
+                adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
                 // ставим выбор
                 gradesSpinners[gradeI].setSelection(grades[gradeI]);
             } else {
                 // адаптер спиннера
-                gradesSpinners[gradeI].setAdapter(new ArrayAdapter<>(
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
                         getActivity(),
-                        R.layout.spinner_dropdown_element_subtitle,
+                        R.layout.spinner_dropdown_element_subtitle_transparent,
                         new String[]{" "}
-                ));
-            } // при выборе элемента из спиннера
+                );
+                gradesSpinners[gradeI].setAdapter(adapter);
+                adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
+            }
+            // при выборе элемента из спиннера
             final int finalGradeI = gradeI;
             gradesSpinners[gradeI].setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
 
@@ -286,20 +302,24 @@ public class GradeDialogFragment extends DialogFragment {
             // ставим адаптер и выбор спиннеру в соответствии с текущей оценкой
             if (grades[gradeI] >= 0) {
                 // адаптер спиннера
-                typesSpinners[gradeI].setAdapter(new ArrayAdapter<>(
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
                         getActivity(),
-                        R.layout.spinner_dropdown_element_subtitle,
+                        R.layout.spinner_dropdown_element_subtitle_transparent,
                         gradesTypesNames
-                ));
+                );
+                typesSpinners[gradeI].setAdapter(adapter);
+                adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
                 // ставим выбор
                 typesSpinners[gradeI].setSelection(chosenTypes[gradeI]);
             } else {
                 // адаптер спиннера
-                typesSpinners[gradeI].setAdapter(new ArrayAdapter<>(
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
                         getActivity(),
-                        R.layout.spinner_dropdown_element_subtitle,
+                        R.layout.spinner_dropdown_element_subtitle_transparent,
                         new String[]{" "}
-                ));
+                );
+                typesSpinners[gradeI].setAdapter(adapter);
+                adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
             }
             // при выборе элемента из спиннера
             typesSpinners[gradeI].setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
@@ -349,9 +369,9 @@ public class GradeDialogFragment extends DialogFragment {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        saveTextParams.leftMargin = (int) getResources().getDimension(R.dimen.double_margin);
+        saveTextParams.leftMargin = (int) getResources().getDimension(R.dimen.forth_margin);
         saveTextParams.topMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-        saveTextParams.rightMargin = (int) getResources().getDimension(R.dimen.double_margin);
+        saveTextParams.rightMargin = (int) getResources().getDimension(R.dimen.forth_margin);
         saveTextParams.bottomMargin = (int) getResources().getDimension(R.dimen.simple_margin);
         saveButtonContainer.addView(saveText, saveTextParams);
 

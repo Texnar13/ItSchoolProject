@@ -69,12 +69,11 @@ public class CreateCabinetDialogFragment extends DialogFragment {
                 (int) getResources().getDimension(R.dimen.cabinets_out_add_cabinet_image_height)
         );
         imageBackgroundParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        imageBackgroundParams.topMargin = (int) getResources().getDimension(R.dimen.double_margin);
         imageContainer.addView(imageBackground, imageBackgroundParams);
 
         // кнопка назад
         ImageView backImage = new ImageView(getActivity());
-        backImage.setImageResource(R.drawable.__button_back_arrow_dark_gray);
+        backImage.setImageResource(R.drawable.__button_back_arrow_orange);
         backImage.setAdjustViewBounds(true);
         RelativeLayout.LayoutParams backImageParams = new RelativeLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),
@@ -103,7 +102,7 @@ public class CreateCabinetDialogFragment extends DialogFragment {
         );
         titleParams.setMargins(
                 (int) getResources().getDimension(R.dimen.double_margin),
-                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.double_margin),
                 0
         );
@@ -127,6 +126,7 @@ public class CreateCabinetDialogFragment extends DialogFragment {
         // текстовое поле имени
         final EditText editName = new EditText(getActivity());
         editName.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        editName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         editName.setTextColor(Color.BLACK);
         editName.setHint(R.string.cabinets_out_activity_dialog_hint_cabinet_name);
         editName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -150,7 +150,7 @@ public class CreateCabinetDialogFragment extends DialogFragment {
         );
         saveTextButtonContainerParams.setMargins(
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.double_margin)
         );
@@ -171,9 +171,9 @@ public class CreateCabinetDialogFragment extends DialogFragment {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         createTextButtonParams.setMargins(
-                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.forth_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.forth_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin)
         );
         createTextButtonParams.gravity = Gravity.CENTER;

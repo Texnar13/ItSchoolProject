@@ -33,6 +33,57 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/start_screen_text_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/half_more_margin"
+                android:text="*10:35*"
+                android:textColor="#000000"
+                android:textSize="@dimen/text_title_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/start_screen_text_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="*31 Октября*"
+                android:textColor="#000000"
+                android:textSize="@dimen/text_title_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/start_screen_text_time" />
+
+            <TextView
+                android:id="@+id/start_screen_text_day_of_week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="*Понедельник*"
+                android:textColor="@color/dopDarkBlue"
+                android:textSize="@dimen/text_subtitle_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/start_screen_text_date" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/half_margin"
+                android:layout_marginRight="@dimen/half_margin"
+                android:layout_marginBottom="@dimen/half_margin"
+                android:gravity="bottom"
+                android:text="@string/start_screen_activity_title_now"
+                android:textColor="@color/backgroundWhite"
+                android:textSize="@dimen/text_subtitle_size"
+                app:layout_constraintBottom_toTopOf="@+id/start_screen_layout_now"
+                app:layout_constraintLeft_toLeftOf="@+id/start_screen_layout_now"
+                app:layout_constraintTop_toBottomOf="@+id/start_screen_text_day_of_week"
+                tools:ignore="RtlHardcoded" />
 
             <LinearLayout
                 android:id="@+id/start_screen_layout_now"
@@ -70,57 +121,6 @@
                     android:textSize="@dimen/text_subtitle_size" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/start_screen_text_day_of_week"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="*Понедельник*"
-                android:textColor="@color/dopDarkBlue"
-                android:textSize="@dimen/text_subtitle_size"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/start_screen_text_date" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/half_margin"
-                android:layout_marginRight="@dimen/half_margin"
-                android:layout_marginBottom="@dimen/half_margin"
-                android:gravity="bottom"
-                android:text="@string/start_screen_activity_title_now"
-                android:textColor="@color/backgroundWhite"
-                android:textSize="@dimen/text_subtitle_size"
-                app:layout_constraintBottom_toTopOf="@+id/start_screen_layout_now"
-                app:layout_constraintLeft_toLeftOf="@+id/start_screen_layout_now"
-                app:layout_constraintTop_toBottomOf="@+id/start_screen_text_day_of_week"
-                tools:ignore="RtlHardcoded" />
-
-            <TextView
-                android:id="@+id/start_screen_text_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/double_margin"
-                android:text="*10:35*"
-                android:textColor="#000000"
-                android:textSize="@dimen/text_title_size"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/start_screen_text_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="*31 Октября*"
-                android:textColor="#000000"
-                android:textSize="@dimen/text_title_size"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/start_screen_text_time" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,7 +1,6 @@
 package com.learning.texnar13.teachersprogect;
 
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
@@ -25,6 +24,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -96,7 +97,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     // картинка с иконками
     ImageView instrumentalImage;
     // фон картинки с иконками
-    ImageView instrumentalImageBackground;
+    RelativeLayout instrumentalImageBackground;
 
 
     // точка середины между пальцами за предыдущую итерацию
@@ -208,6 +209,13 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cabinet_redactor);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+
         // цвет кнопки меню
         getSupportActionBar().getThemedContext().setTheme(R.style.cabinetRedactorStyle);
 
@@ -225,7 +233,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         //android:layout_centerInParent="true"
 
         TextView title = new TextView(this);
-        title.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+        title.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_medium));
         title.setSingleLine(true);
         title.setGravity(Gravity.CENTER);
         title.setTextColor(getResources().getColor(R.color.backgroundWhite));
@@ -329,10 +337,10 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             public void onGlobalLayout() {
                 out.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 addButtonSizeRect = new Rect(
-                        out.getWidth() / 2 - (int) pxFromDp(50) / 2,
-                        out.getHeight() - (int) pxFromDp(50),
-                        out.getWidth() / 2 + (int) pxFromDp(50) / 2,
-                        out.getHeight()
+                        (int)(out.getWidth() / 2 - getResources().getDimension(R.dimen.cabinet_redactor_button_add_size) / 2),
+                        (int)(out.getHeight() -  getResources().getDimension(R.dimen.cabinet_redactor_button_add_size) - getResources().getDimension(R.dimen.cabinet_redactor_button_add_bottom_margin)),
+                        (int) (out.getWidth() / 2 + getResources().getDimension(R.dimen.cabinet_redactor_button_add_size) / 2),
+                        (int) (out.getHeight() - getResources().getDimension(R.dimen.cabinet_redactor_button_add_bottom_margin))
                 );
             }
         });
@@ -404,11 +412,14 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
 //                //todo-- (для отладки)
 //                for (int i = 0; i < desksList.size(); i++) {
 //                    RelativeLayout relativeLayout = new RelativeLayout(this);
-//                    relativeLayout.setBackground(getResources().getDrawable(R.drawable.start_screen_3_4_pink_spot));
+//                    relativeLayout.setBackground(getResources().getDrawable(R.drawable.__background_round_simple_full_pink));
 //
-//                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
-//                    layoutParams.leftMargin = (int) motionEvent.getX()-50;
-//                    layoutParams.topMargin = (int) motionEvent.getY()-50;
+//                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+//                            addButtonSizeRect.right-addButtonSizeRect.left,
+//                            addButtonSizeRect.bottom-addButtonSizeRect.top
+//                    );
+//                    layoutParams.leftMargin = addButtonSizeRect.left;
+//                    layoutParams.topMargin = addButtonSizeRect.top;
 //                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 //                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 //
@@ -444,7 +455,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         );
                         // ставим иконку для удаления
                         instrumentalImage.setImageResource(0);
-                        instrumentalImageBackground.setImageResource(R.drawable.__button_bucket);
+                        instrumentalImageBackground.setBackgroundResource(R.drawable.__button_bucket);
                     }
                     i--;
                 }
@@ -464,8 +475,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         // прекращаем перемещение
                         mode = NONE;
                         // ставим изображение в плюс
-                        instrumentalImage.setImageResource(R.drawable.__button_add);
-                        instrumentalImageBackground.setImageResource(R.drawable.cabinet_redactor_add_desk_button);
+                        instrumentalImage.setImageResource(R.drawable.__button_add_white);
+                        instrumentalImageBackground.setBackgroundResource(R.drawable.cabinet_redactor_add_desk_button);
                         // снимаем выбор с парты
                         checkedDeskId = -1;
                     }
@@ -502,8 +513,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         // из списка
                         desksList.remove(i);
                         // возвращаем картинку
-                        instrumentalImage.setImageResource(R.drawable.__button_add);
-                        instrumentalImageBackground.setImageResource(R.drawable.cabinet_redactor_add_desk_button);
+                        instrumentalImage.setImageResource(R.drawable.__button_add_white);
+                        instrumentalImageBackground.setBackgroundResource(R.drawable.cabinet_redactor_add_desk_button);
 
                         // прекращаем перемещение парты
                         mode = NONE;
@@ -618,8 +629,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     db.close();
 
                     // ставим изображение в плюс
-                    instrumentalImage.setImageResource(R.drawable.__button_add);
-                    instrumentalImageBackground.setImageResource(R.drawable.cabinet_redactor_add_desk_button);
+                    instrumentalImage.setImageResource(R.drawable.__button_add_white);
+                    instrumentalImageBackground.setBackgroundResource(R.drawable.cabinet_redactor_add_desk_button);
                     // снимаем с парты выбор
                     checkedDeskId = -1;
                 }

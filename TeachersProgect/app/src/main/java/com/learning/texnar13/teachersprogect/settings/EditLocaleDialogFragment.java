@@ -1,7 +1,7 @@
 package com.learning.texnar13.teachersprogect.settings;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -62,7 +62,7 @@ public class EditLocaleDialogFragment extends DialogFragment {
         closeImageViewParams.setMargins(
                 (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin));
         headLayout.addView(closeImageView, closeImageViewParams);
         // при нажатии на кнопку закрыть
@@ -76,10 +76,10 @@ public class EditLocaleDialogFragment extends DialogFragment {
 
         // текст заголовка
         TextView title = new TextView(getActivity());
-        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_medium));
         title.setText(R.string.settings_activity_dialog_edit_locale_title);
         title.setGravity(Gravity.CENTER_VERTICAL);
-        title.setTextColor(Color.WHITE);
+        title.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
         title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
 
         LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
@@ -141,11 +141,14 @@ public class EditLocaleDialogFragment extends DialogFragment {
             linear.addView(item, itemParams);
             //текст в нем
             TextView text = new TextView(getActivity());
-            text.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             text.setText(localeNames[i]);
             if (lastLocaleNumber == i) {
+                text.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_bold));
                 text.setTextColor(getResources().getColor(R.color.baseBlue));
-            } else text.setTextColor(Color.BLACK);
+            } else {
+                text.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                text.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+            }
             text.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             item.addView(text);
 

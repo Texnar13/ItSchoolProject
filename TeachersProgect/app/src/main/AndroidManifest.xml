@@ -25,7 +25,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
 
-                <!--action android:name="android.intent.action.VIEW" />
+                <!--action android:name="android.intent.action.VIEW" />todo
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" /-->
 
@@ -62,10 +62,12 @@
         <activity
             android:name=".ScheduleDayActivity"
             android:configChanges="locale"
-            android:label="@string/title_activity_schedule_day" />
+            android:label="@string/title_activity_schedule_day"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".lessonRedactor.LessonRedactorActivity"
-            android:configChanges="locale" />
+            android:configChanges="locale"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".settings.SettingsActivity"
             android:configChanges="locale"
@@ -91,7 +93,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".learnersAndGradesOut.learnersAndGradesStatistics.LearnersGradesStatisticsActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

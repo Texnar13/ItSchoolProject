@@ -11,7 +11,7 @@
     <RelativeLayout
         android:id="@+id/schedule_month_title_container"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="@dimen/my_toolbar_size">
 
         <ImageView
             android:id="@+id/schedule_month_back_arrow"
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/forth_margin"
                 android:layout_marginRight="@dimen/forth_margin"
-                android:fontFamily="@font/geometria"
+                android:fontFamily="@font/geometria_medium"
                 android:text="@string/title_activity_schedule_month"
                 android:textColor="@color/backgroundWhite"
                 android:textSize="@dimen/text_subtitle_size" />

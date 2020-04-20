@@ -1,5 +1,6 @@
 package com.learning.texnar13.teachersprogect.startScreen;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -55,6 +58,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
 
     // при создании
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +67,13 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
         setContentView(R.layout.activity_start_screen);
+
+        // ставим цвет статус бара
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.baseBlue));
+        }
 
 
         // ================ реклама яндекса на главном экране ================
@@ -116,7 +127,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
                 //создать диалог
                 StartScreenRateUsDialog startScreenRateUsDialog = new StartScreenRateUsDialog();
                 //показать диалог
-                startScreenRateUsDialog.show(getFragmentManager(), IS_RATE);
+                startScreenRateUsDialog.show(getSupportFragmentManager(), IS_RATE);
             }
         }
 
@@ -194,9 +205,9 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
                 // текст пустоты
                 TextView absText = new TextView(this);
-                absText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_extra_light));
+                absText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
                 absText.setText(R.string.start_screen_activity_title_current_no_lesson);
-                absText.setTextColor(Color.BLACK);
+                absText.setTextColor(getResources().getColor(R.color.backgroundGray));
                 absText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                 LinearLayout.LayoutParams absTextParams = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
@@ -330,7 +341,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
                 // кабинет
                 TextView cabinetText = new TextView(this);
-                cabinetText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_light));
+                cabinetText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
                 cabinetText.setText(cabinetName);
                 cabinetText.setTextColor(Color.BLACK);
                 cabinetText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -501,4 +512,13 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
   Надо отследить что пользователь открыл приложение, а не (например) повернул. Это можно сделать проверив
   if(savedInstanceState==null) это аргумент в onCreate методе активити. После её поворота (пересоздания)
   этот аргумент уже не null и условие выполнено не будет.
+
+
+  // устаревшие диалоги надо перевести на библиотеку androidX
+  // getSupportFragmentManager()
+  // import androidx.fragment.app.DialogFragment;
+
+  а также активити import androidx.appcompat.app.AppCompatActivity;
+
+
 * */

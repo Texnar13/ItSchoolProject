@@ -15,7 +15,7 @@
         app:backgroundTint="@color/baseOrange"
         app:borderWidth="0dp"
         app:elevation="0.1dp"
-        app:srcCompat="@drawable/__button_add" />
+        app:srcCompat="@drawable/__button_add_white" />
 
     <include layout="@layout/content_cabinets_out" />
 

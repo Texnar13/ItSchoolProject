@@ -29,6 +29,7 @@
 
         <TextView
             android:id="@+id/cabinet_redactor_state_text"
+            android:fontFamily="@font/geometria_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -38,7 +39,7 @@
             android:gravity="center"
             android:text="@string/cabinet_redactor_activity_text_help"
             android:textColor="@color/backgroundLiteGray"
-            android:textSize="10pt" />
+            android:textSize="@dimen/text_subtitle_size" />
     </RelativeLayout>
 
 
@@ -58,19 +59,23 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/activity_cabinet_redactor_instrumental_image_background"
                 android:layout_width="@dimen/cabinet_redactor_button_add_size"
                 android:layout_height="@dimen/cabinet_redactor_button_add_size"
-                android:layout_centerInParent="true"
-                android:background="@drawable/cabinet_redactor_add_desk_button" />
+                android:layout_marginBottom="@dimen/cabinet_redactor_button_add_bottom_margin"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/cabinet_redactor_add_desk_button" >
 
-            <ImageView
-                android:id="@+id/activity_cabinet_redactor_instrumental_image"
-                android:layout_width="@dimen/cabinet_redactor_button_add_image_size"
-                android:layout_height="@dimen/cabinet_redactor_button_add_image_size"
-                android:layout_centerInParent="true"
-                app:srcCompat="@drawable/__button_add" />
+                <ImageView
+                    android:id="@+id/activity_cabinet_redactor_instrumental_image"
+                    android:layout_width="@dimen/cabinet_redactor_button_add_image_size"
+                    android:layout_height="@dimen/cabinet_redactor_button_add_image_size"
+                    android:layout_centerInParent="true"
+                    app:srcCompat="@drawable/__button_add_white" />
+            </RelativeLayout>
+
+
         </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>

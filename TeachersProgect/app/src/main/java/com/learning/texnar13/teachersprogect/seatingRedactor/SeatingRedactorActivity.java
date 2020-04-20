@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,6 +19,8 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -129,6 +132,16 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         setContentView(R.layout.activity_seating_redactor);
+
+        // цвета статус бара
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+
+
         out = findViewById(R.id.seating_redactor_room);
         out.setOnTouchListener(this);
 
@@ -659,7 +672,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     // создаем текст ученика
                     TextView learnerText = new TextView(getApplicationContext());
                     learnerText.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.geometria));
-                    learnerText.setTextSize(8 * multiplier);
+                    learnerText.setTextSize(7 * multiplier);
                     learnerText.setAllCaps(true);
                     learnerText.setGravity(Gravity.CENTER_HORIZONTAL);
                     learnerText.setTextColor(Color.BLACK);
@@ -720,7 +733,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                 // размеры текста если он есть
                 if (learnersTextViews[placeI] != null) {
                     // меняем размер текста ученика
-                    learnersTextViews[placeI].setTextSize(8 * multiplier);
+                    learnersTextViews[placeI].setTextSize(7 * multiplier);
                 }
             }
 
@@ -767,6 +780,12 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                         // выводим картинку +
                         ImageView lernerImage = new ImageView(getApplicationContext());
                         LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                        lernerImageParams.setMargins(
+                                (int) getResources().getDimension(R.dimen.half_margin),
+                                (int) getResources().getDimension(R.dimen.half_margin),
+                                (int) getResources().getDimension(R.dimen.half_margin),
+                                (int) getResources().getDimension(R.dimen.half_margin)
+                        );
                         lernerImage.setImageResource(R.drawable.__button_circle_plus);
                         viewPlaceOut[placesI].addView(lernerImage, lernerImageParams);
                     } else {
@@ -787,7 +806,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             // создаем текст ученика
             TextView learnerText = new TextView(getApplicationContext());
             learnerText.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.geometria));
-            learnerText.setTextSize(8 * multiplier);
+            learnerText.setTextSize(7 * multiplier);
             learnerText.setAllCaps(true);
             learnerText.setGravity(Gravity.CENTER_HORIZONTAL);
             learnerText.setTextColor(Color.BLACK);

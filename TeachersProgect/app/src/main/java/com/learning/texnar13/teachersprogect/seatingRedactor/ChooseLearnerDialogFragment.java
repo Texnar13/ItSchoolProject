@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.appcompat.app.AlertDialog;
+
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.R;
+import com.learning.texnar13.teachersprogect.ScheduleDayActivity;
 
 import java.util.ArrayList;
 
@@ -68,7 +70,7 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
 
         // текст заголовка
         TextView title = new TextView(getActivity());
-        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria));
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_medium));
         title.setText(R.string.lesson_redactor_activity_text_choose_learner);
         title.setGravity(Gravity.CENTER_VERTICAL);
         title.setTextColor(Color.WHITE);
@@ -94,10 +96,17 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
         // создаем контейнер тела диалога
         LinearLayout bodyLayoutContainer = new LinearLayout(getActivity());
         bodyLayoutContainer.setOrientation(LinearLayout.VERTICAL);
-        bodyLayoutScroll.addView(bodyLayoutContainer,
+        ScrollView.LayoutParams bodyLayoutContainerParams = new ScrollView.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
+        bodyLayoutContainerParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                0,
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin)
+        );
+        bodyLayoutScroll.addView(bodyLayoutContainer, bodyLayoutContainerParams);
 
         // получаем  из intent имена учеников
         ArrayList<String> learnersNames = getArguments().getStringArrayList(ARGS_LEARNERS_NAMES_ARRAY);

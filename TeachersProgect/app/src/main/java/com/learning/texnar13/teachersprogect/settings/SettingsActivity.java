@@ -1,5 +1,6 @@
 package com.learning.texnar13.teachersprogect.settings;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -35,6 +36,7 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
     com.yandex.mobile.ads.InterstitialAd settingsBack;
 
     // создание экрана
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -165,7 +167,7 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
                 args.putIntArray("arr7", arr7);
                 args.putIntArray("arr8", arr8);
                 editTimeDialogFragment.setArguments(args);
-                editTimeDialogFragment.show(getFragmentManager(), "editTime");
+                editTimeDialogFragment.show(getSupportFragmentManager(), "editTime");
             }
         });
 
@@ -218,7 +220,7 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
                 EditLocaleDialogFragment localeDialog = new EditLocaleDialogFragment();
                 localeDialog.setArguments(args);
                 // запускаем
-                localeDialog.show(getFragmentManager(), "editLocaleDialog");
+                localeDialog.show(getSupportFragmentManager(), "editLocaleDialog");
             }
         });
 
