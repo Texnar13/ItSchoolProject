@@ -23,7 +23,7 @@
     <string name="start_screen_activity_dialog_button_later">Позже</string>
 
     <string name="start_screen_activity_dialog_whats_new_title">Что нового:</string>
-    <string name="start_screen_activity_dialog_whats_new_text">Поздравляем Вас с началом учебного года, дорогие пользователи!\n\n<b>Представляем обещанное глобальное обновление</b>: теперь все гораздо удобнее и красивее. С новым дизайном пришли и новые возможности (к примеру, типы оценок: тест, контрольная, четвертная). Не забудьте залезть в Настройки – они позволяют сделать приложение 100 % подходящим для вас. Спасибо за ваши отзывы – именно они помогают нам сделать приложение лучше! Если у вас есть предложения – пишите, у нас грандиозные планы по дальнейшему улучшению Помощника учителя!</string>
+    <string name="start_screen_activity_dialog_whats_new_text">Мы сделали дизайн ещё удобнее и добавили новые возможности функционалу! ❤️</string>
     <string name="start_screen_activity_dialog_whats_new_button_ok">Понятно</string>
 
     <string name="start_screen_activity_dialog_deprecated_device_text">Внимание!\nДанное устройство не поддерживается.\nМогут некорректно отображаться некоторые элементы интерфейса.\n</string>
@@ -93,7 +93,7 @@
     <string name="learners_and_grades_statistics_activity_hint_date_day">ДЕНЬ</string>
     <string name="learners_and_grades_statistics_activity_hint_date_month">МЕСЯЦ</string>
     <string name="learners_and_grades_statistics_activity_hint_date_year">ГОД</string>
-    <string name="learners_and_grades_statistics_activity_spinner_text_add">+ Добавить период времени</string>
+    <string name="learners_and_grades_statistics_activity_spinner_text_add">+ добавить период времени</string>
     <string name="learners_and_grades_statistics_activity_spinner_text_remove">- Удалить периоды времени</string>
     <!-- диалог -->
     <string name="learners_and_grades_statistics_activity_dialog_title_add_statistic">Создать учебный период</string>
@@ -207,17 +207,17 @@
     <string name="lesson_activity_menu_text_learners">Посадить учеников</string>
     <string name="lesson_activity_menu_text_end_lesson">Закончить</string>
     <!-- диалоговое окно -->
-    <string name="lesson_activity_learner_absent_text">Отсутствует на уроке</string>
+    <string name="lesson_activity_learner_absent_text">отсутствует на уроке</string>
     <string name="lesson_activity_learner_dialog_out_text">Вы точно хотите выйти из урока без сохранения?</string>
-    <string name="lesson_activity_learner_dialog_out_yes">Да</string>
-    <string name="lesson_activity_learner_dialog_out_no">Нет!</string>
+    <string name="lesson_activity_learner_dialog_out_yes">Выйти! (все данные удалятся)</string>
+    <string name="lesson_activity_learner_dialog_out_no">Вернуться к уроку!</string>
 
 
     <!-- активность окончания урока-->
     <!-- заголовок активности -->
     <string name="title_activity_lesson_list">Итоги урока</string>
     <!-- меню сверху -->
-    <string name="lesson_list_activity_menu_text_save">сохранить</string>
+    <string name="lesson_list_activity_menu_text_save">Сохранить</string>
     <!-- уведомления -->
     <string name="lesson_list_activity_menu_toast_grades_saved">Все ответы успешно сохранены!</string>
     <!-- диалоги -->
@@ -225,7 +225,7 @@
     <string name="lesson_list_activity_dialog_button_save">сохранить</string>
     <string name="lesson_list_activity_dialog_button_cancel">отмена</string>
     <!-- подсказка на экране -->
-    <string name="lesson_list_activity_text_help">Здесь выводятся результаты урока. \nЧтобы изменить ответы, нажмите на них. \nЧтобы сохранить ответы, нажмите кнопку СОХРАНИТЬ (вверху). \nЕсли не хотите сохранять ответы, нажмите кнопку "Назад" на вашем устройстве.</string>
+    <string name="lesson_list_activity_text_help">Здесь выводятся результаты урока. \nЧтобы изменить ответы, нажмите на них. \nЧтобы сохранить ответы, нажмите кнопку СОХРАНИТЬ. \nЕсли не хотите сохранять ответы, нажмите кнопку "Назад" на вашем устройстве.</string>
 
 
     <!-- активность настроек-->
@@ -256,7 +256,8 @@
     <string name="settings_activity_dialog_new_type_title">Новый тип</string>
     <string name="settings_activity_dialog_delete_text_confirm_delete">Для подтверждения введите число </string>
     <string name="settings_activity_dialog_hint_number">ЧИСЛО</string>
-    <string name="settings_activity_dialog_button_remove">Удалить все данные</string>
+    <string name="settings_activity_dialog_button_remove_data">Удалить все данные</string>
+    <string name="settings_activity_dialog_button_remove">Удалить</string>
     <string name="settings_activity_dialog_button_cancel">Отмена</string>
     <string name="settings_activity_dialog_button_save">Сохранить</string>
     <string name="settings_activity_dialog_edit_time_title">Время уроков</string>

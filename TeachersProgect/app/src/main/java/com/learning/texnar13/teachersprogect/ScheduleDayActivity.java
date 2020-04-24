@@ -67,6 +67,9 @@ public class ScheduleDayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
+
         // вертикальная ориентация
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
@@ -101,7 +104,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
         // заголовок
         ((TextView) findViewById(R.id.schedule_day_title)).setText(Integer.parseInt(lessonDate.substring(8, 10)) + " " +
-                getResources().getStringArray(R.array.months_names_low_case)[Integer.parseInt(lessonDate.substring(5, 7))] + " " +
+                getResources().getStringArray(R.array.months_names_low_case)[Integer.parseInt(lessonDate.substring(5, 7))-1] + " " +
                 Integer.parseInt(lessonDate.substring(0, 4)));
 
 
@@ -297,6 +300,16 @@ public class ScheduleDayActivity extends AppCompatActivity {
 
                 // дополнительно выводим разметку сведений урока
 
+//                LinearLayout contentContainer = new LinearLayout(this);
+//                contentContainer.setBackgroundColor(Color.MAGENTA);
+//                TableRow.LayoutParams contentContainerParams = new TableRow.LayoutParams(
+//                        TableRow.LayoutParams.MATCH_PARENT,
+//                        100
+//                );
+//                lessonContainer.addView(contentContainer, contentContainerParams);
+
+
+
                 // текст предмета
                 TextView subjectText = new TextView(this);
                 subjectText.setGravity(Gravity.CENTER);
@@ -403,7 +416,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
         outLayout.addView(mAdView, mAdViewParams);
         // выбираем размер рекламы
         mAdView.setBlockId(getResources().getString(R.string.banner_id_schedule_day));
-        mAdView.setAdSize(AdSize.BANNER_320x50);
+        mAdView.setAdSize(AdSize.BANNER_320x100);
         // Создание объекта таргетирования рекламы.
         final com.yandex.mobile.ads.AdRequest adRequest = new com.yandex.mobile.ads.AdRequest.Builder().build();
         // Загрузка объявления.

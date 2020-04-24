@@ -22,6 +22,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -80,6 +81,10 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
     protected void onCreate(Bundle savedInstanceState) {
         // ставим содержимое экрана
         super.onCreate(savedInstanceState);
+
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
+
         setContentView(R.layout.activity_learners_grades_statistics);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

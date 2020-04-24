@@ -4,12 +4,12 @@
     <layer-list>
         <item>
             <shape>
-                <solid android:color="@color/backgroundLiteGray" />
+                <solid android:color="@color/backgroundWhite" />
             </shape>
         </item>
         <item android:bottom="1.5dp">
             <shape>
-                <solid android:color="@color/backgroundWhite" />
+                <solid android:color="@color/backgroundLiteGray" />
             </shape>
         </item>
     </layer-list>

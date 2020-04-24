@@ -23,7 +23,7 @@
     <string name="start_screen_activity_dialog_button_later">Más tarde.</string>
 
     <string name="start_screen_activity_dialog_whats_new_title">Qué hay de nuevo:</string>
-    <string name="start_screen_activity_dialog_whats_new_text">Felicidades por el comienzo del año escolar, queridos usuarios!</string>Здесь текст чего нового от разработчика
+    <string name="start_screen_activity_dialog_whats_new_text">We have made the design even more convenient and added new features to the functionality! ❤️</string>
     <string name="start_screen_activity_dialog_whats_new_button_ok">Muy bien.</string>
 
     <string name="start_screen_activity_dialog_deprecated_device_text">¡Atención!\nEste dispositivo no es compatible.\nAlgunos elementos de la interfaz pueden no mostrarse correctamente.</string>
@@ -93,7 +93,7 @@
     <string name="learners_and_grades_statistics_activity_hint_date_day">DÍA</string>
     <string name="learners_and_grades_statistics_activity_hint_date_month">MES</string>
     <string name="learners_and_grades_statistics_activity_hint_date_year">AÑO</string>
-    <string name="learners_and_grades_statistics_activity_spinner_text_add">+ Agregar un período de aprendizaje</string>
+    <string name="learners_and_grades_statistics_activity_spinner_text_add">+ agregar un período de aprendizaje</string>
     <string name="learners_and_grades_statistics_activity_spinner_text_remove">- Eliminar un período de aprendizaje</string>
     <!-- диалог -->
     <string name="learners_and_grades_statistics_activity_dialog_title_add_statistic">Crear un período de aprendizaje</string>
@@ -207,17 +207,17 @@
     <string name="lesson_activity_menu_text_learners">Sentar a los alumnos</string>
     <string name="lesson_activity_menu_text_end_lesson">Terminar</string>
     <!-- диалоговое окно -->
-    <string name="lesson_activity_learner_absent_text">Falta en la lección</string>
+    <string name="lesson_activity_learner_absent_text">falta en la lección</string>
     <string name="lesson_activity_learner_dialog_out_text">¿Estás seguro de querer salir de la lección sin guardar?</string>
-    <string name="lesson_activity_learner_dialog_out_yes">Sí.</string>
-    <string name="lesson_activity_learner_dialog_out_no">No hay!</string>
+    <string name="lesson_activity_learner_dialog_out_yes">Salir (se eliminarán todos los datos)</string>
+    <string name="lesson_activity_learner_dialog_out_no">Volver a la lección</string>
 
 
     <!-- активность окончания урока-->
     <!-- заголовок активности -->
     <string name="title_activity_lesson_list">Resumen de la lección</string>
     <!-- меню сверху -->
-    <string name="lesson_list_activity_menu_text_save">guardar</string>
+    <string name="lesson_list_activity_menu_text_save">Guardar</string>
     <!-- уведомления -->
     <string name="lesson_list_activity_menu_toast_grades_saved">Todas las respuestas se guardan con éxito!</string>
     <!-- диалоги -->
@@ -225,7 +225,7 @@
     <string name="lesson_list_activity_dialog_button_save">guardar</string>
     <string name="lesson_list_activity_dialog_button_cancel">сancelar</string>
     <!-- подсказка на экране -->
-    <string name="lesson_list_activity_text_help">Aquí se muestran los resultados de la lección. \n Para cambiar las respuestas, haga clic en ellas. \n Para guardar las respuestas, haga clic en el botón GUARDAR (arriba). \n Si no desea guardar las respuestas, haga clic en el botón atrás en su dispositivo.</string>
+    <string name="lesson_list_activity_text_help">Aquí se muestran los resultados de la lección. \n Para cambiar las respuestas, haga clic en ellas. \n Para guardar las respuestas, haga clic en el botón GUARDAR. \n Si no desea guardar las respuestas, haga clic en el botón atrás en su dispositivo.</string>
 
 
     <!-- активность настроек-->
@@ -256,7 +256,8 @@
     <string name="settings_activity_dialog_new_type_title">Nueva clase</string>
     <string name="settings_activity_dialog_delete_text_confirm_delete">Para confirmar, escriba un número </string>
     <string name="settings_activity_dialog_hint_number">Número</string>
-    <string name="settings_activity_dialog_button_remove">Eliminar los datos</string>
+    <string name="settings_activity_dialog_button_remove_data">Eliminar los datos</string>
+    <string name="settings_activity_dialog_button_remove">Eliminar</string>
     <string name="settings_activity_dialog_button_cancel">Cancelar</string>
     <string name="settings_activity_dialog_button_save">Guardar</string>
     <string name="settings_activity_dialog_edit_time_title">Tiempo de lecciones</string>

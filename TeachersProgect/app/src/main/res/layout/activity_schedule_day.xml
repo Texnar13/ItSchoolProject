@@ -37,8 +37,8 @@
                 android:id="@+id/schedule_day_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/forth_margin"
-                android:layout_marginRight="@dimen/forth_margin"
+                android:layout_marginLeft="@dimen/simple_margin"
+                android:layout_marginRight="@dimen/simple_margin"
                 android:fontFamily="@font/geometria_medium"
                 android:textColor="@color/backgroundWhite"
                 android:textSize="@dimen/text_subtitle_size" />

@@ -20,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.ScheduleMonthActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -136,8 +137,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
-        // раздуваем layout
         super.onCreate(savedInstanceState);
+
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
+
+        // раздуваем layout
         setContentView(R.layout.activity_learners_and_grades);
         // раздуваем тулбар
         Toolbar toolbar = /*(Toolbar)*/ findViewById(R.id.cabinets_out_toolbar);
@@ -900,7 +905,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                                         //запускаем
                                         editGrade.setArguments(bundle);
-                                        editGrade.show(getFragmentManager(), "editGradeDialog - hello");// illegalState - вызов в неподходящее время
+                                        editGrade.show(getSupportFragmentManager(), "editGradeDialog - hello");// illegalState - вызов в неподходящее время
                                     }
                                 }
                             } else {// если нажат ученик

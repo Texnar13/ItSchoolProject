@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.learning.texnar13.teachersprogect"
-    android:versionCode="50"
-    android:versionName="tera3.060">
+    android:versionCode="51"
+    android:versionName="tera3.560">
 
     <application
         android:name=".MyApplication"
@@ -50,7 +50,8 @@
         <activity
             android:name=".lesson.LessonListActivity"
             android:configChanges="locale"
-            android:label="@string/title_activity_lesson_list" />
+            android:label="@string/title_activity_lesson_list"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".seatingRedactor.SeatingRedactorActivity"
             android:configChanges="locale" />

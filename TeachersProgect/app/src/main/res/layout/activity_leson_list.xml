@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.learning.texnar13.teachersprogect.lesson.LessonListActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/lesson_list_toolbar_back_arrow"
+            android:layout_width="@dimen/my_icon_small_size"
+            android:layout_height="@dimen/my_icon_small_size"
+            android:layout_marginLeft="@dimen/simple_margin"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/__button_back_arrow_blue" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/my_icon_size"
+            android:layout_marginRight="@dimen/my_icon_size"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/__background_edit_lesson" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/my_toolbar_text_container_height_size"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/my_icon_size"
+            android:layout_marginRight="@dimen/my_icon_size"
+            android:gravity="center"
+            android:background="@drawable/_button_round_background_blue">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/forth_margin"
+                android:layout_marginRight="@dimen/forth_margin"
+                android:fontFamily="@font/geometria_medium"
+                android:text="@string/title_activity_lesson_list"
+                android:textColor="@color/backgroundWhite"
+                android:textSize="@dimen/text_subtitle_size" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/lesson_list_out"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+</LinearLayout>

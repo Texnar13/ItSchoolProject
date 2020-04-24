@@ -1,7 +1,9 @@
 package com.learning.texnar13.teachersprogect.learnersClassesOut;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
@@ -23,12 +25,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.learnersAndGradesOut.LearnersAndGradesActivity;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class LearnersClassesOutActivity extends AppCompatActivity implements EditLearnersClassDialogInterface, CreateLearnersClassDialogInterface {
 
@@ -85,9 +89,14 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 
 //------------------------------создаем активность--------------------------------------------------
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
+
         setContentView(R.layout.activity_learners_classes_out);
 
         // вертикальная ориентация

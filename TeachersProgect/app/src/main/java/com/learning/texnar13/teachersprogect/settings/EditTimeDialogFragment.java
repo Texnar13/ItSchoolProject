@@ -2,7 +2,6 @@ package com.learning.texnar13.teachersprogect.settings;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import androidx.fragment.app.DialogFragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
@@ -12,13 +11,14 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.learning.texnar13.teachersprogect.R;
 
@@ -30,6 +30,9 @@ public class EditTimeDialogFragment extends DialogFragment {
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+        // настраиваем программный вывод векторных изображений
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        
         //layout диалога
         LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -88,7 +91,7 @@ public class EditTimeDialogFragment extends DialogFragment {
         titleParams.setMargins(
                 0,
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin));
         Log.e("TeachersApp", "outMainMenu: " + closeImageView.getId());
         titleParams.gravity = Gravity.CENTER_VERTICAL;
@@ -166,7 +169,7 @@ public class EditTimeDialogFragment extends DialogFragment {
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
-            itemParams.bottomMargin = 8;
+            itemParams.bottomMargin = (int) getResources().getDimension(R.dimen.simple_margin);
             timesOut.addView(item, itemParams);
 
             //--цифра
@@ -187,6 +190,8 @@ public class EditTimeDialogFragment extends DialogFragment {
             fields[i][0] = new EditText(getActivity());
             fields[i][0].setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             fields[i][0].setGravity(Gravity.CENTER);
+            fields[i][0].setBackground(getResources().getDrawable(R.drawable._underlined_white_shape));
+            fields[i][0].setPadding(0, 3, 0, 3);
             fields[i][0].setHint(getResources().getString(R.string.settings_activity_dialog_hint_hour));
             fields[i][0].setText("" + array[i][0]);
             fields[i][0].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -210,6 +215,8 @@ public class EditTimeDialogFragment extends DialogFragment {
             fields[i][1] = new EditText(getActivity());
             fields[i][1].setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             fields[i][1].setGravity(Gravity.CENTER);
+            fields[i][1].setBackground(getResources().getDrawable(R.drawable._underlined_white_shape));
+            fields[i][1].setPadding(0, 3, 0, 3);
             fields[i][1].setHint(getResources().getString(R.string.settings_activity_dialog_hint_minute));
             fields[i][1].setText("" + getTwoSymbols(array[i][1]));
             fields[i][1].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -234,6 +241,8 @@ public class EditTimeDialogFragment extends DialogFragment {
             fields[i][2] = new EditText(getActivity());
             fields[i][2].setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             fields[i][2].setGravity(Gravity.CENTER);
+            fields[i][2].setBackground(getResources().getDrawable(R.drawable._underlined_white_shape));
+            fields[i][2].setPadding(0, 3, 0, 3);
             fields[i][2].setHint(getResources().getString(R.string.settings_activity_dialog_hint_hour));
             fields[i][2].setText("" + array[i][2]);
             fields[i][2].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -252,6 +261,8 @@ public class EditTimeDialogFragment extends DialogFragment {
             fields[i][3] = new EditText(getActivity());
             fields[i][3].setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             fields[i][3].setGravity(Gravity.CENTER);
+            fields[i][3].setBackground(getResources().getDrawable(R.drawable._underlined_white_shape));
+            fields[i][3].setPadding(0, 3, 0, 3);
             fields[i][3].setHint(getResources().getString(R.string.settings_activity_dialog_hint_minute));
             fields[i][3].setText("" + getTwoSymbols(array[i][3]));
             fields[i][3].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));

@@ -75,9 +75,12 @@ public class PeriodDialogFragment extends DialogFragment {
         // контейнер в скролле
         bodyLayout = new LinearLayout(getActivity());
         bodyLayout.setOrientation(LinearLayout.VERTICAL);
-        bodyScroll.addView(bodyLayout,
+        ScrollView.LayoutParams bodyScrollParams = new ScrollView.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        bodyScrollParams.topMargin = (int) getResources().getDimension(R.dimen.half_margin);
+        bodyScroll.addView(bodyLayout, bodyScrollParams);
 
         // ---- контейнер для кнопок снизу ----
         bottomLayout = new LinearLayout(getActivity());
@@ -372,6 +375,7 @@ public class PeriodDialogFragment extends DialogFragment {
         final EditText periodNameField = new EditText(getActivity());
         periodNameField.setHint(R.string.learners_and_grades_statistics_activity_dialog_hint_profile_name);
         periodNameField.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        periodNameField.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
         periodNameField.setTextColor(Color.BLACK);
         // параметры текста
         LinearLayout.LayoutParams periodNameFieldParams = new LinearLayout.LayoutParams(
@@ -537,10 +541,10 @@ public class PeriodDialogFragment extends DialogFragment {
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
             periodContainerParams.setMargins(
-                    (int) getResources().getDimension(R.dimen.forth_margin),
-                    (int) getResources().getDimension(R.dimen.half_margin),
-                    (int) getResources().getDimension(R.dimen.forth_margin),
-                    (int) getResources().getDimension(R.dimen.half_margin)
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    0,
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    0
             );
             periodContainerParams.gravity = Gravity.CENTER_VERTICAL;
             bodyLayout.addView(periodContainer, periodContainerParams);
@@ -586,6 +590,12 @@ public class PeriodDialogFragment extends DialogFragment {
             editPeriodsNames[periodI].setText(periodsNames.get(periodI));
             editPeriodsNames[periodI].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             editPeriodsNames[periodI].setTextColor(Color.BLACK);
+            editPeriodsNames[periodI].setPadding(
+                    (int) getResources().getDimension(R.dimen.half_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.half_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin)
+            );
             editPeriodsNames[periodI].setHint(R.string.learners_and_grades_statistics_activity_dialog_hint_profile_name);
             // параметры текста
             LinearLayout.LayoutParams periodTextParams = new LinearLayout.LayoutParams(
@@ -651,7 +661,7 @@ public class PeriodDialogFragment extends DialogFragment {
 
         // кнопка сохранить
         final TextView saveTextButton = new TextView(getActivity());
-        saveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_medium));
+        saveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
         saveTextButton.setText(getResources().getString(R.string.learners_and_grades_out_activity_dialog_button_save));
         saveTextButton.setGravity(Gravity.CENTER);
         saveTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));

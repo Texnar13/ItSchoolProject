@@ -17,8 +17,9 @@
         <ImageView
             android:id="@+id/cabinets_out_toolbar_back_arrow"
             android:layout_centerVertical="true"
-            android:layout_width="@dimen/my_icon_size"
-            android:layout_height="@dimen/my_icon_size"
+            android:layout_width="@dimen/my_icon_small_size"
+            android:layout_height="@dimen/my_icon_small_size"
+            android:layout_marginLeft="@dimen/simple_margin"
             android:adjustViewBounds="true"
             app:srcCompat="@drawable/__button_back_arrow_orange"/>
 

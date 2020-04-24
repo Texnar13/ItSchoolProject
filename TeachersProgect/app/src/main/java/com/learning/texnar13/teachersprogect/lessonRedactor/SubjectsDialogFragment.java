@@ -359,6 +359,7 @@ public class SubjectsDialogFragment extends DialogFragment {
         // текстовое поле для названия предмета
         final EditText subjectNameField = new EditText(getActivity());
         subjectNameField.setHint(getResources().getString(R.string.learners_and_grades_out_activity_dialog_hint_subject_name));
+        subjectNameField.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
         subjectNameField.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         subjectNameField.setTextColor(Color.BLACK);
         // параметры текста
@@ -536,9 +537,9 @@ public class SubjectsDialogFragment extends DialogFragment {
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
             subjectContainerParams.setMargins(
-                    (int)getResources().getDimension(R.dimen.forth_margin),
+                    (int)getResources().getDimension(R.dimen.double_margin),
                     (int)getResources().getDimension(R.dimen.half_margin),
-                    (int)getResources().getDimension(R.dimen.forth_margin),
+                    (int)getResources().getDimension(R.dimen.double_margin),
                     (int)getResources().getDimension(R.dimen.half_margin)
             );
             subjectContainerParams.gravity = Gravity.CENTER_VERTICAL;
@@ -582,6 +583,7 @@ public class SubjectsDialogFragment extends DialogFragment {
             // создаем текстовое поле с названием предмета
             editSubjectsNames[subjectI] = new EditText(getActivity());
             editSubjectsNames[subjectI].setText(subjectsNames.get(subjectI));
+            editSubjectsNames[subjectI].setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             editSubjectsNames[subjectI].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             editSubjectsNames[subjectI].setTextColor(Color.BLACK);
             editSubjectsNames[subjectI].setHint(getResources().getString(R.string.learners_and_grades_out_activity_dialog_hint_subject_name));
@@ -642,7 +644,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                 (int)getResources().getDimension(R.dimen.simple_margin),
                 (int)getResources().getDimension(R.dimen.simple_margin),
                 (int)getResources().getDimension(R.dimen.simple_margin),
-                (int)getResources().getDimension(R.dimen.simple_margin)
+                (int)getResources().getDimension(R.dimen.half_more_margin)
         );
         saveTextButtonContainerParams.gravity = Gravity.CENTER;
         bottomLayout.addView(saveButtonContainer, saveTextButtonContainerParams);

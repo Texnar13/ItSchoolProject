@@ -24,6 +24,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -77,6 +78,10 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
+
         setContentView(R.layout.activity_lesson_redactor);
         // вертикальная ориентация
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
@@ -97,7 +102,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         // ================ загрузка рекламы яндекса ================
         com.yandex.mobile.ads.AdView mAdView = findViewById(R.id.activity_lesson_redactor_banner);
         mAdView.setBlockId(getResources().getString(R.string.banner_id_lesson_redactor));
-        mAdView.setAdSize(AdSize.BANNER_320x50);
+        mAdView.setAdSize(AdSize.BANNER_320x100);
         // Создание объекта таргетирования рекламы.
         final com.yandex.mobile.ads.AdRequest adRequest = new com.yandex.mobile.ads.AdRequest.Builder().build();
         // Загрузка объявления.

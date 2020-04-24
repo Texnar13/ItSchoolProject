@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,12 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -26,25 +29,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class SettingsActivity extends AppCompatActivity implements EditMaxAnswersDialogInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface, EditGradesTypeDialogFragmentInterface, SettingsRemoveInterface {
 
     TextView maxGradeText;
 
+    boolean isColoredGrades;
+
     // межстраничный баннер открывающийся при выходе из настроек
     //InterstitialAd settingsBack;
     com.yandex.mobile.ads.InterstitialAd settingsBack;
+
+
+
+
 
     // создание экрана
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
 
 
         // разрешаем только вертикальную ориентацию
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-
 
         // ================ начинаем загрузку межстраничного баннера конца урока ================
         settingsBack = new com.yandex.mobile.ads.InterstitialAd(this);
@@ -125,7 +136,7 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
                 args.putStringArray(EditGradesTypesDialogFragment.ARGS_TYPES_NAMES_ARRAY_TAG, typesStrings);
                 typesDialogFragment.setArguments(args);
                 // запуск
-                typesDialogFragment.show(getFragmentManager(), "editGradesTypesDialogFragment");
+                typesDialogFragment.show(getSupportFragmentManager(), "editGradesTypesDialogFragment");
             }
         });
 
@@ -226,21 +237,27 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
 
         // цветные оценки
         final RelativeLayout coloredGradesContainer = findViewById(R.id.activity_settings_are_grades_colored_container);
-        final Switch coloredGradesSwitch = findViewById(R.id.activity_settings_are_grades_colored_switch);
+        final ImageView coloredGradesSwitch = findViewById(R.id.activity_settings_are_grades_colored_switch);
         // ставим переключатель в состояние из бд
-        coloredGradesSwitch.setChecked(db.getSettingsAreTheGradesColoredByProfileId(1));
+        isColoredGrades = db.getSettingsAreTheGradesColoredByProfileId(1);
+        if(isColoredGrades){
+            coloredGradesSwitch.setImageResource(R.drawable.switch_4);
+        }else{
+            coloredGradesSwitch.setImageResource(R.drawable.switch_0);
+        }
+
         // обработчик контейнеру
         coloredGradesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.setSettingsAreTheGradesColoredByProfileId(1, !coloredGradesSwitch.isChecked());
-                coloredGradesSwitch.setChecked(db.getSettingsAreTheGradesColoredByProfileId(1));
-//                if(coloredGradesSwitch.isChecked()){
-//                    coloredGradesSwitch.color(getResources().getColor(R.color.baseBlue));
-//                } else {
-//                    coloredGradesSwitch.setHighlightColor(getResources().getColor(R.color.backgroundWhite));
-//
-//                }
+                isColoredGrades = !isColoredGrades;
+                db.setSettingsAreTheGradesColoredByProfileId(1, isColoredGrades);
+
+                if(isColoredGrades){
+                    coloredGradesSwitch.setImageResource(R.drawable.switch_4);
+                }else{
+                    coloredGradesSwitch.setImageResource(R.drawable.switch_0);
+                }
             }
         });
         // переключатель не нажимается

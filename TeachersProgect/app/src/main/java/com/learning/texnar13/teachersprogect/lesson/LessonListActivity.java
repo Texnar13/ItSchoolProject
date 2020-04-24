@@ -1,6 +1,8 @@
 package com.learning.texnar13.teachersprogect.lesson;
 
+import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -9,7 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,12 +23,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
+import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
 import java.io.Serializable;
 
-public class LessonListActivity extends AppCompatActivity implements GradesDialogInterface, EndLessonInterface {
+public class LessonListActivity extends AppCompatActivity implements GradesDialogInterface {
 
     //public static final String LESSON_TIME = "startTime";
     public static final String LESSON_DATE = "lessonDate";
@@ -42,7 +49,8 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
     public static final String SECOND_GRADES_TYPES = "gradesTypes2";
     public static final String THIRD_GRADES_TYPES = "gradesTypes3";
 
-    public static final String ADD_BANNER = "AdBanner";
+    public static final int RESULT_BACK = 100;
+    public static final int RESULT_SAVE = 101;
 
 //    public static final String LIST_ID = "listId";
 
@@ -82,96 +90,38 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
     static int[][] gradesTypesIndexes;
 
 
-    // межстраничный баннер открывающийся при сохранении оценок
-    //InterstitialAd lessonEndBanner;
-
-
-    // ---------
-
-
-    // инициализация меню
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.lesson_list_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-        menu.findItem(R.id.lesson_list_menu_save).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Log.i("TeachersApp", "LessonListActivity - onPrepareOptionsMenu - save");
-
-                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-
-                // сохраняем оценки в бд
-                for (int learnerI = 0; learnerI < learnersId.length; learnerI++) {
-
-                    // н создаем только одну
-                    if (grades[learnerI][0] == -2) {
-                        db.createGrade(
-                                learnersId[learnerI],
-                                grades[learnerI][0],
-                                gradesTypesId[0],
-                                subjectId,
-                                getIntent().getStringExtra(LESSON_DATE),
-                                getIntent().getIntExtra(LESSON_NUMBER, 0)
-                        );
-                    } else
-                        for (int gradeI = 0; gradeI < 3; gradeI++) {
-                            if (grades[learnerI][gradeI] != 0) {
-                                db.createGrade(
-                                        learnersId[learnerI],
-                                        grades[learnerI][gradeI],
-                                        gradesTypesId[gradesTypesIndexes[learnerI][gradeI]],
-                                        subjectId,
-                                        getIntent().getStringExtra(LESSON_DATE),
-                                        getIntent().getIntExtra(LESSON_NUMBER, 0)
-                                );
-                            }
-                        }
-                    toast.show();
-                }
-                db.close();
-                finish();
-
-
-                //очистка данных
-                learnersId = null;
-                return true;
-            }
-        });
-
-        return true;
-    }
-
-
     // создание активности
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // правим заголовок
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setElevation(0);
-            TextView title = new TextView(this);
-            title.setText(R.string.title_activity_lesson_list);
-            title.setTextColor(getResources().getColor(R.color.backgroundWhite));
-            title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-            title.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_medium));
-            actionBar.setCustomView(title);
-            actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(false);
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
+
+        // разметка
+        setContentView(R.layout.activity_leson_list);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
+        // базовый контейнер
+        RelativeLayout out = findViewById(R.id.lesson_list_out);
 
-        // базовый скролящийся контейнер
+        // кнопка назад
+        findViewById(R.id.lesson_list_toolbar_back_arrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        // скролящийся контейнер
         ScrollView scrollView = new ScrollView(this);
-        scrollView.setBackgroundResource(R.color.backgroundWhite);
-        setContentView(scrollView);
+        out.addView(scrollView, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 
         // поле вывода данных
         LinearLayout table = new LinearLayout(this);
@@ -237,10 +187,10 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
-            learnerRowParams.leftMargin = pxFromDp(10);
-            learnerRowParams.topMargin = pxFromDp(10);
-            learnerRowParams.rightMargin = pxFromDp(10);
-            learnerRowParams.bottomMargin = pxFromDp(10);
+            learnerRowParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+            learnerRowParams.topMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+            learnerRowParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+            learnerRowParams.bottomMargin = (int) getResources().getDimension(R.dimen.simple_margin);
             table.addView(learnerRow, learnerRowParams);
 
 
@@ -256,7 +206,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     4F
             );
-            learnerTextParams.rightMargin = pxFromDp(10);
+            learnerTextParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
             learnerRow.addView(learnerText, learnerTextParams);
 
             // текст с оценками
@@ -328,20 +278,126 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         // подсказка в низу
         TextView helpText = new TextView(this);
         helpText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
-        helpText.setTextColor(getResources().getColor(R.color.backgroundGray));
+        helpText.setTextColor(getResources().getColor(R.color.backgroundLiteGray));
         helpText.setGravity(Gravity.CENTER);
-        helpText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        helpText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         helpText.setText(R.string.lesson_list_activity_text_help);
         //параметры
         LinearLayout.LayoutParams helpTextParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        helpTextParams.setMargins(pxFromDp(20), pxFromDp(10), pxFromDp(20), pxFromDp(10));
+        helpTextParams.setMargins(
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.double_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin)
+        );
         table.addView(helpText, helpTextParams);
 
         // тост говорящий, что оценки сохранены
         toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.lesson_list_activity_menu_toast_grades_saved), Toast.LENGTH_SHORT);
+
+
+        // кнопка сохранить
+        //контейнер для кнопки
+        LinearLayout saveButtonContainer = new LinearLayout(this);
+        saveButtonContainer.setOrientation(LinearLayout.HORIZONTAL);
+        saveButtonContainer.setBackgroundResource(R.drawable._button_round_background_green);
+        saveButtonContainer.setGravity(Gravity.CENTER);
+        RelativeLayout.LayoutParams saveButtonContainerParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        saveButtonContainerParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        saveButtonContainerParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        saveButtonContainerParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.half_more_margin));
+        //контейнер в диалог
+        out.addView(saveButtonContainer, saveButtonContainerParams);
+
+
+        //кнопка сохранения
+        TextView saveButton = new TextView(this);
+        saveButton.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
+        saveButton.setGravity(Gravity.CENTER);
+        saveButton.setText(getResources().getString(R.string.lesson_list_activity_menu_text_save));
+        saveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        saveButton.setTextColor(Color.WHITE);
+        LinearLayout.LayoutParams saveButtonParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        saveButtonParams.setMargins(
+                (int) getResources().getDimension(R.dimen.forth_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.forth_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin));
+        saveButtonContainer.addView(saveButton, saveButtonParams);
+
+
+
+        // нажатие на кнопку сохранить
+        saveButtonContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("TeachersApp", "LessonListActivity - button save click");
+
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+
+                // удаляем все предыдущие оценки в этом дне
+                Cursor deleteGrades = db.getGradesBySubjectDateAndLesson(
+                        subjectId,
+                        getIntent().getStringExtra(LESSON_DATE),
+                        getIntent().getIntExtra(LESSON_NUMBER, 0)
+                );
+                while (deleteGrades.moveToNext())
+                    db.removeGrade(deleteGrades.getLong(deleteGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID)));
+                deleteGrades.close();
+
+
+                // сохраняем оценки в бд
+                for (int learnerI = 0; learnerI < learnersId.length; learnerI++) {
+
+                    // н создаем только одну
+                    if (grades[learnerI][0] == -2) {
+                        db.createGrade(
+                                learnersId[learnerI],
+                                grades[learnerI][0],
+                                gradesTypesId[0],
+                                subjectId,
+                                getIntent().getStringExtra(LESSON_DATE),
+                                getIntent().getIntExtra(LESSON_NUMBER, 0)
+                        );
+                    } else
+                        for (int gradeI = 0; gradeI < 3; gradeI++) {
+                            if (grades[learnerI][gradeI] != 0) {
+                                db.createGrade(
+                                        learnersId[learnerI],
+                                        grades[learnerI][gradeI],
+                                        gradesTypesId[gradesTypesIndexes[learnerI][gradeI]],
+                                        subjectId,
+                                        getIntent().getStringExtra(LESSON_DATE),
+                                        getIntent().getIntExtra(LESSON_NUMBER, 0)
+                                );
+                            }
+                        }
+                    toast.show();
+                }
+                db.close();
+
+                //очистка данных
+                learnersId = null;
+
+                // закрываем урок
+                setResult(RESULT_SAVE);
+                // выходим из активности
+                finish();
+            }
+        });
+
 
     }
 
@@ -386,30 +442,16 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
     @Override
     public void onBackPressed() {
-        // показываем диалог подтверждения выхода из активности
-        EndLessonDialogFragment endLessonDialogFragment = new EndLessonDialogFragment();
-        endLessonDialogFragment.show(getSupportFragmentManager(), "EndLesson - Hello");
-    }
-
-    // обратная связь от диалога EndLessonDialogFragment
-    @Override
-    public void endLesson() {
 
         // очистка данных
         learnersId = null;
-
+        // возвращаемся к уроку
+        setResult(RESULT_BACK);
         // выходим из активности
-        finish();
+        super.onBackPressed();
     }
 
-    private int pxFromDp(float px) {
-        return (int) (px * getResources().getDisplayMetrics().density);
-    }
 
-    // класс для передачи данных в эту активность
-    static class EndLessonIntentContainer implements Serializable {
-        //InterstitialAd addBanner;
-    }
 
 }
 

@@ -89,7 +89,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/_underlined_white_shape"
+                android:background="@drawable/_underlined_gray_shape"
                 android:fontFamily="@font/geometria_bold"
                 android:gravity="center|right"
                 android:text="@string/learners_and_grades_out_activity_title_subject"

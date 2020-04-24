@@ -10,13 +10,13 @@
 
     <!-- высота кнопок -->
     <dimen name="my_buttons_height_size">40sp</dimen>
-    <dimen name="spinner_height_size">48dp</dimen>
+    <dimen name="spinner_height_size">30dp</dimen>
     <dimen name="my_toolbar_text_container_height_size">36sp</dimen>
 
     <dimen name="my_toolbar_size">60dp</dimen>
     <dimen name="my_icon_size">33.33dp</dimen>
-    <dimen name="my_icon_small_size">25dp</dimen>
-    <dimen name="my_icon_small_half_size">12.5dp</dimen>
+    <dimen name="my_icon_small_size">20dp</dimen>
+    <dimen name="my_icon_small_half_size">10dp</dimen>
 
     <dimen name="forth_margin">32dp</dimen>
     <dimen name="double_margin">16dp</dimen>
@@ -28,23 +28,23 @@
 
 
     <!-- радиус скругления углов кнопок -->
-    <dimen name="my_buttons_rounding_radius_size">10dp</dimen>
-    <dimen name="my_buttons_rounding_radius_size_half">5dp</dimen>
+    <dimen name="my_buttons_rounding_radius_size">15dp</dimen>
+    <dimen name="my_buttons_rounding_radius_size_half">7.5dp</dimen>
 
     <!--размеры текста-->
-    <dimen name="text_title_size">18dp</dimen>
-    <dimen name="text_subtitle_size">14dp</dimen>
-    <dimen name="text_simple_size">9dp</dimen>
-    <dimen name="text_small_size">6dp</dimen>
+    <dimen name="text_title_size">18sp</dimen>
+    <dimen name="text_subtitle_size">14sp</dimen>
+    <dimen name="text_simple_size">12sp</dimen>
+    <dimen name="text_small_size">6sp</dimen>
 
     <!--  ширина текстовых полей -->
     <dimen name="text_field_two_simple_symbols_width">35dp</dimen>
     <dimen name="text_field_four_simple_symbols_width">60dp</dimen>
 
     <!--главный экран-->
-    <dimen name="begin_lesson_start_screen_button_height_plus">28dp</dimen>
-    <dimen name="begin_lesson_start_screen_button_height">22dp</dimen>
-    <dimen name="begin_lesson_start_screen_button_height_half">11dp</dimen>
+    <dimen name="begin_lesson_start_screen_button_height_plus">38.2dp</dimen>
+    <dimen name="begin_lesson_start_screen_button_height">30dp</dimen>
+    <dimen name="begin_lesson_start_screen_button_height_half">15dp</dimen>
     <dimen name="start_screen_button_margins">8dp</dimen>
     <dimen name="start_screen_text_margins">7dp</dimen>
     <dimen name="start_screen_image_margins">14dp</dimen>
@@ -65,12 +65,12 @@
 
     <!--редактор кабинета-->
     <dimen name="cabinet_redactor_button_add_bottom_margin">30dp</dimen>
-    <dimen name="cabinet_redactor_button_add_size">50dp</dimen>
-    <dimen name="cabinet_redactor_button_add_image_size">30dp</dimen>
+    <dimen name="cabinet_redactor_button_add_size">40dp</dimen>
+    <dimen name="cabinet_redactor_button_add_image_size">24dp</dimen>
 
     <!-- активность настроек -->
-    <dimen name="settings_title_height">180dp</dimen>
-    <dimen name="settings_title_background_image_height">130dp</dimen>
-    <dimen name="settings_title_round_image_size">140dp</dimen>
+    <dimen name="settings_title_height">160dp</dimen>
+    <dimen name="settings_title_background_image_height">115.6dp</dimen>
+    <dimen name="settings_title_round_image_size">124.4dp</dimen>
 
 </resources>

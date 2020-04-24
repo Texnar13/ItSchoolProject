@@ -56,8 +56,15 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
         // кнопка закрыть
         ImageView closeImageView = new ImageView(getActivity());
         closeImageView.setImageResource(R.drawable.__button_close);
-        LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(pxFromDp(40), pxFromDp(40));
-        closeImageViewParams.setMargins(pxFromDp(10), pxFromDp(10), pxFromDp(10), pxFromDp(10));
+        LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(
+                (int) getResources().getDimension(R.dimen.my_icon_size),
+                (int) getResources().getDimension(R.dimen.my_icon_size));
+        closeImageViewParams.setMargins(
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin)
+        );
         titleLayout.addView(closeImageView, closeImageViewParams);
         // при нажатии на кнопку закрыть
         closeImageView.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +87,9 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        titleParams.setMargins(0, pxFromDp(10), pxFromDp(10), pxFromDp(10));
+        titleParams.setMargins(0, (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin),
+                (int) getResources().getDimension(R.dimen.simple_margin));
         titleParams.gravity = Gravity.CENTER_VERTICAL;
         titleLayout.addView(title, titleParams);
 
@@ -132,7 +141,12 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                 );
-                learnerTextParams.setMargins(pxFromDp(10), pxFromDp(10), pxFromDp(10), pxFromDp(10));
+                learnerTextParams.setMargins(
+                        (int) getResources().getDimension(R.dimen.simple_margin),
+                        (int) getResources().getDimension(R.dimen.simple_margin),
+                        (int) getResources().getDimension(R.dimen.simple_margin),
+                        (int) getResources().getDimension(R.dimen.simple_margin)
+                );
                 textContainer.addView(learnerText, learnerTextParams);
 
                 // при нажатии
@@ -157,10 +171,7 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
     }
 
 
-    // преобразование зависимой величины в пиксели
-    private int pxFromDp(float dp) {
-        return (int) (dp * getActivity().getResources().getDisplayMetrics().density);
-    }
+
 }
 
 

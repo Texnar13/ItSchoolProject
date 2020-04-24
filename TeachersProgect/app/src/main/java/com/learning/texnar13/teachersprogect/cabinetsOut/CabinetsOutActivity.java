@@ -1,7 +1,9 @@
 package com.learning.texnar13.teachersprogect.cabinetsOut;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
@@ -23,12 +25,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
+import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.learnersClassesOut.CreateLearnersClassDialogFragment;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class CabinetsOutActivity extends AppCompatActivity implements EditCabinetDialogInterface, CreateCabinetInterface {
 
@@ -39,9 +43,16 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
 
 
     // создаем активность
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
+
+
         setContentView(R.layout.activity_cabinets_out);
 
         // вертикальная ориентация

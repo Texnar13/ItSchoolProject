@@ -214,13 +214,16 @@
                     android:textSize="@dimen/text_subtitle_size"
                     tools:ignore="RtlHardcoded" />
 
-                <Switch
+                <ImageView
+                    android:layout_centerVertical="true"
                     android:id="@+id/activity_settings_are_grades_colored_switch"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/my_buttons_height_size"
-                    android:layout_marginRight="@dimen/double_margin"
+                    android:layout_height="@dimen/my_icon_small_size"
+                    android:layout_marginRight="@dimen/simple_margin"
                     android:layout_alignParentRight="true"
-                    android:layout_gravity="center_vertical" />
+                    android:layout_gravity="center_vertical"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/switch_0" />
 
 
 

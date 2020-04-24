@@ -23,10 +23,7 @@
     <string name="start_screen_activity_dialog_button_later">Later</string>
 
     <string name="start_screen_activity_dialog_whats_new_title">What\'s new:</string>
-    <string name="start_screen_activity_dialog_whats_new_text">Congratulations on the start of the new school year, dear users!\n\n
-We present the promised global update: now everything is much more convenient and beautiful. With the new design, new features also came (for example, types of ratings: test, control, quarterly). Do not forget to get into Settings - they allow you to make the application 100% suitable for you.
-Thank you for your feedback - it helped us make the application better! If you have any suggestions - write, we have ambitious plans to further improve the Teacher Assistant!
-    </string>
+    <string name="start_screen_activity_dialog_whats_new_text">We have made the design even more convenient and added new features to the functionality! ❤️</string>
     <string name="start_screen_activity_dialog_whats_new_button_ok">OK</string>
 
     <string name="start_screen_activity_dialog_deprecated_device_text">Attention!\nThis device is not supported.\nSome interface elements may not display correctly.\n</string>
@@ -99,7 +96,7 @@ Thank you for your feedback - it helped us make the application better! If you h
     <string name="learners_and_grades_statistics_activity_hint_date_day">DAY</string>
     <string name="learners_and_grades_statistics_activity_hint_date_month">MONTH</string>
     <string name="learners_and_grades_statistics_activity_hint_date_year">YEAR</string>
-    <string name="learners_and_grades_statistics_activity_spinner_text_add">+ Add time period</string>
+    <string name="learners_and_grades_statistics_activity_spinner_text_add">+ add time period</string>
     <string name="learners_and_grades_statistics_activity_spinner_text_remove">- Delete time period</string>
     <!-- диалог -->
     <string name="learners_and_grades_statistics_activity_dialog_title_add_statistic">Add time period</string>
@@ -211,17 +208,17 @@ Thank you for your feedback - it helped us make the application better! If you h
     <string name="lesson_activity_menu_text_learners">Seat the students</string>
     <string name="lesson_activity_menu_text_end_lesson">End the lesson</string>
     <!-- диалоговое окно -->
-    <string name="lesson_activity_learner_absent_text">Absent</string>
+    <string name="lesson_activity_learner_absent_text">absent</string>
     <string name="lesson_activity_learner_dialog_out_text">Do you really want to leave the lesson without saving?</string>
-    <string name="lesson_activity_learner_dialog_out_yes">Yes</string>
-    <string name="lesson_activity_learner_dialog_out_no">No!</string>
+    <string name="lesson_activity_learner_dialog_out_yes">Quit (all data will be deleted)</string>
+    <string name="lesson_activity_learner_dialog_out_no">Back to the lesson</string>
 
 
     <!-- активность окончания урока-->
     <!-- заголовок активности -->
     <string name="title_activity_lesson_list">Lessons learned</string>
     <!-- меню сверху -->
-    <string name="lesson_list_activity_menu_text_save">save</string>
+    <string name="lesson_list_activity_menu_text_save">Save</string>
     <!-- уведомления -->
     <string name="lesson_list_activity_menu_toast_grades_saved">All answers saved successfully!</string>
     <!-- диалоги -->
@@ -229,7 +226,7 @@ Thank you for your feedback - it helped us make the application better! If you h
     <string name="lesson_list_activity_dialog_button_save">save</string>
     <string name="lesson_list_activity_dialog_button_cancel">cancel</string>
     <!-- подсказка на экране -->
-    <string name="lesson_list_activity_text_help">Here are the results of the lesson. \nTo change the answer, click on it. \nTo save the answers, click the SAVE button (above). \nIf you do not want to save answers, click the «Back» button on your device.</string>
+    <string name="lesson_list_activity_text_help">Here are the results of the lesson. \nTo change the answer, click on it. \nTo save the answers, click the SAVE button. \nIf you do not want to save answers, click the «Back» button on your device.</string>
 
 
     <!-- активность настроек-->
@@ -260,7 +257,8 @@ Thank you for your feedback - it helped us make the application better! If you h
     <string name="settings_activity_dialog_new_type_title">New type</string>
     <string name="settings_activity_dialog_delete_text_confirm_delete">Enter the number to confirm</string>
     <string name="settings_activity_dialog_hint_number">NUMBER </string>
-    <string name="settings_activity_dialog_button_remove">Delete all data</string>
+    <string name="settings_activity_dialog_button_remove_data">Delete all data</string>
+    <string name="settings_activity_dialog_button_remove">Remove</string>
     <string name="settings_activity_dialog_button_cancel">Cancel</string>
     <string name="settings_activity_dialog_button_save">Save</string>
     <string name="settings_activity_dialog_edit_time_title">Change lessons time</string>

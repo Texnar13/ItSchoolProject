@@ -12,13 +12,13 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
@@ -30,6 +30,9 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        // настраиваем программный вывод векторных изображений
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // layout диалога
         LinearLayout linearLayout = new LinearLayout(getActivity());
@@ -45,7 +48,6 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         builder.setView(linearLayout);
 
 //--заголовок--
-
 
 
         // layout заголовка
@@ -197,7 +199,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
 
         TextView removeText = new TextView(getActivity());
         removeText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-        removeText.setText(R.string.settings_activity_dialog_button_remove);
+        removeText.setText(R.string.settings_activity_dialog_button_remove_data);
         removeText.setTextColor(getResources().getColor(R.color.backgroundWhite));
         removeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         LinearLayout.LayoutParams removeTextParams = new LinearLayout.LayoutParams(

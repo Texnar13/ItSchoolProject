@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Build;
@@ -33,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
+import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -109,7 +111,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     // константа по которой получаеми id зависимости
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
     // константа по которой получаем время урока (для повторяющихся уроков)//todo костылище!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //public static final String LESSON_TIME = "startTime";
     public static final String LESSON_DATE = "lessonDate";
     public static final String LESSON_NUMBER = "lessonNumber";
 
@@ -127,6 +128,11 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     private static long cabinetId;
     // имя предмета
     private static String cabinetName;
+
+    // время урока
+    String lessonDate;
+    int lessonNumber;
+
 
     // массив учеников
     static private MyLearnerAndHisGrades[] learnersAndTheirGrades;
@@ -212,26 +218,11 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
 
                 // передаем полученную дату урока
-                intent.putExtra(LessonListActivity.LESSON_DATE, getIntent().getStringExtra(LESSON_DATE));
-                intent.putExtra(LessonListActivity.LESSON_NUMBER, getIntent().getStringExtra(LESSON_NUMBER));
-
-                // выводим рекламму
-                if (lessonEndBanner.isLoaded()) {
-                    lessonEndBanner.show();
-                }
-
-                startActivity(intent);
+                intent.putExtra(LessonListActivity.LESSON_DATE, lessonDate);
+                intent.putExtra(LessonListActivity.LESSON_NUMBER, lessonNumber);
 
 
-                //обнуляем данные
-                chosenLearnerPosition = -1;
-                lessonAttitudeId = -1;
-                subjectId = 0;
-                learnersClassId = 0;
-                cabinetId = 0;
-                subjectName = null;
-                learnersAndTheirGrades = null;
-                finish();
+                startActivityForResult(intent, 1);
 
                 return true;
 
@@ -267,12 +258,39 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (LessonListActivity.RESULT_SAVE == resultCode) {
+            //обнуляем данные
+            chosenLearnerPosition = -1;
+            lessonAttitudeId = -1;
+            subjectId = 0;
+            learnersClassId = 0;
+            cabinetId = 0;
+            subjectName = null;
+            learnersAndTheirGrades = null;
+
+            // выводим рекламму
+            if (lessonEndBanner.isLoaded()) {
+                lessonEndBanner.show();
+            }
+
+            finish();
+        }// else if (LessonListActivity.RESULT_BACK == resultCode) {}
+    }
+
 
     // создание экрана
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
+
         setContentView(R.layout.activity_lesson_main);
 
 
@@ -309,7 +327,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         );
         titleContainerParams.leftMargin = (int) getResources().getDimension(R.dimen.double_margin);
         titleContainerParams.rightMargin = (int) getResources().getDimension(R.dimen.double_margin);
-        //android:layout_centerInParent="true"
 
         TextView title = new TextView(this);
         title.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_medium));
@@ -336,8 +353,11 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         // цвет фона
         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.backgroundWhite));
         // кнопка назад
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_pink));
+        } else {
+            getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_pink_png));
+        }
 
 
         // для того, чтобы векторные изображения созданные в коде отображались нормально
@@ -354,6 +374,15 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
         // (проверяем по одному из полей) был создан новый экран или он просто переворачивался
         if (learnersAndTheirGrades == null) {
+
+            // получаем переданную дату урока
+            lessonDate = getIntent().getStringExtra(LESSON_DATE);
+            lessonNumber = getIntent().getIntExtra(LESSON_NUMBER, 0);
+            if (lessonDate.equals("")) {
+                finish();
+            }
+
+
             // получаем данные из бд
             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
@@ -394,33 +423,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             cabinetNameCursor.close();
 
 
-            // получаем учеников по id класса
-            Cursor learnersCursor = db.getLearnersByClassId(learnersClassId);
-
-            // инициализируем массив с учениками
-            learnersAndTheirGrades = new MyLearnerAndHisGrades[learnersCursor.getCount()];
-            //заполняем его
-            for (int i = 0; i < learnersAndTheirGrades.length; i++) {
-                learnersCursor.moveToPosition(i);
-
-                // создаем нового ученика
-                learnersAndTheirGrades[i] = new MyLearnerAndHisGrades(
-                        learnersCursor.getLong(learnersCursor.getColumnIndex(
-                                SchoolContract.TableLearners.KEY_LEARNER_ID
-                        )),
-                        learnersCursor.getString(learnersCursor.getColumnIndex(
-                                SchoolContract.TableLearners.COLUMN_FIRST_NAME
-                        )),
-                        learnersCursor.getString(learnersCursor.getColumnIndex(
-                                SchoolContract.TableLearners.COLUMN_SECOND_NAME
-                        ))
-                );
-            }
-            learnersCursor.close();
-
-            // номер выбранного ученика
-            chosenLearnerPosition = -1;
-
             //максимальная оценка
             maxAnswersCount = db.getSettingsMaxGrade(1);
 
@@ -437,6 +439,64 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                 );
             }
             typesCursor.close();
+
+
+            // получаем учеников по id класса
+            Cursor learnersCursor = db.getLearnersByClassId(learnersClassId);
+
+            // инициализируем массив с учениками
+            learnersAndTheirGrades = new MyLearnerAndHisGrades[learnersCursor.getCount()];
+            //заполняем его
+            for (int i = 0; i < learnersAndTheirGrades.length; i++) {
+                learnersCursor.moveToPosition(i);
+
+                long learnerId = learnersCursor.getLong(learnersCursor.getColumnIndex(
+                        SchoolContract.TableLearners.KEY_LEARNER_ID
+                ));
+
+                // создаем нового ученика
+                learnersAndTheirGrades[i] = new MyLearnerAndHisGrades(
+                        learnerId,
+                        learnersCursor.getString(learnersCursor.getColumnIndex(
+                                SchoolContract.TableLearners.COLUMN_FIRST_NAME
+                        )),
+                        learnersCursor.getString(learnersCursor.getColumnIndex(
+                                SchoolContract.TableLearners.COLUMN_SECOND_NAME
+                        ))
+                );
+
+                // получаем оценки ученика
+                Cursor grades = db.getGradesByLearnerIdSubjectDateAndLesson(learnerId, subjectId, lessonDate, lessonNumber);
+                // получаем три или менее оценки
+                for (int j = 0; j < 3; j++) {
+                    // если больше оценок нет
+                    if (!grades.moveToNext()) {
+                        break;
+                    }
+                    // если находим н-ку
+                    int grade = grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_GRADE));
+                    if (grade <= -2) {
+                        learnersAndTheirGrades[i].learnerGrades[0] = grade;
+                        learnersAndTheirGrades[i].learnerGrades[1] = grade;
+                        learnersAndTheirGrades[i].learnerGrades[2] = grade;
+                        learnersAndTheirGrades[i].learnerGradesTypes[0] = grade;
+                        learnersAndTheirGrades[i].learnerGradesTypes[1] = grade;
+                        learnersAndTheirGrades[i].learnerGradesTypes[2] = grade;
+                        break;
+                    }
+                    // или просто считываем данные
+                    learnersAndTheirGrades[i].learnerGrades[j] = grade;
+                    learnersAndTheirGrades[i].learnerGradesTypes[j] =
+                            grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID)) - 1;
+                }
+                grades.close();
+
+            }
+            learnersCursor.close();
+
+            // номер выбранного ученика
+            chosenLearnerPosition = -1;
+
             db.close();
         }
 

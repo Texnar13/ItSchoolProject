@@ -2,11 +2,9 @@ package com.learning.texnar13.teachersprogect.settings;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Service;
+import androidx.fragment.app.DialogFragment;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -16,14 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
@@ -102,7 +97,11 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                             LinearLayout.LayoutParams.WRAP_CONTENT
                     );
                     newTypeContainerParams.bottomMargin = 8;
-                    newTypeContainerParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
+                    newTypeContainerParams.setMargins(
+                            (int) getResources().getDimension(R.dimen.half_margin),
+                            (int) getResources().getDimension(R.dimen.simple_margin),
+                            (int) getResources().getDimension(R.dimen.half_margin),
+                            (int) getResources().getDimension(R.dimen.simple_margin));
 
                     // ---- добавляем ссылку на контейнер элементу списка ----
                     newType.typeContainer = newTypeContainer;
@@ -167,7 +166,11 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
             itemParams.bottomMargin = 8;
-            itemParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
+            itemParams.setMargins(
+                    (int) getResources().getDimension(R.dimen.half_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.half_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin));
             // ---- добавляем ссылку на контейнер элементу списка ----
             type.typeContainer = item;
             // ---- выводим контейнер в список ----
@@ -199,7 +202,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     getActivity().getResources().getDimension(R.dimen.text_subtitle_size)
             );
             editText.setInputType(InputType.TYPE_CLASS_TEXT);
-            editText.setTextColor(Color.BLACK);
+            editText.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
             editText.setSingleLine(true);//todo закрывать клавиатуру на открытии нового контейнера и закрытии этого
 
             // эта строка убирает флаги(были поставлены автоматически), которые недавали открывать
@@ -215,8 +218,8 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     1F
             );
             editTextParams.gravity = Gravity.CENTER_VERTICAL;
-            editTextParams.leftMargin = (int) pxFromDp(10);
-            editTextParams.rightMargin = (int) pxFromDp(10);
+            editTextParams.leftMargin = (int) getResources().getDimension(R.dimen.double_margin);
+            editTextParams.rightMargin = (int) getResources().getDimension(R.dimen.double_margin);
             typeRecord.typeContainer.addView(editText, editTextParams);
 
 
@@ -246,7 +249,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                 removeButtonContainerParams.setMargins(
                         (int) getResources().getDimension(R.dimen.simple_margin),
                         (int) getResources().getDimension(R.dimen.simple_margin),
-                        (int) getResources().getDimension(R.dimen.simple_margin),
+                        0,
                         (int) getResources().getDimension(R.dimen.simple_margin)
                 );
                 removeButtonContainerParams.gravity = Gravity.CENTER;
@@ -256,7 +259,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                 removeText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
                 removeText.setText(R.string.settings_activity_dialog_button_remove);
                 removeText.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                removeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                removeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
                 LinearLayout.LayoutParams removeTextParams = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
@@ -317,7 +320,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             saveText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             saveText.setText(R.string.settings_activity_dialog_button_save);
             saveText.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-            saveText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            saveText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
             LinearLayout.LayoutParams saveTextParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
@@ -375,7 +378,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             textView.setText(typeRecord.typeName);
             textView.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getActivity().getResources().getDimension(R.dimen.text_subtitle_size));
-            textView.setTextColor(Color.BLACK);
+            textView.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
             textView.setGravity(Gravity.CENTER_VERTICAL);
             // параметры текста
             final LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(
@@ -384,8 +387,8 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     1F
             );
             textViewParams.gravity = Gravity.CENTER_VERTICAL;
-            textViewParams.leftMargin = (int) pxFromDp(10);
-            textViewParams.rightMargin = (int) pxFromDp(10);
+            textViewParams.leftMargin = (int) getResources().getDimension(R.dimen.double_margin);
+            textViewParams.rightMargin = (int) getResources().getDimension(R.dimen.double_margin);
             typeRecord.typeContainer.addView(textView, textViewParams);
 
             // --- при нажатии на контейнер ---

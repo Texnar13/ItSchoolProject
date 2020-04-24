@@ -84,7 +84,7 @@
             android:layout_marginEnd="@dimen/forth_margin"
             android:layout_marginRight="@dimen/forth_margin"
             android:layout_marginBottom="@dimen/simple_margin"
-            android:background="@drawable/_underlined_white_shape"
+            android:background="@drawable/_underlined_gray_shape"
             android:fontFamily="@font/geometria_bold"
             android:gravity="center|right"
             android:text="@string/learners_and_grades_out_activity_title_subject"

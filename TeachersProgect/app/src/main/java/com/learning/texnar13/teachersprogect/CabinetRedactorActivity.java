@@ -207,6 +207,10 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
+
         setContentView(R.layout.activity_cabinet_redactor);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -257,8 +261,11 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         // цвет фона
         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.backgroundWhite));
         // кнопка назад
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_orange));
+        } else {
+            getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_orange_png));
+        }
 
 
         // размеры экрана

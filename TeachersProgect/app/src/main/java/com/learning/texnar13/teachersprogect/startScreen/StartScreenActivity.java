@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.ScheduleMonthActivity;
 import com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity;
@@ -49,7 +51,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     static final String IS_RATE = "isRate";
     //версия
     static final String WHATS_NEW = "whatsNew";
-    static final int NOW_VERSION = 44;// todo получать автоматически
+    static final int NOW_VERSION = 51;// todo получать автоматически
 
     static int i = 0;
 
@@ -63,10 +65,14 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
+
         // отключаем поворот
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
         setContentView(R.layout.activity_start_screen);
+
 
         // ставим цвет статус бара
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -113,11 +119,11 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         // через семь заходов в приложение открывает диалог 'оцените'
         if (!sharedPreferences.getBoolean(IS_RATE, false)) {
             editor.putInt(ENTERS_COUNT, sharedPreferences.getInt(ENTERS_COUNT, 0) + 1);
-            if(sharedPreferences.getInt(ENTERS_COUNT, 0) == 1){
+            if (sharedPreferences.getInt(ENTERS_COUNT, 0) == 1) {
                 // показываем диалог устаревшего устройства
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
                     DeviseDeprecatedDialogFragment dialog = new DeviseDeprecatedDialogFragment();
-                    dialog.show(getFragmentManager(),"device api deprecated");
+                    dialog.show(getFragmentManager(), "device api deprecated");
                 }
             }
             if (sharedPreferences.getInt(ENTERS_COUNT, 0) == 10) {

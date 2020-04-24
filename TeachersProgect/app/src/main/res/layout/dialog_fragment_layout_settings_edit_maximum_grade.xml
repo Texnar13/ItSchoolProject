@@ -23,7 +23,7 @@
             android:adjustViewBounds="true"
             app:srcCompat="@drawable/__button_close"/>
         <TextView
-            android:layout_marginRight="@dimen/simple_margin"
+            android:layout_marginRight="@dimen/double_margin"
             android:fontFamily="@font/geometria_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

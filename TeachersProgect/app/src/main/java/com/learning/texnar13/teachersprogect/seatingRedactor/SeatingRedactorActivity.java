@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -128,10 +129,13 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // настраиваем программный вывод векторных изображений
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
 
         setContentView(R.layout.activity_seating_redactor);
+
+        // настраиваем программный вывод векторных изображений
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // цвета статус бара
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -273,7 +277,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
 
             // создаем view для парты и выводим его
-            RelativeLayout deskLayout = new RelativeLayout(getApplicationContext());
+            RelativeLayout deskLayout = new RelativeLayout(SeatingRedactorActivity.this);
             out.addView(deskLayout);
 
             // создаем парту
@@ -578,7 +582,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             // и текстове поля
             learnersTextViews = new TextView[placesId.length];
             for (int placeI = 0; placeI < placesId.length; placeI++) {
-                this.viewPlaceOut[placeI] = new LinearLayout(getApplicationContext());
+                this.viewPlaceOut[placeI] = new LinearLayout(SeatingRedactorActivity.this);
                 this.viewPlaceOut[placeI].setOrientation(LinearLayout.VERTICAL);
                 this.viewPlaceOut[placeI].setGravity(Gravity.CENTER);
                 this.viewPlaceOut[placeI].setWeightSum(4);
@@ -605,7 +609,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                             viewPlaceOut[finalPlaceI].removeAllViews();
 
                             // удаляем из базы данных
-                            DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                            DataBaseOpenHelper db = new DataBaseOpenHelper(SeatingRedactorActivity.this);
                             db.deleteLearnerAndPlaceAttitudeById(attitudesId[finalPlaceI]);
                             db.close();
 
@@ -664,14 +668,14 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
                     // создаем картинку ученика
-                    ImageView lernerImage = new ImageView(getApplicationContext());
+                    ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
                     LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F);
                     lernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
                     this.viewPlaceOut[placeI].addView(lernerImage, lernerImageParams);
 
                     // создаем текст ученика
-                    TextView learnerText = new TextView(getApplicationContext());
-                    learnerText.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.geometria));
+                    TextView learnerText = new TextView(SeatingRedactorActivity.this);
+                    learnerText.setTypeface(ResourcesCompat.getFont(SeatingRedactorActivity.this, R.font.geometria));
                     learnerText.setTextSize(7 * multiplier);
                     learnerText.setAllCaps(true);
                     learnerText.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -778,7 +782,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                         viewPlaceOut[placesI].removeAllViews();
 
                         // выводим картинку +
-                        ImageView lernerImage = new ImageView(getApplicationContext());
+                        ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
                         LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         lernerImageParams.setMargins(
                                 (int) getResources().getDimension(R.dimen.half_margin),
@@ -798,14 +802,14 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             this.viewPlaceOut[place].removeAllViews();
 
             // создаем картинку ученика
-            ImageView lernerImage = new ImageView(getApplicationContext());
+            ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
             LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F);
             lernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
             this.viewPlaceOut[place].addView(lernerImage, lernerImageParams);
 
             // создаем текст ученика
-            TextView learnerText = new TextView(getApplicationContext());
-            learnerText.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.geometria));
+            TextView learnerText = new TextView(SeatingRedactorActivity.this);
+            learnerText.setTypeface(ResourcesCompat.getFont(SeatingRedactorActivity.this, R.font.geometria));
             learnerText.setTextSize(7 * multiplier);
             learnerText.setAllCaps(true);
             learnerText.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -823,7 +827,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
     }
 
     private float pxFromDp(float dp) {
-        return dp * getApplicationContext().getResources().getDisplayMetrics().density;
+        return dp * SeatingRedactorActivity.this.getResources().getDisplayMetrics().density;
     }
 
     // нажатие кнопки назад

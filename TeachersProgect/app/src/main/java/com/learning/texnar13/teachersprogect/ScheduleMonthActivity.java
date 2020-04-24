@@ -65,6 +65,9 @@ public class ScheduleMonthActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
+
         // вертикальная ориентация
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 

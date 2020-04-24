@@ -2,7 +2,7 @@ package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -27,27 +27,27 @@ import com.learning.texnar13.teachersprogect.R;
 public class GradeEditDialogFragment extends DialogFragment {//входные данные оценка, id оценки
 
     // переменные константы позволяющие получить данные через intent
-    public static final String ARGS_LEARNER_NAME = "name";
-    public static final String ARGS_STRING_GRADES_TYPES_ARRAY = "gradesTypes";
-    public static final String ARGS_INT_GRADES_ARRAY = "grades";
-    public static final String ARGS_INT_MAX_GRADE = "maxGrade";
-    public static final String ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY = "chosenTypes";
-    public static final String ARGS_STRING_CURRENT_DATE = "currentDate";
-    public static final String ARGS_INT_LESSON_NUMBER = "lessonNumber";
+    static final String ARGS_LEARNER_NAME = "name";
+    static final String ARGS_STRING_GRADES_TYPES_ARRAY = "gradesTypes";
+    static final String ARGS_INT_GRADES_ARRAY = "grades";
+    static final String ARGS_INT_MAX_GRADE = "maxGrade";
+    static final String ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY = "chosenTypes";
+    static final String ARGS_STRING_CURRENT_DATE = "currentDate";
+    static final String ARGS_INT_LESSON_NUMBER = "lessonNumber";
 
 
     // массив позиций выбранных оценок
-    int[] grades;
+    private int[] grades;
     // массив позиций выбранных типов
-    int[] chosenTypes;
+    private int[] chosenTypes;
 
     // номер выбранного урока
-    int lessonPosition;
+    private int lessonPosition;
 
     // массив спиннеров с оценками
-    Spinner[] gradesSpinners;
+    private Spinner[] gradesSpinners;
     // массив спиннеров с типами оценок
-    Spinner[] typesSpinners;
+    private Spinner[] typesSpinners;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -153,6 +153,8 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         lessonNumberSpinnerParams.rightMargin = (int) getResources().getDimension(R.dimen.double_margin);
+        lessonNumberSpinnerParams.topMargin = (int) getResources().getDimension(R.dimen.half_margin);
+        lessonNumberSpinnerParams.bottomMargin = (int) getResources().getDimension(R.dimen.half_margin);
         lessonNumberSpinnerParams.addRule(RelativeLayout.CENTER_VERTICAL);
         lessonNumberSpinnerParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         currentContainer.addView(lessonNumberSpinner, lessonNumberSpinnerParams);

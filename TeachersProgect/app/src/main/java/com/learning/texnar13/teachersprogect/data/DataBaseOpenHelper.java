@@ -1653,6 +1653,24 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         );
     }
 
+    public Cursor getGradesBySubjectDateAndLesson(long subjectId, String date, int lessonNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        // запрашиваем оценки ученика по уроку и дате
+        return db.query(
+                SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
+                null,
+                SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " = " + subjectId + " AND " +
+                        SchoolContract.TableLearnersGrades.COLUMN_DATE + " = \"" + date + "\" AND " +
+                        SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER + " = \"" + lessonNumber + "\""
+                //null
+                ,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
     public Cursor getGradesByLearnerIdSubjectDateAndLesson(long learnerId, long subjectId, String date, int lessonNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
         // запрашиваем оценки ученика по уроку и дате
