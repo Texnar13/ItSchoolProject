@@ -7,22 +7,23 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-
-import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
+
 import com.learning.texnar13.teachersprogect.R;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 
 public class LearnersAndGradesTableView extends View {
 
-    final String TAG = "TeachersApp";
+    //final String TAG = "TeachersApp";
 
     // кисть для отрисовки текста
     private Paint drawTextPaint;
@@ -69,6 +70,10 @@ public class LearnersAndGradesTableView extends View {
     private ArrayList<LearnerAndHisGradesWithSize> learnersAndGradesDataAndSizes;
     // максимальная оценка для раскрашивания
     private long maxAnswersCount = 5;
+    // названия типов пропусков
+    String[] absTypes;
+    // первый день недели
+    private int firstMonthDayOfWeek = -1;
     // текущаяя дата (-1 - этот месяц не текущий) (нумерация с 0)
     int currentDate = -1;
 
@@ -108,7 +113,7 @@ public class LearnersAndGradesTableView extends View {
         drawTextPaint.getTextBounds("88", 0, 2, rect);
 
         // ширина границы клеток и линий вокруг даты в пикселях
-        cellBorderSize = (int) pxFromDp(1);
+        cellBorderSize = (int) (getResources().getDisplayMetrics().density);// зависимые едницы в пиксели
         if (cellBorderSize < 1) cellBorderSize = 1;
         // свободное пространство в клетке вокруг текста
         cellFreeSpaceMargin = (int) getResources().getDimension(R.dimen.half_more_margin);
@@ -167,16 +172,34 @@ public class LearnersAndGradesTableView extends View {
         tData.isInCopyProcess = true;
         ArrayList<NewLearnerAndHisGrades> data = new ArrayList<>();
         for (int learnersI = 0; learnersI < tData.learnersAndHisGrades.size(); learnersI++) {
-                    data.add(
+            data.add(
                     new NewLearnerAndHisGrades(tData.learnersAndHisGrades.get(learnersI))
             );
         }
-        tData.isInCopyProcess = false;
+
+        // названия пропусков
+        absTypes = tData.absNames;
+
+        // работаем с переданной датой
+        if (tData.yearAndMonth != null) {
+            GregorianCalendar currentViewCalendar = new GregorianCalendar();
+            currentViewCalendar.setTime(tData.yearAndMonth);
+            currentViewCalendar.set(GregorianCalendar.DAY_OF_MONTH, 1);
+            firstMonthDayOfWeek = (int) currentViewCalendar.get(GregorianCalendar.DAY_OF_WEEK);
+            // (Вс-Сб)->(Пн-Вс)
+            if (firstMonthDayOfWeek == 1) {
+                firstMonthDayOfWeek = 6;
+            } else {
+                firstMonthDayOfWeek -= 2;
+            }
+        }
 
 
         // назначаем размер листу во view чтобы потом скопировать в него данные
         learnersAndGradesDataAndSizes = new ArrayList<>(data.size());
 
+        // данные полностью скопированы
+        tData.isInCopyProcess = false;
 
         // строка для промежуточных расчетов
         StringBuilder tempString = new StringBuilder();
@@ -269,7 +292,6 @@ public class LearnersAndGradesTableView extends View {
                     // ---- пробегаемся по ученикам ----
                     for (int learnerI = 0; learnerI < data.size(); learnerI++) {
 
-
                         // проверяем не пустые ли оценки у учеников
                         if (data.get(learnerI).learnerGrades.length == data.get(0).learnerGrades.length)
                             if (data.get(learnerI).learnerGrades[dayI].length == data.get(0).learnerGrades[dayI].length) {
@@ -281,57 +303,81 @@ public class LearnersAndGradesTableView extends View {
                                 int bottomMargin = cellBorderSize + cellFreeSpaceMargin;
                                 int[] leftMargins = new int[data.get(learnerI).learnerGrades[dayI][lessonI].grades.length];
 
-                                // складываем оценки и вычисляем их общую длинну
-                                for (int gradesI = 0; gradesI < data.get(learnerI).learnerGrades[dayI][lessonI].grades.length; gradesI++) {
+
+                                // если пропуск
+                                if (data.get(learnerI).learnerGrades[dayI][lessonI].absTypePoz != -1) {
+                                    //todo правильно ли
+
+                                    // расчитываем отступы всех трех оценок
+                                    leftMargins[0] = cellFreeSpaceMargin;
+                                    drawTextPaint.getTextBounds(
+                                            absTypes[data.get(learnerI).learnerGrades[dayI][lessonI].absTypePoz],
+                                            0,
+                                            absTypes[data.get(learnerI).learnerGrades[dayI][lessonI].absTypePoz].length(),
+                                            gradeRect
+                                    );
+
+                                    leftMargins[1] = leftMargins[0] + gradeRect.left + gradeRect.right;
+                                    leftMargins[2] = leftMargins[1];
+                                    // имитируем расчет последней клетки в прямоугольник
+                                    gradeRect.left = 0;
+                                    gradeRect.right = 0;
+                                } else {// если пропуска нет высчитываем все три оценки
+
+                                    // складываем оценки и вычисляем их общую длинну
+                                    for (int gradesI = 0; gradesI < data.get(learnerI).learnerGrades[dayI][lessonI].grades.length; gradesI++) {
 
 
-                                    if (data.get(learnerI).learnerGrades[dayI][lessonI].grades[gradesI] == 0) {
-                                        // если оценка нулевая
-                                        if (gradesI == 0) {
-                                            // для первой оценки
-                                            leftMargins[0] = 0;
-                                        } else {
-                                            leftMargins[gradesI] = leftMargins[gradesI - 1] + gradeRect.left + gradeRect.right;
-                                        }
-                                    } else {
-                                        // если оценка не нулевая
-                                        if (gradesI == 0) {
-                                            // для первой оценки
-                                            leftMargins[0] = cellFreeSpaceMargin;
-                                        } else {
-                                            if (leftMargins[gradesI - 1] == 0) {
-                                                leftMargins[gradesI] = cellBorderSize + cellFreeSpaceMargin;
+                                        if (data.get(learnerI).learnerGrades[dayI][lessonI].grades[gradesI] == 0) {
+                                            // если оценка нулевая
+                                            if (gradesI == 0) {
+                                                // для первой оценки
+                                                leftMargins[0] = 0;
                                             } else {
-                                                leftMargins[gradesI] = leftMargins[gradesI - 1] + gradeRect.left + gradeRect.right + gradesSpaceMargin;
+                                                leftMargins[gradesI] = leftMargins[gradesI - 1] + gradeRect.left + gradeRect.right;
+                                            }
+                                        } else {
+                                            // если оценка не нулевая
+                                            if (gradesI == 0) {
+                                                // для первой оценки
+                                                leftMargins[0] = cellFreeSpaceMargin;
+                                            } else {
+                                                if (leftMargins[gradesI - 1] == 0) {
+                                                    leftMargins[gradesI] = cellBorderSize + cellFreeSpaceMargin;
+                                                } else {
+                                                    leftMargins[gradesI] = leftMargins[gradesI - 1] + gradeRect.left + gradeRect.right + gradesSpaceMargin;
+                                                }
                                             }
                                         }
+
+                                        // считаем ширину оценки для отступа следующей
+                                        if (data.get(learnerI).learnerGrades[dayI][lessonI].grades[gradesI] > 0) {
+                                            // если это не нулевой балл
+                                            drawTextPaint.getTextBounds(
+                                                    Integer.toString(data.get(learnerI).learnerGrades[dayI][lessonI].grades[gradesI]),
+                                                    0,
+                                                    Integer.toString(data.get(learnerI).learnerGrades[dayI][lessonI].grades[gradesI]).length(),
+                                                    gradeRect
+                                            );
+
+                                        }
+//                                        else if (data.get(learnerI).learnerGrades[dayI][lessonI].absTypePoz != -1) {
+//                                            // пропуск
+//                                            drawTextPaint.getTextBounds(
+//                                                    absTypes[data.get(learnerI).learnerGrades[dayI][lessonI].absTypePoz],
+//                                                    0,
+//                                                    absTypes[data.get(learnerI).learnerGrades[dayI][lessonI].absTypePoz].length(),
+//                                                    gradeRect
+//                                            );
+//                                       }
+                                        else //if (data.get(learnerI).learnerGrades[dayI][lessonI].grades[gradesI] == 0)
+                                        {
+                                            gradeRect.left = 0;
+                                            gradeRect.right = 0;
+                                        }
+                                        // -1 -> ошибка
+
                                     }
-
-                                    // считаем ширину оценки для отступа следующей
-                                    if (data.get(learnerI).learnerGrades[dayI][lessonI].grades[gradesI] > 0) {
-                                        // если это не нулевой балл
-                                        drawTextPaint.getTextBounds(
-                                                Integer.toString(data.get(learnerI).learnerGrades[dayI][lessonI].grades[gradesI]),
-                                                0,
-                                                Integer.toString(data.get(learnerI).learnerGrades[dayI][lessonI].grades[gradesI]).length(),
-                                                gradeRect
-                                        );
-
-                                    } else if (data.get(learnerI).learnerGrades[dayI][lessonI].grades[gradesI] == -2) {
-                                        // -2 -> Abs
-                                        drawTextPaint.getTextBounds(
-                                                getResources().getString(R.string.learners_and_grades_out_activity_title_grade_n),
-                                                0,
-                                                getResources().getString(R.string.learners_and_grades_out_activity_title_grade_n).length(),
-                                                gradeRect
-                                        );
-
-                                    } else if (data.get(learnerI).learnerGrades[dayI][lessonI].grades[gradesI] == 0) {
-                                        gradeRect.left = 0;
-                                        gradeRect.right = 0;
-                                    }
-                                    // -1 -> ошибка
-
                                 }
 
                                 // ----- расчитываем размеры и положение самой ячейки -----
@@ -392,6 +438,7 @@ public class LearnersAndGradesTableView extends View {
                                 learnersAndGradesDataAndSizes.get(learnerI).learnerGrades[dayI][lessonI] =
                                         new GradeUnitWithSize(
                                                 data.get(learnerI).learnerGrades[dayI][lessonI].grades,
+                                                data.get(learnerI).learnerGrades[dayI][lessonI].absTypePoz,
                                                 gradeRect,
                                                 bottomMargin,
                                                 leftMargins
@@ -515,79 +562,83 @@ public class LearnersAndGradesTableView extends View {
                             // выводим ли прочерк
                             boolean isZero = true;
 
-                            // пробегаемся по оценкам
-                            for (int gradeI = 0; gradeI < learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades.length; gradeI++) {
 
-                                // печатаем оценки
-                                if (learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] > 0) {
-                                    isZero = false;
-                                    // ------ если это не нулевой балл ------
+                            // печатаем оценки
+                            // если стоит пропуск
+                            if (learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].absTypePoz != -1) {
+                                isZero = false;
 
-                                    // ---- выбираем цвет текста  ----
-                                    if(maxAnswersCount == -1){
-                                        drawTextPaint.setColor(getResources().getColor(R.color.backgroundDarkGray));
-                                    }else
-                                    //1
-                                    if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 20) {
-                                        drawTextPaint.setColor(getResources().getColor(R.color.grade1));
-                                    } else
-                                        //2
-                                        if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 41) {
-                                            drawTextPaint.setColor(getResources().getColor(R.color.grade2));
+                                // выбираем цвет текста, проверяя не нажата ли ячейка
+                                if (i == chosenCellPoz[0] && dayIterator == chosenCellPoz[1] && lessonIterator == chosenCellPoz[2]) {
+                                    drawTextPaint.setColor(Color.WHITE);
+                                } else {
+                                    drawTextPaint.setColor(Color.BLACK);
+                                }
+
+                                // ---- выводим текст ----
+                                canvas.drawText(
+                                        absTypes[learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].absTypePoz],
+                                        learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.left
+                                                + learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].leftTextMargins[0]
+                                                + learnersShowedWidth + gradesXOffset,
+                                        learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.bottom
+                                                - learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].bottomTextMargin
+                                                + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
+                                        drawTextPaint
+                                );
+
+                            } else {// если пропуска нет
+                                // пробегаемся по оценкам
+                                for (int gradeI = 0; gradeI < learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades.length; gradeI++) {
+                                    // печатаем оценку
+                                    if (learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] > 0) {
+                                        isZero = false;
+                                        // ------ если это не нулевой балл ------
+
+                                        // ---- выбираем цвет текста  ----
+                                        if (maxAnswersCount == -1) {
+                                            drawTextPaint.setColor(getResources().getColor(R.color.backgroundDarkGray));
                                         } else
-                                            //3
-                                            if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 60) {
-                                                drawTextPaint.setColor(getResources().getColor(R.color.grade3));
+                                            //1
+                                            if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 20) {
+                                                drawTextPaint.setColor(getResources().getColor(R.color.grade1));
                                             } else
-                                                //4
-                                                if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 80) {
-                                                    drawTextPaint.setColor(getResources().getColor(R.color.grade4));
+                                                //2
+                                                if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 41) {
+                                                    drawTextPaint.setColor(getResources().getColor(R.color.grade2));
                                                 } else
-                                                    //5
-                                                    if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 100) {
-                                                        drawTextPaint.setColor(getResources().getColor(R.color.grade5));
+                                                    //3
+                                                    if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 60) {
+                                                        drawTextPaint.setColor(getResources().getColor(R.color.grade3));
                                                     } else
-                                                        // > 5
-                                                        if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100F) > 100) {
-                                                            drawTextPaint.setColor(Color.DKGRAY);
-                                                        }
-                                    // ---- выводим текст ----
-                                    canvas.drawText(
-                                            Integer.toString(learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI]),
-                                            learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.left
-                                                    + learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].leftTextMargins[gradeI]
-                                                    + learnersShowedWidth + gradesXOffset,
-                                            learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.bottom
-                                                    - learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].bottomTextMargin
-                                                    + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
-                                            drawTextPaint
-                                    );
+                                                        //4
+                                                        if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 80) {
+                                                            drawTextPaint.setColor(getResources().getColor(R.color.grade4));
+                                                        } else
+                                                            //5
+                                                            if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 100) {
+                                                                drawTextPaint.setColor(getResources().getColor(R.color.grade5));
+                                                            } else
+                                                                // > 5
+                                                                if ((int) (((float) learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100F) > 100) {
+                                                                    drawTextPaint.setColor(Color.DKGRAY);
+                                                                }
+                                        // ---- выводим текст ----
+                                        canvas.drawText(
+                                                Integer.toString(learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI]),
+                                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.left
+                                                        + learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].leftTextMargins[gradeI]
+                                                        + learnersShowedWidth + gradesXOffset,
+                                                learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.bottom
+                                                        - learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].bottomTextMargin
+                                                        + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
+                                                drawTextPaint
+                                        );
 
-                                } else if (learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].grades[gradeI] == -2) {
-                                    isZero = false;
-                                    // ------ -2 -> Abs ------
-                                    // ---- выбираем цвет текста ----
-
-                                    // проверяем не нажата ли ячейка
-                                    if (i == chosenCellPoz[0] && dayIterator == chosenCellPoz[1] && lessonIterator == chosenCellPoz[2]) {
-                                        drawTextPaint.setColor(Color.WHITE);
-                                    } else {
-                                        drawTextPaint.setColor(Color.BLACK);
                                     }
-
-                                    // ---- выводим текст ----
-                                    canvas.drawText(
-                                            getResources().getString(R.string.learners_and_grades_out_activity_title_grade_n),
-                                            learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.left
-                                                    + learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].leftTextMargins[gradeI]
-                                                    + learnersShowedWidth + gradesXOffset,
-                                            learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.bottom
-                                                    - learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].bottomTextMargin
-                                                    + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
-                                            drawTextPaint
-                                    );
                                 }
                             }
+
 
                             if (isZero) {
                                 // ----- выводим прочерк -----
@@ -598,16 +649,6 @@ public class LearnersAndGradesTableView extends View {
                                 } else {
                                     drawTextPaint.setColor(Color.GRAY);
                                 }
-
-//                                canvas.drawText(
-//                                        "-",
-//                                        learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.left
-//                                                + cellFreeSpaceMargin + learnersShowedWidth + gradesXOffset,
-//                                        learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].location.bottom
-//                                                - learnersAndGradesDataAndSizes.get(i).learnerGrades[dayIterator][lessonIterator].bottomTextMargin
-//                                                + learnersAndGradesOffsetForTitle + learnersAndGradesYOffset,
-//                                        drawTextPaint
-//                                );
                             }
                         }
                     }
@@ -793,7 +834,7 @@ public class LearnersAndGradesTableView extends View {
 
                                     // рисуем текст
                                     drawTextPaint.setColor(Color.BLACK);
-                                    dateText = "" + (dayIterator + 1);// todo или все-таки выводить номер урока lessonIterator
+                                    dateText = "" + (dayIterator + 1);
                                     drawTextPaint.getTextBounds(dateText, 0, dateText.length(), headTextRect);
                                     canvas.drawText(dateText,
                                             learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][lessonIterator].location.left +
@@ -802,6 +843,21 @@ public class LearnersAndGradesTableView extends View {
                                             bottomTitleTextOffset,
                                             drawTextPaint
                                     );
+
+                                    // рисуем маленький номер урока
+                                    drawTextPaint.setTextSize(getResources().getDimension(R.dimen.text_small_size));
+                                    dateText = "" + (lessonIterator + 1);
+
+                                    canvas.drawText(dateText,
+                                            learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][lessonIterator].location.left +
+                                                    learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][lessonIterator].location.width() / 2F + headTextRect.right / 2F +
+                                                    learnersShowedWidth + gradesXOffset,
+                                            learnersAndGradesOffsetForTitle / 2F + headTextRect.top / 2F,
+                                            drawTextPaint
+                                    );
+                                    drawTextPaint.setTextSize(getResources().getDimension(R.dimen.text_subtitle_size));
+
+
                                 }
                             }
                         }
@@ -820,6 +876,7 @@ public class LearnersAndGradesTableView extends View {
                             );
                         }
 
+
                         // рисуем дату
                         drawTextPaint.setColor(Color.BLACK);
                         dateText = "" + (dayIterator + 1);
@@ -831,6 +888,32 @@ public class LearnersAndGradesTableView extends View {
                                 bottomTitleTextOffset,
                                 drawTextPaint
                         );
+
+                        // рисуем маленький день недели
+                        if (firstMonthDayOfWeek > -1) {
+                            // высота большого текста
+                            drawTextPaint.getTextBounds(dateText, 0, dateText.length(), headTextRect);
+                            int top = headTextRect.top;
+
+                            // получаем сам текст
+                            drawTextPaint.setTextSize(getResources().getDimension(R.dimen.text_small_size));
+                            dateText = getResources().getStringArray(R.array.schedule_month_activity_week_days_short_array)[
+                                    (firstMonthDayOfWeek + dayIterator) % 7
+                                    ];
+                            drawTextPaint.getTextBounds(dateText, 0, dateText.length(), headTextRect);
+
+                            // высота маленького текста
+                            drawTextPaint.getTextBounds(dateText, 0, dateText.length(), headTextRect);
+
+                            canvas.drawText(dateText,
+                                    learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][0].location.left +
+                                            learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][0].location.width() / 2F + headTextRect.right / 2F +
+                                            learnersShowedWidth + gradesXOffset,
+                                    learnersAndGradesOffsetForTitle / 2F - top / 2F - headTextRect.top,
+                                    drawTextPaint
+                            );
+                            drawTextPaint.setTextSize(getResources().getDimension(R.dimen.text_subtitle_size));
+                        }
                     }
                 }
 
@@ -874,7 +957,27 @@ public class LearnersAndGradesTableView extends View {
             if (downPoint.x > learnersShowedWidth) {
                 // если нажатие в области оценок
 
-                // пробегаемся по таблице
+                // шапка таблицы оценок
+                for (int dayIterator = 0; dayIterator < learnersAndGradesDataAndSizes.get(0).learnerGrades.length; dayIterator++) {
+                    for (int lessonIterator = 0; lessonIterator < learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator].length; lessonIterator++) {
+                        Rect currentGradeLocation = learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][lessonIterator].location;
+                        if (
+                                // координаты касания относительно таблицы по Y
+                                ((int) downPoint.y - learnersAndGradesYOffset <= learnersAndGradesOffsetForTitle) &&
+                                // координаты касания относительно таблицы по X
+                                        ((int) downPoint.x - learnersShowedWidth - gradesXOffset >= currentGradeLocation.left) &&
+                                        ((int) downPoint.x - learnersShowedWidth - gradesXOffset <= currentGradeLocation.right)
+                        ) {
+
+                            // нажата дата урока
+                            chosenCellPoz[0] = -1;
+                            chosenCellPoz[1] = dayIterator;
+                            chosenCellPoz[2] = lessonIterator;
+                            return new int[]{-1, dayIterator, lessonIterator};
+                        }
+                    }
+                }
+                // пробегаемся по содержимому таблицы оценок
                 for (int learnerIterator = 0; learnerIterator < learnersAndGradesDataAndSizes.size(); learnerIterator++) {
                     for (int dayIterator = 0; dayIterator < learnersAndGradesDataAndSizes.get(learnerIterator).learnerGrades.length; dayIterator++) {
                         for (int lessonIterator = 0; lessonIterator < learnersAndGradesDataAndSizes.get(learnerIterator).learnerGrades[dayIterator].length; lessonIterator++) {
@@ -1028,10 +1131,7 @@ public class LearnersAndGradesTableView extends View {
         dynamicLearnersAndGradesYOffset = 0;
     }
 
-    // зависимые едницы в пиксели
-    private float pxFromDp(float dp) {
-        return dp * getResources().getDisplayMetrics().density;
-    }
+
 }
 
 
@@ -1040,6 +1140,9 @@ class GradeUnitWithSize {
     // массив оценок
     int[] grades;
 
+    // тип пропуска
+    int absTypePoz;
+
     // размеры клетки
     Rect location;
     // отступ текста от нижней границы
@@ -1047,8 +1150,9 @@ class GradeUnitWithSize {
     //  отступ текста от левой границы
     int[] leftTextMargins;
 
-    GradeUnitWithSize(int[] grades, Rect location, int bottomTextMargin, int[] leftTextMargins) {
+    GradeUnitWithSize(int[] grades, int absTypePoz, Rect location, int bottomTextMargin, int[] leftTextMargins) {
         this.grades = grades;
+        this.absTypePoz = absTypePoz;
         this.location = location;
         this.bottomTextMargin = bottomTextMargin;
         this.leftTextMargins = leftTextMargins;

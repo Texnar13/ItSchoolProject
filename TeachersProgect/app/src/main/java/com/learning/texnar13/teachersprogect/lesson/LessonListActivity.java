@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -19,7 +17,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -27,8 +24,6 @@ import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
-
-import java.io.Serializable;
 
 public class LessonListActivity extends AppCompatActivity implements GradesDialogInterface {
 
@@ -40,6 +35,9 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
     public static final String ARGS_INT_ARRAY_LEARNERS_ID = "learnersID";
     public static final String STRING_GRADES_TYPES_ARRAY = "gradesTypesArray";
     public static final String INT_GRADES_TYPES_ID_ARRAY = "gradesTypesIdArray";
+    public static final String STRING_ABSENT_TYPES_ARRAY = "absentTypesArray";
+    public static final String STRING_ABSENT_TYPES_LONG_ARRAY = "absentTypesLongArray";
+    public static final String LONG_ABSENT_TYPES_ID_ARRAY = "absentTypesIdArray";
     public static final String INT_MAX_GRADE = "maxGrade";
 
     public static final String FIRST_GRADES = "grades1";
@@ -48,16 +46,13 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
     public static final String FIRST_GRADES_TYPES = "gradesTypes1";
     public static final String SECOND_GRADES_TYPES = "gradesTypes2";
     public static final String THIRD_GRADES_TYPES = "gradesTypes3";
+    public static final String INT_ABSENT_TYPE_POZ_ARRAY = "absTypePoz";
 
     public static final int RESULT_BACK = 100;
     public static final int RESULT_SAVE = 101;
 
-//    public static final String LIST_ID = "listId";
-
-
     // номер выбранного ученика
     int chosenLearnerPoz;
-
 
     // тост выводящийся после сохранения оценок
     Toast toast;
@@ -70,24 +65,29 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
     // id предмета
     static long subjectId;
 
-    // получаем учеников
+    // ученики
     static long[] learnersId;
     static String[] learnersNames;
 
     // массив с TextView учеников
     static TextView[] learnersGradesTexts;
 
-    // получаем массив предметов
+    // массив типов оценок
     static long[] gradesTypesId;
-    static String[] GradesTypesNames;
+    static String[] gradesTypesNames;
 
+    // массив типов пропусков
+    static long[] absentTypesId;
+    static String[] absentTypesNames;
+    static String[] absentTypesLongNames;
 
-    // получаем размер максимальной оценки
+    // размер максимальной оценки
     static int maxGrade;
 
-    // получаем массивы оценок и выбранных типов
+    // массивы оценок и выбранных типов
     static int[][] grades;
     static int[][] gradesTypesIndexes;
+    static int[] absentPoses;
 
 
     // создание активности
@@ -147,11 +147,19 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
             // получаем массив предметов
             gradesTypesId = getIntent().getLongArrayExtra(INT_GRADES_TYPES_ID_ARRAY);
-            GradesTypesNames = getIntent().getStringArrayExtra(STRING_GRADES_TYPES_ARRAY);
+            gradesTypesNames = getIntent().getStringArrayExtra(STRING_GRADES_TYPES_ARRAY);
 
 
             // получаем размер максимальной оценки
             maxGrade = getIntent().getIntExtra(INT_MAX_GRADE, -1);
+
+            // получаем массив данных о пропусках
+            absentTypesId = getIntent().getLongArrayExtra(LONG_ABSENT_TYPES_ID_ARRAY);
+            absentTypesNames = getIntent().getStringArrayExtra(STRING_ABSENT_TYPES_ARRAY);
+            absentTypesLongNames = getIntent().getStringArrayExtra(STRING_ABSENT_TYPES_LONG_ARRAY);
+
+            // получаем массив с пропусками
+            absentPoses = getIntent().getIntArrayExtra(INT_ABSENT_TYPE_POZ_ARRAY);
 
             // получаем массивы оценок и выбранных типов
             grades = new int[learnersId.length][3];
@@ -217,28 +225,32 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
             // выводим оценки
             StringBuilder gradeText = new StringBuilder();
-            if (grades[learnersI][0] == 0 && grades[learnersI][1] == 0 && grades[learnersI][2] == 0) {
-                gradeText.append('-');
-            } else if (grades[learnersI][0] == -2) {
-                gradeText.append(getResources().getString(R.string.learners_and_grades_out_activity_title_grade_n));
-            } else {
-                if (grades[learnersI][0] != 0) {
-                    gradeText.append(grades[learnersI][0]);
-                    if (grades[learnersI][1] != 0 || grades[learnersI][2] != 0) {
-                        gradeText.append(' ');
-                    }
-                }
-                if (grades[learnersI][1] != 0) {
-                    gradeText.append(grades[learnersI][1]);
 
-                    if (grades[learnersI][2] != 0) {
-                        gradeText.append(' ');
+            if (absentPoses[learnersI] != -1) {// пропуск
+                gradeText.append(absentTypesNames[absentPoses[learnersI]]);
+            } else {// обычные оценки
+                if (grades[learnersI][0] == 0 && grades[learnersI][1] == 0 && grades[learnersI][2] == 0) {
+                    gradeText.append('-');
+                } else {
+                    if (grades[learnersI][0] != 0) {
+                        gradeText.append(grades[learnersI][0]);
+                        if (grades[learnersI][1] != 0 || grades[learnersI][2] != 0) {
+                            gradeText.append(' ');
+                        }
                     }
-                }
-                if (grades[learnersI][2] != 0) {
-                    gradeText.append(grades[learnersI][2]);
+                    if (grades[learnersI][1] != 0) {
+                        gradeText.append(grades[learnersI][1]);
+
+                        if (grades[learnersI][2] != 0) {
+                            gradeText.append(' ');
+                        }
+                    }
+                    if (grades[learnersI][2] != 0) {
+                        gradeText.append(grades[learnersI][2]);
+                    }
                 }
             }
+
             learnerGradesText.setText(gradeText.toString());
             learnerGradesText.setTextColor(Color.BLACK);
             learnerGradesText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -259,18 +271,22 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
                     chosenLearnerPoz = finalLearnersI;
 
                     // вызываем диалог оценок
-                    GradeDialogFragment gradeDialogFragment = new GradeDialogFragment();
+                    GradeEditLessonDialogFragment gradeEditLessonDialogFragment = new GradeEditLessonDialogFragment();
                     // выводим аргументы
                     Bundle args = new Bundle();
-                    args.putString(GradeDialogFragment.ARGS_LEARNER_NAME, learnersNames[finalLearnersI]);
-                    args.putStringArray(GradeDialogFragment.ARGS_STRING_GRADES_TYPES_ARRAY, GradesTypesNames.clone());
-                    args.putIntArray(GradeDialogFragment.ARGS_INT_GRADES_ARRAY, grades[finalLearnersI].clone());
-                    args.putInt(GradeDialogFragment.ARGS_INT_MAX_GRADE, maxGrade);
-                    args.putIntArray(GradeDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY, gradesTypesIndexes[finalLearnersI].clone());
-                    args.putInt(GradeDialogFragment.ARGS_INT_CHOSEN_GRADE_POSITION, -1);
-                    gradeDialogFragment.setArguments(args);
+                    args.putString(GradeEditLessonDialogFragment.ARGS_LEARNER_NAME, learnersNames[finalLearnersI]);
+                    args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_GRADES_TYPES_ARRAY, gradesTypesNames.clone());
+                    args.putInt(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ABSENT_TYPE_NUMBER, absentPoses[finalLearnersI]);
+                    args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_ABSENT_TYPES_NAMES_ARRAY, absentTypesNames.clone());
+                    args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_ABSENT_TYPES_LONG_NAMES_ARRAY, absentTypesLongNames.clone());
+                    args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ARRAY, grades[finalLearnersI].clone());
+                    args.putInt(GradeEditLessonDialogFragment.ARGS_INT_MAX_GRADE, maxGrade);
+                    args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY, gradesTypesIndexes[finalLearnersI].clone());
+                    args.putInt(GradeEditLessonDialogFragment.ARGS_INT_CHOSEN_GRADE_POSITION, -1);
+
+                    gradeEditLessonDialogFragment.setArguments(args);
                     // показываем диалог
-                    gradeDialogFragment.show(getFragmentManager(), "gradeDialogFragment - Hello");
+                    gradeEditLessonDialogFragment.show(getFragmentManager(), "gradeDialogFragment - Hello");
                 }
             });
         }
@@ -338,12 +354,11 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         saveButtonContainer.addView(saveButton, saveButtonParams);
 
 
-
         // нажатие на кнопку сохранить
         saveButtonContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("TeachersApp", "LessonListActivity - button save click");
+                //Log.i("TeachersApp", "LessonListActivity - button save click");
 
                 DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
 
@@ -360,30 +375,29 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
                 // сохраняем оценки в бд
                 for (int learnerI = 0; learnerI < learnersId.length; learnerI++) {
-
-                    // н создаем только одну
-                    if (grades[learnerI][0] == -2) {
+                    if (absentPoses[learnerI] != -1) {// пропуск
                         db.createGrade(
                                 learnersId[learnerI],
-                                grades[learnerI][0],
-                                gradesTypesId[0],
+                                0, 0, 0,
+                                1, 1, 1,
+                                absentTypesId[absentPoses[learnerI]],
                                 subjectId,
                                 getIntent().getStringExtra(LESSON_DATE),
                                 getIntent().getIntExtra(LESSON_NUMBER, 0)
                         );
-                    } else
-                        for (int gradeI = 0; gradeI < 3; gradeI++) {
-                            if (grades[learnerI][gradeI] != 0) {
-                                db.createGrade(
-                                        learnersId[learnerI],
-                                        grades[learnerI][gradeI],
-                                        gradesTypesId[gradesTypesIndexes[learnerI][gradeI]],
-                                        subjectId,
-                                        getIntent().getStringExtra(LESSON_DATE),
-                                        getIntent().getIntExtra(LESSON_NUMBER, 0)
-                                );
-                            }
+                    } else {
+                        if (grades[learnerI][0] != 0 || grades[learnerI][1] != 0 || grades[learnerI][2] != 0) {
+                            db.createGrade(
+                                    learnersId[learnerI],
+                                    grades[learnerI][0], grades[learnerI][1], grades[learnerI][2],
+                                    gradesTypesId[gradesTypesIndexes[learnerI][0]], gradesTypesId[gradesTypesIndexes[learnerI][1]], gradesTypesId[gradesTypesIndexes[learnerI][2]],
+                                    -1,
+                                    subjectId,
+                                    getIntent().getStringExtra(LESSON_DATE),
+                                    getIntent().getIntExtra(LESSON_NUMBER, 0)
+                            );
                         }
+                    }
                     toast.show();
                 }
                 db.close();
@@ -404,34 +418,38 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
     // обратная связь от диалога оценок GradeDialogFragment
     @Override
-    public void setGrades(int[] newGrades, int[] chosenTypesNumbers) {
+    public void setGrades(int[] newGrades, int[] chosenTypesNumbers, int chosenAbsPoz) {
 
         // меняем массивы
         grades[chosenLearnerPoz] = newGrades;
         gradesTypesIndexes[chosenLearnerPoz] = chosenTypesNumbers;
+        absentPoses[chosenLearnerPoz] = chosenAbsPoz;
 
         // меняем текст оценки выбранного ученика
         StringBuilder gradeText = new StringBuilder();
-        if (grades[chosenLearnerPoz][0] == 0 && grades[chosenLearnerPoz][1] == 0 && grades[chosenLearnerPoz][2] == 0) {
-            gradeText.append('-');
-        } else if (grades[chosenLearnerPoz][0] == -2) {
-            gradeText.append(getResources().getString(R.string.learners_and_grades_out_activity_title_grade_n));
-        } else {
-            if (grades[chosenLearnerPoz][0] != 0) {
-                gradeText.append(grades[chosenLearnerPoz][0]);
-                if (grades[chosenLearnerPoz][1] != 0 || grades[chosenLearnerPoz][2] != 0) {
-                    gradeText.append(' ');
+        // пропуск
+        if (absentPoses[chosenLearnerPoz] != -1) {
+            gradeText.append(absentTypesNames[absentPoses[chosenLearnerPoz]]);
+        } else {// обычные оценки
+            if (grades[chosenLearnerPoz][0] == 0 && grades[chosenLearnerPoz][1] == 0 && grades[chosenLearnerPoz][2] == 0) {
+                gradeText.append('-');
+            } else {
+                if (grades[chosenLearnerPoz][0] != 0) {
+                    gradeText.append(grades[chosenLearnerPoz][0]);
+                    if (grades[chosenLearnerPoz][1] != 0 || grades[chosenLearnerPoz][2] != 0) {
+                        gradeText.append(' ');
+                    }
                 }
-            }
-            if (grades[chosenLearnerPoz][1] != 0) {
-                gradeText.append(grades[chosenLearnerPoz][1]);
+                if (grades[chosenLearnerPoz][1] != 0) {
+                    gradeText.append(grades[chosenLearnerPoz][1]);
 
-                if (grades[chosenLearnerPoz][2] != 0) {
-                    gradeText.append(' ');
+                    if (grades[chosenLearnerPoz][2] != 0) {
+                        gradeText.append(' ');
+                    }
                 }
-            }
-            if (grades[chosenLearnerPoz][2] != 0) {
-                gradeText.append(grades[chosenLearnerPoz][2]);
+                if (grades[chosenLearnerPoz][2] != 0) {
+                    gradeText.append(grades[chosenLearnerPoz][2]);
+                }
             }
         }
         learnersGradesTexts[chosenLearnerPoz].setText(gradeText.toString());
@@ -450,7 +468,6 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         // выходим из активности
         super.onBackPressed();
     }
-
 
 
 }

@@ -4,14 +4,23 @@
     <bool name="isTablet">false</bool>
 
     <!-- рекламные блоки -->
-    <string name="banner_id_start_screen" translatable="false">R-M-450642-2</string><!-- R-M-DEMO-320x50 -->
-    <string name="banner_id_calendar" translatable="false">R-M-450642-3</string><!-- R-M-DEMO-320x50 -->
-    <string name="banner_id_calendar_big" translatable="false">R-M-450642-6</string><!-- R-M-DEMO-320x100-context -->
-    <string name="banner_id_after_lesson" translatable="false">R-M-450642-4</string><!-- R-M-DEMO-320x480 -->
-    <string name="banner_id_after_settings" translatable="false">R-M-450642-5</string><!-- R-M-DEMO-320x480 -->
+    <!--string name="banner_id_start_screen" translatable="false">R-M-450642-2</string>
+    <string name="banner_id_calendar" translatable="false">R-M-450642-3</string>
+    <string name="banner_id_calendar_big" translatable="false">R-M-450642-6</string>
+    <string name="banner_id_after_lesson" translatable="false">R-M-450642-4</string>
+    <string name="banner_id_after_settings" translatable="false">R-M-450642-5</string>
+    <string name="banner_id_schedule_day" translatable="false">R-M-450642-7</string>
+    <string name="banner_id_lesson_redactor" translatable="false">R-M-450642-8</string-->
 
-    <string name="banner_id_schedule_day" translatable="false">R-M-450642-7</string><!-- R-M-DEMO-320x100-context -->
-    <string name="banner_id_lesson_redactor" translatable="false">R-M-450642-8</string><!-- R-M-DEMO-320x100-context -->
+
+    <string name="banner_id_start_screen" translatable="false">R-M-DEMO-320x50</string>
+    <string name="banner_id_calendar" translatable="false">R-M-DEMO-320x50</string>
+    <string name="banner_id_calendar_big" translatable="false">R-M-DEMO-320x100-context</string>
+    <string name="banner_id_after_lesson" translatable="false">R-M-DEMO-320x480</string>
+    <string name="banner_id_after_settings" translatable="false">R-M-DEMO-320x480</string>
+    <string name="banner_id_schedule_day" translatable="false">R-M-DEMO-320x100-context</string>
+    <string name="banner_id_lesson_redactor" translatable="false">R-M-DEMO-320x100-context</string>
+
 
     <!-- а также: -->
     <!--  номер версии приложения -->

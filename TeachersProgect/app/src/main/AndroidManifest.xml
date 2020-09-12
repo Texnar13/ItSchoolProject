@@ -4,6 +4,7 @@
     package="com.learning.texnar13.teachersprogect"
     android:versionCode="51"
     android:versionName="tera3.560">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="replace"/>
 
     <application
         android:name=".MyApplication"

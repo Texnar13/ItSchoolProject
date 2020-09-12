@@ -52,7 +52,6 @@
     <!-- тексты  -->
     <string name="learners_and_grades_out_activity_title_subject">Asignatura</string>
     <string name="learners_and_grades_out_activity_title_table_names">NOMBRE</string>
-    <string name="learners_and_grades_out_activity_title_grade_n">AUS</string>
     <string name="learners_and_grades_out_activity_title_grade_no_answers">—</string>
     <string name="learners_and_grades_out_activity_text_create_subject">¿Crear uno nuevo?</string>
     <string name="learners_and_grades_out_activity_text_add_learner">+ agregar un alumno</string>
@@ -129,12 +128,11 @@
 
 
     <!-- активность редактор кабинетов -->
-    <!-- заголовок активности -->
     <!-- меню сверху -->
     <string name="cabinet_redactor_activity_menu_text_gird">Alineación del escritorios</string>
     <string name="cabinet_redactor_activity_menu_text_gird_lines">Сuadrícula</string>
     <!-- подсказка на экране -->
-    <string name="cabinet_redactor_activity_text_help">Haga clic en + para añadir un escritorio.\n Muévalo de la manera en que se encuentra en el aula, \n Mantenga pulsado + para agregar un escritorio individual.\n para eliminar un escritorio, arrástrelo a la papelera de reciclaje que aparece en el lugar +.</string>
+    <string name="cabinet_redactor_activity_text_help">Haga clic en + para añadir un escritorio.\n Muévalo de la manera en que se encuentra en el aula, \n Mantenga pulsado + para agregar un escritorio individual.\n para eliminar un escritorio, arrástrelo a la papelera de reciclaje que aparece en el lugar +.\nPuede acercar o alejar con dos dedos</string>
 
 
     <!-- активность календаря на месяц-->
@@ -234,6 +232,7 @@
     <!-- тексты -->
     <string name="settings_activity_title_max_answer">Puntuación máxima/número de respuestas</string>
     <string name="settings_activity_title_grades_type">Tipos de trabajo en la lección</string>
+    <string name="settings_activity_title_absent_type">Типы пропусков</string>
     <string name="settings_activity_title_colored_grades">Calificaciónes de colores</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">Puntuación máxima/número de respuestas: %1$s</string>
@@ -254,6 +253,11 @@
     <string name="settings_activity_dialog_delete_title">¿Quieres borrar todos los datos?</string>
     <string name="settings_activity_dialog_add_type_title">+ agregar nueva tipo de calificaciónes</string>
     <string name="settings_activity_dialog_new_type_title">Nueva clase</string>
+    <string name="settings_activity_dialog_add_absent_type_title">+ добавить тип пропусков</string>
+    <string name="settings_activity_dialog_new_absent_type_long_title_hint">Название типа</string>
+    <string name="settings_activity_dialog_new_absent_type_title_hint">Сокращение</string>
+    <string name="settings_activity_dialog_new_absent_type_long_title">Новый тип</string>
+    <string name="settings_activity_dialog_new_absent_type_title">Кор</string>
     <string name="settings_activity_dialog_delete_text_confirm_delete">Para confirmar, escriba un número </string>
     <string name="settings_activity_dialog_hint_number">Número</string>
     <string name="settings_activity_dialog_button_remove_data">Eliminar los datos</string>
@@ -272,5 +276,9 @@
     <!-- база данных -->
     <!-- значение по умолчанию -->
     <string name="db_table_grade_text_first_default_value">Trabajo en la lección</string>
+    <string name="db_table_grades_abs_1_default_value">Aus</string>
+    <string name="db_table_grades_abs_1_long_default_value">Ausencia</string>
+    <string name="db_table_grades_abs_2_default_value">E</string>
+    <string name="db_table_grades_abs_2_long_default_value">Está enfermo</string>
 
 </resources>

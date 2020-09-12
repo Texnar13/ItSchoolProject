@@ -356,7 +356,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             endMonthEditText.setBackgroundResource(R.drawable._underlined_black);
             endYearEditText.setText("" + periods.get(periodPosition).dates[5]);
             endYearEditText.setBackgroundResource(R.drawable._underlined_black);
-        }else{
+        } else {
             startDayEditText.setText("");
             startDayEditText.setBackgroundResource(R.drawable._underlined_black);
             startMonthEditText.setText("");
@@ -405,21 +405,26 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 
                 for (int j = 0; j < grades.getCount(); j++) {
                     grades.moveToPosition(j);
-                    int grade = grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_GRADE));
-                    switch (grade) {
-                        case -1:
-                            Log.wtf(TAG, "LearnersGradesStatisticsActivity.getAndOutGrades - grade is -1!");
-                            break;
-                        case 0:
-                            break;
-                        case -2:
-                            nCount++;
-                            break;
-                        default:
-                            gradesSum = gradesSum + grade;
-                            gradesCount++;
-                            break;
-                    }
+
+                    // если есть пропуск
+                    if (!grades.isNull(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {
+                        nCount++;
+                    } else // иначе просто считаем оценки
+                        for (int gradePozIterator = 0; gradePozIterator < SchoolContract.TableLearnersGrades.COLUMNS_GRADE.length; gradePozIterator++) {
+
+                            int grade = grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[gradePozIterator]));
+                            switch (grade) {
+                                case -1:
+                                    Log.wtf(TAG, "LearnersGradesStatisticsActivity.getAndOutGrades - grade is -1!");
+                                    break;
+                                case 0:
+                                    break;
+                                default:
+                                    gradesSum = gradesSum + grade;
+                                    gradesCount++;
+                                    break;
+                            }
+                        }
                 }
                 grades.close();
             }

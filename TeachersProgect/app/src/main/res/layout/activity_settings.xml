@@ -191,6 +191,108 @@
 
 
             <RelativeLayout
+                android:id="@+id/activity_settings_edit_absent_type_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/__background_round_simple_full_dark"
+                android:layout_marginBottom="@dimen/double_margin"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/my_buttons_height_size"
+                    android:layout_marginLeft="@dimen/double_margin"
+                    android:layout_marginRight="@dimen/my_icon_size"
+                    android:gravity="center_vertical"
+                    android:text="@string/settings_activity_title_absent_type"
+                    android:fontFamily="@font/geometria_medium"
+                    android:textColor="@color/backgroundDarkGray"
+                    android:textSize="@dimen/text_subtitle_size"
+                    tools:ignore="RtlHardcoded" />
+
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/simple_margin"
+                    android:layout_width="@dimen/my_icon_small_size"
+                    android:layout_height="@dimen/my_icon_small_size"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/activity_settings_export_all_data_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/__background_round_simple_full_dark"
+                android:layout_marginBottom="@dimen/double_margin"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/my_buttons_height_size"
+                    android:layout_marginLeft="@dimen/double_margin"
+                    android:layout_marginRight="@dimen/my_icon_size"
+                    android:gravity="center_vertical"
+                    android:text="#Экспорт данных#"
+                    android:fontFamily="@font/geometria_medium"
+                    android:textColor="@color/backgroundDarkGray"
+                    android:textSize="@dimen/text_subtitle_size"
+                    tools:ignore="RtlHardcoded" />
+
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/simple_margin"
+                    android:layout_width="@dimen/my_icon_small_size"
+                    android:layout_height="@dimen/my_icon_small_size"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/activity_settings_import_all_data_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/__background_round_simple_full_dark"
+                android:layout_marginBottom="@dimen/double_margin"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/my_buttons_height_size"
+                    android:layout_marginLeft="@dimen/double_margin"
+                    android:layout_marginRight="@dimen/my_icon_size"
+                    android:gravity="center_vertical"
+                    android:text="#Импорт данных#"
+                    android:fontFamily="@font/geometria_medium"
+                    android:textColor="@color/backgroundDarkGray"
+                    android:textSize="@dimen/text_subtitle_size"
+                    tools:ignore="RtlHardcoded" />
+
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/simple_margin"
+                    android:layout_width="@dimen/my_icon_small_size"
+                    android:layout_height="@dimen/my_icon_small_size"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
                 android:id="@+id/activity_settings_are_grades_colored_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

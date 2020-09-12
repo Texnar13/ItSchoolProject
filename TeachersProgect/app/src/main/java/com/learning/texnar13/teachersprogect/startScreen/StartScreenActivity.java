@@ -527,4 +527,15 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
   а также активити import androidx.appcompat.app.AppCompatActivity;
 
 
+// выводим вступитльное сообщение
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        if (!sharedPreferences.getBoolean(WAS_HELP_SHOWED, false)) {// выводилось ли оно до этого
+            // изменяем на то, что оно было
+            SharedPreferences.Editor ed = sharedPreferences.edit();
+            ed.putBoolean(WAS_HELP_SHOWED, true);
+            ed.apply();
+            // показываем
+            Toast.makeText(this, R.string.cabinet_redactor_activity_toast_help, Toast.LENGTH_LONG).show();
+        }
+
 * */

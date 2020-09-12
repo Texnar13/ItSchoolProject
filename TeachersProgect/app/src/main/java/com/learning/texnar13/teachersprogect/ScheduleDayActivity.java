@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -112,14 +113,24 @@ public class ScheduleDayActivity extends AppCompatActivity {
         // скролящийся контейнер таблицы
         ScrollView scrollView = new ScrollView(this);
         scrollView.setBackgroundColor(getResources().getColor(R.color.backgroundWhite));
+        scrollView.setFillViewport(true);
         ((LinearLayout) findViewById(R.id.schedule_day_body_container)).addView(
                 scrollView,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
+        // горизонтальный контейнер
+        HorizontalScrollView horizontalScrollView = new HorizontalScrollView(this);
+        horizontalScrollView.setMinimumWidth(getResources().getDisplayMetrics().widthPixels);
+        horizontalScrollView.setFillViewport(true);
+        scrollView.addView(
+                horizontalScrollView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
         // главный контенйнер уроков
         outLayout = new TableLayout(this);
         //outLayout.setOrientation(LinearLayout.VERTICAL);
-        scrollView.addView(outLayout, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        horizontalScrollView.addView(outLayout, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
     }
 
@@ -198,7 +209,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
             TextView lessonBeginTimeText = new TextView(this);
             lessonBeginTimeText.setGravity(Gravity.CENTER);
             lessonBeginTimeText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
-            lessonBeginTimeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            lessonBeginTimeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
             lessonBeginTimeText.setText(getTwoSymbols(standartLessonsPeriods[lessonI][0]) + ':' + getTwoSymbols(standartLessonsPeriods[lessonI][1]));
             timeContainer.addView(lessonBeginTimeText, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
@@ -206,7 +217,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
             TextView lessonEndTimeText = new TextView(this);
             lessonEndTimeText.setGravity(Gravity.CENTER);
             lessonEndTimeText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
-            lessonEndTimeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            lessonEndTimeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
             lessonEndTimeText.setText(getTwoSymbols(standartLessonsPeriods[lessonI][2]) + ':' + getTwoSymbols(standartLessonsPeriods[lessonI][3]));
             timeContainer.addView(lessonEndTimeText, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
@@ -286,16 +297,16 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 String cabinetName = cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
                 cabinetCursor.close();
 
-                // укорачиваем поля если они слишком длинные Loading…
-                if (subjectName.length() > 10) {
-                    subjectName = subjectName.substring(0, 9) + "…";
-                }
-                if (learnersClassName.length() > 5) {
-                    learnersClassName = learnersClassName.substring(0, 4) + "…";// absde -> abc…  abcd->abcd
-                }
-                if (cabinetName.length() > 5) {
-                    cabinetName = cabinetName.substring(0, 4) + "…";
-                }
+//                // укорачиваем поля если они слишком длинные Loading…
+//                if (subjectName.length() > 10) {
+//                    subjectName = subjectName.substring(0, 9) + "…";
+//                }
+//                if (learnersClassName.length() > 5) {
+//                    learnersClassName = learnersClassName.substring(0, 4) + "…";// absde -> abc…  abcd->abcd
+//                }
+//                if (cabinetName.length() > 5) {
+//                    cabinetName = cabinetName.substring(0, 4) + "…";
+//                }
 
 
                 // дополнительно выводим разметку сведений урока
@@ -409,7 +420,7 @@ public class ScheduleDayActivity extends AppCompatActivity {
         // в конце выводим рекламмный баннер
         com.yandex.mobile.ads.AdView mAdView = new com.yandex.mobile.ads.AdView(this);
         TableLayout.LayoutParams mAdViewParams = new TableLayout.LayoutParams(
-                TableLayout.LayoutParams.MATCH_PARENT,
+                TableLayout.LayoutParams.WRAP_CONTENT,
                 TableLayout.LayoutParams.WRAP_CONTENT
         );
         mAdViewParams.topMargin = (int) getResources().getDimension(R.dimen.simple_margin);

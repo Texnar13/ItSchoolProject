@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Build;
@@ -21,7 +20,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -99,6 +97,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     static int maxAnswersCount;
     // названия типов ответов и их id
     static AnswersType[] answersTypes;
+    // названия типов ответов и их id
+    static AbsentType[] absentTypes;
 
     // точка середины между пальцами за предыдущую итерацию
     Point oldMid = new Point();
@@ -169,18 +169,23 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                 int[] gradesTypes2 = new int[learnersAndTheirGrades.length];
                 int[] gradesTypes3 = new int[learnersAndTheirGrades.length];
 
+                int[] absentPoz = new int[learnersAndTheirGrades.length];
+
                 String[] learnersNames = new String[learnersAndTheirGrades.length];
 
                 for (int j = 0; j < learnersAndTheirGrades.length; j++) {
 
+                    // оценки
                     grades1[j] = learnersAndTheirGrades[j].learnerGrades[0];
                     grades2[j] = learnersAndTheirGrades[j].learnerGrades[1];
                     grades3[j] = learnersAndTheirGrades[j].learnerGrades[2];
-
+                    // типы оценок
                     gradesTypes1[j] = learnersAndTheirGrades[j].learnerGradesTypes[0];
                     gradesTypes2[j] = learnersAndTheirGrades[j].learnerGradesTypes[1];
                     gradesTypes3[j] = learnersAndTheirGrades[j].learnerGradesTypes[2];
-
+                    // пропуски
+                    absentPoz[j] = learnersAndTheirGrades[j].absTypePozNumber;
+                    // ученики
                     learnersId[j] = learnersAndTheirGrades[j].learnerId;
                     learnersNames[j] = learnersAndTheirGrades[j].lastName + " " + learnersAndTheirGrades[j].name;
                 }
@@ -188,34 +193,42 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                 // переходим к активности списка оценок
                 Intent intent = new Intent(getApplicationContext(), LessonListActivity.class);
                 intent.putExtra(LessonListActivity.SUBJECT_ID, subjectId);
+                // ученики
                 intent.putExtra(LessonListActivity.ARGS_STRING_ARRAY_LEARNERS_NAMES, learnersNames);
-
                 intent.putExtra(LessonListActivity.ARGS_INT_ARRAY_LEARNERS_ID, learnersId);
-
-
-                // конвертируем типы оценок
-
+                // типы оценок
                 long[] typesId = new long[answersTypes.length];
                 String[] typesNames = new String[answersTypes.length];
                 for (int typeI = 0; typeI < answersTypes.length; typeI++) {
                     typesId[typeI] = answersTypes[typeI].id;
                     typesNames[typeI] = answersTypes[typeI].typeName;
                 }
-
                 intent.putExtra(LessonListActivity.STRING_GRADES_TYPES_ARRAY, typesNames);
                 intent.putExtra(LessonListActivity.INT_GRADES_TYPES_ID_ARRAY, typesId);
-
-
+                // типы пропусков
+                long[] absId = new long[absentTypes.length];
+                String[] absNames = new String[absentTypes.length];
+                String[] absLongNames = new String[absentTypes.length];
+                for (int typeI = 0; typeI < absentTypes.length; typeI++) {
+                    absId[typeI] = absentTypes[typeI].id;
+                    absNames[typeI] = absentTypes[typeI].typeAbsName;
+                    absLongNames[typeI] = absentTypes[typeI].typeAbsLongName;
+                }
+                intent.putExtra(LessonListActivity.STRING_ABSENT_TYPES_ARRAY, absNames);
+                intent.putExtra(LessonListActivity.STRING_ABSENT_TYPES_LONG_ARRAY, absLongNames);
+                intent.putExtra(LessonListActivity.LONG_ABSENT_TYPES_ID_ARRAY, absId);
+                // максимальная оценка
                 intent.putExtra(LessonListActivity.INT_MAX_GRADE, maxAnswersCount);
-
+                // оценки
                 intent.putExtra(LessonListActivity.FIRST_GRADES, grades1);
                 intent.putExtra(LessonListActivity.SECOND_GRADES, grades2);
                 intent.putExtra(LessonListActivity.THIRD_GRADES, grades3);
-
+                // типы выбранных оценок
                 intent.putExtra(LessonListActivity.FIRST_GRADES_TYPES, gradesTypes1);
                 intent.putExtra(LessonListActivity.SECOND_GRADES_TYPES, gradesTypes2);
                 intent.putExtra(LessonListActivity.THIRD_GRADES_TYPES, gradesTypes3);
-
+                // выбранные пропуски
+                intent.putExtra(LessonListActivity.INT_ABSENT_TYPE_POZ_ARRAY, absentPoz);
 
                 // передаем полученную дату урока
                 intent.putExtra(LessonListActivity.LESSON_DATE, lessonDate);
@@ -440,6 +453,21 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             }
             typesCursor.close();
 
+            // названия типов пропусков
+            Cursor typesAbsCursor = db.getAbsentTypes();
+            absentTypes = new AbsentType[typesAbsCursor.getCount()];
+            // извлекаем данные из курсора
+            for (int typeI = 0; typeI < absentTypes.length; typeI++) {
+                typesAbsCursor.moveToPosition(typeI);
+                // добавляем новый тип во внутренний список
+                absentTypes[typeI] = new AbsentType(
+                        typesAbsCursor.getLong(typesAbsCursor.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.KEY_LEARNERS_ABSENT_TYPE_ID)),
+                        typesAbsCursor.getString(typesAbsCursor.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME)),
+                        typesAbsCursor.getString(typesAbsCursor.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME))
+                );
+            }
+            typesAbsCursor.close();
+
 
             // получаем учеников по id класса
             Cursor learnersCursor = db.getLearnersByClassId(learnersClassId);
@@ -465,32 +493,51 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                         ))
                 );
 
-                // получаем оценки ученика
+                // получаем оценки ученика за этот урок
                 Cursor grades = db.getGradesByLearnerIdSubjectDateAndLesson(learnerId, subjectId, lessonDate, lessonNumber);
-                // получаем три или менее оценки
-                for (int j = 0; j < 3; j++) {
-                    // если больше оценок нет
-                    if (!grades.moveToNext()) {
-                        break;
-                    }
-                    // если находим н-ку
-                    int grade = grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_GRADE));
-                    if (grade <= -2) {
-                        learnersAndTheirGrades[i].learnerGrades[0] = grade;
-                        learnersAndTheirGrades[i].learnerGrades[1] = grade;
-                        learnersAndTheirGrades[i].learnerGrades[2] = grade;
-                        learnersAndTheirGrades[i].learnerGradesTypes[0] = grade;
-                        learnersAndTheirGrades[i].learnerGradesTypes[1] = grade;
-                        learnersAndTheirGrades[i].learnerGradesTypes[2] = grade;
-                        break;
-                    }
-                    // или просто считываем данные
-                    learnersAndTheirGrades[i].learnerGrades[j] = grade;
-                    learnersAndTheirGrades[i].learnerGradesTypes[j] =
-                            grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID)) - 1;
-                }
-                grades.close();
 
+                if (grades.moveToNext()) {// если оценки за этот урок уже проставлялись
+                    int absId = grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID));
+                    if (absId != -1) {// если стоит пропуск
+                        // проходимся в цикле по всем типам оценок запоминая номер попавшегося
+                        learnersAndTheirGrades[i].absTypePozNumber = -1;
+                        int poz = 0;
+                        while (absentTypes.length > poz) {
+                            if (absentTypes[poz].id != absId) {
+                                poz++;
+                            } else {
+                                learnersAndTheirGrades[i].absTypePozNumber = poz;
+                                break;
+                            }
+                        }
+                        learnersAndTheirGrades[i].learnerGrades[0] = 0;
+                        learnersAndTheirGrades[i].learnerGrades[1] = 0;
+                        learnersAndTheirGrades[i].learnerGrades[2] = 0;
+                        learnersAndTheirGrades[i].learnerGradesTypes[0] = 0;
+                        learnersAndTheirGrades[i].learnerGradesTypes[1] = 0;
+                        learnersAndTheirGrades[i].learnerGradesTypes[2] = 0;
+                    } else {// если пропуска нет
+                        for (int gradeI = 0; gradeI < SchoolContract.TableLearnersGrades.COLUMNS_GRADE.length; gradeI++) {
+                            // оценка
+                            learnersAndTheirGrades[i].learnerGrades[gradeI] =
+                                    grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[gradeI]));
+                            // тип оценки
+                            long typeId = grades.getLong(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[gradeI]));
+                            // проходимся в цикле по всем типам оценок запоминая номер попавшегося
+                            learnersAndTheirGrades[i].learnerGradesTypes[gradeI] = -1;// единица всегда должна перекрываться другим значение иначе будет ошибка
+                            int poz = 0;
+                            while (answersTypes.length > poz) {
+                                if (answersTypes[poz].id != typeId) {
+                                    poz++;
+                                } else {
+                                    learnersAndTheirGrades[i].learnerGradesTypes[gradeI] = poz;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }// если не проставлялись оставляем пустые значения
+                grades.close();
             }
             learnersCursor.close();
 
@@ -693,32 +740,26 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     int currentGrade = learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition];//..
 
                     // ставим в tempLernerImage изображение по последней оценке(из памяти)
-                    switch (currentGrade) {
-                        case -2:
-                            tempLernerImage.setImageResource(R.drawable.lesson_learner_abs);
-                            break;
-                        case 0:
-                            tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
-                            break;
-                        default:
-                            if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 20) {
-                                //1
-                                tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
-                            } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 41) {
-                                //2
-                                tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
-                            } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 60) {
-                                //3
-                                tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
-                            } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 80) {
-                                //4
-                                tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
-                            } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 100) {
-                                //5
-                                tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
-                            }
+                    if (learnersAndTheirGrades[learnerPosition].absTypePozNumber != -1) {// пропуск
+                        tempLernerImage.setImageResource(R.drawable.lesson_learner_abs);
+                    } else if (currentGrade == 0) {
+                        tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
+                    } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 20) {
+                        //1
+                        tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
+                    } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 41) {
+                        //2
+                        tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
+                    } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 60) {
+                        //3
+                        tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
+                    } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 80) {
+                        //4
+                        tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
+                    } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 100) {
+                        //5
+                        tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
                     }
-
 
                     // выбираем очередность оценок//..
 
@@ -865,7 +906,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                             //..------_____
 
                             // если стоит Н, то ничего не делаем
-                            if (learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition] != -2) {
+                            if (learnersAndTheirGrades[learnerPosition].absTypePozNumber == -1) {
                                 // если все же стоит какая-то оценка,
 
                                 // смотрим можем ли ее увеличивать
@@ -929,36 +970,54 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                             chosenLearnerPosition = learnerPosition;
 
                             // вызываем диалог изменения оценок
-                            GradeDialogFragment gradeDialog = new GradeDialogFragment();
+                            GradeEditLessonDialogFragment gradeDialog = new GradeEditLessonDialogFragment();
                             // передаем на вход данные
                             Bundle args = new Bundle();
-                            args.putString(GradeDialogFragment.ARGS_LEARNER_NAME,
+                            args.putString(GradeEditLessonDialogFragment.ARGS_LEARNER_NAME,
                                     learnersAndTheirGrades[learnerPosition].lastName + " "
                                             + learnersAndTheirGrades[learnerPosition].name
                             );
 
-                            // переводим названия предметов в строковый массив
+                            // переводим названия оценок в строковый массив
                             String[] stringTypes = new String[answersTypes.length];
                             for (int typeI = 0; typeI < answersTypes.length; typeI++) {
                                 stringTypes[typeI] = answersTypes[typeI].typeName;
                             }
-                            args.putStringArray(GradeDialogFragment.ARGS_STRING_GRADES_TYPES_ARRAY,
+                            args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_GRADES_TYPES_ARRAY,
                                     stringTypes
                             );
 
-                            args.putIntArray(GradeDialogFragment.ARGS_INT_GRADES_ARRAY,
+                            args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ARRAY,
                                     learnersAndTheirGrades[learnerPosition].learnerGrades.clone()
                             );
 
-                            args.putIntArray(GradeDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY,
+                            args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY,
                                     learnersAndTheirGrades[learnerPosition].learnerGradesTypes.clone()
                             );
 
-                            args.putInt(GradeDialogFragment.ARGS_INT_MAX_GRADE,
+                            // переводим названия оценок в строковый массив
+                            String[] absTypes = new String[absentTypes.length];
+                            String[] longAbsTypes = new String[absentTypes.length];
+                            for (int typeI = 0; typeI < absentTypes.length; typeI++) {
+                                absTypes[typeI] = absentTypes[typeI].typeAbsName;
+                                longAbsTypes[typeI] = absentTypes[typeI].typeAbsLongName;
+                            }
+                            args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_ABSENT_TYPES_NAMES_ARRAY,
+                                    absTypes
+                            );
+                            args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_ABSENT_TYPES_LONG_NAMES_ARRAY,
+                                    longAbsTypes
+                            );
+
+                            args.putInt(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ABSENT_TYPE_NUMBER,
+                                    learnersAndTheirGrades[learnerPosition].absTypePozNumber
+                            );
+
+                            args.putInt(GradeEditLessonDialogFragment.ARGS_INT_MAX_GRADE,
                                     maxAnswersCount
                             );
 
-                            args.putInt(GradeDialogFragment.ARGS_INT_CHOSEN_GRADE_POSITION,
+                            args.putInt(GradeEditLessonDialogFragment.ARGS_INT_CHOSEN_GRADE_POSITION,
                                     learnersAndTheirGrades[learnerPosition].chosenGradePosition//..
                             );
 
@@ -981,7 +1040,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
     // обратная связь от диалога оценок GradeDialogFragment
     @Override
-    public void setGrades(int[] grades, int[] chosenTypesNumbers) {
+    public void setGrades(int[] grades, int[] chosenTypesNumbers, int chosenAbsPoz) {
         // ставим выбранной следующую оценку
         if (learnersAndTheirGrades[chosenLearnerPosition].chosenGradePosition != 2) {
             learnersAndTheirGrades[chosenLearnerPosition].chosenGradePosition++;
@@ -991,6 +1050,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         // передаем измененные массивы в общий список
         learnersAndTheirGrades[chosenLearnerPosition].learnerGrades = grades;
         learnersAndTheirGrades[chosenLearnerPosition].learnerGradesTypes = chosenTypesNumbers;
+
+        // тип пропуска
+        learnersAndTheirGrades[chosenLearnerPosition].absTypePozNumber = chosenAbsPoz;
 
         // обновляем текст и картинки на ученике
         learnersAndTheirGrades[chosenLearnerPosition].updateViewsData();
@@ -1192,6 +1254,19 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         }
     }
 
+    // класс для хранения типов пропусков
+    class AbsentType {
+        long id;
+        String typeAbsName;
+        String typeAbsLongName;
+
+        AbsentType(long id, String typeAbsName, String typeAbsLongName) {
+            this.id = id;
+            this.typeAbsName = typeAbsName;
+            this.typeAbsLongName = typeAbsLongName;
+        }
+    }
+
     // класс для хранения ученика и его оценок
     class MyLearnerAndHisGrades {
 
@@ -1204,6 +1279,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         int[] learnerGrades;
         // массив номеров типов оценок
         int[] learnerGradesTypes;
+        // тип пропуска
+        int absTypePozNumber;
 
         // номер выбранной оценки //..
         int chosenGradePosition = 0;
@@ -1214,6 +1291,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             this.lastName = lastName;
             this.learnerGrades = new int[]{0, 0, 0};
             this.learnerGradesTypes = new int[]{0, 0, 0};
+            this.absTypePozNumber = -1;
         }
 
         // контейнер места ученика
@@ -1377,35 +1455,27 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
             Log.e(TAG, "--------- " + learnerGrades[chosenGradePosition]);
             // меняем изображение на учненике в соответствии с оценкой
-            switch (learnerGrades[chosenGradePosition]) {
-                case -2:
-                    viewLearnerImage.setImageResource(R.drawable.lesson_learner_abs);
-                    break;
-                case 0:
-                    if (learnerGrades[0] == 0 && learnerGrades[1] == 0 && learnerGrades[2] == 0) {
-                        viewLearnerImage.setImageResource(R.drawable.lesson_learner_0_gray);
-                    } else {
-                        viewLearnerImage.setImageResource(R.drawable.lesson_learner_mix);
-                    }
-                    break;
-                default:
-                    if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 20) {
-                        //1
-                        viewLearnerImage.setImageResource(R.drawable.lesson_learner_1);
-                    } else if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 41) {
-                        //2
-                        viewLearnerImage.setImageResource(R.drawable.lesson_learner_2);
-                    } else if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 60) {
-                        //3
-                        viewLearnerImage.setImageResource(R.drawable.lesson_learner_3);
-                    } else if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 80) {
-                        //4
-                        viewLearnerImage.setImageResource(R.drawable.lesson_learner_4);
-                    } else if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 100) {
-                        //5
-                        viewLearnerImage.setImageResource(R.drawable.lesson_learner_5);
-                    }
+            if (absTypePozNumber != -1) {// пропуск
+                viewLearnerImage.setImageResource(R.drawable.lesson_learner_abs);
+            } else if (learnerGrades[chosenGradePosition] == 0) {
+                viewLearnerImage.setImageResource(R.drawable.lesson_learner_0_gray);
+            } else if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 20) {
+                //1
+                viewLearnerImage.setImageResource(R.drawable.lesson_learner_1);
+            } else if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 41) {
+                //2
+                viewLearnerImage.setImageResource(R.drawable.lesson_learner_2);
+            } else if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 60) {
+                //3
+                viewLearnerImage.setImageResource(R.drawable.lesson_learner_3);
+            } else if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 80) {
+                //4
+                viewLearnerImage.setImageResource(R.drawable.lesson_learner_4);
+            } else if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 100) {
+                //5
+                viewLearnerImage.setImageResource(R.drawable.lesson_learner_5);
             }
+
 
         }
     }

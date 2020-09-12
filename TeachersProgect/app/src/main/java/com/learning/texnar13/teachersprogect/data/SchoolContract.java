@@ -86,16 +86,40 @@ public final class SchoolContract {
     public static final class TableLearnersGrades {
         public static final String NAME_TABLE_LEARNERS_GRADES = "learnersGrades";
         public static final String KEY_GRADE_ID = BaseColumns._ID;
-        public static final String COLUMN_GRADE = "grade";
 
         public static final String COLUMN_DATE = "date";
         public static final String COLUMN_LESSON_NUMBER = "lessonNumber";
 
-        //public static final String COLUMN_TIME_STAMP = "time";// в timestamp"yyyy-MM-dd HH:mm:ss"
+        public static final String[] COLUMNS_GRADE = {"grade1", "grade2", "grade3"};
+        public static final String[] KEYS_GRADES_TITLES_ID = {"title1Id", "title2Id", "title3Id"};
+        public static final String KEY_ABSENT_TYPE_ID = "absentTypeId";
+
         public static final String KEY_SUBJECT_ID = "subjectId";
         public static final String KEY_LEARNER_ID = "learnerId";
-        public static final String KEY_GRADE_TITLE_ID = "titleId";
-        //constants:
+
+        public static final String CREATE_TABLE_STRING = "CREATE TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ( " +
+                SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                SchoolContract.TableLearnersGrades.COLUMN_DATE + " TIMESTRING DEFAULT \"0000-00-00\" NOT NULL," +
+                SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0 NOT NULL," +
+
+                SchoolContract.TableLearnersGrades.COLUMNS_GRADE[0] + " INTEGER DEFAULT 0 NOT NULL, " +
+                SchoolContract.TableLearnersGrades.COLUMNS_GRADE[1] + " INTEGER DEFAULT 0 NOT NULL, " +
+                SchoolContract.TableLearnersGrades.COLUMNS_GRADE[2] + " INTEGER DEFAULT 0 NOT NULL, " +
+
+                SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[0] + " INTEGER DEFAULT 1 NOT NULL, " +
+                SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[1] + " INTEGER DEFAULT 1 NOT NULL, " +
+                SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[2] + " INTEGER DEFAULT 1 NOT NULL, " +
+                SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID + " INTEGER DEFAULT NULL, " +
+
+                SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER NOT NULL, " +
+                SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " INTEGER NOT NULL, " +
+                "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE, " +
+                "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE, " +
+
+                "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[0] + ") REFERENCES " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES + " (" + SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID + ") ON DELETE SET DEFAULT, " +
+                "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[1] + ") REFERENCES " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES + " (" + SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID + ") ON DELETE SET DEFAULT, " +
+                "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[2] + ") REFERENCES " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES + " (" + SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID + ") ON DELETE SET DEFAULT, " +
+                "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID + ") REFERENCES " + SchoolContract.TableLearnersAbsentTypes.NAME_TABLE_LEARNERS_ABSENT_TYPES + " (" + SchoolContract.TableLearnersAbsentTypes.KEY_LEARNERS_ABSENT_TYPE_ID + ") ON DELETE CASCADE ); ";
     }
 
     public static final class TableLearnersGradesTitles {
@@ -103,6 +127,13 @@ public final class SchoolContract {
         public static final String KEY_LEARNERS_GRADES_TITLE_ID = BaseColumns._ID;
         public static final String COLUMN_LEARNERS_GRADES_TITLE = "title";
 
+    }
+
+    public static final class TableLearnersAbsentTypes {
+        public static final String NAME_TABLE_LEARNERS_ABSENT_TYPES = "learnersAbsentTypes";
+        public static final String KEY_LEARNERS_ABSENT_TYPE_ID = BaseColumns._ID;
+        public static final String COLUMN_LEARNERS_ABSENT_TYPE_NAME = "absentName";
+        public static final String COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME = "absentLongName";
     }
 
     public static final class TableSubjects {
@@ -132,4 +163,11 @@ public final class SchoolContract {
         public static final int CONSTANT_REPEAT_ON_WORKING_DAYS = 3;//todo CONSTANT_REPEAT_ON_WORKING_DAYS
         public static final int CONSTANT_REPEAT_MONTHLY = 4;
     }
+
+    public static final class TableLessonComment {
+        public static final String NAME_TABLE_LESSON_TEXT = "lessonComment";
+        public static final String KEY_LESSON_TEXT_ID = BaseColumns._ID;
+        public static final String COLUMN_LESSON_TEXT = "commentText";
+    }
+
 }

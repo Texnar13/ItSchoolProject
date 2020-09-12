@@ -1,5 +1,6 @@
 package com.learning.texnar13.teachersprogect;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -30,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -144,19 +146,9 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 //если чекбокс нажат
-                if (menuItem.isChecked()) {
-                    //убираем галочку
-                    isGird = false;
-                    menuItem.setChecked(false);
-                    //убираем сетку
-                    outLines();
-                } else {
-                    //ставим галочку
-                    menuItem.setChecked(true);
-                    isGird = true;
-                    //возвращаем подведение парт
-                    outLines();
-                }
+                isGird = !menuItem.isChecked();
+                menuItem.setChecked(isGird);
+                outLines();
                 return true;
             }
         });
@@ -344,8 +336,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             public void onGlobalLayout() {
                 out.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 addButtonSizeRect = new Rect(
-                        (int)(out.getWidth() / 2 - getResources().getDimension(R.dimen.cabinet_redactor_button_add_size) / 2),
-                        (int)(out.getHeight() -  getResources().getDimension(R.dimen.cabinet_redactor_button_add_size) - getResources().getDimension(R.dimen.cabinet_redactor_button_add_bottom_margin)),
+                        (int) (out.getWidth() / 2 - getResources().getDimension(R.dimen.cabinet_redactor_button_add_size) / 2),
+                        (int) (out.getHeight() - getResources().getDimension(R.dimen.cabinet_redactor_button_add_size) - getResources().getDimension(R.dimen.cabinet_redactor_button_add_bottom_margin)),
                         (int) (out.getWidth() / 2 + getResources().getDimension(R.dimen.cabinet_redactor_button_add_size) / 2),
                         (int) (out.getHeight() - getResources().getDimension(R.dimen.cabinet_redactor_button_add_bottom_margin))
                 );
