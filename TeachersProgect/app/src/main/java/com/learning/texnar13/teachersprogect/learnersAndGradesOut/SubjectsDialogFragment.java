@@ -1,12 +1,8 @@
 package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.res.ResourcesCompat;
-
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -19,6 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.learning.texnar13.teachersprogect.R;
 

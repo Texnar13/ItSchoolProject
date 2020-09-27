@@ -73,6 +73,8 @@
     <string name="learners_and_grades_out_activity_dialog_title_enter_subject_name">Enter subject name:</string>
     <string name="learners_and_grades_out_activity_dialog_hint_subject_name">Subject name</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson">lesson</string>
+    <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">ДЗ и заметки:</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_lesson_comment">Комментарий…</string>
     <!-- уведомления диалогов -->
     <string name="learners_and_grades_out_activity_dialog_toast_no_name">No first name entered</string>
     <string name="learners_and_grades_out_activity_dialog_toast_no_last_name">No last name entered</string>

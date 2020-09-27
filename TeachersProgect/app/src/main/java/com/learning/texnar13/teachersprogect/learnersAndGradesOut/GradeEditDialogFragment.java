@@ -3,6 +3,7 @@ package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
 import android.app.AlertDialog;
 import android.app.Dialog;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import android.content.DialogInterface;
@@ -614,15 +615,15 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
     }
 
     @Override
-    public void onCancel(DialogInterface dialog) {
+    public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
         //вызываем в активности метод разрешения изменения оценок
-        ((EditGradeDialogInterface) getActivity()).gradesSelectNothing();
+        ((AllowEditGradesInterface) getActivity()).allowUserEditGrades();
 
     }
 }
@@ -630,5 +631,4 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
 interface EditGradeDialogInterface {
     void editGrades(int[] grades, int absTypePoz, int[] chosenTypesNumbers, int lessonPoz);
 
-    void gradesSelectNothing();
 }

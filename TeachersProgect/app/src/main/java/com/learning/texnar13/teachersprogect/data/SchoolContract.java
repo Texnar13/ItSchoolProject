@@ -15,11 +15,12 @@ public final class SchoolContract {
         public static final String KEY_SETTINGS_PROFILE_ID = BaseColumns._ID;
         public static final String COLUMN_PROFILE_NAME = "profileName";
         public static final String COLUMN_LOCALE = "locale";
-        public static final String COLUMN_LOCALE_DEFAULT_CODE = "defaultLocale";
         public static final String COLUMN_INTERFACE_SIZE = "interfaceSize";
         public static final String COLUMN_MAX_ANSWER = "maxAnswer";
         public static final String COLUMN_TIME = "time";
         public static final String COLUMN_ARE_THE_GRADES_COLORED = "areTheGradesColored";
+        // константы
+        public static final String COLUMN_LOCALE_DEFAULT_CODE = "defaultLocale";
         //массивы в json
         public static final String COLUMN_TIME_BEGIN_HOUR_NAME = "beginHour";
         public static final String COLUMN_TIME_BEGIN_MINUTE_NAME = "beginMinute";
@@ -167,6 +168,9 @@ public final class SchoolContract {
     public static final class TableLessonComment {
         public static final String NAME_TABLE_LESSON_TEXT = "lessonComment";
         public static final String KEY_LESSON_TEXT_ID = BaseColumns._ID;
+        public static final String COLUMN_LESSON_DATE = "commentDate";
+        public static final String COLUMN_LESSON_NUMBER = "commentLessonNumber";
+        public static final String KEY_SUBJECT_ID = "subjectId";
         public static final String COLUMN_LESSON_TEXT = "commentText";
     }
 

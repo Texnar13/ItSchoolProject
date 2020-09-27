@@ -73,6 +73,8 @@
     <string name="learners_and_grades_out_activity_dialog_title_enter_subject_name">输入学科名称:</string>
     <string name="learners_and_grades_out_activity_dialog_hint_subject_name">名称学科</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson">课</string>
+    <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">ДЗ и заметки:</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_lesson_comment">Комментарий…</string>
     <!-- уведомления диалогов -->
     <string name="learners_and_grades_out_activity_dialog_toast_no_name">没有输入名字</string>
     <string name="learners_and_grades_out_activity_dialog_toast_no_last_name">没有输入姓氏</string>

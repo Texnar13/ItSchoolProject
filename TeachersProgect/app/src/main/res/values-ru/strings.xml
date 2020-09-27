@@ -73,6 +73,8 @@
     <string name="learners_and_grades_out_activity_dialog_title_enter_subject_name">Введите название предмета:</string>
     <string name="learners_and_grades_out_activity_dialog_hint_subject_name">Название предмета</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson">урок</string>
+    <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">ДЗ и заметки:</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_lesson_comment">Комментарий…</string>
     <!-- уведомления диалогов -->
     <string name="learners_and_grades_out_activity_dialog_toast_no_name">Не введено имя</string>
     <string name="learners_and_grades_out_activity_dialog_toast_no_last_name">Не введена фамилия</string>

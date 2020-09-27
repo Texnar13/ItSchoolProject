@@ -2,7 +2,6 @@ package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,7 +12,6 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.learning.texnar13.teachersprogect.R;
 
@@ -337,12 +336,6 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
                     "CreateLearnerDialogFragment: you must implements UpdateTableInterface in your activity"
             );
         }
-    }
-
-    //---------форматы----------
-
-    private float pxFromDp(float px) {
-        return px * getActivity().getResources().getDisplayMetrics().density;
     }
 }
 

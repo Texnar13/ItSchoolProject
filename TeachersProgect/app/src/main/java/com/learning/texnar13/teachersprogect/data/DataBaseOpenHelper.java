@@ -26,7 +26,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
     private static final boolean IS_DEBUG = false;
@@ -76,6 +78,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES + ";");
+            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT + ";");
             db.execSQL("PRAGMA foreign_keys = ON;");
 
             //настройки
@@ -159,7 +162,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             sql = "CREATE TABLE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " ( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + " INTEGER, " +
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + " INTEGER, " +
-                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0," +
+                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0 NOT NULL," +
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " TIMESTRING DEFAULT \"0000-00-00\" NOT NULL," +
                     //"lessonDateBegin TIMESTRING, " +
                     //"lessonDateEnd TIMESTRING, " +
@@ -220,275 +223,19 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             }
             // комментарий к уроку
             db.execSQL(
-                    "CREATE TABLE " + SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT +
-                            " ( " + SchoolContract.TableLessonComment.KEY_LESSON_TEXT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                            SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT + " TEXT NOT NULL);"
+                    "CREATE TABLE " + SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT + " ( " +
+                            SchoolContract.TableLessonComment.KEY_LESSON_TEXT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                            SchoolContract.TableLessonComment.COLUMN_LESSON_DATE + " TIMESTRING DEFAULT \"0000-00-00\" NOT NULL, " +
+                            SchoolContract.TableLessonComment.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0 NOT NULL, " +
+                            SchoolContract.TableLessonComment.KEY_SUBJECT_ID + " INTEGER DEFAULT NULL, " +
+
+                            SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT + " TEXT NOT NULL, " +
+                            "FOREIGN KEY(" + SchoolContract.TableLessonComment.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE SET DEFAULT);"
             );
 
 
         } else {//иначе г@внокод
             //операции по сохранению данных на старых версиях
-//            if (oldVersion < 5) {//если база версии 5 и выше, то она не запустит этот код //создаём пустые таблицы без за полнения
-//                db.execSQL("PRAGMA foreign_keys = OFF;");
-//                db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + ";");
-//                db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + ";");
-//                db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableDesks.NAME_TABLE_DESKS + ";");
-//                db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + ";");
-//                db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + ";");
-//                db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + ";");
-//                db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + ";");
-//                db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
-//                db.execSQL("DROP TABLE IF EXISTS lessons;");
-//                db.execSQL("DROP TABLE IF EXISTS lessonsAnd;");
-//                db.execSQL("PRAGMA foreign_keys = ON;");
-//
-////настройки
-//                String sql = "CREATE TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + "( " + SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME + " VARCHAR, " +
-//                        SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE + " INTEGER ); ";
-//                db.execSQL(sql);
-//
-////кабинет
-//                sql = "CREATE TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "( " + SchoolContract.TableCabinets.KEY_CABINET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        SchoolContract.TableCabinets.COLUMN_NAME + " VARCHAR ); ";
-//                db.execSQL(sql);
-////парта
-//                sql = "CREATE TABLE " + SchoolContract.TableDesks.NAME_TABLE_DESKS + "( " + SchoolContract.TableDesks.KEY_DESK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        SchoolContract.TableDesks.COLUMN_X + " INTEGER, " +
-//                        SchoolContract.TableDesks.COLUMN_Y + " INTEGER, " +
-//                        SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES + " INTEGER, " +
-//                        SchoolContract.TableDesks.KEY_CABINET_ID + " INTEGER, " +
-//                        "FOREIGN KEY(" + SchoolContract.TableDesks.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + "(" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ON DELETE CASCADE ); ";
-//                db.execSQL(sql);
-////место
-//                sql = "CREATE TABLE " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + " ( " + SchoolContract.TablePlaces.KEY_PLACE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        SchoolContract.TablePlaces.KEY_DESK_ID + " INTEGER, " +
-//                        SchoolContract.TablePlaces.COLUMN_ORDINAL + " INTEGER, " +
-//                        "FOREIGN KEY(" + SchoolContract.TablePlaces.KEY_DESK_ID + ") REFERENCES " + SchoolContract.TableDesks.NAME_TABLE_DESKS + " (" + SchoolContract.TableDesks.KEY_DESK_ID + ") ON DELETE CASCADE ); ";
-//                db.execSQL(sql);
-////класс
-//                sql = "CREATE TABLE " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + " ( " + SchoolContract.TableClasses.KEY_CLASS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        SchoolContract.TableClasses.COLUMN_CLASS_NAME + " VARCHAR ); ";
-//                db.execSQL(sql);
-////ученик
-//                sql = "CREATE TABLE " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " ( " + SchoolContract.TableLearners.KEY_LEARNER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        SchoolContract.TableLearners.COLUMN_FIRST_NAME + " VARCHAR, " +
-//                        SchoolContract.TableLearners.COLUMN_SECOND_NAME + " VARCHAR, " +
-//                        SchoolContract.TableLearners.KEY_CLASS_ID + " INTEGER, " +
-//                        "FOREIGN KEY(" + SchoolContract.TableLearners.KEY_CLASS_ID + ") REFERENCES " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + " (" + SchoolContract.TableClasses.KEY_CLASS_ID + ") ON DELETE CASCADE ); ";
-//                db.execSQL(sql);
-////ученик-место
-//                sql = "CREATE TABLE " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + " ( " + SchoolContract.TableLearnersOnPlaces.KEY_ATTITUDE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID + " INTEGER, " +
-//                        SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID + " INTEGER, " +
-//                        "FOREIGN KEY(" + SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE, " +
-//                        "FOREIGN KEY(" + SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID + ") REFERENCES " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + " (" + SchoolContract.TablePlaces.KEY_PLACE_ID + ") ON DELETE CASCADE ); ";
-//                db.execSQL(sql);
-////оценки учеников
-//                sql = "CREATE TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ( " + SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER, " +
-//                        SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
-//                        "lessonId INTEGER, " +
-//                        "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); ";
-//                db.execSQL(sql);
-////уроки
-//                sql = "CREATE TABLE lessons ( " + SchoolContract.TableSubjects.KEY_SUBJECT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        SchoolContract.TableSubjects.COLUMN_NAME + " VARCHAR, " +
-//                        SchoolContract.TableSubjects.KEY_CLASS_ID + " INTEGER, " +
-//                        //SchoolContract.TableSubjects.KEY_CABINET_ID + " INTEGER, " +
-//                        "FOREIGN KEY(" + SchoolContract.TableSubjects.KEY_CLASS_ID + ") REFERENCES " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + " (" + SchoolContract.TableClasses.KEY_CLASS_ID + ") ON DELETE CASCADE ); ";
-//                //"FOREIGN KEY(" + SchoolContract.TableSubjects.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + " (" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ON DELETE CASCADE, " +
-//                db.execSQL(sql);
-////--
-////урок и его время проведения
-//                sql = "CREATE TABLE lessonsAnd ( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        "lessonId INTEGER, " +
-//                        SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + " INTEGER, " +
-//                        "lessonDateBegin INTEGER, " +
-//                        "lessonDateEnd INTEGER, " +
-//                        "FOREIGN KEY(lessonId) REFERENCES lessons (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE ); ";
-//                db.execSQL(sql);
-//            }
-//            if (oldVersion < 6) {
-//                db.execSQL("ALTER TABLE lessonsAnd ADD COLUMN " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " INTEGER DEFAULT " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER + ";");//колонка для повторения уроков
-//            }
-//            if (oldVersion < 7) {
-//                db.execSQL("ALTER TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ADD COLUMN time TEXT DEFAULT '0000-00-00 00:00:00';");//время поставленной оценки
-//            }
-//            if (oldVersion < 8) {//добавляем foreign key
-//                db.execSQL("PRAGMA foreign_keys = OFF;");
-//                // --для кабинетов--
-//
-//                //переименовываем старую таблицу
-//                db.execSQL("ALTER TABLE lessonsAnd RENAME TO lessonsAnd_old;");
-//                //создаём новую таблицу
-//                db.execSQL("CREATE TABLE lessonsAnd ( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        "lessonId INTEGER, " +
-//                        SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + " INTEGER, " +
-//                        "lessonDateBegin INTEGER, " +
-//                        "lessonDateEnd INTEGER, " +
-//                        SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " INTEGER DEFAULT " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER + ", " +
-//                        "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + " (" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ON DELETE CASCADE ," +
-//                        "FOREIGN KEY(lessonId) REFERENCES lessons (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE ); "
-//                );
-//                //переносим значения
-//                db.execSQL("INSERT INTO lessonsAnd SELECT * FROM lessonsAnd_old;");
-//                //удаляем старую таблицу
-//                db.execSQL("DROP TABLE IF EXISTS lessonsAnd_old;");
-//
-//                // --для оценок--
-//                db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
-//                String sql = "CREATE TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ( " + SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER, " +
-//                        SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
-//                        "time TEXT DEFAULT '0000-00-00 00:00:00', " +
-//                        "lessonId INTEGER, " +
-//                        "FOREIGN KEY(lessonId) REFERENCES lessons ( _id ) ON DELETE CASCADE, " +
-//                        "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); ";
-//                db.execSQL(sql);
-//                db.execSQL("PRAGMA foreign_keys = ON");
-//            }
-//            if (oldVersion < 10) {//переименоввываем таблицы и поля в новые имена
-//                db.execSQL("PRAGMA foreign_keys = OFF;");
-//
-//                db.execSQL("DROP TABLE IF EXISTS lessonsAnd_old;");//от предыдущих багов
-//
-//                // --для зависимостей--
-//
-//                //создаём новую таблицу
-//                db.execSQL("CREATE TABLE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " ( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + " INTEGER, " +
-//                        SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + " INTEGER, " +
-//                        "lessonDateBegin INTEGER, " +
-//                        "lessonDateEnd INTEGER, " +
-//                        SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " INTEGER DEFAULT " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER + ", " +
-//                        "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + " (" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ON DELETE CASCADE ," +
-//                        "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE ); "
-//                );
-//                //переносим значения
-//                db.execSQL("INSERT INTO " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " SELECT * FROM lessonsAnd;");
-//                //удаляем старую таблицу
-//                db.execSQL("DROP TABLE IF EXISTS lessonsAnd;");
-//
-//                // --для предметов--
-//
-//                //переименовываем старую таблицу
-//                db.execSQL("ALTER TABLE lessons RENAME TO " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + ";");
-//
-//                // --для оценок--
-//
-//                //удаляем старую таблицу
-//                db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
-//                //создаем новую
-//                String sql = "CREATE TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ( " + SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER, " +
-//                        SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
-//                        SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " INTEGER, " +
-//                        "time TEXT DEFAULT '0000-00-00 00:00:00', " +
-//                        "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE, " +
-//                        "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE ); ";
-//                db.execSQL(sql);
-//
-//                db.execSQL("PRAGMA foreign_keys = ON");
-//            }
-//            //колонка для максимальной оценки
-//            if (oldVersion < 11) {
-//                db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER + " INTEGER DEFAULT 5;");
-//            }
-//            //колонка для времени
-//            if (oldVersion < 12) {
-//                db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_TIME + " TEXT DEFAULT " +
-//                        "'{\"" + SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_HOUR_NAME + "\":" +
-//                        //часы начала
-//                        "[\"8\",\"9\",\"10\",\"11\",\"12\",\"13\",\"14\",\"15\",\"16\"]," +
-//                        //минуты начала
-//                        "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_MINUTE_NAME + "\":" +
-//                        "[\"30\",\"30\",\"30\",\"30\",\"25\",\"30\",\"25\",\"20\",\"6\"]," +
-//                        //часы конца
-//                        "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_HOUR_NAME + "\":" +
-//                        "[\"9\",\"10\",\"11\",\"12\",\"13\",\"14\",\"15\",\"16\",\"23\"]," +
-//                        //минуты конца
-//                        "\"" + SchoolContract.TableSettingsData.COLUMN_TIME_END_MINUTE_NAME + "\":" +
-//                        "[\"15\",\"15\",\"15\",\"15\",\"10\",\"15\",\"10\",\"5\",\"59\"]" +
-//                        "}';");
-//            }
-//            //колонка для локализации
-//            if (oldVersion < 13) {
-//                db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_LOCALE + " TEXT DEFAULT '" + SchoolContract.TableSettingsData.COLUMN_LOCALE_DEFAULT_CODE + "';");
-//            }
-//            if (oldVersion < 14) {// добавляем таблицу с профилями статистики
-//                db.execSQL("CREATE TABLE " + SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES + " ( " + SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME + " TEXT, " +
-//                        "startTime TEXT, " +
-//                        "endTime TEXT); ");
-//            }
-//            if (oldVersion < 15) {// переменная отвечающая за цветные оценки
-//                db.execSQL("ALTER TABLE " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS +
-//                        " ADD COLUMN " + SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED + " INTEGER DEFAULT 1;");
-//
-//            }
-//
-//            if (oldVersion < 16) {
-//                // -------- создаем таблицу типов оценок --------
-//                db.execSQL(
-//                        "CREATE TABLE " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES +
-//                                " ( " + SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                                SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE + " TEXT);"
-//                );
-//
-//                {// ---- вставляем одну запись "работа на уроке" ----  <-- эта запись является костантой, ее нельзя удалить
-//                    ContentValues values = new ContentValues();
-//                    values.put(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE, context.getResources().getString(R.string.db_table_grade_text_first_default_value));
-//                    values.put(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID, 1);
-//                    db.insert(SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES,
-//                            null,
-//                            values
-//                    );
-//                }
-//
-//                // -------- всем оценкам ставим начальный тип --------
-//                // --- переделываем таблицу ---
-//                db.execSQL("PRAGMA foreign_keys = OFF");
-//                //переименовываем старую таблицу
-//                db.execSQL("ALTER TABLE " +
-//                        SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES +
-//                        " RENAME TO learnersGrades_old;");
-//                //создаём новую таблицу
-//                db.execSQL("CREATE TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + " ( " + SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                        SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " INTEGER, " +
-//                        SchoolContract.TableLearnersGrades.COLUMN_GRADE + " INTEGER, " +
-//                        SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " INTEGER, " +
-//                        "time TIMESTRING DEFAULT \"0000-00-00 00:00:00\", " +
-//                        // начальное значение заголовка единица
-//                        SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID + " INTEGER DEFAULT 1, " +//todo not null
-//                        "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID +
-//                        ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE, " +
-//                        "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_LEARNER_ID +
-//                        ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE, " +
-//                        "FOREIGN KEY(" + SchoolContract.TableLearnersGrades.KEY_GRADE_TITLE_ID +
-//                        ") REFERENCES " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES + " (" + SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID + ") ON DELETE CASCADE ); "
-//                );
-//                //переносим значения
-//                db.execSQL("INSERT INTO " +
-//                        SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES +
-//                        " SELECT *,\"1\" FROM learnersGrades_old;");// с дополнительной колонкой и значением "1"
-//                //удаляем старую таблицу
-//                db.execSQL("DROP TABLE IF EXISTS learnersGrades_old;");
-//                // закончили переделку
-//                db.execSQL("PRAGMA foreign_keys = ON");
-//
-//                // -- добавляем кабинетам свои значения смещения и мультипликатора хранящиеся в таблице --
-//                db.execSQL("ALTER TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS +
-//                        " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER + " INTEGER DEFAULT 1;"
-//                );
-//                db.execSQL("ALTER TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS +
-//                        " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X + " INTEGER DEFAULT 0;"
-//                );
-//                db.execSQL("ALTER TABLE " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS +
-//                        " ADD COLUMN " + SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y + " INTEGER DEFAULT 0;"
-//                );
-//            }
-
             if (oldVersion < 17) {
 
                 // -- добавляем колонку номера урока и даты урока, заменяющие собой время урока --
@@ -860,8 +607,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         "1, " +
                         "1, " +
                         "null, " +
-                        SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + ", " +
-                        SchoolContract.TableLearnersGrades.KEY_LEARNER_ID +
+                        SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + ", " +
+                        SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID +
                         " FROM learnersGrades_old;");// с дополнительной колонкой и значением "1" и null
                 //удаляем старую таблицу
                 db.execSQL("DROP TABLE IF EXISTS learnersGrades_old;");
@@ -873,13 +620,12 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 Cursor allGrades = db.query(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, null, null, null, null, null);
 
                 // группируем оценки по дням, по урокам, по предметам и по ученикам
-                while (allGrades.moveToNext()) {
-                    Log.e("aaaaaaaaa", "updateDatabase: 1");
+                while (allGrades.moveToNext()) {//-----
                     // ищем оценки которые имеют тот же день, урок, предмет и ученика
                     Cursor sameGrades = db.query(
                             SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
                             null,
-                            SchoolContract.TableLearnersGrades.COLUMN_DATE + " == " + allGrades.getLong(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_DATE)) + " AND " +
+                            SchoolContract.TableLearnersGrades.COLUMN_DATE + " == \"" + allGrades.getString(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_DATE)) + "\" AND " +
                                     SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER + " == " + allGrades.getLong(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER)) + " AND " +
                                     SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " == " + allGrades.getLong(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID)) + " AND " +
                                     SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " == " + allGrades.getLong(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_LEARNER_ID)) + " AND " +
@@ -889,7 +635,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
                     // Если стоит пропуск
                     if (allGrades.getInt(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[0])) == -2) {
-                        Log.e("aaaaaaaaa", "11sameGrades" + sameGrades.getCount());
                         // выставляем первый тип пропуска и пустую оценку
                         ContentValues content = new ContentValues();
                         content.put(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID, 1);
@@ -902,7 +647,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
                         // удаляем все остальные оценки (которых на самом деле и не должно быть)
                         while (sameGrades.moveToNext()) {
-                            Log.e("aaaaaaaaa", "updateDatabase: 2");
                             db.delete(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
                                     SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " == " + sameGrades.getLong(sameGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID)),
                                     null
@@ -914,7 +658,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         allGrades = db.query(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES, null, null, null, null, null, null);
 
                     } else {
-                        Log.e("aaaaaaaaa", "22sameGrades" + sameGrades.getCount());
                         // если с одинаковыми параметрами есть несколько оценок
                         if (sameGrades.getCount() > 0) {
 
@@ -939,7 +682,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
                                 // удаляем все остальные оценки (которых на самом деле и не должно быть)
                                 while (sameGrades.moveToNext()) {
-                                    Log.e("aaaaaaaaa", "updateDatabase: 3");
                                     db.delete(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
                                             SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " == " + sameGrades.getLong(sameGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID)),
                                             null
@@ -986,7 +728,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
                                         // удаляем все остальные оценки (которых на самом деле и не должно быть)
                                         while (sameGrades.moveToNext()) {
-                                            Log.e("aaaaaaaaa", "updateDatabase: 4");
                                             db.delete(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
                                                     SchoolContract.TableLearnersGrades.KEY_GRADE_ID + " == " + sameGrades.getLong(sameGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID)),
                                                     null
@@ -1027,9 +768,13 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
                 // добавляем комментарий к уроку
                 db.execSQL(
-                        "CREATE TABLE " + SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT +
-                                " ( " + SchoolContract.TableLessonComment.KEY_LESSON_TEXT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                                SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT + " TEXT NOT NULL);"
+                        "CREATE TABLE " + SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT + " ( " +
+                                SchoolContract.TableLessonComment.KEY_LESSON_TEXT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                                SchoolContract.TableLessonComment.COLUMN_LESSON_DATE + " TIMESTRING DEFAULT \"0000-00-00\" NOT NULL, " +
+                                SchoolContract.TableLessonComment.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0 NOT NULL, " +
+                                SchoolContract.TableLessonComment.KEY_SUBJECT_ID + " INTEGER DEFAULT NULL, " +
+                                SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT + " TEXT NOT NULL, " +
+                                "FOREIGN KEY(" + SchoolContract.TableLessonComment.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE SET DEFAULT);"
                 );
 
             }
@@ -2161,6 +1906,49 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return answer;
     }
 
+    // комментарий к дате и уроку
+    public long createLessonComment(long subjectId, String date, long lessonNumber, String text) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableLessonComment.COLUMN_LESSON_DATE, date);
+        values.put(SchoolContract.TableLessonComment.KEY_SUBJECT_ID, subjectId);
+        values.put(SchoolContract.TableLessonComment.COLUMN_LESSON_NUMBER, lessonNumber);
+        values.put(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT, text);
+        long temp = db.insert(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, null, values);//-1 = ошибка ввода
+        if (IS_DEBUG)
+            Log.i("DBOpenHelper", "createLessonComment returnId = " + temp + " text= " + text);
+        return temp;
+    }
+
+    public void setLessonCommentStringById(long commentId, String text) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT, text);
+        db.update(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, values, SchoolContract.TableLessonComment.KEY_LESSON_TEXT_ID + " == " + commentId, null);
+    }
+
+    public Cursor getLessonComments() {
+        return getReadableDatabase().query(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, null, null, null, null, null, null);
+    }
+
+    public Cursor getLessonCommentsBetweenDates(long subjectId, String startDate, String endDate) {
+        return getReadableDatabase().query(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, null,
+                SchoolContract.TableLessonComment.KEY_SUBJECT_ID + " == " + subjectId + " AND " + SchoolContract.TableLessonComment.COLUMN_LESSON_DATE + " BETWEEN \"" + startDate + "\" AND \"" + endDate + "\" ",
+                null, null, null, null);
+    }
+
+    public Cursor getLessonCommentsByDateAndLessonNumber(long subjectId, String date, long lessonNumber) {
+        return getReadableDatabase().query(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, null,
+                SchoolContract.TableLessonComment.KEY_SUBJECT_ID + " == " + subjectId + " AND " + SchoolContract.TableLessonComment.COLUMN_LESSON_DATE + " == \"" + date + "\"" +
+                        SchoolContract.TableLessonComment.COLUMN_LESSON_NUMBER + " == " + lessonNumber,
+                null, null, null, null);
+    }
+
+    public void removeLessonCommentById(long lessonCommentId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, SchoolContract.TableLessonComment.KEY_LESSON_TEXT_ID + " == " + lessonCommentId, null);
+    }
+
     //работа с бд
     public void restartTable() {//создание бд заново
         onUpgrade(this.getReadableDatabase(), 0, 100);
@@ -2176,25 +1964,26 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
             // таблица настроек
             serializer.startTag("", SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS);
-            Cursor settings = getSettingProfileById(1);
-            while (settings.moveToNext()){
+            Cursor settings = getReadableDatabase()
+                    .query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, null, null, null, null, null);
+            while (settings.moveToNext()) {
                 serializer.startTag("", "element");
                 serializer.attribute("", "elementId", settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID)));
                 serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME)));
                 serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_LOCALE, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_LOCALE)));
-                serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_LOCALE_DEFAULT_CODE, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_LOCALE_DEFAULT_CODE)));
                 serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE)));
                 serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER)));
                 serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_TIME, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_TIME)));
                 serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED)));
                 serializer.endTag("", "element");
             }
+            settings.close();
             serializer.endTag("", SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS);
 
             // таблица кабинетов
             serializer.startTag("", SchoolContract.TableCabinets.NAME_TABLE_CABINETS);
             Cursor cabinets = getCabinets();
-            while (cabinets.moveToNext()){
+            while (cabinets.moveToNext()) {
                 serializer.startTag("", "element");
                 serializer.attribute("", "elementId", cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.KEY_CABINET_ID)));
                 serializer.attribute("", SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER)));
@@ -2203,12 +1992,13 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 serializer.attribute("", SchoolContract.TableCabinets.COLUMN_NAME, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)));
                 serializer.endTag("", "element");
             }
+            cabinets.close();
             serializer.endTag("", SchoolContract.TableCabinets.NAME_TABLE_CABINETS);
 
             // таблица парт
             serializer.startTag("", SchoolContract.TableDesks.NAME_TABLE_DESKS);
             Cursor desks = getDesks();
-            while (cabinets.moveToNext()){
+            while (desks.moveToNext()) {
                 serializer.startTag("", "element");
                 serializer.attribute("", "elementId", desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
                 serializer.attribute("", SchoolContract.TableDesks.COLUMN_X, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)));
@@ -2217,161 +2007,195 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 serializer.attribute("", SchoolContract.TableDesks.KEY_CABINET_ID, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.KEY_CABINET_ID)));
                 serializer.endTag("", "element");
             }
+            desks.close();
             serializer.endTag("", SchoolContract.TableDesks.NAME_TABLE_DESKS);
 
             //// таблица парт
             //            serializer.startTag("", SchoolContract..);
-            //            Cursor desks = getDesks();
-            //            while (cabinets.moveToNext()){
+            //            Cursor desks = get();
+            //            while (desks.moveToNext()){
             //                serializer.startTag("", "element");
-            //                serializer.attribute("", "elementId", .getString(.getColumnIndex(SchoolContract..)));
-            //                serializer.attribute("", SchoolContract.., .getString(.getColumnIndex(SchoolContract..)));
+            //                serializer.attribute("", "elementId", desks.getString(desks.getColumnIndex(SchoolContract..)));
+            //                serializer.attribute("", SchoolContract.., desks.getString(desks.getColumnIndex(SchoolContract..)));
             //                serializer.endTag("", "element");
             //            }
+            //            desks.close();
             //            serializer.endTag("", SchoolContract..);
-
 
 
 //            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + ";");
 //            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + ";");
 //            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + ";");
 //            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + ";");
-//            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES + ";");
+
+            // таблица оценок
+            serializer.startTag("", SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES);
+            Cursor grades = getReadableDatabase().query(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
+                    null, null, null, null, null, null);
+            while (grades.moveToNext()) {
+                serializer.startTag("", "element");
+                serializer.attribute("", "elementId", grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID)));
+
+                serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMN_DATE,
+                        grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_DATE)));
+                serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER,
+                        grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER)));
+                for (int i = 0; i < SchoolContract.TableLearnersGrades.COLUMNS_GRADE.length; i++) {
+                    serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMNS_GRADE[i],
+                            grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[i])));
+                }
+                for (int i = 0; i < SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID.length; i++) {
+                    serializer.attribute("", SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[i],
+                            grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[i])));
+                }
+
+                serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID,
+                        "" + grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID)));
+                serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID,
+                        grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID)));
+                serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_LEARNER_ID,
+                        grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_LEARNER_ID)));
+
+                serializer.endTag("", "element");
+            }
+            grades.close();
+            serializer.endTag("", SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES);
+
+
 //            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + ";");
 //            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + ";");
 //            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES + ";");
 //            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES + ";");
 
 
-//            serializer.startTag("", "messages");
-//            serializer.attribute("", "number", String.valueOf(messages.size()));
-//            for (Message msg : messages) {
-//                serializer.startTag("", "message");
-//                serializer.attribute("", "date", msg.getDate());
-//                serializer.startTag("", "title");
-//                serializer.text(msg.getTitle());
-//                serializer.endTag("", "title");
-//                serializer.startTag("", "url");
-//                serializer.text(msg.getLink().toExternalForm());
-//                serializer.endTag("", "url");
-//                serializer.startTag("", "body");
-//                serializer.text(msg.getDescription());
-//                serializer.endTag("", "body");
-//                serializer.endTag("", "message");
-//            }
-//            serializer.endTag("", "messages");
+            // таблица коммнетариев к уроку
+            serializer.startTag("", SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT);
+            Cursor comments = getLessonComments();
+            while (comments.moveToNext()) {
+                serializer.startTag("", "element");
+                serializer.attribute("", "elementId", comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.KEY_LESSON_TEXT_ID)));
+                serializer.attribute("", SchoolContract.TableLessonComment.COLUMN_LESSON_DATE, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.COLUMN_LESSON_DATE)));
+                serializer.attribute("", SchoolContract.TableLessonComment.COLUMN_LESSON_NUMBER, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.COLUMN_LESSON_NUMBER)));
+                serializer.attribute("", SchoolContract.TableLessonComment.KEY_SUBJECT_ID, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.KEY_SUBJECT_ID)));
+                serializer.attribute("", SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT)));
+                serializer.endTag("", "element");
+            }
+            comments.close();
+            serializer.endTag("", SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT);
+
+
             serializer.endDocument();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-
-    // класс буфер для преобразования данных в xml
-    public static class DataBaseClassInterpretation {
-
-        // file.TADB
-
-        public String dbVersion;
-
-        public static class TableSettingsData {
-            public long keyId;
-            public String COLUMN_PROFILE_NAME;
-            public String COLUMN_LOCALE;
-            public String COLUMN_LOCALE_DEFAULT_CODE;
-            public int COLUMN_INTERFACE_SIZE;
-            public int COLUMN_MAX_ANSWER;
-            public String COLUMN_TIME;
-            public int COLUMN_ARE_THE_GRADES_COLORED;
-        }
-
-        public static final class TableStatisticsProfiles {
-            public long keyId;
-            public String COLUMN_PROFILE_NAME;
-            public String COLUMN_START_DATE;
-            public String COLUMN_END_DATE;
-        }
-
-        public static final class TableCabinets {
-            public long keyId;
-            public int COLUMN_CABINET_MULTIPLIER;
-            public int COLUMN_CABINET_OFFSET_X;
-            public int COLUMN_CABINET_OFFSET_Y;
-            public String COLUMN_NAME;
-        }
-
-        public static final class TableDesks {
-            public long keyId;
-            public int COLUMN_X;
-            public int COLUMN_Y;
-            public int COLUMN_NUMBER_OF_PLACES;
-            public long KEY_CABINET_ID;
-        }
-
-        public static final class TablePlaces {
-            public long keyId;
-            public long KEY_DESK_ID;
-            public long COLUMN_ORDINAL;//какое по счету место
-        }
-
-        public static final class TableClasses {
-            public long keyId;
-            public String COLUMN_CLASS_NAME;
-        }
-
-        public static final class TableLearners {
-            public long keyId;
-            public String COLUMN_FIRST_NAME;
-            public String COLUMN_SECOND_NAME;
-            public long KEY_CLASS_ID;
-        }
-
-        public static final class TableLearnersOnPlaces {
-            public long keyId;
-            public long KEY_LEARNER_ID;
-            public long KEY_PLACE_ID;
-        }
-
-        public static final class TableLearnersGrades {
-            public long keyId;
-
-            public String COLUMN_DATE;
-            public int COLUMN_LESSON_NUMBER;
-
-            public int[] COLUMNS_GRADE;
-            public long[] KEYS_GRADES_TITLES_ID;
-            public long KEY_ABSENT_TYPE_ID;
-
-            public long KEY_SUBJECT_ID;
-            public long KEY_LEARNER_ID;
-        }
-
-        public static final class TableLearnersGradesTitles {
-            public long keyId;
-            public String COLUMN_LEARNERS_GRADES_TITLE;
-        }
-
-        public static final class TableLearnersAbsentTypes {
-            public long keyId;
-            public String COLUMN_LEARNERS_ABSENT_TYPE_NAME;
-            public String COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME;
-        }
-
-        public static final class TableSubjects {
-            public long keyId;
-            public String COLUMN_NAME;
-            public long KEY_CLASS_ID;
-        }
-
-        public static final class TableSubjectAndTimeCabinetAttitude {
-            public long keyId;
-            public long KEY_SUBJECT_ID;
-            public long KEY_CABINET_ID;
-
-            public String COLUMN_LESSON_DATE;
-            public int COLUMN_LESSON_NUMBER;
-
-            public int COLUMN_REPEAT;
-        }
-    }
+//
+//    // класс буфер для преобразования данных в xml
+//    public static class DataBaseClassInterpretation {
+//
+//        // file.TADB
+//
+//        public String dbVersion;
+//
+//        public static class TableSettingsData {
+//            public long keyId;
+//            public String COLUMN_PROFILE_NAME;
+//            public String COLUMN_LOCALE;
+//            public String COLUMN_LOCALE_DEFAULT_CODE;
+//            public int COLUMN_INTERFACE_SIZE;
+//            public int COLUMN_MAX_ANSWER;
+//            public String COLUMN_TIME;
+//            public int COLUMN_ARE_THE_GRADES_COLORED;
+//        }
+//
+//        public static final class TableStatisticsProfiles {
+//            public long keyId;
+//            public String COLUMN_PROFILE_NAME;
+//            public String COLUMN_START_DATE;
+//            public String COLUMN_END_DATE;
+//        }
+//
+//        public static final class TableCabinets {
+//            public long keyId;
+//            public int COLUMN_CABINET_MULTIPLIER;
+//            public int COLUMN_CABINET_OFFSET_X;
+//            public int COLUMN_CABINET_OFFSET_Y;
+//            public String COLUMN_NAME;
+//        }
+//
+//        public static final class TableDesks {
+//            public long keyId;
+//            public int COLUMN_X;
+//            public int COLUMN_Y;
+//            public int COLUMN_NUMBER_OF_PLACES;
+//            public long KEY_CABINET_ID;
+//        }
+//
+//        public static final class TablePlaces {
+//            public long keyId;
+//            public long KEY_DESK_ID;
+//            public long COLUMN_ORDINAL;//какое по счету место
+//        }
+//
+//        public static final class TableClasses {
+//            public long keyId;
+//            public String COLUMN_CLASS_NAME;
+//        }
+//
+//        public static final class TableLearners {
+//            public long keyId;
+//            public String COLUMN_FIRST_NAME;
+//            public String COLUMN_SECOND_NAME;
+//            public long KEY_CLASS_ID;
+//        }
+//
+//        public static final class TableLearnersOnPlaces {
+//            public long keyId;
+//            public long KEY_LEARNER_ID;
+//            public long KEY_PLACE_ID;
+//        }
+//
+//        public static final class TableLearnersGrades {
+//            public long keyId;
+//
+//            public String COLUMN_DATE;
+//            public int COLUMN_LESSON_NUMBER;
+//
+//            public int[] COLUMNS_GRADE;
+//            public long[] KEYS_GRADES_TITLES_ID;
+//            public long KEY_ABSENT_TYPE_ID;
+//
+//            public long KEY_SUBJECT_ID;
+//            public long KEY_LEARNER_ID;
+//        }
+//
+//        public static final class TableLearnersGradesTitles {
+//            public long keyId;
+//            public String COLUMN_LEARNERS_GRADES_TITLE;
+//        }
+//
+//        public static final class TableLearnersAbsentTypes {
+//            public long keyId;
+//            public String COLUMN_LEARNERS_ABSENT_TYPE_NAME;
+//            public String COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME;
+//        }
+//
+//        public static final class TableSubjects {
+//            public long keyId;
+//            public String COLUMN_NAME;
+//            public long KEY_CLASS_ID;
+//        }
+//
+//        public static final class TableSubjectAndTimeCabinetAttitude {
+//            public long keyId;
+//            public long KEY_SUBJECT_ID;
+//            public long KEY_CABINET_ID;
+//
+//            public String COLUMN_LESSON_DATE;
+//            public int COLUMN_LESSON_NUMBER;
+//
+//            public int COLUMN_REPEAT;
+//        }
+//    }
 
 }

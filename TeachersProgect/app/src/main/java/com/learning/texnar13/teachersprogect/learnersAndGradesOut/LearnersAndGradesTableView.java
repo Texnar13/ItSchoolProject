@@ -72,6 +72,8 @@ public class LearnersAndGradesTableView extends View {
     private long maxAnswersCount = 5;
     // названия типов пропусков
     String[] absTypes;
+    // наличие комментариев на датах и уроках
+    boolean[][] isComment;
     // первый день недели
     private int firstMonthDayOfWeek = -1;
     // текущаяя дата (-1 - этот месяц не текущий) (нумерация с 0)
@@ -192,8 +194,26 @@ public class LearnersAndGradesTableView extends View {
             } else {
                 firstMonthDayOfWeek -= 2;
             }
-        }
 
+
+            // смотрим где есть коммментарии к уроку
+            boolean notNull = false;
+            if (tData.lessonComments != null)
+                if (tData.lessonComments.length > 0)
+                    if (tData.lessonComments[0].length > 0)
+                        notNull = true;
+
+            if (notNull) {
+                isComment = new boolean[tData.lessonComments.length][tData.lessonComments[0].length];
+                for (int dayI = 0; dayI < isComment.length; dayI++) {
+                    for (int lessonI = 0; lessonI < isComment[0].length; lessonI++) {
+                        isComment[dayI][lessonI] = (tData.lessonComments[dayI][lessonI] != null);
+                    }
+                }
+            } else {
+                isComment = new boolean[currentViewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)][9];
+            }
+        }
 
         // назначаем размер листу во view чтобы потом скопировать в него данные
         learnersAndGradesDataAndSizes = new ArrayList<>(data.size());
@@ -269,7 +289,6 @@ public class LearnersAndGradesTableView extends View {
                     )
             );
         }
-        // todo по поводу базы данных, все данные должны храниться не по времени а по урокам и дате тк количество уроков везде фиксированно как и оценки!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         if (data.size() != 0) {
             // -------------- инициализируем у учеников массивы оценок --------------
@@ -296,7 +315,6 @@ public class LearnersAndGradesTableView extends View {
                         if (data.get(learnerI).learnerGrades.length == data.get(0).learnerGrades.length)
                             if (data.get(learnerI).learnerGrades[dayI].length == data.get(0).learnerGrades[dayI].length) {
 
-
                                 // создаем прямоугольник для хранения координат оценки
                                 Rect gradeRect = new Rect();
                                 // расчитываем отступы оценок от краёв прямоугольника
@@ -304,9 +322,10 @@ public class LearnersAndGradesTableView extends View {
                                 int[] leftMargins = new int[data.get(learnerI).learnerGrades[dayI][lessonI].grades.length];
 
 
+                                // --- расчитываем общую ширину клетки и положение оценок в ней ---
+
                                 // если пропуск
                                 if (data.get(learnerI).learnerGrades[dayI][lessonI].absTypePoz != -1) {
-                                    //todo правильно ли
 
                                     // расчитываем отступы всех трех оценок
                                     leftMargins[0] = cellFreeSpaceMargin;
@@ -319,7 +338,7 @@ public class LearnersAndGradesTableView extends View {
 
                                     leftMargins[1] = leftMargins[0] + gradeRect.left + gradeRect.right;
                                     leftMargins[2] = leftMargins[1];
-                                    // имитируем расчет последней клетки в прямоугольник
+                                    // имитируем расчет последней оценки в прямоугольник
                                     gradeRect.left = 0;
                                     gradeRect.right = 0;
                                 } else {// если пропуска нет высчитываем все три оценки
@@ -360,18 +379,7 @@ public class LearnersAndGradesTableView extends View {
                                                     gradeRect
                                             );
 
-                                        }
-//                                        else if (data.get(learnerI).learnerGrades[dayI][lessonI].absTypePoz != -1) {
-//                                            // пропуск
-//                                            drawTextPaint.getTextBounds(
-//                                                    absTypes[data.get(learnerI).learnerGrades[dayI][lessonI].absTypePoz],
-//                                                    0,
-//                                                    absTypes[data.get(learnerI).learnerGrades[dayI][lessonI].absTypePoz].length(),
-//                                                    gradeRect
-//                                            );
-//                                       }
-                                        else //if (data.get(learnerI).learnerGrades[dayI][lessonI].grades[gradesI] == 0)
-                                        {
+                                        } else {
                                             gradeRect.left = 0;
                                             gradeRect.right = 0;
                                         }
@@ -380,12 +388,14 @@ public class LearnersAndGradesTableView extends View {
                                     }
                                 }
 
-                                // ----- расчитываем размеры и положение самой ячейки -----
+                                // ----- расчитываем размеры и положение самой ячейки и синхронизируем эту ячейку по ширине с предыдущими -----
                                 // считаем ширину всего прямоугольника
                                 gradeRect.right = leftMargins[leftMargins.length - 1] + gradeRect.right + gradeRect.left;
                                 gradeRect.left = 0;
-                                // ширина текста должна быть не меньше заданной (если она не_нулевая или первая)
-                                if (gradeRect.right > 0 || lessonI == 0) {
+                                // ширина текста должна быть не меньше заданной
+                                // (если она не_нулевая или первая или если в этом уроке есть заметка)
+                                // todo в onDraw первый урок выводится даже если он нулевой по ширине
+                                if (gradeRect.right > 0 || lessonI == 0||isComment[dayI][lessonI]) {
                                     if (gradeRect.right < cellTextMinimumWidth) {
                                         gradeRect.right = cellTextMinimumWidth;
                                         // прочерк
@@ -754,6 +764,7 @@ public class LearnersAndGradesTableView extends View {
                         // заранее пробегаемся по урокам в дне и ищем последний ненулевой по ширине урок
                         int lastLesson = 0;
                         for (int lessonIterator = 0; lessonIterator < learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator].length; lessonIterator++) {
+                            // если у клетки этого урока есть ширина
                             if (learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][lessonIterator].location.width() != 0)
                                 lastLesson = lessonIterator;
                         }
@@ -832,10 +843,25 @@ public class LearnersAndGradesTableView extends View {
 
                                     }
 
-                                    // рисуем текст
+                                    // считаем размеры текста даты
                                     drawTextPaint.setColor(Color.BLACK);
                                     dateText = "" + (dayIterator + 1);
                                     drawTextPaint.getTextBounds(dateText, 0, dateText.length(), headTextRect);
+
+                                    // рисуем круок комментария
+                                    if (isComment[dayIterator][lessonIterator]) {
+                                        backgroundPaint.setColor(getResources().getColor(R.color.baseBlue));
+                                        canvas.drawCircle(
+                                                learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][lessonIterator].location.left +
+                                                        learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][lessonIterator].location.width() / 2F - headTextRect.right / 2F - cellBorderSize * 5 +
+                                                        learnersShowedWidth + gradesXOffset,
+                                                learnersAndGradesOffsetForTitle / 2F + headTextRect.top / 2F - cellBorderSize * 5,
+                                                cellBorderSize * 4,
+                                                backgroundPaint
+                                        );
+                                    }
+
+                                    // рисуем текст даты
                                     canvas.drawText(dateText,
                                             learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][lessonIterator].location.left +
                                                     learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][lessonIterator].location.width() / 2F - headTextRect.right / 2F +
@@ -876,11 +902,26 @@ public class LearnersAndGradesTableView extends View {
                             );
                         }
 
-
-                        // рисуем дату
+                        // считаем размеры текста даты
                         drawTextPaint.setColor(Color.BLACK);
                         dateText = "" + (dayIterator + 1);
                         drawTextPaint.getTextBounds(dateText, 0, dateText.length(), headTextRect);
+
+
+                        // рисуем круок комментария (cellBorderSize * 4 - это радиус кружка)
+                        if (isComment[dayIterator][0]) {
+                            backgroundPaint.setColor(getResources().getColor(R.color.baseBlue));
+                            canvas.drawCircle(
+                                    learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][0].location.left +
+                                            learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][0].location.width() / 2F - headTextRect.right / 2F - cellBorderSize * 5 +
+                                            learnersShowedWidth + gradesXOffset,
+                                    learnersAndGradesOffsetForTitle / 2F + headTextRect.top / 2F - cellBorderSize * 5,
+                                    cellBorderSize * 4,
+                                    backgroundPaint
+                            );
+                        }
+
+                        // рисуем дату
                         canvas.drawText(dateText,
                                 learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][0].location.left +
                                         learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][0].location.width() / 2F - headTextRect.right / 2F +
@@ -962,9 +1003,9 @@ public class LearnersAndGradesTableView extends View {
                     for (int lessonIterator = 0; lessonIterator < learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator].length; lessonIterator++) {
                         Rect currentGradeLocation = learnersAndGradesDataAndSizes.get(0).learnerGrades[dayIterator][lessonIterator].location;
                         if (
-                                // координаты касания относительно таблицы по Y
+                            // координаты касания относительно таблицы по Y
                                 ((int) downPoint.y - learnersAndGradesYOffset <= learnersAndGradesOffsetForTitle) &&
-                                // координаты касания относительно таблицы по X
+                                        // координаты касания относительно таблицы по X
                                         ((int) downPoint.x - learnersShowedWidth - gradesXOffset >= currentGradeLocation.left) &&
                                         ((int) downPoint.x - learnersShowedWidth - gradesXOffset <= currentGradeLocation.right)
                         ) {
