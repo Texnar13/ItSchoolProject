@@ -82,6 +82,21 @@ public class GradeEditLessonDialogFragment extends DialogFragment {
         // названия типов оценок
         final String[] gradesTypesNames = getArguments().getStringArray(ARGS_STRING_GRADES_TYPES_ARRAY);
 
+
+        // если оценок нет, то проставляем типы по умолчанию
+        if (absTypePoz == -1) {
+            // первая оценка остается с типом по умолчанию
+            // вторая со вторым
+            if (grades[1] == 0 && gradesTypesNames.length > 1) {
+                chosenTypes[1] = 1;
+            }
+            // третья с третьим
+            if (grades[2] == 0 && gradesTypesNames.length > 2) {
+                chosenTypes[2] = 2;
+            }
+        }
+
+
         // создаем массив с оценками в текстовом виде
         final int maxGrade = getArguments().getInt(ARGS_INT_MAX_GRADE, 0);
         final String[][] gradesString = new String[grades.length][];

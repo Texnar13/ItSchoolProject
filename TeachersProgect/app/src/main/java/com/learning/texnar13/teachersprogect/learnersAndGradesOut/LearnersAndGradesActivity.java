@@ -262,12 +262,25 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         currentCalendar = new GregorianCalendar();
         currentCalendar.setTime(new Date());
         currentCalendar.setLenient(false);
-        // если отображаемый календарь уже был создан, сравниваем с ним текущую дату
-        if (viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
-                viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH)) {
-            learnersAndGradesTableView.currentDate = currentCalendar.get(Calendar.DAY_OF_MONTH) - 1;
-        } else
-            learnersAndGradesTableView.currentDate = -1;
+//        // если отображаемый календарь уже был создан, сравниваем с ним текущую дату
+//        if (viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
+//                viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH)) {
+//            // текущая дата
+//            learnersAndGradesTableView.currentDate = currentCalendar.get(Calendar.DAY_OF_MONTH) - 1;
+//            // текущий урок
+//            int[][] times = db.getSettingsTime(1);// стандартное время уроков
+//            int lessonNumber = 0;// текущий урок
+//            for (int lessonI = 0; lessonI < times.length; lessonI++) {
+//                if ((currentCalendar.get(Calendar.HOUR_OF_DAY) > times[lessonI][0] ||
+//                        (currentCalendar.get(Calendar.HOUR_OF_DAY) == times[lessonI][0] && currentCalendar.get(Calendar.MINUTE) >= times[lessonI][1])) &&
+//                        (currentCalendar.get(Calendar.HOUR_OF_DAY) < times[lessonI][2] || (currentCalendar.get(Calendar.HOUR_OF_DAY) == times[lessonI][2] && currentCalendar.get(Calendar.MINUTE) <= times[lessonI][3]))
+//                ) {
+//                    lessonNumber = lessonI;
+//                }
+//            }
+//            learnersAndGradesTableView.currentLesson = lessonNumber;
+//        } else
+//            learnersAndGradesTableView.currentDate = -1;
 
 
         // получаем локализованные названия месяцев
@@ -298,12 +311,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 }
                 dateText.setText(monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR));
 
-                // выставляем в таблицу текущую дату
-                if (viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
-                        viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH)) {
-                    learnersAndGradesTableView.currentDate = currentCalendar.get(Calendar.DAY_OF_MONTH) - 1;
-                } else
-                    learnersAndGradesTableView.currentDate = -1;
+//                // выставляем в таблицу текущую дату
+//                if (viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
+//                        viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH)) {
+//                    learnersAndGradesTableView.currentDate = currentCalendar.get(Calendar.DAY_OF_MONTH) - 1;
+//                } else
+//                    learnersAndGradesTableView.currentDate = -1;
 
                 // получаем оценки из бд по новой дате
                 getGradesFromDB();
@@ -330,12 +343,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 }
                 dateText.setText(monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR));
 
-                // выставляем в таблицу текущую дату
-                if (viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
-                        viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH)) {
-                    learnersAndGradesTableView.currentDate = currentCalendar.get(Calendar.DAY_OF_MONTH) - 1;
-                } else
-                    learnersAndGradesTableView.currentDate = -1;
+//                // выставляем в таблицу текущую дату
+//                if (viewCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
+//                        viewCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH)) {
+//                    learnersAndGradesTableView.currentDate = currentCalendar.get(Calendar.DAY_OF_MONTH) - 1;
+//                } else
+//                    learnersAndGradesTableView.currentDate = -1;
 
 
                 // получаем оценки из бд по новой дате

@@ -184,7 +184,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
             LinearLayout containerNow = findViewById(R.id.start_screen_layout_now);
             containerNow.removeAllViews();
 
-            final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
             // получаем стандартное время уроков
             int[][] times = db.getSettingsTime(1);

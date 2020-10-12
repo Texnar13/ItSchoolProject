@@ -92,7 +92,28 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
 
         // получаем выбранный номер типа пропуска
         absTypePoz = getArguments().getInt(ARGS_INT_GRADES_ABSENT_TYPE_NUMBER);
-        Log.e("TAG", "onCreateDialog: "+absTypePoz);
+
+
+        // названия типов оценок
+        final String[] gradesTypesNames = getArguments().getStringArray(ARGS_STRING_GRADES_TYPES_ARRAY);
+
+        // названия типов пропусков
+        final String[] absentTypesNames = getArguments().getStringArray(ARGS_STRING_ABSENT_TYPES_NAMES_ARRAY);
+        final String[] absentTypesLongNames = getArguments().getStringArray(ARGS_STRING_ABSENT_TYPES_LONG_NAMES_ARRAY);
+
+
+        // если оценок нет, то проставляем типы по умолчанию
+        if (absTypePoz == -1) {
+            // первая оценка остается с типом по умолчанию
+            // вторая со вторым
+            if (grades[1] == 0 && gradesTypesNames.length > 1) {
+                chosenTypes[1] = 1;
+            }
+            // третья с третьим
+            if (grades[2] == 0 && gradesTypesNames.length > 2) {
+                chosenTypes[2] = 2;
+            }
+        }
 
 
         // создаем массив с оценками в текстовом виде
@@ -119,13 +140,6 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
             }
         }
 
-
-        // названия типов оценок
-        final String[] gradesTypesNames = getArguments().getStringArray(ARGS_STRING_GRADES_TYPES_ARRAY);
-
-        // названия типов пропусков
-        final String[] absentTypesNames = getArguments().getStringArray(ARGS_STRING_ABSENT_TYPES_NAMES_ARRAY);
-        final String[] absentTypesLongNames = getArguments().getStringArray(ARGS_STRING_ABSENT_TYPES_LONG_NAMES_ARRAY);
 
         // контейнер текущей даты и номера урока
         RelativeLayout currentContainer = new RelativeLayout(getActivity());
@@ -334,7 +348,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                     // пропуски
                     absTypePoz = -1;
                     // если типов пропуска больше чем 1
-                    if (absentTypesLongNames.length > 1){
+                    if (absentTypesLongNames.length > 1) {
                         finalAbsSpinner.setAdapter(new ArrayAdapter<>(
                                 getActivity(),
                                 R.layout.spinner_dropdown_element_subtitle_transparent_dark_gray,
@@ -374,7 +388,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                     // пропуски
                     absTypePoz = 0;
                     // если типов пропуска больше чем 1
-                    if (absentTypesLongNames.length > 1){
+                    if (absentTypesLongNames.length > 1) {
                         finalAbsSpinner.setAdapter(new ArrayAdapter<>(
                                 getActivity(),
                                 R.layout.spinner_dropdown_element_subtitle_transparent_dark_gray,
@@ -594,7 +608,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
 
                 // если оценки нулевые, обнуляем типы к первому
                 for (int gradeI = 0; gradeI < grades.length; gradeI++) {
-                    if(grades[gradeI] == 0){
+                    if (grades[gradeI] == 0) {
                         chosenTypes[gradeI] = 0;
                     }
                 }

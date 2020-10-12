@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -62,9 +63,9 @@ public class LessonCommentDialogFragment extends DialogFragment {
         // получаем старый текст
         String text = "";
         Bundle args = getArguments();
-        if(args != null){
+        if (args != null) {
             text = getArguments().getString(ARGS_PREVIOUS_TEXT);
-            if(text == null){
+            if (text == null) {
                 text = "";
             }
         }
@@ -77,6 +78,8 @@ public class LessonCommentDialogFragment extends DialogFragment {
         edit.setGravity(Gravity.CENTER_VERTICAL);
         edit.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
         edit.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+        // ставим ограничение в 3 строки
+        edit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(70)});
         LinearLayout.LayoutParams editParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT

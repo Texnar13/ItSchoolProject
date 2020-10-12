@@ -53,7 +53,7 @@ import java.util.ArrayList;
  *
  * */
 
-public class LessonActivity extends AppCompatActivity implements View.OnTouchListener, GradesDialogInterface, EndLessonInterface {
+public class LessonActivity extends AppCompatActivity implements View.OnTouchListener, GradesDialogInterface/*, EndLessonInterface*/ {
 
 
     public static final String TAG = "TeachersApp";
@@ -157,7 +157,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         menu.findItem(R.id.lesson_menu_end_lesson).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-
 
                 long[] learnersId = new long[learnersAndTheirGrades.length];
 
@@ -497,7 +496,12 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                 Cursor grades = db.getGradesByLearnerIdSubjectDateAndLesson(learnerId, subjectId, lessonDate, lessonNumber);
 
                 if (grades.moveToNext()) {// если оценки за этот урок уже проставлялись
-                    int absId = grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID));
+                    int absId;
+                    if (grades.isNull(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {
+                        absId = -1;
+                    } else {
+                        absId = grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID));
+                    }
                     if (absId != -1) {// если стоит пропуск
                         // проходимся в цикле по всем типам оценок запоминая номер попавшегося
                         learnersAndTheirGrades[i].absTypePozNumber = -1;
@@ -1216,14 +1220,54 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
     @Override
     public void onBackPressed() {
-        // показываем диалог подтверждения выхода из активности
-        EndLessonDialogFragment endLessonDialogFragment = new EndLessonDialogFragment();
-        endLessonDialogFragment.show(getSupportFragmentManager(), "EndLesson - Hello");
-    }
+//        // показываем диалог подтверждения выхода из активности
+//        EndLessonDialogFragment endLessonDialogFragment = new EndLessonDialogFragment();
+//        endLessonDialogFragment.show(getSupportFragmentManager(), "EndLesson - Hello");
 
-    // обратная связь от диалога EndLessonDialogFragment
-    @Override
-    public void endLesson() {
+
+        DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+
+        // удаляем все предыдущие оценки в этом дне
+        Cursor deleteGrades = db.getGradesBySubjectDateAndLesson(
+                subjectId,
+                lessonDate,
+                lessonNumber
+        );
+        while (deleteGrades.moveToNext())
+            db.removeGrade(deleteGrades.getLong(deleteGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID)));
+        deleteGrades.close();
+
+
+        // сохраняем оценки в бд
+        for (MyLearnerAndHisGrades currentLearner : learnersAndTheirGrades) {
+
+            if (currentLearner.absTypePozNumber != -1) {// пропуск
+                db.createGrade(
+                        currentLearner.learnerId,
+                        0, 0, 0,
+                        1, 1, 1,
+                        absentTypes[currentLearner.absTypePozNumber].id,
+                        subjectId,
+                        lessonDate,
+                        lessonNumber
+                );
+            } else {
+                if (currentLearner.learnerGrades[0] != 0 || currentLearner.learnerGrades[1] != 0 || currentLearner.learnerGrades[2] != 0) {
+                    db.createGrade(
+                            currentLearner.learnerId,
+                            currentLearner.learnerGrades[0], currentLearner.learnerGrades[1], currentLearner.learnerGrades[2],
+                            answersTypes[currentLearner.learnerGradesTypes[0]].id, answersTypes[currentLearner.learnerGradesTypes[1]].id, answersTypes[currentLearner.learnerGradesTypes[2]].id,
+                            -1,
+                            subjectId,
+                            lessonDate,
+                            lessonNumber
+                    );
+                }
+            }
+            //toast.show();
+        }
+        db.close();
+
 
         //обнуляем данные
         chosenLearnerPosition = -1;
@@ -1234,9 +1278,31 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         subjectName = null;
         learnersAndTheirGrades = null;
 
+        // выводим рекламму
+        if (lessonEndBanner.isLoaded()) {
+            lessonEndBanner.show();
+        }
+
         // выходим из активности
-        finish();
+        super.onBackPressed();
     }
+
+//    // обратная связь от диалога EndLessonDialogFragment
+//    @Override
+//    public void endLesson() {
+//
+//        //обнуляем данные
+//        chosenLearnerPosition = -1;
+//        lessonAttitudeId = -1;
+//        subjectId = 0;
+//        learnersClassId = 0;
+//        cabinetId = 0;
+//        subjectName = null;
+//        learnersAndTheirGrades = null;
+//
+//        // выходим из активности
+//        finish();
+//    }
 
     private float pxFromDp(float dp) {
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
