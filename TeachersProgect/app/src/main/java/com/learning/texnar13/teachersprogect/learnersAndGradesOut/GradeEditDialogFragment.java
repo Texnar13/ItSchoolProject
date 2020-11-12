@@ -210,7 +210,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
         // контейнер для имени и поля с отсутствием
         LinearLayout titleLayout = new LinearLayout(getActivity());
         titleLayout.setOrientation(LinearLayout.VERTICAL);
-        titleLayout.setBackgroundResource(R.drawable._dialog_body_background_lite_gray);
+        titleLayout.setBackgroundResource(R.color.backgroundLiteGray);
         linearLayout.addView(titleLayout,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT

@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
@@ -216,28 +217,33 @@ public class EditLearnersClassDialogFragment extends DialogFragment {
         saveButtonContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    //вызываем в активности метод по созданию класса и передаем ей имя
-                    ((com.learning.texnar13.teachersprogect.learnersClassesOut.EditLearnersClassDialogInterface) getActivity()).editLearnersClass(
-                            editName.getText().toString(),
-                            getArguments().getLong("classId")
-                    );
-                } catch (java.lang.ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован интерфейс EditLearnersClassDialogInterface
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "EditLearnersClassDialogFragment: you must implements EditLearnersClassDialogInterface in your activity"
-                    );
-                } catch (java.lang.NullPointerException e) {
-                    //в диалог необходимо передать id класса( Bungle putLong("classId",classId) )
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "EditLearnersClassDialogFragment: you must give classId( Bungle putLong(\"classId\",classId) )"
-                    );
+
+                if (editName.getText().toString().trim().length() == 0) {
+                    Toast.makeText(getActivity(), R.string.learners_classes_out_activity_toast_empty_name, Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        //вызываем в активности метод по созданию класса и передаем ей имя
+                        ((com.learning.texnar13.teachersprogect.learnersClassesOut.EditLearnersClassDialogInterface) getActivity()).editLearnersClass(
+                                editName.getText().toString().trim(),
+                                getArguments().getLong("classId")
+                        );
+                    } catch (java.lang.ClassCastException e) {
+                        //в вызвающей активности должен быть имплементирован интерфейс EditLearnersClassDialogInterface
+                        e.printStackTrace();
+                        Log.i(
+                                "TeachersApp",
+                                "EditLearnersClassDialogFragment: you must implements EditLearnersClassDialogInterface in your activity"
+                        );
+                    } catch (java.lang.NullPointerException e) {
+                        //в диалог необходимо передать id класса( Bungle putLong("classId",classId) )
+                        e.printStackTrace();
+                        Log.i(
+                                "TeachersApp",
+                                "EditLearnersClassDialogFragment: you must give classId( Bungle putLong(\"classId\",classId) )"
+                        );
+                    }
+                    dismiss();
                 }
-                dismiss();
             }
         });
 

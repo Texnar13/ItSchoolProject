@@ -42,6 +42,8 @@
     <string name="learners_classes_out_activity_dialog_button_save">сохранить</string>
     <string name="learners_classes_out_activity_dialog_button_delete">удалить</string>
     <string name="learners_classes_out_activity_dialog_button_cancel">отмена</string>
+    <!-- тост -->
+    <string name="learners_classes_out_activity_toast_empty_name">Не введено название группы</string>
     <!-- подсказка на экране -->
     <string name="learners_classes_out_activity_text_help">Чтобы создать группу, нажмите + и введите его название.\nЧтобы посмотреть список учеников и их ответы, нажмите на нужный вам класс.\nЧтобы переименовать или удалить группу с учениками, нажмите на нее и удерживайте.</string>
 
@@ -277,7 +279,8 @@
 
     <!-- база данных -->
     <!-- значение по умолчанию -->
-    <string name="db_table_grade_text_first_default_value">Работа на уроке</string>
+    <string name="db_table_grade_text_first_default_value">Устный ответ</string>
+
     <string name="db_table_grades_abs_1_default_value">Н</string>
     <string name="db_table_grades_abs_1_long_default_value">Отсутствует</string>
     <string name="db_table_grades_abs_2_default_value">Б</string>

@@ -42,6 +42,8 @@
     <string name="learners_classes_out_activity_dialog_button_save">Save</string>
     <string name="learners_classes_out_activity_dialog_button_delete">Remove</string>
     <string name="learners_classes_out_activity_dialog_button_cancel">Cancel</string>
+    <!-- тост -->
+    <string name="learners_classes_out_activity_toast_empty_name">Group name not entered</string>
     <!-- подсказка на экране -->
     <string name="learners_classes_out_activity_text_help">To create a class, press + and enter its name. \nTo see the list of students and their grades, click on the class you need. \nTo rename or delete a class with students, press on it and hold it. </string>
 
@@ -277,7 +279,8 @@
 
     <!-- база данных -->
     <!-- значение по умолчанию -->
-    <string name="db_table_grade_text_first_default_value">Work on the lesson</string>
+    <string name="db_table_grade_text_first_default_value">Verbal answer</string>
+
     <string name="db_table_grades_abs_1_default_value">Abs</string>
     <string name="db_table_grades_abs_1_long_default_value">Absent</string>
     <string name="db_table_grades_abs_2_default_value">S</string>

@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
@@ -185,20 +186,24 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
         createTextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    //вызываем в активности метод по созданию класса и передаем ей имя
-                    ((com.learning.texnar13.teachersprogect.learnersClassesOut.CreateLearnersClassDialogInterface) getActivity()).createLearnersClass(
-                            editName.getText().toString()
-                    );
-                } catch (java.lang.ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован класс CreateLearnersClassInterface
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "CreateLearnersClassDialogFragment: you must implements CreateLearnersClassInterface in your activity"
-                    );
+                if (editName.getText().toString().trim().length() == 0) {
+                    Toast.makeText(getActivity(), R.string.learners_classes_out_activity_toast_empty_name, Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        //вызываем в активности метод по созданию класса и передаем ей имя
+                        ((com.learning.texnar13.teachersprogect.learnersClassesOut.CreateLearnersClassDialogInterface) getActivity()).createLearnersClass(
+                                editName.getText().toString().trim()
+                        );
+                    } catch (java.lang.ClassCastException e) {
+                        //в вызвающей активности должен быть имплементирован класс CreateLearnersClassInterface
+                        e.printStackTrace();
+                        Log.i(
+                                "TeachersApp",
+                                "CreateLearnersClassDialogFragment: you must implements CreateLearnersClassInterface in your activity"
+                        );
+                    }
+                    dismiss();
                 }
-                dismiss();
             }
         });
 

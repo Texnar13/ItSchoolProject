@@ -67,7 +67,7 @@
             android:label="@string/title_activity_schedule_day"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".lessonRedactor.LessonRedactorActivity"
+            android:name=".LessonRedactorActivity"
             android:configChanges="locale"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity

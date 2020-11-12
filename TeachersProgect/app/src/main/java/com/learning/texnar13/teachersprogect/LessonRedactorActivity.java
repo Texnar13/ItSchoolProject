@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.lessonRedactor;
+package com.learning.texnar13.teachersprogect;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -24,8 +24,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.learning.texnar13.teachersprogect.MyApplication;
-import com.learning.texnar13.teachersprogect.R;
+
+import com.learning.texnar13.teachersprogect.SubjectsDialog.SubjectsDialogFragment;
+import com.learning.texnar13.teachersprogect.SubjectsDialog.SubjectsDialogInterface;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
@@ -94,7 +95,8 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
-        //setTheme(android.R.style.Theme_Dialog);
+        setTheme(android.R.style.Theme_Dialog);
+        //this.setFinishOnTouchOutside(false);
 
 
         // ******************** загружаем данные ********************
@@ -189,89 +191,89 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         }
 
 
-        // кнопка не повторять урок
-        findViewById(R.id.activity_lesson_redactor_lesson_repeat_no).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // переключаем цвета
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
-                        setTextColor(getResources().getColor(R.color.baseGreen));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
-                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
-                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
-                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
-                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
-                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
-                // и переменные
-                repeat = SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER;
-            }
-        });
-        // кнопка повторять урок каждый день
-        findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // переключаем цвета
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
-                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
-                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
-                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
-                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
-                        setTextColor(getResources().getColor(R.color.baseGreen));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
-                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
-                // и переменные
-                repeat = SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY;
-
-            }
-        });
-        // кнопка повторять урок каждую неделю
-        findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // переключаем цвета
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
-                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
-                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
-                        setTextColor(getResources().getColor(R.color.baseGreen));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
-                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
-                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
-                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
-                // и переменные
-                repeat = SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY;
-
-            }
-        });
-
-        // закрашиваем выбранный тип повторов при старте активности
-        if (repeat == SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER) {
-            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
-                    setTextColor(getResources().getColor(R.color.baseGreen));
-            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
-                    setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
-        } else if (repeat == SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY) {
-            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
-                    setTextColor(getResources().getColor(R.color.baseGreen));
-            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
-                    setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
-        } else {
-            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
-                    setTextColor(getResources().getColor(R.color.baseGreen));
-            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
-                    setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
-        }
+//        // кнопка не повторять урок
+//        findViewById(R.id.activity_lesson_redactor_lesson_repeat_no).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // переключаем цвета
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+//                        setTextColor(getResources().getColor(R.color.baseGreen));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+//                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+//                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+//                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+//                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+//                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
+//                // и переменные
+//                repeat = SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER;
+//            }
+//        });
+//        // кнопка повторять урок каждый день
+//        findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // переключаем цвета
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+//                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+//                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+//                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+//                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+//                        setTextColor(getResources().getColor(R.color.baseGreen));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+//                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
+//                // и переменные
+//                repeat = SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY;
+//
+//            }
+//        });
+//        // кнопка повторять урок каждую неделю
+//        findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // переключаем цвета
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+//                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+//                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+//                        setTextColor(getResources().getColor(R.color.baseGreen));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+//                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+//                        setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+//                ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+//                        setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_family));
+//                // и переменные
+//                repeat = SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY;
+//
+//            }
+//        });
+//
+//        // закрашиваем выбранный тип повторов при старте активности
+//        if (repeat == SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER) {
+//            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+//                    setTextColor(getResources().getColor(R.color.baseGreen));
+//            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_no)).
+//                    setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
+//        } else if (repeat == SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY) {
+//            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+//                    setTextColor(getResources().getColor(R.color.baseGreen));
+//            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_daily)).
+//                    setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
+//        } else {
+//            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+//                    setTextColor(getResources().getColor(R.color.baseGreen));
+//            ((TextView) findViewById(R.id.activity_lesson_redactor_lesson_repeat_weekly)).
+//                    setTypeface(ResourcesCompat.getFont(LessonRedactorActivity.this, R.font.geometria_medium));
+//        }
 
 // ******************** вывод данных в поля ********************
 
@@ -322,7 +324,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
                     subjectsDialogFragment.setArguments(args);
 
                     // показываем диалог
-                    subjectsDialogFragment.show(getFragmentManager(), "subjectsDialogFragment - hello");
+                    subjectsDialogFragment.show(getSupportFragmentManager(), "subjectsDialogFragment - hello");
                 }
             }
         });
@@ -342,7 +344,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
                     Intent intent = new Intent(getApplicationContext(), SeatingRedactorActivity.class);
                     intent.putExtra(SeatingRedactorActivity.CLASS_ID, classId);
                     intent.putExtra(SeatingRedactorActivity.CABINET_ID, cabinetId);
-                    startActivityForResult(intent, 1);
+                    startActivity(intent);
                 }
             }
         });
@@ -399,8 +401,13 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        seatingTextUpdate();
+    }
 
-// ==================== методы обновления ====================
+    // ==================== методы обновления ====================
 
     // ------ вывод классов в спиннер ------
     void outClasses() {
@@ -512,93 +519,6 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
         } else {
             subjectText.setText(subjects.get(chosenSubjectPosition).getSubjectName());
         }
-
-
-//
-//        // количество предметов
-//        final int count = cursor.getCount();
-//        // все тексты
-//        final String[] stringLessons;
-//        // тексты уроков
-//        final String[] stringOnlyLessons = new String[cursor.getCount()];
-//        // id уроков
-//        final long[] lessonsId = new long[cursor.getCount()];
-//
-//        // дополнительные кнопки
-//        if (count == 0) {
-//            stringLessons = new String[cursor.getCount() + 2];
-//            stringLessons[stringLessons.length - 1] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_create_subject);
-//        } else {
-//            stringLessons = new String[cursor.getCount() + 3];
-//            stringLessons[stringLessons.length - 1] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_remove_subject);
-//            stringLessons[stringLessons.length - 2] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_create_subject);
-//        }
-//        // и нулевая строка
-//        stringLessons[0] = getResources().getString(R.string.lesson_redactor_activity_spinner_text_select_subject);
-//
-//        // получаем данные из курсора
-//        for (int i = 1; i < stringLessons.length - 2; i++) {
-//            cursor.moveToNext();
-//            lessonsId[i - 1] = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID));
-//            stringLessons[i] = cursor.getString(cursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME));
-//            stringOnlyLessons[i - 1] = stringLessons[i];
-//        }
-//        cursor.close();
-//        db.close();
-//
-//        // адаптер для спиннера
-//        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_element_title, stringLessons);
-//        subjectSpinner.setAdapter(adapter);
-//        // позиция
-//        if (subjectPosition == -1) {
-//            for (int i = 0; i < lessonsId.length; i++) {
-//                if (chosenSubjectId == lessonsId[i]) {
-//                    subjectPosition = i + 1;
-//                }
-//            }
-//        }
-//        subjectSpinner.setSelection(subjectPosition, false);
-//        // слушатель
-//        subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//            }
-//
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-//                Log.i("TeachersApp", "LessonRedactorActivity - outSubjects onItemSelected " + pos);
-//                if (count != 0 && pos == stringLessons.length - 1) {
-//                    // вызываем диалог удаления предмета
-//                    Log.i("TeachersApp", "LessonRedactorActivity - remove subject");
-//                    //данные передаваемые в диалог
-//                    Bundle args = new Bundle();
-//                    args.putStringArray("stringOnlyLessons", stringOnlyLessons);
-//                    args.putLongArray("lessonsId", lessonsId);
-//                    //диалог по удалению предмета
-//                    RemoveSubjectDialogFragment removeDialog = new RemoveSubjectDialogFragment();
-//                    removeDialog.setArguments(args);
-//                    removeDialog.show(getFragmentManager(), "removeLessons");
-//
-//                } else if ((count != 0 && stringLessons.length - 2 == pos) || (count == 0 && stringLessons.length - 1 == pos)) {
-//                    //диалог создания предмета
-//                    Log.i("TeachersApp", "LessonRedactorActivity - new lesson");
-//                    //данные для диалога
-//                    Bundle args = new Bundle();
-//                    // передаем длинну списка, чтобы при создании переместиться на последний созданный
-//                    args.putStringArray("stringLessons", stringLessons);
-//                    //диалог по созданию нового предмета
-//                    CreateSubjectDialogFragment subjectNameDialogFragment = new CreateSubjectDialogFragment();
-//                    subjectNameDialogFragment.setArguments(args);
-//                    subjectNameDialogFragment.show(getFragmentManager(), "createSubject");
-//                } else if (pos != 0) {
-//                    Log.i("TeachersApp", "LessonRedactorActivity - chosen lesson id = " + lessonsId[pos - 1]);
-//                    chosenSubjectId = lessonsId[pos - 1];
-//                } else {
-//                    Log.i("TeachersApp", "LessonRedactorActivity - no lesson selected");
-//                    chosenSubjectId = -1;
-//                }
-//            }
-//        });
     }
 
     // -- спиннер времени --
@@ -643,11 +563,7 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        seatingTextUpdate();
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -782,30 +698,33 @@ public class LessonRedactorActivity extends AppCompatActivity implements Subject
             subjectText.setText(subjects.get(chosenSubjectPosition).getSubjectName());
         }
     }
+
+
+    // класс для хранения предмета
+    class SubjectUnit {
+        private long subjectId;
+        private String subjectName;
+
+        SubjectUnit(long subjectId, String subjectName) {
+            this.subjectId = subjectId;
+            this.subjectName = subjectName;
+        }
+
+        long getSubjectId() {
+            return subjectId;
+        }
+
+        String getSubjectName() {
+            return subjectName;
+        }
+
+        void setSubjectName(String newSubjectName) {
+            this.subjectName = newSubjectName;
+        }
+    }
 }
 
-// класс для хранения предмета
-class SubjectUnit {
-    private long subjectId;
-    private String subjectName;
 
-    SubjectUnit(long subjectId, String subjectName) {
-        this.subjectId = subjectId;
-        this.subjectName = subjectName;
-    }
-
-    long getSubjectId() {
-        return subjectId;
-    }
-
-    String getSubjectName() {
-        return subjectName;
-    }
-
-    void setSubjectName(String newSubjectName) {
-        this.subjectName = newSubjectName;
-    }
-}
 
 /*
  * https://developer.android.com/guide/topics/ui/menus#PopupMenu

@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
@@ -212,7 +213,7 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
         negativeTextButton.setGravity(Gravity.CENTER);
         negativeTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
         negativeTextButton.setTextColor(getResources().getColor(R.color.signalRed));
-        negativeTextButton.setPaintFlags(negativeTextButton.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+        negativeTextButton.setPaintFlags(negativeTextButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         // параметры кнопки
         LinearLayout.LayoutParams negativeTextButtonParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -273,21 +274,25 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
         createButtonContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    //вызываем в активности метод по созданию ученика и передаем ей имя и фамилию
-                    ((EditLearnerDialogInterface) getActivity()).editLearner(
-                            editSurname.getText().toString(),
-                            editName.getText().toString()
-                    );
-                } catch (java.lang.ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован класс EditLearnerInterface
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "LearnerEditDialogFragment: you must implements EditLearnerInterface in your activity"
-                    );
+                if (editSurname.getText().toString().trim().length() == 0) {
+                    Toast.makeText(getActivity(), R.string.learners_and_grades_out_activity_dialog_toast_no_last_name, Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        //вызываем в активности метод по созданию ученика и передаем ей имя и фамилию
+                        ((EditLearnerDialogInterface) getActivity()).editLearner(
+                                editSurname.getText().toString().trim(),
+                                editName.getText().toString().trim()
+                        );
+                    } catch (java.lang.ClassCastException e) {
+                        //в вызвающей активности должен быть имплементирован класс EditLearnerInterface
+                        e.printStackTrace();
+                        Log.i(
+                                "TeachersApp",
+                                "LearnerEditDialogFragment: you must implements EditLearnerInterface in your activity"
+                        );
+                    }
+                    dismiss();
                 }
-                dismiss();
             }
         });
 

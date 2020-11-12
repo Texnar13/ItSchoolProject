@@ -40,7 +40,7 @@ import java.util.ArrayList;
 
 public class CabinetRedactorActivity extends AppCompatActivity implements View.OnTouchListener {
 
-    public static final String TAG = "TeachersApp";
+    static final String TAG = "TeachersApp";
 
     // режимы зума
     static final int NONE = 0;

@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
+package com.learning.texnar13.teachersprogect.SubjectsDialog;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -123,13 +123,13 @@ public class SubjectsDialogFragment extends DialogFragment {
         LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(
                 (int)getResources().getDimension(R.dimen.my_icon_size),
                 (int)getResources().getDimension(R.dimen.my_icon_size)
-                );
+        );
         closeImageViewParams.setMargins(
                 (int)getResources().getDimension(R.dimen.simple_margin),
                 (int)getResources().getDimension(R.dimen.simple_margin),
                 (int)getResources().getDimension(R.dimen.simple_margin),
                 (int)getResources().getDimension(R.dimen.simple_margin)
-                );
+        );
         titleLayout.addView(closeImageView, closeImageViewParams);
         // при нажатии на кнопку закрыть
         closeImageView.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +157,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                 (int)getResources().getDimension(R.dimen.simple_margin),
                 (int)getResources().getDimension(R.dimen.simple_margin),
                 (int)getResources().getDimension(R.dimen.simple_margin)
-                );
+        );
         titleParams.gravity = Gravity.CENTER_VERTICAL;
         titleLayout.addView(title, titleParams);
 
@@ -196,7 +196,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                         (int)getResources().getDimension(R.dimen.simple_margin),
                         (int)getResources().getDimension(R.dimen.forth_margin),
                         (int)getResources().getDimension(R.dimen.simple_margin)
-                        );
+                );
                 subjectsContainer.addView(subjectText, subjectTextParams);
 
                 // при нажатии на текстовое поле
@@ -212,7 +212,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                         try {
                             // вызываем в активности метод по выбору предмета
                             ((SubjectsDialogInterface) getActivity()).setSubjectPosition(finalPosition);
-                        } catch (java.lang.ClassCastException e) {
+                        } catch (ClassCastException e) {
                             e.printStackTrace();
                             Log.i("TeachersApp",
                                     "SubjectsDialogFragment: you must implements SubjectsDialogInterface in your activity"
@@ -439,7 +439,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                 try {
                     // вызываем в активности метод по созданию предмета
                     ((SubjectsDialogInterface) getActivity()).createSubject(subjectNameField.getText().toString(), position);
-                } catch (java.lang.ClassCastException e) {
+                } catch (ClassCastException e) {
                     e.printStackTrace();
                     Log.i("TeachersApp",
                             "SubjectsDialogFragment: you must implements SubjectsDialogInterface in your activity"
@@ -703,19 +703,3 @@ public class SubjectsDialogFragment extends DialogFragment {
 }
 
 
-interface SubjectsDialogInterface {
-
-    // установить предмет стоящий на этой позиции как выбранный
-    void setSubjectPosition(int position);
-
-    // создать предмет
-    void createSubject(String name, int position);
-
-    // удалить предмет
-    void deleteSubjects(boolean[] deleteList);
-
-    // переименовать предметы
-    void renameSubjects(String[] newSubjectsNames);
-
-
-}

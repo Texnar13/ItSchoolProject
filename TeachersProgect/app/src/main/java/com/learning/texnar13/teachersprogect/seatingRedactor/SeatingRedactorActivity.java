@@ -833,7 +833,6 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
     // нажатие кнопки назад
     @Override
     public void onBackPressed() {
-        //setResult(RESULT_OK);
 
         // чтобы если на активность зашли снова, то данные перезаписались
         learners = null;

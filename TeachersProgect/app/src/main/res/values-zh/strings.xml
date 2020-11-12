@@ -42,6 +42,8 @@
     <string name="learners_classes_out_activity_dialog_button_save">保存</string>
     <string name="learners_classes_out_activity_dialog_button_delete">删除</string>
     <string name="learners_classes_out_activity_dialog_button_cancel">取消</string>
+    <!-- тост -->
+    <string name="learners_classes_out_activity_toast_empty_name">沒有輸入班級名稱</string>
     <!-- подсказка на экране -->
     <string name="learners_classes_out_activity_text_help">若要创建组，请按+并输入其名称。\n要查看学生和他们的答案的列表，点击你想要的类。\n要重命名或删除一组学生，按住它。</string>
 
@@ -73,8 +75,8 @@
     <string name="learners_and_grades_out_activity_dialog_title_enter_subject_name">输入学科名称:</string>
     <string name="learners_and_grades_out_activity_dialog_hint_subject_name">名称学科</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson">课</string>
-    <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">ДЗ и заметки:</string>
-    <string name="learners_and_grades_out_activity_dialog_hint_lesson_comment">Комментарий…</string>
+    <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">#ДЗ и заметки:</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_lesson_comment">#Комментарий…</string>
     <!-- уведомления диалогов -->
     <string name="learners_and_grades_out_activity_dialog_toast_no_name">没有输入名字</string>
     <string name="learners_and_grades_out_activity_dialog_toast_no_last_name">没有输入姓氏</string>
@@ -277,7 +279,8 @@
 
     <!-- база данных -->
     <!-- значение по умолчанию -->
-    <string name="db_table_grade_text_first_default_value">在课堂上的工作</string>
+    <string name="db_table_grade_text_first_default_value">口头回答</string>
+
     <string name="db_table_grades_abs_1_default_value">缺席</string>
     <string name="db_table_grades_abs_1_long_default_value">学生缺席</string>
     <string name="db_table_grades_abs_2_default_value">病了</string>

@@ -233,30 +233,25 @@ public class LearnerCreateDialogFragment extends DialogFragment {
         createButtonContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    //вызываем в активности метод по созданию ученика и передаем ей имя и фамилию
-                    ((CreateLearnerInterface) getActivity()).createLearner(
-                            editSurname.getText().toString(),
-                            editName.getText().toString()
-                    );
-                    // -- если поля пустые, то выводим сообщение --
-                    // пустое имя
-                    if (editName.getText().toString().length() == 0) {
-                        Toast.makeText(getActivity(), R.string.learners_and_grades_out_activity_dialog_toast_no_name, Toast.LENGTH_SHORT).show();
+                if (editSurname.getText().toString().trim().length() == 0) {
+                    Toast.makeText(getActivity(), R.string.learners_and_grades_out_activity_dialog_toast_no_last_name, Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        //вызываем в активности метод по созданию ученика и передаем ей имя и фамилию
+                        ((CreateLearnerInterface) getActivity()).createLearner(
+                                editSurname.getText().toString().trim(),
+                                editName.getText().toString().trim()
+                        );
+                    } catch (java.lang.ClassCastException e) {
+                        //в вызвающей активности должен быть имплементирован класс CreateLearnerInterface
+                        e.printStackTrace();
+                        Log.i(
+                                "TeachersApp",
+                                "LearnerCreateDialogFragment: you must implements CreateLearnerInterface in your activity"
+                        );
                     }
-                    // пустая фамилия
-                    if (editSurname.getText().toString().length() == 0) {
-                        Toast.makeText(getActivity(), R.string.learners_and_grades_out_activity_dialog_toast_no_last_name, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (java.lang.ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован класс CreateLearnerInterface
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "LearnerCreateDialogFragment: you must implements CreateLearnerInterface in your activity"
-                    );
+                    dismiss();
                 }
-                dismiss();
             }
         });
 

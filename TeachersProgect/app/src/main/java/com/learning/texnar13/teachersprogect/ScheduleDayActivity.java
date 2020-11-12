@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -16,24 +15,20 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
-import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity;
+import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorDialogFragment;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 import com.yandex.mobile.ads.AdSize;
 
@@ -255,12 +250,14 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 lessonContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //создание/редактирование урока
-                        Intent intentForLessonEditor = new Intent(getApplicationContext(), LessonRedactorActivity.class);
-                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, -1L);
-                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_DATE, lessonDate);
-                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_NUMBER, finalLessonI);
-                        startActivity(intentForLessonEditor);
+                        // диалог создания урока
+                        LessonRedactorDialogFragment dialogFragment = new LessonRedactorDialogFragment();
+                        Bundle args = new Bundle();
+                        args.putLong(LessonRedactorDialogFragment.LESSON_ATTITUDE_ID, -1);
+                        args.putString(LessonRedactorDialogFragment.LESSON_DATE, lessonDate);
+                        args.putInt(LessonRedactorDialogFragment.LESSON_NUMBER, finalLessonI);
+                        dialogFragment.setArguments(args);
+                        dialogFragment.show(getSupportFragmentManager(),"LessonRedactorDialogFragment");
                     }
                 });
             } else {// если нашли
@@ -297,27 +294,6 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 String cabinetName = cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
                 cabinetCursor.close();
 
-//                // укорачиваем поля если они слишком длинные Loading…
-//                if (subjectName.length() > 10) {
-//                    subjectName = subjectName.substring(0, 9) + "…";
-//                }
-//                if (learnersClassName.length() > 5) {
-//                    learnersClassName = learnersClassName.substring(0, 4) + "…";// absde -> abc…  abcd->abcd
-//                }
-//                if (cabinetName.length() > 5) {
-//                    cabinetName = cabinetName.substring(0, 4) + "…";
-//                }
-
-
-                // дополнительно выводим разметку сведений урока
-
-//                LinearLayout contentContainer = new LinearLayout(this);
-//                contentContainer.setBackgroundColor(Color.MAGENTA);
-//                TableRow.LayoutParams contentContainerParams = new TableRow.LayoutParams(
-//                        TableRow.LayoutParams.MATCH_PARENT,
-//                        100
-//                );
-//                lessonContainer.addView(contentContainer, contentContainerParams);
 
 
 
@@ -404,12 +380,14 @@ public class ScheduleDayActivity extends AppCompatActivity {
                 lessonContainer.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        //создание/редактирование урока
-                        final Intent intentForLessonEditor = new Intent(getApplicationContext(), LessonRedactorActivity.class);
-                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, lessonId);
-                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_DATE, lessonDate);
-                        intentForLessonEditor.putExtra(LessonRedactorActivity.LESSON_NUMBER, finalLessonI);
-                        startActivity(intentForLessonEditor);
+                        //редактирование урока
+                        LessonRedactorDialogFragment dialogFragment = new LessonRedactorDialogFragment();
+                        Bundle args = new Bundle();
+                        args.putLong(LessonRedactorDialogFragment.LESSON_ATTITUDE_ID, lessonId);
+                        args.putString(LessonRedactorDialogFragment.LESSON_DATE, lessonDate);
+                        args.putInt(LessonRedactorDialogFragment.LESSON_NUMBER, finalLessonI);
+                        dialogFragment.setArguments(args);
+                        dialogFragment.show(getSupportFragmentManager(),"LessonRedactorDialogFragment");
                         return true;
                     }
                 });

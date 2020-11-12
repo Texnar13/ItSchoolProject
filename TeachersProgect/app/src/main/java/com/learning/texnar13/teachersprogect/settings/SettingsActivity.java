@@ -434,74 +434,74 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
         DataBaseOpenHelper dbOpenHelper = new DataBaseOpenHelper(getApplicationContext());
         dbOpenHelper.restartTable();
 
-        dbOpenHelper.createClass("1\"A\"");
-        long classId = dbOpenHelper.createClass("2\"A\"");
-
-        long lerner1Id = dbOpenHelper.createLearner("Зинченко", "Сократ", classId);
-        long lerner2Id = dbOpenHelper.createLearner("Шумякин", "Феофан", classId);
-        long lerner3Id = dbOpenHelper.createLearner("Рябец", "Валентин", classId);
-        long lerner4Id = dbOpenHelper.createLearner("Гроша", "Любава", classId);
-        long lerner5Id = dbOpenHelper.createLearner("Авдонина", "Алиса", classId);
-
-
-        long cabinetId = dbOpenHelper.createCabinet("406");
-
-        ArrayList<Long> places = new ArrayList<>();
-        {
-            long desk1Id = dbOpenHelper.createDesk(2, 160, 200, cabinetId);//1
-            places.add(dbOpenHelper.createPlace(desk1Id, 1));
-            places.add(dbOpenHelper.createPlace(desk1Id, 2));
-        }
-        {
-            long desk2Id = dbOpenHelper.createDesk(2, 40, 200, cabinetId);//2
-            places.add(dbOpenHelper.createPlace(desk2Id, 1));
-            places.add(dbOpenHelper.createPlace(desk2Id, 2));
-        }
-        {
-            long desk3Id = dbOpenHelper.createDesk(2, 160, 120, cabinetId);//3
-            places.add(dbOpenHelper.createPlace(desk3Id, 1));
-            places.add(dbOpenHelper.createPlace(desk3Id, 2));
-        }
-        {
-            long desk4Id = dbOpenHelper.createDesk(2, 40, 120, cabinetId);//4
-            places.add(dbOpenHelper.createPlace(desk4Id, 1));
-            places.add(dbOpenHelper.createPlace(desk4Id, 2));
-        }
-        {
-            long desk5Id = dbOpenHelper.createDesk(2, 160, 40, cabinetId);//5
-            places.add(dbOpenHelper.createPlace(desk5Id, 1));
-            places.add(dbOpenHelper.createPlace(desk5Id, 2));
-        }
-        {
-            long desk6Id = dbOpenHelper.createDesk(2, 40, 40, cabinetId);//6
-            places.add(dbOpenHelper.createPlace(desk6Id, 1));
-            places.add(dbOpenHelper.createPlace(desk6Id, 2));
-        }
-        //   |6|  |5|   |    |  |  |  |
-        //   |4|  |3|   |    | 4|  |  |
-        //   |2|  |1|   |    |35|  |21|
-        //       [-]
-
-
-        long lessonId = dbOpenHelper.createSubject("физика", classId
-                //, cabinetId
-        );
-        dbOpenHelper.setLessonTimeAndCabinet(lessonId, cabinetId, "2017-10-17", 1, SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER);
-
-        //создание настроек после удаления таблицы
-        //db.createNewSettingsProfileWithId1("default", 50);
-
-        dbOpenHelper.setLearnerOnPlace(//lessonId,
-                lerner1Id, places.get(1));
-        dbOpenHelper.setLearnerOnPlace(//lessonId,
-                lerner2Id, places.get(0));
-        dbOpenHelper.setLearnerOnPlace(//lessonId,
-                lerner3Id, places.get(2));
-        dbOpenHelper.setLearnerOnPlace(//lessonId,
-                lerner4Id, places.get(7));
-        dbOpenHelper.setLearnerOnPlace(//lessonId,
-                lerner5Id, places.get(3));
-        dbOpenHelper.close();
+//        dbOpenHelper.createClass("1\"A\"");
+//        long classId = dbOpenHelper.createClass("2\"A\"");
+//
+//        long lerner1Id = dbOpenHelper.createLearner("Зинченко", "Сократ", classId);
+//        long lerner2Id = dbOpenHelper.createLearner("Шумякин", "Феофан", classId);
+//        long lerner3Id = dbOpenHelper.createLearner("Рябец", "Валентин", classId);
+//        long lerner4Id = dbOpenHelper.createLearner("Гроша", "Любава", classId);
+//        long lerner5Id = dbOpenHelper.createLearner("Авдонина", "Алиса", classId);
+//
+//
+//        long cabinetId = dbOpenHelper.createCabinet("406");
+//
+//        ArrayList<Long> places = new ArrayList<>();
+//        {
+//            long desk1Id = dbOpenHelper.createDesk(2, 160, 200, cabinetId);//1
+//            places.add(dbOpenHelper.createPlace(desk1Id, 1));
+//            places.add(dbOpenHelper.createPlace(desk1Id, 2));
+//        }
+//        {
+//            long desk2Id = dbOpenHelper.createDesk(2, 40, 200, cabinetId);//2
+//            places.add(dbOpenHelper.createPlace(desk2Id, 1));
+//            places.add(dbOpenHelper.createPlace(desk2Id, 2));
+//        }
+//        {
+//            long desk3Id = dbOpenHelper.createDesk(2, 160, 120, cabinetId);//3
+//            places.add(dbOpenHelper.createPlace(desk3Id, 1));
+//            places.add(dbOpenHelper.createPlace(desk3Id, 2));
+//        }
+//        {
+//            long desk4Id = dbOpenHelper.createDesk(2, 40, 120, cabinetId);//4
+//            places.add(dbOpenHelper.createPlace(desk4Id, 1));
+//            places.add(dbOpenHelper.createPlace(desk4Id, 2));
+//        }
+//        {
+//            long desk5Id = dbOpenHelper.createDesk(2, 160, 40, cabinetId);//5
+//            places.add(dbOpenHelper.createPlace(desk5Id, 1));
+//            places.add(dbOpenHelper.createPlace(desk5Id, 2));
+//        }
+//        {
+//            long desk6Id = dbOpenHelper.createDesk(2, 40, 40, cabinetId);//6
+//            places.add(dbOpenHelper.createPlace(desk6Id, 1));
+//            places.add(dbOpenHelper.createPlace(desk6Id, 2));
+//        }
+//        //   |6|  |5|   |    |  |  |  |
+//        //   |4|  |3|   |    | 4|  |  |
+//        //   |2|  |1|   |    |35|  |21|
+//        //       [-]
+//
+//
+//        long lessonId = dbOpenHelper.createSubject("физика", classId
+//                //, cabinetId
+//        );
+//        dbOpenHelper.setLessonTimeAndCabinet(lessonId, cabinetId, "2017-10-17", 1, SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER);
+//
+//        //создание настроек после удаления таблицы
+//        //db.createNewSettingsProfileWithId1("default", 50);
+//
+//        dbOpenHelper.setLearnerOnPlace(//lessonId,
+//                lerner1Id, places.get(1));
+//        dbOpenHelper.setLearnerOnPlace(//lessonId,
+//                lerner2Id, places.get(0));
+//        dbOpenHelper.setLearnerOnPlace(//lessonId,
+//                lerner3Id, places.get(2));
+//        dbOpenHelper.setLearnerOnPlace(//lessonId,
+//                lerner4Id, places.get(7));
+//        dbOpenHelper.setLearnerOnPlace(//lessonId,
+//                lerner5Id, places.get(3));
+//        dbOpenHelper.close();
 
         Toast toast = Toast.makeText(this, R.string.settings_activity_toast_data_delete_success, Toast.LENGTH_LONG);
         toast.show();

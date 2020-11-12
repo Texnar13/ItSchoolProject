@@ -145,19 +145,17 @@ public final class SchoolContract {
     }
 
     public static final class TableSubjectAndTimeCabinetAttitude {
-        public static final String NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE = "lessonAndTimeWithCabinet";//rename to lessonAndTimeWithCabinet
+        public static final String NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE = "lessonAndTimeWithCabinet";
         public static final String KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID = BaseColumns._ID;
         public static final String KEY_SUBJECT_ID = "subjectId";
         public static final String KEY_CABINET_ID = "cabinetId";
 
-        public static final String COLUMN_LESSON_DATE = "lessonDate";
         public static final String COLUMN_LESSON_NUMBER = "lessonNumber";
-
-        //public static final String COLUMN_DATE_BEGIN = "lessonDateBegin";
-        //public static final String COLUMN_DATE_END = "lessonDateEnd";
+        public static final String COLUMN_LESSON_DATE = "lessonDate";// todo исправить баг с исправлением даты
+        public static final String COLUMN_END_REPEAT_DATE = "endRepeatDate";// todo
         public static final String COLUMN_REPEAT = "repeat";
 
-        // repeat constants:
+        // repeat constants(посмотри LessonRedactorDialogFragment):
         public static final int CONSTANT_REPEAT_NEVER = 0;
         public static final int CONSTANT_REPEAT_DAILY = 1;
         public static final int CONSTANT_REPEAT_WEEKLY = 2;
@@ -168,9 +166,8 @@ public final class SchoolContract {
     public static final class TableLessonComment {
         public static final String NAME_TABLE_LESSON_TEXT = "lessonComment";
         public static final String KEY_LESSON_TEXT_ID = BaseColumns._ID;
+        public static final String KEY_LESSON_ID = "commentLessonId";
         public static final String COLUMN_LESSON_DATE = "commentDate";
-        public static final String COLUMN_LESSON_NUMBER = "commentLessonNumber";
-        public static final String KEY_SUBJECT_ID = "subjectId";
         public static final String COLUMN_LESSON_TEXT = "commentText";
     }
 

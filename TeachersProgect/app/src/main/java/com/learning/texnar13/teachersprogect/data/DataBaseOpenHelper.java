@@ -164,8 +164,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + " INTEGER, " +
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0 NOT NULL," +
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " TIMESTRING DEFAULT \"0000-00-00\" NOT NULL," +
-                    //"lessonDateBegin TIMESTRING, " +
-                    //"lessonDateEnd TIMESTRING, " +
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " INTEGER DEFAULT " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER + ", " +
                     "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + " (" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ON DELETE CASCADE ," +
                     "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE ); ";
@@ -198,7 +196,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME + " TEXT NOT NULL, " +
                             SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME + " TEXT NOT NULL);"
             );
-            {// ---- вставляем три записи "н", "бол.", "спр."  ----  <-- запись "н" нельзя удалить но можно переименовать
+            {// ---- вставляем 2 записи "н", "бол." ----  <-- запись "н" нельзя удалить но можно переименовать
                 ContentValues values1 = new ContentValues();
                 values1.put(SchoolContract.TableLearnersAbsentTypes.KEY_LEARNERS_ABSENT_TYPE_ID, 1);
                 values1.put(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME,
@@ -225,12 +223,10 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             db.execSQL(
                     "CREATE TABLE " + SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT + " ( " +
                             SchoolContract.TableLessonComment.KEY_LESSON_TEXT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                            SchoolContract.TableLessonComment.COLUMN_LESSON_DATE + " TIMESTRING DEFAULT \"0000-00-00\" NOT NULL, " +
-                            SchoolContract.TableLessonComment.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0 NOT NULL, " +
-                            SchoolContract.TableLessonComment.KEY_SUBJECT_ID + " INTEGER DEFAULT NULL, " +
-
+                            SchoolContract.TableLessonComment.KEY_LESSON_ID + " INTEGER NOT NULL, " +
+                            SchoolContract.TableLessonComment.COLUMN_LESSON_DATE + " TIMESTRING NOT NULL, " +
                             SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT + " TEXT NOT NULL, " +
-                            "FOREIGN KEY(" + SchoolContract.TableLessonComment.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE SET DEFAULT);"
+                            "FOREIGN KEY(" + SchoolContract.TableLessonComment.KEY_LESSON_ID + ") REFERENCES " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " (" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + ") ON DELETE CASCADE);"
             );
 
 
@@ -766,15 +762,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 }
                 allGrades.close();
 
-                // добавляем комментарий к уроку
+                // комментарий к уроку
                 db.execSQL(
                         "CREATE TABLE " + SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT + " ( " +
                                 SchoolContract.TableLessonComment.KEY_LESSON_TEXT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                                SchoolContract.TableLessonComment.COLUMN_LESSON_DATE + " TIMESTRING DEFAULT \"0000-00-00\" NOT NULL, " +
-                                SchoolContract.TableLessonComment.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0 NOT NULL, " +
-                                SchoolContract.TableLessonComment.KEY_SUBJECT_ID + " INTEGER DEFAULT NULL, " +
+                                SchoolContract.TableLessonComment.KEY_LESSON_ID + " INTEGER NOT NULL, " +
+                                SchoolContract.TableLessonComment.COLUMN_LESSON_DATE + " TIMESTRING NOT NULL, " +
                                 SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT + " TEXT NOT NULL, " +
-                                "FOREIGN KEY(" + SchoolContract.TableLessonComment.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE SET DEFAULT);"
+                                "FOREIGN KEY(" + SchoolContract.TableLessonComment.KEY_LESSON_ID + ") REFERENCES " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " (" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + ") ON DELETE CASCADE);"
                 );
 
             }
@@ -1823,7 +1818,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     //урок и его время проведения
     public long setLessonTimeAndCabinet(long subjectId, long cabinetId, String date, long lessonNumber, long repeatPeriod) {
-        //date и database
+        // date и database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID, subjectId);
@@ -1838,8 +1833,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     }
 
     public int editLessonTimeAndCabinet(long attitudeId, long subjectId, long cabinetId, String date, long lessonNumber, long repeatPeriod) {
-
-        //date и database
+        // date и database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID, subjectId);
@@ -1862,40 +1856,151 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+//    public Cursor getSubjectAndTimeCabinetAttitudesByDatePeriodAndLessonNumbersPeriod(String startDate, String endDate, long endLessonNumber) {
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        return db.rawQuery("SELECT * FROM " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE +
+//                        // по времени
+//                        " WHERE ((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " <= ?) AND (" +
+//                        // по дате
+//                        "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " BETWEEN ? AND ?) OR ((" +
+//                        "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) OR " +
+//                        "((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) AND (strftime(\"%w\"," + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + ") == strftime(\"%w\", ?)))" +
+//                        ") AND " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " < ?))" +
+//                        ")",
+//                new String[]{
+//                        Long.toString(endLessonNumber),
+//                        startDate,
+//                        endDate,
+//                        Integer.toString(SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY),
+//                        Integer.toString(SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY),
+//                        date,
+//                        startDate
+//                });
+//
+//        /*
+//        * WHERE
+//	    (
+//	    	(COLUMN_LESSON_NUMBER <= endLessonNumber) AND (
+//	    		(COLUMN_LESSON_DATE BETWEEN date AND date) OR (
+//	    			(
+//	    				(COLUMN_REPEAT = CONSTANT_REPEAT_DAILY) OR
+//	    				(
+//	    					(COLUMN_REPEAT = CONSTANT_REPEAT_WEEKLY) AND (strftime("%w",COLUMN_LESSON_DATE) == strftime("%w", date))
+//	    				)
+//	    			) AND COLUMN_LESSON_DATE < dateS
+//	    		)
+//	    	)
+//	    )
+//	    */
+//    }
+
+
+
     public Cursor getSubjectAndTimeCabinetAttitudesByDateAndLessonNumbersPeriod(String date, long startLessonNumber, long endLessonNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE +
+                        // по времени
                         " WHERE ((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " BETWEEN ? AND ?) AND (" +
-                        "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " = ?) OR " +
+                        // по дате
+                        "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " = ?) OR ((" +
                         "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) OR " +
                         "((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) AND (strftime(\"%w\"," + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + ") == strftime(\"%w\", ?)))" +
-                        "))",
+                        ") AND " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " < ?))" +
+                        ")",
                 new String[]{
-                        "" + startLessonNumber,
-                        "" + endLessonNumber,
+                        Long.toString(startLessonNumber),
+                        Long.toString(endLessonNumber),
                         date,
-                        "" + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY,
-                        "" + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY,
+                        Integer.toString(SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY),
+                        Integer.toString(SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY),
+                        date,
                         date
                 });
+
+        /*
+        * WHERE
+	    (
+	    	(COLUMN_LESSON_NUMBER BETWEEN startLessonNumber AND endLessonNumber) AND (
+	    		(COLUMN_LESSON_DATE = date) OR (
+	    			(
+	    				(COLUMN_REPEAT = CONSTANT_REPEAT_DAILY) OR
+	    				(
+	    					(COLUMN_REPEAT = CONSTANT_REPEAT_WEEKLY) AND (strftime("%w",COLUMN_LESSON_DATE) == strftime("%w", date))
+	    				)
+	    			) AND COLUMN_LESSON_DATE < date
+	    		)
+	    	)
+	    )
+	    */
     }
 
+    public Cursor getSubjectAndTimeCabinetAttitudesByDateAndLessonNumbersPeriod(long subjectId, String date, long startLessonNumber, long endLessonNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE +
+                        // по времени
+                        " WHERE ((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " BETWEEN ? AND ?) AND (" +
+                        // по дате
+                        "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " = ?) OR ((" +
+                        "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) OR " +
+                        "((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) AND (strftime(\"%w\"," + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + ") == strftime(\"%w\", ?)))" +
+                        ") AND " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " < ?))" +
+                        " AND " + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + " = "+subjectId+")",
+                new String[]{
+                        Long.toString(startLessonNumber),
+                        Long.toString(endLessonNumber),
+                        date,
+                        Integer.toString(SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY),
+                        Integer.toString(SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY),
+                        date,
+                        date
+                });
+
+        /*
+        * WHERE
+	    (
+	    	(COLUMN_LESSON_NUMBER BETWEEN startLessonNumber AND endLessonNumber) AND (
+	    		(COLUMN_LESSON_DATE = date) OR (
+	    			(
+	    				(COLUMN_REPEAT = CONSTANT_REPEAT_DAILY) OR
+	    				(
+	    					(COLUMN_REPEAT = CONSTANT_REPEAT_WEEKLY) AND (strftime("%w",COLUMN_LESSON_DATE) == strftime("%w", date))
+	    				)
+	    			) AND COLUMN_LESSON_DATE < date
+	    		)
+	    	)
+	    )
+	    */
+    }
 
     public Cursor getSubjectAndTimeCabinetAttitudeByDateAndLessonNumber(String date, long lessonNumber) {//попадает ли переданное время в какой-либо из уроков
         return this.getReadableDatabase().rawQuery(
                 "SELECT * FROM " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE +
                         " WHERE ((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " = ?) AND (" +
-                        "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " = ?) OR " +
+                        "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " = ?) OR (" +
                         "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) OR " +
-                        "((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) AND (strftime(\"%w\"," + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + ") == strftime(\"%w\", ?)))" +
+                        "((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) AND (strftime(\"%w\"," + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + ") == strftime(\"%w\", ?))" +
+                        ") AND " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " < ?)" +
                         "))",
                 new String[]{
-                        "" + lessonNumber,
+                        Long.toString(lessonNumber),
                         date,
-                        "" + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY,
-                        "" + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY,
+                        Integer.toString(SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY),
+                        Integer.toString(SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY),
+                        date,
                         date
                 });
+        /*
+        WHERE
+        (
+            (COLUMN_LESSON_NUMBER = ?) AND (
+                (COLUMN_LESSON_DATE = ?) OR (COLUMN_REPEAT = ?) OR (
+                    (
+                        (COLUMN_REPEAT = ?) AND (strftime("%w",COLUMN_LESSON_DATE) == strftime("%w", ?))
+                    ) AND COLUMN_LESSON_DATE > date
+                )
+            )
+        )
+        */
     }
 
     public int deleteSubjectAndTimeCabinetAttitude(long attitudeId) {
@@ -1907,12 +2012,11 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     }
 
     // комментарий к дате и уроку
-    public long createLessonComment(long subjectId, String date, long lessonNumber, String text) {
+    public long createLessonComment( String date, long lessonId, long lessonNumber, String text) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(SchoolContract.TableLessonComment.KEY_LESSON_ID, lessonId);
         values.put(SchoolContract.TableLessonComment.COLUMN_LESSON_DATE, date);
-        values.put(SchoolContract.TableLessonComment.KEY_SUBJECT_ID, subjectId);
-        values.put(SchoolContract.TableLessonComment.COLUMN_LESSON_NUMBER, lessonNumber);
         values.put(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT, text);
         long temp = db.insert(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, null, values);//-1 = ошибка ввода
         if (IS_DEBUG)
@@ -1927,20 +2031,19 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         db.update(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, values, SchoolContract.TableLessonComment.KEY_LESSON_TEXT_ID + " == " + commentId, null);
     }
 
-    public Cursor getLessonComments() {
-        return getReadableDatabase().query(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, null, null, null, null, null, null);
-    }
+//    public Cursor getLessonComments() {
+//        return getReadableDatabase().query(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, null, null, null, null, null, null);
+//    }
 
-    public Cursor getLessonCommentsBetweenDates(long subjectId, String startDate, String endDate) {
-        return getReadableDatabase().query(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, null,
-                SchoolContract.TableLessonComment.KEY_SUBJECT_ID + " == " + subjectId + " AND " + SchoolContract.TableLessonComment.COLUMN_LESSON_DATE + " BETWEEN \"" + startDate + "\" AND \"" + endDate + "\" ",
-                null, null, null, null);
-    }
+//    public Cursor getLessonCommentsBetweenDates(long lessonId, String startDate, String endDate) {
+//        return getReadableDatabase().query(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, null,
+//                SchoolContract.TableLessonComment.KEY_LESSON_ID + " == " + lessonId + " AND " + SchoolContract.TableLessonComment.COLUMN_LESSON_DATE + " BETWEEN \"" + startDate + "\" AND \"" + endDate + "\" ",
+//                null, null, null, null);
+//    }
 
-    public Cursor getLessonCommentsByDateAndLessonNumber(long subjectId, String date, long lessonNumber) {
+    public Cursor getLessonCommentsByDateAndLesson(long lessonId, String date) {
         return getReadableDatabase().query(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, null,
-                SchoolContract.TableLessonComment.KEY_SUBJECT_ID + " == " + subjectId + " AND " + SchoolContract.TableLessonComment.COLUMN_LESSON_DATE + " == \"" + date + "\"" +
-                        SchoolContract.TableLessonComment.COLUMN_LESSON_NUMBER + " == " + lessonNumber,
+                SchoolContract.TableLessonComment.KEY_LESSON_ID + " == " + lessonId + " AND " + SchoolContract.TableLessonComment.COLUMN_LESSON_DATE + " == \"" + date + "\"",
                 null, null, null, null);
     }
 
@@ -2066,22 +2169,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 //            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + ";");
 //            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES + ";");
 //            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES + ";");
-
-
-            // таблица коммнетариев к уроку
-            serializer.startTag("", SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT);
-            Cursor comments = getLessonComments();
-            while (comments.moveToNext()) {
-                serializer.startTag("", "element");
-                serializer.attribute("", "elementId", comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.KEY_LESSON_TEXT_ID)));
-                serializer.attribute("", SchoolContract.TableLessonComment.COLUMN_LESSON_DATE, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.COLUMN_LESSON_DATE)));
-                serializer.attribute("", SchoolContract.TableLessonComment.COLUMN_LESSON_NUMBER, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.COLUMN_LESSON_NUMBER)));
-                serializer.attribute("", SchoolContract.TableLessonComment.KEY_SUBJECT_ID, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.KEY_SUBJECT_ID)));
-                serializer.attribute("", SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT)));
-                serializer.endTag("", "element");
-            }
-            comments.close();
-            serializer.endTag("", SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT);
 
 
             serializer.endDocument();

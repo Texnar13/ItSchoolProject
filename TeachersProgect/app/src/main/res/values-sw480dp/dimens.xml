@@ -34,6 +34,7 @@
     <dimen name="text_title_size">37sp</dimen>
     <dimen name="text_subtitle_size">28sp</dimen>
     <dimen name="text_simple_size">25sp</dimen>
+    <dimen name="text_sub_simple_size">21.667sp</dimen>
     <dimen name="text_small_size">15sp</dimen>
 
     <!--  ширина текстовых полей -->
