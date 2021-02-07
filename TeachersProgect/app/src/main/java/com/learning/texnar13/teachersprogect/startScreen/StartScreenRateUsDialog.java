@@ -72,7 +72,7 @@ public class StartScreenRateUsDialog extends DialogFragment {
         fiveStars.setWeightSum(5);
         for (int i = 0; i < 5; i++) {
             ImageView star = new ImageView(getActivity());
-            star.setImageResource(R.drawable.__icon_star);
+            star.setImageResource(R.drawable.start_screen_activity_dialog_rate_star_icon);
             star.setAdjustViewBounds(true);
             LinearLayout.LayoutParams starParams = new LinearLayout.LayoutParams(
                     0,
@@ -116,7 +116,7 @@ public class StartScreenRateUsDialog extends DialogFragment {
 
 // контейнер кнопки оценить
         LinearLayout positiveButtonContainer = new LinearLayout(getActivity());
-        positiveButtonContainer.setBackgroundResource(R.drawable._button_round_background_green);
+        positiveButtonContainer.setBackgroundResource(R.drawable._button_round_background_orange);
         // параметры контейнера
         LinearLayout.LayoutParams positiveButtonContainerParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,

@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -29,12 +30,10 @@ import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.Serializable;
 
 public class SettingsActivity extends AppCompatActivity implements EditMaxAnswersDialogInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface, EditGradesTypeDialogFragmentInterface, EditAbsentTypeDialogFragmentInterface, SettingsRemoveInterface {
 
@@ -72,18 +71,17 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
         // Загрузка объявления.
         settingsBack.loadAd(adRequest);
 
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
 
+        // раздуваем layout
+        setContentView(R.layout.settings_activity);
+        // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
+        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        // убираем заголовок, там свой
+        getSupportActionBar().setTitle("");
+        ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_settings);
 
-        // кнопка назад
-        findViewById(R.id.activity_settings_back_arrow).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // выходим из активности
-                onBackPressed();
-            }
-        });
 
         final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
@@ -187,36 +185,29 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
         editTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                int[][] arrays = db.getSettingsTime(1);
-                db.close();
-                Log.e("TeachersApp", "editTimeButton*********" + Arrays.toString(arrays));
-
-                int[] arr0 = arrays[0];// TODO error ArrayIndexOutOfBoundsException
-                int[] arr1 = arrays[1];
-                int[] arr2 = arrays[2];
-                int[] arr3 = arrays[3];
-                int[] arr4 = arrays[4];
-                int[] arr5 = arrays[5];
-                int[] arr6 = arrays[6];
-                int[] arr7 = arrays[7];
-                int[] arr8 = arrays[8];
 
                 //диалог
                 EditTimeDialogFragment editTimeDialogFragment = new EditTimeDialogFragment();
-                //данные
-                Bundle args = new Bundle();
-                args.putIntArray("arr0", arr0);
-                args.putIntArray("arr1", arr1);
-                args.putIntArray("arr2", arr2);
-                args.putIntArray("arr3", arr3);
-                args.putIntArray("arr4", arr4);
-                args.putIntArray("arr5", arr5);
-                args.putIntArray("arr6", arr6);
-                args.putIntArray("arr7", arr7);
-                args.putIntArray("arr8", arr8);
-                editTimeDialogFragment.setArguments(args);
-                editTimeDialogFragment.show(getSupportFragmentManager(), "editTime");
+
+
+                // получаем данные о времени из бд
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                int[][] arrays = db.getSettingsTime(1);
+                db.close();
+                if (arrays != null) {
+                    // пакуем данные в обьект
+                    EditTimeDialogFragment.EditTimeDialogDataTransfer dataObject =
+                            new EditTimeDialogFragment.EditTimeDialogDataTransfer(arrays);
+                    // и передаем диалогу
+                    Bundle args = new Bundle();
+                    args.putSerializable(
+                            EditTimeDialogFragment.EditTimeDialogDataTransfer.PARAM_DATA,
+                            (Serializable) dataObject
+                    );
+                    editTimeDialogFragment.setArguments(args);
+                    editTimeDialogFragment.show(getSupportFragmentManager(), "editTime");
+                }
+
             }
         });
 
@@ -360,9 +351,9 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
         // ставим переключатель в состояние из бд
         isColoredGrades = db.getSettingsAreTheGradesColoredByProfileId(1);
         if (isColoredGrades) {
-            coloredGradesSwitch.setImageResource(R.drawable.switch_4);
+            coloredGradesSwitch.setImageResource(R.drawable.test_switch_4);
         } else {
-            coloredGradesSwitch.setImageResource(R.drawable.switch_0);
+            coloredGradesSwitch.setImageResource(R.drawable.test_switch_0);
         }
 
         // обработчик контейнеру
@@ -373,9 +364,9 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
                 db.setSettingsAreTheGradesColoredByProfileId(1, isColoredGrades);
 
                 if (isColoredGrades) {
-                    coloredGradesSwitch.setImageResource(R.drawable.switch_4);
+                    coloredGradesSwitch.setImageResource(R.drawable.test_switch_4);
                 } else {
-                    coloredGradesSwitch.setImageResource(R.drawable.switch_0);
+                    coloredGradesSwitch.setImageResource(R.drawable.test_switch_0);
                 }
             }
         });

@@ -6,7 +6,6 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,7 +20,7 @@ public class EditMaxAnswersCountDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // раздуваем Layout
-        View linearLayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_layout_settings_edit_maximum_grade, null);
+        View linearLayout = getActivity().getLayoutInflater().inflate(R.layout.settings_dialog_edit_maximum_grade, null);
         // -------------------------------- получаем текстовое поле --------------------------------
         final EditText editText = (EditText) linearLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_maximum_grade_edit_text);
         // ставим прошлое значение

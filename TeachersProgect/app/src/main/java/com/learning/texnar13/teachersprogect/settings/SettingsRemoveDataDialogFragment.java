@@ -63,7 +63,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
 
         // кнопка закрыть
         ImageView closeImageView = new ImageView(getActivity());
-        closeImageView.setImageResource(R.drawable.__button_close);
+        closeImageView.setImageResource(R.drawable.base_button_close);
         LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),
                 (int) getResources().getDimension(R.dimen.my_icon_size));
@@ -182,7 +182,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         // контейнер кнопки
         LinearLayout removeButtonContainer = new LinearLayout(getActivity());
         removeButtonContainer.setGravity(Gravity.CENTER);
-        removeButtonContainer.setBackgroundResource(R.drawable.__background_round_simple_full_signal_red);
+        removeButtonContainer.setBackgroundResource(R.drawable.settings_dialog_remove_button_background);
         LinearLayout.LayoutParams removeButtonContainerParams = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,

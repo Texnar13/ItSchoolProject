@@ -3,11 +3,6 @@ package com.learning.texnar13.teachersprogect.seatingRedactor;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AlertDialog;
-
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -17,8 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.DialogFragment;
+
 import com.learning.texnar13.teachersprogect.R;
-import com.learning.texnar13.teachersprogect.ScheduleDayActivity;
 
 import java.util.ArrayList;
 
@@ -55,7 +53,7 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
 
         // кнопка закрыть
         ImageView closeImageView = new ImageView(getActivity());
-        closeImageView.setImageResource(R.drawable.__button_close);
+        closeImageView.setImageResource(R.drawable.base_button_close);
         LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),
                 (int) getResources().getDimension(R.dimen.my_icon_size));

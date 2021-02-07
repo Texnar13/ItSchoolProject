@@ -9,7 +9,6 @@ import androidx.fragment.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -38,6 +37,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
     static final String ARGS_STRING_ABSENT_TYPES_NAMES_ARRAY = "absentTypeNameArray";
     static final String ARGS_STRING_ABSENT_TYPES_LONG_NAMES_ARRAY = "absentTypeLongNameArray";
     static final String ARGS_INT_MAX_GRADE = "maxGrade";
+    static final String ARGS_INT_MAX_LESSONS_COUNT = "maxLessonsCount";
     static final String ARGS_STRING_CURRENT_DATE = "currentDate";
     static final String ARGS_INT_LESSON_NUMBER = "lessonNumber";
 
@@ -57,9 +57,19 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
     // массив спиннеров с типами оценок
     private Spinner[] typesSpinners;
 
+    // максимальная оценка
+    int maxGrade;
+
+
+    // чекбокс отсутствия
+    ImageView checkImage;
+    // спиннер отсутствия
+    Spinner finalAbsSpinner;
+
+
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.i("TeachersApp", "LessonListEditDialogFragment - onCreateDialog");
 
         // начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -79,27 +89,26 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
         linearLayout.setLayoutParams(linearLayoutParams);
         builder.setView(linearLayout);
 
-        // получаем данные из intent
 
+        // получаем данные из intent
         // имя редактируемого ученика
         String learnerName = getArguments().getString(ARGS_LEARNER_NAME);
-
         // выбранные номера типов оценок
         chosenTypes = getArguments().getIntArray(ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY);
-
         // оценки
         grades = getArguments().getIntArray(ARGS_INT_GRADES_ARRAY);// todo для шлифовки кода можно убрать эту строчку(или отправить null) и исправить ошибки если они вдруг появятся
-
         // получаем выбранный номер типа пропуска
         absTypePoz = getArguments().getInt(ARGS_INT_GRADES_ABSENT_TYPE_NUMBER);
-
-
         // названия типов оценок
         final String[] gradesTypesNames = getArguments().getStringArray(ARGS_STRING_GRADES_TYPES_ARRAY);
-
         // названия типов пропусков
-        final String[] absentTypesNames = getArguments().getStringArray(ARGS_STRING_ABSENT_TYPES_NAMES_ARRAY);
+        //final String[] absentTypesNames = getArguments().getStringArray(ARGS_STRING_ABSENT_TYPES_NAMES_ARRAY);
         final String[] absentTypesLongNames = getArguments().getStringArray(ARGS_STRING_ABSENT_TYPES_LONG_NAMES_ARRAY);
+        // максимальная оценка
+        maxGrade = getArguments().getInt(ARGS_INT_MAX_GRADE, 0);
+        // максимальное количество уроков
+        int maxLessonsCount = getArguments().getInt(ARGS_INT_MAX_LESSONS_COUNT, 1);
+
 
 
         // если оценок нет, то проставляем типы по умолчанию
@@ -117,7 +126,6 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
 
 
         // создаем массив с оценками в текстовом виде
-        final int maxGrade = getArguments().getInt(ARGS_INT_MAX_GRADE, 0);
         final String[][] gradesString = new String[grades.length][];
         // массив для хранения дополнительных оценок
         final int[] dopGrades = new int[grades.length];
@@ -178,25 +186,138 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
         lessonNumberSpinnerParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         currentContainer.addView(lessonNumberSpinner, lessonNumberSpinnerParams);
         // адаптер спиннера
-        String[] lessonsTexts = new String[9];
+        String[] lessonsTexts = new String[maxLessonsCount];
         for (int lessonsI = 0; lessonsI < lessonsTexts.length; lessonsI++) {
             lessonsTexts[lessonsI] = (lessonsI + 1) + " " + getResources().getString(R.string.learners_and_grades_out_activity_dialog_title_lesson);
         }
         ArrayAdapter<String> lessonAdapter = new ArrayAdapter<>(
                 getActivity(),
-                R.layout.spinner_dropdown_element_subtitle_transparent_dark_gray,
+                R.layout.______spinner_dropdown_element_subtitle_transparent_dark_gray,
                 lessonsTexts
         );
-        lessonAdapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
+        lessonAdapter.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
         lessonNumberSpinner.setAdapter(lessonAdapter);
         // получаем выбранный номер урока
         lessonPosition = getArguments().getInt(ARGS_INT_LESSON_NUMBER);
         // выставляем его в спиннер
         lessonNumberSpinner.setSelection(lessonPosition, false);
-        // при выборе номера урока
+        // при выборе номера урока (не отрабатывает при запуске)
         lessonNumberSpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                // если оценки нулевые, обнуляем типы к первому из списка
+                for (int gradeI = 0; gradeI < grades.length; gradeI++) {
+                    if (grades[gradeI] == 0) {
+                        chosenTypes[gradeI] = 0;
+                    }
+                }
+                // сохраняем измененные оценки в активность
+                ((EditGradeDialogInterface) getActivity()).editGrades(grades, absTypePoz, chosenTypes, lessonPosition);
+
+                // получаем оценки с другого урока
+                GradeUnit temp = ((EditGradeDialogInterface) getActivity()).getLessonGrades(position);
+                if (temp != null) {
+                    grades = temp.grades;
+                    chosenTypes = temp.gradesTypesIndexes;
+                    absTypePoz = temp.absTypePoz;
+                } else {
+                    grades = new int[]{0, 0, 0};
+                    chosenTypes = new int[]{0, 0, 0};
+                    absTypePoz = -1;
+                }
+
+
+                // если чекбокс пропуска не активен
+                if (absTypePoz == -1) {
+                    checkImage.setImageResource(R.drawable.learners_and_grades_activity_abs_checkbox_background_empty);
+
+                    // если типов пропуска больше чем 1
+                    if (absentTypesLongNames.length > 1) {
+                        finalAbsSpinner.setAdapter(new ArrayAdapter<>(
+                                getActivity(),
+                                R.layout.______spinner_dropdown_element_subtitle_transparent_dark_gray,
+                                new String[]{" "}
+                        ));
+                    }
+
+                    // оценки
+                    for (int gradeI = 0; gradeI < grades.length; gradeI++) {
+
+                        // адаптер спиннера оценок
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                                getActivity(),
+                                R.layout._____spinner_dropdown_element_subtitle_transparent,
+                                gradesString[gradeI]
+                        );
+                        gradesSpinners[gradeI].setAdapter(adapter);
+                        adapter.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
+
+                        // ставим выбор
+                        if (grades[gradeI] <= maxGrade) {
+                            gradesSpinners[gradeI].setSelection(grades[gradeI]);
+                        } else {
+                            gradesSpinners[gradeI].setSelection(maxGrade + 1);
+                        }
+
+
+                        // адаптер спиннера типов
+                        ArrayAdapter<String> typesSpinnersAdapter = new ArrayAdapter<>(
+                                getActivity(),
+                                R.layout._____spinner_dropdown_element_subtitle_transparent,
+                                gradesTypesNames
+                        );
+                        typesSpinnersAdapter.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
+                        typesSpinners[gradeI].setAdapter(typesSpinnersAdapter);
+                        // ставим выбор
+                        typesSpinners[gradeI].setSelection(chosenTypes[gradeI], false);
+                    }
+
+                } else {
+                    checkImage.setImageResource(R.drawable.learners_and_grades_activity_abs_checkbox_background_full);
+
+                    // если типов пропуска больше чем 1
+                    if (absentTypesLongNames.length > 1) {
+                        finalAbsSpinner.setAdapter(new ArrayAdapter<>(
+                                getActivity(),
+                                R.layout.______spinner_dropdown_element_subtitle_transparent_dark_gray,
+                                absentTypesLongNames
+                        ));
+                        finalAbsSpinner.setSelection(absTypePoz, false);
+                    }
+
+                    // оценки
+                    for (int gradeI = 0; gradeI < grades.length; gradeI++) {
+
+                        // чистим оценки
+                        grades[gradeI] = 0;
+                        chosenTypes[gradeI] = 0;
+
+                        // и дизактивируем спиннеры
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                                getActivity(),
+                                R.layout._____spinner_dropdown_element_subtitle_transparent,
+                                new String[]{" "}
+                        );
+                        gradesSpinners[gradeI].setAdapter(adapter);
+                        adapter.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
+
+
+                        // адаптер спиннера типов
+                        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(
+                                getActivity(),
+                                R.layout._____spinner_dropdown_element_subtitle_transparent,
+                                new String[]{" "}
+                        );
+                        typesSpinners[gradeI].setAdapter(adapter2);
+                        adapter2.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
+
+                    }
+
+                }
+
+
+                // выставляем новую позицию
                 lessonPosition = position;
             }
 
@@ -255,11 +376,11 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
         titleLayout.addView(absContainer, absContainerParams);
 
         // чекбокс отсутствия
-        final ImageView checkImage = new ImageView(getActivity());
+        checkImage = new ImageView(getActivity());
         if (absTypePoz != -1) {
-            checkImage.setImageResource(R.drawable.__checkbox_full);
+            checkImage.setImageResource(R.drawable.learners_and_grades_activity_abs_checkbox_background_full);
         } else {
-            checkImage.setImageResource(R.drawable.__checkbox_empty);
+            checkImage.setImageResource(R.drawable.learners_and_grades_activity_abs_checkbox_background_empty);
         }
         RelativeLayout.LayoutParams checkImageParams = new RelativeLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_small_size),
@@ -288,18 +409,18 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
             if (absTypePoz == -1) {// если пропуска нет, выводим пустой спиннер
                 absentAdapter = new ArrayAdapter<>(
                         getActivity(),
-                        R.layout.spinner_dropdown_element_subtitle_transparent_dark_gray,
+                        R.layout.______spinner_dropdown_element_subtitle_transparent_dark_gray,
                         new String[]{" "}
                 );
-                absentAdapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
+                absentAdapter.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
                 absSpinner.setAdapter(absentAdapter);
             } else {
                 absentAdapter = new ArrayAdapter<>(
                         getActivity(),
-                        R.layout.spinner_dropdown_element_subtitle_transparent_dark_gray,
+                        R.layout.______spinner_dropdown_element_subtitle_transparent_dark_gray,
                         absentTypesLongNames
                 );
-                absentAdapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
+                absentAdapter.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
                 absSpinner.setAdapter(absentAdapter);
                 absSpinner.setSelection(absTypePoz, false);
             }
@@ -314,7 +435,6 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-
                 }
             });
 
@@ -337,13 +457,13 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
         }
 
         // нажатие на контейнер отсутствия
-        final Spinner finalAbsSpinner = absSpinner;
+        finalAbsSpinner = absSpinner;
         absContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // если чекбокс был активен, дизактивируем
                 if (absTypePoz != -1) {
-                    checkImage.setImageResource(R.drawable.__checkbox_empty);
+                    checkImage.setImageResource(R.drawable.learners_and_grades_activity_abs_checkbox_background_empty);
 
                     // пропуски
                     absTypePoz = -1;
@@ -351,7 +471,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                     if (absentTypesLongNames.length > 1) {
                         finalAbsSpinner.setAdapter(new ArrayAdapter<>(
                                 getActivity(),
-                                R.layout.spinner_dropdown_element_subtitle_transparent_dark_gray,
+                                R.layout.______spinner_dropdown_element_subtitle_transparent_dark_gray,
                                 new String[]{" "}
                         ));
                     }
@@ -366,24 +486,24 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                         gradesSpinners[gradeI].setSelection(0, false);
                         ArrayAdapter<String> gradesSpinnersAdapter = new ArrayAdapter<>(
                                 getActivity(),
-                                R.layout.spinner_dropdown_element_subtitle_transparent,
+                                R.layout._____spinner_dropdown_element_subtitle_transparent,
                                 gradesString[gradeI]
                         );
-                        gradesSpinnersAdapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
+                        gradesSpinnersAdapter.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
                         gradesSpinners[gradeI].setAdapter(gradesSpinnersAdapter);
 
                         typesSpinners[gradeI].setSelection(0, false);
                         ArrayAdapter<String> typesSpinnersAdapter = new ArrayAdapter<>(
                                 getActivity(),
-                                R.layout.spinner_dropdown_element_subtitle_transparent,
+                                R.layout._____spinner_dropdown_element_subtitle_transparent,
                                 gradesTypesNames
                         );
-                        typesSpinnersAdapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
+                        typesSpinnersAdapter.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
                         typesSpinners[gradeI].setAdapter(typesSpinnersAdapter);
                     }
 
                 } else {// иначе активируем его
-                    checkImage.setImageResource(R.drawable.__checkbox_full);
+                    checkImage.setImageResource(R.drawable.learners_and_grades_activity_abs_checkbox_background_full);
 
                     // пропуски
                     absTypePoz = 0;
@@ -391,7 +511,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                     if (absentTypesLongNames.length > 1) {
                         finalAbsSpinner.setAdapter(new ArrayAdapter<>(
                                 getActivity(),
-                                R.layout.spinner_dropdown_element_subtitle_transparent_dark_gray,
+                                R.layout.______spinner_dropdown_element_subtitle_transparent_dark_gray,
                                 absentTypesLongNames
                         ));
                         finalAbsSpinner.setSelection(0, false);
@@ -405,19 +525,19 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                         // и дизактивируем спиннеры
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                                 getActivity(),
-                                R.layout.spinner_dropdown_element_subtitle_transparent,
+                                R.layout._____spinner_dropdown_element_subtitle_transparent,
                                 new String[]{" "}
                         );
                         gradesSpinners[gradeI].setAdapter(adapter);
-                        adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
+                        adapter.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
 
                         ArrayAdapter<String> adapter2 = new ArrayAdapter<>(
                                 getActivity(),
-                                R.layout.spinner_dropdown_element_subtitle_transparent,
+                                R.layout._____spinner_dropdown_element_subtitle_transparent,
                                 new String[]{" "}
                         );
                         typesSpinners[gradeI].setAdapter(adapter2);
-                        adapter2.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
+                        adapter2.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
                     }
 
 
@@ -475,11 +595,11 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                 // адаптер спиннера
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(
                         getActivity(),
-                        R.layout.spinner_dropdown_element_subtitle_transparent,
+                        R.layout._____spinner_dropdown_element_subtitle_transparent,
                         gradesString[gradeI]
                 );
                 gradesSpinners[gradeI].setAdapter(adapter);
-                adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
+                adapter.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
 
                 // ставим выбор
                 if (grades[gradeI] <= maxGrade) {
@@ -491,11 +611,11 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                 // адаптер спиннера
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(
                         getActivity(),
-                        R.layout.spinner_dropdown_element_subtitle_transparent,
+                        R.layout._____spinner_dropdown_element_subtitle_transparent,
                         new String[]{" "}
                 );
                 gradesSpinners[gradeI].setAdapter(adapter);
-                adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
+                adapter.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
             } // при выборе элемента из спиннера
             final int finalGradeI = gradeI;
             gradesSpinners[gradeI].setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
@@ -527,22 +647,22 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                 // адаптер спиннера
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(
                         getActivity(),
-                        R.layout.spinner_dropdown_element_subtitle_transparent,
+                        R.layout._____spinner_dropdown_element_subtitle_transparent,
                         gradesTypesNames
                 );
                 typesSpinners[gradeI].setAdapter(adapter);
-                adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
+                adapter.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
                 // ставим выбор
                 typesSpinners[gradeI].setSelection(chosenTypes[gradeI], false);
             } else {
                 // адаптер спиннера
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(
                         getActivity(),
-                        R.layout.spinner_dropdown_element_subtitle_transparent,
+                        R.layout._____spinner_dropdown_element_subtitle_transparent,
                         new String[]{" "}
                 );
                 typesSpinners[gradeI].setAdapter(adapter);
-                adapter.setDropDownViewResource(R.layout.spinner_dropdown_element_subtitle);
+                adapter.setDropDownViewResource(R.layout.___base_spinner_dropdown_element_subtitle);
 
             }
             // при выборе элемента из спиннера
@@ -563,13 +683,12 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
             gradeContainer.addView(typesSpinners[gradeI], LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         }
 
-
         // добавляем кнопку сохранить/ок
 
         // контейнер кнопки
         LinearLayout saveButtonContainer = new LinearLayout(getActivity());
         saveButtonContainer.setGravity(Gravity.CENTER);
-        saveButtonContainer.setBackgroundResource(R.drawable._button_round_background_green);
+        saveButtonContainer.setBackgroundResource(R.drawable._button_round_background_orange);
         LinearLayout.LayoutParams saveButtonContainerParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -631,6 +750,8 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
+        //вызываем в активности метод разрешения изменения оценок
+        ((AllowEditGradesInterface) getActivity()).allowUserEditGrades();
     }
 
     @Override
@@ -645,4 +766,5 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
 interface EditGradeDialogInterface {
     void editGrades(int[] grades, int absTypePoz, int[] chosenTypesNumbers, int lessonPoz);
 
+    GradeUnit getLessonGrades(int lessonNumber);
 }

@@ -73,7 +73,7 @@ public class CreateCabinetDialogFragment extends DialogFragment {
 
         // кнопка назад
         ImageView backImage = new ImageView(getActivity());
-        backImage.setImageResource(R.drawable.__button_back_arrow_orange);
+        backImage.setImageResource(R.drawable.base_button_back_blue);
         backImage.setAdjustViewBounds(true);
         RelativeLayout.LayoutParams backImageParams = new RelativeLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),
@@ -142,7 +142,7 @@ public class CreateCabinetDialogFragment extends DialogFragment {
 
         // контейнер кнопки создать
         LinearLayout createButtonContainer = new LinearLayout(getActivity());
-        createButtonContainer.setBackgroundResource(R.drawable._button_round_background_green);
+        createButtonContainer.setBackgroundResource(R.drawable._button_round_background_orange);
         // параметры контейнера
         LinearLayout.LayoutParams saveTextButtonContainerParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,

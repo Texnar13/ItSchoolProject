@@ -140,7 +140,7 @@ public class PeriodDialogFragment extends DialogFragment {
 
         // кнопка закрыть
         ImageView closeImageView = new ImageView(getActivity());
-        closeImageView.setImageResource(R.drawable.__button_close);
+        closeImageView.setImageResource(R.drawable.base_button_close);
         LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),
                 (int) getResources().getDimension(R.dimen.my_icon_size)
@@ -392,7 +392,7 @@ public class PeriodDialogFragment extends DialogFragment {
 
         // контейнер кнопки создать
         LinearLayout createButtonContainer = new LinearLayout(getActivity());
-        createButtonContainer.setBackgroundResource(R.drawable._button_round_background_green);
+        createButtonContainer.setBackgroundResource(R.drawable._button_round_background_orange);
         // параметры контейнера
         LinearLayout.LayoutParams saveTextButtonContainerParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -552,7 +552,7 @@ public class PeriodDialogFragment extends DialogFragment {
 
             // кнопка чтобы отмечать предметы на удаление
             final ImageView deleteImage = new ImageView(getActivity());
-            deleteImage.setImageResource(R.drawable.__checkbox_empty);
+            deleteImage.setImageResource(R.drawable.learners_and_grades_activity_abs_checkbox_background_empty);
             // параметры кнопки
             LinearLayout.LayoutParams deleteImageParams = new LinearLayout.LayoutParams(
                     (int) getResources().getDimension(R.dimen.my_icon_small_size), (int) getResources().getDimension(R.dimen.my_icon_small_size)
@@ -574,9 +574,9 @@ public class PeriodDialogFragment extends DialogFragment {
                 public void onClick(View v) {
                     // инвертируем состояние кнопки
                     if (deleteList[finalPeriodI]) {
-                        deleteImage.setImageResource(R.drawable.__checkbox_empty);
+                        deleteImage.setImageResource(R.drawable.learners_and_grades_activity_abs_checkbox_background_empty);
                     } else {
-                        deleteImage.setImageResource(R.drawable.__checkbox_full);
+                        deleteImage.setImageResource(R.drawable.learners_and_grades_activity_abs_checkbox_background_full);
                     }
                     // и переменной
                     deleteList[finalPeriodI] = !deleteList[finalPeriodI];
@@ -644,7 +644,7 @@ public class PeriodDialogFragment extends DialogFragment {
 
         // контейнер кнопки сохранить
         LinearLayout saveButtonContainer = new LinearLayout(getActivity());
-        saveButtonContainer.setBackgroundResource(R.drawable._button_round_background_green);
+        saveButtonContainer.setBackgroundResource(R.drawable._button_round_background_orange);
         // параметры контейнера
         LinearLayout.LayoutParams saveTextButtonContainerParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,

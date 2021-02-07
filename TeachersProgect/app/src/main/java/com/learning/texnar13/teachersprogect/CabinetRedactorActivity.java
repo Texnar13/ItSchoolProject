@@ -1,6 +1,5 @@
 package com.learning.texnar13.teachersprogect;
 
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -9,29 +8,23 @@ import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
@@ -203,8 +196,15 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
 
-        setContentView(R.layout.activity_cabinet_redactor);
 
+        // раздуваем layout
+        setContentView(R.layout.cabinet_redactor_activity);
+        // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
+        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        // убираем заголовок, там свой
+        getSupportActionBar().setTitle("");
+
+        // заливаем статусбар
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -212,56 +212,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
-        // цвет кнопки меню
-        getSupportActionBar().getThemedContext().setTheme(R.style.cabinetRedactorStyle);
-
-        // вставляем в actionBar заголовок активности
-        LinearLayout titleContainer = new LinearLayout(this);
-        titleContainer.setGravity(Gravity.CENTER);
-        titleContainer.setBackgroundResource(R.drawable._button_round_background_orange);
-        ActionBar.LayoutParams titleContainerParams = new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.my_toolbar_text_container_height_size),
-                Gravity.CENTER
-        );
-        titleContainerParams.leftMargin = (int) getResources().getDimension(R.dimen.double_margin);
-        titleContainerParams.rightMargin = (int) getResources().getDimension(R.dimen.double_margin);
-        //android:layout_centerInParent="true"
-
-        TextView title = new TextView(this);
-        title.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_medium));
-        title.setSingleLine(true);
-        title.setGravity(Gravity.CENTER);
-        title.setTextColor(getResources().getColor(R.color.backgroundWhite));
-        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-        titleParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-        titleParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-        titleContainer.addView(title, titleParams);
-        getSupportActionBar().setCustomView(titleContainer, titleContainerParams);
-        // выставляем свой заголовок
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-
-
-        // кнопка назад в actionBar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        // убираем тень
-        getSupportActionBar().setElevation(0);
-        // цвет фона
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.backgroundWhite));
-        // кнопка назад
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_orange));
-        } else {
-            getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_orange_png));
-        }
-
 
         // размеры экрана
-        // узнаем размеры экрана из класса Display
         {
             DisplayMetrics metrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -289,7 +241,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         cabinetCursor.moveToFirst();
 
         // выводим его имя
-        title.setText(// todo переделать через файл строк
+        ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(// todo переделать через файл строк
                 cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME))
         );
         // множитель    0.25 <-> 4
@@ -454,7 +406,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         );
                         // ставим иконку для удаления
                         instrumentalImage.setImageResource(0);
-                        instrumentalImageBackground.setBackgroundResource(R.drawable.__button_bucket);
+                        instrumentalImageBackground.setBackgroundResource(R.drawable.cabinet_redactor_activity_button_delete_desk);
                     }
                     i--;
                 }
@@ -474,8 +426,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         // прекращаем перемещение
                         mode = NONE;
                         // ставим изображение в плюс
-                        instrumentalImage.setImageResource(R.drawable.__button_add_white);
-                        instrumentalImageBackground.setBackgroundResource(R.drawable.cabinet_redactor_add_desk_button);
+                        instrumentalImage.setImageResource(R.drawable.base_button_add_white);
+                        instrumentalImageBackground.setBackgroundResource(R.drawable.cabinet_redactor_activity_button_add_desk);
                         // снимаем выбор с парты
                         checkedDeskId = -1;
                     }
@@ -512,8 +464,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         // из списка
                         desksList.remove(i);
                         // возвращаем картинку
-                        instrumentalImage.setImageResource(R.drawable.__button_add_white);
-                        instrumentalImageBackground.setBackgroundResource(R.drawable.cabinet_redactor_add_desk_button);
+                        instrumentalImage.setImageResource(R.drawable.base_button_add_white);
+                        instrumentalImageBackground.setBackgroundResource(R.drawable.cabinet_redactor_activity_button_add_desk);
 
                         // прекращаем перемещение парты
                         mode = NONE;
@@ -628,8 +580,8 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     db.close();
 
                     // ставим изображение в плюс
-                    instrumentalImage.setImageResource(R.drawable.__button_add_white);
-                    instrumentalImageBackground.setBackgroundResource(R.drawable.cabinet_redactor_add_desk_button);
+                    instrumentalImage.setImageResource(R.drawable.base_button_add_white);
+                    instrumentalImageBackground.setBackgroundResource(R.drawable.cabinet_redactor_activity_button_add_desk);
                     // снимаем с парты выбор
                     checkedDeskId = -1;
                 }

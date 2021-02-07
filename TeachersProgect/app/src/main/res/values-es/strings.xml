@@ -9,7 +9,7 @@
 
     <!-- активность главный экран -->
     <!-- тексты кнопок -->
-    <string name="start_screen_activity_title_my_learners">Alumnos</string>
+    <string name="start_screen_activity_title_my_learners">Clases</string>
     <string name="start_screen_activity_title_my_cabinets">Aulas</string>
     <string name="start_screen_activity_title_my_schedule">Horario</string>
     <string name="start_screen_activity_title_settings">Ajustes</string>
@@ -59,6 +59,7 @@
     <string name="learners_and_grades_out_activity_text_add_learner">+ agregar un alumno</string>
     <!-- меню сверху -->
     <string name="learners_and_grades_out_activity_menu_title_statistics">Estadísticas sobre el asignatura</string>
+    <string name="learners_and_grades_out_activity_menu_title_show_all">#Показать все#</string>
     <!-- диалоги -->
     <string name="learners_and_grades_out_activity_dialog_title_create_learner">agregar un alumno</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_learner">Edita al alumno</string>
@@ -169,7 +170,7 @@
     <string name="lesson_redactor_activity_spinner_text_repeat_daily">Diario</string>
     <string name="lesson_redactor_activity_spinner_text_repeat_weekly">Semanalmente</string>
     <!-- тексты -->
-    <string name="lesson_redactor_activity_title_class">Grupo</string>
+    <string name="lesson_redactor_activity_title_class">Groupe</string>
     <string name="lesson_redactor_activity_title_subject">Asignatura</string>
     <string name="lesson_redactor_activity_title_cabinet">Aulas</string>
     <string name="lesson_redactor_activity_title_time">Tiempo</string>
@@ -199,6 +200,7 @@
 
     <!-- активность редактора рассадки-->
     <string name="lesson_redactor_activity_text_choose_learner">Seleccione un alumno:</string>
+    <string name="lesson_redactor_activity_menu_clear">Limpiar escritorios</string>
 
 
     <!-- активность урока-->
@@ -236,7 +238,7 @@
     <!-- тексты -->
     <string name="settings_activity_title_max_answer">Puntuación máxima/número de respuestas</string>
     <string name="settings_activity_title_grades_type">Tipos de trabajo en la lección</string>
-    <string name="settings_activity_title_absent_type">Типы пропусков</string>
+    <string name="settings_activity_title_absent_type">Tipos de ausencia</string>
     <string name="settings_activity_title_colored_grades">Calificaciónes de colores</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">Puntuación máxima/número de respuestas: %1$s</string>
@@ -257,11 +259,10 @@
     <string name="settings_activity_dialog_delete_title">¿Quieres borrar todos los datos?</string>
     <string name="settings_activity_dialog_add_type_title">+ agregar nueva tipo de calificaciónes</string>
     <string name="settings_activity_dialog_new_type_title">Nueva clase</string>
-    <string name="settings_activity_dialog_add_absent_type_title">+ добавить тип пропусков</string>
-    <string name="settings_activity_dialog_new_absent_type_long_title_hint">Название типа</string>
-    <string name="settings_activity_dialog_new_absent_type_title_hint">Сокращение</string>
-    <string name="settings_activity_dialog_new_absent_type_long_title">Новый тип</string>
-    <string name="settings_activity_dialog_new_absent_type_title">Кор</string>
+    <string name="settings_activity_dialog_add_absent_type_title">+ Agregar tipo de ausencia</string>
+    <string name="settings_activity_dialog_new_absent_type_long_title_hint">Tipo:</string>
+    <string name="settings_activity_dialog_new_absent_type_title_hint">Abreviatura:</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_empty">Introduzca el nombre</string>
     <string name="settings_activity_dialog_delete_text_confirm_delete">Para confirmar, escriba un número </string>
     <string name="settings_activity_dialog_hint_number">Número</string>
     <string name="settings_activity_dialog_button_remove_data">Eliminar los datos</string>
@@ -281,9 +282,9 @@
     <!-- значение по умолчанию -->
     <string name="db_table_grade_text_first_default_value">Respuesta verbal</string>
 
-    <string name="db_table_grades_abs_1_default_value">Aus</string>
-    <string name="db_table_grades_abs_1_long_default_value">Ausencia</string>
+    <string name="db_table_grades_abs_1_default_value">F</string>
+    <string name="db_table_grades_abs_1_long_default_value">Falta</string>
     <string name="db_table_grades_abs_2_default_value">E</string>
-    <string name="db_table_grades_abs_2_long_default_value">Está enfermo</string>
+    <string name="db_table_grades_abs_2_long_default_value">Enfermo</string>
 
 </resources>

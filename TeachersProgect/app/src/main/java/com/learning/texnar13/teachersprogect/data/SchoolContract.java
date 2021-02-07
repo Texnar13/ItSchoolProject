@@ -74,6 +74,7 @@ public final class SchoolContract {
         public static final String KEY_LEARNER_ID = BaseColumns._ID;
         public static final String COLUMN_FIRST_NAME = "firstName";
         public static final String COLUMN_SECOND_NAME = "secondName";
+        public static final String COLUMN_COMMENT = "comment";
         public static final String KEY_CLASS_ID = "classId";
     }
 
@@ -167,6 +168,7 @@ public final class SchoolContract {
         public static final String NAME_TABLE_LESSON_TEXT = "lessonComment";
         public static final String KEY_LESSON_TEXT_ID = BaseColumns._ID;
         public static final String KEY_LESSON_ID = "commentLessonId";
+        // номер урока не нужен, тк даже две математики в один день будут иметь разный id
         public static final String COLUMN_LESSON_DATE = "commentDate";
         public static final String COLUMN_LESSON_TEXT = "commentText";
     }

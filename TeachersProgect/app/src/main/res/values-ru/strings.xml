@@ -9,7 +9,7 @@
 
     <!-- активность главный экран -->
     <!-- тексты кнопок -->
-    <string name="start_screen_activity_title_my_learners">Ученики</string>
+    <string name="start_screen_activity_title_my_learners">Группы</string>
     <string name="start_screen_activity_title_my_cabinets">Кабинеты</string>
     <string name="start_screen_activity_title_my_schedule">Расписание</string>
     <string name="start_screen_activity_title_settings">Настройки</string>
@@ -59,6 +59,7 @@
     <string name="learners_and_grades_out_activity_text_add_learner">+ Добавить ученика</string>
     <!-- меню сверху -->
     <string name="learners_and_grades_out_activity_menu_title_statistics">Статистика по предмету</string>
+    <string name="learners_and_grades_out_activity_menu_title_show_all">#Показать все#</string>
     <!-- диалоги -->
     <string name="learners_and_grades_out_activity_dialog_title_create_learner">Добавление ученика</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_learner">Редактирование ученика</string>
@@ -169,7 +170,7 @@
     <string name="lesson_redactor_activity_spinner_text_repeat_daily">Каждый день</string>
     <string name="lesson_redactor_activity_spinner_text_repeat_weekly">Каждую неделю</string>
     <!-- тексты -->
-    <string name="lesson_redactor_activity_title_class">Класс</string>
+    <string name="lesson_redactor_activity_title_class">Группа</string>
     <string name="lesson_redactor_activity_title_subject">Предмет</string>
     <string name="lesson_redactor_activity_title_cabinet">Кабинет</string>
     <string name="lesson_redactor_activity_title_time">Дата</string>
@@ -199,6 +200,7 @@
 
     <!-- активность редактора рассадки-->
     <string name="lesson_redactor_activity_text_choose_learner">Выберите ученика:</string>
+    <string name="lesson_redactor_activity_menu_clear">Очистить парты</string>
 
 
     <!-- активность урока-->
@@ -236,7 +238,7 @@
     <!-- тексты -->
     <string name="settings_activity_title_max_answer">Макс. балл/число ответов</string>
     <string name="settings_activity_title_grades_type">Типы работы на уроке</string>
-    <string name="settings_activity_title_absent_type">Типы пропусков</string>
+    <string name="settings_activity_title_absent_type">Типы отсутствия</string>
     <string name="settings_activity_title_colored_grades">Цветные оценки</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">Макс. балл/число ответов: %1$s</string>
@@ -257,11 +259,10 @@
     <string name="settings_activity_dialog_delete_title">Вы точно хотите удалить все данные?</string>
     <string name="settings_activity_dialog_add_type_title">+ добавить тип оценок</string>
     <string name="settings_activity_dialog_new_type_title">Новый тип</string>
-    <string name="settings_activity_dialog_add_absent_type_title">+ добавить тип пропусков</string>
-    <string name="settings_activity_dialog_new_absent_type_long_title_hint">Название типа</string>
-    <string name="settings_activity_dialog_new_absent_type_title_hint">Сокращение</string>
-    <string name="settings_activity_dialog_new_absent_type_long_title">Новый тип</string>
-    <string name="settings_activity_dialog_new_absent_type_title">Кор</string>
+    <string name="settings_activity_dialog_add_absent_type_title">+ Добавить тип отсутствия</string>
+    <string name="settings_activity_dialog_new_absent_type_long_title_hint">Тип:</string>
+    <string name="settings_activity_dialog_new_absent_type_title_hint">Сокращение:</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_empty">Введите название</string>
     <string name="settings_activity_dialog_delete_text_confirm_delete">Для подтверждения введите число </string>
     <string name="settings_activity_dialog_hint_number">ЧИСЛО</string>
     <string name="settings_activity_dialog_button_remove_data">Удалить все данные</string>

@@ -3,6 +3,7 @@ package com.learning.texnar13.teachersprogect.SubjectsDialog;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -42,6 +43,18 @@ public class SubjectsDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        /*
+        *
+        * todo отладить
+        *  создание предмета в редакторе урока при отсутствии предметов на втором классе
+        *  а затем переключение обратно на первый
+        *  java.lang.ArrayIndexOutOfBoundsException: length=1; index=-1
+        *  at java.util.ArrayList.get(ArrayList.java:310)
+        *  at com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorDialogFragment.getAndOutSubjects(LessonRedactorDialogFragment.java:621)
+        *  at com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorDialogFragment$6.onItemSelected(LessonRedactorDialogFragment.java:551)
+        *
+        * */
 
         // начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -119,7 +132,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // кнопка закрыть
         ImageView closeImageView = new ImageView(getActivity());
-        closeImageView.setImageResource(R.drawable.__button_close);
+        closeImageView.setImageResource(R.drawable.base_button_close);
         LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(
                 (int)getResources().getDimension(R.dimen.my_icon_size),
                 (int)getResources().getDimension(R.dimen.my_icon_size)
@@ -358,6 +371,7 @@ public class SubjectsDialogFragment extends DialogFragment {
         // текстовое поле для названия предмета
         final EditText subjectNameField = new EditText(getActivity());
         subjectNameField.setHint(getResources().getString(R.string.learners_and_grades_out_activity_dialog_hint_subject_name));
+        subjectNameField.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         subjectNameField.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
         subjectNameField.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         subjectNameField.setTextColor(Color.BLACK);
@@ -376,7 +390,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // контейнер кнопки создать
         LinearLayout createButtonContainer = new LinearLayout(getActivity());
-        createButtonContainer.setBackgroundResource(R.drawable._button_round_background_green);
+        createButtonContainer.setBackgroundResource(R.drawable._button_round_background_orange);
         // параметры контейнера
         LinearLayout.LayoutParams saveTextButtonContainerParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -441,9 +455,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                     ((SubjectsDialogInterface) getActivity()).createSubject(subjectNameField.getText().toString(), position);
                 } catch (ClassCastException e) {
                     e.printStackTrace();
-                    Log.i("TeachersApp",
-                            "SubjectsDialogFragment: you must implements SubjectsDialogInterface in your activity"
-                    );
+                    Log.i("TeachersApp", "SubjectsDialogFragment: you must implements SubjectsDialogInterface in your activity");
                 }
 
                 // закрываем диалог
@@ -547,7 +559,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
             // кнопка чтобы отмечать предметы на удаление
             final ImageView deleteImage = new ImageView(getActivity());
-            deleteImage.setImageResource(R.drawable.__checkbox_empty);
+            deleteImage.setImageResource(R.drawable.learners_and_grades_activity_abs_checkbox_background_empty);
             // параметры кнопки
             LinearLayout.LayoutParams deleteImageParams = new LinearLayout.LayoutParams(
                     (int)getResources().getDimension(R.dimen.my_icon_small_size), (int)getResources().getDimension(R.dimen.my_icon_small_size)
@@ -569,9 +581,9 @@ public class SubjectsDialogFragment extends DialogFragment {
                 public void onClick(View v) {
                     // инвертируем состояние кнопки
                     if (deleteList[finalSubjectI]) {
-                        deleteImage.setImageResource(R.drawable.__checkbox_empty);
+                        deleteImage.setImageResource(R.drawable.learners_and_grades_activity_abs_checkbox_background_empty);
                     } else {
-                        deleteImage.setImageResource(R.drawable.__checkbox_full);
+                        deleteImage.setImageResource(R.drawable.learners_and_grades_activity_abs_checkbox_background_full);
                     }
                     // и переменной
                     deleteList[finalSubjectI] = !deleteList[finalSubjectI];
@@ -583,6 +595,7 @@ public class SubjectsDialogFragment extends DialogFragment {
             editSubjectsNames[subjectI] = new EditText(getActivity());
             editSubjectsNames[subjectI].setText(subjectsNames.get(subjectI));
             editSubjectsNames[subjectI].setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+            editSubjectsNames[subjectI].setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
             editSubjectsNames[subjectI].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             editSubjectsNames[subjectI].setTextColor(Color.BLACK);
             editSubjectsNames[subjectI].setHint(getResources().getString(R.string.learners_and_grades_out_activity_dialog_hint_subject_name));
@@ -633,7 +646,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // контейнер кнопки сохранить
         LinearLayout saveButtonContainer = new LinearLayout(getActivity());
-        saveButtonContainer.setBackgroundResource(R.drawable._button_round_background_green);
+        saveButtonContainer.setBackgroundResource(R.drawable._button_round_background_orange);
         // параметры контейнера
         LinearLayout.LayoutParams saveTextButtonContainerParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,

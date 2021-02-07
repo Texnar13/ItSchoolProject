@@ -11,21 +11,21 @@
     </string-array>
 
     <string-array name="months_names">
-        <item>ENERO</item>
-        <item>FEBRERO</item>
-        <item>MARZO</item>
-        <item>ABRIL</item>
-        <item>MAYO</item>
-        <item>JUNIO</item>
-        <item>JULIO</item>
-        <item>AGOSTO</item>
-        <item>SEPTRIEMBRE</item>
-        <item>OCTUBRE</item>
-        <item>NOVIEMBRE</item>
-        <item>DICIEMBRE</item>
+        <item>enero</item>
+        <item>febrero</item>
+        <item>marzo</item>
+        <item>abril</item>
+        <item>mayo</item>
+        <item>junio</item>
+        <item>julio</item>
+        <item>agosto</item>
+        <item>septriembre</item>
+        <item>octubre</item>
+        <item>noviembre</item>
+        <item>diciembre</item>
     </string-array>
 
-    <string-array name="months_names_low_case">
+    <string-array name="months_names_with_ending">
         <item>enero</item>        
         <item>febrero</item>
         <item>marzo</item>        

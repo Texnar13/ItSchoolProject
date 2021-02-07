@@ -55,7 +55,7 @@ public class EditLocaleDialogFragment extends DialogFragment {
 
         // кнопка закрыть
         ImageView closeImageView = new ImageView(getActivity());
-        closeImageView.setImageResource(R.drawable.__button_close);
+        closeImageView.setImageResource(R.drawable.base_button_close);
         LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),
                 (int) getResources().getDimension(R.dimen.my_icon_size));

@@ -4,14 +4,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -20,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
@@ -36,7 +34,7 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
 
     // массив с текстами записей, id и view-компонентами
     ArrayList<AbsentTypeRecord> types = new ArrayList<>();
-    //linear в скролле
+    // базовый linear в скролле
     LinearLayout listOut;
 
     @Override
@@ -45,24 +43,24 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-// ---- layout диалога ----
-        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_layout_settings_edit_absent_types, null);
+        // layout диалога
+        View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.settings_dialog_edit_absent_types, null);
         builder.setView(dialogLayout);
 
-
-// ---- LinearLayout в скролле для вывода списка ----
+        // LinearLayout в скролле для вывода списка
         listOut = dialogLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_absent_types_list_out);
         listOut.setGravity(Gravity.CENTER);
         listOut.setOrientation(LinearLayout.VERTICAL);
 
-// ---- получаем данные ----
+
+        // получаем список типов
         try {
-            //переданные значения
+            // переданные значения
             long[] typesId = getArguments().getLongArray(ARGS_TYPES_ID_ARRAY_TAG);
             String[] typesStrings = getArguments().getStringArray(ARGS_TYPES_NAMES_ARRAY_TAG);
             String[] typesLongStrings = getArguments().getStringArray(ARGS_TYPES_LONG_NAMES_ARRAY_TAG);
 
-            //массив с полями
+            // массив с полями
             for (int i = 0; i < typesId.length; i++) {
                 types.add(new AbsentTypeRecord(typesId[i], typesStrings[i], typesLongStrings[i]));
             }
@@ -75,30 +73,21 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
             );
         }
 
-// -- выводим поля в список --
+        // выводим поля в список
         outTypesInLinearLayout(listOut);
 
-// ---- кнопка добавления типа ----
-        TextView addTextButton = dialogLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_absent_types_text_button_add);
-
-        addTextButton.setOnClickListener(new View.OnClickListener() {
+        // кнопка добавления типа
+        dialogLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_absent_types_text_button_add).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     // ---- вызываем в активности метод по созданию нового типа ----
-                    AbsentTypeRecord newType = new AbsentTypeRecord(
-                            ((EditAbsentTypeDialogFragmentInterface) getActivity()).createAbsentType(
-                                    getResources().getString(R.string.settings_activity_dialog_new_absent_type_title),
-                                    getResources().getString(R.string.settings_activity_dialog_new_absent_type_long_title)
-                            ),
-                            getResources().getString(R.string.settings_activity_dialog_new_absent_type_title),
-                            getResources().getString(R.string.settings_activity_dialog_new_absent_type_long_title)
-                    );
+                    AbsentTypeRecord newType = new AbsentTypeRecord(-1, "", "");
                     // ---- создаем контейнер ----
                     LinearLayout newTypeContainer = new LinearLayout(getActivity());
                     newTypeContainer.setGravity(Gravity.CENTER_VERTICAL);
                     newTypeContainer.setOrientation(LinearLayout.VERTICAL);
-                    newTypeContainer.setBackground(getActivity().getResources().getDrawable(R.drawable.__background_round_simple_full_dark_white));
+                    newTypeContainer.setBackground(getActivity().getResources().getDrawable(R.drawable.base_dialog_background_dwhite_full_round));
                     // параметры контейнера
                     LinearLayout.LayoutParams newTypeContainerParams = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -119,8 +108,21 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
                     // ---- выводим контейнер в скролл ----
                     listOut.addView(newTypeContainer, newTypeContainerParams);
 
-                    // ---- выводим содержимое в контейнер ----
-                    outContentInTypeContainer(newType, false);
+                    // ---- выводим содержимое в открытый закрывая все остальные контейнеры
+                    for (int typeI = 0; typeI < types.size(); typeI++) {
+                        if (types.get(typeI) != newType) {
+                            if (types.get(typeI).typeId == -1) {// если запись новая, удаляем
+                                listOut.removeView(types.get(typeI).typeContainer);
+                                types.remove(typeI);
+                                typeI--;
+                            } else {// иначе выводим его не активным
+                                outContentInTypeContainer(types.get(typeI), false);
+                            }
+                        } else
+                            // выводим его активным
+                            outContentInTypeContainer(newType, true);
+
+                    }
 
                 } catch (java.lang.ClassCastException e) {
                     //в вызвающей активности должен быть имплементирован класс EditAbsentTypeDialogFragmentInterface
@@ -162,30 +164,38 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
         layout.removeAllViews();
 
         // ---- основные поля ----
-        for (AbsentTypeRecord type : types) {
-            // ---- создаем контейнер для одного элемента ----
-            LinearLayout item = new LinearLayout(getActivity());
-            item.setGravity(Gravity.CENTER_VERTICAL);
-            item.setOrientation(LinearLayout.VERTICAL);
-            item.setBackground(getActivity().getResources().getDrawable(R.drawable.__background_round_simple_full_dark_white));
-            // параметры контейнера
-            LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            itemParams.bottomMargin = 8;
-            itemParams.setMargins(
-                    (int) getResources().getDimension(R.dimen.half_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.half_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin));
-            // ---- добавляем ссылку на контейнер элементу списка ----
-            type.typeContainer = item;
-            // ---- выводим контейнер в список ----
-            layout.addView(item, itemParams);
+        for (int typeI = 0; typeI < types.size(); typeI++) {
+            // проверка id = -1
+            if (types.get(typeI).typeId == -1) {
+                listOut.removeView(types.get(typeI).typeContainer);
+                types.remove(typeI);
+                typeI--;
+            } else {
 
-            // ---- выводим содержимое в контейнер ----
-            outContentInTypeContainer(type, false);
+                // ---- создаем контейнер для одного элемента ----
+                LinearLayout item = new LinearLayout(getActivity());
+                item.setGravity(Gravity.CENTER_VERTICAL);
+                item.setOrientation(LinearLayout.VERTICAL);
+                item.setBackground(getActivity().getResources().getDrawable(R.drawable.base_dialog_background_dwhite_full_round));
+                // параметры контейнера
+                LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                itemParams.bottomMargin = 8;
+                itemParams.setMargins(
+                        (int) getResources().getDimension(R.dimen.half_margin),
+                        (int) getResources().getDimension(R.dimen.simple_margin),
+                        (int) getResources().getDimension(R.dimen.half_margin),
+                        (int) getResources().getDimension(R.dimen.simple_margin));
+                // ---- добавляем ссылку на контейнер элементу списка ----
+                types.get(typeI).typeContainer = item;
+                // ---- выводим контейнер в список ----
+                layout.addView(item, itemParams);
+
+                // ---- выводим содержимое в контейнер ----
+                outContentInTypeContainer(types.get(typeI), false);
+            }
         }
 
     }
@@ -277,12 +287,12 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
             typeRecord.typeContainer.addView(buttonsContainer, containerParams);
 
             // кнопка удалить
-            if (typeRecord.typeId != 1) {
+            if (typeRecord.typeId != 1 && typeRecord.typeId != -1) {
 
                 // контейнер кнопки
                 LinearLayout removeButtonContainer = new LinearLayout(getActivity());
                 removeButtonContainer.setGravity(Gravity.CENTER);
-                removeButtonContainer.setBackgroundResource(R.drawable.__background_round_simple_full_dark);
+                removeButtonContainer.setBackgroundResource(R.drawable.base_dialog_background_gray_full_round);
                 LinearLayout.LayoutParams removeButtonContainerParams = new LinearLayout.LayoutParams(
                         0,
                         LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -343,7 +353,7 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
             // контейнер кнопки
             LinearLayout saveButtonContainer = new LinearLayout(getActivity());
             saveButtonContainer.setGravity(Gravity.CENTER);
-            saveButtonContainer.setBackgroundResource(R.drawable.__background_round_simple_full_dark);
+            saveButtonContainer.setBackgroundResource(R.drawable.base_dialog_background_gray_full_round);
             LinearLayout.LayoutParams saveButtonContainerParams = new LinearLayout.LayoutParams(
                     0,
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -380,12 +390,34 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
                     // вызываем метод по сохранению названия
                     boolean isChanged = false;
                     try {
-                        //вызываем в активности метод по сохранению
-                        isChanged = ((EditAbsentTypeDialogFragmentInterface) getActivity()).editAbsentType(
-                                typeRecord.typeId,
-                                editText.getText().toString(),
-                                longEditText.getText().toString()
-                        );
+                        // проверка на пустые поля
+                        if (editText.getText().toString().trim().length() == 0 ||
+                                longEditText.getText().toString().trim().length() == 0) {
+                            Toast.makeText(
+                                    getActivity(),
+                                    R.string.settings_activity_dialog_new_absent_type_toast_empty,
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        } else {
+
+
+                            // если запись новая
+                            if (typeRecord.typeId == -1) {
+                                // создаем ее в бд
+                                typeRecord.typeId = ((EditAbsentTypeDialogFragmentInterface) getActivity()).createAbsentType(
+                                        editText.getText().toString().trim(),
+                                        longEditText.getText().toString().trim()
+                                );
+                                isChanged = true;
+                            } else {
+                                // изменяем существующую запись
+                                isChanged = ((EditAbsentTypeDialogFragmentInterface) getActivity()).editAbsentType(
+                                        typeRecord.typeId,
+                                        editText.getText().toString().trim(),
+                                        longEditText.getText().toString().trim()
+                                );
+                            }
+                        }
                     } catch (java.lang.ClassCastException e) {
                         //в вызвающей активности должен быть имплементирован класс EditAbsentTypeDialogFragmentInterface
                         e.printStackTrace();
@@ -409,8 +441,8 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
                     // перевыводим содержимое
                     if (isChanged) {
                         // меняем переменную в списке
-                        typeRecord.typeName = editText.getText().toString();
-                        typeRecord.longName = longEditText.getText().toString();
+                        typeRecord.typeName = editText.getText().toString().trim();
+                        typeRecord.longName = longEditText.getText().toString().trim();
 
                         // выводим неактивный
                         outContentInTypeContainer(typeRecord, false);
@@ -443,10 +475,15 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     // закрываем все остальные контейнеры
-                    for (AbsentTypeRecord fType : types) {
-                        if (fType.typeId != typeRecord.typeId) {
-                            // выводим его не активным
-                            outContentInTypeContainer(fType, false);
+                    for (int typeI = 0; typeI < types.size(); typeI++) {
+                        if (types.get(typeI) != typeRecord) {
+                            if (types.get(typeI).typeId == -1) {// если запись новая, удаляем
+                                listOut.removeView(types.get(typeI).typeContainer);
+                                types.remove(typeI);
+                                typeI--;
+                            } else {// иначе выводим его не активным
+                                outContentInTypeContainer(types.get(typeI), false);
+                            }
                         } else
                             // выводим его активным
                             outContentInTypeContainer(typeRecord, true);
@@ -457,10 +494,11 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
     }
 
 
-    //---------форматы----------
+    // метод вывода содержимого нового не сохраненного элемента списка (с id = -1)
+    // при сохранении он сановится обычным элементом
+    // если пользователь нажмет во вне контейнера, то запись стирается проверками в других методах (тк id = -1).
+    void outNewContainer(final AbsentTypeRecord typeRecord) {
 
-    private float pxFromDp(float px) {
-        return px * getActivity().getResources().getDisplayMetrics().density;
     }
 }
 

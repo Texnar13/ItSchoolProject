@@ -3,7 +3,6 @@ package com.learning.texnar13.teachersprogect.learnersClassesOut;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
@@ -11,6 +10,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.util.TypedValue;
@@ -30,9 +30,6 @@ import com.learning.texnar13.teachersprogect.learnersAndGradesOut.LearnersAndGra
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
-
-import java.util.ArrayList;
-import java.util.Locale;
 
 public class LearnersClassesOutActivity extends AppCompatActivity implements EditLearnersClassDialogInterface, CreateLearnersClassDialogInterface {
 
@@ -64,9 +61,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
     public void editLearnersClass(String name, long classId) {
         //изменяем класс
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        ArrayList<Long> arrayList = new ArrayList<>();
-        arrayList.add(classId);
-        db.setClassesNames(arrayList, name);
+        db.setClassName(classId, name);
         db.close();
         //опять выводим списки
         getLearnersClasses();
@@ -78,9 +73,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
     public void removeLearnersClass(long classId) {
         //удаляем класс
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        ArrayList<Long> arrayList = new ArrayList<>();
-        arrayList.add(classId);
-        db.deleteClasses(arrayList);
+        db.deleteClass(classId);
         db.close();
         //опять выводим списки
         getLearnersClasses();
@@ -97,7 +90,15 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
 
-        setContentView(R.layout.activity_learners_classes_out);
+
+        // раздуваем layout
+        setContentView(R.layout.learners_classes_out_activity);
+        // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
+        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        // убираем заголовок, там свой
+        getSupportActionBar().setTitle("");
+        ((TextView)findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_learners_classes_out);
+
 
         // вертикальная ориентация
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
@@ -108,15 +109,6 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
             window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
-
-        //кнопка назад
-        findViewById(R.id.learners_classes_out_toolbar_back_arrow).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // выходим из активности
-                onBackPressed();
-            }
-        });
 
         // ------ кнопка добавления класса ------
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
@@ -182,7 +174,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 
             //создаем контейнер
             RelativeLayout learnersClassContainer = new RelativeLayout(this);
-            learnersClassContainer.setBackgroundResource(R.drawable.__background_round_simple_full_dark_white);
+            learnersClassContainer.setBackgroundResource(R.drawable.base_dialog_background_dwhite_full_round);
             // параметры контейнера
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,//ш
@@ -221,7 +213,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 
             // стрелочка
             ImageView arrow = new ImageView(this);
-            arrow.setImageResource(R.drawable.__button_forward_arrow_blue);
+            arrow.setImageResource(R.drawable.base_button_forward_blue);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
                     (int) getResources().getDimension(R.dimen.my_icon_small_size),
                     (int) getResources().getDimension(R.dimen.my_icon_small_size)
@@ -287,7 +279,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 
             // создаем контейнер
             RelativeLayout learnersClassContainer = new RelativeLayout(this);
-            learnersClassContainer.setBackgroundResource(R.drawable.__background_round_simple_full_dark_white);
+            learnersClassContainer.setBackgroundResource(R.drawable.base_dialog_background_dwhite_full_round);
             // параметры контейнера
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,//ш
@@ -325,7 +317,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 
             // стрелочка
             ImageView arrow = new ImageView(this);
-            arrow.setImageResource(R.drawable.__button_add_blue);
+            arrow.setImageResource(R.drawable.learners_classes_activity_button_add___kitkat);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
                     (int) getResources().getDimension(R.dimen.my_icon_small_size),
                     (int) getResources().getDimension(R.dimen.my_icon_small_size)

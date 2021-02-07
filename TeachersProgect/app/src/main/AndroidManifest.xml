@@ -4,7 +4,10 @@
     package="com.learning.texnar13.teachersprogect"
     android:versionCode="51"
     android:versionName="tera3.560">
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="replace"/>
+
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:node="replace" />
 
     <application
         android:name=".MyApplication"
@@ -16,11 +19,9 @@
         tools:ignore="GoogleAppIndexingWarning">
 
 
-
         <activity
             android:name=".startScreen.StartScreenActivity"
-            android:configChanges="locale"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:configChanges="locale">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -47,56 +48,44 @@
             android:label="@string/title_activity_lesson" />
         <activity
             android:name=".CabinetRedactorActivity"
-            android:configChanges="locale"/>
+            android:configChanges="locale" />
         <activity
             android:name=".lesson.LessonListActivity"
             android:configChanges="locale"
-            android:label="@string/title_activity_lesson_list"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_lesson_list" />
         <activity
             android:name=".seatingRedactor.SeatingRedactorActivity"
             android:configChanges="locale" />
         <activity
             android:name=".ScheduleMonthActivity"
             android:configChanges="locale"
-            android:label="@string/title_activity_schedule_month"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:label="@string/title_activity_schedule_month" />
         <activity
-            android:name=".ScheduleDayActivity"
+            android:name=".lessonRedactor.LessonRedactorActivity"
             android:configChanges="locale"
-            android:label="@string/title_activity_schedule_day"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".LessonRedactorActivity"
-            android:configChanges="locale"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/myActivityDialogTheme" />
         <activity
             android:name=".settings.SettingsActivity"
             android:configChanges="locale"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".learnersAndGradesOut.LearnersAndGradesActivity"
-            android:configChanges="locale"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:configChanges="locale" />
         <activity
             android:name=".cabinetsOut.CabinetsOutActivity"
             android:configChanges="locale"
-            android:label="@string/title_activity_cabinets_out"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_cabinets_out" />
         <activity
             android:name=".startScreen.StartScreenHelp"
             android:configChanges="locale" />
         <activity
             android:name=".learnersClassesOut.LearnersClassesOutActivity"
             android:configChanges="locale"
-            android:label="@string/title_activity_learners_classes_out"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_learners_classes_out" />
         <activity
             android:name=".learnersAndGradesOut.learnersAndGradesStatistics.LearnersGradesStatisticsActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

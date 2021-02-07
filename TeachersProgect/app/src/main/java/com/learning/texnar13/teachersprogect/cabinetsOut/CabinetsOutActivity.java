@@ -3,7 +3,6 @@ package com.learning.texnar13.teachersprogect.cabinetsOut;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
@@ -11,10 +10,12 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -29,10 +30,7 @@ import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
-import com.learning.texnar13.teachersprogect.learnersClassesOut.CreateLearnersClassDialogFragment;
-
-import java.util.ArrayList;
-import java.util.Locale;
+import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 
 public class CabinetsOutActivity extends AppCompatActivity implements EditCabinetDialogInterface, CreateCabinetInterface {
 
@@ -53,7 +51,14 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         MyApplication.updateLangForContext(this);
 
 
-        setContentView(R.layout.activity_cabinets_out);
+        // раздуваем layout
+        setContentView(R.layout.cabinets_out_activity);
+        // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
+        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        // убираем заголовок, там свой
+        getSupportActionBar().setTitle("");
+        ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_cabinets_out);
+
 
         // вертикальная ориентация
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
@@ -64,15 +69,6 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
             window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
-
-        //кнопка назад
-        findViewById(R.id.cabinets_out_toolbar_back_arrow).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // выходим из активности
-                onBackPressed();
-            }
-        });
 
 
         // ------ кнопка добавления кабинета ------
@@ -139,7 +135,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
 
             //создаем контейнер
             RelativeLayout cabinetContainer = new RelativeLayout(this);
-            cabinetContainer.setBackgroundResource(R.drawable.__background_round_simple_full_dark_white);
+            cabinetContainer.setBackgroundResource(R.drawable.base_dialog_background_dwhite_full_round);
             // параметры контейнера
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,//ш
@@ -167,17 +163,15 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
             );
             itemParams.addRule(RelativeLayout.CENTER_VERTICAL);
             itemParams.setMargins(
-                    (int) getResources().getDimension(R.dimen.double_margin),
-                    0,
+                    (int) getResources().getDimension(R.dimen.double_margin), 0,
                     (int) (getResources().getDimension(R.dimen.my_icon_small_size)
-                            + 2 * getResources().getDimension(R.dimen.simple_margin)),
-                    0
+                            + 2 * getResources().getDimension(R.dimen.simple_margin)), 0
             );
             cabinetContainer.addView(item, itemParams);
 
             // стрелочка
             ImageView arrow = new ImageView(this);
-            arrow.setImageResource(R.drawable.__button_forward_arrow_orange);
+            arrow.setImageResource(R.drawable.base_button_forward_blue);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
                     (int) getResources().getDimension(R.dimen.my_icon_small_size),
                     (int) getResources().getDimension(R.dimen.my_icon_small_size)
@@ -199,42 +193,64 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
             cabinetContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //переходим на редактирование этого кабинета
-                    Intent intent = new Intent(getApplicationContext(), CabinetRedactorActivity.class);
-                    //передаём id выбранного кабинета
-                    intent.putExtra(CabinetRedactorActivity.EDITED_CABINET_ID, finalId);
-                    startActivity(intent);
-                }
-            });
 
-            // долгое
-            cabinetContainer.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    //инициализируем диалог
+//                    // переходим на редактирование этого кабинета
+//                    Intent intent = new Intent(getApplicationContext(), CabinetRedactorActivity.class);
+//                    // передаём id выбранного кабинета
+//                    intent.putExtra(CabinetRedactorActivity.EDITED_CABINET_ID, finalId);
+//                    startActivity(intent);
+//                }
+//            });
+//
+//            // долгое
+//            cabinetContainer.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View view) {
+
+                    // инициализируем диалог
                     EditCabinetDialogFragment editDialog = new EditCabinetDialogFragment();
-                    //-данные для диалога-
-                    //получаем из бд
+
+                    // данные для диалога
+                    // получаем из бд
                     DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                    //кабинеты по Id
+                    // создаем обьект с данными
+                    Bundle args = new Bundle();
+                    args.putLong(EditCabinetDialogFragment.ARG_CABINET_ID, finalId);
+                    // имя кабинета по Id
                     Cursor cabinetCursor = db.getCabinet(finalId);
                     cabinetCursor.moveToFirst();
-                    //создаем обьект с данными
-                    Bundle args = new Bundle();
-                    args.putLong("cabinetId", finalId);
-                    args.putString("name", cabinetCursor.getString(
-                            cabinetCursor.getColumnIndex(
-                                    SchoolContract.TableCabinets.COLUMN_NAME)
+                    args.putString(EditCabinetDialogFragment.ARG_CABINET_NAME, cabinetCursor.getString(
+                            cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)
                     ));
-                    //данные диалогу
-                    editDialog.setArguments(args);
-                    //показать диалог
-                    editDialog.show(getFragmentManager(), "editCabinetDialog");
-
-                    //заканчиваем работу с бд
                     cabinetCursor.close();
+                    // получаем список классов
+                    Cursor classesCursor = db.getLearnersClass();
+                    long[] classesIds = new long[classesCursor.getCount()];
+                    String[] classesNames = new String[classesCursor.getCount()];
+                    for (int classesI = 0; classesI < classesCursor.getCount(); classesI++) {
+                        classesCursor.moveToNext();
+                        // id классов
+                        classesIds[classesI] = classesCursor.getLong(classesCursor.getColumnIndex(
+                                SchoolContract.TableClasses.KEY_CLASS_ID
+                        ));
+                        // имена классов
+                        classesNames[classesI] = classesCursor.getString(classesCursor.getColumnIndex(
+                                SchoolContract.TableClasses.COLUMN_CLASS_NAME
+                        ));
+                    }
+                    args.putLongArray(EditCabinetDialogFragment.ARG_ARRAY_CLASSES_ID, classesIds);
+                    args.putStringArray(EditCabinetDialogFragment.ARG_ARRAY_CLASSES_NAMES, classesNames);
+                    classesCursor.close();
+
+                    // данные диалогу
+                    editDialog.setArguments(args);
+
+                    // показать диалог
+                    editDialog.show(getSupportFragmentManager(), "editCabinetDialog");
+                    // заканчиваем работу с бд
+
                     db.close();
-                    return true;
+                    //return true;
                 }
             });
         }
@@ -245,7 +261,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
 
             // создаем контейнер
             RelativeLayout learnersClassContainer = new RelativeLayout(this);
-            learnersClassContainer.setBackgroundResource(R.drawable.__background_round_simple_full_dark_white);
+            learnersClassContainer.setBackgroundResource(R.drawable.base_dialog_background_dwhite_full_round);
             // параметры контейнера
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,//ш
@@ -283,7 +299,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
 
             // стрелочка
             ImageView arrow = new ImageView(this);
-            arrow.setImageResource(R.drawable.__button_add_orange);
+            arrow.setImageResource(R.drawable.cabinets_activity_button_add___kitkat);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
                     (int) getResources().getDimension(R.dimen.my_icon_small_size),
                     (int) getResources().getDimension(R.dimen.my_icon_small_size)
@@ -365,16 +381,35 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
 
     // переименование
     @Override
-    public void editCabinet(String name, long cabinetId) {
-        //изменяем кабинет
+    public void editCabinetName(long cabinetId, String name) {
+        // изменяем кабинет
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        ArrayList<Long> arrayList = new ArrayList<>();
-        arrayList.add(cabinetId);
-        db.setCabinetName(arrayList, name);
+        db.setCabinetName(cabinetId, name);
         db.close();
-        //опять выводим списки
+        // опять выводим списки
         getCabinets();
         outCabinets();
+    }
+
+    // расставить парты
+    @Override
+    public void arrangeCabinetDesks(long cabinetId) {
+        // переходим на редактирование этого кабинета
+        Intent intent = new Intent(getApplicationContext(), CabinetRedactorActivity.class);
+        // передаём id выбранного кабинета
+        intent.putExtra(CabinetRedactorActivity.EDITED_CABINET_ID, cabinetId);
+        startActivity(intent);
+    }
+
+    // посадить учеников
+    @Override
+    public void arrangeLearnersInCabinet(long cabinetId, long classId) {
+        // переходим на редактирование рассадки
+        Intent intent = new Intent(getApplicationContext(), SeatingRedactorActivity.class);
+        // передаём id выбранного кабинета
+        intent.putExtra(SeatingRedactorActivity.CABINET_ID, cabinetId);
+        intent.putExtra(SeatingRedactorActivity.CLASS_ID, classId);
+        startActivity(intent);
     }
 
     // удаление
@@ -382,13 +417,22 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
     public void removeCabinet(long cabinetId) {
         //удаляем кабинет
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        ArrayList<Long> arrayList = new ArrayList<>();
-        arrayList.add(cabinetId);
-        db.deleteCabinets(arrayList);
+        db.deleteCabinets(cabinetId);
         db.close();
         //опять выводим списки
         getCabinets();
         outCabinets();
+    }
+
+
+    // кнопка назад в actionBar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else
+            return super.onOptionsItemSelected(item);
     }
 
 }

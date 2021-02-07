@@ -9,13 +9,14 @@ import android.graphics.drawable.shapes.RoundRectShape;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -126,13 +127,78 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.seating_redactor_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.seating_redactor_menu_clear).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                // убираем парту и место из выбранного
+                chosenDeskPosition = -1;
+                chosenPlacePosition = -1;
+
+                // если количество учеников не нулевое выводим картинку + на всех местах
+                isPlus = (learners.length != 0);
+
+                // ткрываем бд
+                DataBaseOpenHelper db = new DataBaseOpenHelper(SeatingRedactorActivity.this);
+
+                for (DeskUnit desk : desks)// по массиву с партами
+                    for (int placeI = 0; placeI < desk.placesId.length; placeI++) {// по местам за партой
+                        if (desk.learnersIndexes[placeI] != -1) {// если на этом месте сидит ученик
+                            // удаляем из базы данных
+                            db.deleteLearnerAndPlaceAttitudeById(desk.attitudesId[placeI]);
+
+                            // разрываем связи в списках
+                            learners[desk.learnersIndexes[placeI]].deskNumber = -1;
+                            learners[desk.learnersIndexes[placeI]].placeNumber = -1;
+                            desk.learnersIndexes[placeI] = -1;
+                            desk.attitudesId[placeI] = -1;
+                        }
+
+                        // чистим рзметку
+                        desk.viewPlaceOut[placeI].removeAllViews();
+                        // если можно выводим плюс
+                        if (isPlus) {
+                            // выводим картинку +
+                            ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
+                            LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                            lernerImageParams.setMargins(
+                                    (int) getResources().getDimension(R.dimen.half_margin),
+                                    (int) getResources().getDimension(R.dimen.half_margin),
+                                    (int) getResources().getDimension(R.dimen.half_margin),
+                                    (int) getResources().getDimension(R.dimen.half_margin)
+                            );
+                            lernerImage.setImageResource(R.drawable.seating_redactor_activity_button_add_learner_background);
+                            desk.viewPlaceOut[placeI].addView(lernerImage, lernerImageParams);
+                        }
+                    }
+                db.close();
+                return true;
+            }
+        });
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
 
-        setContentView(R.layout.activity_seating_redactor);
+        // раздуваем layout
+        setContentView(R.layout.seating_redactor_activity);
+        // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
+        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        // убираем заголовок, там свой
+        getSupportActionBar().setTitle("");
+
 
         // настраиваем программный вывод векторных изображений
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -148,17 +214,6 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
         out = findViewById(R.id.seating_redactor_room);
         out.setOnTouchListener(this);
-
-        // отключаем тулбар
-        getSupportActionBar().hide();
-
-        // кнопка назад
-        findViewById(R.id.seating_redactor_toolbar_back_arrow).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
 
 
         // получаем id класса и кабинета из intent
@@ -205,8 +260,9 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             cabinetName = cabinetName.substring(0, 5) + "…";
         }
 
+
         // выставляем заголовок
-        ((TextView) findViewById(R.id.seating_redactor_toolbar_title)).setText(learnersClassName + ", " + cabinetName);
+        ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(learnersClassName + ", " + cabinetName);
 
 
         // получаем учеников
@@ -306,8 +362,6 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
         for (DeskUnit desk : desks) {
             desk.outEmpty();
         }
-
-        //}
     }
 
 
@@ -670,7 +724,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     // создаем картинку ученика
                     ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
                     LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F);
-                    lernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
+                    lernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_gray_0);
                     this.viewPlaceOut[placeI].addView(lernerImage, lernerImageParams);
 
                     // создаем текст ученика
@@ -775,7 +829,6 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
         void outEmpty() {
             for (int placesI = 0; placesI < viewPlaceOut.length; placesI++) {
 
-                Log.e(TAG, "outEmpty: isPlus" + isPlus);
                 // если на месте нет ученика и можно выводить плюсы
                 if (learnersIndexes[placesI] == -1)
                     if (isPlus) {
@@ -790,7 +843,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                                 (int) getResources().getDimension(R.dimen.half_margin),
                                 (int) getResources().getDimension(R.dimen.half_margin)
                         );
-                        lernerImage.setImageResource(R.drawable.__button_circle_plus);
+                        lernerImage.setImageResource(R.drawable.seating_redactor_activity_button_add_learner_background);
                         viewPlaceOut[placesI].addView(lernerImage, lernerImageParams);
                     } else {
                         viewPlaceOut[placesI].removeAllViews();
@@ -804,7 +857,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             // создаем картинку ученика
             ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
             LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F);
-            lernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
+            lernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_gray_0);
             this.viewPlaceOut[place].addView(lernerImage, lernerImageParams);
 
             // создаем текст ученика

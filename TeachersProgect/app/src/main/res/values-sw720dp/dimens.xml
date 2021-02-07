@@ -4,9 +4,6 @@
     <dimen name="activity_vertical_margin">0dp</dimen>
     <dimen name="fab_margin">40dp</dimen>
 
-    <!-- множитель размера парт -->
-    <integer name="desks_screen_multiplier">1</integer>
-
     <!-- высота кнопок -->
     <dimen name="my_buttons_height_size">75dp</dimen>
     <dimen name="spinner_height_size">75dp</dimen>

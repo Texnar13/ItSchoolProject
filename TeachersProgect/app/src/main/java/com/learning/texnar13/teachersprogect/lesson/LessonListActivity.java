@@ -4,9 +4,9 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.MyApplication;
@@ -98,8 +99,14 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
 
-        // разметка
-        setContentView(R.layout.activity_leson_list);
+        // раздуваем layout
+        setContentView(R.layout.leson_list_activity);
+        // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
+        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        // убираем заголовок, там свой
+        getSupportActionBar().setTitle("");
+        ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_lesson_list);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
@@ -110,14 +117,6 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
         // базовый контейнер
         RelativeLayout out = findViewById(R.id.lesson_list_out);
-
-        // кнопка назад
-        findViewById(R.id.lesson_list_toolbar_back_arrow).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
 
         // скролящийся контейнер
         ScrollView scrollView = new ScrollView(this);
@@ -319,7 +318,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         //контейнер для кнопки
         LinearLayout saveButtonContainer = new LinearLayout(this);
         saveButtonContainer.setOrientation(LinearLayout.HORIZONTAL);
-        saveButtonContainer.setBackgroundResource(R.drawable._button_round_background_green);
+        saveButtonContainer.setBackgroundResource(R.drawable._button_round_background_orange);
         saveButtonContainer.setGravity(Gravity.CENTER);
         RelativeLayout.LayoutParams saveButtonContainerParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -456,6 +455,17 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
         // убираем выбор с ученика
         chosenLearnerPoz = -1;
+    }
+
+
+    // кнопка назад в actionBar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else
+            return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -7,6 +7,14 @@
         android:enabled="true"
         android:title="@string/learners_and_grades_out_activity_menu_title_statistics"
         android:visible="true"
-        app:showAsAction="never|withText">
-    </item>
+        app:showAsAction="never|withText"/>
+    <item
+        android:id="@+id/learners_and_grades_menu_show_all"
+        android:checkable="true"
+        android:checked="true"
+        android:enabled="true"
+        android:title="@string/learners_and_grades_out_activity_menu_title_show_all"
+        android:visible="true"
+        app:showAsAction="never|withText"
+        />
 </menu>

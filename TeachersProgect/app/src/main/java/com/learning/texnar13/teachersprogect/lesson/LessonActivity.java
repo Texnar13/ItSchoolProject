@@ -11,9 +11,9 @@ import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.util.Log;
@@ -74,10 +74,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     private static final float MEDIUM_GRADE_SIZE_DOUBLE = 7;
     private static final float LARGE_GRADE_SIZE_DOUBLE = 9;
 
-
-    // межстраничный баннер открывающийся на экране вывода всех оценок при их сохранении
-    com.yandex.mobile.ads.InterstitialAd lessonEndBanner;
-
+//    // межстраничный баннер открывающийся на экране вывода всех оценок при их сохранении
+//    com.yandex.mobile.ads.InterstitialAd lessonEndBanner;
 
     // лист с партами
     static ArrayList<DeskUnit> desksList = new ArrayList<>();
@@ -270,32 +268,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         return true;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (LessonListActivity.RESULT_SAVE == resultCode) {
-            //обнуляем данные
-            chosenLearnerPosition = -1;
-            lessonAttitudeId = -1;
-            subjectId = 0;
-            learnersClassId = 0;
-            cabinetId = 0;
-            subjectName = null;
-            learnersAndTheirGrades = null;
-
-            // выводим рекламму
-            if (lessonEndBanner.isLoaded()) {
-                lessonEndBanner.show();
-            }
-
-            finish();
-        }// else if (LessonListActivity.RESULT_BACK == resultCode) {}
-    }
-
-
     // создание экрана
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -303,17 +277,22 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
 
-        setContentView(R.layout.activity_lesson_main);
+        // раздуваем layout
+        setContentView(R.layout.lesson_activity);
+        // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
+        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        // убираем заголовок, там свой
+        getSupportActionBar().setTitle("");
 
 
-        // ================ начинаем загрузку межстраничного баннера конца урока ================
-        lessonEndBanner = new com.yandex.mobile.ads.InterstitialAd(this);
-        lessonEndBanner.setBlockId(getResources().getString(R.string.banner_id_after_lesson));
-        // Создание объекта таргетирования рекламы.
-        final com.yandex.mobile.ads.AdRequest adRequest =
-                new com.yandex.mobile.ads.AdRequest.Builder().build();
-        // Загрузка объявления
-        lessonEndBanner.loadAd(adRequest);
+//        // ================ начинаем загрузку межстраничного баннера конца урока ================
+//        lessonEndBanner = new com.yandex.mobile.ads.InterstitialAd(this);
+//        lessonEndBanner.setBlockId(getResources().getString(R.string.banner_id_after_lesson));
+//        // Создание объекта таргетирования рекламы.
+//        final com.yandex.mobile.ads.AdRequest adRequest =
+//                new com.yandex.mobile.ads.AdRequest.Builder().build();
+//        // Загрузка объявления
+//        lessonEndBanner.loadAd(adRequest);
 
 
         // цвета статус бара
@@ -322,53 +301,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        }
-
-
-        // цвет кнопки меню
-        getSupportActionBar().getThemedContext().setTheme(R.style.LessonStyle);
-
-        // вставляем в actionBar заголовок активности
-        LinearLayout titleContainer = new LinearLayout(this);
-        titleContainer.setGravity(Gravity.CENTER);
-        titleContainer.setBackgroundResource(R.drawable._button_round_background_pink);
-        ActionBar.LayoutParams titleContainerParams = new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.my_toolbar_text_container_height_size),
-                Gravity.CENTER
-        );
-        titleContainerParams.leftMargin = (int) getResources().getDimension(R.dimen.double_margin);
-        titleContainerParams.rightMargin = (int) getResources().getDimension(R.dimen.double_margin);
-
-        TextView title = new TextView(this);
-        title.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_medium));
-        title.setSingleLine(true);
-        title.setGravity(Gravity.CENTER);
-        title.setTextColor(getResources().getColor(R.color.backgroundWhite));
-        title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-        titleParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-        titleParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-        titleContainer.addView(title, titleParams);
-        getSupportActionBar().setCustomView(titleContainer, titleContainerParams);
-        // выставляем свой заголовок
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-
-
-        // кнопка назад в actionBar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        // убираем тень
-        getSupportActionBar().setElevation(0);
-        // цвет фона
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.backgroundWhite));
-        // кнопка назад
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_pink));
-        } else {
-            getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.__button_back_arrow_pink_png));
         }
 
 
@@ -575,7 +507,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             shortCabinetName = cabinetName;
 
         // выставляем название предмета и класса в заголовок
-        title.setText(shortSubjectName + ", " + shortClassName + ", " + shortCabinetName);
+        ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(shortSubjectName + ", " + shortClassName + ", " + shortCabinetName);
 
     }
 
@@ -658,13 +590,19 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 //-------имя ученика
 
 
+                long placeId = placesCursor.getLong(placesCursor.getColumnIndex(
+                        SchoolContract.TablePlaces.KEY_PLACE_ID));
                 // получаем id ученика, который сидит на этом месте
-                long learnerId = db.getLearnerIdByClassIdAndPlaceId(
-                        learnersClassId,
-                        placesCursor.getLong(placesCursor.getColumnIndex(
-                                SchoolContract.TablePlaces.KEY_PLACE_ID
-                        ))
-                );
+                // пробегаемся по всем ученикам
+                long learnerId = -1;
+                for (int learnerI = 0; learnerI < learnersAndTheirGrades.length && learnerId == -1; learnerI++) {
+                    // получаем зависимость по месту и ученику
+                    Cursor placeAttitudeCursor = db.getAttitudeByLearnerIdAndPlaceId(learnerId, placeId);
+                    if (placeAttitudeCursor.moveToLast()) {
+                        learnerId = placeAttitudeCursor.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_ATTITUDE_ID);
+                    }
+                    placeAttitudeCursor.close();
+                }
 
                 // если ученика нет, то нет и смысла выводить здесь что-либо
                 if (learnerId >= 0) {
@@ -745,24 +683,24 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
                     // ставим в tempLernerImage изображение по последней оценке(из памяти)
                     if (learnersAndTheirGrades[learnerPosition].absTypePozNumber != -1) {// пропуск
-                        tempLernerImage.setImageResource(R.drawable.lesson_learner_abs);
+                        tempLernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_abs);
                     } else if (currentGrade == 0) {
-                        tempLernerImage.setImageResource(R.drawable.lesson_learner_0_gray);
+                        tempLernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_gray_0);
                     } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 20) {
                         //1
-                        tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
+                        tempLernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_1);
                     } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 41) {
                         //2
-                        tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
+                        tempLernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_2);
                     } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 60) {
                         //3
-                        tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
+                        tempLernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_3);
                     } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 80) {
                         //4
-                        tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
+                        tempLernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_4);
                     } else if ((int) (((float) currentGrade / (float) maxAnswersCount) * 100F) <= 100) {
                         //5
-                        tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
+                        tempLernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_5);
                     }
 
                     // выбираем очередность оценок//..
@@ -947,19 +885,19 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                                 // ставим соответствующую картинку
                                 if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 20) {
                                     //1
-                                    tempLernerImage.setImageResource(R.drawable.lesson_learner_1);
+                                    tempLernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_1);
                                 } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 41) {
                                     //2
-                                    tempLernerImage.setImageResource(R.drawable.lesson_learner_2);
+                                    tempLernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_2);
                                 } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 60) {
                                     //3
-                                    tempLernerImage.setImageResource(R.drawable.lesson_learner_3);
+                                    tempLernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_3);
                                 } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 80) {
                                     //4
-                                    tempLernerImage.setImageResource(R.drawable.lesson_learner_4);
+                                    tempLernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_4);
                                 } else if ((int) (((float) learnersAndTheirGrades[learnerPosition].learnerGrades[learnersAndTheirGrades[learnerPosition].chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 100) {
                                     //5
-                                    tempLernerImage.setImageResource(R.drawable.lesson_learner_5);
+                                    tempLernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_5);
                                 }
                             }
                         }
@@ -1205,6 +1143,29 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 
+    // обратная связь
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (LessonListActivity.RESULT_SAVE == resultCode) {
+            //обнуляем данные
+            chosenLearnerPosition = -1;
+            lessonAttitudeId = -1;
+            subjectId = 0;
+            learnersClassId = 0;
+            cabinetId = 0;
+            subjectName = null;
+            learnersAndTheirGrades = null;
+
+//            // выводим рекламму
+//            if (lessonEndBanner.isLoaded()) {
+//                lessonEndBanner.show();
+//            }
+            finish();
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -1278,31 +1239,14 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         subjectName = null;
         learnersAndTheirGrades = null;
 
-        // выводим рекламму
-        if (lessonEndBanner.isLoaded()) {
-            lessonEndBanner.show();
-        }
+//        // выводим рекламму
+//        if (lessonEndBanner.isLoaded()) {
+//            lessonEndBanner.show();
+//        }
 
         // выходим из активности
         super.onBackPressed();
     }
-
-//    // обратная связь от диалога EndLessonDialogFragment
-//    @Override
-//    public void endLesson() {
-//
-//        //обнуляем данные
-//        chosenLearnerPosition = -1;
-//        lessonAttitudeId = -1;
-//        subjectId = 0;
-//        learnersClassId = 0;
-//        cabinetId = 0;
-//        subjectName = null;
-//        learnersAndTheirGrades = null;
-//
-//        // выходим из активности
-//        finish();
-//    }
 
     private float pxFromDp(float dp) {
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
@@ -1522,24 +1466,24 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             Log.e(TAG, "--------- " + learnerGrades[chosenGradePosition]);
             // меняем изображение на учненике в соответствии с оценкой
             if (absTypePozNumber != -1) {// пропуск
-                viewLearnerImage.setImageResource(R.drawable.lesson_learner_abs);
+                viewLearnerImage.setImageResource(R.drawable.lesson_activity_learner_icon_abs);
             } else if (learnerGrades[chosenGradePosition] == 0) {
-                viewLearnerImage.setImageResource(R.drawable.lesson_learner_0_gray);
+                viewLearnerImage.setImageResource(R.drawable.lesson_activity_learner_icon_gray_0);
             } else if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 20) {
                 //1
-                viewLearnerImage.setImageResource(R.drawable.lesson_learner_1);
+                viewLearnerImage.setImageResource(R.drawable.lesson_activity_learner_icon_1);
             } else if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 41) {
                 //2
-                viewLearnerImage.setImageResource(R.drawable.lesson_learner_2);
+                viewLearnerImage.setImageResource(R.drawable.lesson_activity_learner_icon_2);
             } else if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 60) {
                 //3
-                viewLearnerImage.setImageResource(R.drawable.lesson_learner_3);
+                viewLearnerImage.setImageResource(R.drawable.lesson_activity_learner_icon_3);
             } else if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 80) {
                 //4
-                viewLearnerImage.setImageResource(R.drawable.lesson_learner_4);
+                viewLearnerImage.setImageResource(R.drawable.lesson_activity_learner_icon_4);
             } else if ((int) (((float) learnerGrades[chosenGradePosition] / (float) maxAnswersCount) * 100F) <= 100) {
                 //5
-                viewLearnerImage.setImageResource(R.drawable.lesson_learner_5);
+                viewLearnerImage.setImageResource(R.drawable.lesson_activity_learner_icon_5);
             }
 
 

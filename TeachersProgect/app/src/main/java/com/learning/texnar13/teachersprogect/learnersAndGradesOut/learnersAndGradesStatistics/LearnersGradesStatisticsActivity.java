@@ -63,12 +63,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 
 
     // текстовые поля времени
-    private EditText startDayEditText;
-    private EditText startMonthEditText;
-    private EditText startYearEditText;
-    private EditText endDayEditText;
-    private EditText endMonthEditText;
-    private EditText endYearEditText;
+    private EditText[] timeTexts = new EditText[6];
 
     // колонка со списком оценок
     private LinearLayout gradesColumn;
@@ -85,7 +80,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
 
-        setContentView(R.layout.activity_learners_grades_statistics);
+        setContentView(R.layout.learners_grades_statistics_activity);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -177,12 +172,12 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 
 
         // находим текстовые поля дат
-        startDayEditText = (EditText) findViewById(R.id.learners_grades_statistics_begin_day);
-        startMonthEditText = (EditText) findViewById(R.id.learners_grades_statistics_begin_month);
-        startYearEditText = (EditText) findViewById(R.id.learners_grades_statistics_begin_year);
-        endDayEditText = (EditText) findViewById(R.id.learners_grades_statistics_end_day);
-        endMonthEditText = (EditText) findViewById(R.id.learners_grades_statistics_end_month);
-        endYearEditText = (EditText) findViewById(R.id.learners_grades_statistics_end_year);
+        timeTexts[0] = (EditText) findViewById(R.id.learners_grades_statistics_begin_day);
+        timeTexts[1] = (EditText) findViewById(R.id.learners_grades_statistics_begin_month);
+        timeTexts[2] = (EditText) findViewById(R.id.learners_grades_statistics_begin_year);
+        timeTexts[3] = (EditText) findViewById(R.id.learners_grades_statistics_end_day);
+        timeTexts[4] = (EditText) findViewById(R.id.learners_grades_statistics_end_month);
+        timeTexts[5] = (EditText) findViewById(R.id.learners_grades_statistics_end_year);
 
         // назначаем слушатели изменения текста, которые при изменении поля запускают проверку, сохранение и вывод
         TextWatcher watcher = new TextWatcher() {
@@ -202,15 +197,11 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                     // проверяем, можем ли получать оценки
                     if (periodPosition != -1) {
                         // проверяем даты на соответствие
-                        if (isDateGood(startDayEditText, startMonthEditText, startYearEditText, endDayEditText, endMonthEditText, endYearEditText)) {
+                        if (isDateGood()) {
                             // помещаем в массив
-                            Log.e("TeachersApp", "endYearEditText.afterTextChanged: saveDate");
-                            periods.get(periodPosition).dates[0] = Integer.parseInt(startDayEditText.getText().toString());
-                            periods.get(periodPosition).dates[1] = Integer.parseInt(startMonthEditText.getText().toString());
-                            periods.get(periodPosition).dates[2] = Integer.parseInt(startYearEditText.getText().toString());
-                            periods.get(periodPosition).dates[3] = Integer.parseInt(endDayEditText.getText().toString());
-                            periods.get(periodPosition).dates[4] = Integer.parseInt(endMonthEditText.getText().toString());
-                            periods.get(periodPosition).dates[5] = Integer.parseInt(endYearEditText.getText().toString());
+                            Log.e("TeachersApp", "timeTexts[5].afterTextChanged: saveDate");
+                            for (int fieldI = 0; fieldI < 6; fieldI++)
+                                periods.get(periodPosition).dates[fieldI] = Integer.parseInt(timeTexts[fieldI].getText().toString());
                             // сохраняем в бд
                             DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
                             db.setStatisticTime(
@@ -244,12 +235,8 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                     }
             }
         };
-        startDayEditText.addTextChangedListener(watcher);
-        startMonthEditText.addTextChangedListener(watcher);
-        startYearEditText.addTextChangedListener(watcher);
-        endDayEditText.addTextChangedListener(watcher);
-        endMonthEditText.addTextChangedListener(watcher);
-        endYearEditText.addTextChangedListener(watcher);
+        for (int fieldI = 0; fieldI < 6; fieldI++)
+            timeTexts[fieldI].addTextChangedListener(watcher);
 
 
         // выводим учеников в таблицу
@@ -344,32 +331,17 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         isTextCheckRun = false;
         // меняем тексты
         if (periodPosition != -1) {
-            startDayEditText.setText("" + periods.get(periodPosition).dates[0]);
-            startDayEditText.setBackgroundResource(R.drawable._underlined_black);
-            startMonthEditText.setText("" + periods.get(periodPosition).dates[1]);
-            startMonthEditText.setBackgroundResource(R.drawable._underlined_black);
-            startYearEditText.setText("" + periods.get(periodPosition).dates[2]);
-            startYearEditText.setBackgroundResource(R.drawable._underlined_black);
-            endDayEditText.setText("" + periods.get(periodPosition).dates[3]);
-            endDayEditText.setBackgroundResource(R.drawable._underlined_black);
-            endMonthEditText.setText("" + periods.get(periodPosition).dates[4]);
-            endMonthEditText.setBackgroundResource(R.drawable._underlined_black);
-            endYearEditText.setText("" + periods.get(periodPosition).dates[5]);
-            endYearEditText.setBackgroundResource(R.drawable._underlined_black);
+            for (int fieldI = 0; fieldI < 6; fieldI++) {
+                timeTexts[fieldI].setText("" + periods.get(periodPosition).dates[fieldI]);
+                timeTexts[fieldI].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                timeTexts[fieldI].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+            }
         } else {
-            startDayEditText.setText("");
-            startDayEditText.setBackgroundResource(R.drawable._underlined_black);
-            startMonthEditText.setText("");
-            startMonthEditText.setBackgroundResource(R.drawable._underlined_black);
-            startYearEditText.setText("");
-            startYearEditText.setBackgroundResource(R.drawable._underlined_black);
-            endDayEditText.setText("");
-            endDayEditText.setBackgroundResource(R.drawable._underlined_black);
-            endMonthEditText.setText("");
-            endMonthEditText.setBackgroundResource(R.drawable._underlined_black);
-            endYearEditText.setText("");
-            endYearEditText.setBackgroundResource(R.drawable._underlined_black);
-
+            for (int fieldI = 0; fieldI < 6; fieldI++) {
+                timeTexts[fieldI].setText("");
+                timeTexts[fieldI].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                timeTexts[fieldI].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+            }
         }
         // разрешаем проверку
         isTextCheckRun = true;
@@ -512,7 +484,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
     }
 
     // проверка дат
-    boolean isDateGood(EditText editStartDay, EditText editStartMonth, EditText editStartYear, EditText editEndDay, EditText editEndMonth, EditText editEndYear) {
+    boolean isDateGood() {
         //переменная отвечающая за то подходят данные или нет
         boolean isGood = true;
 
@@ -522,58 +494,71 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         GregorianCalendar startCalendar = new GregorianCalendar(0, 0, 1, 0, 0);
 
         // размеры текста
-        if (editStartYear.getText().toString().length() != 4) {
-            editStartYear.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+        if (timeTexts[2].getText().toString().length() != 4) {
+            timeTexts[2].setTextColor(getResources().getColor(R.color.signalRed));
+            timeTexts[2].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+            //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
             isGood = false;
         } else {
             // диапазон чисел
-            if (Integer.parseInt(editStartYear.getText().toString()) < 1000 || Integer.parseInt(editStartYear.getText().toString()) > 9999) {
-                editStartYear.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+            if (Integer.parseInt(timeTexts[2].getText().toString()) < 1000 || Integer.parseInt(timeTexts[2].getText().toString()) > 9999) {
+                timeTexts[2].setTextColor(getResources().getColor(R.color.signalRed));
+                timeTexts[2].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
                 isGood = false;
             } else {
                 //убираем красный
-                startDayEditText.setBackgroundResource(R.drawable._underlined_black);
+                timeTexts[2].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                timeTexts[2].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
                 // год в календарь
-                startCalendar.set(GregorianCalendar.YEAR, Integer.parseInt(editStartYear.getText().toString()));
+                startCalendar.set(GregorianCalendar.YEAR, Integer.parseInt(timeTexts[2].getText().toString()));
 
             }
         }
 
         // размеры текста
-        if (editStartMonth.getText().toString().length() <= 0 || editStartMonth.getText().toString().length() > 2) {
-            editStartMonth.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+        if (timeTexts[1].getText().toString().length() <= 0 || timeTexts[1].getText().toString().length() > 2) {
+            timeTexts[1].setTextColor(getResources().getColor(R.color.signalRed));
+            timeTexts[1].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+            //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
             isGood = false;
         } else {
             // диапазон чисел
-            if (Integer.parseInt(editStartMonth.getText().toString()) < 1 || Integer.parseInt(editStartMonth.getText().toString()) > 12) {
-                editStartMonth.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+            if (Integer.parseInt(timeTexts[1].getText().toString()) < 1 || Integer.parseInt(timeTexts[1].getText().toString()) > 12) {
+                timeTexts[1].setTextColor(getResources().getColor(R.color.signalRed));
+                timeTexts[1].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
                 isGood = false;
             } else {
                 //убираем красный
-                editStartMonth.setBackgroundResource(R.drawable._underlined_black);
+                timeTexts[1].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                timeTexts[1].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
                 // месяц в календарь
-                startCalendar.set(GregorianCalendar.MONTH, Integer.parseInt(editStartMonth.getText().toString()) - 1);
+                startCalendar.set(GregorianCalendar.MONTH, Integer.parseInt(timeTexts[1].getText().toString()) - 1);
             }
         }
 
-        //if (isGood) {
         // размеры текста
-        if (editStartDay.getText().toString().length() <= 0 || editStartDay.getText().toString().length() > 2) {
-            editStartDay.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+        if (timeTexts[0].getText().toString().length() <= 0 || timeTexts[0].getText().toString().length() > 2) {
+            timeTexts[0].setTextColor(getResources().getColor(R.color.signalRed));
+            timeTexts[0].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+            //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
             isGood = false;
         } else {
             // диапазон чисел
-            if (Integer.parseInt(editStartDay.getText().toString()) < 1 || Integer.parseInt(editStartDay.getText().toString()) > startCalendar.getActualMaximum(GregorianCalendar.DAY_OF_MONTH)) {
-                editStartDay.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+            if (Integer.parseInt(timeTexts[0].getText().toString()) < 1 || Integer.parseInt(timeTexts[0].getText().toString()) > startCalendar.getActualMaximum(GregorianCalendar.DAY_OF_MONTH)) {
+                timeTexts[0].setTextColor(getResources().getColor(R.color.signalRed));
+                timeTexts[0].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
                 isGood = false;
             } else {
                 //убираем красный
-                editStartDay.setBackgroundResource(R.drawable._underlined_black);
+                timeTexts[0].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                timeTexts[0].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
                 // день в календарь
-                startCalendar.set(GregorianCalendar.DAY_OF_MONTH, Integer.parseInt(editStartDay.getText().toString()));
+                startCalendar.set(GregorianCalendar.DAY_OF_MONTH, Integer.parseInt(timeTexts[0].getText().toString()));
             }
         }
-        //}
+
 
 
         // - дата конца -
@@ -583,76 +568,85 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         endCalendar.setTime(startCalendar.getTime());
 
         // размеры текста
-        if (editEndYear.getText().toString().length() != 4) {
-            editEndYear.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+        if (timeTexts[5].getText().toString().length() != 4) {
+            timeTexts[5].setTextColor(getResources().getColor(R.color.signalRed));
+            timeTexts[5].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+            //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
             isGood = false;
         } else {
             // диапазон чисел
-            if (Integer.parseInt(editEndYear.getText().toString()) < 1000 || Integer.parseInt(editEndYear.getText().toString()) > 9999) {
-                editEndYear.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+            if (Integer.parseInt(timeTexts[5].getText().toString()) < 1000 || Integer.parseInt(timeTexts[5].getText().toString()) > 9999) {
+                timeTexts[5].setTextColor(getResources().getColor(R.color.signalRed));
+                timeTexts[5].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
                 isGood = false;
             } else {
                 //убираем красный
-                editEndYear.setBackgroundResource(R.drawable._underlined_black);
+                timeTexts[5].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                timeTexts[5].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
                 // год в календарь
-                endCalendar.set(GregorianCalendar.YEAR, Integer.parseInt(editEndYear.getText().toString()));
+                endCalendar.set(GregorianCalendar.YEAR, Integer.parseInt(timeTexts[5].getText().toString()));
             }
         }
 
         // размеры текста
-        if (editEndMonth.getText().toString().length() <= 0 || editEndMonth.getText().toString().length() > 2) {
-            editEndMonth.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+        if (timeTexts[4].getText().toString().length() <= 0 || timeTexts[4].getText().toString().length() > 2) {
+            timeTexts[4].setTextColor(getResources().getColor(R.color.signalRed));
+            timeTexts[4].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+            //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
             isGood = false;
         } else {
             // диапазон чисел
-            if (Integer.parseInt(editEndMonth.getText().toString()) < 1 || Integer.parseInt(editEndMonth.getText().toString()) > 12) {
-                editEndMonth.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+            if (Integer.parseInt(timeTexts[4].getText().toString()) < 1 || Integer.parseInt(timeTexts[4].getText().toString()) > 12) {
+                timeTexts[4].setTextColor(getResources().getColor(R.color.signalRed));
+                timeTexts[4].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
                 isGood = false;
             } else {
                 //убираем красный
-                editEndMonth.setBackgroundResource(R.drawable._underlined_black);
+                timeTexts[4].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                timeTexts[4].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
                 // месяц в календарь
-                endCalendar.set(GregorianCalendar.MONTH, Integer.parseInt(editEndMonth.getText().toString()) - 1);
+                endCalendar.set(GregorianCalendar.MONTH, Integer.parseInt(timeTexts[4].getText().toString()) - 1);
             }
         }
 
-
-        //if (isGood) {
         // размеры текста
-        if (editEndDay.getText().toString().length() <= 0 || editEndDay.getText().toString().length() > 2) {
-            editEndDay.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+        if (timeTexts[3].getText().toString().length() <= 0 || timeTexts[3].getText().toString().length() > 2) {
+            timeTexts[3].setTextColor(getResources().getColor(R.color.signalRed));
+            timeTexts[3].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+            //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
             isGood = false;
         } else {
             // диапазон чисел
-            if (Integer.parseInt(editEndDay.getText().toString()) < 1 || Integer.parseInt(editEndDay.getText().toString()) > endCalendar.getActualMaximum(GregorianCalendar.DAY_OF_MONTH)) {
-                editEndDay.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+            if (Integer.parseInt(timeTexts[3].getText().toString()) < 1 || Integer.parseInt(timeTexts[3].getText().toString()) > endCalendar.getActualMaximum(GregorianCalendar.DAY_OF_MONTH)) {
+                timeTexts[3].setTextColor(getResources().getColor(R.color.signalRed));
+                timeTexts[3].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
                 isGood = false;
             } else {
                 //убираем красный
-                editEndDay.setBackgroundResource(R.drawable._underlined_black);
+                timeTexts[3].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                timeTexts[3].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
                 // день в календарь
-                endCalendar.set(GregorianCalendar.DAY_OF_MONTH, Integer.parseInt(editEndDay.getText().toString()));
+                endCalendar.set(GregorianCalendar.DAY_OF_MONTH, Integer.parseInt(timeTexts[3].getText().toString()));
             }
         }
-        //}
+
 
         if (isGood) {
-            // проверка по времени
+            // проверка по времени начала и конца
             if (startCalendar.getTime().getTime() > endCalendar.getTime().getTime()) {
-                editStartDay.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
-                editStartMonth.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
-                editStartYear.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
-                editEndDay.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
-                editEndMonth.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
-                editEndYear.setBackground(getResources().getDrawable(R.drawable._underlined_black_pink));
+                for (int fieldI = 0; fieldI < 6; fieldI++) {
+                    timeTexts[fieldI].setTextColor(getResources().getColor(R.color.signalRed));
+                    timeTexts[fieldI].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                }
                 isGood = false;
             } else {
-                editStartDay.setBackgroundResource(R.drawable._underlined_black);
-                editStartMonth.setBackgroundResource(R.drawable._underlined_black);
-                editStartYear.setBackgroundResource(R.drawable._underlined_black);
-                editEndDay.setBackgroundResource(R.drawable._underlined_black);
-                editEndMonth.setBackgroundResource(R.drawable._underlined_black);
-                editEndYear.setBackgroundResource(R.drawable._underlined_black);
+                for (int fieldI = 0; fieldI < 6; fieldI++) {
+                    timeTexts[fieldI].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+                    timeTexts[fieldI].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                }
             }
         }
 

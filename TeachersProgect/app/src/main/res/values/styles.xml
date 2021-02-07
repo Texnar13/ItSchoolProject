@@ -1,13 +1,89 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- семейство шрифтов -->
         <item name="android:fontFamily">@font/geometria_family</item>
 
         <item name="colorPrimary">@color/baseBlue</item>
+        <item name="android:textColorPrimary">@color/baseOrange</item>
         <item name="colorPrimaryDark">@color/backgroundLiteGray</item>
-        <item name="colorAccent">@color/backgroundGray</item>
+        <item name="colorAccent">@color/baseBlue</item>
+
+
+        <!--item name="autoCompleteTextViewStyle">@style/Widget.EditText.MyEditTextStyle</item>
+        <item name="editTextStyle">@style/Widget.EditText.MyEditTextStyle</item>
+        <item name="android:editTextStyle">@style/Widget.EditText.MyEditTextStyle</item-->
+
+
+        <item name="android:textViewStyle">@style/MyTextViewStyle</item>
     </style>
+
+    <!-- Стиль текстовых полей ввода -->
+    <style name="Widget.EditText.MyEditTextStyle" parent="@android:style/Widget.EditText">
+
+        <item name="android:textColor">@color/baseBlue</item>
+        <item name="android:textColorPrimary">@color/baseBlue</item>
+        <item name="android:textCursorDrawable">@color/baseBlue</item>
+
+
+        <item name="editTextBackground">@color/baseGreen</item>
+        <item name="background">@color/baseGreen</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/baseGreen</item>
+
+        <!-- выделенный текст -->
+        <item name="colorAccent">@color/baseBlue</item>
+    </style>
+
+    <!-- Стиль текстов -->
+    <style name="MyTextViewStyle" parent="Widget.AppCompat.TextView">
+        <item name="fontFamily">@font/geometria</item>
+    </style>
+
+
+    <style name="myActivityDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <!-- без предка Theme.AppCompat.Light.Dialog не открываются внутренние диалоги -->
+
+        <!-- убираем отступы-вставки по краям -->
+        <item name="android:windowBackground">
+            @drawable/lesson_redactor_dialog_background_no_insert
+        </item>
+        <!-- тень позади диалога -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- нажатия за пределами диалога закрывают его -->
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
+
+    <style name="MyToolbarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <!-- цвет точек меню и стрелки-->
+        <item name="colorControlNormal">@color/baseBlue</item>
+        <!--item name="android:colorControlNormal" tools:targetApi="lollipop">@color/baseBlue</item-->
+        <item name="titleTextColor">@color/baseBlue</item>
+        <!-- цвет фона -->
+        <item name="colorPrimary">@color/backgroundWhite</item>
+        <!-- подсветка фона кнопок при нажатии -->
+        <item name="colorControlHighlight">@color/backgroundLiteGray</item>
+
+        <item name="homeAsUpIndicator">@drawable/base_button_back_blue</item>
+        <item name="titleTextStyle">@style/myToolbarTextStyle</item>
+
+
+        <item name="android:singleLineTitle" tools:targetApi="o">true</item>
+
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+
+    <style name="myToolbarTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+
+        <!-- @android:style/TextAppearance.Holo.Widget.ActionBar.Title -->
+        <item name="android:textSize">@dimen/text_small_size</item>
+
+    </style>
+
+
+    <!--    |||||||||||||||||||||||||||||||||    -->
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -19,19 +95,18 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- тема для текстов в выпадающем меню -->
-    <style name="MenuTextStyle" parent="@android:style/Widget.TextView"> >
+    <style name="MenuTextStyle" parent="@android:style/Widget.TextView">
         <item name="android:textColor">#A85E4F</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">12sp</item>
     </style>
 
 
-
     <style name="ThemeYellowToolbarIcons" parent="Theme.AppCompat.Light">
         <!-- цвет иконок навигации -->
         <item name="colorControlNormal">@color/baseOrange</item>
         <!-- color of the menu overflow icon -->
-<!--        <item name="android:textColorSecondary">@color/baseGreen</item>-->
+        <!--        <item name="android:textColorSecondary">@color/baseGreen</item>-->
     </style>
 
     <!-- стиль ActionBar урока -->

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/_dialog_head_background_blue">
+
+        <ImageView
+            android:id="@+id/dialog_fragment_layout_cabinet_out_edit_cabinet_cancel_button"
+            android:layout_width="@dimen/my_icon_size"
+            android:layout_height="@dimen/my_icon_size"
+            android:layout_margin="@dimen/simple_margin"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/base_button_close" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/simple_margin"
+            android:fontFamily="@font/geometria_medium"
+            android:gravity="center"
+            android:text="@string/cabinets_out_activity_dialog_title_edit_cabinet"
+            android:textColor="@color/backgroundWhite"
+            android:textSize="@dimen/text_subtitle_size" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/_dialog_bottom_background_white"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/double_margin"
+                android:paddingLeft="@dimen/double_margin"
+                android:paddingRight="@dimen/double_margin">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/double_margin"
+                    android:layout_marginBottom="@dimen/double_margin"
+                    android:background="@drawable/base_dialog_background_gray_full_round"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/half_more_margin"
+                        android:fontFamily="@font/geometria_medium"
+                        android:gravity="center"
+                        android:text="#Название:"
+                        android:textColor="@color/backgroundDarkGray"
+                        android:textSize="@dimen/text_subtitle_size" />
+
+                    <EditText
+                        android:hint="@string/cabinets_out_activity_dialog_hint_cabinet_name"
+                        android:id="@+id/dialog_fragment_layout_cabinet_out_edit_cabinet_name_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/simple_margin"
+                        android:layout_marginRight="@dimen/simple_margin"
+                        android:fontFamily="@font/geometria_medium"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/text_subtitle_size" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/double_margin"
+                    android:background="@drawable/base_dialog_background_gray_full_round"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/double_margin"
+                    android:paddingRight="@dimen/double_margin">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/double_margin"
+                        android:fontFamily="@font/geometria_medium"
+                        android:gravity="center"
+                        android:text="#Пересадить учеников:"
+                        android:textColor="@color/backgroundDarkGray"
+                        android:textSize="@dimen/text_subtitle_size" />
+
+                    <LinearLayout
+                        android:id="@+id/dialog_fragment_layout_cabinet_out_edit_cabinet_classes_out"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/dialog_fragment_layout_cabinet_out_edit_cabinet_arrange_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/double_margin"
+                    android:background="@drawable/base_dialog_background_blue_full_round"
+                    android:fontFamily="@font/geometria_medium"
+                    android:gravity="center"
+                    android:padding="@dimen/half_more_margin"
+                    android:text="#Переставить парты"
+                    android:textColor="@color/backgroundWhite"
+                    android:textSize="@dimen/text_subtitle_size" />
+
+                <TextView
+                    android:id="@+id/dialog_fragment_layout_cabinet_out_edit_cabinet_delete_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/geometria_medium"
+                    android:gravity="center"
+                    android:layout_margin="@dimen/half_more_margin"
+                    android:text="#Удалить кабинет"
+                    android:textColor="@color/signalRed"
+                    android:textSize="@dimen/text_subtitle_size" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundWhite"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.learning.texnar13.teachersprogect.learnersAndGradesOut.LearnersAndGradesActivity">
+
+    <include layout="@layout/base_toolbar_blue" />
+
+    <com.learning.texnar13.teachersprogect.learnersAndGradesOut.LearnersAndGradesTableView
+        android:id="@+id/learners_and_grades_activity_table_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>

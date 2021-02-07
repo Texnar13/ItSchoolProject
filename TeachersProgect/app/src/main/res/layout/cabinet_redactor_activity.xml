@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.learning.texnar13.teachersprogect.CabinetRedactorActivity">
+
+    <RelativeLayout
+        android:id="@+id/redactor_out_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:background="@color/backgroundWhite"/>
+
+    <RelativeLayout
+        android:id="@+id/redactor_out"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/cabinet_redactor_state_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:fontFamily="@font/geometria_light"
+            android:gravity="center"
+            android:text="@string/cabinet_redactor_activity_text_help"
+            android:textColor="@color/backgroundLiteGray"
+            android:textSize="@dimen/text_subtitle_size" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:baselineAligned="false"
+
+        android:orientation="horizontal">
+
+        <RelativeLayout
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <RelativeLayout
+                android:id="@+id/activity_cabinet_redactor_instrumental_image_background"
+                android:layout_width="@dimen/cabinet_redactor_button_add_size"
+                android:layout_height="@dimen/cabinet_redactor_button_add_size"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/cabinet_redactor_button_add_bottom_margin"
+                android:background="@drawable/cabinet_redactor_activity_button_add_desk">
+
+                <ImageView
+                    android:id="@+id/activity_cabinet_redactor_instrumental_image"
+                    android:layout_width="@dimen/cabinet_redactor_button_add_image_size"
+                    android:layout_height="@dimen/cabinet_redactor_button_add_image_size"
+                    android:layout_centerInParent="true"
+                    app:srcCompat="@drawable/base_button_add_white" />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+    </LinearLayout>
+
+
+    <include layout="@layout/base_toolbar_blue" />
+
+</RelativeLayout>

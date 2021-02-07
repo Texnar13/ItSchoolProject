@@ -20,21 +20,21 @@
 
 
     <string-array name="months_names">
-        <item>JANUARY</item>        
-        <item>FEBRUARY</item>
-        <item>MARCH</item>        
-        <item>APRIL</item>       
-        <item>MAY</item>        
-        <item>JUNE</item>        
-        <item>JULY</item>        
-        <item>AUGUST</item>       
-        <item>SEPTEMBER</item>        
-        <item>OCTOBER</item>        
-        <item>NOVEMBER</item>        
-        <item>DECEMBER</item>
+        <item>january</item>        
+        <item>february</item>
+        <item>march</item>        
+        <item>april</item>       
+        <item>may</item>        
+        <item>june</item>        
+        <item>july</item>        
+        <item>august</item>       
+        <item>september</item>        
+        <item>october</item>        
+        <item>november</item>        
+        <item>december</item>
     </string-array>
 
-    <string-array name="months_names_low_case">
+    <string-array name="months_names_with_ending">
         <item>january</item>        
         <item>february</item>
         <item>march</item>        

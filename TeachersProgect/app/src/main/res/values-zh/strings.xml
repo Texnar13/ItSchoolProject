@@ -9,7 +9,7 @@
 
     <!-- активность главный экран -->
     <!-- тексты кнопок -->
-    <string name="start_screen_activity_title_my_learners">学生</string>
+    <string name="start_screen_activity_title_my_learners">班级</string>
     <string name="start_screen_activity_title_my_cabinets">课堂</string>
     <string name="start_screen_activity_title_my_schedule">时间表</string>
     <string name="start_screen_activity_title_settings">设置</string>
@@ -59,6 +59,7 @@
     <string name="learners_and_grades_out_activity_text_add_learner">添加学生</string>
     <!-- меню сверху -->
     <string name="learners_and_grades_out_activity_menu_title_statistics">统计</string>
+    <string name="learners_and_grades_out_activity_menu_title_show_all">#Показать все#</string>
     <!-- диалоги -->
     <string name="learners_and_grades_out_activity_dialog_title_create_learner">添加学生</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_learner">编辑学生</string>
@@ -199,6 +200,7 @@
 
     <!-- активность редактора рассадки-->
     <string name="lesson_redactor_activity_text_choose_learner">选择学生:</string>
+    <string name="lesson_redactor_activity_menu_clear">清除课桌</string>
 
 
     <!-- активность урока-->
@@ -236,7 +238,7 @@
     <!-- тексты -->
     <string name="settings_activity_title_max_answer">量分数/最高得分</string>
     <string name="settings_activity_title_grades_type">课的工作类型</string>
-    <string name="settings_activity_title_absent_type">Типы пропусков</string>
+    <string name="settings_activity_title_absent_type">缺席的类型</string>
     <string name="settings_activity_title_colored_grades">颜色分数</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">量分数/最高得分: %1$s</string>
@@ -257,11 +259,10 @@
     <string name="settings_activity_dialog_delete_title">您确定要删除所有应用程序数据吗？</string>
     <string name="settings_activity_dialog_add_type_title">+ 添加课的工作类型</string>
     <string name="settings_activity_dialog_new_type_title">新课的工作类型</string>
-    <string name="settings_activity_dialog_add_absent_type_title">+ добавить тип пропусков</string>
-    <string name="settings_activity_dialog_new_absent_type_long_title_hint">Название типа</string>
-    <string name="settings_activity_dialog_new_absent_type_title_hint">Сокращение</string>
-    <string name="settings_activity_dialog_new_absent_type_long_title">Новый тип</string>
-    <string name="settings_activity_dialog_new_absent_type_title">Кор</string>
+    <string name="settings_activity_dialog_add_absent_type_title">+ 添加缺席类型</string>
+    <string name="settings_activity_dialog_new_absent_type_long_title_hint">类型:</string>
+    <string name="settings_activity_dialog_new_absent_type_title_hint">代表符号:</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_empty">输入名称</string>
     <string name="settings_activity_dialog_delete_text_confirm_delete">输入要确认的数字 </string>
     <string name="settings_activity_dialog_hint_number">数字</string>
     <string name="settings_activity_dialog_button_remove_data">删除</string>
@@ -281,9 +282,9 @@
     <!-- значение по умолчанию -->
     <string name="db_table_grade_text_first_default_value">口头回答</string>
 
-    <string name="db_table_grades_abs_1_default_value">缺席</string>
-    <string name="db_table_grades_abs_1_long_default_value">学生缺席</string>
-    <string name="db_table_grades_abs_2_default_value">病了</string>
-    <string name="db_table_grades_abs_2_long_default_value">学生病了</string>
+    <string name="db_table_grades_abs_1_default_value">缺</string>
+    <string name="db_table_grades_abs_1_long_default_value">缺课</string>
+    <string name="db_table_grades_abs_2_default_value">病</string>
+    <string name="db_table_grades_abs_2_long_default_value">有病</string>
 
 </resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item android:height="100dp">
+                <layer-list>
+                    <item android:height="1dp"
+                        android:top="99dp">
+                        <shape>
+                            <solid android:color="#000000" />
+                        </shape>
+                    </item>
+                </layer-list>
+            </item>
+        </layer-list>
+    </item>
+</selector>

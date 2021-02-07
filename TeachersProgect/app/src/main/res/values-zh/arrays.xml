@@ -25,7 +25,7 @@
         <item>十二月</item>
     </string-array>
 
-    <string-array name="months_names_low_case">
+    <string-array name="months_names_with_ending">
         <item>一月</item>
         <item>二月</item>
         <item>三月</item>
