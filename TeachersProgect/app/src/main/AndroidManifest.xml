@@ -17,8 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
-
         <activity
             android:name=".startScreen.StartScreenActivity"
             android:configChanges="locale">
@@ -27,25 +25,30 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
 
-                <!--action android:name="android.intent.action.VIEW" />todo
+                <!--
+                action android:name="android.intent.action.VIEW" />todo
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" /-->
+                <category android:name="android.intent.category.BROWSABLE" /
+                -->
+
 
                 <!-- Accepts URIs that begin with "http://www.my-site.com/my-app..." -->
-                <!--data
+                <!--
+                data
                     android:host="http"
                     android:scheme="www.my-site.com"
                     android:pathPrefix="/my-app" />
                 <data android:scheme="my-site"
-                    android:host="my-app" /-->
-
+                    android:host="my-app" /
+                -->
 
             </intent-filter>
         </activity>
         <activity
             android:name=".lesson.LessonActivity"
-            android:configChanges="locale"
-            android:label="@string/title_activity_lesson" />
+            android:configChanges="locale" />
+        <activity android:name=".cabinetsOut.CabinetEditActivity"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".CabinetRedactorActivity"
             android:configChanges="locale" />

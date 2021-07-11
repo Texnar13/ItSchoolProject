@@ -27,7 +27,7 @@ import java.util.GregorianCalendar;
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
     private static final boolean IS_DEBUG = true;
     private static final int DB_VERSION = 20;
-    private Context context;
+    private final Context context;
 
     private static final String LOG_TAG = "DBOpenHelper";
 
@@ -1142,7 +1142,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return temp;
     }
 
-    public Cursor getLearnersClass() {
+    public Cursor getLearnersClases() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(SchoolContract.TableClasses.NAME_TABLE_CLASSES, null, null, null, null, null, null);
         if (IS_DEBUG)
@@ -1150,7 +1150,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getLearnersClass(long classId) {
+    public Cursor getLearnersClases(long classId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(SchoolContract.TableClasses.NAME_TABLE_CLASSES, null,
                 SchoolContract.TableClasses.KEY_CLASS_ID + " = " + classId,

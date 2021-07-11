@@ -210,7 +210,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
         };
 
         {// классы
-            Cursor classesCursor = db.getLearnersClass();
+            Cursor classesCursor = db.getLearnersClases();
 
             classUnits = new LearnersClassUnit_1[classesCursor.getCount()];
             for (int i = 0; i < classUnits.length; i++) {

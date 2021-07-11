@@ -210,7 +210,7 @@ public class LessonRedactorDialogFragment extends DialogFragment implements Subj
         };
 
         {// классы
-            Cursor classesCursor = db.getLearnersClass();
+            Cursor classesCursor = db.getLearnersClases();
 
             classUnits = new LearnersClassUnit_1[classesCursor.getCount()];
             for (int i = 0; i < classUnits.length; i++) {

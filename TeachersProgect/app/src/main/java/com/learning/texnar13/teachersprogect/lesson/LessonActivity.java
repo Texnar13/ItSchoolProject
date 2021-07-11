@@ -274,6 +274,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
+
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
 
@@ -355,7 +358,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             subjectCursor.close();
 
             // получаем имя класа
-            Cursor learnersClass = db.getLearnersClass(learnersClassId);
+            Cursor learnersClass = db.getLearnersClases(learnersClassId);
             learnersClass.moveToFirst();
             className = learnersClass.getString(learnersClass.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
             learnersClass.close();

@@ -217,8 +217,8 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
 
         // получаем id класса и кабинета из intent
-        learnersClassId = getIntent().getLongExtra(CLASS_ID, -1);
-        cabinetId = getIntent().getLongExtra(CABINET_ID, -1);
+        learnersClassId = getIntent().getLongExtra(CLASS_ID, -1L);
+        cabinetId = getIntent().getLongExtra(CABINET_ID, -1L);
         if (learnersClassId == -1 || cabinetId == -1) {
             finish();
             return;
@@ -246,7 +246,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
 
         // получаем класс из бд
-        Cursor classCursor = db.getLearnersClass(learnersClassId);
+        Cursor classCursor = db.getLearnersClases(learnersClassId);
         classCursor.moveToFirst();
         // получаем название класса
         String learnersClassName = classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));

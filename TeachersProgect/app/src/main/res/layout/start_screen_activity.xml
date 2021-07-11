@@ -1,37 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_start_screen_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundWhite"
     tools:context="com.learning.texnar13.teachersprogect.startScreen.StartScreenActivity">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:background="@color/backgroundWhite"
+        android:gravity="center_horizontal">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/start_screen_top_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/begin_lesson_start_screen_button_height_half"
-                android:background="@drawable/start_screen_activity_top_background"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/start_screen_activity_top_background">
 
             <TextView
                 android:id="@+id/start_screen_text_time"
@@ -40,8 +28,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/half_more_margin"
                 android:text="*10:35*"
-                android:textColor="#000000"
-                android:textSize="@dimen/text_title_size"
+                android:textColor="@color/backgroundWhite"
+                android:textSize="@dimen/text_fat_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -52,8 +40,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="*31 Октября*"
-                android:textColor="#000000"
-                android:textSize="@dimen/text_title_size"
+                android:textColor="@color/backgroundWhite"
+                android:textSize="@dimen/text_simple_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/start_screen_text_time" />
@@ -64,8 +52,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="*Понедельник*"
-                android:textColor="@color/dopDarkBlue"
-                android:textSize="@dimen/text_subtitle_size"
+                android:textColor="@color/backgroundWhite"
+                android:textSize="@dimen/text_simple_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/start_screen_text_date" />
@@ -89,46 +77,23 @@
                 android:id="@+id/start_screen_layout_now"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/double_margin"
-                android:layout_marginRight="@dimen/double_margin"
-                android:layout_marginBottom="@dimen/begin_lesson_start_screen_button_height_plus"
+                android:layout_marginStart="@dimen/double_margin"
+                android:layout_marginEnd="@dimen/double_margin"
+                android:layout_marginBottom="@dimen/forth_margin"
                 android:background="@drawable/start_screen_activity_button_current_lesson_background"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintLeft_toRightOf="parent" />
-
-            <LinearLayout
-                android:id="@+id/start_screen_button_start_lesson_background"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/begin_lesson_start_screen_button_height"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/start_screen_activity_button_lesson_background"
-                android:gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <TextView
-                    android:id="@+id/start_screen_button_start_lesson_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/double_margin"
-                    android:layout_marginRight="@dimen/double_margin"
-                    android:text="@string/start_screen_activity_title_current_start_lesson"
-                    android:textColor="@color/backgroundWhite"
-                    android:textSize="@dimen/text_subtitle_size" />
-            </LinearLayout>
-
-
+                app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
         <LinearLayout
+            android:id="@+id/test_id_start_screen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/start_screen_top_container"
             android:layout_above="@+id/start_screen_ad_banner"
+            android:layout_below="@+id/start_screen_top_container"
+            android:layout_marginTop="@dimen/forth_margin"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:weightSum="2">
@@ -137,20 +102,19 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/double_margin"
-                android:layout_marginTop="@dimen/simple_margin"
                 android:layout_marginRight="@dimen/simple_margin"
                 android:layout_marginBottom="@dimen/double_margin"
                 android:layout_weight="1"
-                android:weightSum="2"
                 android:orientation="vertical"
+                android:weightSum="2"
                 tools:ignore="RtlHardcoded">
 
                 <RelativeLayout
-                    android:layout_weight="1"
-                    android:layout_gravity="left"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_marginBottom="@dimen/double_margin">
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="@dimen/double_margin"
+                    android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/start_screen_button_my_classes"
@@ -182,10 +146,10 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_weight="1"
-                    android:layout_gravity="right"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp">
+                    android:layout_height="0dp"
+                    android:layout_gravity="right"
+                    android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/start_screen_button_schedule"
@@ -223,20 +187,19 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/simple_margin"
-                android:layout_marginTop="@dimen/simple_margin"
                 android:layout_marginRight="@dimen/double_margin"
                 android:layout_marginBottom="@dimen/double_margin"
                 android:layout_weight="1"
-                android:weightSum="2"
                 android:orientation="vertical"
+                android:weightSum="2"
                 tools:ignore="RtlHardcoded">
 
                 <RelativeLayout
-                    android:layout_weight="1"
-                    android:layout_gravity="right"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_marginBottom="@dimen/double_margin">
+                    android:layout_gravity="left"
+                    android:layout_marginBottom="@dimen/double_margin"
+                    android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/start_screen_button_my_cabinets"
@@ -269,10 +232,10 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_weight="1"
-                    android:layout_gravity="left"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp">
+                    android:layout_height="0dp"
+                    android:layout_gravity="left"
+                    android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/start_screen_button_reload"
@@ -309,10 +272,30 @@
 
 
         <com.yandex.mobile.ads.AdView
-            android:layout_alignParentBottom="true"
             android:id="@+id/start_screen_ad_banner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
 
     </RelativeLayout>
-</RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/start_screen_button_start_lesson_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/start_screen_activity_button_background_start_lesson"
+        android:paddingStart="@dimen/forth_margin"
+        android:paddingEnd="@dimen/forth_margin"
+        android:paddingTop="@dimen/half_more_margin"
+        android:paddingBottom="@dimen/half_more_margin"
+        android:fontFamily="@font/geometria"
+        android:text="@string/start_screen_activity_title_current_start_lesson"
+        android:textColor="@color/backgroundWhite"
+        android:textSize="@dimen/text_subtitle_size"
+        app:layout_anchor="@+id/start_screen_top_container"
+        app:layout_anchorGravity="bottom|center_horizontal" />
+
+    <!-- android:theme="@style/PrimaryActionButton"-->
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

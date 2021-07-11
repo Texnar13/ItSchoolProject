@@ -143,7 +143,7 @@ public class CreateLearnersClassDialogFragment extends DialogFragment {
 
         // контейнер кнопки создать
         LinearLayout createButtonContainer = new LinearLayout(getActivity());
-        createButtonContainer.setBackgroundResource(R.drawable._button_round_background_orange);
+        createButtonContainer.setBackgroundResource(R.drawable.base_button_round_background_orange);
         // параметры контейнера
         LinearLayout.LayoutParams createButtonContainerParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,

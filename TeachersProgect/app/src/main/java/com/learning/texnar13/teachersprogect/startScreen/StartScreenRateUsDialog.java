@@ -116,7 +116,7 @@ public class StartScreenRateUsDialog extends DialogFragment {
 
 // контейнер кнопки оценить
         LinearLayout positiveButtonContainer = new LinearLayout(getActivity());
-        positiveButtonContainer.setBackgroundResource(R.drawable._button_round_background_orange);
+        positiveButtonContainer.setBackgroundResource(R.drawable.base_button_round_background_orange);
         // параметры контейнера
         LinearLayout.LayoutParams positiveButtonContainerParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,

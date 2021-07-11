@@ -174,7 +174,7 @@ public class EditLearnersClassDialogFragment extends DialogFragment {
 
         // контейнер кнопки сохранить
         LinearLayout saveButtonContainer = new LinearLayout(getActivity());
-        saveButtonContainer.setBackgroundResource(R.drawable._button_round_background_orange);
+        saveButtonContainer.setBackgroundResource(R.drawable.base_button_round_background_orange);
         // параметры контейнера
         LinearLayout.LayoutParams saveButtonContainerParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,

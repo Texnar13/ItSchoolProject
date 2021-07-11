@@ -58,7 +58,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
                 (int) getResources().getDimension(R.dimen.double_margin),
                 0
         );
-        scrollLayout.addView(title,titleParams);
+        scrollLayout.addView(title, titleParams);
 
         // текст
         TextView text = new TextView(getActivity());
@@ -78,14 +78,14 @@ public class WhatsNewDialogFragment extends DialogFragment {
                 (int) getResources().getDimension(R.dimen.double_margin),
                 (int) getResources().getDimension(R.dimen.double_margin)
         );
-        scrollLayout.addView(text,textParams);
+        scrollLayout.addView(text, textParams);
 
 
         // кнопка выхода
 
         //контейнер для нее
         RelativeLayout container = new RelativeLayout(getActivity());
-        container.setBackgroundResource(R.drawable._button_round_background_orange);
+        container.setBackgroundResource(R.drawable.base_button_round_background_orange);
         container.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -99,7 +99,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
                 (int) getResources().getDimension(R.dimen.double_margin)
         );
         //контейнер в диалог
-        scrollLayout.addView(container,containerParams);
+        scrollLayout.addView(container, containerParams);
 
         //сама кнопка
         TextView button = new TextView(getActivity());

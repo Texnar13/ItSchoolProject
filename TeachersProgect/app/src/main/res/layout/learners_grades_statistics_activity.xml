@@ -28,7 +28,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/my_icon_size"
             android:layout_marginRight="@dimen/my_icon_size"
-            android:background="@drawable/start_screen_activity_button_lesson_background"
+            android:background="@drawable/start_screen_activity_button_background_start_lesson"
             android:gravity="center">
 
             <TextView

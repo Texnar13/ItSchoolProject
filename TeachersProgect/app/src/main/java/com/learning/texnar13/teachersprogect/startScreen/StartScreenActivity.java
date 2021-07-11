@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,16 +42,12 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class StartScreenActivity extends AppCompatActivity implements View.OnClickListener, RateInterface {
-
-
+public class StartScreenActivity extends AppCompatActivity implements RateInterface {
     // константы для SharedPreferences
-
     // счетчик заходов в приложение для оценки в sharedPreferences
     static final String ENTERS_COUNT = "entersCount";
     // оценено?
     static final String IS_RATE = "isRate";
-
     // версия
     static final String WHATS_NEW = "whatsNew";
     static final int NOW_VERSION = BuildConfig.VERSION_CODE;
@@ -65,8 +60,8 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
     // контейнер текущего урока
     LinearLayout currentLessonContainer;
     // кнопка создать/начать урок
-    LinearLayout lessonButtonBackground;
     TextView lessonButtonText;
+
 
     // при создании
     @SuppressLint("SourceLockedOrientationActivity")
@@ -99,20 +94,28 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
         // расписание
         ImageView relButtonSchedule = findViewById(R.id.start_screen_button_schedule);
-        relButtonSchedule.setOnClickListener(this);
+        relButtonSchedule.setOnClickListener(v -> startActivity(new Intent(
+                StartScreenActivity.this, ScheduleMonthActivity.class
+        )));
         // кабинеты
         ImageView relButtonCabinets = findViewById(R.id.start_screen_button_my_cabinets);
-        relButtonCabinets.setOnClickListener(this);
+        relButtonCabinets.setOnClickListener(v -> startActivity(new Intent(
+                StartScreenActivity.this, CabinetsOutActivity.class
+        )));
         // классы
         ImageView relButtonClasses = findViewById(R.id.start_screen_button_my_classes);
-        relButtonClasses.setOnClickListener(this);
+        relButtonClasses.setOnClickListener(v -> startActivity(new Intent(
+                StartScreenActivity.this, LearnersClassesOutActivity.class
+        )));
         // настройки
         ImageView relButtonSettings = findViewById(R.id.start_screen_button_reload);
-        relButtonSettings.setOnClickListener(this);
+        relButtonSettings.setOnClickListener(v -> startActivity(new Intent(
+                StartScreenActivity.this, SettingsActivity.class
+        )));
+
 
         // контейнер текущего урока
         currentLessonContainer = findViewById(R.id.start_screen_layout_now);
-        lessonButtonBackground = findViewById(R.id.start_screen_button_start_lesson_background);
         lessonButtonText = findViewById(R.id.start_screen_button_start_lesson_text);
 
 
@@ -128,13 +131,6 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
             // через семь заходов в приложение открывает диалог 'оцените'
             if (!sharedPreferences.getBoolean(IS_RATE, false)) {
                 editor.putInt(ENTERS_COUNT, sharedPreferences.getInt(ENTERS_COUNT, 0) + 1);
-                if (sharedPreferences.getInt(ENTERS_COUNT, 0) == 1) {
-                    // показываем диалог устаревшего устройства
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                        DeviseDeprecatedDialogFragment dialog = new DeviseDeprecatedDialogFragment();
-                        dialog.show(getFragmentManager(), "device api deprecated");
-                    }
-                }
                 if (sharedPreferences.getInt(ENTERS_COUNT, 0) == 10) {
                     //на всякий случай обнуляем счетчик
                     editor.putInt(ENTERS_COUNT, 1);
@@ -179,9 +175,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-
     // при запуске/при входе на эту активность
-
     @SuppressLint("SetTextI18n")
     @Override
     protected void onStart() {
@@ -220,22 +214,17 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
         isInit = false;
     }
 
-    @SuppressLint("SetTextI18n")
-    void outCurrentLesson() {
 
+    void outCurrentLesson() {
         currentLessonContainer.removeAllViews();
 
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-
-        // получаем текущее время и выводим его в поля
+        // получаем текущее время
         GregorianCalendar nowCalendar = new GregorianCalendar();
-        nowCalendar.setTime(new Date());
 
         // получаем стандартное время уроков
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         int[][] times = db.getSettingsTime(1);
-        if(times == null){
-            times = new int[0][0];
-        }
+        if (times == null) times = new int[0][0];
 
         // определяем текущий урок
         int lessonNumber = -1;
@@ -246,7 +235,6 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
             ) {
                 lessonNumber = lessonI;
             }
-
         }
         final String lessonDate = (new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()))
                 .format(nowCalendar.getTime());
@@ -277,26 +265,24 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
 
 
             // меняем кнопку на создание урока
-            lessonButtonBackground.setBackgroundResource(R.drawable._button_round_background_orange);
+            lessonButtonText.setBackgroundResource(R.drawable.start_screen_activity_button_background_create_lesson);
             lessonButtonText.setText(R.string.start_screen_activity_title_current_create_lesson);
 
             // назначаем создание при нажатии
-            final int finalLessonNumber = lessonNumber;
-            View.OnClickListener clickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            if (lessonNumber != -1) {
+                final int finalLessonNumber = lessonNumber;
+                View.OnClickListener clickListener = v -> {
                     // создаем активность
                     Intent intent = new Intent(StartScreenActivity.this, LessonRedactorActivity.class);
                     intent.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, -1L);
                     intent.putExtra(LessonRedactorActivity.LESSON_CHECK_DATE, lessonDate);
                     intent.putExtra(LessonRedactorActivity.LESSON_NUMBER, finalLessonNumber);
                     startActivityForResult(intent, LessonRedactorActivity.LESSON_REDACTOR_RESULT_ID);
-                }
-            };
-            // нажатие на контейнер с датой и кнопку урока
-            currentLessonContainer.setOnClickListener(clickListener);
-            lessonButtonBackground.setOnClickListener(clickListener);
-
+                };
+                // нажатие на контейнер с датой и кнопку урока
+                currentLessonContainer.setOnClickListener(clickListener);
+                lessonButtonText.setOnClickListener(clickListener);
+            }
         } else {// если урок есть
 
             // получаем поля урока
@@ -312,7 +298,7 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
             long learnersClassId = subjectCursor.getLong(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
             subjectCursor.close();
             // имя класса
-            Cursor classCursor = db.getLearnersClass(learnersClassId);
+            Cursor classCursor = db.getLearnersClases(learnersClassId);
             classCursor.moveToFirst();
             String className = classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
             classCursor.close();
@@ -322,140 +308,68 @@ public class StartScreenActivity extends AppCompatActivity implements View.OnCli
             String cabinetName = cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
             cabinetCursor.close();
 
-            // укорачиваем поля если они слишком длинные Loading…
-            if (subjectName.length() > 15) {
-                subjectName = subjectName.substring(0, 14) + "…";
+
+            // укорачиваем поля если они слишком длинные
+            if (subjectName.length() > 18) {// abcde -> abc…  abcd->abcd
+                subjectName = subjectName.substring(0, 17) + "…";
             }
-            if (className.length() > 6) {
-                className = className.substring(0, 5) + "…";// absde -> abc…  abcd->abcd
+            if (className.length() > 25) {
+                className = className.substring(0, 24) + "…";
             }
-            if (cabinetName.length() > 6) {
-                cabinetName = cabinetName.substring(0, 5) + "…";
+            if (cabinetName.length() > 10) {
+                cabinetName = cabinetName.substring(0, 9) + "…";
             }
 
-            // выводим поля в контейнер
-
-            // контейнер времени
-            LinearLayout timeContainer = new LinearLayout(this);
-            timeContainer.setOrientation(LinearLayout.VERTICAL);
-            LinearLayout.LayoutParams timeContainerParams = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
+            // раздуваем поля в контейнере
+            LinearLayout lessonField = (LinearLayout) getLayoutInflater().inflate(
+                    R.layout.start_screen_current_lesson_field,
+                    currentLessonContainer
             );
-            timeContainerParams.topMargin = (int) getResources().getDimension(R.dimen.half_margin);
-            timeContainerParams.bottomMargin = (int) getResources().getDimension(R.dimen.half_margin);
-            timeContainerParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-            currentLessonContainer.addView(timeContainer, timeContainerParams);
+            // выводим в них текст
             // первое время
-            TextView firstTime = new TextView(this);
-            firstTime.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
-            firstTime.setText(times[lessonNumber][0] + ":" + times[lessonNumber][1]);
-            firstTime.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-            firstTime.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-            timeContainer.addView(firstTime,
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
+            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_field_time_1)).setText(
+                    getResources().getString(
+                            R.string.start_screen_activity_time_field,
+                            times[lessonNumber][0],
+                            times[lessonNumber][1]
+                    ));
             // второе время
-            TextView secondTime = new TextView(this);
-            secondTime.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
-            secondTime.setText(times[lessonNumber][2] + ":" + times[lessonNumber][3]);
-            secondTime.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-            secondTime.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-            timeContainer.addView(secondTime,
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-
+            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_field_time_2)).setText(
+                    getResources().getString(
+                            R.string.start_screen_activity_time_field,
+                            times[lessonNumber][2],
+                            times[lessonNumber][3]
+                    ));
             // предмет
-            TextView subjectText = new TextView(this);
-            subjectText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
-            subjectText.setText(subjectName);
-            subjectText.setTextColor(Color.BLACK);
-            subjectText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-            LinearLayout.LayoutParams subjectTextParams = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-            subjectTextParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-            currentLessonContainer.addView(subjectText, subjectTextParams);
-
+            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_field_subject)).setText(subjectName);
             // класс
-            TextView classText = new TextView(this);
-            classText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_medium));
-            classText.setText(className);
-            classText.setTextColor(Color.BLACK);
-            classText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-            LinearLayout.LayoutParams classTextParams = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-            classTextParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-            currentLessonContainer.addView(classText, classTextParams);
-
+            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_field_class)).setText(className);
             // кабинет
-            TextView cabinetText = new TextView(this);
-            cabinetText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
-            cabinetText.setText(cabinetName);
-            cabinetText.setTextColor(Color.BLACK);
-            cabinetText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-            LinearLayout.LayoutParams cabinetTextParams = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-            cabinetTextParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-            currentLessonContainer.addView(cabinetText, cabinetTextParams);
+            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_field_cabinet)).setText(cabinetName);
 
             // делаем кнопку видимой если она была скрыта
-            lessonButtonBackground.setBackgroundResource(R.drawable.start_screen_activity_button_lesson_background);
+            lessonButtonText.setBackgroundResource(R.drawable.start_screen_activity_button_background_start_lesson);
             lessonButtonText.setText(R.string.start_screen_activity_title_current_start_lesson);
 
             // назначаем открытие урока при нажатии
             final int finalLessonNumber = lessonNumber;
-            View.OnClickListener clickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // создаем намерение
-                    Intent intent = new Intent(getApplicationContext(), LessonActivity.class);
-                    // соединяем и отправляем
-                    intent.putExtra(LessonActivity.LESSON_DATE, savedLessonDate);
-                    intent.putExtra(LessonActivity.LESSON_NUMBER, finalLessonNumber);
-                    // отправляем id
-                    intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, lessonId);
-                    startActivity(intent);
-                }
+            View.OnClickListener clickListener = v -> {
+                // создаем намерение
+                Intent intent = new Intent(getApplicationContext(), LessonActivity.class);
+                // соединяем и отправляем
+                intent.putExtra(LessonActivity.LESSON_DATE, savedLessonDate);
+                intent.putExtra(LessonActivity.LESSON_NUMBER, finalLessonNumber);
+                // отправляем id
+                intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, lessonId);
+                startActivity(intent);
             };
             // нажатие на контейнер с датой
             currentLessonContainer.setOnClickListener(clickListener);
             // и кнопку урока
-            lessonButtonBackground.setOnClickListener(clickListener);
+            lessonButtonText.setOnClickListener(clickListener);
         }
         attitude.close();
         db.close();
-    }
-
-
-    @Override
-    public void onClick(View view) {
-        Intent intent;
-        switch (view.getId()) {
-            case R.id.start_screen_button_schedule:// переход в список расписаний
-                intent = new Intent(this, ScheduleMonthActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.start_screen_button_my_cabinets:// переход в список кабинетов
-                intent = new Intent(this, CabinetsOutActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.start_screen_button_my_classes:// переход в список классов
-                intent = new Intent(this, LearnersClassesOutActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.start_screen_button_reload:// настройки
-                intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
-                break;
-        }
     }
 
 
@@ -556,4 +470,13 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Toast.makeText(this, R.string.cabinet_redactor_activity_toast_help, Toast.LENGTH_LONG).show();
         }
 
+
+// Убираем панель уведомлений
+this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+        // настраиваем программный вывод векторных изображений в диалогах
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
 * */
+

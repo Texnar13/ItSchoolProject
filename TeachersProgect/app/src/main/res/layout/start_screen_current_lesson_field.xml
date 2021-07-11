@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/simple_margin">
+
+    <LinearLayout
+        android:weightSum="10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/start_screen_current_lesson_field_time_1"
+            android:layout_weight="1.5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/geometria_bold"
+            android:textColor="@color/baseBlue"
+            android:textSize="@dimen/text_simple_size" />
+        <TextView
+            android:id="@+id/start_screen_current_lesson_field_subject"
+            android:layout_weight="5.5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/geometria_bold"
+            android:textColor="@color/baseBlue"
+            android:textSize="@dimen/text_simple_size" />
+        <TextView
+            android:id="@+id/start_screen_current_lesson_field_cabinet"
+            android:layout_weight="3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/geometria_bold"
+            android:gravity="end"
+            android:textColor="@color/baseBlue"
+            android:textSize="@dimen/text_simple_size" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <TextView
+            android:id="@+id/start_screen_current_lesson_field_time_2"
+            android:layout_weight="1.5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/geometria_bold"
+            android:textColor="@color/baseBlue"
+            android:textSize="@dimen/text_simple_size" />
+        <TextView
+            android:id="@+id/start_screen_current_lesson_field_class"
+            android:layout_weight="8.5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/geometria_bold"
+            android:textColor="@color/baseBlue"
+            android:textSize="@dimen/text_simple_size" />
+    </LinearLayout>
+
+
+</LinearLayout>

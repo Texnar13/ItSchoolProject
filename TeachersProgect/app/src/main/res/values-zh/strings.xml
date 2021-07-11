@@ -1,5 +1,4 @@
 <resources>
-    <string name="title_activity_lesson">Lesson</string>
 
     <!--\n gthtyjc-->
     <!-- название приложения -->
@@ -17,6 +16,7 @@
     <string name="start_screen_activity_title_current_no_lesson">现在没有教训。</string>
     <string name="start_screen_activity_title_current_start_lesson">开始上课？</string>
     <string name="start_screen_activity_title_current_create_lesson">创建一个教训？</string>
+    <string name="start_screen_activity_time_field" formatted="true">%d:%02d</string>
     <!-- диалог -->
     <string name="start_screen_activity_dialog_title_rate">请评价我们的应用!</string>
     <string name="start_screen_activity_dialog_button_rate_now">评价!</string>

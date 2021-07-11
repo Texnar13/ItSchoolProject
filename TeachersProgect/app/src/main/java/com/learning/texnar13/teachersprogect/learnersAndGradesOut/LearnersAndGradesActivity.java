@@ -203,7 +203,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         // получаем название класса из бд и ставим в заголовок
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         // название класса
-        Cursor classCursor = db.getLearnersClass(classId);
+        Cursor classCursor = db.getLearnersClases(classId);
         classCursor.moveToFirst();
         ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
         classCursor.close();

@@ -55,6 +55,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
     private float cellSize;
     // названия месяцев из ресурсов
     private String[] monthsNames;
+    private String[] monthsNamesWithEnding;
 
 
     // календарь с выбранной датой
@@ -80,20 +81,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
-//        // задаем слой жестов
-//        GestureOverlayView gestureOverlayView = new GestureOverlayView(this);
-//        View inflate = getLayoutInflater().inflate(R.layout.activity_schedule_month, null);
-//        gestureOverlayView.addView(inflate);
-//        gestureOverlayView.setGestureColor(Color.TRANSPARENT);//делаем невидимым
-//        gestureOverlayView.setUncertainGestureColor(Color.TRANSPARENT);
-//        // проверяем наличие библиотеки жестов
-//        gestureLib = GestureLibraries.fromRawResource(this, R.raw.gestures);
-//        if (!gestureLib.load()) {
-//            finish();
-//            return;
-//        }
-//        // выводим слой жестов вместе с основной разметкой
-//        setContentView(gestureOverlayView);
+
         // выводим разметку
         setContentView(R.layout.schedule_month_activity);
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
@@ -124,42 +112,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
         // получаем названия месяцев из ресурсов
         monthsNames = getResources().getStringArray(R.array.months_names);
+        monthsNamesWithEnding = getResources().getStringArray(R.array.months_names_with_ending);
 
-//        // определяем переключение месяцев жестами
-//        gestureOverlayView.addOnGesturePerformedListener(new GestureOverlayView.OnGesturePerformedListener() {
-//            @Override
-//            public void onGesturePerformed(GestureOverlayView gestureOverlayView, Gesture gesture) {
-//                ArrayList<Prediction> predictions = gestureLib.recognize(gesture);
-//                for (Prediction prediction : predictions) {
-//                    if (prediction.score > 1.0) {
-//                        switch (prediction.name) {
-//                            case "forward_swipe":
-//                                if ((viewCalendar.get(Calendar.MONTH)) == 11) {//месяц: 0 - 11
-//                                    viewCalendar.set(Calendar.MONTH, 0);
-//                                    viewCalendar.set(Calendar.YEAR, viewCalendar.get(Calendar.YEAR) + 1);
-//                                } else {
-//                                    viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) + 1);
-//                                }
-//                                // по выбранной дате выводим месяц и заголовок
-//                                outMonth();
-//                                outCurrentData();
-//                                break;
-//                            case "back_swipe":
-//                                if ((viewCalendar.get(Calendar.MONTH)) == 0) {
-//                                    viewCalendar.set(Calendar.MONTH, 11);
-//                                    viewCalendar.set(Calendar.YEAR, viewCalendar.get(Calendar.YEAR) - 1);
-//                                } else {
-//                                    viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) - 1);
-//                                }
-//                                // по выбранной дате выводим месяц и заголовок
-//                                outMonth();
-//                                outCurrentData();
-//                                break;
-//                        }
-//                    }
-//                }
-//            }
-//        });
 
         // нажатие на кнопку предыдущий месяц
         findViewById(R.id.schedule_month_button_previous).setOnClickListener(new View.OnClickListener() {
@@ -426,12 +380,22 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         // вывод не пустого дня
         if (chosenOutDayNumber != -1) {
 
-            // отображаемая дата в текстовом виде
-            final String outStringDate = String.format(Locale.getDefault(), "%04d-%02d-%02d",
-                    viewCalendar.get(Calendar.YEAR),
-                    viewCalendar.get(Calendar.MONTH) + 1,
-                    chosenOutDayNumber
+
+            // выводим заголовок
+            TextView head = new TextView(this);
+            head.setBackgroundResource(R.drawable._dialog_head_background_blue);
+            head.setTextColor(getResources().getColor(R.color.backgroundWhite));
+            head.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            head.setGravity(Gravity.CENTER);
+            head.setPadding(
+                    getResources().getDimensionPixelOffset(R.dimen.double_margin),
+                    getResources().getDimensionPixelOffset(R.dimen.double_margin),
+                    getResources().getDimensionPixelOffset(R.dimen.double_margin),
+                    getResources().getDimensionPixelOffset(R.dimen.double_margin)
             );
+            LinearLayout.LayoutParams headParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            dayOut.addView(head, headParams);
 
 
             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
@@ -439,8 +403,14 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             int[][] standardLessonsPeriods = db.getSettingsTime(1);
 
 
-            // текущий номер урока (-1 - не сегодня)
+            // получаем текущий номер урока (-1 - не сегодня)
             int currentLesson = -1;
+            // отображаемая дата в текстовом виде
+            final String outStringDate = String.format(Locale.getDefault(), "%04d-%02d-%02d",
+                    viewCalendar.get(Calendar.YEAR),
+                    viewCalendar.get(Calendar.MONTH) + 1,
+                    chosenOutDayNumber
+            );
             // если просматриваем сегодняшний день
             if (dateFormat.format(new Date()).equals(outStringDate)) {
 
@@ -458,6 +428,12 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                             (hour == standardLessonsPeriods[lessonI][2] && minute <= standardLessonsPeriods[lessonI][3])
                     )) currentLesson = lessonI;
                 }
+
+                // выводим в заголовок слово сегодня
+                head.setText("#Сегодня:");
+            } else {
+                // иначе просто выставляем число в заголовок
+                head.setText(chosenOutDayNumber + " " + monthsNamesWithEnding[viewCalendar.get(Calendar.MONTH)] + ':');
             }
 
             // пробегаемся по урокам
@@ -579,7 +555,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                     subjectCursor.close();
 
                     // получаем класс
-                    Cursor classCursor = db.getLearnersClass(learnersClassId);
+                    Cursor classCursor = db.getLearnersClases(learnersClassId);
                     classCursor.moveToFirst();
                     // получаем имя класса
                     String learnersClassName = classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));

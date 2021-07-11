@@ -7,12 +7,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.res.ResourcesCompat;
-
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -25,14 +19,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.res.ResourcesCompat;
+
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 
-public class CabinetsOutActivity extends AppCompatActivity implements EditCabinetDialogInterface, CreateCabinetInterface {
+public class CabinetsOutActivity extends AppCompatActivity implements CreateCabinetInterface {
 
     //static потом (для переворота)
     Long[] cabinetsId;
@@ -45,16 +43,12 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
-
-
         // раздуваем layout
         setContentView(R.layout.cabinets_out_activity);
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
-        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        setSupportActionBar(findViewById(R.id.base_blue_toolbar));
         // убираем заголовок, там свой
         getSupportActionBar().setTitle("");
         ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_cabinets_out);
@@ -190,68 +184,13 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
             // короткое нажатие на пункт списка
             // номер пункта в списке
             final long finalId = cabinetsId[i];
-            cabinetContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-//                    // переходим на редактирование этого кабинета
-//                    Intent intent = new Intent(getApplicationContext(), CabinetRedactorActivity.class);
-//                    // передаём id выбранного кабинета
-//                    intent.putExtra(CabinetRedactorActivity.EDITED_CABINET_ID, finalId);
-//                    startActivity(intent);
-//                }
-//            });
-//
-//            // долгое
-//            cabinetContainer.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View view) {
-
-                    // инициализируем диалог
-                    EditCabinetDialogFragment editDialog = new EditCabinetDialogFragment();
-
-                    // данные для диалога
-                    // получаем из бд
-                    DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                    // создаем обьект с данными
-                    Bundle args = new Bundle();
-                    args.putLong(EditCabinetDialogFragment.ARG_CABINET_ID, finalId);
-                    // имя кабинета по Id
-                    Cursor cabinetCursor = db.getCabinet(finalId);
-                    cabinetCursor.moveToFirst();
-                    args.putString(EditCabinetDialogFragment.ARG_CABINET_NAME, cabinetCursor.getString(
-                            cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)
-                    ));
-                    cabinetCursor.close();
-                    // получаем список классов
-                    Cursor classesCursor = db.getLearnersClass();
-                    long[] classesIds = new long[classesCursor.getCount()];
-                    String[] classesNames = new String[classesCursor.getCount()];
-                    for (int classesI = 0; classesI < classesCursor.getCount(); classesI++) {
-                        classesCursor.moveToNext();
-                        // id классов
-                        classesIds[classesI] = classesCursor.getLong(classesCursor.getColumnIndex(
-                                SchoolContract.TableClasses.KEY_CLASS_ID
-                        ));
-                        // имена классов
-                        classesNames[classesI] = classesCursor.getString(classesCursor.getColumnIndex(
-                                SchoolContract.TableClasses.COLUMN_CLASS_NAME
-                        ));
-                    }
-                    args.putLongArray(EditCabinetDialogFragment.ARG_ARRAY_CLASSES_ID, classesIds);
-                    args.putStringArray(EditCabinetDialogFragment.ARG_ARRAY_CLASSES_NAMES, classesNames);
-                    classesCursor.close();
-
-                    // данные диалогу
-                    editDialog.setArguments(args);
-
-                    // показать диалог
-                    editDialog.show(getSupportFragmentManager(), "editCabinetDialog");
-                    // заканчиваем работу с бд
-
-                    db.close();
-                    //return true;
-                }
+            cabinetContainer.setOnClickListener(view -> {
+                // активность редактирования имени кабинета
+                Intent editCabinetNameIntent = new Intent(CabinetsOutActivity.this, CabinetEditActivity.class);
+                // id кабинета
+                editCabinetNameIntent.putExtra(EditCabinetDialogFragment.ARG_CABINET_ID, finalId);
+                // запускаем
+                startActivityForResult(editCabinetNameIntent, CabinetEditActivity.CABINET_EDIT_REQUEST_CODE);
             });
         }
 
@@ -378,52 +317,23 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
         outCabinets();
     }
 
-
-    // переименование
     @Override
-    public void editCabinetName(long cabinetId, String name) {
-        // изменяем кабинет
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        db.setCabinetName(cabinetId, name);
-        db.close();
-        // опять выводим списки
-        getCabinets();
-        outCabinets();
+    // обратная связь от активности CabinetEditActivity
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CabinetEditActivity.CABINET_EDIT_REQUEST_CODE){
+            switch (resultCode){
+                case CabinetEditActivity.RESULT_NONE:
+                    break;
+                case CabinetEditActivity.RESULT_REMOVE_CABINET:
+                case CabinetEditActivity.RESULT_RENAME_CABINET:
+                    //опять выводим списки
+                    getCabinets();
+                    outCabinets();
+                    break;
+            }
+        }
     }
-
-    // расставить парты
-    @Override
-    public void arrangeCabinetDesks(long cabinetId) {
-        // переходим на редактирование этого кабинета
-        Intent intent = new Intent(getApplicationContext(), CabinetRedactorActivity.class);
-        // передаём id выбранного кабинета
-        intent.putExtra(CabinetRedactorActivity.EDITED_CABINET_ID, cabinetId);
-        startActivity(intent);
-    }
-
-    // посадить учеников
-    @Override
-    public void arrangeLearnersInCabinet(long cabinetId, long classId) {
-        // переходим на редактирование рассадки
-        Intent intent = new Intent(getApplicationContext(), SeatingRedactorActivity.class);
-        // передаём id выбранного кабинета
-        intent.putExtra(SeatingRedactorActivity.CABINET_ID, cabinetId);
-        intent.putExtra(SeatingRedactorActivity.CLASS_ID, classId);
-        startActivity(intent);
-    }
-
-    // удаление
-    @Override
-    public void removeCabinet(long cabinetId) {
-        //удаляем кабинет
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        db.deleteCabinets(cabinetId);
-        db.close();
-        //опять выводим списки
-        getCabinets();
-        outCabinets();
-    }
-
 
     // кнопка назад в actionBar
     @Override
@@ -436,6 +346,3 @@ public class CabinetsOutActivity extends AppCompatActivity implements EditCabine
     }
 
 }
-
-// Убираем панель уведомлений
-//this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);

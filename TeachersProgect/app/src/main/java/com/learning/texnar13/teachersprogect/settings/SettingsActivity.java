@@ -407,6 +407,7 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case 1234:
                 if (grantResults.length > 0
@@ -599,11 +600,6 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
         }
     }
 
-
-    private float pxFromDp(float dp) {
-        return dp * getApplicationContext().getResources().getDisplayMetrics().density;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {//кнопка назад в actionBar
@@ -619,7 +615,7 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
 
         // выводим рекламу при закрытии активности настроек
         if (settingsBack.isLoaded()) {
-            settingsBack.show();
+            // settingsBack.show(); todo wtf? не работает, Only fullscreen activities can request orientation
         }
     }
 }

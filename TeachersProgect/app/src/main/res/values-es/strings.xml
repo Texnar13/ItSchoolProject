@@ -1,5 +1,4 @@
 <resources>
-    <string name="title_activity_lesson">Lesson</string>
 
     <!--\n gthtyjc-->
     <!-- название приложения -->
@@ -17,6 +16,7 @@
     <string name="start_screen_activity_title_current_no_lesson">Ahora no hay clase.</string>
     <string name="start_screen_activity_title_current_start_lesson">¿Сomience la clase?</string>
     <string name="start_screen_activity_title_current_create_lesson">¿Crear una lección?</string>
+    <string name="start_screen_activity_time_field" formatted="true">%d:%02d</string>
     <!-- диалог -->
     <string name="start_screen_activity_dialog_title_rate">¡Por favor califique nuestra aplicación!</string>
     <string name="start_screen_activity_dialog_button_rate_now">Evaluar!</string>

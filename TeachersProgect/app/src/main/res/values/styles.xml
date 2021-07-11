@@ -39,6 +39,10 @@
         <item name="fontFamily">@font/geometria</item>
     </style>
 
+    <style name="Widget.AppCompat.EditText.MyStyle">
+        <!-- todo -->
+    </style>
+
 
     <style name="myActivityDialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <!-- без предка Theme.AppCompat.Light.Dialog не открываются внутренние диалоги -->

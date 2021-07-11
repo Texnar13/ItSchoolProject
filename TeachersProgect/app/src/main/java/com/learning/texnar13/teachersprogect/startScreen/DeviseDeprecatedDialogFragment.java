@@ -65,7 +65,7 @@ public class DeviseDeprecatedDialogFragment extends DialogFragment {
 
         //контейнер для нее
         RelativeLayout container = new RelativeLayout(getActivity());
-        container.setBackgroundResource(R.drawable._button_round_background_orange);
+        container.setBackgroundResource(R.drawable.base_button_round_background_orange);
         container.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,

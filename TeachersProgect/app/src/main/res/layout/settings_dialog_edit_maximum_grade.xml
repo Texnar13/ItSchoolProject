@@ -67,7 +67,7 @@
             android:layout_marginTop="@dimen/simple_margin"
             android:layout_marginRight="@dimen/simple_margin"
             android:layout_marginBottom="@dimen/double_margin"
-            android:background="@drawable/_button_round_background_orange"
+            android:background="@drawable/base_button_round_background_orange"
             android:gravity="center"
             android:orientation="horizontal">
 
