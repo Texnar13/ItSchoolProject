@@ -7,7 +7,7 @@
     android:padding="@dimen/half_more_margin"
     android:textColor="@color/backgroundWhite"
     android:textSize="@dimen/text_subtitle_size"
-    android:background="@drawable/base_dialog_background_blue_full_round">
+    android:background="@drawable/base_background_dialog_full_round_blue">
 
 
 </TextView>

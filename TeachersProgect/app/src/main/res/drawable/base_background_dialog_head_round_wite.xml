@@ -4,7 +4,7 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <corners android:topLeftRadius="@dimen/my_buttons_rounding_radius_size" android:topRightRadius="@dimen/my_buttons_rounding_radius_size" />
+                    <corners android:topLeftRadius="@dimen/radius_rounding_dialogs" android:topRightRadius="@dimen/radius_rounding_dialogs" />
                     <solid android:color="@color/backgroundWhite" />
                 </shape>
             </item>

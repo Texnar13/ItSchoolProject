@@ -318,7 +318,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         //контейнер для кнопки
         LinearLayout saveButtonContainer = new LinearLayout(this);
         saveButtonContainer.setOrientation(LinearLayout.HORIZONTAL);
-        saveButtonContainer.setBackgroundResource(R.drawable.base_button_round_background_orange);
+        saveButtonContainer.setBackgroundResource(R.drawable.base_background_button_circle_orange);
         saveButtonContainer.setGravity(Gravity.CENTER);
         RelativeLayout.LayoutParams saveButtonContainerParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -339,7 +339,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         TextView saveButton = new TextView(this);
         saveButton.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
         saveButton.setGravity(Gravity.CENTER);
-        saveButton.setText(getResources().getString(R.string.lesson_list_activity_menu_text_save));
+        saveButton.setText(getResources().getString(R.string.button_save));
         saveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         saveButton.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams saveButtonParams = new LinearLayout.LayoutParams(

@@ -29,7 +29,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/_dialog_head_background_dark"
+                    android:background="@drawable/base_background_dialog_head_round_lgray"
                     android:orientation="vertical">
                     <TextView
                         android:layout_marginLeft="@dimen/double_margin"
@@ -45,7 +45,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/_dialog_bottom_background_dark"
+                    android:background="@drawable/base_background_dialog_bottom_round_dwite"
                     android:orientation="vertical">
                     <TextView
                         android:id="@+id/activity_settings_edit_locale_button_locale_text"
@@ -62,7 +62,7 @@
                 android:id="@+id/activity_settings_edit_time_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/base_dialog_background_gray_full_round"
+                android:background="@drawable/base_background_dialog_full_round_gray"
                 android:layout_marginBottom="@dimen/double_margin"
                 android:layout_marginLeft="@dimen/double_margin"
                 android:layout_marginRight="@dimen/double_margin"
@@ -95,7 +95,7 @@
                 android:id="@+id/activity_settings_edit_max_answers_count_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/base_dialog_background_gray_full_round"
+                android:background="@drawable/base_background_dialog_full_round_gray"
                 android:layout_marginBottom="@dimen/double_margin"
                 android:layout_marginLeft="@dimen/double_margin"
                 android:layout_marginRight="@dimen/double_margin"
@@ -131,7 +131,7 @@
                 android:id="@+id/activity_settings_edit_grades_type_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/base_dialog_background_gray_full_round"
+                android:background="@drawable/base_background_dialog_full_round_gray"
                 android:layout_marginBottom="@dimen/double_margin"
                 android:layout_marginLeft="@dimen/double_margin"
                 android:layout_marginRight="@dimen/double_margin"
@@ -165,7 +165,7 @@
                 android:id="@+id/activity_settings_edit_absent_type_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/base_dialog_background_gray_full_round"
+                android:background="@drawable/base_background_dialog_full_round_gray"
                 android:layout_marginBottom="@dimen/double_margin"
                 android:layout_marginLeft="@dimen/double_margin"
                 android:layout_marginRight="@dimen/double_margin"
@@ -199,7 +199,7 @@
                 android:id="@+id/activity_settings_export_all_data_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/base_dialog_background_gray_full_round"
+                android:background="@drawable/base_background_dialog_full_round_gray"
                 android:layout_marginBottom="@dimen/double_margin"
                 android:layout_marginLeft="@dimen/double_margin"
                 android:layout_marginRight="@dimen/double_margin"
@@ -233,7 +233,7 @@
                 android:id="@+id/activity_settings_import_all_data_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/base_dialog_background_gray_full_round"
+                android:background="@drawable/base_background_dialog_full_round_gray"
                 android:layout_marginBottom="@dimen/double_margin"
                 android:layout_marginLeft="@dimen/double_margin"
                 android:layout_marginRight="@dimen/double_margin"
@@ -271,7 +271,7 @@
                 android:layout_marginLeft="@dimen/double_margin"
                 android:layout_marginRight="@dimen/double_margin"
                 android:orientation="horizontal"
-                android:background="@drawable/base_dialog_background_gray_full_round">
+                android:background="@drawable/base_background_dialog_full_round_gray">
 
 
 
@@ -306,7 +306,7 @@
                 android:id="@+id/activity_settings_remove_data_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/base_dialog_background_gray_full_round"
+                android:background="@drawable/base_background_dialog_full_round_gray"
                 android:layout_marginBottom="@dimen/double_margin"
                 android:layout_marginLeft="@dimen/double_margin"
                 android:layout_marginRight="@dimen/double_margin"
@@ -330,7 +330,7 @@
                 android:id="@+id/settings_rate_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/base_dialog_background_blue_full_round"
+                android:background="@drawable/base_background_dialog_full_round_blue"
                 android:layout_marginBottom="@dimen/double_margin"
                 android:layout_marginLeft="@dimen/double_margin"
                 android:layout_marginRight="@dimen/double_margin"

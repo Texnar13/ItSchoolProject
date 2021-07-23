@@ -4,8 +4,8 @@
         <layer-list>
             <item>
                 <shape>
-                    <corners android:radius="@dimen/my_buttons_rounding_radius_size" />
-                    <solid android:color="@color/backgroundDarkWhite" />
+                    <corners android:radius="@dimen/radius_rounding_buttons" />
+                    <solid android:color="@color/signalRed" />
                 </shape>
             </item>
         </layer-list>

@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundWhite"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".cabinetsOut.CabinetEditActivity"
-    android:background="@color/backgroundWhite">
+    tools:context=".cabinetsOut.CabinetEditActivity">
 
     <include layout="@layout/base_toolbar_blue" />
 
@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/double_margin"
                 android:layout_marginBottom="@dimen/double_margin"
-                android:background="@drawable/base_dialog_background_gray_full_round"
+                android:background="@drawable/base_background_dialog_full_round_gray"
                 android:orientation="horizontal">
 
                 <TextView
@@ -40,7 +40,7 @@
                     android:layout_margin="@dimen/half_more_margin"
                     android:fontFamily="@font/geometria_medium"
                     android:gravity="center"
-                    android:text="#Название:"
+                    android:text="@string/cabinets_out_activity_button_text_cabinet_title"
                     android:textColor="#000000"
                     android:textSize="@dimen/text_subtitle_size" />
 
@@ -54,10 +54,11 @@
                     android:fontFamily="@font/geometria_medium"
                     android:gravity="center"
                     android:hint="@string/cabinets_out_activity_dialog_hint_cabinet_name"
+                    android:inputType="textCapWords"
                     android:singleLine="true"
                     android:textColor="#000000"
-                    android:inputType="textCapWords"
-                    android:textSize="@dimen/text_subtitle_size" />
+                    android:textSize="@dimen/text_subtitle_size"
+                    android:importantForAutofill="no" />
             </LinearLayout>
 
             <LinearLayout
@@ -65,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/double_margin"
-                android:background="@drawable/base_dialog_background_gray_full_round"
+                android:background="@drawable/base_background_dialog_full_round_gray"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/double_margin"
                 android:paddingRight="@dimen/double_margin">
@@ -77,7 +78,7 @@
                     android:layout_margin="@dimen/double_margin"
                     android:fontFamily="@font/geometria_medium"
                     android:gravity="center"
-                    android:text="#Пересадить учеников:"
+                    android:text="@string/cabinets_out_activity_button_text_seat_students"
                     android:textColor="@color/backgroundDarkGray"
                     android:textSize="@dimen/text_subtitle_size" />
 
@@ -85,7 +86,7 @@
                     android:id="@+id/cabinet_out_edit_cabinet_classes_out"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"/>
+                    android:orientation="vertical" />
             </LinearLayout>
 
             <TextView
@@ -93,21 +94,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/double_margin"
-                android:background="@drawable/base_dialog_background_gray_full_round"
+                android:background="@drawable/base_background_dialog_full_round_gray"
                 android:gravity="center"
                 android:padding="@dimen/half_more_margin"
-                android:text="#Переставить парты"
+                android:text="@string/cabinets_out_activity_button_text_arrange_deks"
                 android:textColor="#000000"
                 android:textSize="@dimen/text_subtitle_size" />
+
             <TextView
                 android:id="@+id/cabinet_out_edit_cabinet_delete_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/double_margin"
-                android:background="@drawable/base_dialog_background_gray_full_round"
+                android:background="@drawable/base_background_dialog_full_round_gray"
                 android:gravity="center"
                 android:padding="@dimen/half_more_margin"
-                android:text="#Удалить кабинет"
+                android:text="@string/cabinets_out_activity_button_text_delete_cabinet"
                 android:textColor="@color/signalRed"
                 android:textSize="@dimen/text_subtitle_size" />
         </LinearLayout>

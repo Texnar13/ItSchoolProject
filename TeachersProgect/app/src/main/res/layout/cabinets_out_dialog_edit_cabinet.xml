@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/_dialog_head_background_blue">
+        android:background="@drawable/base_background_dialog_head_round_blue">
 
         <ImageView
             android:id="@+id/dialog_fragment_layout_cabinet_out_edit_cabinet_cancel_button"
@@ -26,7 +26,7 @@
             android:layout_marginRight="@dimen/simple_margin"
             android:fontFamily="@font/geometria_medium"
             android:gravity="center"
-            android:text="@string/cabinets_out_activity_dialog_title_edit_cabinet"
+            android:text="@string/cabinets_out_activity_title_edit_cabinet"
             android:textColor="@color/backgroundWhite"
             android:textSize="@dimen/text_subtitle_size" />
 
@@ -35,7 +35,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/_dialog_bottom_background_white"
+        android:background="@drawable/base_background_dialog_bottom_round_wite"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/double_margin"
                     android:layout_marginBottom="@dimen/double_margin"
-                    android:background="@drawable/base_dialog_background_gray_full_round"
+                    android:background="@drawable/base_background_dialog_full_round_gray"
                     android:orientation="horizontal">
 
                     <TextView
@@ -91,7 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/double_margin"
-                    android:background="@drawable/base_dialog_background_gray_full_round"
+                    android:background="@drawable/base_background_dialog_full_round_gray"
                     android:orientation="vertical"
                     android:paddingLeft="@dimen/double_margin"
                     android:paddingRight="@dimen/double_margin">
@@ -121,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="@dimen/double_margin"
-                    android:background="@drawable/base_dialog_background_blue_full_round"
+                    android:background="@drawable/base_background_dialog_full_round_blue"
                     android:fontFamily="@font/geometria_medium"
                     android:gravity="center"
                     android:padding="@dimen/half_more_margin"

@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.learning.texnar13.teachersprogect.AcceptDialog.AcceptDialog;
+import com.learning.texnar13.teachersprogect.AcceptDialog.AcceptDialogInterface;
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
@@ -21,7 +23,7 @@ import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 
-public class CabinetEditActivity extends AppCompatActivity {
+public class CabinetEditActivity extends AppCompatActivity implements AcceptDialogInterface {
 
     public static final String ARG_CABINET_ID = "cabinetId";
     public static final int CABINET_EDIT_REQUEST_CODE = 200;
@@ -54,7 +56,7 @@ public class CabinetEditActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.base_blue_toolbar));
         getSupportActionBar().setTitle("");
         ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(
-                R.string.cabinets_out_activity_dialog_title_edit_cabinet);
+                R.string.cabinets_out_activity_title_edit_cabinet);
 
 
         // получаем входные данные
@@ -147,14 +149,15 @@ public class CabinetEditActivity extends AppCompatActivity {
 
         // кнопка удаление
         findViewById(R.id.cabinet_out_edit_cabinet_delete_button).setOnClickListener((View.OnClickListener) view -> {
-            isDelete = true;
-            //удаляем кабинет
-            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-            db.deleteCabinets(cabinetId);
-            db.close();
-            // устанавливаем результат
-            setResult(RESULT_REMOVE_CABINET);
-            finish();
+            // Создаем диалог AcceptDialog с соответствующими текстами
+            AcceptDialog accept = new AcceptDialog();
+            Bundle args = new Bundle();
+            args.putString(AcceptDialog.ARG_ACCEPT_MESSAGE,
+                    getResources().getString(R.string.cabinets_out_activity_title_delete_cabinet_ask));
+            args.putString(AcceptDialog.ARG_ACCEPT_BUTTON_TEXT,
+                    getResources().getString(R.string.cabinets_out_activity_button_text_delete_cabinet));
+            accept.setArguments(args);
+            accept.show(getSupportFragmentManager(), "delete accept");
         });
     }
 
@@ -181,5 +184,19 @@ public class CabinetEditActivity extends AppCompatActivity {
             return true;
         } else
             return super.onOptionsItemSelected(item);
+    }
+
+
+    // Обратная связь от диалога AcceptDialog
+    @Override
+    public void accept() {
+        isDelete = true;
+        //удаляем кабинет
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        db.deleteCabinets(cabinetId);
+        db.close();
+        // устанавливаем результат
+        setResult(RESULT_REMOVE_CABINET);
+        finish();
     }
 }

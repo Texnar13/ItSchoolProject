@@ -19,7 +19,7 @@
             android:id="@+id/start_screen_top_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/start_screen_activity_top_background">
+            android:background="@drawable/base_background_dialog_bottom_round_blue">
 
             <TextView
                 android:id="@+id/start_screen_text_time"
@@ -80,7 +80,7 @@
                 android:layout_marginStart="@dimen/double_margin"
                 android:layout_marginEnd="@dimen/double_margin"
                 android:layout_marginBottom="@dimen/forth_margin"
-                android:background="@drawable/start_screen_activity_button_current_lesson_background"
+                android:background="@drawable/start_screen_activity_background_button_current_lesson"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent" />
@@ -121,7 +121,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/start_screen_activity_button_background_2_girl" />
+                        app:srcCompat="@drawable/start_screen_activity_background_button_2_girl" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -156,7 +156,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/start_screen_activity_button_background_1_calendar" />
+                        app:srcCompat="@drawable/start_screen_activity_background_button_1_calendar" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -206,7 +206,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/start_screen_activity_button_background_3_cabinets" />
+                        app:srcCompat="@drawable/start_screen_activity_background_button_3_cabinets" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -242,7 +242,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/start_screen_activity_button_background_4_settings" />
+                        app:srcCompat="@drawable/start_screen_activity_background_button_4_settings" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -284,7 +284,7 @@
         android:id="@+id/start_screen_button_start_lesson_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/start_screen_activity_button_background_start_lesson"
+        android:background="@drawable/start_screen_activity_background_button_start_lesson"
         android:paddingStart="@dimen/forth_margin"
         android:paddingEnd="@dimen/forth_margin"
         android:paddingTop="@dimen/half_more_margin"

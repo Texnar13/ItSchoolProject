@@ -46,7 +46,7 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
 
         // выводим заголовок
         LinearLayout titleLayout = new LinearLayout(getActivity());
-        titleLayout.setBackgroundResource(R.drawable._dialog_head_background_blue);
+        titleLayout.setBackgroundResource(R.drawable.base_background_dialog_head_round_blue);
         linearLayout.addView(titleLayout,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -94,7 +94,7 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
 
         // создаем скролл тела диалога
         ScrollView bodyLayoutScroll = new ScrollView(getActivity());
-        bodyLayoutScroll.setBackgroundResource(R.drawable._dialog_bottom_background_dark);
+        bodyLayoutScroll.setBackgroundResource(R.drawable.base_background_dialog_bottom_round_dwite);
         linearLayout.addView(bodyLayoutScroll,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT

@@ -383,7 +383,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
             // выводим заголовок
             TextView head = new TextView(this);
-            head.setBackgroundResource(R.drawable._dialog_head_background_blue);
+            head.setBackgroundResource(R.drawable.base_background_dialog_head_round_blue);
             head.setTextColor(getResources().getColor(R.color.backgroundWhite));
             head.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             head.setGravity(Gravity.CENTER);

@@ -13,7 +13,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/_dialog_head_background_white"
+            android:background="@drawable/base_background_dialog_head_round_wite"
             android:orientation="vertical"
             android:padding="@dimen/double_margin">
 
@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/double_margin"
-                android:background="@drawable/base_button_background_round_gray"
+                android:background="@drawable/base_background_button_round_gray"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/double_margin"
@@ -109,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/double_margin"
-                android:background="@drawable/base_button_background_round_gray"
+                android:background="@drawable/base_background_button_round_gray"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/double_margin"
@@ -144,7 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/double_margin"
-                android:background="@drawable/base_button_background_round_gray"
+                android:background="@drawable/base_background_button_round_gray"
                 android:gravity="center"
                 android:padding="@dimen/half_more_margin">
 
@@ -153,7 +153,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/geometria"
-                    android:text="@string/learners_and_grades_out_activity_dialog_button_delete"
+                    android:text="@string/button_remove"
                     android:textColor="@color/signalRed"
                     android:textSize="@dimen/text_subtitle_size" />
             </LinearLayout>
@@ -165,7 +165,7 @@
             android:id="@+id/learners_and_grades_dialog_learner_edit_button_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/_dialog_bottom_background_blue"
+            android:background="@drawable/base_background_dialog_bottom_round_blue"
             android:fontFamily="@font/geometria"
             android:gravity="center"
             android:padding="@dimen/half_more_margin"

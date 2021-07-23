@@ -474,7 +474,7 @@ public class GradeEditLessonDialogFragment extends DialogFragment {
         // контейнер кнопки
         LinearLayout saveButtonContainer = new LinearLayout(getActivity());
         saveButtonContainer.setGravity(Gravity.CENTER);
-        saveButtonContainer.setBackgroundResource(R.drawable.base_button_round_background_orange);
+        saveButtonContainer.setBackgroundResource(R.drawable.base_background_button_circle_orange);
         LinearLayout.LayoutParams saveButtonContainerParams = new LinearLayout.LayoutParams(
                 ActionBar.LayoutParams.WRAP_CONTENT,
                 ActionBar.LayoutParams.WRAP_CONTENT,

@@ -3,7 +3,6 @@ package com.learning.texnar13.teachersprogect.settings;
 import android.app.Dialog;
 import androidx.fragment.app.DialogFragment;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -45,7 +44,7 @@ public class EditLocaleDialogFragment extends DialogFragment {
         // layout заголовка
         LinearLayout headLayout = new LinearLayout(getActivity());
         headLayout.setOrientation(LinearLayout.HORIZONTAL);
-        headLayout.setBackgroundResource(R.drawable._dialog_head_background_dark);
+        headLayout.setBackgroundResource(R.drawable.base_background_dialog_head_round_lgray);
         headLayout.setGravity(Gravity.CENTER_VERTICAL);
         LinearLayout.LayoutParams headLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -114,7 +113,7 @@ public class EditLocaleDialogFragment extends DialogFragment {
 
         //контейнеры для прокрутки
         ScrollView scrollView = new ScrollView(getActivity());
-        scrollView.setBackgroundResource(R.drawable._dialog_bottom_background_white);
+        scrollView.setBackgroundResource(R.drawable.base_background_dialog_bottom_round_wite);
         linearLayout.addView(scrollView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1F));
 
         LinearLayout linear = new LinearLayout(getActivity());

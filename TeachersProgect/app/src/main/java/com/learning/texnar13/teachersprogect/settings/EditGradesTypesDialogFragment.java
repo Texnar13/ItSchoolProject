@@ -89,7 +89,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     LinearLayout newTypeContainer = new LinearLayout(getActivity());
                     newTypeContainer.setGravity(Gravity.CENTER_VERTICAL);
                     newTypeContainer.setOrientation(LinearLayout.VERTICAL);
-                    newTypeContainer.setBackground(getActivity().getResources().getDrawable(R.drawable.base_dialog_background_dwhite_full_round));
+                    newTypeContainer.setBackground(getActivity().getResources().getDrawable(R.drawable.base_background_dialog_full_round_dwite));
                     // параметры контейнера
                     LinearLayout.LayoutParams newTypeContainerParams = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -158,7 +158,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             LinearLayout item = new LinearLayout(getActivity());
             item.setGravity(Gravity.CENTER_VERTICAL);
             item.setOrientation(LinearLayout.VERTICAL);
-            item.setBackground(getActivity().getResources().getDrawable(R.drawable.base_dialog_background_dwhite_full_round));
+            item.setBackground(getActivity().getResources().getDrawable(R.drawable.base_background_dialog_full_round_dwite));
             // параметры контейнера
             LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -239,7 +239,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                 // контейнер кнопки
                 LinearLayout removeButtonContainer = new LinearLayout(getActivity());
                 removeButtonContainer.setGravity(Gravity.CENTER);
-                removeButtonContainer.setBackgroundResource(R.drawable.base_dialog_background_gray_full_round);
+                removeButtonContainer.setBackgroundResource(R.drawable.base_background_dialog_full_round_gray);
                 LinearLayout.LayoutParams removeButtonContainerParams = new LinearLayout.LayoutParams(
                         0,
                         LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -300,7 +300,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             // контейнер кнопки
             LinearLayout saveButtonContainer = new LinearLayout(getActivity());
             saveButtonContainer.setGravity(Gravity.CENTER);
-            saveButtonContainer.setBackgroundResource(R.drawable.base_dialog_background_gray_full_round);
+            saveButtonContainer.setBackgroundResource(R.drawable.base_background_dialog_full_round_gray);
             LinearLayout.LayoutParams saveButtonContainerParams = new LinearLayout.LayoutParams(
                     0,
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -317,7 +317,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
 
             TextView saveText = new TextView(getActivity());
             saveText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-            saveText.setText(R.string.settings_activity_dialog_button_save);
+            saveText.setText(R.string.button_save);
             saveText.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
             saveText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
             LinearLayout.LayoutParams saveTextParams = new LinearLayout.LayoutParams(

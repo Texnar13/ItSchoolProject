@@ -28,7 +28,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/my_icon_size"
             android:layout_marginRight="@dimen/my_icon_size"
-            android:background="@drawable/start_screen_activity_button_background_start_lesson"
+            android:background="@drawable/start_screen_activity_background_button_start_lesson"
             android:gravity="center">
 
             <TextView
@@ -71,7 +71,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/begin_lesson_start_screen_button_height_half"
-                    android:background="@drawable/_dialog_head_background_white"
+                    android:background="@drawable/base_background_dialog_head_round_wite"
                     android:orientation="vertical">
 
                     <LinearLayout

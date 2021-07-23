@@ -25,8 +25,8 @@
 
 
     <!-- радиус скругления углов кнопок -->
-    <dimen name="my_buttons_rounding_radius_size">15dp</dimen>
-    <dimen name="my_buttons_rounding_radius_size_half">7.5dp</dimen>
+    <dimen name="radius_rounding_buttons">7.5dp</dimen>
+    <dimen name="radius_rounding_dialogs">11.25dp</dimen>
 
     <!--размеры текста-->
     <dimen name="text_fat_size">36sp</dimen>

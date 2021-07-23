@@ -25,8 +25,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.learning.texnar13.teachersprogect.R;
-import com.learning.texnar13.teachersprogect.SubjectsDialog.SubjectsDialogFragment;
-import com.learning.texnar13.teachersprogect.SubjectsDialog.SubjectsDialogInterface;
+import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogFragment;
+import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogInterface;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;

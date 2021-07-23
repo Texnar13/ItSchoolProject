@@ -174,7 +174,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 
             //создаем контейнер
             RelativeLayout learnersClassContainer = new RelativeLayout(this);
-            learnersClassContainer.setBackgroundResource(R.drawable.base_dialog_background_dwhite_full_round);
+            learnersClassContainer.setBackgroundResource(R.drawable.base_background_dialog_full_round_dwite);
             // параметры контейнера
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,//ш
@@ -213,7 +213,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 
             // стрелочка
             ImageView arrow = new ImageView(this);
-            arrow.setImageResource(R.drawable.base_button_forward_blue);
+            arrow.setImageResource(R.drawable.base_button_arrow_forward_blue);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
                     (int) getResources().getDimension(R.dimen.my_icon_small_size),
                     (int) getResources().getDimension(R.dimen.my_icon_small_size)
@@ -279,7 +279,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 
             // создаем контейнер
             RelativeLayout learnersClassContainer = new RelativeLayout(this);
-            learnersClassContainer.setBackgroundResource(R.drawable.base_dialog_background_dwhite_full_round);
+            learnersClassContainer.setBackgroundResource(R.drawable.base_background_dialog_full_round_dwite);
             // параметры контейнера
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,//ш

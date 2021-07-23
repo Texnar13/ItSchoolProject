@@ -28,7 +28,6 @@ import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
-import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 
 public class CabinetsOutActivity extends AppCompatActivity implements CreateCabinetInterface {
 
@@ -129,7 +128,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
 
             //создаем контейнер
             RelativeLayout cabinetContainer = new RelativeLayout(this);
-            cabinetContainer.setBackgroundResource(R.drawable.base_dialog_background_dwhite_full_round);
+            cabinetContainer.setBackgroundResource(R.drawable.base_background_dialog_full_round_dwite);
             // параметры контейнера
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,//ш
@@ -165,7 +164,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
 
             // стрелочка
             ImageView arrow = new ImageView(this);
-            arrow.setImageResource(R.drawable.base_button_forward_blue);
+            arrow.setImageResource(R.drawable.base_button_arrow_forward_blue);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
                     (int) getResources().getDimension(R.dimen.my_icon_small_size),
                     (int) getResources().getDimension(R.dimen.my_icon_small_size)
@@ -188,7 +187,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
                 // активность редактирования имени кабинета
                 Intent editCabinetNameIntent = new Intent(CabinetsOutActivity.this, CabinetEditActivity.class);
                 // id кабинета
-                editCabinetNameIntent.putExtra(EditCabinetDialogFragment.ARG_CABINET_ID, finalId);
+                editCabinetNameIntent.putExtra(CabinetEditActivity.ARG_CABINET_ID, finalId);
                 // запускаем
                 startActivityForResult(editCabinetNameIntent, CabinetEditActivity.CABINET_EDIT_REQUEST_CODE);
             });
@@ -200,7 +199,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
 
             // создаем контейнер
             RelativeLayout learnersClassContainer = new RelativeLayout(this);
-            learnersClassContainer.setBackgroundResource(R.drawable.base_dialog_background_dwhite_full_round);
+            learnersClassContainer.setBackgroundResource(R.drawable.base_background_dialog_full_round_dwite);
             // параметры контейнера
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,//ш

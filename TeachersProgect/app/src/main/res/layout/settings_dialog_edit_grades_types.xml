@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/_dialog_head_background_dark">
+        android:background="@drawable/base_background_dialog_head_round_lgray">
 
         <ImageView
             android:id="@+id/dialog_fragment_layout_settings_edit_grades_types_cancel_button"
@@ -38,7 +38,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/_dialog_bottom_background_white"
+        android:background="@drawable/base_background_dialog_bottom_round_wite"
         android:gravity="center"
         android:orientation="vertical">
 

@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.SubjectsDialog;
+package com.learning.texnar13.teachersprogect.subjectsDialog;
 
 public interface SubjectsDialogInterface {
 

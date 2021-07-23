@@ -36,7 +36,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
 
         // layout диалога
         LinearLayout linearLayout = new LinearLayout(getActivity());
-        linearLayout.setBackgroundResource(R.drawable._dialog_full_background_white);
+        linearLayout.setBackgroundResource(R.drawable.base_background_dialog_full_round_wite);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(
@@ -53,7 +53,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         // layout заголовка
         LinearLayout headLayout = new LinearLayout(getActivity());
         headLayout.setOrientation(LinearLayout.HORIZONTAL);
-        headLayout.setBackgroundResource(R.drawable._dialog_head_background_dark);
+        headLayout.setBackgroundResource(R.drawable.base_background_dialog_head_round_lgray);
         headLayout.setGravity(Gravity.CENTER_VERTICAL);
         LinearLayout.LayoutParams headLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -182,7 +182,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         // контейнер кнопки
         LinearLayout removeButtonContainer = new LinearLayout(getActivity());
         removeButtonContainer.setGravity(Gravity.CENTER);
-        removeButtonContainer.setBackgroundResource(R.drawable.settings_dialog_remove_button_background);
+        removeButtonContainer.setBackgroundResource(R.drawable.settings_background_remove_button);
         LinearLayout.LayoutParams removeButtonContainerParams = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,

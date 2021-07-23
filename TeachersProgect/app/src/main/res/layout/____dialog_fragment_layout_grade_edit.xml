@@ -24,7 +24,7 @@
         android:layout_alignParentRight="true"
         android:gravity="center"
         android:layout_below="@+id/dialog_fragment_layout_edit_grade_head"
-        android:background="@drawable/_dialog_bottom_background_white"
+        android:background="@drawable/base_background_dialog_bottom_round_wite"
         android:orientation="vertical"
         tools:ignore="RtlHardcoded"/>
 

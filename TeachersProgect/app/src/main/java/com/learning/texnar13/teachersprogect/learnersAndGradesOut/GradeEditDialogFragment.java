@@ -151,7 +151,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
 
         // контейнер текущей даты и номера урока
         RelativeLayout currentContainer = new RelativeLayout(getActivity());
-        currentContainer.setBackgroundResource(R.drawable._dialog_head_background_dark);
+        currentContainer.setBackgroundResource(R.drawable.base_background_dialog_head_round_lgray);
         LinearLayout.LayoutParams currentContainerParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -549,7 +549,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
         // ---- контейнер для тела диалога ----
         ScrollView bodyLayout = new ScrollView(getActivity());
         //
-        bodyLayout.setBackgroundResource(R.drawable._dialog_bottom_background_white);
+        bodyLayout.setBackgroundResource(R.drawable.base_background_dialog_bottom_round_wite);
         //bodyLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.addView(bodyLayout,
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -688,7 +688,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
         // контейнер кнопки
         LinearLayout saveButtonContainer = new LinearLayout(getActivity());
         saveButtonContainer.setGravity(Gravity.CENTER);
-        saveButtonContainer.setBackgroundResource(R.drawable.base_button_round_background_orange);
+        saveButtonContainer.setBackgroundResource(R.drawable.base_background_button_circle_orange);
         LinearLayout.LayoutParams saveButtonContainerParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -705,7 +705,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
 
         TextView saveText = new TextView(getActivity());
         saveText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-        saveText.setText(R.string.learners_and_grades_out_activity_dialog_button_save);
+        saveText.setText(R.string.button_save);
         saveText.setTextColor(getResources().getColor(R.color.backgroundWhite));
         saveText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         LinearLayout.LayoutParams saveTextParams = new LinearLayout.LayoutParams(

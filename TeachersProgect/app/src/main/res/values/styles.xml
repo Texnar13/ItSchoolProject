@@ -68,7 +68,7 @@
         <!-- подсветка фона кнопок при нажатии -->
         <item name="colorControlHighlight">@color/backgroundLiteGray</item>
 
-        <item name="homeAsUpIndicator">@drawable/base_button_back_blue</item>
+        <item name="homeAsUpIndicator">@drawable/base_button_arrow_back_blue</item>
         <item name="titleTextStyle">@style/myToolbarTextStyle</item>
 
 

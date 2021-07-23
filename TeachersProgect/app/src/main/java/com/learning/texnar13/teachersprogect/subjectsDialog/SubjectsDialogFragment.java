@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.SubjectsDialog;
+package com.learning.texnar13.teachersprogect.subjectsDialog;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -120,9 +120,9 @@ public class SubjectsDialogFragment extends DialogFragment {
     void outMainMenu() {
 
         // выставляем цвета диалога
-        titleLayout.setBackgroundResource(R.drawable._dialog_head_background_blue);
+        titleLayout.setBackgroundResource(R.drawable.base_background_dialog_head_round_blue);
         bodyScroll.setBackgroundResource(R.color.backgroundWhite);
-        bottomLayout.setBackgroundResource(R.drawable._dialog_bottom_background_dark);
+        bottomLayout.setBackgroundResource(R.drawable.base_background_dialog_bottom_round_dwite);
 
         // затираем то что было выведено до этого
         titleLayout.removeAllViews();
@@ -306,9 +306,9 @@ public class SubjectsDialogFragment extends DialogFragment {
     // метод вывода интерфейса создания предмета
     void outCreateSubjectMenu() {
         // выставляем цвета диалога
-        titleLayout.setBackgroundResource(R.drawable._dialog_head_background_dark);
+        titleLayout.setBackgroundResource(R.drawable.base_background_dialog_head_round_lgray);
         bodyScroll.setBackgroundResource(R.color.backgroundWhite);
-        bottomLayout.setBackgroundResource(R.drawable._dialog_bottom_background_white);
+        bottomLayout.setBackgroundResource(R.drawable.base_background_dialog_bottom_round_wite);
 
         // затираем то что было выведено до этого
         titleLayout.removeAllViews();
@@ -390,7 +390,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // контейнер кнопки создать
         LinearLayout createButtonContainer = new LinearLayout(getActivity());
-        createButtonContainer.setBackgroundResource(R.drawable.base_button_round_background_orange);
+        createButtonContainer.setBackgroundResource(R.drawable.base_background_button_circle_orange);
         // параметры контейнера
         LinearLayout.LayoutParams saveTextButtonContainerParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -468,9 +468,9 @@ public class SubjectsDialogFragment extends DialogFragment {
     // метод вывода списка удаления и редактирования
     void outEditSubjectsMenu() {
         // выставляем цвета диалога
-        titleLayout.setBackgroundResource(R.drawable._dialog_head_background_dark);
+        titleLayout.setBackgroundResource(R.drawable.base_background_dialog_head_round_lgray);
         bodyScroll.setBackgroundResource(R.color.backgroundWhite);
-        bottomLayout.setBackgroundResource(R.drawable._dialog_bottom_background_white);
+        bottomLayout.setBackgroundResource(R.drawable.base_background_dialog_bottom_round_wite);
 
         // затираем то что было выведено до этого
         titleLayout.removeAllViews();
@@ -512,7 +512,7 @@ public class SubjectsDialogFragment extends DialogFragment {
         // кнопка удалить в заголовке
         final TextView title = new TextView(getActivity());
         title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-        title.setText(getResources().getString(R.string.learners_and_grades_out_activity_dialog_button_delete));
+        title.setText(getResources().getString(R.string.button_remove));
         title.setGravity(Gravity.CENTER_VERTICAL);
         title.setTextColor(Color.RED);
         title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -646,7 +646,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // контейнер кнопки сохранить
         LinearLayout saveButtonContainer = new LinearLayout(getActivity());
-        saveButtonContainer.setBackgroundResource(R.drawable.base_button_round_background_orange);
+        saveButtonContainer.setBackgroundResource(R.drawable.base_background_button_circle_orange);
         // параметры контейнера
         LinearLayout.LayoutParams saveTextButtonContainerParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -664,7 +664,7 @@ public class SubjectsDialogFragment extends DialogFragment {
         // кнопка сохранить
         final TextView saveTextButton = new TextView(getActivity());
         saveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-        saveTextButton.setText(getResources().getString(R.string.learners_and_grades_out_activity_dialog_button_save));
+        saveTextButton.setText(getResources().getString(R.string.button_save));
         saveTextButton.setGravity(Gravity.CENTER);
         saveTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         saveTextButton.setTextColor(getResources().getColor(R.color.backgroundWhite));

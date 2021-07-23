@@ -265,7 +265,7 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
 
 
             // меняем кнопку на создание урока
-            lessonButtonText.setBackgroundResource(R.drawable.start_screen_activity_button_background_create_lesson);
+            lessonButtonText.setBackgroundResource(R.drawable.start_screen_activity_background_button_create_lesson);
             lessonButtonText.setText(R.string.start_screen_activity_title_current_create_lesson);
 
             // назначаем создание при нажатии
@@ -348,7 +348,7 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_field_cabinet)).setText(cabinetName);
 
             // делаем кнопку видимой если она была скрыта
-            lessonButtonText.setBackgroundResource(R.drawable.start_screen_activity_button_background_start_lesson);
+            lessonButtonText.setBackgroundResource(R.drawable.start_screen_activity_background_button_start_lesson);
             lessonButtonText.setText(R.string.start_screen_activity_title_current_start_lesson);
 
             // назначаем открытие урока при нажатии

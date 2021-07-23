@@ -34,7 +34,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toStartOf="@+id/schedule_month_date_text"
                     android:layout_toLeftOf="@+id/schedule_month_date_text"
-                    app:srcCompat="@drawable/base_button_back_blue" />
+                    app:srcCompat="@drawable/base_button_arrow_back_blue" />
 
                 <ImageView
                     android:id="@+id/schedule_month_button_next"
@@ -45,7 +45,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_toEndOf="@+id/schedule_month_date_text"
                     android:layout_toRightOf="@+id/schedule_month_date_text"
-                    app:srcCompat="@drawable/base_button_forward_blue" />
+                    app:srcCompat="@drawable/base_button_arrow_forward_blue" />
 
                 <TextView
                     android:id="@+id/schedule_month_date_text"

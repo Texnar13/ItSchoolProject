@@ -4,6 +4,8 @@
     <!-- название приложения -->
     <string name="app_name">Teacher\'s assistant</string>
     <string name="button_save">Save</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_remove">Remove</string>
 
 
     <!-- активность главный экран -->
@@ -39,9 +41,6 @@
     <string name="learners_classes_out_activity_dialog_title_edit_class">Group editing</string>
     <string name="learners_classes_out_activity_dialog_hint_class_name">Group name</string>
     <string name="learners_classes_out_activity_dialog_button_add">Add</string>
-    <string name="learners_classes_out_activity_dialog_button_save">Save</string>
-    <string name="learners_classes_out_activity_dialog_button_delete">Remove</string>
-    <string name="learners_classes_out_activity_dialog_button_cancel">Cancel</string>
     <!-- тост -->
     <string name="learners_classes_out_activity_toast_empty_name">Group name not entered</string>
     <!-- подсказка на экране -->
@@ -59,7 +58,7 @@
     <string name="learners_and_grades_out_activity_text_add_learner">+ Add learner</string>
     <!-- меню сверху -->
     <string name="learners_and_grades_out_activity_menu_title_statistics">Statistics</string>
-    <string name="learners_and_grades_out_activity_menu_title_show_all">#Показать все#</string>
+    <string name="learners_and_grades_out_activity_menu_title_show_all">##Показать все</string>
     <!-- диалоги -->
     <string name="learners_and_grades_out_activity_dialog_title_create_learner">Add a student</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_learner">Edit student</string>
@@ -67,17 +66,14 @@
     <string name="learners_and_grades_out_activity_dialog_hint_learner_name">First name</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_second_name">Last name</string>
     <string name="learners_and_grades_out_activity_dialog_button_add">+ Add</string>
-    <string name="learners_and_grades_out_activity_dialog_button_save">Save</string>
     <string name="learners_and_grades_out_activity_dialog_button_create">Create</string>
     <string name="learners_and_grades_out_activity_dialog_button_change">Change</string>
-    <string name="learners_and_grades_out_activity_dialog_button_delete">Remove</string>
-    <string name="learners_and_grades_out_activity_dialog_button_cancel">Cancel</string>
     <string name="learners_and_grades_out_activity_dialog_title_choose_subject">Choose subject:</string>
     <string name="learners_and_grades_out_activity_dialog_title_enter_subject_name">Enter subject name:</string>
     <string name="learners_and_grades_out_activity_dialog_hint_subject_name">Subject name</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson">lesson</string>
-    <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">ДЗ и заметки:</string>
-    <string name="learners_and_grades_out_activity_dialog_hint_lesson_comment">Комментарий…</string>
+    <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">##ДЗ и заметки:</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_lesson_comment">##Комментарий…</string>
     <!-- уведомления диалогов -->
     <string name="learners_and_grades_out_activity_dialog_toast_no_name">No first name entered</string>
     <string name="learners_and_grades_out_activity_dialog_toast_no_last_name">No last name entered</string>
@@ -110,9 +106,6 @@
     <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_year">YEAR</string>
     <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_month">MONTH</string>
     <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_day">DAY</string>
-    <string name="learners_and_grades_statistics_activity_dialog_button_cancel">Cancel</string>
-    <string name="learners_and_grades_statistics_activity_dialog_button_save">Save</string>
-    <string name="learners_and_grades_statistics_activity_dialog_button_delete">Delete</string>
     <!-- подсказка на экране -->
     <string name="learners_and_grades_statistics_activity_text_help">Here you can see the total average result by the answers and miss of your students for a certain period. This period you can enter in the field on the top.</string>
 
@@ -120,14 +113,16 @@
     <!-- активность списка кабинетов -->
     <!-- заголовок активности -->
     <string name="title_activity_cabinets_out">My classrooms</string>
+    <!-- тексты -->
+    <string name="cabinets_out_activity_title_edit_cabinet">Edit classroom</string>
+    <string name="cabinets_out_activity_button_text_cabinet_title">##Название:</string>
+    <string name="cabinets_out_activity_button_text_seat_students">##Пересадить учеников:</string>
+    <string name="cabinets_out_activity_button_text_arrange_deks">##Переставить парты</string>
+    <string name="cabinets_out_activity_button_text_delete_cabinet">##Удалить кабинет</string>
+    <string name="cabinets_out_activity_title_delete_cabinet_ask">##Вы точно хотите удалить кабинет?</string>
     <!-- диалоги -->
     <string name="cabinets_out_activity_dialog_title_create_cabinet">New classroom</string>
-    <string name="cabinets_out_activity_dialog_title_edit_cabinet">Edit classroom</string>
     <string name="cabinets_out_activity_dialog_hint_cabinet_name">Title/number</string>
-    <string name="cabinets_out_activity_dialog_button_add">Add</string>
-    <string name="cabinets_out_activity_dialog_button_save">Save</string>
-    <string name="cabinets_out_activity_dialog_button_delete">Remove</string>
-    <string name="cabinets_out_activity_dialog_button_cancel">Cancel</string>
     <!-- подсказка на экране -->
     <string name="cabinets_out_activity_text_help">To create a classroom, press + and enter its name. \nTo arrange the desks, click on the classroom you need. \nTo rename or delete the classroom, press and hold it.</string>
 
@@ -187,11 +182,8 @@
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">Seat the students</string>
     <string name="lesson_redactor_activity_button_remove"><u>Remove lesson</u></string>
-    <string name="lesson_redactor_activity_button_save">Save</string>
-    <string name="lesson_redactor_activity_button_cancel">Cancel</string>
     <!-- диалоги -->
     <string name="lesson_redactor_activity_dialog_button_remove">Remove</string>
-    <string name="lesson_redactor_activity_dialog_button_cancel">Cancel</string>
     <string name="lesson_redactor_activity_dialog_button_add">Create</string>
     <string name="lesson_redactor_activity_dialog_title_remove_subjects">Select subjects to remove</string>
     <string name="lesson_redactor_activity_dialog_title_add_subject">Adding a subject</string>
@@ -221,13 +213,10 @@
     <!-- заголовок активности -->
     <string name="title_activity_lesson_list">Lessons learned</string>
     <!-- меню сверху -->
-    <string name="lesson_list_activity_menu_text_save">Save</string>
     <!-- уведомления -->
     <string name="lesson_list_activity_menu_toast_grades_saved">All answers saved successfully!</string>
     <!-- диалоги -->
     <string name="lesson_list_activity_dialog_title">Edit answer</string>
-    <string name="lesson_list_activity_dialog_button_save">save</string>
-    <string name="lesson_list_activity_dialog_button_cancel">cancel</string>
     <!-- подсказка на экране -->
     <string name="lesson_list_activity_text_help">Here are the results of the lesson. \nTo change the answer, click on it. \nTo save the answers, click the SAVE button. \nIf you do not want to save answers, click the «Back» button on your device.</string>
 
@@ -267,8 +256,6 @@
     <string name="settings_activity_dialog_hint_number">NUMBER </string>
     <string name="settings_activity_dialog_button_remove_data">Delete all data</string>
     <string name="settings_activity_dialog_button_remove">Remove</string>
-    <string name="settings_activity_dialog_button_cancel">Cancel</string>
-    <string name="settings_activity_dialog_button_save">Save</string>
     <string name="settings_activity_dialog_edit_time_title">Change lessons time</string>
     <string name="settings_activity_dialog_hint_hour">HOUR</string>
     <string name="settings_activity_dialog_hint_minute">MIN</string>

@@ -10,7 +10,7 @@
         android:id="@+id/base_blue_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/base_button_back_blue"
+        app:navigationIcon="@drawable/base_button_arrow_back_blue"
         android:theme="@style/MyToolbarTheme">
 
         <TextView

@@ -28,7 +28,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
         // layout диалога
         LinearLayout dialogLinearLayout = new LinearLayout(getActivity());
-        dialogLinearLayout.setBackgroundResource(R.drawable._dialog_full_background_white);
+        dialogLinearLayout.setBackgroundResource(R.drawable.base_background_dialog_full_round_wite);
         dialogLinearLayout.setOrientation(LinearLayout.VERTICAL);
         builder.setView(dialogLinearLayout);
 
@@ -85,7 +85,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
         //контейнер для нее
         RelativeLayout container = new RelativeLayout(getActivity());
-        container.setBackgroundResource(R.drawable.base_button_round_background_orange);
+        container.setBackgroundResource(R.drawable.base_background_button_circle_orange);
         container.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,

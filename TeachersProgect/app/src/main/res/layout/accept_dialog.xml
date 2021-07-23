@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/base_background_dialog_head_round_wite"
+        android:orientation="horizontal"
+        android:padding="@dimen/double_margin"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/accept_dialog_button_close"
+            android:layout_width="@dimen/my_icon_size"
+            android:layout_height="@dimen/my_icon_size"
+            app:srcCompat="@drawable/base_button_close_background_round" />
+
+        <TextView
+            android:id="@+id/accept_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/double_margin"
+            android:layout_marginEnd="@dimen/double_margin"
+            android:textColor="#000000"
+            android:textSize="@dimen/text_subtitle_size" />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/accept_dialog_text_button_accept"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/double_margin"
+        android:paddingBottom="@dimen/double_margin"
+        android:paddingStart="@dimen/forth_margin"
+        android:paddingEnd="@dimen/forth_margin"
+        android:background="@drawable/base_background_dialog_bottom_round_blue"
+        android:gravity="center"
+        android:textColor="@color/backgroundWhite"
+        android:textSize="@dimen/text_subtitle_size" />
+</LinearLayout>
