@@ -34,6 +34,16 @@ public class EditTimeDialogFragment extends DialogFragment {
     // контейнер вывода времени
     LinearLayout outContainer;
 
+    /* todo переделай эту жесть +
+     *  косяк: не можем добавить урок после 23:59
+     *  правим, создаем
+     *  цифра все равно красная
+     *
+     *  todo нужна проверка и сохранение после каждого on focus changed.
+     *   метод проверки по 3 ряда?
+    */
+
+
     @SuppressLint("SetTextI18n")
     @NonNull
     @Override
@@ -350,7 +360,7 @@ public class EditTimeDialogFragment extends DialogFragment {
                     // сохраняем изменения в бд?
 
                 } else {
-                    Toast.makeText(getActivity(), "#Вы не можете создать урок после 23:58", Toast.LENGTH_LONG).show();// todo перевод
+                    Toast.makeText(getActivity(), R.string.settings_activity_dialog_edit_time_toast_last_lesson_error, Toast.LENGTH_LONG).show();// todo перевод
                     lastLine.timeFields[3].setTextColor(getResources().getColor(R.color.signalRed));
                     lastLine.timeFields[3].setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_bold));
                     //lastLine.timeFields[3].set(getResources().getColor(R.color.signalRed));
@@ -419,6 +429,7 @@ public class EditTimeDialogFragment extends DialogFragment {
 
     // проверка полей
     int[][] checkFields() {
+        Log.e("tag","test");
         // флаг правильности всех полей
         boolean correctFlag = true;
         // флаг правильности текущего поля

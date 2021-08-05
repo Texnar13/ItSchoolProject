@@ -9,6 +9,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +21,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.learning.texnar13.teachersprogect.BuildConfig;
+import com.android.billingclient.api.AcknowledgePurchaseParams;
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.ScheduleMonthActivity;
 import com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import com.learning.texnar13.teachersprogect.learnersClassesOut.LearnersClassesOutActivity;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity;
@@ -37,30 +45,15 @@ import com.learning.texnar13.teachersprogect.settings.SettingsActivity;
 import com.yandex.mobile.ads.AdSize;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class StartScreenActivity extends AppCompatActivity implements RateInterface {
-    // константы для SharedPreferences
-    // счетчик заходов в приложение для оценки в sharedPreferences
-    static final String ENTERS_COUNT = "entersCount";
-    // оценено?
-    static final String IS_RATE = "isRate";
-    // версия
-    static final String WHATS_NEW = "whatsNew";
-    static final int NOW_VERSION = BuildConfig.VERSION_CODE;
 
-
-    // была ли начальная инициализация
-    static boolean isInit = false;
-
-
-    // контейнер текущего урока
-    LinearLayout currentLessonContainer;
-    // кнопка создать/начать урок
-    TextView lessonButtonText;
+    // todo раз в сколько запусков показываются диалоги
 
 
     // при создании
@@ -68,6 +61,7 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
         // отключаем поворот
@@ -82,15 +76,8 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             window.setStatusBarColor(getResources().getColor(R.color.baseBlue));
         }
 
-        // ================ реклама яндекса на главном экране ================
-        com.yandex.mobile.ads.AdView mAdView = findViewById(R.id.start_screen_ad_banner);
-        mAdView.setBlockId(getResources().getString(R.string.banner_id_start_screen));
-        mAdView.setAdSize(AdSize.BANNER_320x50);
-        // Создание объекта таргетирования рекламы.
-        final com.yandex.mobile.ads.AdRequest adRequest = new com.yandex.mobile.ads.AdRequest.Builder().build();
-        // Загрузка объявления.
-        mAdView.loadAd(adRequest);
 
+        // работаем с view
 
         // расписание
         ImageView relButtonSchedule = findViewById(R.id.start_screen_button_schedule);
@@ -108,55 +95,66 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
                 StartScreenActivity.this, LearnersClassesOutActivity.class
         )));
         // настройки
-        ImageView relButtonSettings = findViewById(R.id.start_screen_button_reload);
+        ImageView relButtonSettings = findViewById(R.id.start_screen_button_settings);
         relButtonSettings.setOnClickListener(v -> startActivity(new Intent(
                 StartScreenActivity.this, SettingsActivity.class
         )));
 
 
-        // контейнер текущего урока
-        currentLessonContainer = findViewById(R.id.start_screen_layout_now);
-        lessonButtonText = findViewById(R.id.start_screen_button_start_lesson_text);
+        if (savedInstanceState == null) {// при создании активности
 
+            // todo переходим со старого SharedPreferences на новое а также копируем настройки из бд
 
-        // при начале работы активности
-        if (!isInit) {
-            isInit = true;
+            // проверяем статус подписки
+            checkSubscriptionStatusAndSavePrefs();
+
             // ------ сохраненные параметры ------
+            //SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+            //hrftdhgsfgdhgh();
+            //todo
+            //todo
+            //todo
+            //todo
+            //todo
+            //todo
+            //todo
+            //todo
+            //todo
+            //todo
             //начинаем редактировать
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             // ---- счетчик "оцените нас" ----
             // через семь заходов в приложение открывает диалог 'оцените'
-            if (!sharedPreferences.getBoolean(IS_RATE, false)) {
-                editor.putInt(ENTERS_COUNT, sharedPreferences.getInt(ENTERS_COUNT, 0) + 1);
-                if (sharedPreferences.getInt(ENTERS_COUNT, 0) == 10) {
+            if (!sharedPreferences.getBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE, false)) {
+                editor.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 0) + 1);
+                if (sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 0) == 10) {
                     //на всякий случай обнуляем счетчик
-                    editor.putInt(ENTERS_COUNT, 1);
-                    editor.putBoolean(IS_RATE, false);
+                    editor.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 1);
+                    editor.putBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE, false);
                     //создать диалог
                     StartScreenRateUsDialog startScreenRateUsDialog = new StartScreenRateUsDialog();
                     //показать диалог
-                    startScreenRateUsDialog.show(getSupportFragmentManager(), IS_RATE);
+                    startScreenRateUsDialog.show(getSupportFragmentManager(), SharedPrefsContract.PREFS_BOOLEAN_IS_RATE);
                 }
             }
 
             // ---- диалог что нового ----
             //если уже создано
-            if (sharedPreferences.contains(WHATS_NEW)) {
+            if (sharedPreferences.contains(SharedPrefsContract.PREFS_INT_WHATS_NEW)) {
                 //если версия старая
-                if (sharedPreferences.getInt(WHATS_NEW, -1) < NOW_VERSION) {
+                if (sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_WHATS_NEW, -1) < SharedPrefsContract.PREFS_INT_NOW_VERSION) {
                     // меняем версию
-                    editor.putInt(WHATS_NEW, NOW_VERSION);
+                    editor.putInt(SharedPrefsContract.PREFS_INT_WHATS_NEW, SharedPrefsContract.PREFS_INT_NOW_VERSION);
                     // показываем диалог что нового
                     WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
-                    dialogFragment.show(getFragmentManager(), WHATS_NEW);
+                    dialogFragment.show(getFragmentManager(), SharedPrefsContract.PREFS_INT_WHATS_NEW);
                 }
             } else {
                 //если еще не созданно
                 //создаем переменную с версией
-                editor.putInt(WHATS_NEW, NOW_VERSION);
+                editor.putInt(SharedPrefsContract.PREFS_INT_WHATS_NEW, SharedPrefsContract.PREFS_INT_NOW_VERSION);
                 //начальный диалог...
             }
 
@@ -173,7 +171,82 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             settingCursor.close();
             db.close();
         }
+
+        // выводим рекламу если нет подписки
+        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
+            // реклама яндекса
+            loadAdd();
+        }
     }
+
+    // проверка состояния подписки, результат в SharedPrefs
+    void checkSubscriptionStatusAndSavePrefs() {
+        final BillingClient billingClient = BillingClient.newBuilder(this)
+                .setListener((billingResult, purchases) -> {
+                }).enablePendingPurchases().build();
+        // пытаемся подключиться
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingServiceDisconnected() {
+                billingClient.endConnection();
+            }
+
+            @Override
+            public void onBillingSetupFinished(@NonNull BillingResult connectResult) {
+                // связь установлена
+                if (connectResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                    // получаем данные о подписках
+                    billingClient.queryPurchasesAsync(BillingClient.SkuType.SUBS, (queryCheckResult, purchasesList) -> {
+                        Log.e("tagTag", "Error billingResult.getResponseCode()=" + queryCheckResult.getResponseCode() + " purchasesList=" + purchasesList); //todo удалить
+                        // данные получены
+                        if (queryCheckResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+
+                            // проверяем есть ли среди подписок подписка на премиум
+                            boolean subsPurchasedFlag = false;
+                            for (Purchase purchase : purchasesList) {
+                                // получаем sku покупок для анализа
+                                ArrayList<String> tempSkus = purchase.getSkus();
+                                if (tempSkus.contains(getResources().getString(R.string.subscription_id_month_sponsor)) ||
+                                        tempSkus.contains(getResources().getString(R.string.subscription_id_year_sponsor)) ||
+                                        purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                                    subsPurchasedFlag = true;
+                                    // заодно, если что, подтверждаем их
+                                    if (!purchase.isAcknowledged()) {
+                                        AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams
+                                                .newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
+                                        // подтверждение на подтверждение
+                                        billingClient.acknowledgePurchase(acknowledgePurchaseParams, billingResult12 -> {
+                                        });
+                                    }
+                                }
+                            }
+
+                            // сохраняем параметр в SharedPreferences
+                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()
+                                    .putBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, subsPurchasedFlag).apply();
+                        }
+                        billingClient.endConnection();
+                    });
+                } else {
+                    billingClient.endConnection();
+                }
+            }
+        });
+
+    }
+
+    // показ раеламы
+    void loadAdd() {
+        com.yandex.mobile.ads.AdView mAdView = findViewById(R.id.start_screen_ad_banner);
+        mAdView.setBlockId(getResources().getString(R.string.banner_id_start_screen));
+        mAdView.setAdSize(AdSize.BANNER_320x50);
+        // Создание объекта таргетирования рекламы.
+        final com.yandex.mobile.ads.AdRequest adRequest = new com.yandex.mobile.ads.AdRequest.Builder().build();
+        // Загрузка объявления.
+        mAdView.loadAd(adRequest);
+    }
+
 
     // при запуске/при входе на эту активность
     @SuppressLint("SetTextI18n")
@@ -207,15 +280,12 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
         super.onStart();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // чистим данные
-        isInit = false;
-    }
-
-
     void outCurrentLesson() {
+        // контейнер текущего урока
+        LinearLayout currentLessonContainer = findViewById(R.id.start_screen_layout_now);
+        // кнопка создать/начать урок
+        TextView lessonButtonText = findViewById(R.id.start_screen_button_start_lesson_text);
+
         currentLessonContainer.removeAllViews();
 
         // получаем текущее время
@@ -377,13 +447,25 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
     @Override
     public void rate(int rateId) {
 
+        //SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        //hrftdhgsfgdhgh();
+        //todo
+        //todo
+        //todo
+        //todo
+        //todo
+        //todo
+        //todo
+        //todo
+        //todo
+        //todo
         //начинаем редактировать
         SharedPreferences.Editor ed = sharedPreferences.edit();
         switch (rateId) {
             case 0://оценить
-                ed.putBoolean(IS_RATE, true);
-                ed.putInt(ENTERS_COUNT, 0);
+                ed.putBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE, true);
+                ed.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 0);
 
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 boolean isActivityNotStarted = true;
@@ -411,11 +493,11 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
                 }
                 break;
             case 1://перенести на потом
-                ed.putInt(ENTERS_COUNT, 1);
+                ed.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 1);
                 break;
             case 2://не оценивать
-                ed.putBoolean(IS_RATE, true);
-                ed.putInt(ENTERS_COUNT, 2);
+                ed.putBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE, true);
+                ed.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 2);
         }
         // завершаем редактирование сохраненных параметров
         ed.apply();

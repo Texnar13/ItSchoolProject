@@ -122,7 +122,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/geometria"
                     android:paddingBottom="@dimen/simple_margin"
-                    android:text="#Информация:"
+                    android:text="@string/learners_and_grades_out_activity_dialog_title_learner_info"
                     android:textColor="@color/backgroundDarkGray"
                     android:textSize="@dimen/text_subtitle_size" />
 

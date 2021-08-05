@@ -3,6 +3,7 @@ package com.learning.texnar13.teachersprogect.settings;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -14,55 +15,84 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.learning.texnar13.teachersprogect.AcceptDialog.AcceptDialog;
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.sponsor.SponsorActivity;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Objects;
 
-public class SettingsActivity extends AppCompatActivity implements EditMaxAnswersDialogInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface, EditGradesTypeDialogFragmentInterface, EditAbsentTypeDialogFragmentInterface, SettingsRemoveInterface {
+public class SettingsActivity extends AppCompatActivity implements View.OnClickListener, EditMaxAnswersDialogInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface, EditGradesTypeDialogFragmentInterface, EditAbsentTypeDialogFragmentInterface, SettingsRemoveInterface {
 
     TextView maxGradeText;
 
     boolean isColoredGrades;
+    ImageView coloredGradesSwitch;
+
 
     // межстраничный баннер открывающийся при выходе из настроек
-    //InterstitialAd settingsBack;
     com.yandex.mobile.ads.InterstitialAd settingsBack;
 
     // путь для файла с данными
     static final String SAVE_DATA_DIRECTORY = "/teachersAssistant";
     static final String SAVE_DATA_FILE_NAME = "saved_data.xml";
 
+    // помощник запуска активности SponsorActivity с результатом
+    private final ActivityResultLauncher<Integer> startResultHelper = registerForActivityResult(
+            new ActivityResultContract<Integer, Integer>() {
+                @NonNull
+                @Override
+                public Intent createIntent(@NonNull Context context, Integer input) {
+                    return new Intent(context, SponsorActivity.class);
+                }
+
+                @Override
+                public Integer parseResult(int resultCode, @Nullable Intent intent) {
+                    return resultCode;
+                }
+            }, result -> {
+                if (result == SponsorActivity.RESULT_DEAL_DONE) {
+
+                    // todo показываем диалог, что все куплено
+                    AcceptDialog dialog = new AcceptDialog();
+                    Bundle args = new Bundle();
+                    args.putString(AcceptDialog.ARG_ACCEPT_MESSAGE, "Всё");
+                    args.putString(AcceptDialog.ARG_ACCEPT_BUTTON_TEXT, "Куплено");
+                    dialog.setArguments(args);
+                    dialog.show(getSupportFragmentManager(), "buyer");
+                }
+            });
+
 
     // создание экрана
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
-
-
+        super.onCreate(savedInstanceState);
         // разрешаем только вертикальную ориентацию
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
-        // ================ начинаем загрузку межстраничного баннера конца урока ================
+        // начинаем загрузку межстраничного баннера конца урока
         settingsBack = new com.yandex.mobile.ads.InterstitialAd(this);
         settingsBack.setBlockId(getResources().getString(R.string.banner_id_after_settings));
         // Создание объекта таргетирования рекламы.
@@ -71,195 +101,162 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
         // Загрузка объявления.
         settingsBack.loadAd(adRequest);
 
-
-        super.onCreate(savedInstanceState);
-
         // раздуваем layout
         setContentView(R.layout.settings_activity);
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
         setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
         // убираем заголовок, там свой
-        getSupportActionBar().setTitle("");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("");
         ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_settings);
 
 
-        final DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        // слушатели кнопкам
+        // настройка локализации
+        findViewById(R.id.activity_settings_edit_locale_button).setOnClickListener(this);
+        // изменить время
+        findViewById(R.id.activity_settings_edit_time_button).setOnClickListener(this);
+        // максимальое число ответов
+        findViewById(R.id.activity_settings_edit_max_answers_count_button).setOnClickListener(this);
+        // изменение типов оценок
+        findViewById(R.id.activity_settings_edit_grades_type_button).setOnClickListener(this);
+        // изменение типов пропусков
+        findViewById(R.id.activity_settings_edit_absent_type_button).setOnClickListener(this);
+        // экспорт и импорт данных
+        findViewById(R.id.activity_settings_export_all_data_button).setOnClickListener(this);
+        findViewById(R.id.activity_settings_import_all_data_button).setOnClickListener(this);
+        // цветные оценки
+        findViewById(R.id.activity_settings_are_grades_colored_container).setOnClickListener(this);
+        // удаление данных
+        findViewById(R.id.activity_settings_remove_data_button).setOnClickListener(this);
+        // подписка
+        findViewById(R.id.settings_activity_button_subscribe).setOnClickListener(this);
+        // оцените нас
+        findViewById(R.id.settings_rate_button).setOnClickListener(this);
 
-//-------------максимальный ответ-------------
 
+        // получаем данные из бд
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
-        // ставим прошлый максимум
+        // -- максимальный ответ
         maxGradeText = ((TextView) findViewById(R.id.activity_settings_edit_max_answers_count_text));
-        maxGradeText.setText(
-                String.format(
-                        getResources().getString(R.string.settings_activity_button_edit_max_answer),
-                        "" + db.getSettingsMaxGrade(1)
-                )
-        );
-        //кнопка вызова диалога по изменению
-        findViewById(R.id.activity_settings_edit_max_answers_count_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                // аргументы
-                Bundle args = new Bundle();
-                args.putInt(EditMaxAnswersCountDialogFragment.ARGUMENT_LAST_MAX, db.getSettingsMaxGrade(1));
-                // показываем диалог
-                EditMaxAnswersCountDialogFragment editMaxAnswersCountDialogFragment = new EditMaxAnswersCountDialogFragment();
-                editMaxAnswersCountDialogFragment.setArguments(args);
-                editMaxAnswersCountDialogFragment.show(getFragmentManager(), "EditMaxAnswersDialogInterface");
-                db.close();
+        maxGradeText.setText(String.format(
+                getResources().getString(R.string.settings_activity_button_edit_max_answer),
+                Integer.toString(db.getSettingsMaxGrade(1))
+        ));
+
+        // -- настройка локализации
+        // достаем коды языков
+        String[] localeCodes = getResources().getStringArray(R.array.locale_code);
+        // получаем текущий код локализации из бд
+        String lastLocale = db.getSettingsLocale(1);
+        // находим прошлую локализацию в списке
+        int lastLocaleNumber = 0;
+        for (int i = 0; i < localeCodes.length; i++) {
+            if (localeCodes[i].equals(lastLocale)) {
+                lastLocaleNumber = i;
             }
-        });
+        }
+        // достаем названия языков
+        String[] localeNames = getResources().getStringArray(R.array.locale_names);
+        // выводим название
+        ((TextView) findViewById(R.id.activity_settings_edit_locale_button_locale_text)).setText(localeNames[lastLocaleNumber]);
+
+        // -- цветные оценки
+        coloredGradesSwitch = findViewById(R.id.activity_settings_are_grades_colored_switch);
+        coloredGradesSwitch.setClickable(false);
+        // ставим переключатель и внутреннюю переменную в состояние из бд
+        isColoredGrades = db.getSettingsAreTheGradesColoredByProfileId(1);
+        coloredGradesSwitch.setImageResource(
+                (isColoredGrades) ? (R.drawable.test_switch_4) : (R.drawable.test_switch_0));
+
+        db.close();
+    }
 
 
-// -------------- кнопка для изменения типов оценок -----------
+    // =================================== обработка всех кнопок ===================================
+    @Override
+    public void onClick(View v) {
+        int vId = v.getId();
 
-        RelativeLayout editGradesTypesButton = findViewById(R.id.activity_settings_edit_grades_type_button);
-        editGradesTypesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                Cursor types = db.getGradesTypes();
-
-                // массивы из базы данных
-                long[] typesId = new long[types.getCount()];
-                String[] typesStrings = new String[types.getCount()];
-                for (int i = 0; i < types.getCount(); i++) {
-                    types.moveToNext();
-
-                    typesId[i] = types.getLong(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID));
-                    typesStrings[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE));
-                }
-                // запуск диалога
-                EditGradesTypesDialogFragment typesDialogFragment = new EditGradesTypesDialogFragment();
-                // данные
-                Bundle args = new Bundle();
-                args.putLongArray(EditGradesTypesDialogFragment.ARGS_TYPES_ID_ARRAY_TAG, typesId);
-                args.putStringArray(EditGradesTypesDialogFragment.ARGS_TYPES_NAMES_ARRAY_TAG, typesStrings);
-                typesDialogFragment.setArguments(args);
-                // запуск
-                typesDialogFragment.show(getSupportFragmentManager(), "editGradesTypesDialogFragment");
-            }
-        });
-
-// -------------- кнопка для изменения типов пропусков -----------
-
-        RelativeLayout editAbsentTypesButton = findViewById(R.id.activity_settings_edit_absent_type_button);
-        editAbsentTypesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                Cursor types = db.getAbsentTypes();
-
-                // массивы из базы данных
-                long[] typesId = new long[types.getCount()];
-                String[] typesNames = new String[types.getCount()];
-                String[] typesLongNames = new String[types.getCount()];
-                for (int i = 0; i < types.getCount(); i++) {
-                    types.moveToNext();
-
-                    typesId[i] = types.getLong(types.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.KEY_LEARNERS_ABSENT_TYPE_ID));
-                    typesNames[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME));
-                    typesLongNames[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME));
-                }
-                // запуск диалога
-                EditAbsentTypesDialogFragment typesDialogFragment = new EditAbsentTypesDialogFragment();
-                // данные
-                Bundle args = new Bundle();
-                args.putLongArray(EditAbsentTypesDialogFragment.ARGS_TYPES_ID_ARRAY_TAG, typesId);
-                args.putStringArray(EditAbsentTypesDialogFragment.ARGS_TYPES_NAMES_ARRAY_TAG, typesNames);
-                args.putStringArray(EditAbsentTypesDialogFragment.ARGS_TYPES_LONG_NAMES_ARRAY_TAG, typesLongNames);
-                typesDialogFragment.setArguments(args);
-                // запуск
-                typesDialogFragment.show(getSupportFragmentManager(), "editAbsentTypesDialogFragment");
-            }
-        });
-
-
-//--------------изменить время-----------
-
-        //кнопка  изменения
-        RelativeLayout editTimeButton = findViewById(R.id.activity_settings_edit_time_button);
-        //слушатель
-        editTimeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //диалог
-                EditTimeDialogFragment editTimeDialogFragment = new EditTimeDialogFragment();
-
-
-                // получаем данные о времени из бд
-                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                int[][] arrays = db.getSettingsTime(1);
-                db.close();
-                if (arrays != null) {
-                    // пакуем данные в обьект
-                    EditTimeDialogFragment.EditTimeDialogDataTransfer dataObject =
-                            new EditTimeDialogFragment.EditTimeDialogDataTransfer(arrays);
-                    // и передаем диалогу
-                    Bundle args = new Bundle();
-                    args.putSerializable(
-                            EditTimeDialogFragment.EditTimeDialogDataTransfer.PARAM_DATA,
-                            (Serializable) dataObject
-                    );
-                    editTimeDialogFragment.setArguments(args);
-                    editTimeDialogFragment.show(getSupportFragmentManager(), "editTime");
-                }
-
-            }
-        });
-
-// -------------- экспорт и импорт данных --------------
-
-        findViewById(R.id.activity_settings_export_all_data_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // диалог разрешения на запись файлов
-                if (ContextCompat.checkSelfPermission(SettingsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                        PackageManager.PERMISSION_DENIED) {// если нет разрешения запрашиваем его
-
-                    Toast.makeText(SettingsActivity.this, "#Чтобы экспортировать данные, нужно разрешение на запись файлов#", Toast.LENGTH_SHORT).show();
-                    ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1234);
-                } else {// если разрешение есть
-
-                    // проверяем доступность SD
-                    if (!Environment.getExternalStorageState().equals(
-                            Environment.MEDIA_MOUNTED)) {
-                        Toast.makeText(SettingsActivity.this, "SD-карта не доступна ", Toast.LENGTH_LONG).show();
-                        Log.d("test", "SD-карта не доступна: " + Environment.getExternalStorageState());
-                        return;
-                    }
-                    // получаем путь к SD
-                    File sdPath = Environment.getExternalStorageDirectory();
-                    // добавляем свой каталог к пути
-                    sdPath = new File(sdPath.getAbsolutePath() + SAVE_DATA_DIRECTORY);
-                    // создаем каталог
-                    Log.e("test", Boolean.toString(sdPath.mkdirs()));
-                    // формируем объект File, который содержит путь к файлу
-                    File sdFile = new File(sdPath, SAVE_DATA_FILE_NAME);
-                    try {
-                        // открываем поток для записи
-                        FileWriter fw = new FileWriter(sdFile);
-                        // пишем данные
-                        DataBaseOpenHelper db = new DataBaseOpenHelper(SettingsActivity.this);
-                        db.writeXMLDataBaseInFile(fw);
-                        // закрываем поток
-                        fw.close();
-                        Toast.makeText(SettingsActivity.this, "Файл записан на SD ", Toast.LENGTH_LONG).show();
-                        Log.d("test", "Файл записан на SD: " + sdFile.getAbsolutePath());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        // кнопка оцените нас
+        if (vId == R.id.settings_rate_button) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("market://details?id=com.learning.texnar13.teachersprogect"));
+            if (isActivityNotStarted(intent)) {
+                intent.setData(Uri
+                        .parse("https://play.google.com/store/apps/details?id=com.learning.texnar13.teachersprogect"));
+                if (isActivityNotStarted(intent)) {
+                    Toast.makeText(
+                            this,
+                            "Could not open Android market, please check if the market app installed or not. Try again later",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        }
+        // кнопка максимальной оценки
+        else if (vId == R.id.activity_settings_edit_max_answers_count_button) {
+            // аргументы
+            Bundle args = new Bundle();
+            DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+            args.putInt(EditMaxAnswersCountDialogFragment.ARGUMENT_LAST_MAX, db.getSettingsMaxGrade(1));
+            db.close();
+            // показываем диалог
+            EditMaxAnswersCountDialogFragment editMaxAnswersCountDialogFragment = new EditMaxAnswersCountDialogFragment();
+            editMaxAnswersCountDialogFragment.setArguments(args);
+            editMaxAnswersCountDialogFragment.show(getFragmentManager(), "EditMaxAnswersDialogInterface");
 
-        findViewById(R.id.activity_settings_import_all_data_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        }
+        // удаление данных
+        else if (vId == R.id.activity_settings_remove_data_button) {
+            //создаем диалог
+            SettingsRemoveDataDialogFragment removeDialog = new SettingsRemoveDataDialogFragment();
+            // запускаем
+            removeDialog.show(getFragmentManager(), "removeSettingsDialog");
+        }
+        // экспорт данных
+        else if (vId == R.id.activity_settings_export_all_data_button) {
 
+            // диалог разрешения на запись файлов
+            if (ContextCompat.checkSelfPermission(SettingsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_DENIED) {// если нет разрешения запрашиваем его
+
+                Toast.makeText(SettingsActivity.this, "#Чтобы экспортировать данные, нужно разрешение на запись файлов#", Toast.LENGTH_SHORT).show();
+                ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1234);
+            } else {// если разрешение есть
+
+                // проверяем доступность SD
+                if (!Environment.getExternalStorageState().equals(
+                        Environment.MEDIA_MOUNTED)) {
+                    Toast.makeText(SettingsActivity.this, "SD-карта не доступна ", Toast.LENGTH_LONG).show();
+                    Log.d("test", "SD-карта не доступна: " + Environment.getExternalStorageState());
+                    return;
+                }
+                // получаем путь к SD
+                File sdPath = Environment.getExternalStorageDirectory();
+                // добавляем свой каталог к пути
+                sdPath = new File(sdPath.getAbsolutePath() + SAVE_DATA_DIRECTORY);
+                // создаем каталог
+                Log.e("test", Boolean.toString(sdPath.mkdirs()));
+                // формируем объект File, который содержит путь к файлу
+                File sdFile = new File(sdPath, SAVE_DATA_FILE_NAME);
+                try {
+                    // открываем поток для записи
+                    FileWriter fw = new FileWriter(sdFile);
+                    // пишем данные
+                    DataBaseOpenHelper db = new DataBaseOpenHelper(SettingsActivity.this);
+                    db.writeXMLDataBaseInFile(fw);
+                    db.close();
+                    // закрываем поток
+                    fw.close();
+                    Toast.makeText(SettingsActivity.this, "Файл записан на SD ", Toast.LENGTH_LONG).show();
+                    Log.d("test", "Файл записан на SD: " + sdFile.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        // импорт данных
+        else if (vId == R.id.activity_settings_import_all_data_button) {
 //                // проверяем доступность SD
 //                if (!Environment.getExternalStorageState().equals(
 //                        Environment.MEDIA_MOUNTED)) {
@@ -285,116 +282,127 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
-
-
 //                public void getXMLFromDB(){
 //
 //                }
-            }
-        });
-
-//--------------удаление данных-----------
-
-        RelativeLayout removeDataButton = findViewById(R.id.activity_settings_remove_data_button);
-        removeDataButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //создаем диалог
-                SettingsRemoveDataDialogFragment removeDialog =
-                        new SettingsRemoveDataDialogFragment();
-                // запускаем
-                removeDialog.show(getFragmentManager(), "removeSettingsDialog");
-            }
-        });
-
-//--------------настройка локализации-----------------
-        // находим кнопку
-        LinearLayout editLocaleButton = findViewById(R.id.activity_settings_edit_locale_button);
-        // ставим текст
-        {
-            // достаем коды языков
-            String[] localeСodes = getResources().getStringArray(R.array.locale_code);
-            // получаем текущий код локализации из бд
-            String lastLocale = db.getSettingsLocale(1);
-            // находим прошлую локализацию в списке
-            int lastLocaleNumber = 0;
-            for (int i = 0; i < localeСodes.length; i++) {
-                if (localeСodes[i].equals(lastLocale)) {
-                    lastLocaleNumber = i;
-                }
-            }
-            // достаем названия языков
-            String[] localeNames = getResources().getStringArray(R.array.locale_names);
-            // выводим название
-            ((TextView) findViewById(R.id.activity_settings_edit_locale_button_locale_text)).setText(localeNames[lastLocaleNumber]);
         }
-        // ставим обработчик
-        editLocaleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //текущая локаль из бд
-                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-
+        // изменить время
+        else if (vId == R.id.activity_settings_edit_time_button) {
+            //диалог
+            EditTimeDialogFragment editTimeDialogFragment = new EditTimeDialogFragment();
+            // получаем данные о времени из бд
+            DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+            int[][] arrays = db.getSettingsTime(1);
+            db.close();
+            if (arrays != null) {
+                // пакуем данные в обьект
+                EditTimeDialogFragment.EditTimeDialogDataTransfer dataObject =
+                        new EditTimeDialogFragment.EditTimeDialogDataTransfer(arrays);
+                // и передаем диалогу
                 Bundle args = new Bundle();
-                args.putString("locale", db.getSettingsLocale(1));
-                //создаем диалог
-                EditLocaleDialogFragment localeDialog = new EditLocaleDialogFragment();
-                localeDialog.setArguments(args);
-                // запускаем
-                localeDialog.show(getSupportFragmentManager(), "editLocaleDialog");
+                args.putSerializable(
+                        EditTimeDialogFragment.EditTimeDialogDataTransfer.PARAM_DATA,
+                        (Serializable) dataObject
+                );
+                editTimeDialogFragment.setArguments(args);
+                editTimeDialogFragment.show(getSupportFragmentManager(), "editTime");
             }
-        });
-
-        // цветные оценки
-        final RelativeLayout coloredGradesContainer = findViewById(R.id.activity_settings_are_grades_colored_container);
-        final ImageView coloredGradesSwitch = findViewById(R.id.activity_settings_are_grades_colored_switch);
-        // ставим переключатель в состояние из бд
-        isColoredGrades = db.getSettingsAreTheGradesColoredByProfileId(1);
-        if (isColoredGrades) {
-            coloredGradesSwitch.setImageResource(R.drawable.test_switch_4);
-        } else {
-            coloredGradesSwitch.setImageResource(R.drawable.test_switch_0);
         }
+        // изменение типов пропусков
+        else if (vId == R.id.activity_settings_edit_absent_type_button) {
+            DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+            Cursor types = db.getAbsentTypes();
 
-        // обработчик контейнеру
-        coloredGradesContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isColoredGrades = !isColoredGrades;
-                db.setSettingsAreTheGradesColoredByProfileId(1, isColoredGrades);
+            // массивы из базы данных
+            long[] typesId = new long[types.getCount()];
+            String[] typesNames = new String[types.getCount()];
+            String[] typesLongNames = new String[types.getCount()];
+            for (int i = 0; i < types.getCount(); i++) {
+                types.moveToNext();
 
-                if (isColoredGrades) {
-                    coloredGradesSwitch.setImageResource(R.drawable.test_switch_4);
-                } else {
-                    coloredGradesSwitch.setImageResource(R.drawable.test_switch_0);
-                }
+                typesId[i] = types.getLong(types.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.KEY_LEARNERS_ABSENT_TYPE_ID));
+                typesNames[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME));
+                typesLongNames[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME));
             }
-        });
-        // переключатель не нажимается
-        coloredGradesSwitch.setClickable(false);
+            types.close();
+            db.close();
+            // запуск диалога
+            EditAbsentTypesDialogFragment typesDialogFragment = new EditAbsentTypesDialogFragment();
+            // данные
+            Bundle args = new Bundle();
+            args.putLongArray(EditAbsentTypesDialogFragment.ARGS_TYPES_ID_ARRAY_TAG, typesId);
+            args.putStringArray(EditAbsentTypesDialogFragment.ARGS_TYPES_NAMES_ARRAY_TAG, typesNames);
+            args.putStringArray(EditAbsentTypesDialogFragment.ARGS_TYPES_LONG_NAMES_ARRAY_TAG, typesLongNames);
+            typesDialogFragment.setArguments(args);
+            // запуск
+            typesDialogFragment.show(getSupportFragmentManager(), "editAbsentTypesDialogFragment");
+        }
+        // изменение типов оценок
+        else if (vId == R.id.activity_settings_edit_grades_type_button) {
+            DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+            Cursor types = db.getGradesTypes();
 
-//--------------оцените нас-----------------
+            // массивы из базы данных
+            long[] typesId = new long[types.getCount()];
+            String[] typesStrings = new String[types.getCount()];
+            for (int i = 0; i < types.getCount(); i++) {
+                types.moveToNext();
 
-        RelativeLayout rateUsButton = findViewById(R.id.settings_rate_button);
-        rateUsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("market://details?id=com.learning.texnar13.teachersprogect"));
-                if (!isActivityStarted(intent)) {
-                    intent.setData(Uri
-                            .parse("https://play.google.com/store/apps/details?id=com.learning.texnar13.teachersprogect"));
-                    if (!isActivityStarted(intent)) {
-                        Toast.makeText(
-                                getApplicationContext(),
-                                "Could not open Android market, please check if the market app installed or not. Try again later",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
+                typesId[i] = types.getLong(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID));
+                typesStrings[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE));
             }
-        });
+            types.close();
+            db.close();
+            // запуск диалога
+            EditGradesTypesDialogFragment typesDialogFragment = new EditGradesTypesDialogFragment();
+            // данные
+            Bundle args = new Bundle();
+            args.putLongArray(EditGradesTypesDialogFragment.ARGS_TYPES_ID_ARRAY_TAG, typesId);
+            args.putStringArray(EditGradesTypesDialogFragment.ARGS_TYPES_NAMES_ARRAY_TAG, typesStrings);
+            typesDialogFragment.setArguments(args);
+            // запуск
+            typesDialogFragment.show(getSupportFragmentManager(), "editGradesTypesDialogFragment");
+        }
+        // цветные оценки
+        else if (vId == R.id.activity_settings_are_grades_colored_container) {
+            // инвертируем поля в бд
+            isColoredGrades = !isColoredGrades;
+            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+            db.setSettingsAreTheGradesColoredByProfileId(1, isColoredGrades);
+            db.close();
+            // инвертируем переключатель
+            coloredGradesSwitch.setImageResource(
+                    (isColoredGrades) ? (R.drawable.test_switch_4) : (R.drawable.test_switch_0)
+            );
+        }
+        // настройка локализации
+        else if (vId == R.id.activity_settings_edit_locale_button) {
+            // создаем диалог
+            EditLocaleDialogFragment localeDialog = new EditLocaleDialogFragment();
+            Bundle args = new Bundle();
+            // текущая локаль из бд
+            DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+            args.putString("locale", db.getSettingsLocale(1));
+            db.close();
+            localeDialog.setArguments(args);
+            // запускаем
+            localeDialog.show(getSupportFragmentManager(), "editLocaleDialog");
+        }
+        // подписка
+        else if (vId == R.id.settings_activity_button_subscribe) {
+            startResultHelper.launch(0);
+        }
+    }
 
-        db.close();
+
+    // для кнопки оцените нас
+    private boolean isActivityNotStarted(Intent aIntent) {
+        try {
+            startActivity(aIntent);
+            return false;
+        } catch (ActivityNotFoundException e) {
+            return true;
+        }
     }
 
 
@@ -589,16 +597,6 @@ public class SettingsActivity extends AppCompatActivity implements EditMaxAnswer
 
     // =================================== вспомогательные методы ==================================
 
-
-    //для кнопки оцените нас
-    private boolean isActivityStarted(Intent aIntent) {
-        try {
-            startActivity(aIntent);
-            return true;
-        } catch (ActivityNotFoundException e) {
-            return false;
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

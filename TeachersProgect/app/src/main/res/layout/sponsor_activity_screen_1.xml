@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/baseBlue"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sponsor_activity_screen_1_content_1"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="@dimen/forth_margin"
+        android:layout_marginEnd="@dimen/forth_margin"
+        android:gravity="center"
+        android:text="@string/sponsor_activity_title_screen_1"
+        android:textColor="@color/backgroundWhite"
+        android:textSize="@dimen/text_subtitle_size" />
+
+    <LinearLayout
+        android:id="@+id/sponsor_activity_screen_1_content_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sponsor_activity_screen_1_content_2"
+        android:layout_marginStart="@dimen/forth_margin"
+        android:layout_marginEnd="@dimen/forth_margin"
+        android:background="@drawable/base_background_dialog_full_round_white"
+        android:orientation="vertical"
+        android:padding="@dimen/double_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lesson_redactor_activity_title_lesson_homework"
+            android:textColor="#000000"
+            android:textSize="@dimen/text_subtitle_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/simple_margin"
+            android:text="@string/sponsor_activity_text_test_dz"
+            android:textColor="#000000"
+            android:textSize="@dimen/text_subtitle_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sponsor_activity_screen_1_content_2"
+        android:layout_margin="@dimen/forth_margin"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="@dimen/forth_margin"
+        android:layout_marginEnd="@dimen/forth_margin"
+        android:background="@drawable/base_background_dialog_full_round_white"
+        android:orientation="vertical"
+        android:padding="@dimen/double_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/learners_and_grades_out_activity_dialog_title_learner_info"
+            android:textColor="#000000"
+            android:textSize="@dimen/text_subtitle_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/simple_margin"
+            android:text="@string/sponsor_activity_text_test_info"
+            android:textColor="#000000"
+            android:textSize="@dimen/text_subtitle_size" />
+    </LinearLayout>
+</RelativeLayout>

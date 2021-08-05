@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -37,6 +38,8 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class ScheduleMonthActivity extends AppCompatActivity {
+
+    // todo разнеси это по фрагментам, читать не возможно
 
     //private GestureLibrary gestureLib;
 
@@ -79,7 +82,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);// todo что это за строка, в Start Screen она не используется
         }
 
         // выводим разметку
@@ -430,7 +433,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 }
 
                 // выводим в заголовок слово сегодня
-                head.setText("#Сегодня:");
+                head.setText(R.string.schedule_month_activity_current_day_title);
             } else {
                 // иначе просто выставляем число в заголовок
                 head.setText(chosenOutDayNumber + " " + monthsNamesWithEnding[viewCalendar.get(Calendar.MONTH)] + ':');
@@ -634,8 +637,9 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                                 intentForStartLesson.putExtra(LessonActivity.LESSON_NUMBER, finalLessonI);
                                 startActivity(intentForStartLesson);
                             } else {
+                                // todo, а это точно нужно или лучше выводить надпись "у вас есть не рассаженные ученики"
                                 // тост о не рассаженных учениках
-                                Toast.makeText(getApplicationContext(), R.string.schedule_day_activity_toast_learners, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), R.string.schedule_month_activity_toast_learners, Toast.LENGTH_LONG).show();
                                 //редактировать рассадку
                                 Intent intentForStartSeatingRedactor = new Intent(getApplicationContext(), SeatingRedactorActivity.class);
                                 intentForStartSeatingRedactor.putExtra(SeatingRedactorActivity.CABINET_ID, cabinetId);

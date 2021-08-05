@@ -28,7 +28,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
         // layout диалога
         LinearLayout dialogLinearLayout = new LinearLayout(getActivity());
-        dialogLinearLayout.setBackgroundResource(R.drawable.base_background_dialog_full_round_wite);
+        dialogLinearLayout.setBackgroundResource(R.drawable.base_background_dialog_full_round_white);
         dialogLinearLayout.setOrientation(LinearLayout.VERTICAL);
         builder.setView(dialogLinearLayout);
 

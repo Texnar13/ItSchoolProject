@@ -184,7 +184,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="ДЗ#"
+                    android:text="@string/lesson_redactor_activity_title_lesson_homework"
                     android:textColor="@color/backgroundDarkGray"
                     android:textSize="@dimen/text_simple_size"
                     android:textStyle="bold" />

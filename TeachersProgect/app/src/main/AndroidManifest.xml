@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.learning.texnar13.teachersprogect"
-    android:versionCode="51"
-    android:versionName="tera3.560">
+    android:versionCode="52"
+    android:versionName="tera3.900">
 
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -17,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".sponsor.SponsorActivity"></activity>
         <activity
             android:name=".startScreen.StartScreenActivity"
             android:configChanges="locale">
@@ -47,8 +48,9 @@
         <activity
             android:name=".lesson.LessonActivity"
             android:configChanges="locale" />
-        <activity android:name=".cabinetsOut.CabinetEditActivity"
-            android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".cabinetsOut.CabinetEditActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".CabinetRedactorActivity"
             android:configChanges="locale" />

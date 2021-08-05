@@ -34,6 +34,5 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
 
     // play market billing api
-    def billing_version = "4.0.0"
-    implementation "com.android.billingclient:billing:$billing_version"
+    implementation "com.android.billingclient:billing:4.0.0"
 }

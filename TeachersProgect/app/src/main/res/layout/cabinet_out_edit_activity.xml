@@ -97,7 +97,7 @@
                 android:background="@drawable/base_background_dialog_full_round_gray"
                 android:gravity="center"
                 android:padding="@dimen/half_more_margin"
-                android:text="@string/cabinets_out_activity_button_text_arrange_deks"
+                android:text="@string/cabinets_out_activity_button_text_arrange_desks"
                 android:textColor="#000000"
                 android:textSize="@dimen/text_subtitle_size" />
 

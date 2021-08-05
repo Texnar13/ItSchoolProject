@@ -39,6 +39,7 @@ import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /*
  * onCreate(),
@@ -275,35 +276,24 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         super.onCreate(savedInstanceState);
 
 
-
-
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
 
         // раздуваем layout
         setContentView(R.layout.lesson_activity);
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
-        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        setSupportActionBar(findViewById(R.id.base_blue_toolbar));
         // убираем заголовок, там свой
         getSupportActionBar().setTitle("");
-
-
-//        // ================ начинаем загрузку межстраничного баннера конца урока ================
-//        lessonEndBanner = new com.yandex.mobile.ads.InterstitialAd(this);
-//        lessonEndBanner.setBlockId(getResources().getString(R.string.banner_id_after_lesson));
-//        // Создание объекта таргетирования рекламы.
-//        final com.yandex.mobile.ads.AdRequest adRequest =
-//                new com.yandex.mobile.ads.AdRequest.Builder().build();
-//        // Загрузка объявления
-//        lessonEndBanner.loadAd(adRequest);
-
 
         // цвета статус бара
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            // темный шрифт todo https://habr.com/ru/company/oleg-bunin/blog/488196/
+            window.getDecorView().setSystemUiVisibility(
+                    window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
 
@@ -514,10 +504,11 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
     }
 
-    // при каждом запуске экрана
+
+    // при каждом показе экрана или если экран перекрыли, а потом показали еще раз
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
 
         // обновляем список парт и положение учеников
         // и выводим все
@@ -529,31 +520,30 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     @SuppressLint("ResourceType")
     void outAll() {
 
-        // загружаем из базы данных
+        // загружаем данные из базы данных
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
-        // получаем кабинет из бд чтобы достать размеры которые могли измениться
-        Cursor cabinetCursor = db.getCabinet(cabinetId);
-        Log.e(TAG, "cabinetId" + cabinetCursor.getCount());
-        cabinetCursor.moveToFirst();
+        {// получаем размеры и отступы кабинета
+            Cursor cabinetCursor = db.getCabinet(cabinetId);
+            cabinetCursor.moveToFirst();
+            // получаем множитель  (0.25 <-> 4)
+            multiplier = 0.0375F * cabinetCursor.getLong(cabinetCursor.getColumnIndex(
+                    SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER)) + 0.25F;
+            // и отступы
+            xAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X));
+            yAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y));
+            cabinetCursor.close();
+        }
 
-        // получаем множитель  (0.25 <-> 4)
-        multiplier = 0.0375F *
-                cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER))///////todo--------------------------------
-                + 0.25F;
-        // и отступы
-        xAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X));
-        yAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y));
-        cabinetCursor.close();
+        // -- парты --
 
-
-        // загружаем парты из бд
-        Cursor desksCursor = db.getDesksByCabinetId(cabinetId);
-        // и выводим
+        // чистим view
         out.removeAllViews();
         desksList.clear();
+        // загружаем парты из бд
+        Cursor desksCursor = db.getDesksByCabinetId(cabinetId);
         while (desksCursor.moveToNext()) {
-            // достаем данные из бд
+            // данные одной парты
             int numberOfPlaces = desksCursor.getInt(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES));
             long deskXDp = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X));
             long deskYDp = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y));
@@ -1184,12 +1174,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
     @Override
     public void onBackPressed() {
-//        // показываем диалог подтверждения выхода из активности
-//        EndLessonDialogFragment endLessonDialogFragment = new EndLessonDialogFragment();
-//        endLessonDialogFragment.show(getSupportFragmentManager(), "EndLesson - Hello");
-
 
         DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+        // todo перенести все в клас бд
 
         // удаляем все предыдущие оценки в этом дне
         Cursor deleteGrades = db.getGradesBySubjectDateAndLesson(
@@ -1200,7 +1187,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         while (deleteGrades.moveToNext())
             db.removeGrade(deleteGrades.getLong(deleteGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID)));
         deleteGrades.close();
-
 
         // сохраняем оценки в бд
         for (MyLearnerAndHisGrades currentLearner : learnersAndTheirGrades) {
@@ -1215,20 +1201,18 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                         lessonDate,
                         lessonNumber
                 );
-            } else {
-                if (currentLearner.learnerGrades[0] != 0 || currentLearner.learnerGrades[1] != 0 || currentLearner.learnerGrades[2] != 0) {
-                    db.createGrade(
-                            currentLearner.learnerId,
-                            currentLearner.learnerGrades[0], currentLearner.learnerGrades[1], currentLearner.learnerGrades[2],
-                            answersTypes[currentLearner.learnerGradesTypes[0]].id, answersTypes[currentLearner.learnerGradesTypes[1]].id, answersTypes[currentLearner.learnerGradesTypes[2]].id,
-                            -1,
-                            subjectId,
-                            lessonDate,
-                            lessonNumber
-                    );
-                }
+            } else if (currentLearner.learnerGrades[0] != 0 || currentLearner.learnerGrades[1] != 0 || currentLearner.learnerGrades[2] != 0) {
+                db.createGrade(
+                        currentLearner.learnerId,
+                        currentLearner.learnerGrades[0], currentLearner.learnerGrades[1], currentLearner.learnerGrades[2],
+                        answersTypes[currentLearner.learnerGradesTypes[0]].id, answersTypes[currentLearner.learnerGradesTypes[1]].id, answersTypes[currentLearner.learnerGradesTypes[2]].id,
+                        -1,
+                        subjectId,
+                        lessonDate,
+                        lessonNumber
+                );
             }
-            //toast.show();
+
         }
         db.close();
 
@@ -1242,11 +1226,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         subjectName = null;
         learnersAndTheirGrades = null;
 
-//        // выводим рекламму
-//        if (lessonEndBanner.isLoaded()) {
-//            lessonEndBanner.show();
-//        }
-
         // выходим из активности
         super.onBackPressed();
     }
@@ -1257,7 +1236,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
 
     // класс для хранения типов ответов
-    class AnswersType {
+    static class AnswersType {
         long id;
         String typeName;
 
@@ -1268,7 +1247,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
     // класс для хранения типов пропусков
-    class AbsentType {
+    static class AbsentType {
         long id;
         String typeAbsName;
         String typeAbsLongName;
@@ -1348,10 +1327,10 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             ((RelativeLayout.LayoutParams) viewPlaceOut.getLayoutParams()).topMargin =
                     (int) pxFromDp(NO_ZOOMED_LEARNER_BORDER_SIZE * multiplier);
 
-            ((RelativeLayout.LayoutParams) viewPlaceOut.getLayoutParams()).width =
+            viewPlaceOut.getLayoutParams().width =
                     (int) pxFromDp((NO_ZOOMED_DESK_SIZE - NO_ZOOMED_LEARNER_BORDER_SIZE * 2) * multiplier);
 
-            ((RelativeLayout.LayoutParams) viewPlaceOut.getLayoutParams()).height =
+            viewPlaceOut.getLayoutParams().height =
                     (int) pxFromDp((NO_ZOOMED_DESK_SIZE - NO_ZOOMED_LEARNER_BORDER_SIZE * 2) * multiplier);
 
 
@@ -1508,9 +1487,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             this.seatingLearnerNumber = new int[numberOfPlaces];
 
             // заполняем места на партах пустыми учениками
-            for (int learnerI = 0; learnerI < seatingLearnerNumber.length; learnerI++) {
-                seatingLearnerNumber[learnerI] = -1;
-            }
+            Arrays.fill(seatingLearnerNumber, -1);
 
             // --- получаем графический контейнер ---
             this.desk = relativeLayout;

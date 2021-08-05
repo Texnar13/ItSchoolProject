@@ -37,7 +37,7 @@ public class EditLearnersClassDialogFragment extends DialogFragment {
 
         // layout диалога
         LinearLayout linearLayout = new LinearLayout(getActivity());
-        linearLayout.setBackgroundResource(R.drawable.base_background_dialog_full_round_wite);
+        linearLayout.setBackgroundResource(R.drawable.base_background_dialog_full_round_white);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(

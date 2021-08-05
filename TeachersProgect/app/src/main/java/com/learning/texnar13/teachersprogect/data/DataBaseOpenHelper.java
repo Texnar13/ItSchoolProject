@@ -97,7 +97,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     "[\"15\",\"15\",\"15\",\"15\",\"10\",\"15\",\"10\",\"5\",\"59\"]" +
                     "}'," +
                     SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE + " INTEGER, " +
-                    SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED + " INTEGER DEFAULT 1); ";
+                    SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED + " INTEGER DEFAULT 1);";
             db.execSQL(sql);
             {// ---- вставляем одну запись настроек ----
                 ContentValues values = new ContentValues();
@@ -781,8 +781,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             if (oldVersion < 20) {
                 // добавляем комментарий ученику
                 db.execSQL("ALTER TABLE " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS +
-                        " ADD COLUMN " + SchoolContract.TableLearners.COLUMN_COMMENT + " VARCHAR;"
-                );
+                        " ADD COLUMN " + SchoolContract.TableLearners.COLUMN_COMMENT + " VARCHAR;");
             }
         }
     }
@@ -880,7 +879,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         return answer;
     }
 
-    public int setSettingsTime(long profileId, int[][] time) {// metod param {{hh,mm,hh,mm},{hh,mm,hh,mm},...}
+    public int setSettingsTime(long profileId, int[][] time) {// metod param {{hh,mm,hh,mm},{hh,mm,hh,mm},...} todo че за жесть, используй готовую библиотеку gson
         SQLiteDatabase db = this.getWritableDatabase();
 
         // переделываем расписание
@@ -1175,7 +1174,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public int deleteClass(long classesId) {
         SQLiteDatabase db = this.getReadableDatabase();
         int answer = db.delete(SchoolContract.TableClasses.NAME_TABLE_CLASSES,
-                SchoolContract.TableClasses.KEY_CLASS_ID + " = "+classesId, null);
+                SchoolContract.TableClasses.KEY_CLASS_ID + " = " + classesId, null);
         if (IS_DEBUG)
             Log.i(LOG_TAG, "deleteClasses id= " + classesId + " return = " + answer);
         return answer;

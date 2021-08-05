@@ -9,8 +9,6 @@
     <string name="banner_id_calendar_big" translatable="false">R-M-450642-6</string>
     <string name="banner_id_after_settings" translatable="false">R-M-450642-5</string>
     <string name="banner_id_lesson_redactor" translatable="false">R-M-450642-8</string-->
-    <!--string name="banner_id_after_lesson" translatable="false">R-M-450642-4</string-->
-    <!--string name="banner_id_schedule_day" translatable="false">R-M-450642-7</string-->
 
 
     <string name="banner_id_start_screen" translatable="false">R-M-DEMO-320x50</string>
@@ -18,8 +16,10 @@
     <string name="banner_id_calendar_big" translatable="false">R-M-DEMO-320x100-context</string>
     <string name="banner_id_after_settings" translatable="false">R-M-DEMO-320x480</string>
     <string name="banner_id_lesson_redactor" translatable="false">R-M-DEMO-320x100-context</string>
-    <!--string name="banner_id_after_lesson" translatable="false">R-M-DEMO-320x480</string-->
-    <!--string name="banner_id_schedule_day" translatable="false">R-M-DEMO-320x100-context</string-->
+
+    <!-- id покупок в SponsorActivity -->
+    <string name="subscription_id_month_sponsor" translatable="false">com.anavana.teachersproject.month_sponsor</string>
+    <string name="subscription_id_year_sponsor" translatable="false">com.anavana.teachersproject.year_sponsor</string>
 
 
 

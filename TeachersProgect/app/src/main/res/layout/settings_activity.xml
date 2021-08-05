@@ -327,6 +327,30 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/settings_activity_button_subscribe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/base_background_dialog_full_round_gray"
+                android:layout_marginBottom="@dimen/double_margin"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/my_buttons_height_size"
+                    android:layout_marginLeft="@dimen/double_margin"
+                    android:layout_marginRight="@dimen/my_icon_size"
+                    android:gravity="center_vertical"
+                    android:text="@string/settings_activity_button_subscribe"
+                    android:fontFamily="@font/geometria_medium"
+                    android:textColor="@color/backgroundDarkGray"
+                    android:textSize="@dimen/text_subtitle_size"
+                    tools:ignore="RtlHardcoded" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/settings_rate_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

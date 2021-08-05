@@ -52,7 +52,7 @@
                 android:background="@drawable/base_background_button_round_gray"
                 android:gravity="center"
                 android:padding="@dimen/simple_margin"
-                android:text="#+ Добавить урок"
+                android:text="@string/settings_activity_dialog_edit_time_button_add_lesson"
                 android:textColor="#000000"
                 android:textSize="@dimen/text_subtitle_size" />
 
