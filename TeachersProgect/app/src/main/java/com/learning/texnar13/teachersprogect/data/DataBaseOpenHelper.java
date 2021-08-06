@@ -1264,7 +1264,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     }
 
     public int setLearnerNameAndLastName(long learnerId, String name, String lastName, String comment) {// todo нужен ли комментарий здесь или вынсти его в отдельный метод
-        //asdfghjklsdfghjk
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentName = new ContentValues();
         contentName.put(SchoolContract.TableLearners.COLUMN_FIRST_NAME, name);
@@ -1459,6 +1458,13 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             Log.i(LOG_TAG, "getAttitudeByLearnerIdAndPlaceId learnerId=" + learnerId + " placeId=" + placeId + " number=" + cursor.getCount() + " content=" + Arrays.toString(cursor.getColumnNames())
             );
         return cursor;
+    }
+
+    public Cursor getAttitudesByPlaceId(Long placeId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES,
+                null, SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID + " = " + placeId,
+                null, null, null, null);
     }
 
     public long deleteLearnerAndPlaceAttitudeById(long attitudeId) {
@@ -2177,7 +2183,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             comments.close();
             serializer.endTag("", SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT);
 
-
             serializer.endDocument();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -2291,5 +2296,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 //            public int COLUMN_REPEAT;
 //        }
 //    }
+
 
 }

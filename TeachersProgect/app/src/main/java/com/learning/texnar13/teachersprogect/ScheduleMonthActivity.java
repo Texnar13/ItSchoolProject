@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -632,9 +631,9 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                             if (db.getNotPutLearnersIdByCabinetIdAndClassId(cabinetId, learnersClassId).size() == 0) {
                                 //начать урок
                                 Intent intentForStartLesson = new Intent(getApplicationContext(), LessonActivity.class);
-                                intentForStartLesson.putExtra(LessonActivity.LESSON_ATTITUDE_ID, lessonId);
-                                intentForStartLesson.putExtra(LessonActivity.LESSON_DATE, outStringDate);
-                                intentForStartLesson.putExtra(LessonActivity.LESSON_NUMBER, finalLessonI);
+                                intentForStartLesson.putExtra(LessonActivity.ARGS_LESSON_ATTITUDE_ID, lessonId);
+                                intentForStartLesson.putExtra(LessonActivity.ARGS_LESSON_DATE, outStringDate);
+                                intentForStartLesson.putExtra(LessonActivity.ARGS_LESSON_NUMBER, finalLessonI);
                                 startActivity(intentForStartLesson);
                             } else {
                                 // todo, а это точно нужно или лучше выводить надпись "у вас есть не рассаженные ученики"

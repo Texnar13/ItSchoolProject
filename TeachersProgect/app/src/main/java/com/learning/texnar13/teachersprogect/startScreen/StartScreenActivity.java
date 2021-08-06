@@ -427,10 +427,10 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
                 // создаем намерение
                 Intent intent = new Intent(getApplicationContext(), LessonActivity.class);
                 // соединяем и отправляем
-                intent.putExtra(LessonActivity.LESSON_DATE, savedLessonDate);
-                intent.putExtra(LessonActivity.LESSON_NUMBER, finalLessonNumber);
+                intent.putExtra(LessonActivity.ARGS_LESSON_DATE, savedLessonDate);
+                intent.putExtra(LessonActivity.ARGS_LESSON_NUMBER, finalLessonNumber);
                 // отправляем id
-                intent.putExtra(LessonActivity.LESSON_ATTITUDE_ID, lessonId);
+                intent.putExtra(LessonActivity.ARGS_LESSON_ATTITUDE_ID, lessonId);
                 startActivity(intent);
             };
             // нажатие на контейнер с датой

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?><!-- править здесь можно только расположение елементов, все размеры задаются программно -->
+
+<!---контейнер места           id размеры -->
+<!--   -контейнер ученика-->
+<!--     -контейнер картинки-->
+<!--       -картинка ученика   id фон-->
+<!--       -главный текст      id размеры-->
+<!--     -имя ученика          id размеры -->
+<!--   -оценки                 id размеры -->
+
+<!-- контейнер места -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lesson_desk_place_element_place_out"
+    android:layout_width="200dp"
+    android:layout_height="200dp">
+
+    <!-- контейнер ученика -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:weightSum="4">
+
+
+        <!-- контейнер картинки -->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="3">
+
+            <!-- картинка ученика -->
+            <ImageView
+                android:id="@+id/lesson_desk_place_element_learner_background"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/lesson_activity_learner_icon_1" />
+
+            <TextView
+                android:id="@+id/lesson_desk_place_element_center_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/geometria"
+                android:gravity="bottom"
+                android:text="5"
+                android:textColor="#000000"
+                android:textSize="80sp" />
+        </RelativeLayout>
+
+        <!-- имя ученика -->
+        <TextView
+            android:id="@+id/lesson_desk_place_element_learner_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/geometria"
+            android:gravity="center_vertical|start"
+            android:singleLine="true"
+            android:text="Иванов Иван"
+            android:textColor="#000000"
+            android:textSize="40sp" />
+    </LinearLayout>
+
+    <!-- оценки -->
+    <TextView
+        android:id="@+id/lesson_desk_place_element_left_grade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/geometria"
+        android:text=" 12"
+        android:textColor="#000000"
+        android:textSize="40sp" />
+
+    <TextView
+        android:id="@+id/lesson_desk_place_element_right_grade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:fontFamily="@font/geometria"
+        android:text="5 "
+        android:textColor="#000000"
+        android:textSize="40sp" />
+</RelativeLayout>
+
+
+
+
+
+
+
