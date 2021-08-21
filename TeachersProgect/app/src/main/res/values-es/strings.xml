@@ -59,6 +59,8 @@
     <!-- меню сверху -->
     <string name="learners_and_grades_out_activity_menu_title_statistics">Estadísticas sobre el asignatura</string>
     <string name="learners_and_grades_out_activity_menu_title_show_all">##Показать все</string>
+    <string name="learners_and_grades_out_activity_menu_title_learners_import">##Импортировать учеников и оценки</string>
+    <string name="learners_and_grades_out_activity_menu_title_learners_export">##Выгрузить учеников и оценки</string>
     <!-- диалоги -->
     <string name="learners_and_grades_out_activity_dialog_title_create_learner">agregar un alumno</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_learner">Edita al alumno</string>
@@ -82,6 +84,10 @@
     <string name="learners_and_grades_out_activity_text_help">Esta es su lista de clase electrónica: una lista de estudiantes y sus respuestas por fecha.\nElija una asignatura y un mes.\nEl dígito Blanco al lado de la fecha es el número de lección (1, 2, etc.) que pasó ese día (el dígito anterior).\nHaga clic en + para agregar al alumno.\nPoner el nombre del alumno-se abre un menú donde se puede eliminar o cambiar el nombre.</string>
     <!-- уведомления -->
     <string name="learners_and_grades_out_activity_load_text">Cargando…</string>
+
+
+    <!-- активность импорта экспорта оценок и учеников -->
+    <string name="learners_and_grades_import_give_me_a_reason">##Ну позязя :3 Ну дай рарешение!</string>
 
 
     <!-- активность списка статистик -->

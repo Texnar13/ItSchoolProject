@@ -1,14 +1,8 @@
 package com.learning.texnar13.teachersprogect;
 
-import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Build;
-import android.os.LocaleList;
-import android.util.DisplayMetrics;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -17,7 +11,7 @@ import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
 import java.util.Locale;
 
-public class MyApplication extends Application {
+public class MyApplication extends Application {//MultiDexApplication/Application // todo multiDex
     private Locale locale;
 
 
@@ -34,11 +28,6 @@ public class MyApplication extends Application {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-//        locale = new Locale(lang);
-//        Locale.setDefault(locale);
-//        Configuration config = new Configuration();
-//        config.locale = locale;
-//        getApplicationContext().getResources().updateConfiguration(config, null);
     }
 
 
@@ -52,6 +41,7 @@ public class MyApplication extends Application {
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
+        // config.fontScale todo почитать про динамическое изменение шрифта
         config.locale = locale;
         context.getResources().updateConfiguration(config, null);
     }

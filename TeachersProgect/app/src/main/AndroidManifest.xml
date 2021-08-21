@@ -6,7 +6,7 @@
     android:versionName="tera3.900">
 
     <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         tools:node="replace" />
 
     <application
@@ -17,7 +17,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".sponsor.SponsorActivity"></activity>
+        <activity
+            android:name=".gradesPeriods.GradesPeriodsActivity"
+            android:exported="true" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="@string/share_internal_directory_authorities"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider> <!-- content://com.texnar13.exel2 -->
+        <activity
+            android:name=".learnersAndGradesOut.LearnersAndGradesImportActivity"
+            android:exported="true" />
         <activity
             android:name=".startScreen.StartScreenActivity"
             android:configChanges="locale">
@@ -91,6 +106,7 @@
         <activity
             android:name=".learnersAndGradesOut.learnersAndGradesStatistics.LearnersGradesStatisticsActivity"
             android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".sponsor.SponsorActivity" />
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.AcceptDialog;
+package com.learning.texnar13.teachersprogect.acceptDialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

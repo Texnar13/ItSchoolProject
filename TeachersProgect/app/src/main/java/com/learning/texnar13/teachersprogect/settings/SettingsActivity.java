@@ -27,7 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.learning.texnar13.teachersprogect.AcceptDialog.AcceptDialog;
+import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialog;
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;

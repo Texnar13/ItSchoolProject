@@ -154,7 +154,7 @@ public final class SchoolContract {
 
         public static final String COLUMN_LESSON_NUMBER = "lessonNumber";
         public static final String COLUMN_LESSON_DATE = "lessonDate";// todo исправить баг с исправлением даты
-        public static final String COLUMN_END_REPEAT_DATE = "endRepeatDate";// todo
+        public static final String COLUMN_END_REPEAT_DATE = "endRepeatDate";// todo TODO TODO!!!!!
         public static final String COLUMN_REPEAT = "repeat";
 
         // repeat constants(посмотри LessonRedactorDialogFragment):

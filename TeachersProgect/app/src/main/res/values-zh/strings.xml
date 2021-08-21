@@ -59,6 +59,8 @@
     <!-- меню сверху -->
     <string name="learners_and_grades_out_activity_menu_title_statistics">统计</string>
     <string name="learners_and_grades_out_activity_menu_title_show_all">##Показать все</string>
+    <string name="learners_and_grades_out_activity_menu_title_learners_import">##Импортировать учеников и оценки</string>
+    <string name="learners_and_grades_out_activity_menu_title_learners_export">##Выгрузить учеников и оценки</string>
     <!-- диалоги -->
     <string name="learners_and_grades_out_activity_dialog_title_create_learner">添加学生</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_learner">编辑学生</string>
@@ -82,6 +84,10 @@
     <string name="learners_and_grades_out_activity_text_help">这是你的电子期刊：学生和他们的答案按日期列表。\n选择主题和月份。\n日期旁边的白色数字是课程的数量（1st，2nd等）。）你花了那一天（前面的数字）。\n按+，所以你添加一个学生。\n按住学生的姓名打开一个菜单，您可以在其中删除或重命名学生。</string>
     <!-- уведомления -->
     <string name="learners_and_grades_out_activity_load_text">装载……</string>
+
+
+    <!-- активность импорта экспорта оценок и учеников -->
+    <string name="learners_and_grades_import_give_me_a_reason">##Ну позязя :3 Ну дай рарешение!</string>
 
 
     <!-- активность списка статистик -->

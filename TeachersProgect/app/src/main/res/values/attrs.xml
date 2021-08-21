@@ -3,6 +3,9 @@
     <!-- getResources().getBoolean(R.bool.isTablet) -->
     <bool name="isTablet">false</bool>
 
+    <!-- экспорт (системный псевдоним папки из которой будут экспортироваться файлы) -->
+    <string name="share_internal_directory_authorities" translatable="false">com.learning.texnar13.teachersprogect.export_path</string>
+
     <!-- рекламные блоки -->
     <!--string name="banner_id_start_screen" translatable="false">R-M-450642-2</string>
     <string name="banner_id_calendar" translatable="false">R-M-450642-3</string>

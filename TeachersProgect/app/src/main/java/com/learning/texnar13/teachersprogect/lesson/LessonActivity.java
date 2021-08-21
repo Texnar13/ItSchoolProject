@@ -34,7 +34,6 @@ import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActi
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
 /*
  * onCreate(),
@@ -44,7 +43,7 @@ import java.util.Iterator;
  * эти поля должны быть статичными, и с проверкой на существование(для переворота)
  * при переходе удалить
  *
- * OnStart(),
+ * OnResume(), todo сделать как ActivityResult
  * выводятся парты и ученики
  *
  * */
@@ -89,15 +88,13 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     private int mode = NONE;
     // точка середины между пальцами за предыдущую итерацию
     private Point oldMid = new Point();
-    // множитель за предыдущую итерацию
-    private float oldMultiplier = 0;
     // предыдущее растояние между пальцам
     private float oldDist = 1f;
 
     // слой с партами
     private RelativeLayout out;
 
-    // ---------- данные не исчезающие при повороте экрана, todo? их надо чистить
+    // ---------- данные не исчезающие при повороте экрана ----------
 
     // -- параметры из бд --
     // максимальная оценка
@@ -525,6 +522,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
         // и выводим все
         outAll();
+
+        Log.e(TAG, "onResume: " + learnersAndTheirGrades.length);
+
     }
 
 
@@ -610,7 +610,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                 if (learnerArrPos != -1) {
                     // инициализируем разметку места на парте
                     View placeRoot = getLayoutInflater().inflate(
-                            R.layout.lesson_desk_place_element, currentDeskUnit.desk);
+                            R.layout.lesson_desk_place_element, null);
+                    currentDeskUnit.desk.addView(placeRoot);
 
                     // сохраняем ссылки на все view
                     learnersAndTheirGrades[learnerArrPos].setViews(
@@ -760,7 +761,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     // готовимся к зуму
                     mode = ZOOM;
                     // начальные данные о пальцах
-                    oldMultiplier = multiplier;
                     oldMid = findMidPoint(motionEvent);
                 }
                 break;
@@ -796,8 +796,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                                 if (deskUnit.seatingLearnerNumber[placeI] != -1) {
                                     learnersAndTheirGrades[deskUnit.seatingLearnerNumber[placeI]]
                                             .updateSizesForZoom(multiplier, placeI);
-                                    Log.e(TAG, "onTouch: seatingLearnerNumber" + deskUnit.seatingLearnerNumber[placeI]);
-                                    Log.e(TAG, "onTouch: multiplier" + multiplier);
+                                    Log.e(TAG, "onTouch: " + deskUnit.seatingLearnerNumber[placeI]);
+                                    Log.e(TAG, "onTouch: " + learnersAndTheirGrades[deskUnit.seatingLearnerNumber[placeI]].leftGrade);
                                 }
                             }
 

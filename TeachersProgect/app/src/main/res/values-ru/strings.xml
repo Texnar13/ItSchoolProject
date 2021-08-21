@@ -59,6 +59,8 @@
     <!-- меню сверху -->
     <string name="learners_and_grades_out_activity_menu_title_statistics">Статистика по предмету</string>
     <string name="learners_and_grades_out_activity_menu_title_show_all">##Показать все</string>
+    <string name="learners_and_grades_out_activity_menu_title_learners_import">##Импортировать учеников и оценки</string>
+    <string name="learners_and_grades_out_activity_menu_title_learners_export">##Выгрузить учеников и оценки</string>
     <!-- диалоги -->
     <string name="learners_and_grades_out_activity_dialog_title_create_learner">Добавление ученика</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_learner">Редактирование ученика</string>
@@ -82,6 +84,10 @@
     <string name="learners_and_grades_out_activity_text_help">Это ваш электронный журнал: список учеников и их ответы по датам.\nВыберите предмет и месяц.\nБелая цифра рядом с датой - это номер урока(1-ый, 2-ой и.т.д.), который вы провели в этот день (предшествующая цифра).\nНажмите на +, так вы добавите ученика.\nУдерживайте имя ученика - откроется меню, где можно его удалить или переименовать.</string>
     <!-- уведомления -->
     <string name="learners_and_grades_out_activity_load_text">Загрузка…</string>
+
+
+    <!-- активность импорта экспорта оценок и учеников -->
+    <string name="learners_and_grades_import_give_me_a_reason">##Ну позязя :3 Ну дай рарешение!</string>
 
 
     <!-- активность списка статистик -->

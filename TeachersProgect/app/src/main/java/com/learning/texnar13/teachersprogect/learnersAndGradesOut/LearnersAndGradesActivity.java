@@ -15,18 +15,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
-import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogFragment;
-import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogInterface;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.learnersAndGradesOut.learnersAndGradesStatistics.LearnersGradesStatisticsActivity;
 import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity;
+import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogFragment;
+import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogInterface;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,6 +43,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     private static final String TAG = "TeachersApp";
     // константа по которой через intent передается id класса
     public static final String CLASS_ID = "classId";
+
+
+    // ------------ обратная связь активностей ------------
+
+    ActivityResultLauncher<Integer> learnersAndGradesImportLauncher;
 
     // ------------ данные из таблицы ------------
 
@@ -108,59 +113,72 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     public boolean onPrepareOptionsMenu(final Menu menu) {
         Log.i(TAG, "onPrepareOptionsMenu");
         // кнопка статистики
-        menu.findItem(R.id.learners_and_grades_menu_statistics).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
+        menu.findItem(R.id.learners_and_grades_menu_statistics).setOnMenuItemClickListener(menuItem -> {
 
-                // выбран ли урок
-                if (chosenSubjectPosition < 0) {
-                    // создаем диалог работы с предметами
-                    SubjectsDialogFragment subjectsDialogFragment = new SubjectsDialogFragment();
+            // выбран ли урок
+            if (chosenSubjectPosition < 0) {
+                // создаем диалог работы с предметами
+                SubjectsDialogFragment subjectsDialogFragment = new SubjectsDialogFragment();
 
-                    // готоим и передаем массив названий предиметов
-                    Bundle args = new Bundle();
-                    String[] subjectsArray = new String[subjects.length];
-                    for (int subjectI = 0; subjectI < subjectsArray.length; subjectI++) {
-                        subjectsArray[subjectI] = subjects[subjectI].getSubjectName();
-                    }
-                    args.putStringArray(SubjectsDialogFragment.ARGS_LEARNERS_NAMES_STRING_ARRAY, subjectsArray);
-                    subjectsDialogFragment.setArguments(args);
-
-                    // показываем диалог
-                    subjectsDialogFragment.show(getSupportFragmentManager(), "subjectsDialogFragment - hello");
-
-                } else {
-                    // запускаем активность статистики
-                    Intent intent = new Intent(
-                            LearnersAndGradesActivity.this,
-                            LearnersGradesStatisticsActivity.class
-                    );
-                    // и передаем ему id предмета
-                    intent.putExtra(
-                            LearnersGradesStatisticsActivity.INTENT_SUBJECT_ID,
-                            subjects[chosenSubjectPosition].getSubjectId()
-                    );
-                    startActivity(intent);
+                // готоим и передаем массив названий предиметов
+                Bundle args = new Bundle();
+                String[] subjectsArray = new String[subjects.length];
+                for (int subjectI = 0; subjectI < subjectsArray.length; subjectI++) {
+                    subjectsArray[subjectI] = subjects[subjectI].getSubjectName();
                 }
-                return true;
+                args.putStringArray(SubjectsDialogFragment.ARGS_LEARNERS_NAMES_STRING_ARRAY, subjectsArray);
+                subjectsDialogFragment.setArguments(args);
+
+                // показываем диалог
+                subjectsDialogFragment.show(getSupportFragmentManager(), "subjectsDialogFragment - hello");
+
+            } else {
+                // запускаем активность статистики
+                Intent intent = new Intent(
+                        LearnersAndGradesActivity.this,
+                        LearnersGradesStatisticsActivity.class
+                );
+                // и передаем ему id предмета
+                intent.putExtra(
+                        LearnersGradesStatisticsActivity.INTENT_SUBJECT_ID,
+                        subjects[chosenSubjectPosition].getSubjectId()
+                );
+                startActivity(intent);
             }
+            return true;
         });
 
-        menu.findItem(R.id.learners_and_grades_menu_show_all).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                // при нажатии на элемент читаем состояние чекбокса
-                if (learnersAndGradesTableView != null) {
-                    item.setChecked(!item.isChecked());
-                    learnersAndGradesTableView.isAllDaysShowed = item.isChecked();
-                    learnersAndGradesTableView.setData(dataLearnersAndGrades, absentTypes);
-                    learnersAndGradesTableView.invalidate();
-                }
-                return true;
+        // показывать пустые оценки
+        menu.findItem(R.id.learners_and_grades_menu_show_all).setOnMenuItemClickListener(item -> {
+            // при нажатии на элемент читаем состояние чекбокса
+            if (learnersAndGradesTableView != null) {
+                item.setChecked(!item.isChecked());
+                learnersAndGradesTableView.isAllDaysShowed = item.isChecked();
+                learnersAndGradesTableView.setData(dataLearnersAndGrades, absentTypes);
+                learnersAndGradesTableView.invalidate();
             }
+            return true;
         });
 
+        // импорт учеников и оценок через excel
+        menu.findItem(R.id.learners_and_grades_menu_learners_import).setOnMenuItemClickListener(item -> {
+            // запускаем активность импрота
+            learnersAndGradesImportLauncher.launch(null);
+            return true;
+        });
+
+        // экспорт учеников и оценок в excel
+        menu.findItem(R.id.learners_and_grades_menu_learners_export).setOnMenuItemClickListener(item -> {
+
+            // приводим данные об учениках
+            ArrayList<String> names = new ArrayList<>();
+            for (NewLearnerAndHisGrades learner : dataLearnersAndGrades.learnersAndHisGrades) {
+                names.add(learner.surname + " " + learner.name);
+            }
+            // и экспортруем их
+            LearnersAndGradesExportHelper.shareLearners(this, names);
+            return true;
+        });
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -180,7 +198,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         setContentView(R.layout.learners_and_grades_content);
 
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
-        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        setSupportActionBar(findViewById(R.id.base_blue_toolbar));
         // убираем заголовок, там свой
         getSupportActionBar().setTitle("");
 
@@ -428,6 +446,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 learnersAndGradesTableView.setData(dataLearnersAndGrades, absentTypes);
             }
         }
+
+        // регистрируем обратную связь для импорта учеников и оценок
+        learnersAndGradesImportLauncher = registerForActivityResult(new LearnersAndGradesImportActivity.LearnersImportActivityResultContract(), result -> {
+            if (result != null) {
+                // todo
+                Log.e(TAG, "onPrepareOptionsMenu: learnersUnits=" + result.learnersUnits);
+            }
+        });
     }
 
     // -------------------------- основные методы --------------------------

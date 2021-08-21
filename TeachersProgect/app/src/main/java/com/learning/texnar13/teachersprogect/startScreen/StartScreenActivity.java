@@ -38,6 +38,7 @@ import com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
+import com.learning.texnar13.teachersprogect.gradesPeriods.GradesPeriodsActivity;
 import com.learning.texnar13.teachersprogect.learnersClassesOut.LearnersClassesOutActivity;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity;
@@ -178,6 +179,10 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             // реклама яндекса
             loadAdd();
         }
+
+
+//        Intent intent = new Intent(this, GradesPeriodsActivity.class); для отладки новой активности статистики
+//        startActivity(intent);
     }
 
     // проверка состояния подписки, результат в SharedPrefs

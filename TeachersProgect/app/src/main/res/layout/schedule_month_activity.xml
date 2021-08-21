@@ -70,17 +70,18 @@
                 android:orientation="vertical" />
 
             <LinearLayout
-                android:id="@+id/schedule_month_day_table"
+                android:id="@+id/shedule_month_ad_banner_place"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="bottom"
                 android:orientation="vertical" />
 
             <LinearLayout
-                android:id="@+id/shedule_month_ad_banner_place"
+                android:id="@+id/schedule_month_day_table"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="bottom"
                 android:orientation="vertical" />
+
 
         </LinearLayout>
     </ScrollView>

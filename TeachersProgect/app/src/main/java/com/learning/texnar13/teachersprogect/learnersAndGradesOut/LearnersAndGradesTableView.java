@@ -1271,23 +1271,6 @@ public class LearnersAndGradesTableView extends View {
         return Bitmap.createScaledBitmap(bitmap, bitmapWidth, bitmapHeight, false);
     }
 
-//    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
-//        // создаем drawable из векторной картинки
-//        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-//            drawable = (DrawableCompat.wrap(drawable)).mutate();
-//        }
-//        // перерисовываем drawable в bitmap
-//        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-//                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-//        Canvas canvas = new Canvas(bitmap);
-//        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-//        drawable.draw(canvas);
-//
-//        return bitmap;
-//    }
-
-
     // метод обрабатывающий нажатие на view
     int[] touch(PointF downPoint, boolean longClick) {
         /* {место в таблице, ученик, день, урок}

@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.AcceptDialog;
+package com.learning.texnar13.teachersprogect.acceptDialog;
 
 public interface AcceptDialogInterface {
     void accept();

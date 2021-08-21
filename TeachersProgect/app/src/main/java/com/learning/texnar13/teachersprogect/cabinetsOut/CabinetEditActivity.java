@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.learning.texnar13.teachersprogect.AcceptDialog.AcceptDialog;
-import com.learning.texnar13.teachersprogect.AcceptDialog.AcceptDialogInterface;
+import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialog;
+import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialogInterface;
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
