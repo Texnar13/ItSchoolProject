@@ -155,7 +155,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // текст заголовка
         TextView title = new TextView(getActivity());
-        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_medium));
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         title.setText(R.string.learners_and_grades_out_activity_dialog_title_choose_subject);
         title.setGravity(Gravity.CENTER_VERTICAL);
         title.setTextColor(Color.WHITE);
@@ -194,7 +194,7 @@ public class SubjectsDialogFragment extends DialogFragment {
             for (int subjectI = 0; subjectI < subjectsNames.size(); subjectI++) {
                 // создаем текстовое поле с названием предмета
                 final TextView subjectText = new TextView(getActivity());
-                subjectText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+                subjectText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
                 subjectText.setText(subjectsNames.get(subjectI));
                 subjectText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                 subjectText.setTextColor(Color.BLACK);
@@ -242,7 +242,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // кнопка изменить
         final TextView changeTextButton = new TextView(getActivity());
-        changeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        changeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         changeTextButton.setText(getResources().getString(R.string.learners_and_grades_out_activity_dialog_button_change));
         changeTextButton.setGravity(Gravity.CENTER);
         changeTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -273,7 +273,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // кнопка добавить
         final TextView addTextButton = new TextView(getActivity());
-        addTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        addTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         addTextButton.setText(getResources().getString(R.string.learners_and_grades_out_activity_dialog_button_add));
         addTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         addTextButton.setGravity(Gravity.CENTER);
@@ -348,7 +348,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // текст заголовка
         TextView title = new TextView(getActivity());
-        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_medium));
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         title.setText(getResources().getString(R.string.learners_and_grades_out_activity_dialog_title_enter_subject_name));
         title.setGravity(Gravity.CENTER_VERTICAL);
         title.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
@@ -372,7 +372,7 @@ public class SubjectsDialogFragment extends DialogFragment {
         final EditText subjectNameField = new EditText(getActivity());
         subjectNameField.setHint(getResources().getString(R.string.learners_and_grades_out_activity_dialog_hint_subject_name));
         subjectNameField.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-        subjectNameField.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        subjectNameField.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         subjectNameField.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         subjectNameField.setTextColor(Color.BLACK);
         // параметры текста
@@ -407,7 +407,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // кнопка создать
         final TextView createTextButton = new TextView(getActivity());
-        createTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        createTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         createTextButton.setText(getResources().getString(R.string.learners_and_grades_out_activity_dialog_button_create));
         createTextButton.setGravity(Gravity.CENTER);
         createTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -511,7 +511,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // кнопка удалить в заголовке
         final TextView title = new TextView(getActivity());
-        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         title.setText(getResources().getString(R.string.button_remove));
         title.setGravity(Gravity.CENTER_VERTICAL);
         title.setTextColor(Color.RED);
@@ -594,7 +594,7 @@ public class SubjectsDialogFragment extends DialogFragment {
             // создаем текстовое поле с названием предмета
             editSubjectsNames[subjectI] = new EditText(getActivity());
             editSubjectsNames[subjectI].setText(subjectsNames.get(subjectI));
-            editSubjectsNames[subjectI].setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+            editSubjectsNames[subjectI].setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
             editSubjectsNames[subjectI].setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
             editSubjectsNames[subjectI].setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             editSubjectsNames[subjectI].setTextColor(Color.BLACK);
@@ -663,7 +663,7 @@ public class SubjectsDialogFragment extends DialogFragment {
 
         // кнопка сохранить
         final TextView saveTextButton = new TextView(getActivity());
-        saveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        saveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         saveTextButton.setText(getResources().getString(R.string.button_save));
         saveTextButton.setGravity(Gravity.CENTER);
         saveTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));

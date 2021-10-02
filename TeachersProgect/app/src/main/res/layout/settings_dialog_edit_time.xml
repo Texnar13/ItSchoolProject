@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/base_background_dialog_full_round_white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +13,61 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/base_background_dialog_head_round_wite"
+            android:orientation="horizontal"
+            android:padding="@dimen/double_margin">
+
+            <ImageView
+                android:id="@+id/dialog_fragment_layout_settings_edit_time_button_close"
+                android:layout_width="@dimen/my_icon_size"
+                android:layout_height="@dimen/my_icon_size"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/base_button_close_background_round" />
+
+            <TextView
+                style="@style/ButtonSimpleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/double_margin"
+                android:text="@string/settings_activity_dialog_edit_time_title" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dialog_fragment_layout_settings_edit_time_time_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/settings_activity_edit_time_lessons_side_margin"
+            android:layout_marginEnd="@dimen/settings_activity_edit_time_lessons_side_margin"
+            android:layout_marginBottom="@dimen/double_margin"/>
+
+        <TextView
+            android:id="@+id/dialog_fragment_layout_settings_edit_time_button_add"
+            style="@style/SettingsButtonSimpleStyle"
+            android:gravity="center"
+            android:text="@string/settings_activity_dialog_edit_time_button_add_lesson" />
+
+
+        <TextView
+            android:id="@+id/dialog_fragment_layout_settings_edit_time_button_save"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/simple_buttons_height"
+            android:background="@drawable/base_background_dialog_bottom_round_blue"
+            android:gravity="center"
+            android:text="@string/button_save"
+            android:textColor="@color/backgroundWhite"
+            android:textSize="@dimen/simple_buttons_text_size" />
+    </LinearLayout>
+
+
+    <!--LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
@@ -74,5 +129,5 @@
                 android:textColor="@color/backgroundWhite"
                 android:textSize="@dimen/text_subtitle_size" />
         </LinearLayout>
-    </LinearLayout>
+    </LinearLayout-->
 </ScrollView>

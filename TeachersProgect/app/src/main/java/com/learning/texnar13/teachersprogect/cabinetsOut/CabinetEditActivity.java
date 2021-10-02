@@ -2,12 +2,15 @@ package com.learning.texnar13.teachersprogect.cabinetsOut;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,7 +18,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialog;
-import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialogInterface;
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
@@ -23,7 +25,7 @@ import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 
-public class CabinetEditActivity extends AppCompatActivity implements AcceptDialogInterface {
+public class CabinetEditActivity extends AppCompatActivity implements AcceptDialog.AcceptDialogInterface {
 
     public static final String ARG_CABINET_ID = "cabinetId";
     public static final int CABINET_EDIT_REQUEST_CODE = 200;
@@ -51,7 +53,15 @@ public class CabinetEditActivity extends AppCompatActivity implements AcceptDial
         super.onCreate(savedInstanceState);
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
-        setContentView(R.layout.cabinet_out_edit_activity);
+        // цвет статус бара
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);// todo что это за строка, в Start Screen она не используется
+        }
+
+        setContentView(R.layout.cabinets_out_edit_activity);
         // тулбар
         setSupportActionBar(findViewById(R.id.base_blue_toolbar));
         getSupportActionBar().setTitle("");

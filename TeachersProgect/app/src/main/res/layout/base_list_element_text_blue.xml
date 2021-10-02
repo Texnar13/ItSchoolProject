@@ -2,7 +2,7 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:fontFamily="@font/geometria_medium"
+    android:fontFamily="@font/montserrat_medium"
     android:gravity="center"
     android:padding="@dimen/half_more_margin"
     android:textColor="@color/backgroundWhite"

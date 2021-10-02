@@ -1,5 +1,68 @@
 <resources>
 
+    <!-- мой телефон A71 -->
+
+    <!-- пиздец близко, беги друг -->
+
+
+
+    <!-- для всего приложения -->
+    <dimen name="base_toolbar_text_size">21sp</dimen>
+    <dimen name="simple_buttons_text_size">17sp</dimen>
+    <dimen name="simple_buttons_height">62dp</dimen>
+
+    <dimen name="base_buttons_arrow_size">18dp</dimen>
+
+    <!-- главный экран -->
+    <dimen name="start_screen_time_text_size">45sp</dimen>
+    <dimen name="start_screen_date_text_size">19sp</dimen>
+    <dimen name="start_screen_week_day_text_size">@dimen/start_screen_date_text_size</dimen>
+    <dimen name="start_screen_now_text_size">@dimen/simple_buttons_text_size</dimen>
+
+    <!-- календарь на месяц -->
+    <dimen name="shedule_month_month_text_size">19sp</dimen>
+    <dimen name="shedule_month_calendar_margin">30dp</dimen>
+    <dimen name="shedule_month_month_buttons_heght">60dp</dimen>
+    <dimen name="shedule_month_arrow_size">20dp</dimen>
+    <dimen name="shedule_month_days_text_size">17sp</dimen>
+
+    <dimen name="shedule_month_calendar_day_text_size">@dimen/simple_buttons_text_size</dimen>
+
+    <dimen name="shedule_month_day_title_text_size">19sp</dimen>
+    <dimen name="shedule_month_lesson_number_margin">12dp</dimen>
+    <dimen name="shedule_month_lesson_texts_margin">20dp</dimen>
+    <dimen name="shedule_month_lesson_top_bottom_margin">6dp</dimen>
+    <dimen name="shedule_month_lessons_number_size">19sp</dimen>
+    <dimen name="shedule_month_lessons_time_size">16sp</dimen>
+    <dimen name="shedule_month_lessons_content_text_size">@dimen/simple_buttons_text_size</dimen>
+
+
+    <!-- активность учеников -->
+    <dimen name="learners_and_grades_activity_subject_and_month_text_size">@dimen/simple_buttons_text_size</dimen>
+    <dimen name="learners_and_grades_activity_content_text_size">15sp</dimen>
+    <dimen name="learners_and_grades_activity_index_text_size">15sp</dimen>
+
+
+    <!-- активность настроек -->
+    <dimen name="settings_activity_sponsor_icon_size">25dp</dimen>
+    <dimen name="settings_activity_buttons_side_margin">10dp</dimen>
+    <dimen name="settings_activity_switch_size">60dp</dimen>
+    <dimen name="settings_activity_divider_height">1.5dp</dimen>
+    <dimen name="settings_activity_edit_locale_buttons_height">40dp</dimen>
+    <dimen name="settings_activity_edit_locale_bottom_margin">25dp</dimen>
+
+    <dimen name="settings_activity_edit_time_text_view_height">40dp</dimen>
+    <dimen name="settings_activity_edit_time_lessons_side_margin">50dp</dimen>
+
+    <!-- премиум активность -->
+    <dimen name="premium_activity_title_text_size">28sp</dimen>
+    <dimen name="premium_activity_background_button_frame_thikness">3dp</dimen>
+    <dimen name="premium_activity_background_button_frame_thikness_bold">4dp</dimen>
+    <dimen name="premium_activity_messages_text_size">21sp</dimen>
+    <dimen name="premium_activity_messages_small_text_size">16sp</dimen>
+
+
+    <!-- пиздец близко, беги друг -->
 
     <dimen name="activity_horizontal_margin">0dp</dimen>
     <dimen name="activity_vertical_margin">0dp</dimen>
@@ -26,7 +89,7 @@
 
     <!-- радиус скругления углов кнопок -->
     <dimen name="radius_rounding_buttons">10dp</dimen><!-- будешь с Аней скруглять углы, это значение стоит в плеймаркете: 20dp-->
-    <dimen name="radius_rounding_dialogs">15dp</dimen>
+    <dimen name="radius_rounding_dialogs">20dp</dimen>
 
     <!--размеры текста-->
     <dimen name="text_fat_size">52sp</dimen>

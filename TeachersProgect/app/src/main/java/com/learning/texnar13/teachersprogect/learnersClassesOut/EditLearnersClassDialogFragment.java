@@ -1,9 +1,7 @@
 package com.learning.texnar13.teachersprogect.learnersClassesOut;
 
-import android.app.AlertDialog;
+
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -20,8 +18,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.learning.texnar13.teachersprogect.R;
 
@@ -84,16 +85,11 @@ public class EditLearnersClassDialogFragment extends DialogFragment {
         );
         imageContainer.addView(backImage, backImageParams);
         //отмена
-        backImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        backImage.setOnClickListener(view -> dismiss());
 
         // заголовок
         TextView title = new TextView(getActivity());
-        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_medium));
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         title.setText(R.string.learners_classes_out_activity_dialog_title_edit_class);
         title.setTextColor(Color.BLACK);
         title.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_title_size));
@@ -128,19 +124,17 @@ public class EditLearnersClassDialogFragment extends DialogFragment {
 
         // текстовое поле имени
         final EditText editName = new EditText(getActivity());
-        editName.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        editName.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         editName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         editName.setTextColor(Color.BLACK);
         editName.setHint(R.string.learners_classes_out_activity_dialog_hint_class_name);
         editName.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         editName.setInputType(InputType.TYPE_CLASS_TEXT);
         editName.setHintTextColor(Color.GRAY);
-        editNameContainer.addView(editName,
-                new LinearLayout.LayoutParams(
+        editNameContainer.addView(editName, new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT
-                )
-        );
+                ));
         try { // входные данные предыдущее название
             editName.setText(getArguments().getString("name"));
         } catch (NullPointerException e) {
@@ -151,7 +145,7 @@ public class EditLearnersClassDialogFragment extends DialogFragment {
 
         // кнопка удалить
         TextView negativeTextButton = new TextView(getActivity());
-        negativeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_medium));
+        negativeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         negativeTextButton.setText(R.string.button_save);
         negativeTextButton.setGravity(Gravity.CENTER);
         negativeTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
@@ -191,8 +185,8 @@ public class EditLearnersClassDialogFragment extends DialogFragment {
 
         // кнопка сохранить
         TextView saveTextButton = new TextView(getActivity());
-        saveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-        saveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        saveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
+        saveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         saveTextButton.setText(R.string.button_save);
         saveTextButton.setGravity(Gravity.CENTER);
         saveTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -213,56 +207,17 @@ public class EditLearnersClassDialogFragment extends DialogFragment {
 
         //при нажатии...
         // согласие
-        saveButtonContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        saveButtonContainer.setOnClickListener(view -> {
 
-                if (editName.getText().toString().trim().length() == 0) {
-                    Toast.makeText(getActivity(), R.string.learners_classes_out_activity_toast_empty_name, Toast.LENGTH_SHORT).show();
-                } else {
-                    try {
-                        //вызываем в активности метод по созданию класса и передаем ей имя
-                        ((com.learning.texnar13.teachersprogect.learnersClassesOut.EditLearnersClassDialogInterface) getActivity()).editLearnersClass(
-                                editName.getText().toString().trim(),
-                                getArguments().getLong("classId")
-                        );
-                    } catch (java.lang.ClassCastException e) {
-                        //в вызвающей активности должен быть имплементирован интерфейс EditLearnersClassDialogInterface
-                        e.printStackTrace();
-                        Log.i(
-                                "TeachersApp",
-                                "EditLearnersClassDialogFragment: you must implements EditLearnersClassDialogInterface in your activity"
-                        );
-                    } catch (java.lang.NullPointerException e) {
-                        //в диалог необходимо передать id класса( Bungle putLong("classId",classId) )
-                        e.printStackTrace();
-                        Log.i(
-                                "TeachersApp",
-                                "EditLearnersClassDialogFragment: you must give classId( Bungle putLong(\"classId\",classId) )"
-                        );
-                    }
-                    dismiss();
-                }
-            }
-        });
-
-        //удаление
-        negativeTextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            if (editName.getText().toString().trim().length() == 0) {
+                Toast.makeText(getActivity(), R.string.learners_classes_out_activity_toast_empty_name, Toast.LENGTH_SHORT).show();
+            } else {
                 try {
-                    //вызываем в активности метод по далению класса и передаем id
-                    ((com.learning.texnar13.teachersprogect.learnersClassesOut.EditLearnersClassDialogInterface) getActivity()).removeLearnersClass(
-                            getArguments().getLong("classId")
+                    //вызываем в активности метод по созданию класса и передаем ей имя
+                    ((EditLearnersClassDialogInterface) getActivity()).editLearnersClass(
+                            editName.getText().toString().trim()
                     );
-                } catch (java.lang.ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован интерфейс EditLearnersClassDialogInterface
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "EditLearnersClassDialogFragment: you must implements EditLearnersClassDialogInterface in your activity"
-                    );
-                } catch (java.lang.NullPointerException e) {
+                } catch (NullPointerException e) {
                     //в диалог необходимо передать id класса( Bungle putLong("classId",classId) )
                     e.printStackTrace();
                     Log.i(
@@ -274,31 +229,35 @@ public class EditLearnersClassDialogFragment extends DialogFragment {
             }
         });
 
+
+
+        final AppCompatActivity context = (AppCompatActivity)getActivity();
+
+        //удаление
+        negativeTextButton.setOnClickListener(view -> {
+            try {
+                //вызываем в активности метод по далению класса и передаем id
+                ((EditLearnersClassDialogInterface) getActivity()).removeLearnersClass();
+            } catch (NullPointerException e) {
+                //в диалог необходимо передать id класса( Bungle putLong("classId",classId) )
+                e.printStackTrace();
+                Log.i(
+                        "TeachersApp",
+                        "EditLearnersClassDialogFragment: you must give classId( Bungle putLong(\"classId\",classId) )"
+                );
+            }
+            dismiss();
+        });
+
         // наконец создаем диалог и возвращаем его
         Dialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         return dialog;
     }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-    }
-
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        super.onCancel(dialog);
-    }
-
-    //---------форматы----------
-
-    private float pxFromDp(float px) {
-        return px * getActivity().getResources().getDisplayMetrics().density;
-    }
 }
 
 interface EditLearnersClassDialogInterface {
-    void editLearnersClass(String name, long classId);
+    void editLearnersClass(String name);
 
-    void removeLearnersClass(long classId);
+    void removeLearnersClass();
 }

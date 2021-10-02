@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/base_background_dialog_full_round_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/half_more_margin">
+
+        <ImageView
+            android:id="@+id/learners_classes_out_dialog_create_class_button_cancel"
+            android:layout_width="@dimen/my_icon_size"
+            android:layout_height="@dimen/my_icon_size"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/base_button_close_background_round" />
+
+        <TextView
+            style="@style/ButtonSimpleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/double_margin"
+            android:text="@string/learners_classes_out_activity_dialog_title_create_class" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/double_margin"
+        android:paddingStart="@dimen/double_margin"
+        android:paddingEnd="@dimen/double_margin"
+        android:layout_marginBottom="@dimen/simple_margin">
+
+        <TextView
+            style="@style/ButtonSimpleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/backgroundMediumGray"
+            android:layout_gravity="center_vertical"
+            android:text="@string/cabinets_out_activity_dialog_hint_cabinet_name" />
+
+        <EditText
+            android:id="@+id/learners_classes_out_dialog_create_class_name_input"
+            style="@style/SimpleEditTextUnderlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/simple_margin"
+            android:gravity="start"
+            android:inputType="textCapWords"
+            android:paddingTop="@dimen/simple_margin"
+            android:paddingBottom="@dimen/simple_margin" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/learners_classes_out_dialog_create_class_button_save"
+        style="@style/ButtonSimpleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/simple_buttons_height"
+        android:background="@drawable/base_background_dialog_bottom_round_blue"
+        android:gravity="center"
+        android:text="@string/button_save"
+        android:textColor="@color/backgroundWhite" />
+</LinearLayout>

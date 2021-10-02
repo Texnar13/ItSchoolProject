@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/simple_buttons_height"
+    android:layout_marginBottom="@dimen/simple_margin"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/settings_dialog_edit_time_template_single_time_line_lesson_number"
+        style="@style/ButtonSimpleStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:textColor="#000000"
+        android:gravity="end"
+        android:text="1." />
+
+    <EditText
+        android:id="@+id/settings_dialog_edit_time_template_single_time_line_start_hour"
+        style="@style/SimpleEditTextUnderlinedStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/settings_activity_edit_time_text_view_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:inputType="number"
+        android:textColor="#000000" />
+
+    <TextView
+        style="@style/ButtonSimpleStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:gravity="center_horizontal"
+        android:text="@string/settings_activity_dialog_text_time_colon" />
+
+
+    <EditText
+        android:id="@+id/settings_dialog_edit_time_template_single_time_line_start_minute"
+        style="@style/SimpleEditTextUnderlinedStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/settings_activity_edit_time_text_view_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:inputType="number"
+        android:textColor="#000000" />
+
+    <TextView
+        style="@style/ButtonSimpleStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:gravity="center_horizontal"
+        android:text="@string/settings_activity_dialog_text_time_dash" />
+
+    <EditText
+        android:id="@+id/settings_dialog_edit_time_template_single_time_line_end_hour"
+        style="@style/SimpleEditTextUnderlinedStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/settings_activity_edit_time_text_view_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:inputType="number"
+        android:textColor="#000000" />
+
+    <TextView
+        style="@style/ButtonSimpleStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:gravity="center_horizontal"
+        android:text="@string/settings_activity_dialog_text_time_colon" />
+
+
+    <EditText
+        android:id="@+id/settings_dialog_edit_time_template_single_time_line_end_minute"
+        style="@style/SimpleEditTextUnderlinedStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/settings_activity_edit_time_text_view_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:inputType="number"
+        android:textColor="#000000" />
+
+
+    <ImageView
+        android:id="@+id/settings_dialog_edit_time_template_single_time_line_delete_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5" />
+
+</LinearLayout>
+
+

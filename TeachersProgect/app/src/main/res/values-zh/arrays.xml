@@ -40,14 +40,14 @@
         <item>十二月</item>
     </string-array>
 
-    <string-array name="week_days_simple">        
-        <item>星期日</item> 
-        <item>星期一</item>        
-        <item>星期二</item>  
-        <item>星期三</item>        
-        <item>星期四</item>       
-        <item>星期五</item>       
-        <item>星期六</item>   
+    <string-array name="week_days_simple">
+        <item>星期日</item>
+        <item>星期一</item>
+        <item>星期二</item>
+        <item>星期三</item>
+        <item>星期四</item>
+        <item>星期五</item>
+        <item>星期六</item>
     </string-array>
 
     <!-- активность календаря на день-->

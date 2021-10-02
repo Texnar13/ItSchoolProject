@@ -34,7 +34,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/geometria"
+                    android:fontFamily="@font/montserrat_medium"
                     android:gravity="center_vertical"
                     android:text="@string/learners_and_grades_out_activity_dialog_title_create_learner"
                     android:textColor="#000000"
@@ -63,7 +63,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/geometria"
+                        android:fontFamily="@font/montserrat_medium"
                         android:text="@string/learners_and_grades_out_activity_dialog_hint_learner_second_name"
                         android:textColor="@color/backgroundDarkGray"
                         android:textSize="@dimen/text_subtitle_size" />
@@ -72,7 +72,7 @@
                         android:id="@+id/learners_and_grades_dialog_learner_create_edit_second_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/geometria"
+                        android:fontFamily="@font/montserrat_medium"
                         android:inputType="textCapWords"
                         android:textColor="#000000"
                         android:textSize="@dimen/text_subtitle_size" />
@@ -87,7 +87,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/geometria"
+                        android:fontFamily="@font/montserrat_medium"
                         android:text="@string/learners_and_grades_out_activity_dialog_hint_learner_name"
                         android:textColor="@color/backgroundDarkGray"
                         android:textSize="@dimen/text_subtitle_size" />
@@ -96,7 +96,7 @@
                         android:id="@+id/learners_and_grades_dialog_learner_create_edit_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/geometria"
+                        android:fontFamily="@font/montserrat_medium"
                         android:inputType="textCapWords"
                         android:textColor="#000000"
                         android:textSize="@dimen/text_subtitle_size" />
@@ -120,7 +120,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/geometria"
+                    android:fontFamily="@font/montserrat_medium"
                     android:paddingBottom="@dimen/simple_margin"
                     android:text="@string/learners_and_grades_out_activity_dialog_title_learner_info"
                     android:textColor="@color/backgroundDarkGray"
@@ -131,7 +131,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/transparent"
-                    android:fontFamily="@font/geometria"
+                    android:fontFamily="@font/montserrat_medium"
                     android:gravity="top"
                     android:minLines="3"
                     android:textColor="#000000"
@@ -147,7 +147,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/base_background_dialog_bottom_round_blue"
-            android:fontFamily="@font/geometria"
+            android:fontFamily="@font/montserrat_medium"
             android:gravity="center"
             android:padding="@dimen/half_more_margin"
             android:text="@string/button_save"

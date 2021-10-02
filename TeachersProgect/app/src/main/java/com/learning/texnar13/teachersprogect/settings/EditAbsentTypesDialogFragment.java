@@ -3,6 +3,7 @@ package com.learning.texnar13.teachersprogect.settings;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -40,7 +41,7 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //начинаем строить диалог
+        // начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         // layout диалога
@@ -77,73 +78,56 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
         outTypesInLinearLayout(listOut);
 
         // кнопка добавления типа
-        dialogLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_absent_types_text_button_add).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    // ---- вызываем в активности метод по созданию нового типа ----
-                    AbsentTypeRecord newType = new AbsentTypeRecord(-1, "", "");
-                    // ---- создаем контейнер ----
-                    LinearLayout newTypeContainer = new LinearLayout(getActivity());
-                    newTypeContainer.setGravity(Gravity.CENTER_VERTICAL);
-                    newTypeContainer.setOrientation(LinearLayout.VERTICAL);
-                    newTypeContainer.setBackground(getActivity().getResources().getDrawable(R.drawable.base_background_dialog_full_round_dwite));
-                    // параметры контейнера
-                    LinearLayout.LayoutParams newTypeContainerParams = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                    );
-                    newTypeContainerParams.bottomMargin = 8;
-                    newTypeContainerParams.setMargins(
-                            (int) getResources().getDimension(R.dimen.half_margin),
-                            (int) getResources().getDimension(R.dimen.simple_margin),
-                            (int) getResources().getDimension(R.dimen.half_margin),
-                            (int) getResources().getDimension(R.dimen.simple_margin));
+        dialogLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_absent_types_text_button_add).setOnClickListener(view -> {
+            // ---- вызываем в активности метод по созданию нового типа ----
+            AbsentTypeRecord newType = new AbsentTypeRecord(-1, "", "");
+            // ---- создаем контейнер ----
+            LinearLayout newTypeContainer = new LinearLayout(getActivity());
+            newTypeContainer.setGravity(Gravity.CENTER_VERTICAL);
+            newTypeContainer.setOrientation(LinearLayout.VERTICAL);
+            newTypeContainer.setBackground(getActivity().getResources().getDrawable(R.drawable.base_background_button_round_gray));
+            // параметры контейнера
+            LinearLayout.LayoutParams newTypeContainerParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            newTypeContainerParams.bottomMargin = 8;
+            newTypeContainerParams.setMargins(
+                    (int) getResources().getDimension(R.dimen.half_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.half_margin),
+                    (int) getResources().getDimension(R.dimen.simple_margin));
 
-                    // ---- добавляем ссылку на контейнер элементу списка ----
-                    newType.typeContainer = newTypeContainer;
+            // ---- добавляем ссылку на контейнер элементу списка ----
+            newType.typeContainer = newTypeContainer;
 
-                    // ---- добавляем тип в лист ----
-                    types.add(newType);
-                    // ---- выводим контейнер в скролл ----
-                    listOut.addView(newTypeContainer, newTypeContainerParams);
+            // ---- добавляем тип в лист ----
+            types.add(newType);
+            // ---- выводим контейнер в скролл ----
+            listOut.addView(newTypeContainer, newTypeContainerParams);
 
-                    // ---- выводим содержимое в открытый закрывая все остальные контейнеры
-                    for (int typeI = 0; typeI < types.size(); typeI++) {
-                        if (types.get(typeI) != newType) {
-                            if (types.get(typeI).typeId == -1) {// если запись новая, удаляем
-                                listOut.removeView(types.get(typeI).typeContainer);
-                                types.remove(typeI);
-                                typeI--;
-                            } else {// иначе выводим его не активным
-                                outContentInTypeContainer(types.get(typeI), false);
-                            }
-                        } else
-                            // выводим его активным
-                            outContentInTypeContainer(newType, true);
-
+            // ---- выводим содержимое в открытый закрывая все остальные контейнеры
+            for (int typeI = 0; typeI < types.size(); typeI++) {
+                // пробегаемся по всем записям кроме текущего
+                if (types.get(typeI) != newType) {
+                    if (types.get(typeI).typeId == -1) {// если запись новая, удаляем
+                        listOut.removeView(types.get(typeI).typeContainer);
+                        types.remove(typeI);
+                        typeI--;
+                    } else {// иначе выводим его не активным
+                        outContentInTypeContainer(types.get(typeI), false);
                     }
-
-                } catch (java.lang.ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован класс EditAbsentTypeDialogFragmentInterface
-                    e.printStackTrace();
-                    Log.e(
-                            "TeachersApp",
-                            "EditAbsentTypeDialogFragment: you must implements EditAbsentTypeDialogFragmentInterface in your activity"
-                    );
-                }
+                } else
+                    // выводим текущий активным
+                    outContentInTypeContainer(newType, true);
             }
+
         });
 
 
 // ---- кнопка отмены ----
         ImageView neutralButton = dialogLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_absent_types_cancel_button);
-        neutralButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        neutralButton.setOnClickListener(view -> dismiss());
 
         // наконец создаем диалог и возвращаем его
         Dialog dialog = builder.create();
@@ -176,7 +160,7 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
                 LinearLayout item = new LinearLayout(getActivity());
                 item.setGravity(Gravity.CENTER_VERTICAL);
                 item.setOrientation(LinearLayout.VERTICAL);
-                item.setBackground(getActivity().getResources().getDrawable(R.drawable.base_background_dialog_full_round_dwite));
+                item.setBackground(getActivity().getResources().getDrawable(R.drawable.base_background_button_round_gray));
                 // параметры контейнера
                 LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -184,10 +168,10 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
                 );
                 itemParams.bottomMargin = 8;
                 itemParams.setMargins(
-                        (int) getResources().getDimension(R.dimen.half_margin),
-                        (int) getResources().getDimension(R.dimen.simple_margin),
-                        (int) getResources().getDimension(R.dimen.half_margin),
-                        (int) getResources().getDimension(R.dimen.simple_margin));
+                        getResources().getDimensionPixelOffset(R.dimen.half_margin),
+                        getResources().getDimensionPixelOffset(R.dimen.simple_margin),
+                        getResources().getDimensionPixelOffset(R.dimen.half_margin),
+                        getResources().getDimensionPixelOffset(R.dimen.simple_margin));
                 // ---- добавляем ссылку на контейнер элементу списка ----
                 types.get(typeI).typeContainer = item;
                 // ---- выводим контейнер в список ----
@@ -205,9 +189,14 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
         // удаляем все содержимое, если оно есть
         typeRecord.typeContainer.removeAllViews();
 
-        if (isContainerActive) {// если контейнер активен выводим текстовое поле с кнопками
+        if (isContainerActive) {
+            // если контейнер активен выводим текстовое поле с кнопками
             // -- отключаем нажатие на контейнер --
             typeRecord.typeContainer.setOnClickListener(null);
+
+            // тавим высоту контейнера по содержимомоу
+            typeRecord.typeContainer.getLayoutParams().height =
+                    ViewGroup.LayoutParams.WRAP_CONTENT;
 
             // -- удаляем текст --
             typeRecord.typeContainer.removeAllViews();
@@ -216,28 +205,19 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
             final EditText longEditText = new EditText(getActivity());
             longEditText.setText(typeRecord.longName);
             longEditText.setHint(R.string.settings_activity_dialog_new_absent_type_long_title_hint);
-            longEditText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-            longEditText.setTextSize(
-                    TypedValue.COMPLEX_UNIT_PX,
-                    getActivity().getResources().getDimension(R.dimen.text_subtitle_size)
-            );
-            longEditText.setInputType(InputType.TYPE_CLASS_TEXT);
-            longEditText.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+            longEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
             longEditText.setSingleLine(true);
             longEditText.setGravity(Gravity.CENTER_VERTICAL);
             // ставим ограничение в 20 символов
-            InputFilter[] filterArray = new InputFilter[1];
-            filterArray[0] = new InputFilter.LengthFilter(20);
-            longEditText.setFilters(filterArray);
+            longEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
             // параметры текста
             final LinearLayout.LayoutParams editLongTextParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    (int) getResources().getDimension(R.dimen.my_buttons_height_size),
-                    1F
-            );
+                    getResources().getDimensionPixelSize(R.dimen.my_buttons_height_size), 1F);
             editLongTextParams.gravity = Gravity.CENTER_VERTICAL;
-            editLongTextParams.leftMargin = (int) getResources().getDimension(R.dimen.double_margin);
-            editLongTextParams.rightMargin = (int) getResources().getDimension(R.dimen.double_margin);
+            editLongTextParams.leftMargin = getResources().getDimensionPixelOffset(R.dimen.double_margin);
+            editLongTextParams.rightMargin = getResources().getDimensionPixelOffset(R.dimen.double_margin);
+            editLongTextParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.double_margin);
             typeRecord.typeContainer.addView(longEditText, editLongTextParams);
 
 
@@ -245,28 +225,19 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
             final EditText editText = new EditText(getActivity());
             editText.setText(typeRecord.typeName);
             editText.setHint(R.string.settings_activity_dialog_new_absent_type_title_hint);
-            editText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-            editText.setTextSize(
-                    TypedValue.COMPLEX_UNIT_PX,
-                    getActivity().getResources().getDimension(R.dimen.text_subtitle_size)
-            );
-            editText.setInputType(InputType.TYPE_CLASS_TEXT);
-            editText.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
             editText.setSingleLine(true);
             editText.setGravity(Gravity.CENTER_VERTICAL);
             // ставим ограничение в 3 символа
-            InputFilter[] longFilterArray = new InputFilter[1];
-            longFilterArray[0] = new InputFilter.LengthFilter(3);
-            editText.setFilters(longFilterArray);
+            editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
             // параметры текста
             final LinearLayout.LayoutParams editTextParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    (int) getResources().getDimension(R.dimen.my_buttons_height_size),
-                    1F
-            );
+                    getResources().getDimensionPixelSize(R.dimen.my_buttons_height_size), 1F);
             editTextParams.gravity = Gravity.CENTER_VERTICAL;
-            editTextParams.leftMargin = (int) getResources().getDimension(R.dimen.double_margin);
-            editTextParams.rightMargin = (int) getResources().getDimension(R.dimen.double_margin);
+            editTextParams.leftMargin = getResources().getDimensionPixelOffset(R.dimen.double_margin);
+            editTextParams.rightMargin = getResources().getDimensionPixelOffset(R.dimen.double_margin);
+            editTextParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.double_margin);
             typeRecord.typeContainer.addView(editText, editTextParams);
 
             // эта строка убирает флаги(были поставлены автоматически), которые недавали открывать
@@ -279,6 +250,8 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
             LinearLayout buttonsContainer = new LinearLayout(getActivity());
             buttonsContainer.setOrientation(LinearLayout.HORIZONTAL);
             buttonsContainer.setGravity(Gravity.CENTER);
+            buttonsContainer.setBackground(ResourcesCompat.getDrawable(getResources(),
+                    R.drawable.base_background_button_bottom_round_blue, null));
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -288,137 +261,30 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
 
             // кнопка удалить
             if (typeRecord.typeId != 1 && typeRecord.typeId != -1) {
-
-                // контейнер кнопки
-                LinearLayout removeButtonContainer = new LinearLayout(getActivity());
-                removeButtonContainer.setGravity(Gravity.CENTER);
-                removeButtonContainer.setBackgroundResource(R.drawable.base_background_dialog_full_round_gray);
-                LinearLayout.LayoutParams removeButtonContainerParams = new LinearLayout.LayoutParams(
-                        0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        1
-                );
-                removeButtonContainerParams.setMargins(
-                        (int) getResources().getDimension(R.dimen.simple_margin),
-                        (int) getResources().getDimension(R.dimen.simple_margin),
-                        0,
-                        (int) getResources().getDimension(R.dimen.simple_margin)
-                );
-                removeButtonContainerParams.gravity = Gravity.CENTER;
-                buttonsContainer.addView(removeButtonContainer, removeButtonContainerParams);
-
                 TextView removeText = new TextView(getActivity());
-                removeText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+                removeText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
                 removeText.setText(R.string.settings_activity_dialog_button_remove);
-                removeText.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                removeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+                removeText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_semibold));
+                removeText.setTextColor(getResources().getColor(R.color.backgroundWhite));
+                removeText.setGravity(Gravity.CENTER);
+                removeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.simple_buttons_text_size));
+                removeText.setPadding(
+                        getResources().getDimensionPixelOffset(R.dimen.double_margin),
+                        getResources().getDimensionPixelOffset(R.dimen.double_margin),
+                        getResources().getDimensionPixelOffset(R.dimen.double_margin),
+                        getResources().getDimensionPixelOffset(R.dimen.double_margin)
+                );
+
                 LinearLayout.LayoutParams removeTextParams = new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
+                        0, ViewGroup.LayoutParams.MATCH_PARENT, 1
                 );
-                removeTextParams.setMargins(
-                        (int) getResources().getDimension(R.dimen.simple_margin),
-                        (int) getResources().getDimension(R.dimen.simple_margin),
-                        (int) getResources().getDimension(R.dimen.simple_margin),
-                        (int) getResources().getDimension(R.dimen.simple_margin)
-                );
-                removeButtonContainer.addView(removeText, removeTextParams);
-                removeButtonContainer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        boolean isDeleted = false;
-                        try {
-                            //вызываем в активности метод по удалению
-                            isDeleted = ((EditAbsentTypeDialogFragmentInterface) getActivity()).removeAbsentType(typeRecord.typeId);
-                        } catch (java.lang.ClassCastException e) {
-                            //в вызвающей активности должен быть имплементирован класс EditAbsentTypeDialogFragmentInterface
-                            e.printStackTrace();
-                            Log.e(
-                                    "TeachersApp",
-                                    "EditAbsentTypeDialogFragment: you must implements EditAbsentTypeDialogFragmentInterface in your activity"
-                            );
-                        }
-
-                        if (isDeleted) {
-                            // удаляем переменную в скролле
-                            listOut.removeView(typeRecord.typeContainer);
-                            // и в списке
-                            types.remove(typeRecord);
-                        }
-                    }
-                });
-            }
-
-
-            // контейнер кнопки
-            LinearLayout saveButtonContainer = new LinearLayout(getActivity());
-            saveButtonContainer.setGravity(Gravity.CENTER);
-            saveButtonContainer.setBackgroundResource(R.drawable.base_background_dialog_full_round_gray);
-            LinearLayout.LayoutParams saveButtonContainerParams = new LinearLayout.LayoutParams(
-                    0,
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    1
-            );
-            saveButtonContainerParams.setMargins(
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin)
-            );
-            saveButtonContainerParams.gravity = Gravity.CENTER;
-            buttonsContainer.addView(saveButtonContainer, saveButtonContainerParams);
-
-            TextView saveText = new TextView(getActivity());
-            saveText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-            saveText.setText(R.string.button_save);
-            saveText.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-            saveText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-            LinearLayout.LayoutParams saveTextParams = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-            saveTextParams.setMargins(
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin)
-            );
-            saveButtonContainer.addView(saveText, saveTextParams);
-            saveButtonContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // вызываем метод по сохранению названия
-                    boolean isChanged = false;
+                buttonsContainer.addView(removeText, removeTextParams);
+                removeText.setOnClickListener(v -> {
+                    boolean isDeleted = false;
                     try {
-                        // проверка на пустые поля
-                        if (editText.getText().toString().trim().length() == 0 ||
-                                longEditText.getText().toString().trim().length() == 0) {
-                            Toast.makeText(
-                                    getActivity(),
-                                    R.string.settings_activity_dialog_new_absent_type_toast_empty,
-                                    Toast.LENGTH_SHORT
-                            ).show();
-                        } else {
-
-
-                            // если запись новая
-                            if (typeRecord.typeId == -1) {
-                                // создаем ее в бд
-                                typeRecord.typeId = ((EditAbsentTypeDialogFragmentInterface) getActivity()).createAbsentType(
-                                        editText.getText().toString().trim(),
-                                        longEditText.getText().toString().trim()
-                                );
-                                isChanged = true;
-                            } else {
-                                // изменяем существующую запись
-                                isChanged = ((EditAbsentTypeDialogFragmentInterface) getActivity()).editAbsentType(
-                                        typeRecord.typeId,
-                                        editText.getText().toString().trim(),
-                                        longEditText.getText().toString().trim()
-                                );
-                            }
-                        }
-                    } catch (java.lang.ClassCastException e) {
+                        //вызываем в активности метод по удалению
+                        isDeleted = ((EditAbsentTypeDialogFragmentInterface) getActivity()).removeAbsentType(typeRecord.typeId);
+                    } catch (ClassCastException e) {
                         //в вызвающей активности должен быть имплементирован класс EditAbsentTypeDialogFragmentInterface
                         e.printStackTrace();
                         Log.e(
@@ -426,43 +292,117 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
                                 "EditAbsentTypeDialogFragment: you must implements EditAbsentTypeDialogFragmentInterface in your activity"
                         );
                     }
-                    // прячем клавиатуру
-                    try {
-                        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    } catch (java.lang.NullPointerException e) {
-                        e.printStackTrace();
-                        Log.e(
-                                "TeachersApp",
-                                "cannot hide keyboard"
-                        );
-                    }
 
-                    // перевыводим содержимое
-                    if (isChanged) {
-                        // меняем переменную в списке
-                        typeRecord.typeName = editText.getText().toString().trim();
-                        typeRecord.longName = longEditText.getText().toString().trim();
-
-                        // выводим неактивный
-                        outContentInTypeContainer(typeRecord, false);
+                    if (isDeleted) {
+                        // удаляем переменную в скролле
+                        listOut.removeView(typeRecord.typeContainer);
+                        // и в списке
+                        types.remove(typeRecord);
                     }
+                });
+            }
+
+
+            TextView saveText = new TextView(getActivity());
+            saveText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
+            saveText.setText(R.string.button_save);
+            saveText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_semibold));
+            saveText.setTextColor(getResources().getColor(R.color.backgroundWhite));
+            saveText.setGravity(Gravity.CENTER);
+            saveText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.simple_buttons_text_size));
+            saveText.setPadding(
+                    getResources().getDimensionPixelOffset(R.dimen.double_margin),
+                    getResources().getDimensionPixelOffset(R.dimen.double_margin),
+                    getResources().getDimensionPixelOffset(R.dimen.double_margin),
+                    getResources().getDimensionPixelOffset(R.dimen.double_margin)
+            );
+
+            LinearLayout.LayoutParams saveTextParams = new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+            buttonsContainer.addView(saveText, saveTextParams);
+            saveText.setOnClickListener(v -> {
+                // вызываем метод по сохранению названия
+                boolean isChanged = false;
+                try {
+                    // проверка на пустые поля
+                    if (longEditText.getText().toString().trim().length() == 0) {
+                        Toast.makeText(
+                                getActivity(),
+                                R.string.settings_activity_dialog_new_absent_type_toast_empty,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    } else if (editText.getText().toString().trim().length() == 0) {
+                        Toast.makeText(
+                                getActivity(),
+                                R.string.settings_activity_dialog_new_absent_type_toast_empty_short,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    } else {
+                        // если запись новая
+                        if (typeRecord.typeId == -1) {
+                            // создаем ее в бд
+                            typeRecord.typeId = ((EditAbsentTypeDialogFragmentInterface) getActivity()).createAbsentType(
+                                    editText.getText().toString().trim(),
+                                    longEditText.getText().toString().trim()
+                            );
+                            isChanged = true;
+                        } else {
+                            // изменяем существующую запись
+                            isChanged = ((EditAbsentTypeDialogFragmentInterface) getActivity()).editAbsentType(
+                                    typeRecord.typeId,
+                                    editText.getText().toString().trim(),
+                                    longEditText.getText().toString().trim()
+                            );
+                        }
+                    }
+                } catch (ClassCastException e) {
+                    //в вызвающей активности должен быть имплементирован класс EditAbsentTypeDialogFragmentInterface
+                    e.printStackTrace();
+                    Log.e(
+                            "TeachersApp",
+                            "EditAbsentTypeDialogFragment: you must implements EditAbsentTypeDialogFragmentInterface in your activity"
+                    );
+                }
+                // прячем клавиатуру
+                try {
+                    InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    Log.e(
+                            "TeachersApp",
+                            "cannot hide keyboard"
+                    );
+                }
+
+                // перевыводим содержимое
+                if (isChanged) {
+                    // меняем переменную в списке
+                    typeRecord.typeName = editText.getText().toString().trim();
+                    typeRecord.longName = longEditText.getText().toString().trim();
+
+                    // выводим неактивный
+                    outContentInTypeContainer(typeRecord, false);
                 }
             });
 
         } else {// если контейнер не активен выводим просто текст
 
+            // тавим стандартную высоту контейнера
+            typeRecord.typeContainer.getLayoutParams().height =
+                    getResources().getDimensionPixelSize(R.dimen.simple_buttons_height);
+
             // --- текстовое поле элемента ---
             TextView textView = new TextView(getActivity());
-            textView.setText(typeRecord.longName);
-            textView.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getActivity().getResources().getDimension(R.dimen.text_subtitle_size));
-            textView.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+            textView.setText(typeRecord.longName + ": " + typeRecord.typeName);
+            textView.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getActivity().getResources().getDimension(R.dimen.simple_buttons_text_size));
+            textView.setTextColor(Color.BLACK);
             textView.setGravity(Gravity.CENTER_VERTICAL);
             // параметры текста
             final LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    (int) getResources().getDimension(R.dimen.my_buttons_height_size),
+                    getResources().getDimensionPixelOffset(R.dimen.my_buttons_height_size),
                     1F
             );
             textViewParams.gravity = Gravity.CENTER_VERTICAL;
@@ -471,23 +411,20 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
             typeRecord.typeContainer.addView(textView, textViewParams);
 
             // --- при нажатии на контейнер ---
-            typeRecord.typeContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // закрываем все остальные контейнеры
-                    for (int typeI = 0; typeI < types.size(); typeI++) {
-                        if (types.get(typeI) != typeRecord) {
-                            if (types.get(typeI).typeId == -1) {// если запись новая, удаляем
-                                listOut.removeView(types.get(typeI).typeContainer);
-                                types.remove(typeI);
-                                typeI--;
-                            } else {// иначе выводим его не активным
-                                outContentInTypeContainer(types.get(typeI), false);
-                            }
-                        } else
-                            // выводим его активным
-                            outContentInTypeContainer(typeRecord, true);
-                    }
+            typeRecord.typeContainer.setOnClickListener(v -> {
+                // закрываем все остальные контейнеры
+                for (int typeI = 0; typeI < types.size(); typeI++) {
+                    if (types.get(typeI) != typeRecord) {
+                        if (types.get(typeI).typeId == -1) {// если запись новая, удаляем
+                            listOut.removeView(types.get(typeI).typeContainer);
+                            types.remove(typeI);
+                            typeI--;
+                        } else {// иначе выводим его не активным
+                            outContentInTypeContainer(types.get(typeI), false);
+                        }
+                    } else
+                        // выводим его активным
+                        outContentInTypeContainer(typeRecord, true);
                 }
             });
         }
@@ -495,7 +432,7 @@ public class EditAbsentTypesDialogFragment extends DialogFragment {
 
 
     // метод вывода содержимого нового не сохраненного элемента списка (с id = -1)
-    // при сохранении он сановится обычным элементом
+    // при сохранении он становится обычным элементом
     // если пользователь нажмет во вне контейнера, то запись стирается проверками в других методах (тк id = -1).
     void outNewContainer(final AbsentTypeRecord typeRecord) {
 

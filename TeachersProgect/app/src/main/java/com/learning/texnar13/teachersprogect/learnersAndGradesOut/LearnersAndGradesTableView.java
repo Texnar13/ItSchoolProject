@@ -30,14 +30,26 @@ import java.util.GregorianCalendar;
 
 public class LearnersAndGradesTableView extends View {
 
-    //final String TAG = "TeachersApp";
-
-    // кисть для отрисовки текста
-    private TextPaint drawTextPaint;
-    // кисть для отрисовки маленького текста
-    private TextPaint drawSmallTextPaint;
+    // кисть для отрисовки дней недели и индексов
+    private TextPaint drawPaintWeekDaysAndIndexes;
+    // кисть для отрисовки оценок (цвет меняется динамически)
+    private TextPaint drawPaintGrade;
+    // кисть для отрисовки имени(внизу клетки)
+    private TextPaint drawPaintName;
+    // кисть для отрисовки фамилии(вверху клетки) и дат
+    private TextPaint drawPaintSecondNameAndDate;
+    // кисть для отрисовки жирных дат
+    private TextPaint drawPaintFatDate;
+    // кисть для отрисовки предмета и месяца
+    private TextPaint drawPaintTitles;
     // кисть для отрисовки фона
     private Paint backgroundPaint;
+
+//    // кисть для отрисовки текста
+//    private TextPaint drawTextPaint;
+//    // кисть для отрисовки маленького текста
+//    private TextPaint drawSmallTextPaint;
+//
 
     // переменная разрешающая вывод графики
     private boolean canDraw = true;
@@ -59,6 +71,8 @@ public class LearnersAndGradesTableView extends View {
     private int textBottomMarginWeekDays;
     // высота кнопки добавить ученика под таблицей
     private int addLearnerButtonHeight;
+    // отступ кнопки добавить ученика от таблицы
+    private int addLearnerButtonTopMargin;// todo!!! область нажатия
 
     // ширина границы клеток в пикселях
     private int cellBorderSize;
@@ -142,25 +156,58 @@ public class LearnersAndGradesTableView extends View {
 
     private void myInit() {
 
-        // получаем имя для фио
-        //headName = getResources().getString(R.string.learners_and_grades_out_activity_title_table_names);
-        // текст кнопки добавить ученика
+        // получаем текст кнопки добавить ученика
         addLearnerButtonText = getResources().getString(R.string.learners_and_grades_out_activity_text_add_learner);
 
         // названия дней недели
         weekDaysNames = getResources().getStringArray(R.array.schedule_month_activity_week_days_short_array);
 
-        // --- кисть для текста ---
-        drawTextPaint = new TextPaint();
-        drawTextPaint.setTextSize(getResources().getDimension(R.dimen.text_simple_size));
-        // семейство шрифтов
-        drawTextPaint.setTypeface(ResourcesCompat.getFont(getContext(), R.font.geometria));
-        // сглаживание
-        drawTextPaint.setAntiAlias(true);
+
+        // --- кисть для отрисовки дней недели и индексов ---
+        drawPaintWeekDaysAndIndexes = new TextPaint();
+        drawPaintWeekDaysAndIndexes.setTextSize(getResources().getDimension(R.dimen.learners_and_grades_activity_index_text_size));
+        drawPaintWeekDaysAndIndexes.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_semibold));
+        drawPaintWeekDaysAndIndexes.setColor(Color.BLACK);
+        drawPaintWeekDaysAndIndexes.setAntiAlias(true);// сглаживание
+
+        // --- кисть для отрисовки оценок (цвет меняется динамически) ---
+        drawPaintGrade = new TextPaint();
+        drawPaintGrade.setTextSize(getResources().getDimension(R.dimen.learners_and_grades_activity_content_text_size));
+        drawPaintGrade.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_medium));
+        drawPaintGrade.setAntiAlias(true);// сглаживание
+
+        // --- кисть для отрисовки имени(внизу клетки) ---
+        drawPaintName = new TextPaint();
+        drawPaintName.setTextSize(getResources().getDimension(R.dimen.learners_and_grades_activity_content_text_size));
+        drawPaintName.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_medium));
+        drawPaintName.setColor(Color.BLACK);
+        drawPaintName.setAntiAlias(true);// сглаживание
+
+        // --- кисть для отрисовки фамилии(вверху клетки) и дат ---
+        drawPaintSecondNameAndDate = new TextPaint();
+        drawPaintSecondNameAndDate.setTextSize(getResources().getDimension(R.dimen.learners_and_grades_activity_content_text_size));
+        drawPaintSecondNameAndDate.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_semibold));
+        drawPaintSecondNameAndDate.setColor(Color.BLACK);
+        drawPaintSecondNameAndDate.setAntiAlias(true);// сглаживание
+
+        // --- кисть для отрисовки жирных дат ---
+        drawPaintFatDate = new TextPaint();
+        drawPaintFatDate.setTextSize(getResources().getDimension(R.dimen.learners_and_grades_activity_content_text_size));
+        drawPaintFatDate.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_bold));
+        drawPaintFatDate.setColor(Color.BLACK);
+        drawPaintFatDate.setAntiAlias(true);// сглаживание
+
+        // --- кисть для отрисовки предмета и месяца ---
+        drawPaintTitles = new TextPaint();
+        drawPaintTitles.setTextSize(getResources().getDimension(R.dimen.learners_and_grades_activity_subject_and_month_text_size));
+        drawPaintTitles.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_semibold));
+        drawPaintTitles.setColor(getResources().getColor(R.color.backgroundWhite));
+        drawPaintTitles.setAntiAlias(true);// сглаживание
+
 
         // - проставляем размеры -
         Rect rect = new Rect();
-        drawTextPaint.getTextBounds("8", 0, 1, rect);
+        drawPaintSecondNameAndDate.getTextBounds("8", 0, 1, rect);
 
         // высота текста заголовка
         headTextsHeight = rect.bottom - rect.top;
@@ -186,25 +233,20 @@ public class LearnersAndGradesTableView extends View {
         learnersAndGradesOffsetForTitle = dateCircleRadius * 2 + cellBorderSize * 4;
         // высота кнопки добавить ученика под таблицей
         addLearnerButtonHeight = cellMinimumHeight;
+        // отступ кнопки добавить ученика от таблицы
+        addLearnerButtonTopMargin = cellFreeSpaceMargin;
 
         // ширина текста "добавить ученика"
-        addLearnerTextWidth = (int) drawTextPaint.measureText(addLearnerButtonText);
+        addLearnerTextWidth = (int) drawPaintGrade.measureText(addLearnerButtonText);
 
-
-        // --- кисть для маленького текста ---
-        drawSmallTextPaint = new TextPaint();
-        drawSmallTextPaint.setTextSize(getResources().getDimension(R.dimen.text_sub_simple_size));
-        // семейство шрифтов
-        drawSmallTextPaint.setTypeface(ResourcesCompat.getFont(getContext(), R.font.geometria));
-        // сглаживание
-        drawSmallTextPaint.setAntiAlias(true);
 
         // - проставляем размеры -
-        drawSmallTextPaint.getTextBounds("88", 0, 2, rect);
+        drawPaintWeekDaysAndIndexes.getTextBounds("88", 0, 2, rect);
         // высота строки дни недели в шапке
-        titleWeekdaysHeight = rect.bottom - rect.top + cellBorderSize * 4;
+        titleWeekdaysHeight = (rect.bottom - rect.top + cellBorderSize * 4) * 2;
 
-        drawSmallTextPaint.getTextBounds("m", 0, 1, rect);
+        // считаем отступ снизу для дней недели
+        drawPaintWeekDaysAndIndexes.getTextBounds("m", 0, 1, rect);
         textBottomMarginWeekDays = (int) (titleWeekdaysHeight / 2f - (rect.bottom - rect.top) / 2f);
 
         // --- кисть для фона ---
@@ -336,14 +378,14 @@ public class LearnersAndGradesTableView extends View {
             float cellHeight;
             float cellWidth;
 
-            {
-                // считываем размеры текста
+            {// считываем размеры клетки с именем и фамилией ученика
+                // фамилия
                 Rect tempRect = new Rect();
-                drawTextPaint.getTextBounds(data[learnerI].surname, 0, data[learnerI].surname.length(), tempRect);
+                drawPaintSecondNameAndDate.getTextBounds(data[learnerI].surname, 0, data[learnerI].surname.length(), tempRect);
                 float learnerSurnameWidth = tempRect.left + tempRect.right;
                 float learnerSurnameHeight = tempRect.bottom - tempRect.top;
-
-                drawSmallTextPaint.getTextBounds(data[learnerI].name, 0, data[learnerI].name.length(), tempRect);
+                // имя
+                drawPaintName.getTextBounds(data[learnerI].name, 0, data[learnerI].name.length(), tempRect);
                 float learnerNameWidth = tempRect.left + tempRect.right;
                 float learnerNameHeight = tempRect.bottom - tempRect.top;
 
@@ -504,7 +546,7 @@ public class LearnersAndGradesTableView extends View {
 
                                 // расчитываем отступы всех трех оценок
                                 leftMargins[0] = cellFreeSpaceMargin;
-                                tempTextWidth = (int) drawTextPaint.measureText(
+                                tempTextWidth = (int) drawPaintGrade.measureText(
                                         absTypes[currentGrades.absTypePoz].absTypeName
                                 );
 
@@ -543,7 +585,7 @@ public class LearnersAndGradesTableView extends View {
                                     // считаем ширину оценки для отступа следующей
                                     if (currentGrades.grades[gradesI] > 0) {
                                         // если это не нулевой балл
-                                        tempTextWidth = (int) drawTextPaint.measureText(
+                                        tempTextWidth = (int) drawPaintGrade.measureText(
                                                 Integer.toString(currentGrades.grades[gradesI]));
                                     } else {
                                         tempTextWidth = 0;
@@ -610,9 +652,9 @@ public class LearnersAndGradesTableView extends View {
     }
 
     // - строки для промежуточных расчетов -
-    private RectF headEllipseRect = new RectF();
+    private final RectF headEllipseRect = new RectF();
 
-    private Rect smallTextTempRect = new Rect();
+    private final Rect smallTextTempRect = new Rect();
 
 
     // отрисовка вызываемая через invalidate();
@@ -621,9 +663,6 @@ public class LearnersAndGradesTableView extends View {
 
         // переменная запрещающая вывод графики
         if (canDraw && learnersDataAndSizes != null) {
-
-            //if (learnersGrades != null) {-----------
-
 
             // при выполненных расчетах проверяем смещение
             checkOffset();
@@ -646,7 +685,7 @@ public class LearnersAndGradesTableView extends View {
 
             // --- расчитываемое смещение клеток ---
             int currentGradesCellOffsetX = learnersShowedWidth + gradesXOffset;
-            int currentCellOffsetY = learnersAndGradesOffsetForTitle + learnersAndGradesYOffset + titleWeekdaysHeight * 2;
+            int currentCellOffsetY = learnersAndGradesOffsetForTitle + learnersAndGradesYOffset + titleWeekdaysHeight;
 
             // определяем с какого ученика начать чтобы не выводить лишнее
             int startLearner = 0;
@@ -664,8 +703,6 @@ public class LearnersAndGradesTableView extends View {
             // ----- определяем с какого дня начать чтобы не выводить лишнее -----
             int startDay = 0;
             int startLesson = 0;
-
-
             if (learnersGrades.length > 0)
                 while ((startDay < learnersGrades[0].length - 1)) {
                     if ((startLesson >= learnersGrades[0][startDay].length - 1))
@@ -691,18 +728,23 @@ public class LearnersAndGradesTableView extends View {
             int startX = currentGradesCellOffsetX;
 
             // пробегаемся по ученикам                                    смотрим не выходит ли ученик за границы экрана
-            for (int learnerI = startLearner; learnerI < learnersDataAndSizes.length && (currentCellOffsetY) <= viewHeight; learnerI++) {
+            for (int learnerI = startLearner; learnerI < learnersDataAndSizes.length &&
+                    (currentCellOffsetY) <= viewHeight; learnerI++) {
 
                 currentGradesCellOffsetX = startX;
 
                 // ----- пробегаемся по дням -----                                         // и что клетки не выходят за границы экрана (иначе их бессмысленно выводить)
-                for (int dayIterator = startDay; dayIterator < learnersGrades[learnerI].length && currentGradesCellOffsetX <= viewWidth; dayIterator++) {
+                for (int dayIterator = startDay; dayIterator < learnersGrades[learnerI].length &&
+                        currentGradesCellOffsetX <= viewWidth; dayIterator++) {
 
                     // пробегаемся по урокам в дне
-                    for (int lessonIterator = 0; lessonIterator < learnersGrades[learnerI][dayIterator].length && currentGradesCellOffsetX <= viewWidth; lessonIterator++) {
+                    for (int lessonIterator = 0; lessonIterator < learnersGrades[learnerI][dayIterator].length
+                            && currentGradesCellOffsetX <= viewWidth; lessonIterator++) {
 
                         // рисуем рамку
-                        backgroundPaint.setColor(getResources().getColor(R.color.backgroundLiteGray));
+                        backgroundPaint.setColor(getResources().getColor((learnerI % 2 == 0) ?
+                                R.color.backgroundWhite : R.color.backgroundDarkWhite
+                        ));
                         canvas.drawRect(
                                 currentGradesCellOffsetX,
                                 currentCellOffsetY,
@@ -715,9 +757,10 @@ public class LearnersAndGradesTableView extends View {
                         // проверяем не нажата ли ячейка
                         if (learnerI == chosenCellPoz[0] && dayIterator == chosenCellPoz[1] && lessonIterator == chosenCellPoz[2]) {
                             backgroundPaint.setColor(getResources().getColor(R.color.baseBlue));
-                        } else {
-                            backgroundPaint.setColor(getResources().getColor(R.color.backgroundWhite));
-                        }
+                        } else
+                            backgroundPaint.setColor(getResources().getColor((learnerI % 2 == 1) ?
+                                    R.color.backgroundWhite : R.color.backgroundDarkWhite
+                            ));
                         canvas.drawRect(
                                 currentGradesCellOffsetX,
                                 currentCellOffsetY,
@@ -733,18 +776,18 @@ public class LearnersAndGradesTableView extends View {
 
                             // выбираем цвет текста, проверяя не нажата ли ячейка
                             if (learnerI == chosenCellPoz[0] && dayIterator == chosenCellPoz[1] && lessonIterator == chosenCellPoz[2]) {
-                                drawTextPaint.setColor(Color.WHITE);
+                                drawPaintGrade.setColor(Color.WHITE);
                             } else {
-                                drawTextPaint.setColor(Color.BLACK);
+                                drawPaintGrade.setColor(Color.BLACK);
                             }
 
                             // ---- выводим текст ----
                             canvas.drawText(
                                     absTypes[learnersGrades[learnerI][dayIterator][lessonIterator].absTypePoz].absTypeName,
                                     currentGradesCellOffsetX + learnersGrades[learnerI][dayIterator][lessonIterator].leftTextMargins[0],
-                                    currentCellOffsetY + learnersGrades[learnerI][dayIterator][lessonIterator].cellHeight
+                                    currentCellOffsetY + learnersGrades[learnerI][dayIterator][lessonIterator].cellHeight - cellBorderSize
                                             - learnersGrades[learnerI][dayIterator][lessonIterator].bottomTextMargin,
-                                    drawTextPaint
+                                    drawPaintGrade
                             );
 
                         } else {// если пропуска нет
@@ -755,40 +798,32 @@ public class LearnersAndGradesTableView extends View {
                                     // ------ если это не нулевой балл ------
 
                                     // ---- выбираем цвет текста  ----
-                                    if (maxAnswersCount == -1) {
-                                        drawTextPaint.setColor(getResources().getColor(R.color.backgroundDarkGray));
-                                    } else
-                                        //1
-                                        if ((int) (((float) learnersGrades[learnerI][dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 20) {
-                                            drawTextPaint.setColor(getResources().getColor(R.color.grade1));
-                                        } else
-                                            //2
-                                            if ((int) (((float) learnersGrades[learnerI][dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 41) {
-                                                drawTextPaint.setColor(getResources().getColor(R.color.grade2));
-                                            } else
-                                                //3
-                                                if ((int) (((float) learnersGrades[learnerI][dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 60) {
-                                                    drawTextPaint.setColor(getResources().getColor(R.color.grade3));
-                                                } else
-                                                    //4
-                                                    if ((int) (((float) learnersGrades[learnerI][dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 80) {
-                                                        drawTextPaint.setColor(getResources().getColor(R.color.grade4));
-                                                    } else
-                                                        //5
-                                                        if ((int) (((float) learnersGrades[learnerI][dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100) <= 100) {
-                                                            drawTextPaint.setColor(getResources().getColor(R.color.grade5));
-                                                        } else
-                                                            // > 5
-                                                            if ((int) (((float) learnersGrades[learnerI][dayIterator][lessonIterator].grades[gradeI] / (float) maxAnswersCount) * 100F) > 100) {
-                                                                drawTextPaint.setColor(Color.DKGRAY);
-                                                            }
+                                    int gradeColor = getResources().getColor(R.color.backgroundDarkGray);// это цвет любых значений вне пределов, а также Н
+                                    if (maxAnswersCount != -1) {
+                                        int percentGrade = (int) (
+                                                learnersGrades[learnerI][dayIterator][lessonIterator].grades[gradeI] * 100F / maxAnswersCount);
+
+                                        if (percentGrade <= 20) {// 1
+                                            gradeColor = getResources().getColor(R.color.grade1);
+                                        } else if (percentGrade <= 41) {// 2
+                                            gradeColor = getResources().getColor(R.color.grade2);
+                                        } else if (percentGrade <= 60) {// 3
+                                            gradeColor = getResources().getColor(R.color.grade3);
+                                        } else if (percentGrade <= 80) {// 4
+                                            gradeColor = getResources().getColor(R.color.grade4);
+                                        } else if (percentGrade <= 100) {// 5
+                                            gradeColor = getResources().getColor(R.color.grade5);
+                                        }
+                                    }
+                                    drawPaintGrade.setColor(gradeColor);
+
                                     // ---- выводим текст ----
                                     canvas.drawText(
                                             Integer.toString(learnersGrades[learnerI][dayIterator][lessonIterator].grades[gradeI]),
                                             currentGradesCellOffsetX + learnersGrades[learnerI][dayIterator][lessonIterator].leftTextMargins[gradeI],
                                             currentCellOffsetY + learnersGrades[learnerI][dayIterator][lessonIterator].cellHeight
                                                     - learnersGrades[learnerI][dayIterator][lessonIterator].bottomTextMargin,
-                                            drawTextPaint
+                                            drawPaintGrade
                                     );
 
                                 }
@@ -803,7 +838,10 @@ public class LearnersAndGradesTableView extends View {
 
                 // -------- выводим текущего ученика --------
                 // рисуем рамку ученика
-                backgroundPaint.setColor(getResources().getColor(R.color.backgroundLiteGray));
+
+                backgroundPaint.setColor(getResources().getColor((learnerI % 2 == 0) ?
+                        R.color.backgroundWhite : R.color.backgroundDarkWhite
+                ));
                 canvas.drawRect(
                         learnersXOffset,
                         currentCellOffsetY,
@@ -813,7 +851,10 @@ public class LearnersAndGradesTableView extends View {
                 );
 
                 // рисуем фон ученика
-                backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
+
+                backgroundPaint.setColor(getResources().getColor((learnerI % 2 == 1) ?
+                        R.color.backgroundWhite : R.color.backgroundDarkWhite
+                ));
                 canvas.drawRect(
                         learnersXOffset + cellBorderSize,
                         currentCellOffsetY,
@@ -833,24 +874,22 @@ public class LearnersAndGradesTableView extends View {
                 // и пишем его текст
 
                 // фамилия
-                drawTextPaint.setColor(Color.BLACK);
-                drawTextPaint.getTextBounds(learnersDataAndSizes[learnerI].surname, 0, learnersDataAndSizes[learnerI].surname.length(), smallTextTempRect);
+                drawPaintSecondNameAndDate.getTextBounds(learnersDataAndSizes[learnerI].surname, 0, learnersDataAndSizes[learnerI].surname.length(), smallTextTempRect);
 
                 canvas.drawText(
                         learnersDataAndSizes[learnerI].surname,
                         learnersLeftTextMargin + learnersXOffset,
                         currentCellOffsetY - cellBorderSize * 2 + (learnersDataAndSizes[learnerI].cellHeight - cellBorderSize) / 2F,
-                        drawTextPaint
+                        drawPaintSecondNameAndDate
                 );
                 // имя
-                drawSmallTextPaint.setColor(Color.BLACK);
-                drawSmallTextPaint.getTextBounds(learnersDataAndSizes[learnerI].name, 0, learnersDataAndSizes[learnerI].name.length(), smallTextTempRect);
+                drawPaintName.getTextBounds(learnersDataAndSizes[learnerI].name, 0, learnersDataAndSizes[learnerI].name.length(), smallTextTempRect);
                 int nameHeight = smallTextTempRect.bottom - smallTextTempRect.top;
                 canvas.drawText(
                         learnersDataAndSizes[learnerI].name,
                         learnersLeftTextMargin + learnersXOffset,
                         currentCellOffsetY + cellBorderSize * 2 + (learnersDataAndSizes[learnerI].cellHeight - cellBorderSize) / 2F + nameHeight,
-                        drawSmallTextPaint
+                        drawPaintName
                 );
                 // убираем clip-область
                 canvas.restore();
@@ -862,23 +901,33 @@ public class LearnersAndGradesTableView extends View {
 
 
             // выводим кнопку добавить ученика
-            drawTextPaint.setColor(Color.BLACK);
-            drawTextPaint.setUnderlineText(true);
+
+            drawPaintGrade.setUnderlineText(true);
+            drawPaintGrade.setColor(Color.BLACK);
             if (learnersDataAndSizes.length != 0) {
+//                // ее фон
+//                backgroundPaint.setColor(getResources().getColor(R.color.baseOrange));
+//                headEllipseRect.set(viewWidth / 2F - addLearnerTextWidth / 2F,
+//                        currentCellOffsetY + headTextsHeight / 2F+addLearnerButtonTopMargin,
+//                        viewWidth / 2F + addLearnerTextWidth / 2F,
+//                        currentCellOffsetY  + headTextsHeight / 2F + addLearnerButtonHeight + addLearnerButtonTopMargin);
+//                canvas.drawRoundRect(headEllipseRect, 50, 50, backgroundPaint);//hhjghj
+
+                // ее текст
                 canvas.drawText(
                         addLearnerButtonText,
                         viewWidth / 2F - addLearnerTextWidth / 2F,
                         currentCellOffsetY + addLearnerButtonHeight / 2F + headTextsHeight / 2F,
-                        drawTextPaint
+                        drawPaintGrade
                 );
             } else
                 canvas.drawText(
                         addLearnerButtonText,
                         viewWidth / 2F - addLearnerTextWidth / 2F,
                         addLearnerButtonHeight / 2F + headTextsHeight / 2F + learnersAndGradesOffsetForTitle,
-                        drawTextPaint
+                        drawPaintGrade
                 );
-            drawTextPaint.setUnderlineText(false);
+            drawPaintGrade.setUnderlineText(false);
 
 
             // =================================== выводим шапку ===================================
@@ -888,19 +937,20 @@ public class LearnersAndGradesTableView extends View {
                 // смещение текущего дня по ширине
                 int currentHeadCellOffsetX = learnersShowedWidth + gradesXOffset;
                 // не выводим дни которые находятся за предеами экрана
-                for (int dayIterator = 0; dayIterator < learnersGrades[0].length && currentHeadCellOffsetX <= viewWidth; dayIterator++) {
+                for (int dayIterator = 0; dayIterator < learnersGrades[0].length &&
+                        currentHeadCellOffsetX <= viewWidth; dayIterator++) {
 
 
                     // один урок без украшательств
                     if (learnersGrades[0][dayIterator].length == 1) {
 
                         // рисуем фон
-                        backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
+                        backgroundPaint.setColor(getResources().getColor(R.color.backgroundWhite));
                         canvas.drawRect(
                                 currentHeadCellOffsetX,
-                                titleWeekdaysHeight * 2,
+                                titleWeekdaysHeight,
                                 currentHeadCellOffsetX + learnersGrades[0][dayIterator][0].cellWidth,
-                                learnersAndGradesOffsetForTitle + titleWeekdaysHeight * 2,
+                                learnersAndGradesOffsetForTitle + titleWeekdaysHeight,
                                 backgroundPaint
                         );
 
@@ -911,43 +961,37 @@ public class LearnersAndGradesTableView extends View {
                             backgroundPaint.setColor(getResources().getColor(R.color.baseBlue));
                             canvas.drawCircle(
                                     currentHeadCellOffsetX + learnersGrades[0][dayIterator][0].cellWidth / 2F,
-                                    learnersAndGradesOffsetForTitle / 2F + titleWeekdaysHeight * 2,
+                                    learnersAndGradesOffsetForTitle / 2F + titleWeekdaysHeight,
                                     dateCircleRadius - cellBorderSize * 2,
                                     backgroundPaint
                             );
                         }
 
                         // считаем размеры текста даты
-                        int dateTextWidth = (int) drawTextPaint.measureText(Integer.toString((dayIterator + 1)));
+                        int dateTextWidth = (int) drawPaintSecondNameAndDate.measureText(Integer.toString((dayIterator + 1)));
 
 
                         // есть ли на этой дате урок
                         if (isLesson[dayIterator][learnersGrades[0][dayIterator][0].lessonNumber]) {
-                            drawTextPaint.setTypeface(ResourcesCompat.getFont(getContext(), R.font.geometria_bold));
-
                             // рисуем текст даты
-                            drawTextPaint.setColor(Color.BLACK);
                             canvas.drawText(Integer.toString(dayIterator + 1),
                                     currentHeadCellOffsetX + learnersGrades[0][dayIterator][0].cellWidth / 2F - dateTextWidth / 2F,
-                                    learnersAndGradesOffsetForTitle / 2F + headTextsHeight / 2F + titleWeekdaysHeight * 2,
-                                    drawTextPaint
+                                    learnersAndGradesOffsetForTitle / 2F + headTextsHeight / 2F + titleWeekdaysHeight,
+                                    drawPaintFatDate
                             );
 
                             // рисуем маленький номер урока
                             canvas.drawText(Integer.toString(learnersGrades[0][dayIterator][0].lessonNumber + 1),
                                     currentHeadCellOffsetX + learnersGrades[0][dayIterator][0].cellWidth / 2F + dateTextWidth / 2F,
-                                    learnersAndGradesOffsetForTitle / 2F - headTextsHeight / 2F + titleWeekdaysHeight * 2,
-                                    drawSmallTextPaint
+                                    learnersAndGradesOffsetForTitle / 2F - headTextsHeight / 2F + titleWeekdaysHeight,
+                                    drawPaintWeekDaysAndIndexes
                             );
-
-                            drawTextPaint.setTypeface(ResourcesCompat.getFont(getContext(), R.font.geometria));
                         } else {
                             // рисуем текст даты
-                            drawTextPaint.setColor(Color.BLACK);
                             canvas.drawText(Integer.toString(dayIterator + 1),
                                     currentHeadCellOffsetX + learnersGrades[0][dayIterator][0].cellWidth / 2F - dateTextWidth / 2F,
-                                    learnersAndGradesOffsetForTitle / 2F + headTextsHeight / 2F + titleWeekdaysHeight * 2,
-                                    drawTextPaint
+                                    learnersAndGradesOffsetForTitle / 2F + headTextsHeight / 2F + titleWeekdaysHeight,
+                                    drawPaintSecondNameAndDate
                             );
 
                             // самый простой первый урок
@@ -955,8 +999,8 @@ public class LearnersAndGradesTableView extends View {
                                 // рисуем маленький номер урока
                                 canvas.drawText(Integer.toString(learnersGrades[0][dayIterator][0].lessonNumber + 1),
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][0].cellWidth / 2F + dateTextWidth / 2F,
-                                        learnersAndGradesOffsetForTitle / 2F - headTextsHeight / 2F + titleWeekdaysHeight * 2,
-                                        drawSmallTextPaint
+                                        learnersAndGradesOffsetForTitle / 2F - headTextsHeight / 2F + titleWeekdaysHeight,
+                                        drawPaintWeekDaysAndIndexes
                                 );
                             }
                         }
@@ -972,12 +1016,12 @@ public class LearnersAndGradesTableView extends View {
                         );
 
                         // фон дня недели
-                        backgroundPaint.setColor(getResources().getColor(R.color.backgroundLiteGray));
+                        backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
                         canvas.drawRect(
                                 currentHeadCellOffsetX,
-                                titleWeekdaysHeight,
+                                0,
                                 currentHeadCellOffsetX + learnersGrades[0][dayIterator][0].cellWidth,
-                                titleWeekdaysHeight * 2,
+                                titleWeekdaysHeight,
                                 backgroundPaint
                         );
                         // день недели
@@ -986,11 +1030,11 @@ public class LearnersAndGradesTableView extends View {
                             // получаем сам текст
                             String dateText = weekDaysNames[(firstMonthDayOfWeek + dayIterator) % 7];
                             // ширина маленького текста
-                            drawSmallTextPaint.getTextBounds(dateText, 0, dateText.length(), smallTextTempRect);
+                            drawPaintWeekDaysAndIndexes.getTextBounds(dateText, 0, dateText.length(), smallTextTempRect);
                             canvas.drawText(dateText,
                                     currentHeadCellOffsetX + learnersGrades[0][dayIterator][0].cellWidth / 2F - (smallTextTempRect.left + smallTextTempRect.right) / 2F,
-                                    titleWeekdaysHeight * 2f - textBottomMarginWeekDays,
-                                    drawSmallTextPaint
+                                    titleWeekdaysHeight - textBottomMarginWeekDays,
+                                    drawPaintWeekDaysAndIndexes
                             );
                         }
 
@@ -1004,12 +1048,12 @@ public class LearnersAndGradesTableView extends View {
 
 
                             // рисуем фон
-                            backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
+                            backgroundPaint.setColor(getResources().getColor(R.color.backgroundWhite));
                             canvas.drawRect(
                                     currentHeadCellOffsetX,
-                                    titleWeekdaysHeight * 2,
+                                    titleWeekdaysHeight,
                                     currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth,
-                                    learnersAndGradesOffsetForTitle + titleWeekdaysHeight * 2,
+                                    learnersAndGradesOffsetForTitle + titleWeekdaysHeight,
                                     backgroundPaint
                             );
 
@@ -1018,56 +1062,56 @@ public class LearnersAndGradesTableView extends View {
                             // начальный полукруг и прямоугольник
                             if (lessonI == 0) {
                                 // рисуем полукруг
-                                backgroundPaint.setColor(getResources().getColor(R.color.backgroundLiteGray));
+                                backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
                                 headEllipseRect.set(
                                         currentHeadCellOffsetX +
                                                 learnersGrades[0][dayIterator][lessonI].cellWidth / 2F - dateCircleRadius + cellBorderSize / 2F,
-                                        learnersAndGradesOffsetForTitle / 2F - dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight * 2,
+                                        learnersAndGradesOffsetForTitle / 2F - dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight,
                                         currentHeadCellOffsetX +
                                                 learnersGrades[0][dayIterator][lessonI].cellWidth / 2F + dateCircleRadius - cellBorderSize / 2F,
-                                        learnersAndGradesOffsetForTitle / 2F + dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight * 2
+                                        learnersAndGradesOffsetForTitle / 2F + dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight
                                 );
                                 canvas.drawArc(headEllipseRect, 90, 180, false, backgroundPaint);
                                 backgroundPaint.setStyle(Paint.Style.FILL);
 
                                 // рисуем прямоугольник
-                                backgroundPaint.setColor(getResources().getColor(R.color.backgroundLiteGray));
+                                backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
                                 canvas.drawRect(
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F,
-                                        learnersAndGradesOffsetForTitle / 2F - dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight * 2,
+                                        learnersAndGradesOffsetForTitle / 2F - dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight,
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth,
-                                        learnersAndGradesOffsetForTitle / 2F + dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight * 2,
+                                        learnersAndGradesOffsetForTitle / 2F + dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight,
                                         backgroundPaint
                                 );
                             } else if (lessonI == learnersGrades[0][dayIterator].length - 1) {// окончание и прямоугольник
                                 // рисуем прямоугольник
-                                backgroundPaint.setColor(getResources().getColor(R.color.backgroundLiteGray));
+                                backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
                                 canvas.drawRect(
                                         currentHeadCellOffsetX,
-                                        learnersAndGradesOffsetForTitle / 2F - dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight * 2,
+                                        learnersAndGradesOffsetForTitle / 2F - dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight,
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F,
-                                        learnersAndGradesOffsetForTitle / 2F + dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight * 2,
+                                        learnersAndGradesOffsetForTitle / 2F + dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight,
                                         backgroundPaint
                                 );
 
                                 // рисуем полукруг
                                 headEllipseRect.set(
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F - dateCircleRadius + cellBorderSize / 2F,
-                                        learnersAndGradesOffsetForTitle / 2F - dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight * 2,
+                                        learnersAndGradesOffsetForTitle / 2F - dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight,
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F + dateCircleRadius - cellBorderSize / 2F,
-                                        learnersAndGradesOffsetForTitle / 2F + dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight * 2
+                                        learnersAndGradesOffsetForTitle / 2F + dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight
                                 );
                                 canvas.drawArc(headEllipseRect, -90, 180, false, backgroundPaint);
                                 backgroundPaint.setStyle(Paint.Style.FILL);
 
                             } else {// урок посередине
                                 // рисуем прямоугольник
-                                backgroundPaint.setColor(getResources().getColor(R.color.backgroundLiteGray));
+                                backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
                                 canvas.drawRect(
                                         currentHeadCellOffsetX,
-                                        learnersAndGradesOffsetForTitle / 2F - dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight * 2,
+                                        learnersAndGradesOffsetForTitle / 2F - dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight,
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth,
-                                        learnersAndGradesOffsetForTitle / 2F + dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight * 2,
+                                        learnersAndGradesOffsetForTitle / 2F + dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight,
                                         backgroundPaint
                                 );
                             }
@@ -1079,69 +1123,59 @@ public class LearnersAndGradesTableView extends View {
                                 backgroundPaint.setColor(getResources().getColor(R.color.baseBlue));
                                 canvas.drawCircle(
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F,
-                                        learnersAndGradesOffsetForTitle / 2F + titleWeekdaysHeight * 2,
+                                        learnersAndGradesOffsetForTitle / 2F + titleWeekdaysHeight,
                                         dateCircleRadius - cellBorderSize * 2,
                                         backgroundPaint
                                 );
                             }
 
                             // считаем размеры текста даты
-                            int dateTextWidth = (int) drawTextPaint.measureText(Integer.toString((dayIterator + 1)));
+                            int dateTextWidth = (int) drawPaintSecondNameAndDate.measureText(Integer.toString((dayIterator + 1)));
 
                             // есть ли на этой дате урок
                             if (isLesson[dayIterator][learnersGrades[0][dayIterator][lessonI].lessonNumber]) {
-                                drawTextPaint.setTypeface(ResourcesCompat.getFont(getContext(), R.font.geometria_bold));
-
                                 // рисуем текст даты
-                                drawTextPaint.setColor(Color.BLACK);
                                 canvas.drawText(Integer.toString(dayIterator + 1),
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F - dateTextWidth / 2F,
-                                        learnersAndGradesOffsetForTitle / 2F + headTextsHeight / 2F + titleWeekdaysHeight * 2,
-                                        drawTextPaint
+                                        learnersAndGradesOffsetForTitle / 2F + headTextsHeight / 2F + titleWeekdaysHeight,
+                                        drawPaintFatDate
                                 );
 
                                 // рисуем маленький номер урока
                                 canvas.drawText(Integer.toString(learnersGrades[0][dayIterator][lessonI].lessonNumber + 1),
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F + dateTextWidth / 2F,
-                                        learnersAndGradesOffsetForTitle / 2F - headTextsHeight / 2F + titleWeekdaysHeight * 2,
-                                        drawSmallTextPaint
+                                        learnersAndGradesOffsetForTitle / 2F - headTextsHeight / 2F + titleWeekdaysHeight,
+                                        drawPaintWeekDaysAndIndexes
                                 );
-
-                                drawTextPaint.setTypeface(ResourcesCompat.getFont(getContext(), R.font.geometria));
                             } else {
                                 // рисуем текст даты
-                                drawTextPaint.setColor(Color.BLACK);
                                 canvas.drawText(Integer.toString(dayIterator + 1),
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F - dateTextWidth / 2F,
-                                        learnersAndGradesOffsetForTitle / 2F + headTextsHeight / 2F + titleWeekdaysHeight * 2,
-                                        drawTextPaint
+                                        learnersAndGradesOffsetForTitle / 2F + headTextsHeight / 2F + titleWeekdaysHeight,
+                                        drawPaintSecondNameAndDate
                                 );
 
                                 // рисуем маленький номер урока
                                 canvas.drawText(Integer.toString(learnersGrades[0][dayIterator][lessonI].lessonNumber + 1),
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F + dateTextWidth / 2F,
-                                        learnersAndGradesOffsetForTitle / 2F - headTextsHeight / 2F + titleWeekdaysHeight * 2,
-                                        drawSmallTextPaint
+                                        learnersAndGradesOffsetForTitle / 2F - headTextsHeight / 2F + titleWeekdaysHeight,
+                                        drawPaintWeekDaysAndIndexes
                                 );
                             }
 
                             // рисуем фон полоски месяца
                             backgroundPaint.setColor(getResources().getColor(R.color.backgroundWhite));
+                            canvas.drawRect(currentHeadCellOffsetX, 0, currentHeadCellOffsetX +
+                                            learnersGrades[0][dayIterator][lessonI].cellWidth,
+                                    titleWeekdaysHeight, backgroundPaint);
+
+                            // фон дня недели
+                            backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
                             canvas.drawRect(
                                     currentHeadCellOffsetX,
                                     0,
                                     currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth,
                                     titleWeekdaysHeight,
-                                    backgroundPaint
-                            );
-
-                            // фон дня недели
-                            backgroundPaint.setColor(getResources().getColor(R.color.backgroundLiteGray));
-                            canvas.drawRect(
-                                    currentHeadCellOffsetX,
-                                    titleWeekdaysHeight,
-                                    currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth,
-                                    titleWeekdaysHeight * 2,
                                     backgroundPaint
                             );
                             // день недели
@@ -1150,11 +1184,11 @@ public class LearnersAndGradesTableView extends View {
                                 String dateText = weekDaysNames[(firstMonthDayOfWeek + dayIterator) % 7];
 
                                 // ширина маленького текста
-                                drawSmallTextPaint.getTextBounds(dateText, 0, dateText.length(), smallTextTempRect);
+                                drawPaintWeekDaysAndIndexes.getTextBounds(dateText, 0, dateText.length(), smallTextTempRect);
                                 canvas.drawText(dateText,
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F - (smallTextTempRect.left + smallTextTempRect.right) / 2F,
-                                        titleWeekdaysHeight * 2f - textBottomMarginWeekDays,
-                                        drawSmallTextPaint
+                                        titleWeekdaysHeight - textBottomMarginWeekDays,
+                                        drawPaintWeekDaysAndIndexes
                                 );
                             }
 
@@ -1164,37 +1198,36 @@ public class LearnersAndGradesTableView extends View {
                     }
                 }
 
-                // рисуем текст месяца
-                // ширина текста
-                drawSmallTextPaint.getTextBounds(currentDateTitle, 0, currentDateTitle.length(), smallTextTempRect);
-                canvas.drawText(currentDateTitle,
-                        learnersShowedWidth + gradesXOffset + cellBorderSize,
-                        titleWeekdaysHeight / 2f - smallTextTempRect.top / 2F,
-                        drawSmallTextPaint
-                );
+//                // рисуем текст месяца
+//                // ширина текста
+//                drawSmallTextPaint.getTextBounds(currentDateTitle, 0, currentDateTitle.length(), smallTextTempRect);
+//                canvas.drawText(currentDateTitle,
+//                        learnersShowedWidth + gradesXOffset + cellBorderSize,
+//                        titleWeekdaysHeight / 2f - smallTextTempRect.top / 2F,
+//                        drawSmallTextPaint
+//                );
 
 
                 // ----- уголок в заголовке -----
                 if (isSubjectAndDateInTable) {
-                    float headSize = (learnersAndGradesOffsetForTitle + titleWeekdaysHeight * 2);
+                    float headSize = (learnersAndGradesOffsetForTitle + titleWeekdaysHeight);
 
                     // рисуем фон
                     backgroundPaint.setColor(getResources().getColor(R.color.baseBlue));
-                    canvas.drawRect(0, 0, learnersShowedWidth, learnersAndGradesOffsetForTitle + titleWeekdaysHeight * 2, backgroundPaint);
+                    canvas.drawRect(0, 0, learnersShowedWidth, learnersAndGradesOffsetForTitle + titleWeekdaysHeight, backgroundPaint);
 
                     // рисуем текст предмета
-                    drawTextPaint.setColor(getResources().getColor(R.color.backgroundWhite));
                     String shortSubjectText = TextUtils.ellipsize(
-                            (CharSequence) currentSubjectTitle,
-                            drawTextPaint,
+                            currentSubjectTitle,
+                            drawPaintTitles,
                             learnersShowedWidth - learnersLeftTextMargin,
                             TextUtils.TruncateAt.END
                     ).toString();
                     canvas.drawText(
                             shortSubjectText,
-                            (learnersShowedWidth - drawTextPaint.measureText(shortSubjectText)) / 2F,
+                            (learnersShowedWidth - drawPaintTitles.measureText(shortSubjectText)) / 2F,
                             headSize / 4F + headTextsHeight / 2F,
-                            drawTextPaint
+                            drawPaintTitles
                     );
 
                     int imageSize = (int) (headSize / 2f * 0.66);
@@ -1228,20 +1261,26 @@ public class LearnersAndGradesTableView extends View {
 
                     // рисуем текст даты
                     String shortDateText = TextUtils.ellipsize(
-                            (CharSequence) currentDateTitle,
-                            drawTextPaint,
+                            currentDateTitle,
+                            drawPaintTitles,
                             learnersShowedWidth - headSize - learnersLeftTextMargin * 2,
                             TextUtils.TruncateAt.END
                     ).toString();
                     canvas.drawText(shortDateText,
-                            (learnersShowedWidth - drawTextPaint.measureText(shortDateText)) / 2F,
+                            (learnersShowedWidth - drawPaintTitles.measureText(shortDateText)) / 2F,
                             headSize * 0.75F + headTextsHeight / 2F,
-                            drawTextPaint
+                            drawPaintTitles
                     );
-
                 } else {
-                    backgroundPaint.setColor(getResources().getColor(R.color.backgroundLiteGray));
-                    canvas.drawRect(0, 0, learnersShowedWidth, learnersAndGradesOffsetForTitle + titleWeekdaysHeight * 2, backgroundPaint);
+                    // если уголок серый
+                    // рамка уголка
+                    backgroundPaint.setColor(getResources().getColor(R.color.backgroundWhite));
+                    canvas.drawRect(0, 0, learnersShowedWidth, learnersAndGradesOffsetForTitle +
+                            titleWeekdaysHeight, backgroundPaint);
+                    // фон уголка
+                    backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
+                    canvas.drawRect(0, 0, learnersShowedWidth - cellBorderSize,
+                            learnersAndGradesOffsetForTitle + titleWeekdaysHeight - cellBorderSize, backgroundPaint);
                 }
             }
         }
@@ -1254,10 +1293,10 @@ public class LearnersAndGradesTableView extends View {
         super.onDraw(canvas);
     }
 
-
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId, int bitmapWidth, int bitmapHeight) {
         // создаем drawable из векторной картинки
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        assert drawable != null;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             drawable = (DrawableCompat.wrap(drawable)).mutate();
         }
@@ -1270,6 +1309,7 @@ public class LearnersAndGradesTableView extends View {
 
         return Bitmap.createScaledBitmap(bitmap, bitmapWidth, bitmapHeight, false);
     }
+
 
     // метод обрабатывающий нажатие на view
     int[] touch(PointF downPoint, boolean longClick) {
@@ -1287,10 +1327,10 @@ public class LearnersAndGradesTableView extends View {
         if (learnersDataAndSizes.length != 0) {
 
             // если нажали область ниже таблицы
-            if (downPoint.y > (tableHeight + learnersAndGradesOffsetForTitle + titleWeekdaysHeight * 2 + learnersAndGradesYOffset)) {
+            if (downPoint.y > (tableHeight + learnersAndGradesOffsetForTitle + titleWeekdaysHeight + learnersAndGradesYOffset)) {
                 // если нажата кнопка создать ученика
-                if (downPoint.y > tableHeight + learnersAndGradesOffsetForTitle + titleWeekdaysHeight * 2 + learnersAndGradesYOffset &&
-                        downPoint.y <= tableHeight + learnersAndGradesOffsetForTitle + titleWeekdaysHeight * 2 + learnersAndGradesYOffset + addLearnerButtonHeight) {
+                if (downPoint.y > tableHeight + learnersAndGradesOffsetForTitle + titleWeekdaysHeight + learnersAndGradesYOffset &&
+                        downPoint.y <= tableHeight + learnersAndGradesOffsetForTitle + titleWeekdaysHeight + learnersAndGradesYOffset + addLearnerButtonHeight) {
                     return new int[]{4, -1, -1, -1};
                 } else // иначе не нажато ничего
                     return new int[]{0, -1, -1, -1};
@@ -1305,8 +1345,8 @@ public class LearnersAndGradesTableView extends View {
                     for (int lessonIterator = 0; lessonIterator < learnersGrades[0][dayIterator].length; lessonIterator++) {
                         if (
                             // координаты касания относительно таблицы по Y
-                                (downPoint.y > titleWeekdaysHeight * 2) &&
-                                        (downPoint.y <= learnersAndGradesOffsetForTitle + titleWeekdaysHeight * 2) &&
+                                (downPoint.y > titleWeekdaysHeight) &&
+                                        (downPoint.y <= learnersAndGradesOffsetForTitle + titleWeekdaysHeight) &&
                                         // координаты касания относительно таблицы по X
                                         (downPoint.x >= cellXOffset) &&
                                         (downPoint.x <= cellXOffset + learnersGrades[0][dayIterator][lessonIterator].cellWidth)
@@ -1323,7 +1363,7 @@ public class LearnersAndGradesTableView extends View {
                     }
                 }
                 // пробегаемся по содержимому таблицы оценок
-                int cellYOffset = learnersAndGradesOffsetForTitle + titleWeekdaysHeight * 2 + learnersAndGradesYOffset;
+                int cellYOffset = learnersAndGradesOffsetForTitle + titleWeekdaysHeight + learnersAndGradesYOffset;
                 for (int learnerIterator = 0; learnerIterator < learnersDataAndSizes.length; learnerIterator++) {
                     cellXOffset = learnersShowedWidth + gradesXOffset;
                     for (int dayIterator = 0; dayIterator < learnersGrades[learnerIterator].length; dayIterator++) {
@@ -1348,10 +1388,10 @@ public class LearnersAndGradesTableView extends View {
 
             } else {
                 // нажатие в угол сверху
-                if (downPoint.y <= learnersAndGradesOffsetForTitle + titleWeekdaysHeight * 2 &&
+                if (downPoint.y <= learnersAndGradesOffsetForTitle + titleWeekdaysHeight &&
                         isSubjectAndDateInTable) {
 
-                    float headSize = (learnersAndGradesOffsetForTitle + titleWeekdaysHeight * 2);
+                    float headSize = (learnersAndGradesOffsetForTitle + titleWeekdaysHeight);
 
                     if (downPoint.y <= headSize / 2) {// если нажат предмет
                         return new int[]{5, -1, -1, -1};
@@ -1365,7 +1405,7 @@ public class LearnersAndGradesTableView extends View {
                 } else {// если нажатие в области учеников
 
                     // пробегаемся по таблице
-                    int cellYOffset = learnersAndGradesOffsetForTitle + titleWeekdaysHeight * 2 + learnersAndGradesYOffset;
+                    int cellYOffset = learnersAndGradesOffsetForTitle + titleWeekdaysHeight + learnersAndGradesYOffset;
                     for (int learnerIterator = 0; learnerIterator < learnersDataAndSizes.length; learnerIterator++) {
                         if ((downPoint.y >= cellYOffset) && (downPoint.y <= cellYOffset + learnersDataAndSizes[learnerIterator].cellHeight)) {
                             // нажат ученик
@@ -1462,14 +1502,14 @@ public class LearnersAndGradesTableView extends View {
 
             if (learnersAndGradesYOffset + dynamicLearnersAndGradesYOffset <= 0
                     // и проверяем не меньше ли высота учеников чем высота view
-                    && tableHeight > viewHeight - learnersAndGradesOffsetForTitle - titleWeekdaysHeight * 2 - addLearnerButtonHeight) {
+                    && tableHeight > viewHeight - learnersAndGradesOffsetForTitle - titleWeekdaysHeight - addLearnerButtonHeight) {
                 // не будет ли из-за отрицательного смещения ученик уходить вверх создавая пустую облать
-                if (tableHeight + learnersAndGradesYOffset + dynamicLearnersAndGradesYOffset >= viewHeight - learnersAndGradesOffsetForTitle - titleWeekdaysHeight * 2 - addLearnerButtonHeight) {
+                if (tableHeight + learnersAndGradesYOffset + dynamicLearnersAndGradesYOffset >= viewHeight - learnersAndGradesOffsetForTitle - titleWeekdaysHeight - addLearnerButtonHeight) {
                     // смещаем
                     this.learnersAndGradesYOffset += dynamicLearnersAndGradesYOffset;
                 } else {
                     // иначе ставим минимально возможное значение
-                    this.learnersAndGradesYOffset = viewHeight - tableHeight - learnersAndGradesOffsetForTitle - titleWeekdaysHeight * 2 - addLearnerButtonHeight;
+                    this.learnersAndGradesYOffset = viewHeight - tableHeight - learnersAndGradesOffsetForTitle - titleWeekdaysHeight - addLearnerButtonHeight;
                 }
             } else {
                 // иначе ставим максимально возможное значение
@@ -1521,14 +1561,13 @@ public class LearnersAndGradesTableView extends View {
             // по первому ученику смотрим, не будет ли из-за положительного смещения ученик уходить вниз создавая пустую облать
             if (learnersAndGradesYOffset <= 0
                     // и проверяем не меньше ли высота учеников чем высота view
-                    && tableHeight > viewHeight - learnersAndGradesOffsetForTitle - titleWeekdaysHeight * 2 - addLearnerButtonHeight) {
+                    && tableHeight > viewHeight - learnersAndGradesOffsetForTitle - titleWeekdaysHeight - addLearnerButtonHeight) {
                 // будет ли из-за отрицательного смещения ученик уходить вверх создавая пустую облать
-                if (tableHeight + learnersAndGradesYOffset < viewHeight - learnersAndGradesOffsetForTitle - titleWeekdaysHeight * 2 - addLearnerButtonHeight)
+                if (tableHeight + learnersAndGradesYOffset < viewHeight - learnersAndGradesOffsetForTitle - titleWeekdaysHeight - addLearnerButtonHeight)
                     // ставим минимально возможное значение
-                    this.learnersAndGradesYOffset = viewHeight - tableHeight - learnersAndGradesOffsetForTitle - titleWeekdaysHeight * 2 - addLearnerButtonHeight;
+                    this.learnersAndGradesYOffset = viewHeight - tableHeight - learnersAndGradesOffsetForTitle - titleWeekdaysHeight - addLearnerButtonHeight;
             } else// иначе ставим максимально возможное значение
                 this.learnersAndGradesYOffset = 0;
-
         }
     }
 

@@ -42,7 +42,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
         // заголовок
         TextView title = new TextView(getActivity());
-        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria));
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         title.setTextColor(Color.BLACK);
         title.setText(R.string.start_screen_activity_dialog_whats_new_title);
         title.setTextSize(
@@ -62,7 +62,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
         // текст
         TextView text = new TextView(getActivity());
-        text.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria));
+        text.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         text.setTextColor(Color.BLACK);
         text.setText(R.string.start_screen_activity_dialog_whats_new_text);
         text.setTextSize(
@@ -103,7 +103,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
         //сама кнопка
         TextView button = new TextView(getActivity());
-        button.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria));
+        button.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         button.setText(R.string.start_screen_activity_dialog_whats_new_button_ok);
         button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         button.setTextColor(Color.WHITE);

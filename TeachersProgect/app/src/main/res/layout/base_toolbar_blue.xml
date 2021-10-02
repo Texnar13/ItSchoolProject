@@ -10,17 +10,17 @@
         android:id="@+id/base_blue_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/base_button_arrow_back_blue"
         android:theme="@style/MyToolbarTheme">
 
         <TextView
             android:id="@+id/base_blue_toolbar_title"
+            style="@style/TextViewSemiBoldStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:singleLine="true"
             android:text="@string/app_name"
             android:textColor="@color/baseBlue"
-            android:textSize="@dimen/text_title_size" />
+            android:textSize="@dimen/base_toolbar_text_size" />
     </androidx.appcompat.widget.Toolbar>
 </com.google.android.material.appbar.AppBarLayout>

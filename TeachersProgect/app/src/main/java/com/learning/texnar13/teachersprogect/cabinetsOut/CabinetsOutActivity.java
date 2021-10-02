@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
@@ -49,7 +50,11 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
         setSupportActionBar(findViewById(R.id.base_blue_toolbar));
         // убираем заголовок, там свой
-        getSupportActionBar().setTitle("");
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setTitle("");
+        }
         ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_cabinets_out);
 
 
@@ -67,15 +72,12 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
         // ------ кнопка добавления кабинета ------
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
             // плавающая кнопка с низу
-            findViewById(R.id.cabinets_out_fab).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // диалог создания
-                    // инициализируем диалог
-                    CreateCabinetDialogFragment createCabinetDialog = new CreateCabinetDialogFragment();
-                    // показать диалог
-                    createCabinetDialog.show(getFragmentManager(), "createCabinetDialog");
-                }
+            findViewById(R.id.cabinets_out_fab).setOnClickListener(view -> {
+                // диалог создания
+                // инициализируем диалог
+                CreateCabinetDialogFragment createCabinetDialog = new CreateCabinetDialogFragment();
+                // показать диалог
+                createCabinetDialog.show(getFragmentManager(), "createCabinetDialog");
             });
         } else {
             // настраиваем программный вывод векторных изображений
@@ -128,25 +130,25 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
 
             //создаем контейнер
             RelativeLayout cabinetContainer = new RelativeLayout(this);
-            cabinetContainer.setBackgroundResource(R.drawable.base_background_dialog_full_round_dwite);
+            cabinetContainer.setBackgroundResource(R.drawable.base_background_button_round_gray);
             // параметры контейнера
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,//ш
-                    ViewGroup.LayoutParams.WRAP_CONTENT//в
+                    getResources().getDimensionPixelSize(R.dimen.simple_buttons_height)//в
             );
             containerParams.setMargins(
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
                     0
             );
             room.addView(cabinetContainer, containerParams);
 
             // создаём текст
             TextView item = new TextView(this);
-            item.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
+            item.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_semibold));
             item.setGravity(Gravity.CENTER_VERTICAL);
-            item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.simple_buttons_text_size));
             item.setTextColor(Color.BLACK);
             item.setText(cabinetsNames[i]);
             //параметры пункта
@@ -157,8 +159,8 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
             itemParams.addRule(RelativeLayout.CENTER_VERTICAL);
             itemParams.setMargins(
                     (int) getResources().getDimension(R.dimen.double_margin), 0,
-                    (int) (getResources().getDimension(R.dimen.my_icon_small_size)
-                            + 2 * getResources().getDimension(R.dimen.simple_margin)), 0
+                    (int) (getResources().getDimension(R.dimen.base_buttons_arrow_size)
+                            + getResources().getDimension(R.dimen.double_margin)), 0
             );
             cabinetContainer.addView(item, itemParams);
 
@@ -166,15 +168,15 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
             ImageView arrow = new ImageView(this);
             arrow.setImageResource(R.drawable.base_button_arrow_forward_blue);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
-                    (int) getResources().getDimension(R.dimen.my_icon_small_size),
-                    (int) getResources().getDimension(R.dimen.my_icon_small_size)
+                    (int) getResources().getDimension(R.dimen.base_buttons_arrow_size),
+                    (int) getResources().getDimension(R.dimen.base_buttons_arrow_size)
             );
             arrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
             arrowParams.setMargins(
-                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
                     (int) getResources().getDimension(R.dimen.half_more_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
                     (int) getResources().getDimension(R.dimen.half_more_margin)
             );
             cabinetContainer.addView(arrow, arrowParams);
@@ -199,11 +201,11 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
 
             // создаем контейнер
             RelativeLayout learnersClassContainer = new RelativeLayout(this);
-            learnersClassContainer.setBackgroundResource(R.drawable.base_background_dialog_full_round_dwite);
+            learnersClassContainer.setBackgroundResource(R.drawable.base_background_button_round_gray);
             // параметры контейнера
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,//ш
-                    ViewGroup.LayoutParams.WRAP_CONTENT//в
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    getResources().getDimensionPixelSize(R.dimen.simple_buttons_height)
             );
             containerParams.setMargins(
                     (int) getResources().getDimension(R.dimen.simple_margin),
@@ -215,7 +217,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
 
             // создаём текст
             TextView item = new TextView(this);
-            item.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
+            item.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
             item.setGravity(Gravity.CENTER_VERTICAL);
             item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             item.setTextColor(Color.BLACK);
@@ -229,7 +231,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
             itemParams.setMargins(
                     (int) getResources().getDimension(R.dimen.double_margin),
                     0,
-                    (int) (getResources().getDimension(R.dimen.my_icon_small_size)
+                    (int) (getResources().getDimension(R.dimen.base_buttons_arrow_size)
                             + 2 * getResources().getDimension(R.dimen.simple_margin)),
                     0
             );
@@ -239,8 +241,8 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
             ImageView arrow = new ImageView(this);
             arrow.setImageResource(R.drawable.cabinets_activity_button_add___kitkat);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
-                    (int) getResources().getDimension(R.dimen.my_icon_small_size),
-                    (int) getResources().getDimension(R.dimen.my_icon_small_size)
+                    (int) getResources().getDimension(R.dimen.base_buttons_arrow_size),
+                    (int) getResources().getDimension(R.dimen.base_buttons_arrow_size)
             );
             arrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -254,51 +256,48 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
 
 
             // нажатие на пункт списка
-            learnersClassContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // диалог создания
-                    // инициализируем диалог
-                    CreateCabinetDialogFragment createCabinetDialog = new CreateCabinetDialogFragment();
-                    // показать диалог
-                    createCabinetDialog.show(getFragmentManager(), "createCabinetDialog");
-                }
+            learnersClassContainer.setOnClickListener(view -> {
+                // диалог создания
+                // инициализируем диалог
+                CreateCabinetDialogFragment createCabinetDialog = new CreateCabinetDialogFragment();
+                // показать диалог
+                createCabinetDialog.show(getFragmentManager(), "createCabinetDialog");
             });
         }
 
-        //---контейнер---
-        LinearLayout container = new LinearLayout(this);
-        container.setOrientation(LinearLayout.VERTICAL);
-        //параметры контейнера
-        LinearLayout.LayoutParams containerParams =
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                );
-        containerParams.setMargins(
-                (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.simple_margin)
-        );
+//        //---контейнер---
+//        LinearLayout container = new LinearLayout(this);
+//        container.setOrientation(LinearLayout.VERTICAL);
+//        //параметры контейнера
+//        LinearLayout.LayoutParams containerParams =
+//                new LinearLayout.LayoutParams(
+//                        LinearLayout.LayoutParams.WRAP_CONTENT,
+//                        LinearLayout.LayoutParams.WRAP_CONTENT
+//                );
+//        containerParams.setMargins(
+//                (int) getResources().getDimension(R.dimen.simple_margin),
+//                (int) getResources().getDimension(R.dimen.simple_margin),
+//                (int) getResources().getDimension(R.dimen.simple_margin),
+//                (int) getResources().getDimension(R.dimen.simple_margin)
+//        );
 
         // подсказка
-        //создаем
-        TextView helpText = new TextView(this);
-        helpText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
-        helpText.setGravity(Gravity.CENTER);
-        helpText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-        helpText.setTextColor(getResources().getColor(R.color.backgroundLiteGray));
-        helpText.setText(R.string.cabinets_out_activity_text_help);
-        //добавляем
-        container.addView(
-                helpText,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-
-        //---выводим контейнер в экран---
-        room.addView(container, containerParams);
+//        //создаем
+//        TextView helpText = new TextView(this);
+//        helpText.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
+//        helpText.setGravity(Gravity.CENTER);
+//        helpText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+//        helpText.setTextColor(getResources().getColor(R.color.backgroundLiteGray));
+//        helpText.setText(R.string.cabinets_out_activity_text_help);
+//        //добавляем
+//        container.addView(
+//                helpText,
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//        );
+//
+//        //---выводим контейнер в экран---
+//        room.addView(container, containerParams);
     }
 
 
@@ -320,8 +319,8 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
     // обратная связь от активности CabinetEditActivity
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CabinetEditActivity.CABINET_EDIT_REQUEST_CODE){
-            switch (resultCode){
+        if (requestCode == CabinetEditActivity.CABINET_EDIT_REQUEST_CODE) {
+            switch (resultCode) {
                 case CabinetEditActivity.RESULT_NONE:
                     break;
                 case CabinetEditActivity.RESULT_REMOVE_CABINET:

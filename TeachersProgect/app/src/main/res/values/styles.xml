@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- семейство шрифтов -->
-        <item name="android:fontFamily">@font/geometria_family</item>
+        <item name="android:fontFamily">@font/montserrat_family</item>
 
         <item name="colorPrimary">@color/baseBlue</item>
         <item name="android:textColorPrimary">@color/baseOrange</item>
@@ -15,7 +15,8 @@
         <item name="android:editTextStyle">@style/Widget.EditText.MyEditTextStyle</item-->
 
 
-        <item name="android:textViewStyle">@style/MyTextViewStyle</item>
+        <item name="android:textViewStyle">@style/TextViewSimpleStyle</item>
+        <item name="android:editTextStyle">@style/SimpleEditTextUnderlinedStyle</item>
     </style>
 
     <!-- Стиль текстовых полей ввода -->
@@ -35,14 +36,77 @@
     </style>
 
     <!-- Стиль текстов -->
-    <style name="MyTextViewStyle" parent="Widget.AppCompat.TextView">
-        <item name="fontFamily">@font/geometria</item>
+    <style name="TextViewSimpleStyle" parent="Widget.AppCompat.TextView">
+        <item name="fontFamily">@font/montserrat_medium</item>
     </style>
 
-    <style name="Widget.AppCompat.EditText.MyStyle">
-        <!-- todo -->
+    <style name="TextViewSemiBoldStyle" parent="Widget.AppCompat.TextView">
+        <item name="fontFamily">@font/montserrat_semibold</item>
     </style>
 
+    <style name="TextViewBoldStyle" parent="Widget.AppCompat.TextView">
+        <item name="fontFamily">@font/montserrat_bold</item>
+    </style>
+
+    <!-- текксты больших кнопок в "начать урок" -->
+    <style name="StartScreenBigButtonsTextStyle" parent="TextViewSemiBoldStyle">
+        <item name="android:textColor">#000000</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/simple_buttons_text_size</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+
+    <!-- текст названий пунктов в редакторе урока -->
+    <style name="LessonRedactorDescriptionTextStyle" parent="TextViewSemiBoldStyle">
+        <item name="android:textColor">@color/backgroundGray</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/simple_buttons_text_size</item>
+    </style>
+
+
+    <style name="ButtonSimpleStyle" parent="Widget.AppCompat.TextView">
+        <item name="fontFamily">@font/montserrat_semibold</item>
+        <item name="android:textSize">@dimen/simple_buttons_text_size</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="SimpleEditTextUnderlinedStyle" parent="@android:style/Widget.EditText">
+        <item name="android:background">@drawable/base_background_edit_text_selector</item>
+        <item name="fontFamily">@font/montserrat_medium</item>
+        <item name="android:textSize">@dimen/simple_buttons_text_size</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="android:textColorHint">@color/backgroundLiteGray</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="SettingsButtonSimpleStyle" parent="Widget.AppCompat.TextView">
+        <item name="fontFamily">@font/montserrat_semibold</item>
+        <item name="android:textSize">@dimen/simple_buttons_text_size</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/simple_buttons_height</item>
+        <item name="android:background">@drawable/base_background_button_round_gray</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">@dimen/double_margin</item>
+        <item name="android:paddingEnd">@dimen/double_margin</item>
+        <item name="android:layout_marginStart">@dimen/double_margin</item>
+        <item name="android:layout_marginEnd">@dimen/double_margin</item>
+        <item name="android:layout_marginBottom">@dimen/double_margin</item>
+    </style>
+
+    <style name="SettingsDividerStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/settings_activity_divider_height</item>
+        <item name="android:layout_marginBottom">@dimen/double_margin</item>
+        <item name="android:background">@color/backgroundDarkWhite</item>
+    </style>
 
     <style name="myActivityDialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <!-- без предка Theme.AppCompat.Light.Dialog не открываются внутренние диалоги -->
@@ -68,22 +132,11 @@
         <!-- подсветка фона кнопок при нажатии -->
         <item name="colorControlHighlight">@color/backgroundLiteGray</item>
 
-        <item name="homeAsUpIndicator">@drawable/base_button_arrow_back_blue</item>
-        <item name="titleTextStyle">@style/myToolbarTextStyle</item>
-
 
         <item name="android:singleLineTitle" tools:targetApi="o">true</item>
 
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center</item>
-    </style>
-
-
-    <style name="myToolbarTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-
-        <!-- @android:style/TextAppearance.Holo.Widget.ActionBar.Title -->
-        <item name="android:textSize">@dimen/text_small_size</item>
-
     </style>
 
 
@@ -132,6 +185,5 @@
 
         <item name="actionMenuTextColor">@color/baseOrange</item>
     </style>
-
 
 </resources>

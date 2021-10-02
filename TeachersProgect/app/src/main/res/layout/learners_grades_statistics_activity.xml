@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/title_activity_learners_and_grades_statistics"
-                android:fontFamily="@font/geometria_medium"/>
+                android:fontFamily="@font/montserrat_medium"/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -89,7 +89,7 @@
                             android:layout_width="@dimen/text_field_two_simple_symbols_width"
                             android:layout_height="wrap_content"
                             android:background="@drawable/statistic_activity_date_background"
-                            android:fontFamily="@font/geometria_family"
+                            android:fontFamily="@font/montserrat_medium"
                             android:gravity="center"
                             android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_day"
                             android:inputType="number"
@@ -117,7 +117,7 @@
                             android:layout_marginEnd="5dp"
                             android:layout_marginRight="5dp"
                             android:background="@drawable/statistic_activity_date_background"
-                            android:fontFamily="@font/geometria_family"
+                            android:fontFamily="@font/montserrat_medium"
                             android:gravity="center"
                             android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_month"
                             android:inputType="number"
@@ -147,7 +147,7 @@
                             android:paddingBottom="@dimen/half_margin"
                             android:ems="3"
                             android:gravity="center"
-                            android:fontFamily="@font/geometria_family"
+                            android:fontFamily="@font/montserrat_medium"
                             android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
                             android:inputType="number"
                             android:singleLine="true"
@@ -168,7 +168,7 @@
                             android:layout_width="@dimen/text_field_two_simple_symbols_width"
                             android:layout_height="wrap_content"
                             android:background="@drawable/statistic_activity_date_background"
-                            android:fontFamily="@font/geometria_family"
+                            android:fontFamily="@font/montserrat_medium"
                             android:gravity="center"
                             android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_day"
                             android:inputType="number"
@@ -196,7 +196,7 @@
                             android:layout_marginEnd="5dp"
                             android:layout_marginRight="5dp"
                             android:background="@drawable/statistic_activity_date_background"
-                            android:fontFamily="@font/geometria_family"
+                            android:fontFamily="@font/montserrat_medium"
                             android:gravity="center"
                             android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_month"
                             android:inputType="number"
@@ -221,7 +221,7 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/statistic_activity_date_background"
                             android:ems="3"
-                            android:fontFamily="@font/geometria_family"
+                            android:fontFamily="@font/montserrat_medium"
                             android:gravity="center"
                             android:hint="@string/learners_and_grades_statistics_activity_dialog_hint_profile_date_year"
                             android:inputType="number"
@@ -329,7 +329,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
-                        android:fontFamily="@font/geometria_light"
+                        android:fontFamily="@font/montserrat_medium"
                         android:text="@string/learners_and_grades_statistics_activity_text_help"
                         android:textColor="@color/backgroundLiteGray"
                         android:textSize="@dimen/text_subtitle_size" />
@@ -354,7 +354,7 @@
                         android:layout_marginLeft="@dimen/double_margin"
                         android:layout_marginRight="@dimen/double_margin"
                        android:text="1-я четверть"
-                        android:fontFamily="@font/geometria_medium"
+                        android:fontFamily="@font/montserrat_medium"
                         android:textColor="@color/backgroundWhite"
                      android:textSize="@dimen/text_subtitle_size" />
                 </LinearLayout>

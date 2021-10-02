@@ -43,11 +43,18 @@ public class AcceptDialog extends DialogFragment {
         // кнопка
         TextView button = rootView.findViewById(R.id.accept_dialog_text_button_accept);
         button.setText(buttonText);
-        button.setOnClickListener(v -> ((AcceptDialogInterface) getActivity()).accept());
+        button.setOnClickListener(v -> {
+            ((AcceptDialogInterface) getActivity()).accept();
+            dismiss();
+        });
 
         // наконец создаем диалог и возвращаем его
         Dialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         return dialog;
+    }
+
+    public interface AcceptDialogInterface {
+        void accept();
     }
 }

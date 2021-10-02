@@ -75,7 +75,7 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
 
         // текст заголовка
         TextView title = new TextView(getActivity());
-        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_medium));
+        title.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         title.setText(R.string.lesson_redactor_activity_text_choose_learner);
         title.setGravity(Gravity.CENTER_VERTICAL);
         title.setTextColor(Color.WHITE);
@@ -130,7 +130,7 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
                 bodyLayoutContainer.addView(textContainer, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
                 TextView learnerText = new TextView(getActivity());
-                learnerText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria));
+                learnerText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
                 learnerText.setText(learnersNames.get(learnerI));
                 learnerText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                 learnerText.setTextColor(Color.BLACK);

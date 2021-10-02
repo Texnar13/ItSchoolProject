@@ -92,8 +92,8 @@ public class StartScreenRateUsDialog extends DialogFragment {
 
         // кнопка отмены
         TextView negativeTextButton = new TextView(getActivity());
-        negativeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-        negativeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        negativeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
+        negativeTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         negativeTextButton.setText(R.string.start_screen_activity_dialog_button_later);
         negativeTextButton.setGravity(Gravity.CENTER);
         negativeTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
@@ -133,8 +133,8 @@ public class StartScreenRateUsDialog extends DialogFragment {
 
         // кнопка сохранить
         TextView positiveTextButton = new TextView(getActivity());
-        positiveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
-        positiveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        positiveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
+        positiveTextButton.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         positiveTextButton.setText(R.string.start_screen_activity_dialog_button_rate_now);
         positiveTextButton.setGravity(Gravity.CENTER);
         positiveTextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));

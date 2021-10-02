@@ -11,43 +11,43 @@
     </string-array>
 
     <string-array name="months_names">
-        <item>январь</item>
-        <item>февраль</item>
-        <item>март</item>
-        <item>апрель</item>
-        <item>май</item>
-        <item>июнь</item>
-        <item>июль</item>
-        <item>август</item>
-        <item>сентябрь</item>
-        <item>октябрь</item>
-        <item>ноябрь</item>
-        <item>декабрь</item>
+        <item>Январь</item>
+        <item>Февраль</item>
+        <item>Март</item>
+        <item>Апрель</item>
+        <item>Май</item>
+        <item>Июнь</item>
+        <item>Июль</item>
+        <item>Август</item>
+        <item>Сентябрь</item>
+        <item>Октябрь</item>
+        <item>Ноябрь</item>
+        <item>Декабрь</item>
     </string-array>
 
     <string-array name="months_names_with_ending">
-        <item>января</item>        
+        <item>января</item>
         <item>февраля</item>
-        <item>марта</item>        
-        <item>апреля</item>       
-        <item>мая</item>        
-        <item>июня</item>        
-        <item>июля</item>        
-        <item>августа</item>       
-        <item>сентября</item>        
-        <item>октября</item>        
-        <item>ноября</item>        
+        <item>марта</item>
+        <item>апреля</item>
+        <item>мая</item>
+        <item>июня</item>
+        <item>июля</item>
+        <item>августа</item>
+        <item>сентября</item>
+        <item>октября</item>
+        <item>ноября</item>
         <item>декабря</item>
     </string-array>
 
-    <string-array name="week_days_simple">        
-        <item>Воскресенье</item> 
-        <item>Понедельник</item>        
-        <item>Вторник</item>  
-        <item>Среда</item>        
-        <item>Четверг</item>       
-        <item>Пятница</item>       
-        <item>Суббота</item>   
+    <string-array name="week_days_simple">
+        <item>воскресенье</item>
+        <item>понедельник</item>
+        <item>вторник</item>
+        <item>среда</item>
+        <item>четверг</item>
+        <item>пятница</item>
+        <item>суббота</item>
     </string-array>
 
     <!-- активность календаря на день-->

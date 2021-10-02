@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/sponsor_activity_screen_final_button"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sponsor_activity_screen_final_button_title"
+    style="@style/SettingsButtonSimpleStyle"
     android:layout_marginStart="@dimen/forth_margin"
     android:layout_marginEnd="@dimen/forth_margin"
-    android:background="@drawable/base_background_dialog_full_round_white"
-    android:orientation="vertical"
-    android:padding="@dimen/double_margin">
-
-    <TextView
-        android:id="@+id/sponsor_activity_screen_final_button_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:text="@string/sponsor_activity_button_sub_year"
-        android:textColor="@color/baseBlue"
-        android:textSize="@dimen/text_subtitle_size" />
-
-</LinearLayout>
+    android:background="@drawable/premium_activity_background_button_frame"
+    android:gravity="center_vertical"
+    android:text="@string/sponsor_activity_button_sub_year"
+    android:textColor="@color/backgroundWhite" />

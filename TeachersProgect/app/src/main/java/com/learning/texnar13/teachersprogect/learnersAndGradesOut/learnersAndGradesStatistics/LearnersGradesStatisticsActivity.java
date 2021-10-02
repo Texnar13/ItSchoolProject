@@ -246,7 +246,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         for (LearnerUnit learner : learners) {
             // текст ученика
             TextView learnerText = new TextView(this);
-            learnerText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+            learnerText.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
             learnerText.setTextColor(Color.BLACK);
             learnerText.setBackgroundColor(getResources().getColor(R.color.backgroundDarkWhite));
             learnerText.setGravity(Gravity.CENTER_VERTICAL);
@@ -334,13 +334,13 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             for (int fieldI = 0; fieldI < 6; fieldI++) {
                 timeTexts[fieldI].setText("" + periods.get(periodPosition).dates[fieldI]);
                 timeTexts[fieldI].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                timeTexts[fieldI].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                timeTexts[fieldI].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
             }
         } else {
             for (int fieldI = 0; fieldI < 6; fieldI++) {
                 timeTexts[fieldI].setText("");
                 timeTexts[fieldI].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                timeTexts[fieldI].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                timeTexts[fieldI].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
             }
         }
         // разрешаем проверку
@@ -403,7 +403,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 
             // выводим среднюю оценку ученику
             TextView gradeText = new TextView(this);
-            gradeText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+            gradeText.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
             gradeText.setGravity(Gravity.CENTER);
             gradeText.setBackgroundColor(getResources().getColor(R.color.backgroundWhite));
             gradeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -459,7 +459,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 
             // выводим количество пропусков
             TextView absText = new TextView(this);
-            absText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+            absText.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
             absText.setGravity(Gravity.CENTER);
             absText.setTextColor(Color.BLACK);
             absText.setBackgroundColor(getResources().getColor(R.color.backgroundWhite));
@@ -496,20 +496,20 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         // размеры текста
         if (timeTexts[2].getText().toString().length() != 4) {
             timeTexts[2].setTextColor(getResources().getColor(R.color.signalRed));
-            timeTexts[2].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+            timeTexts[2].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
             //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
             isGood = false;
         } else {
             // диапазон чисел
             if (Integer.parseInt(timeTexts[2].getText().toString()) < 1000 || Integer.parseInt(timeTexts[2].getText().toString()) > 9999) {
                 timeTexts[2].setTextColor(getResources().getColor(R.color.signalRed));
-                timeTexts[2].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                timeTexts[2].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
                 //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
                 isGood = false;
             } else {
                 //убираем красный
                 timeTexts[2].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                timeTexts[2].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                timeTexts[2].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
                 // год в календарь
                 startCalendar.set(GregorianCalendar.YEAR, Integer.parseInt(timeTexts[2].getText().toString()));
 
@@ -519,19 +519,19 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         // размеры текста
         if (timeTexts[1].getText().toString().length() <= 0 || timeTexts[1].getText().toString().length() > 2) {
             timeTexts[1].setTextColor(getResources().getColor(R.color.signalRed));
-            timeTexts[1].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+            timeTexts[1].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
             //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
             isGood = false;
         } else {
             // диапазон чисел
             if (Integer.parseInt(timeTexts[1].getText().toString()) < 1 || Integer.parseInt(timeTexts[1].getText().toString()) > 12) {
                 timeTexts[1].setTextColor(getResources().getColor(R.color.signalRed));
-                timeTexts[1].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                timeTexts[1].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
                 isGood = false;
             } else {
                 //убираем красный
                 timeTexts[1].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                timeTexts[1].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                timeTexts[1].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
                 // месяц в календарь
                 startCalendar.set(GregorianCalendar.MONTH, Integer.parseInt(timeTexts[1].getText().toString()) - 1);
             }
@@ -540,20 +540,20 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         // размеры текста
         if (timeTexts[0].getText().toString().length() <= 0 || timeTexts[0].getText().toString().length() > 2) {
             timeTexts[0].setTextColor(getResources().getColor(R.color.signalRed));
-            timeTexts[0].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+            timeTexts[0].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
             //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
             isGood = false;
         } else {
             // диапазон чисел
             if (Integer.parseInt(timeTexts[0].getText().toString()) < 1 || Integer.parseInt(timeTexts[0].getText().toString()) > startCalendar.getActualMaximum(GregorianCalendar.DAY_OF_MONTH)) {
                 timeTexts[0].setTextColor(getResources().getColor(R.color.signalRed));
-                timeTexts[0].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                timeTexts[0].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
                 //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
                 isGood = false;
             } else {
                 //убираем красный
                 timeTexts[0].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                timeTexts[0].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                timeTexts[0].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
                 // день в календарь
                 startCalendar.set(GregorianCalendar.DAY_OF_MONTH, Integer.parseInt(timeTexts[0].getText().toString()));
             }
@@ -570,20 +570,20 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         // размеры текста
         if (timeTexts[5].getText().toString().length() != 4) {
             timeTexts[5].setTextColor(getResources().getColor(R.color.signalRed));
-            timeTexts[5].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+            timeTexts[5].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
             //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
             isGood = false;
         } else {
             // диапазон чисел
             if (Integer.parseInt(timeTexts[5].getText().toString()) < 1000 || Integer.parseInt(timeTexts[5].getText().toString()) > 9999) {
                 timeTexts[5].setTextColor(getResources().getColor(R.color.signalRed));
-                timeTexts[5].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                timeTexts[5].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
                 //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
                 isGood = false;
             } else {
                 //убираем красный
                 timeTexts[5].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                timeTexts[5].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                timeTexts[5].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
                 // год в календарь
                 endCalendar.set(GregorianCalendar.YEAR, Integer.parseInt(timeTexts[5].getText().toString()));
             }
@@ -592,20 +592,20 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         // размеры текста
         if (timeTexts[4].getText().toString().length() <= 0 || timeTexts[4].getText().toString().length() > 2) {
             timeTexts[4].setTextColor(getResources().getColor(R.color.signalRed));
-            timeTexts[4].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+            timeTexts[4].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
             //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
             isGood = false;
         } else {
             // диапазон чисел
             if (Integer.parseInt(timeTexts[4].getText().toString()) < 1 || Integer.parseInt(timeTexts[4].getText().toString()) > 12) {
                 timeTexts[4].setTextColor(getResources().getColor(R.color.signalRed));
-                timeTexts[4].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                timeTexts[4].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
                 //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
                 isGood = false;
             } else {
                 //убираем красный
                 timeTexts[4].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                timeTexts[4].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                timeTexts[4].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
                 // месяц в календарь
                 endCalendar.set(GregorianCalendar.MONTH, Integer.parseInt(timeTexts[4].getText().toString()) - 1);
             }
@@ -614,20 +614,20 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
         // размеры текста
         if (timeTexts[3].getText().toString().length() <= 0 || timeTexts[3].getText().toString().length() > 2) {
             timeTexts[3].setTextColor(getResources().getColor(R.color.signalRed));
-            timeTexts[3].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+            timeTexts[3].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
             //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
             isGood = false;
         } else {
             // диапазон чисел
             if (Integer.parseInt(timeTexts[3].getText().toString()) < 1 || Integer.parseInt(timeTexts[3].getText().toString()) > endCalendar.getActualMaximum(GregorianCalendar.DAY_OF_MONTH)) {
                 timeTexts[3].setTextColor(getResources().getColor(R.color.signalRed));
-                timeTexts[3].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                timeTexts[3].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
                 //.setBackground(getResources().getDrawable(R.drawable.statistic_activity_date_background_alert));
                 isGood = false;
             } else {
                 //убираем красный
                 timeTexts[3].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                timeTexts[3].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                timeTexts[3].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
                 // день в календарь
                 endCalendar.set(GregorianCalendar.DAY_OF_MONTH, Integer.parseInt(timeTexts[3].getText().toString()));
             }
@@ -639,13 +639,13 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             if (startCalendar.getTime().getTime() > endCalendar.getTime().getTime()) {
                 for (int fieldI = 0; fieldI < 6; fieldI++) {
                     timeTexts[fieldI].setTextColor(getResources().getColor(R.color.signalRed));
-                    timeTexts[fieldI].setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                    timeTexts[fieldI].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
                 }
                 isGood = false;
             } else {
                 for (int fieldI = 0; fieldI < 6; fieldI++) {
                     timeTexts[fieldI].setTextColor(getResources().getColor(R.color.backgroundDarkGray));
-                    timeTexts[fieldI].setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
+                    timeTexts[fieldI].setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
                 }
             }
         }

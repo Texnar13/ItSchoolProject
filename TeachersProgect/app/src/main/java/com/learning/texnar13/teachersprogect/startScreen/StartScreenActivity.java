@@ -38,7 +38,6 @@ import com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
-import com.learning.texnar13.teachersprogect.gradesPeriods.GradesPeriodsActivity;
 import com.learning.texnar13.teachersprogect.learnersClassesOut.LearnersClassesOutActivity;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity;
@@ -278,7 +277,6 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
                 getResources().getStringArray(R.array.week_days_simple)[nowCalendar.get(Calendar.DAY_OF_WEEK) - 1]
         );
 
-
         // выводим текущий урок
         outCurrentLesson();
 
@@ -304,10 +302,10 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
         // определяем текущий урок
         int lessonNumber = -1;
         for (int lessonI = 0; lessonI < times.length; lessonI++) {
-            if ((nowCalendar.get(Calendar.HOUR_OF_DAY) > times[lessonI][0] ||
-                    (nowCalendar.get(Calendar.HOUR_OF_DAY) == times[lessonI][0] && nowCalendar.get(Calendar.MINUTE) >= times[lessonI][1])) &&
-                    (nowCalendar.get(Calendar.HOUR_OF_DAY) < times[lessonI][2] || (nowCalendar.get(Calendar.HOUR_OF_DAY) == times[lessonI][2] && nowCalendar.get(Calendar.MINUTE) <= times[lessonI][3]))
-            ) {
+            if (nowCalendar.get(Calendar.HOUR_OF_DAY) > times[lessonI][0] || (
+                    nowCalendar.get(Calendar.HOUR_OF_DAY) == times[lessonI][0] &&
+                            nowCalendar.get(Calendar.MINUTE) >= times[lessonI][1]
+            )) {
                 lessonNumber = lessonI;
             }
         }
@@ -325,7 +323,7 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
 
             // текст пустоты
             TextView absText = new TextView(this);
-            absText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
+            absText.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
             absText.setText(R.string.start_screen_activity_title_current_no_lesson);
             absText.setTextColor(getResources().getColor(R.color.backgroundGray));
             absText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -397,30 +395,30 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
 
             // раздуваем поля в контейнере
             LinearLayout lessonField = (LinearLayout) getLayoutInflater().inflate(
-                    R.layout.start_screen_current_lesson_field,
+                    R.layout.start_screen_current_lesson_pattern,
                     currentLessonContainer
             );
             // выводим в них текст
             // первое время
-            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_field_time_1)).setText(
+            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_pattern_start_time)).setText(
                     getResources().getString(
                             R.string.start_screen_activity_time_field,
                             times[lessonNumber][0],
                             times[lessonNumber][1]
                     ));
             // второе время
-            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_field_time_2)).setText(
+            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_pattern_end_time)).setText(
                     getResources().getString(
                             R.string.start_screen_activity_time_field,
                             times[lessonNumber][2],
                             times[lessonNumber][3]
                     ));
             // предмет
-            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_field_subject)).setText(subjectName);
+            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_pattern_subject)).setText(subjectName);
             // класс
-            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_field_class)).setText(className);
+            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_pattern_class)).setText(className);
             // кабинет
-            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_field_cabinet)).setText(cabinetName);
+            ((TextView) lessonField.findViewById(R.id.start_screen_current_lesson_pattern_cabinet)).setText(cabinetName);
 
             // делаем кнопку видимой если она была скрыта
             lessonButtonText.setBackgroundResource(R.drawable.start_screen_activity_background_button_start_lesson);

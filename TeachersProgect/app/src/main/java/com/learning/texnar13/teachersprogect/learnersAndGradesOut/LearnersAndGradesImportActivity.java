@@ -234,7 +234,7 @@ public class LearnersAndGradesImportActivity extends AppCompatActivity {
 
 
     // регистрируем callback для диалога разрешений
-    private ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     // разрешение выдано, отлично!

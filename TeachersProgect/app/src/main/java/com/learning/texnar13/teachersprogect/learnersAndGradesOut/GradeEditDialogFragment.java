@@ -160,7 +160,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
 
         // текст текущей даты
         TextView dateText = new TextView(getActivity());
-        dateText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        dateText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         dateText.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
         dateText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
         dateText.setText(getArguments().getString(ARGS_STRING_CURRENT_DATE));
@@ -340,7 +340,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
 
         // имя ученика
         TextView name = new TextView(getActivity());
-        name.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_medium));
+        name.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         name.setSingleLine(true);
         name.setText(learnerName);
         name.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_title_size));
@@ -441,7 +441,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
 
         } else {
             TextView absText = new TextView(getActivity());
-            absText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+            absText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
             absText.setText(R.string.lesson_activity_learner_absent_text);
             absText.setTextColor(Color.BLACK);
             absText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -704,7 +704,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
         spinnersContainer.addView(saveButtonContainer, saveButtonContainerParams);
 
         TextView saveText = new TextView(getActivity());
-        saveText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        saveText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         saveText.setText(R.string.button_save);
         saveText.setTextColor(getResources().getColor(R.color.backgroundWhite));
         saveText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));

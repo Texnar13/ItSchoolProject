@@ -1,10 +1,15 @@
 package com.learning.texnar13.teachersprogect.sponsor;
 
+import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +28,7 @@ import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 
@@ -47,7 +53,24 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
+        // отключаем поворот
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        // цвет статус бара
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.premiumAddBackground));
+            // цвет текста в статус баре
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+
         setContentView(R.layout.sponsor_activity);
+
+        // кнопка закрытия активности
+        findViewById(R.id.sponsor_activity_close_button).setOnClickListener(v -> finish());
+
 
         // создаем разметку для перелистывателя страниц
         ViewPager2 viewPager = findViewById(R.id.sponsor_activity_viewpager);

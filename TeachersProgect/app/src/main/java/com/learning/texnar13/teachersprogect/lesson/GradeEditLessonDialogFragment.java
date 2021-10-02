@@ -128,7 +128,7 @@ public class GradeEditLessonDialogFragment extends DialogFragment {
 
         // имя ученика
         TextView name = new TextView(getActivity());
-        name.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        name.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         name.setSingleLine(true);
         name.setText(learnerName);
         name.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_title_size));
@@ -231,7 +231,7 @@ public class GradeEditLessonDialogFragment extends DialogFragment {
 
         } else {
             TextView absText = new TextView(getActivity());
-            absText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+            absText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
             absText.setText(R.string.lesson_activity_learner_absent_text);
             absText.setTextColor(Color.BLACK);
             absText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -490,7 +490,7 @@ public class GradeEditLessonDialogFragment extends DialogFragment {
         spinnersContainer.addView(saveButtonContainer, saveButtonContainerParams);
 
         TextView saveText = new TextView(getActivity());
-        saveText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.geometria_family));
+        saveText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
         saveText.setText(R.string.button_save);
         saveText.setTextColor(getResources().getColor(R.color.backgroundWhite));
         saveText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));

@@ -8,9 +8,9 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.util.Log;
@@ -27,59 +27,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.MyApplication;
+import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialog;
 import com.learning.texnar13.teachersprogect.learnersAndGradesOut.LearnersAndGradesActivity;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 
-public class LearnersClassesOutActivity extends AppCompatActivity implements EditLearnersClassDialogInterface, CreateLearnersClassDialogInterface {
+public class LearnersClassesOutActivity extends AppCompatActivity implements
+        EditLearnersClassDialogInterface, CreateLearnersClassDialogInterface, AcceptDialog.AcceptDialogInterface {
 
     //static потом (для переворота)
     Long[] learnersClassesId;
     String[] classesNames;
     LinearLayout room;
 
-//---------------------------------методы диалогов--------------------------------------------------
-
-
-//-----создание-----
-
-    @Override
-    public void createLearnersClass(String name) {
-        //создаем класс
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        db.createClass(name);
-        db.close();
-        //опять выводим списки
-        getLearnersClasses();
-        outLearnersClasses();
-    }
-
-//-----редактирование-----
-
-    //переименование
-    @Override
-    public void editLearnersClass(String name, long classId) {
-        //изменяем класс
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        db.setClassName(classId, name);
-        db.close();
-        //опять выводим списки
-        getLearnersClasses();
-        outLearnersClasses();
-    }
-
-    //удаление
-    @Override
-    public void removeLearnersClass(long classId) {
-        //удаляем класс
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        db.deleteClass(classId);
-        db.close();
-        //опять выводим списки
-        getLearnersClasses();
-        outLearnersClasses();
-    }
+    long selectedId = -1;
+    long selectedIdForDelete = -1;
 
 //------------------------------создаем активность--------------------------------------------------
 
@@ -95,10 +58,14 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
         // раздуваем layout
         setContentView(R.layout.learners_classes_out_activity);
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
-        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        setSupportActionBar(findViewById(R.id.base_blue_toolbar));
         // убираем заголовок, там свой
-        getSupportActionBar().setTitle("");
-        ((TextView)findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_learners_classes_out);
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setTitle("");
+        }
+        ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_learners_classes_out);
 
 
         // вертикальная ориентация
@@ -114,15 +81,12 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
         // ------ кнопка добавления класса ------
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
             // плавающая кнопка с низу
-            findViewById(R.id.learners_classes_out_add_fab).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // диалог создания
-                    // инициализируем диалог
-                    CreateLearnersClassDialogFragment createClassDialog = new CreateLearnersClassDialogFragment();
-                    // показать диалог
-                    createClassDialog.show(getFragmentManager(), "createClassDialog");
-                }
+            findViewById(R.id.learners_classes_out_add_fab).setOnClickListener(view -> {
+                // диалог создания
+                // инициализируем диалог
+                CreateLearnersClassDialogFragment createClassDialog = new CreateLearnersClassDialogFragment();
+                // показать диалог
+                createClassDialog.show(getSupportFragmentManager(), "createClassDialog");
             });
         } else {
             // настраиваем программный вывод векторных изображений
@@ -175,25 +139,25 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 
             //создаем контейнер
             RelativeLayout learnersClassContainer = new RelativeLayout(this);
-            learnersClassContainer.setBackgroundResource(R.drawable.base_background_dialog_full_round_dwite);
+            learnersClassContainer.setBackgroundResource(R.drawable.base_background_button_round_gray);
             // параметры контейнера
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,//ш
-                    ViewGroup.LayoutParams.WRAP_CONTENT//в
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    getResources().getDimensionPixelSize(R.dimen.simple_buttons_height)
             );
             containerParams.setMargins(
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
                     0
             );
             room.addView(learnersClassContainer, containerParams);
 
             // создаём текст
             TextView item = new TextView(this);
-            item.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
+            item.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_semibold));
             item.setGravity(Gravity.CENTER_VERTICAL);
-            item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.simple_buttons_text_size));
             item.setTextColor(Color.BLACK);
             item.setText(classesNames[i]);
             //параметры пункта
@@ -205,7 +169,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
             itemParams.setMargins(
                     (int) getResources().getDimension(R.dimen.double_margin),
                     0,
-                    (int) (getResources().getDimension(R.dimen.my_icon_small_size)
+                    (int) (getResources().getDimension(R.dimen.base_buttons_arrow_size)
                             + 2 * getResources().getDimension(R.dimen.simple_margin)),
                     0
             );
@@ -216,8 +180,8 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
             ImageView arrow = new ImageView(this);
             arrow.setImageResource(R.drawable.base_button_arrow_forward_blue);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
-                    (int) getResources().getDimension(R.dimen.my_icon_small_size),
-                    (int) getResources().getDimension(R.dimen.my_icon_small_size)
+                    (int) getResources().getDimension(R.dimen.base_buttons_arrow_size),
+                    (int) getResources().getDimension(R.dimen.base_buttons_arrow_size)
             );
             arrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -232,45 +196,42 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 
             // короткое нажатие на пункт списка
             final long finalId = learnersClassesId[i];
-            learnersClassContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //переходим к ученикам этого класса
-                    Intent intent = new Intent(getApplicationContext(), LearnersAndGradesActivity.class);
-                    //передаём id выбранного класса
-                    intent.putExtra(LearnersAndGradesActivity.CLASS_ID, finalId);
-                    startActivity(intent);
-                }
+            learnersClassContainer.setOnClickListener(view -> {
+                //переходим к ученикам этого класса
+                Intent intent = new Intent(getApplicationContext(), LearnersAndGradesActivity.class);
+                //передаём id выбранного класса
+                intent.putExtra(LearnersAndGradesActivity.CLASS_ID, finalId);
+                startActivity(intent);
             });
 
             // долгое
-            learnersClassContainer.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    //инициализируем диалог
-                    EditLearnersClassDialogFragment editDialog = new EditLearnersClassDialogFragment();
-                    //-данные для диалога-
-                    //получаем из бд
-                    DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                    //классы по Id
-                    Cursor classCursor = db.getLearnersClases(finalId);
-                    classCursor.moveToFirst();
-                    //создаем обьект с данными
-                    Bundle args = new Bundle();
-                    args.putLong("classId", finalId);
-                    args.putString("name", classCursor.getString(
-                            classCursor.getColumnIndex(
-                                    SchoolContract.TableClasses.COLUMN_CLASS_NAME)
-                    ));
-                    //данные диалогу
-                    editDialog.setArguments(args);
-                    //показать диалог
-                    editDialog.show(getFragmentManager(), "editClassDialog");
-                    //заканчиваем работу с бд
-                    classCursor.close();
-                    db.close();
-                    return true;
-                }
+            learnersClassContainer.setOnLongClickListener(view -> {
+
+                // ставим класс как выбранный
+                selectedId = finalId;
+
+                //инициализируем диалог
+                EditLearnersClassDialogFragment editDialog = new EditLearnersClassDialogFragment();
+                //-данные для диалога-
+                //получаем из бд
+                DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
+                //классы по Id
+                Cursor classCursor = db.getLearnersClases(finalId);
+                classCursor.moveToFirst();
+                //создаем обьект с данными
+                Bundle args = new Bundle();
+                args.putString("name", classCursor.getString(
+                        classCursor.getColumnIndex(
+                                SchoolContract.TableClasses.COLUMN_CLASS_NAME)
+                ));
+                //данные диалогу
+                editDialog.setArguments(args);
+                //показать диалог
+                editDialog.show(getSupportFragmentManager(), "editClassDialog");
+                //заканчиваем работу с бд
+                classCursor.close();
+                db.close();
+                return true;
             });
         }
 
@@ -280,23 +241,23 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 
             // создаем контейнер
             RelativeLayout learnersClassContainer = new RelativeLayout(this);
-            learnersClassContainer.setBackgroundResource(R.drawable.base_background_dialog_full_round_dwite);
+            learnersClassContainer.setBackgroundResource(R.drawable.base_background_button_round_gray);
             // параметры контейнера
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,//ш
-                    ViewGroup.LayoutParams.WRAP_CONTENT//в
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    getResources().getDimensionPixelSize(R.dimen.simple_buttons_height)
             );
             containerParams.setMargins(
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.simple_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
+                    (int) getResources().getDimension(R.dimen.double_margin),
                     0
             );
             room.addView(learnersClassContainer, containerParams);
 
             // создаём текст
             TextView item = new TextView(this);
-            item.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
+            item.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
             item.setGravity(Gravity.CENTER_VERTICAL);
             item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
             item.setTextColor(Color.BLACK);
@@ -310,7 +271,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
             itemParams.setMargins(
                     (int) getResources().getDimension(R.dimen.double_margin),
                     0,
-                    (int) (getResources().getDimension(R.dimen.my_icon_small_size)
+                    (int) (getResources().getDimension(R.dimen.base_buttons_arrow_size)
                             + 2 * getResources().getDimension(R.dimen.simple_margin)),
                     0
             );
@@ -320,8 +281,8 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
             ImageView arrow = new ImageView(this);
             arrow.setImageResource(R.drawable.learners_classes_activity_button_add___kitkat);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
-                    (int) getResources().getDimension(R.dimen.my_icon_small_size),
-                    (int) getResources().getDimension(R.dimen.my_icon_small_size)
+                    (int) getResources().getDimension(R.dimen.base_buttons_arrow_size),
+                    (int) getResources().getDimension(R.dimen.base_buttons_arrow_size)
             );
             arrowParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -335,56 +296,43 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 
 
             // нажатие на пункт списка
-            learnersClassContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // диалог создания
-                    // инициализируем диалог
-                    CreateLearnersClassDialogFragment createClassDialog = new CreateLearnersClassDialogFragment();
-                    // показать диалог
-                    createClassDialog.show(getFragmentManager(), "createClassDialog");
-                }
+            learnersClassContainer.setOnClickListener(view -> {
+                // диалог создания
+                // инициализируем диалог
+                CreateLearnersClassDialogFragment createClassDialog = new CreateLearnersClassDialogFragment();
+                // показать диалог
+                createClassDialog.show(getSupportFragmentManager(), "createClassDialog");
             });
         }
 
-
-        //экран
-        //-...
-        //-контейнер
-        //--текст
-        //--текст
-        //--текст
-        //-контейнер
-        //экран
-
-        //---контейнер---
-        LinearLayout container = new LinearLayout(this);
-        container.setOrientation(LinearLayout.VERTICAL);
-        //параметры контейнера
-        LinearLayout.LayoutParams containerParams =
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                );
-        containerParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
-
-        //---1 текст---
-        //создаем
-        TextView helpText1 = new TextView(this);
-        helpText1.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
-        helpText1.setGravity(Gravity.CENTER);
-        helpText1.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-        helpText1.setTextColor(getResources().getColor(R.color.backgroundLiteGray));
-        helpText1.setText(R.string.learners_classes_out_activity_text_help);
-        //добавляем
-        container.addView(
-                helpText1,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-
-        //---выводим контейнер в экран---
-        room.addView(container, containerParams);
+//        //---контейнер---
+//        LinearLayout container = new LinearLayout(this);
+//        container.setOrientation(LinearLayout.VERTICAL);
+//        //параметры контейнера
+//        LinearLayout.LayoutParams containerParams =
+//                new LinearLayout.LayoutParams(
+//                        LinearLayout.LayoutParams.WRAP_CONTENT,
+//                        LinearLayout.LayoutParams.WRAP_CONTENT
+//                );
+//        containerParams.setMargins((int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10), (int) pxFromDp(10));
+//
+//        //---1 текст---
+//        //создаем
+//        TextView helpText1 = new TextView(this);
+//        helpText1.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
+//        helpText1.setGravity(Gravity.CENTER);
+//        helpText1.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+//        helpText1.setTextColor(getResources().getColor(R.color.backgroundLiteGray));
+//        helpText1.setText(R.string.learners_classes_out_activity_text_help);
+//        //добавляем
+//        container.addView(
+//                helpText1,
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//        );
+//
+//        //---выводим контейнер в экран---
+//        room.addView(container, containerParams);
 
     }
 
@@ -399,9 +347,71 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements Edi
 
     }
 
-    //---------форматы----------
 
-    private float pxFromDp(float px) {
-        return px * getApplicationContext().getResources().getDisplayMetrics().density;
+
+//---------------------------------методы диалогов--------------------------------------------------
+
+
+//-----создание-----
+
+    @Override
+    public void createLearnersClass(String name) {
+        //создаем класс
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        db.createClass(name);
+        db.close();
+        //опять выводим списки
+        getLearnersClasses();
+        outLearnersClasses();
     }
+
+//-----редактирование-----
+
+    //переименование
+    @Override
+    public void editLearnersClass(String name) {
+        //изменяем класс
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        db.setClassName(selectedId, name);
+        db.close();
+        selectedId = -1;
+        //опять выводим списки
+        getLearnersClasses();
+        outLearnersClasses();
+    }
+
+    // удаление
+    @Override
+    public void removeLearnersClass() {
+        // Создаем диалог AcceptDialog с соответствующими текстами
+        AcceptDialog accept = new AcceptDialog();
+        Bundle args = new Bundle();
+        args.putString(AcceptDialog.ARG_ACCEPT_MESSAGE,
+                getResources().getString(R.string.learners_classes_out_activity_dialog_button_delete_class_ask));
+        args.putString(AcceptDialog.ARG_ACCEPT_BUTTON_TEXT,
+                getResources().getString(R.string.learners_classes_out_activity_dialog_button_delete_class));
+        accept.setArguments(args);
+        accept.show(getSupportFragmentManager(), "delete accept");
+
+        selectedIdForDelete = selectedId;
+        selectedId = -1;
+    }
+
+
+    // обратная связь от диалога подтверждения удаления
+    @Override
+    public void accept() {
+        if (selectedIdForDelete != -1) {
+            //удаляем класс
+            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+            db.deleteClass(selectedIdForDelete);
+            db.close();
+            // опять выводим списки
+            getLearnersClasses();
+            outLearnersClasses();
+        }
+        selectedIdForDelete = -1;
+        selectedId = -1;
+    }
+
 }

@@ -1,44 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_lesson_redactor_main_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/activity_lesson_redactor_main_container"
-    android:background="@drawable/lesson_redactor_dialog_background_no_insert"
-    tools:context="com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity"
     android:layout_marginTop="?attr/actionBarSize"
-    android:layout_marginBottom="@dimen/simple_margin">
+    android:layout_marginBottom="@dimen/simple_margin"
+    android:background="@drawable/base_background_dialog_full_round_white"
+    tools:context="com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity">
     <!--android:layout_margin="@dimen/simple_margin"-->
 
-    <RelativeLayout
+
+    <LinearLayout
         android:id="@+id/activity_lesson_redactor_head_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/base_background_dialog_head_round_blue">
+        android:padding="@dimen/half_more_margin">
 
         <ImageView
             android:id="@+id/activity_lesson_redactor_back_button"
             android:layout_width="@dimen/my_icon_size"
             android:layout_height="@dimen/my_icon_size"
-            android:layout_centerVertical="true"
-            android:layout_margin="@dimen/simple_margin"
-            android:background="@drawable/base_button_close"
-            tools:ignore="RtlHardcoded" />
+            android:adjustViewBounds="true"/>
 
         <TextView
             android:id="@+id/activity_lesson_redactor_head_text"
+            style="@style/ButtonSimpleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_margin="@dimen/simple_margin"
-            android:textColor="@color/backgroundWhite"
-            android:textSize="@dimen/text_subtitle_size"
-            android:textStyle="bold" />
-    </RelativeLayout>
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/double_margin" />
+
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -53,35 +47,19 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-
-            <TextView
-                android:id="@+id/activity_lesson_redactor_current_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/simple_margin"
-                android:gravity="center_horizontal"
-                android:text="понедельник, 10 мая"
-                android:textSize="@dimen/text_simple_size"
-                android:textStyle="bold" />
-
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/double_margin"
                 android:layout_marginRight="@dimen/double_margin"
-                android:background="@drawable/base_background_dialog_full_round_gray"
-                android:padding="@dimen/simple_margin">
+                android:background="@drawable/base_background_button_round_gray"
+                android:padding="@dimen/double_margin">
 
                 <TableRow android:gravity="center_vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/simple_margin"
-                        android:text="Время#"
-                        android:textColor="@color/backgroundDarkGray"
-                        android:textSize="@dimen/text_simple_size"
-                        android:textStyle="bold" />
+                        style="@style/LessonRedactorDescriptionTextStyle"
+                        android:text="@string/lesson_redactor_activity_title_time" />
 
                     <Spinner
                         android:id="@+id/activity_lesson_redactor_time_spinner"
@@ -94,13 +72,8 @@
                 <TableRow android:gravity="center_vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/simple_margin"
-                        android:text="Класс#"
-                        android:textColor="@color/backgroundDarkGray"
-                        android:textSize="@dimen/text_simple_size"
-                        android:textStyle="bold" />
+                        style="@style/LessonRedactorDescriptionTextStyle"
+                        android:text="@string/lesson_redactor_activity_title_class" />
 
                     <Spinner
                         android:id="@+id/activity_lesson_redactor_class_spinner"
@@ -113,13 +86,8 @@
                 <TableRow android:gravity="center_vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/simple_margin"
-                        android:text="Предмет#"
-                        android:textColor="@color/backgroundDarkGray"
-                        android:textSize="@dimen/text_simple_size"
-                        android:textStyle="bold" />
+                        style="@style/LessonRedactorDescriptionTextStyle"
+                        android:text="@string/lesson_redactor_activity_title_subject" />
 
                     <TextView
                         android:id="@+id/activity_lesson_redactor_lesson_name_text_button"
@@ -136,13 +104,8 @@
                 <TableRow android:gravity="center_vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/simple_margin"
-                        android:text="Кабинет#"
-                        android:textColor="@color/backgroundDarkGray"
-                        android:textSize="@dimen/text_simple_size"
-                        android:textStyle="bold" />
+                        style="@style/LessonRedactorDescriptionTextStyle"
+                        android:text="@string/lesson_redactor_activity_title_cabinet" />
 
                     <Spinner
                         android:id="@+id/activity_lesson_redactor_cabinet_spinner"
@@ -155,13 +118,8 @@
                 <TableRow android:gravity="center_vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/simple_margin"
-                        android:text="Повтор#"
-                        android:textColor="@color/backgroundDarkGray"
-                        android:textSize="@dimen/text_simple_size"
-                        android:textStyle="bold" />
+                        style="@style/LessonRedactorDescriptionTextStyle"
+                        android:text="@string/lesson_redactor_activity_title_repeat" />
 
                     <Spinner
                         android:id="@+id/activity_lesson_redactor_repeat_spinner"
@@ -176,24 +134,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/double_margin"
-                android:background="@drawable/base_background_dialog_full_round_gray"
+                android:background="@drawable/base_background_button_round_gray"
                 android:orientation="vertical"
                 android:padding="@dimen/simple_margin">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/LessonRedactorDescriptionTextStyle"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/lesson_redactor_activity_title_lesson_homework"
-                    android:textColor="@color/backgroundDarkGray"
-                    android:textSize="@dimen/text_simple_size"
-                    android:textStyle="bold" />
+                    android:text="@string/lesson_redactor_activity_title_lesson_homework" />
 
                 <EditText
                     android:id="@+id/activity_lesson_redactor_homework_text_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/simple_margin"
+                    android:layout_marginTop="@dimen/simple_margin"
                     android:background="@color/transparent"
                     android:gravity="top"
                     android:minLines="4"
@@ -221,7 +175,7 @@
                         android:layout_marginTop="@dimen/simple_margin"
                         android:layout_marginRight="@dimen/simple_margin"
                         android:layout_marginBottom="@dimen/simple_margin"
-                        android:background="@drawable/base_background_dialog_full_round_gray"
+                        android:background="@drawable/base_background_button_round_gray"
                         android:gravity="center">
 
                         <TextView
@@ -281,20 +235,14 @@
         </LinearLayout>
     </ScrollView>
 
-    <RelativeLayout
+    <TextView
         android:id="@+id/activity_lesson_redactor_save_button"
+        style="@style/ButtonSimpleStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/simple_buttons_height"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/base_background_dialog_bottom_round_blue">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_margin="@dimen/simple_margin"
-            android:text="@string/button_save"
-            android:textColor="@color/backgroundWhite"
-            android:textSize="@dimen/text_subtitle_size" />
-    </RelativeLayout>
+        android:background="@drawable/base_background_dialog_bottom_round_blue"
+        android:gravity="center"
+        android:text="@string/button_save"
+        android:textColor="@color/backgroundWhite" />
 </RelativeLayout>

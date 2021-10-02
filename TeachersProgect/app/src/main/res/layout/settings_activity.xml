@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context="com.learning.texnar13.teachersprogect.settings.SettingsActivity">
 
-    <include layout="@layout/base_toolbar_blue"/>
+    <include layout="@layout/base_toolbar_blue" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -19,361 +19,124 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/activity_settings_edit_locale_button"
+            <RelativeLayout
+                android:id="@+id/settings_activity_button_subscribe_background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/simple_buttons_height"
                 android:layout_margin="@dimen/double_margin"
-                android:orientation="vertical">
+                android:background="@drawable/base_background_button_round_orange">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/base_background_dialog_head_round_lgray"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_marginLeft="@dimen/double_margin"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/my_buttons_height_size"
-                        android:gravity="center_vertical"
-                        android:text="@string/settings_activity_button_edit_locale"
-                        android:fontFamily="@font/geometria_medium"
-                        android:textColor="@color/backgroundDarkGray"
-                        android:textSize="@dimen/text_subtitle_size" />
-                </LinearLayout>
+                <ImageView
+                    android:layout_width="@dimen/settings_activity_sponsor_icon_size"
+                    android:layout_height="@dimen/settings_activity_sponsor_icon_size"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/settings_activity_button_subscribe_text"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/settings_icon_premium" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/base_background_dialog_bottom_round_dwite"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/activity_settings_edit_locale_button_locale_text"
-                        android:layout_marginLeft="@dimen/double_margin"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/my_buttons_height_size"
-                        android:gravity="center_vertical"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/text_subtitle_size" />
-                </LinearLayout>
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/settings_activity_button_subscribe_text"
+                    style="@style/ButtonSimpleStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/my_buttons_height_size"
+                    android:layout_centerInParent="true"
+                    android:text="@string/settings_activity_button_subscribe"
+                    android:textColor="@color/backgroundWhite" />
 
-            <RelativeLayout
+                <ImageView
+                    android:layout_width="@dimen/settings_activity_sponsor_icon_size"
+                    android:layout_height="@dimen/settings_activity_sponsor_icon_size"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/settings_activity_button_subscribe_text"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/settings_icon_premium" />
+
+            </RelativeLayout>
+
+            <FrameLayout style="@style/SettingsDividerStyle" />
+
+            <TextView
+                android:id="@+id/activity_settings_edit_locale_button"
+                style="@style/SettingsButtonSimpleStyle"
+                android:text="@string/settings_activity_button_edit_locale" />
+
+            <FrameLayout style="@style/SettingsDividerStyle" />
+
+            <TextView
                 android:id="@+id/activity_settings_edit_time_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/base_background_dialog_full_round_gray"
-                android:layout_marginBottom="@dimen/double_margin"
-                android:layout_marginLeft="@dimen/double_margin"
-                android:layout_marginRight="@dimen/double_margin"
-                android:orientation="horizontal">
+                style="@style/SettingsButtonSimpleStyle"
+                android:text="@string/settings_activity_button_edit_time" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/my_buttons_height_size"
-                    android:layout_marginLeft="@dimen/double_margin"
-                    android:layout_marginRight="@dimen/my_icon_size"
-                    android:gravity="center_vertical"
-                    android:text="@string/settings_activity_button_edit_time"
-                    android:fontFamily="@font/geometria_medium"
-                    android:textColor="@color/backgroundDarkGray"
-                    android:textSize="@dimen/text_subtitle_size"
-                    tools:ignore="RtlHardcoded" />
-
-                <ImageView
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/simple_margin"
-                    android:layout_width="@dimen/my_icon_small_size"
-                    android:layout_height="@dimen/my_icon_small_size"
-                    android:adjustViewBounds="true"
-                    app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
+            <TextView
                 android:id="@+id/activity_settings_edit_max_answers_count_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/base_background_dialog_full_round_gray"
-                android:layout_marginBottom="@dimen/double_margin"
-                android:layout_marginLeft="@dimen/double_margin"
-                android:layout_marginRight="@dimen/double_margin"
-                android:orientation="horizontal">
+                style="@style/SettingsButtonSimpleStyle"
+                android:text="@string/settings_activity_button_edit_max_answer" />
 
-                <TextView
-                    android:id="@+id/activity_settings_edit_max_answers_count_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/my_buttons_height_size"
-                    android:layout_marginLeft="@dimen/double_margin"
-                    android:layout_marginRight="@dimen/my_icon_size"
-                    android:gravity="center_vertical"
-                    android:text="@string/settings_activity_button_edit_max_answer"
-                    android:fontFamily="@font/geometria_medium"
-                    android:textColor="@color/backgroundDarkGray"
-                    android:textSize="@dimen/text_subtitle_size"
-                    tools:ignore="RtlHardcoded" />
-
-                <ImageView
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/simple_margin"
-                    android:layout_width="@dimen/my_icon_small_size"
-                    android:layout_height="@dimen/my_icon_small_size"
-                    android:adjustViewBounds="true"
-                    app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
-
-            </RelativeLayout>
-
-
-
-            <RelativeLayout
+            <TextView
                 android:id="@+id/activity_settings_edit_grades_type_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/base_background_dialog_full_round_gray"
-                android:layout_marginBottom="@dimen/double_margin"
-                android:layout_marginLeft="@dimen/double_margin"
-                android:layout_marginRight="@dimen/double_margin"
-                android:orientation="horizontal">
+                style="@style/SettingsButtonSimpleStyle"
+                android:text="@string/settings_activity_title_grades_type" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/my_buttons_height_size"
-                    android:layout_marginLeft="@dimen/double_margin"
-                    android:layout_marginRight="@dimen/my_icon_size"
-                    android:gravity="center_vertical"
-                    android:text="@string/settings_activity_title_grades_type"
-                    android:fontFamily="@font/geometria_medium"
-                    android:textColor="@color/backgroundDarkGray"
-                    android:textSize="@dimen/text_subtitle_size"
-                    tools:ignore="RtlHardcoded" />
-
-                <ImageView
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/simple_margin"
-                    android:layout_width="@dimen/my_icon_small_size"
-                    android:layout_height="@dimen/my_icon_small_size"
-                    android:adjustViewBounds="true"
-                    app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
-
-            </RelativeLayout>
-
-
-            <RelativeLayout
+            <TextView
                 android:id="@+id/activity_settings_edit_absent_type_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/base_background_dialog_full_round_gray"
-                android:layout_marginBottom="@dimen/double_margin"
-                android:layout_marginLeft="@dimen/double_margin"
-                android:layout_marginRight="@dimen/double_margin"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/my_buttons_height_size"
-                    android:layout_marginLeft="@dimen/double_margin"
-                    android:layout_marginRight="@dimen/my_icon_size"
-                    android:gravity="center_vertical"
-                    android:text="@string/settings_activity_title_absent_type"
-                    android:fontFamily="@font/geometria_medium"
-                    android:textColor="@color/backgroundDarkGray"
-                    android:textSize="@dimen/text_subtitle_size"
-                    tools:ignore="RtlHardcoded" />
-
-                <ImageView
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/simple_margin"
-                    android:layout_width="@dimen/my_icon_small_size"
-                    android:layout_height="@dimen/my_icon_small_size"
-                    android:adjustViewBounds="true"
-                    app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
-
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/activity_settings_export_all_data_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/base_background_dialog_full_round_gray"
-                android:layout_marginBottom="@dimen/double_margin"
-                android:layout_marginLeft="@dimen/double_margin"
-                android:layout_marginRight="@dimen/double_margin"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/my_buttons_height_size"
-                    android:layout_marginLeft="@dimen/double_margin"
-                    android:layout_marginRight="@dimen/my_icon_size"
-                    android:gravity="center_vertical"
-                    android:text="#Экспорт данных#"
-                    android:fontFamily="@font/geometria_medium"
-                    android:textColor="@color/backgroundDarkGray"
-                    android:textSize="@dimen/text_subtitle_size"
-                    tools:ignore="RtlHardcoded" />
-
-                <ImageView
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/simple_margin"
-                    android:layout_width="@dimen/my_icon_small_size"
-                    android:layout_height="@dimen/my_icon_small_size"
-                    android:adjustViewBounds="true"
-                    app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
-
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/activity_settings_import_all_data_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/base_background_dialog_full_round_gray"
-                android:layout_marginBottom="@dimen/double_margin"
-                android:layout_marginLeft="@dimen/double_margin"
-                android:layout_marginRight="@dimen/double_margin"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/my_buttons_height_size"
-                    android:layout_marginLeft="@dimen/double_margin"
-                    android:layout_marginRight="@dimen/my_icon_size"
-                    android:gravity="center_vertical"
-                    android:text="#Импорт данных#"
-                    android:fontFamily="@font/geometria_medium"
-                    android:textColor="@color/backgroundDarkGray"
-                    android:textSize="@dimen/text_subtitle_size"
-                    tools:ignore="RtlHardcoded" />
-
-                <ImageView
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/simple_margin"
-                    android:layout_width="@dimen/my_icon_small_size"
-                    android:layout_height="@dimen/my_icon_small_size"
-                    android:adjustViewBounds="true"
-                    app:srcCompat="@drawable/__button_forward_arrow_dark_gray"/>
-
-            </RelativeLayout>
-
+                style="@style/SettingsButtonSimpleStyle"
+                android:text="@string/settings_activity_title_absent_type" />
 
             <RelativeLayout
                 android:id="@+id/activity_settings_are_grades_colored_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/simple_buttons_height"
+                android:layout_marginStart="@dimen/double_margin"
+                android:layout_marginEnd="@dimen/double_margin"
                 android:layout_marginBottom="@dimen/double_margin"
-                android:layout_marginLeft="@dimen/double_margin"
-                android:layout_marginRight="@dimen/double_margin"
-                android:orientation="horizontal"
-                android:background="@drawable/base_background_dialog_full_round_gray">
-
-
+                android:background="@drawable/base_background_button_round_gray">
 
                 <TextView
+                    style="@style/ButtonSimpleStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/my_buttons_height_size"
-                    android:layout_marginLeft="@dimen/double_margin"
-                    android:layout_marginRight="@dimen/my_icon_size"
-                    android:gravity="center_vertical"
-                    android:text="@string/settings_activity_title_colored_grades"
-                    android:fontFamily="@font/geometria_medium"
-                    android:textColor="@color/backgroundDarkGray"
-                    android:textSize="@dimen/text_subtitle_size"
-                    tools:ignore="RtlHardcoded" />
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/double_margin"
+                    android:layout_marginEnd="@dimen/double_margin"
+                    android:text="@string/settings_activity_title_colored_grades" />
 
                 <ImageView
-                    android:layout_centerVertical="true"
                     android:id="@+id/activity_settings_are_grades_colored_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/my_icon_small_size"
-                    android:layout_marginRight="@dimen/simple_margin"
-                    android:layout_alignParentRight="true"
-                    android:layout_gravity="center_vertical"
-                    android:adjustViewBounds="true"
+                    android:layout_width="@dimen/settings_activity_switch_size"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/simple_margin"
                     app:srcCompat="@drawable/test_switch_0" />
 
-
-
             </RelativeLayout>
 
-            <RelativeLayout
+            <FrameLayout style="@style/SettingsDividerStyle" />
+
+            <TextView
                 android:id="@+id/activity_settings_remove_data_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/base_background_dialog_full_round_gray"
-                android:layout_marginBottom="@dimen/double_margin"
-                android:layout_marginLeft="@dimen/double_margin"
-                android:layout_marginRight="@dimen/double_margin"
-                android:orientation="horizontal">
+                style="@style/SettingsButtonSimpleStyle"
+                android:text="@string/settings_activity_button_remove_data" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/my_buttons_height_size"
-                    android:layout_marginLeft="@dimen/double_margin"
-                    android:layout_marginRight="@dimen/my_icon_size"
-                    android:gravity="center_vertical"
-                    android:text="@string/settings_activity_button_remove_data"
-                    android:fontFamily="@font/geometria_medium"
-                    android:textColor="@color/backgroundDarkGray"
-                    android:textSize="@dimen/text_subtitle_size"
-                    tools:ignore="RtlHardcoded" />
+            <TextView
+                android:id="@+id/activity_settings_export_all_data_button"
+                style="@style/SettingsButtonSimpleStyle"
+                android:text="@string/settings_activity_button_save_data_copy" />
 
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/activity_settings_import_all_data_button"
+                style="@style/SettingsButtonSimpleStyle"
+                android:text="@string/settings_activity_button_load_data_copy" />
 
-            <RelativeLayout
-                android:id="@+id/settings_activity_button_subscribe"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/base_background_dialog_full_round_gray"
-                android:layout_marginBottom="@dimen/double_margin"
-                android:layout_marginLeft="@dimen/double_margin"
-                android:layout_marginRight="@dimen/double_margin"
-                android:orientation="horizontal">
+            <FrameLayout style="@style/SettingsDividerStyle" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/my_buttons_height_size"
-                    android:layout_marginLeft="@dimen/double_margin"
-                    android:layout_marginRight="@dimen/my_icon_size"
-                    android:gravity="center_vertical"
-                    android:text="@string/settings_activity_button_subscribe"
-                    android:fontFamily="@font/geometria_medium"
-                    android:textColor="@color/backgroundDarkGray"
-                    android:textSize="@dimen/text_subtitle_size"
-                    tools:ignore="RtlHardcoded" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
+            <TextView
                 android:id="@+id/settings_rate_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/base_background_dialog_full_round_blue"
-                android:layout_marginBottom="@dimen/double_margin"
-                android:layout_marginLeft="@dimen/double_margin"
-                android:layout_marginRight="@dimen/double_margin"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:fontFamily="@font/geometria_bold"
-                    android:textAllCaps="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/my_buttons_height_size"
-                    android:layout_marginLeft="@dimen/double_margin"
-                    android:layout_marginRight="@dimen/double_margin"
-                    android:gravity="center"
-                    android:text="@string/settings_activity_button_rate_us"
-                    android:textColor="@color/backgroundWhite"
-                    android:textSize="@dimen/text_subtitle_size"
-                    tools:ignore="RtlHardcoded" />
-
-            </RelativeLayout>
+                style="@style/SettingsButtonSimpleStyle"
+                android:background="@drawable/base_background_button_round_orange"
+                android:text="@string/settings_activity_button_rate_us"
+                android:textColor="@color/backgroundWhite" />
 
         </LinearLayout>
     </ScrollView>

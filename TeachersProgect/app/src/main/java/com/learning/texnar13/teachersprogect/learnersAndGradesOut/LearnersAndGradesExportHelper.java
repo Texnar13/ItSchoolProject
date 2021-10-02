@@ -304,17 +304,16 @@ public class LearnersAndGradesExportHelper {
         HSSFRow headRow = table.getRow(0);
         int lastCell = headRow.getLastCellNum();
 
-        // получаем лист дат с проверенными датами (общ. кол-во ячеек - 1)
+        // получаем лист дат с уже проверенными датами (общ. кол-во ячеек - 1)
         Date[] checkedDates = new Date[lastCell];
         for (int cellI = 0; cellI < checkedDates.length; cellI++) {
             HSSFCell currentCell = headRow.getCell(cellI + 1);
-            checkedDates[cellI] = getDataCellValue(currentCell);
+            checkedDates[cellI] = getDataCellValue(currentCell); // если ячейка неправильная вернет null
             Log.e("TEST", "tableDatesCheck [" + cellI + "] date=" + checkedDates[cellI]);
         }
 
 
         // считываем имена учеников и оценки
-        int learnersCount = 0;// количество добавленых учеников
         int lastRowPos = table.getLastRowNum();
         for (int currentLearnersRowI = 1; currentLearnersRowI <= lastRowPos; currentLearnersRowI++) {
             HSSFRow currentLearnerRow = table.getRow(currentLearnersRowI);
@@ -333,11 +332,31 @@ public class LearnersAndGradesExportHelper {
                     (learnerNamePeaces.length == 1) ? ("") : (learnerNamePeaces[1]), "");
             // сохраняем получившегося ученика
             output.learnersUnits.add(learner);
-            learnersCount++;
 
 
-            // todo ищем оценки ученика
+            // todo ищем оценки ученика в столбцах с корректными датами
+            for (int dateCellPozI = 0; dateCellPozI < checkedDates.length; dateCellPozI++) {
+                if (checkedDates[dateCellPozI] != null) {
+                    HSSFCell gradeCell = currentLearnerRow.getCell(dateCellPozI);
+                    if (gradeCell == null) {
+                        switch (gradeCell.getCellType()) {
+                            case HSSFCell.CELL_TYPE_STRING:
+                                gradeCell.getStringCellValue();
+                            case HSSFCell.CELL_TYPE_NUMERIC:
+                                gradeCell.getNumericCellValue();
+                            default:
 
+                                // todo если вводятся два периода с одинаковой датой,
+                                //  значит пользователь ввел оценки для двух разных урококов в одном дне,
+                                //  вопрос в том, как это хранить, и как хранить сами оценки.
+
+//                                gradesUnits
+//
+// остановился здесь
+                        }
+                    }
+                }
+            }
 
 
             // GradesIOUnit;
@@ -393,7 +412,7 @@ public class LearnersAndGradesExportHelper {
     }
 
     // класс ученика для импорта экспорта
-    static public class LearnersIOUnit implements Serializable{
+    static public class LearnersIOUnit implements Serializable {
         String learnerLastName; // Ivanov
         String learnerName;// Ivan
         String learnerDescription;
@@ -407,11 +426,14 @@ public class LearnersAndGradesExportHelper {
         @NonNull
         @Override
         public String toString() {
-            return "*last_name="+learnerLastName+" name="+learnerName+"* ";
+            return "*last_name=" + learnerLastName + " name=" + learnerName + "* ";
         }
     }
 
-    static public class GradesIOUnit implements Serializable{
+    static public class GradesIOUnit implements Serializable {
+
+        // дата выставления оценки
+
 
         // массив оценок
         int[] learnerGrades;
@@ -424,6 +446,7 @@ public class LearnersAndGradesExportHelper {
             learnerGrades[1] = secondGrade;
             learnerGrades[2] = thirdGrade;
         }
+
         public GradesIOUnit(int absTypeId) {
             this.absTypeId = absTypeId;
             learnerGrades = null;

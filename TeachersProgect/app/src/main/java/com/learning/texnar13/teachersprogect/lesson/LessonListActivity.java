@@ -204,7 +204,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
             // текст имени ученика
             TextView learnerText = new TextView(this);
             learnerText.setSingleLine(true);
-            learnerText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
+            learnerText.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
             learnerText.setText(learnersNames[learnersI]);
             learnerText.setTextColor(Color.BLACK);
             learnerText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
@@ -220,7 +220,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
             TextView learnerGradesText = new TextView(this);
             learnersGradesTexts[learnersI] = learnerGradesText;
             learnerGradesText.setGravity(Gravity.CENTER);
-            learnerGradesText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
+            learnerGradesText.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
 
             // выводим оценки
             StringBuilder gradeText = new StringBuilder();
@@ -292,7 +292,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
         // подсказка в низу
         TextView helpText = new TextView(this);
-        helpText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
+        helpText.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
         helpText.setTextColor(getResources().getColor(R.color.backgroundLiteGray));
         helpText.setGravity(Gravity.CENTER);
         helpText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
@@ -337,7 +337,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
         //кнопка сохранения
         TextView saveButton = new TextView(this);
-        saveButton.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
+        saveButton.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
         saveButton.setGravity(Gravity.CENTER);
         saveButton.setText(getResources().getString(R.string.button_save));
         saveButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));

@@ -27,59 +27,45 @@ public class EditMaxAnswersCountDialogFragment extends DialogFragment {
         editText.setText("" + getArguments().getInt(ARGUMENT_LAST_MAX));
         // -------------------------------- кнопки сохранения/отмены --------------------------------
         // сохранение
-        LinearLayout buttonSave = linearLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_maximum_grade_button_save);
-        buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    // проверяем поля
-                    if (editText.getText().toString().equals("")) {
-                        editText.setText("1");
-                        Toast.makeText(getActivity(), getString(R.string.settings_activity_toast_grade_no_entered), Toast.LENGTH_SHORT).show();
+        View buttonSave = linearLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_maximum_grade_button_save);
+        buttonSave.setOnClickListener(v -> {
+            // проверяем поля
+            String enteredText = editText.getText().toString().trim();
+            if (enteredText.equals("")) {
+                editText.setText("1");
+                Toast.makeText(getActivity(), getString(R.string.settings_activity_toast_grade_no_entered), Toast.LENGTH_SHORT).show();
+            } else {
+                if (enteredText.length() <= 6) {
+                    if (Integer.valueOf(enteredText) > 100) {
+                        editText.setText("100");
+                        Toast.makeText(getActivity(), getString(R.string.settings_activity_toast_grade_too_match), Toast.LENGTH_SHORT).show();
+                        //вызываем в активности метод по изменению максимума
+                        ((EditMaxAnswersDialogInterface) getActivity()).editMaxAnswer(
+                                Integer.parseInt(editText.getText().toString())
+                        );
                     } else {
-                        if (editText.getText().toString().length() <= 6) {
-                            if (Integer.valueOf(editText.getText().toString()) > 100) {
-                                editText.setText("100");
-                                Toast.makeText(getActivity(), getString(R.string.settings_activity_toast_grade_too_match), Toast.LENGTH_SHORT).show();
-                                //вызываем в активности метод по изменению максимума
-                                ((com.learning.texnar13.teachersprogect.settings.EditMaxAnswersDialogInterface) getActivity()).editMaxAnswer(
-                                        Integer.parseInt(editText.getText().toString())
-                                );
-                            } else {
-                                if (Integer.valueOf(editText.getText().toString()) < 1) {
-                                    editText.setText("1");
-                                    Toast.makeText(getActivity(), getString(R.string.settings_activity_toast_grade_too_min), Toast.LENGTH_SHORT).show();
-                                    //вызываем в активности метод по изменению максимума
-                                    ((com.learning.texnar13.teachersprogect.settings.EditMaxAnswersDialogInterface) getActivity()).editMaxAnswer(
-                                            Integer.parseInt(editText.getText().toString())
-                                    );
-                                } else {
-                                    Toast.makeText(getActivity(), getString(R.string.settings_activity_toast_grade_saved) + " " + editText.getText().toString(), Toast.LENGTH_SHORT).show();
-                                    //вызываем в активности метод по изменению максимума
-                                    ((com.learning.texnar13.teachersprogect.settings.EditMaxAnswersDialogInterface) getActivity()).editMaxAnswer(
-                                            Integer.parseInt(editText.getText().toString())
-                                    );
-                                }
-                            }
+                        if (Integer.valueOf(enteredText) < 1) {
+                            editText.setText("1");
+                            Toast.makeText(getActivity(), getString(R.string.settings_activity_toast_grade_too_min), Toast.LENGTH_SHORT).show();
                         } else {
-                            editText.setText("100");
-                            Toast.makeText(getActivity(), getString(R.string.settings_activity_toast_grade_too_match), Toast.LENGTH_SHORT).show();
-                            //вызываем в активности метод по изменению максимума
-                            ((com.learning.texnar13.teachersprogect.settings.EditMaxAnswersDialogInterface) getActivity()).editMaxAnswer(
-                                    Integer.parseInt(editText.getText().toString())
-                            );
+                            Toast.makeText(getActivity(), getString(R.string.settings_activity_toast_grade_saved) + " " + enteredText, Toast.LENGTH_SHORT).show();
+
                         }
+                        //вызываем в активности метод по изменению максимума
+                        ((EditMaxAnswersDialogInterface) getActivity())
+                                .editMaxAnswer(Integer.parseInt(enteredText));
                     }
-                } catch (java.lang.ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован класс EditMaxAnswersDialogInterface
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "EditMaxAnswersCountDialogFragment: you must implements EditMaxAnswersDialogInterface in your activity"
+                } else {
+                    editText.setText("100");
+                    Toast.makeText(getActivity(), getString(R.string.settings_activity_toast_grade_too_match), Toast.LENGTH_SHORT).show();
+                    //вызываем в активности метод по изменению максимума
+                    ((EditMaxAnswersDialogInterface) getActivity()).editMaxAnswer(
+                            Integer.parseInt(editText.getText().toString())
                     );
                 }
-                dismiss();
             }
+
+            dismiss();
         });
         // отмена
         ImageView buttonCancel = linearLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_maximum_grade_button_cancel);

@@ -1,5 +1,7 @@
 package com.learning.texnar13.teachersprogect.sponsor;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +33,24 @@ public class SponsorFragment extends Fragment {
         root = inflater.inflate(R.layout.sponsor_activity_screen_final, container);
         // выводим разметку по данным
         if (loadedPriceList != null) outDataInContainersAndSetClickers(root);
+
+        // ввести промокод
+        root.findViewById(R.id.sponsor_activity_screen_final_promocode).setOnClickListener(v -> {
+            try {
+                startActivity(new Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/redeem?code=")
+                ));
+            } catch (android.content.ActivityNotFoundException e) {
+                // Play Store app is not installed
+            }
+        });
+
+        // восстановить покупки
+        root.findViewById(R.id.sponsor_activity_screen_final_purchases).setOnClickListener(v -> {
+            Toast.makeText(getActivity(), "aaaaaaaaaa", Toast.LENGTH_SHORT).show();
+        });
+
         return root;
     }
 
@@ -48,17 +69,21 @@ public class SponsorFragment extends Fragment {
         for (int priceItemI = 0; priceItemI < loadedPriceList.length; priceItemI++) {
             // вывод разметки кнопки
             View button;
+            LinearLayout.LayoutParams buttonParams;
             if (loadedPriceList[priceItemI].trialPeriodDays == 0) {// это подписка без trial
                 button = getLayoutInflater().inflate(R.layout.sponsor_activity_button_no_trial, null);
+                buttonParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        getResources().getDimensionPixelSize(R.dimen.simple_buttons_height));
             } else {// с trial периодом
                 button = getLayoutInflater().inflate(R.layout.sponsor_activity_button_with_trial, null);
                 // выставляем trial текст
                 ((TextView) button.findViewById(R.id.sponsor_activity_screen_final_button_trial)).setText(
                         getResources().getString(R.string.sponsor_activity_text_free, loadedPriceList[priceItemI].trialPeriodDays)
                 );
+                buttonParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
-            LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             // если кнопка не последняя выводим отступ снизу
             if (priceItemI != loadedPriceList.length - 1)
                 buttonParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.double_margin);
@@ -73,8 +98,7 @@ public class SponsorFragment extends Fragment {
 
             // нажатие на кнопку
             int finalI = priceItemI;
-            button.findViewById(R.id.sponsor_activity_screen_final_button).setOnClickListener(
-                    v1 -> ((SubsClickInterface) getActivity()).click(finalI));
+            button.setOnClickListener(v1 -> ((SubsClickInterface) getActivity()).click(finalI));
         }
     }
 }

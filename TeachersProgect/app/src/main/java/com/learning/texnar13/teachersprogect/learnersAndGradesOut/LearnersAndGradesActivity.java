@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.PointF;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,11 +13,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.learning.texnar13.teachersprogect.MyApplication;
@@ -35,7 +39,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface, EditLearnerDialogInterface, EditGradeDialogInterface, UpdateTableInterface, AllowEditGradesInterface, View.OnTouchListener, SubjectsDialogInterface {
+public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface,
+        EditLearnerDialogInterface, EditGradeDialogInterface, UpdateTableInterface,
+        AllowEditGradesInterface, View.OnTouchListener, SubjectsDialogInterface {
 
     // ------------ константы ------------
 
@@ -188,11 +194,17 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
 
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
+        // цвет статус бара
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);// todo что это за строка, в Start Screen она не используется
+        }
 
         // раздуваем layout
         setContentView(R.layout.learners_and_grades_content);
@@ -200,7 +212,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
         setSupportActionBar(findViewById(R.id.base_blue_toolbar));
         // убираем заголовок, там свой
-        getSupportActionBar().setTitle("");
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setTitle("");
+        }
 
 
         // кнопка назад в actionBar

@@ -24,13 +24,13 @@
             android:layout_marginRight="1px"
             android:layout_weight="1"
             android:background="@color/baseBlue"
-            android:fontFamily="@font/geometria_bold"
+            style="@style/TextViewSemiBoldStyle"
             android:gravity="center"
             android:singleLine="true"
             android:padding="@dimen/half_margin"
             android:text="@string/learners_and_grades_out_activity_title_subject"
             android:textColor="@color/backgroundWhite"
-            android:textSize="@dimen/text_subtitle_size" />
+            android:textSize="@dimen/learners_and_grades_activity_subject_and_month_text_size" />
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -57,13 +57,13 @@
                 android:layout_toLeftOf="@+id/learners_and_grades_activity_button_next"
                 android:layout_toEndOf="@+id/learners_and_grades_activity_button_previous"
                 android:layout_toRightOf="@+id/learners_and_grades_activity_button_previous"
-                android:fontFamily="@font/geometria_bold"
+                style="@style/TextViewSemiBoldStyle"
                 android:gravity="center"
-                android:singleLine="true"
                 android:padding="@dimen/half_margin"
+                android:singleLine="true"
                 android:text="TextView"
                 android:textColor="@color/backgroundWhite"
-                android:textSize="@dimen/text_subtitle_size" />
+                android:textSize="@dimen/learners_and_grades_activity_subject_and_month_text_size" />
 
             <ImageView
                 android:id="@+id/learners_and_grades_activity_button_next"

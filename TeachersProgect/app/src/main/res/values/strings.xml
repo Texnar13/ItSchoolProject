@@ -41,6 +41,8 @@
     <string name="learners_classes_out_activity_dialog_title_edit_class">Group editing</string>
     <string name="learners_classes_out_activity_dialog_hint_class_name">Group name</string>
     <string name="learners_classes_out_activity_dialog_button_add">Add</string>
+    <string name="learners_classes_out_activity_dialog_button_delete_class">##Удалить</string>
+    <string name="learners_classes_out_activity_dialog_button_delete_class_ask">##Вы точно хотите удалить класс?</string>
     <!-- тост -->
     <string name="learners_classes_out_activity_toast_empty_name">Group name not entered</string>
     <!-- подсказка на экране -->
@@ -55,7 +57,7 @@
     <string name="learners_and_grades_out_activity_title_table_names">NAME</string>
     <string name="learners_and_grades_out_activity_title_grade_no_answers">no answers</string>
     <string name="learners_and_grades_out_activity_text_create_subject">Create new?</string>
-    <string name="learners_and_grades_out_activity_text_add_learner">+ Add learner</string>
+    <string name="learners_and_grades_out_activity_text_add_learner">Add learner</string>
     <!-- меню сверху -->
     <string name="learners_and_grades_out_activity_menu_title_statistics">Statistics</string>
     <string name="learners_and_grades_out_activity_menu_title_show_all">##Показать все</string>
@@ -129,7 +131,7 @@
     <string name="cabinets_out_activity_title_delete_cabinet_ask">##Вы точно хотите удалить кабинет?</string>
     <!-- диалоги -->
     <string name="cabinets_out_activity_dialog_title_create_cabinet">New classroom</string>
-    <string name="cabinets_out_activity_dialog_hint_cabinet_name">Title/number</string>
+    <string name="cabinets_out_activity_dialog_hint_cabinet_name">Title:</string>
     <!-- подсказка на экране -->
     <string name="cabinets_out_activity_text_help">To create a classroom, press + and enter its name. \nTo arrange the desks, click on the classroom you need. \nTo rename or delete the classroom, press and hold it.</string>
 
@@ -152,13 +154,13 @@
     <string name="schedule_month_activity_table_additional_title_learners">Seat the students!</string>
     <string name="schedule_month_activity_table_additional_title_ready">Ready, start the lesson?</string>
     <!-- уведомления -->
-    <string name="schedule_month_activity_toast_learners">You can\'t start the lesson until you have seated the students!</string>
+    <string name="schedule_month_activity_toast_learners">##У вас есть не рассаженные ученики</string>
 
 
     <!-- активность редактора уроков-->
     <!-- заголовок активности -->
-    <string name="title_activity_lesson_redactor_create">Create a lesson</string>
-    <string name="title_activity_lesson_redactor_edit">Edit the lesson</string>
+    <string name="title_activity_lesson_redactor_create" formatted="true">Create a lesson:\n%d %s, %s</string>
+    <string name="title_activity_lesson_redactor_edit" formatted="true">Edit the lesson:\n%d %s, %s</string>
     <!-- тексты спиннеров -->
     <string name="lesson_redactor_activity_spinner_text_create_subject">+ create a subject for this class</string>
     <string name="lesson_redactor_activity_spinner_text_remove_subject">- delete subjects</string>
@@ -167,12 +169,12 @@
     <string name="lesson_redactor_activity_spinner_text_repeat_daily">Daily</string>
     <string name="lesson_redactor_activity_spinner_text_repeat_weekly">Weekly</string>
     <!-- тексты -->
-    <string name="lesson_redactor_activity_title_class">Group</string>
-    <string name="lesson_redactor_activity_title_subject">Subject</string>
-    <string name="lesson_redactor_activity_title_cabinet">Classroom</string>
-    <string name="lesson_redactor_activity_title_time">Time</string>
-    <string name="lesson_redactor_activity_spinner_title_lesson">lesson</string>
-    <string name="lesson_redactor_activity_title_repeat">Repeat lesson</string>
+    <string name="lesson_redactor_activity_title_class">Group:</string>
+    <string name="lesson_redactor_activity_title_subject">Subject:</string>
+    <string name="lesson_redactor_activity_title_cabinet">Classroom:</string>
+    <string name="lesson_redactor_activity_title_time">Time:</string>
+    <string name="lesson_redactor_activity_spinner_title_lesson" formatted="true">%2d-lesson %2d:%02d - %2d:%02d</string>
+    <string name="lesson_redactor_activity_title_repeat">Repeat:</string>
     <string name="lesson_redactor_activity_toast_subject_not_select">No subject selected!</string>
     <string name="lesson_redactor_activity_title_lesson_homework">##Заметки, д/з:</string>
     <!-- уведомления -->
@@ -226,7 +228,7 @@
 
     <!-- активность настроек -->
     <!-- заголовок активности -->
-    <string name="title_activity_settings">SETTINGS</string>
+    <string name="title_activity_settings">Settings</string>
     <!-- тексты -->
     <string name="settings_activity_title_max_answer">Max answers count</string>
     <string name="settings_activity_title_grades_type">Answers types</string>
@@ -237,8 +239,10 @@
     <string name="settings_activity_button_edit_time">Edit lessons time</string>
     <string name="settings_activity_button_remove_data">Remove all data</string>
     <string name="settings_activity_button_rate_us">Rate our app!</string>
-    <string name="settings_activity_button_edit_locale">Language</string>
+    <string name="settings_activity_button_edit_locale" formatted="true">Language: %s</string>
     <string name="settings_activity_button_subscribe">##Стать спонсором</string>
+    <string name="settings_activity_button_save_data_copy">##Сохранить резервную копию</string>
+    <string name="settings_activity_button_load_data_copy">##Загрузить резервную копию</string>
     <!-- уведомления -->
     <string name="settings_activity_toast_data_delete_success">Data deleted successfully!</string>
     <string name="settings_activity_toast_data_delete_falture">Was entered an incorrect number, the data is not removed</string>
@@ -250,15 +254,16 @@
     <string name="settings_activity_toast_time_no_saved">Error, time parameters not saved</string>
     <!-- диалоги -->
     <string name="settings_activity_dialog_delete_title">Are you sure you want to delete all data?</string>
-    <string name="settings_activity_dialog_add_type_title">+ add type</string>
+    <string name="settings_activity_dialog_add_type_title">+ Add type</string>
     <string name="settings_activity_dialog_new_type_title">New type</string>
     <string name="settings_activity_dialog_add_absent_type_title">+ Add the type of absence</string>
-    <string name="settings_activity_dialog_new_absent_type_long_title_hint">Type:</string>
-    <string name="settings_activity_dialog_new_absent_type_title_hint">Abbreviation:</string>
+    <string name="settings_activity_dialog_new_absent_type_long_title_hint">Type</string>
+    <string name="settings_activity_dialog_new_absent_type_title_hint">Abbreviation</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty">Enter the name</string>
-    <string name="settings_activity_dialog_delete_text_confirm_delete">Enter the number to confirm</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_empty_short">##Введите сокращение</string>
+    <string name="settings_activity_dialog_delete_text_confirm_delete" formatted="true">Enter the number "%d" to confirm:</string>
     <string name="settings_activity_dialog_hint_number">NUMBER </string>
-    <string name="settings_activity_dialog_button_remove_data">Delete all data</string>
+    <string name="settings_activity_dialog_button_remove_data">Delete</string>
     <string name="settings_activity_dialog_button_remove">Remove</string>
     <string name="settings_activity_dialog_edit_time_title">Change lessons time</string>
     <string name="settings_activity_dialog_edit_time_button_add_lesson">##+ Добавить урок</string>
@@ -273,18 +278,20 @@
 
     <!-- активность рекламы спонсора -->
     <string name="sponsor_activity_button_go_to_last_screen">##Попробовать премиум</string>
-    <string name="sponsor_activity_title_app_name">##Teacher\'s Assistant</string>
-    <string name="sponsor_activity_title_tag">##Спонсор</string>
+    <string name="sponsor_activity_title_app_name">Teacher\'s Assistant</string>
+    <string name="sponsor_activity_title_tag">Premium</string>
     <string name="sponsor_activity_title_screen_0">##Неограниченное количество уроков</string>
     <string name="sponsor_activity_title_screen_1">##Никаких ограничений по символам (комментарий к уроку и к ученику любой длинны)</string>
     <string name="sponsor_activity_title_screen_2">##Нет рекламы</string>
     <string name="sponsor_activity_title_screen_3">##Сколько угодно типов пропусков и типов работы на уроке</string>
     <string name="sponsor_activity_title_screen_4">##Импорт и экспорт данных</string>
     <string name="sponsor_activity_title_screen_last">##Выберите подходящую для вас подписку:</string>
-    <string name="sponsor_activity_button_sub_month" formatted="true">##1 раз в месяц = %s</string>
+    <string name="sponsor_activity_button_sub_month" formatted="true">##Ежемесячно: %s</string>
     <string name="sponsor_activity_button_sub_year" formatted="true">##1 раз в год = %s</string>
     <string name="sponsor_activity_text_free" formatted="true">##Бесплатно %d дней</string>
     <string name="sponsor_activity_title_cancel_sub">##Вы можете отменить подписку в любое время</string>
+    <string name="sponsor_activity_title_promocode">##<u>Использовать промокод</u></string>
+    <string name="sponsor_activity_title_subs">##<u>Восстановить покупки</u></string>
     <string name="sponsor_activity_button_my_subs">##Посмотреть мои подписки</string>
     <string name="sponsor_activity_text_test_dz">##Тестовое дз для надписи, напиши здесь что-нибудь:)</string>
     <string name="sponsor_activity_text_test_info">##Тестовая информация об ученике, напиши здесь что-нибудь</string>

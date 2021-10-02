@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/base_background_dialog_head_round_wite"
         android:orientation="horizontal"
-        android:padding="@dimen/double_margin"
-        android:gravity="center_vertical">
+        android:padding="@dimen/double_margin">
 
         <ImageView
             android:id="@+id/accept_dialog_button_close"
@@ -23,25 +22,19 @@
 
         <TextView
             android:id="@+id/accept_dialog_title"
+            style="@style/ButtonSimpleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/double_margin"
-            android:layout_marginEnd="@dimen/double_margin"
-            android:textColor="#000000"
-            android:textSize="@dimen/text_subtitle_size" />
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/double_margin" />
     </LinearLayout>
-
 
     <TextView
         android:id="@+id/accept_dialog_text_button_accept"
+        style="@style/ButtonSimpleStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/double_margin"
-        android:paddingBottom="@dimen/double_margin"
-        android:paddingStart="@dimen/forth_margin"
-        android:paddingEnd="@dimen/forth_margin"
+        android:layout_height="@dimen/simple_buttons_height"
         android:background="@drawable/base_background_dialog_bottom_round_blue"
         android:gravity="center"
-        android:textColor="@color/backgroundWhite"
-        android:textSize="@dimen/text_subtitle_size" />
+        android:textColor="@color/backgroundWhite" />
 </LinearLayout>

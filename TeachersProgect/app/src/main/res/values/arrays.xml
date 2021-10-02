@@ -11,8 +11,8 @@
     </string-array>
     <!-- коды для них в бд-->
     <string-array name="locale_code">
-        <item>defaultLocale</item>        
-        <item>ru</item>        
+        <item>defaultLocale</item>
+        <item>ru</item>
         <item>en</item>
         <item>zh</item>
         <item>es</item>
@@ -20,43 +20,43 @@
 
 
     <string-array name="months_names">
-        <item>january</item>        
-        <item>february</item>
-        <item>march</item>        
-        <item>april</item>       
-        <item>may</item>        
-        <item>june</item>        
-        <item>july</item>        
-        <item>august</item>       
-        <item>september</item>        
-        <item>october</item>        
-        <item>november</item>        
-        <item>december</item>
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
     </string-array>
 
     <string-array name="months_names_with_ending">
-        <item>january</item>        
+        <item>january</item>
         <item>february</item>
-        <item>march</item>        
-        <item>april</item>       
-        <item>may</item>        
-        <item>june</item>        
-        <item>july</item>        
-        <item>august</item>       
-        <item>september</item>        
-        <item>october</item>        
-        <item>november</item>        
+        <item>march</item>
+        <item>april</item>
+        <item>may</item>
+        <item>june</item>
+        <item>july</item>
+        <item>august</item>
+        <item>september</item>
+        <item>october</item>
+        <item>november</item>
         <item>december</item>
     </string-array>
 
-    <string-array name="week_days_simple">            
-        <item>Sunday</item>
-        <item>Monday</item>        
-        <item>Tuesday</item> 
-        <item>Wednesday</item>        
-        <item>Thursday</item>       
-        <item>Friday</item>       
-        <item>Saturday</item> 
+    <string-array name="week_days_simple">
+        <item>sunday</item>
+        <item>monday</item>
+        <item>tuesday</item>
+        <item>wednesday</item>
+        <item>thursday</item>
+        <item>friday</item>
+        <item>saturday</item>
     </string-array>
 
     <!-- активность календаря на день -->

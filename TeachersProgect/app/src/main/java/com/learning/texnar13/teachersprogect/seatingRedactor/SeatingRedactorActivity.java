@@ -117,8 +117,6 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
     // точка середины между пальцами за предыдущую итерацию
     static private Point oldMid;
-    // множитель за предыдущую итерацию
-    static private float oldMultiplier;
     // предыдущее растояние между пальцам
     static private float oldDist;
 
@@ -442,7 +440,6 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     // готовимся к зуму
                     mode = ZOOM;
                     // начальные данные о пальцах
-                    oldMultiplier = multiplier;
                     oldMid = findMidPoint(motionEvent);
 
                 }
@@ -729,7 +726,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
                     // создаем текст ученика
                     TextView learnerText = new TextView(SeatingRedactorActivity.this);
-                    learnerText.setTypeface(ResourcesCompat.getFont(SeatingRedactorActivity.this, R.font.geometria));
+                    learnerText.setTypeface(ResourcesCompat.getFont(SeatingRedactorActivity.this, R.font.montserrat_medium));
                     learnerText.setTextSize(7 * multiplier);
                     learnerText.setAllCaps(true);
                     learnerText.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -862,7 +859,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
             // создаем текст ученика
             TextView learnerText = new TextView(SeatingRedactorActivity.this);
-            learnerText.setTypeface(ResourcesCompat.getFont(SeatingRedactorActivity.this, R.font.geometria));
+            learnerText.setTypeface(ResourcesCompat.getFont(SeatingRedactorActivity.this, R.font.montserrat_medium));
             learnerText.setTextSize(7 * multiplier);
             learnerText.setAllCaps(true);
             learnerText.setGravity(Gravity.CENTER_HORIZONTAL);

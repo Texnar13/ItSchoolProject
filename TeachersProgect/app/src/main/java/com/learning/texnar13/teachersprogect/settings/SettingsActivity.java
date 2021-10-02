@@ -9,11 +9,14 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +25,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -86,9 +90,16 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
-        super.onCreate(savedInstanceState);
+        // цвет статус бара
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);// todo что это за строка, в Start Screen она не используется
+        }
         // разрешаем только вертикальную ориентацию
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
@@ -106,7 +117,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
         setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
         // убираем заголовок, там свой
-        Objects.requireNonNull(getSupportActionBar()).setTitle("");
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setTitle("");
+        }
+
         ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_settings);
 
 
@@ -129,7 +145,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         // удаление данных
         findViewById(R.id.activity_settings_remove_data_button).setOnClickListener(this);
         // подписка
-        findViewById(R.id.settings_activity_button_subscribe).setOnClickListener(this);
+        findViewById(R.id.settings_activity_button_subscribe_background).setOnClickListener(this);
         // оцените нас
         findViewById(R.id.settings_rate_button).setOnClickListener(this);
 
@@ -138,7 +154,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
         // -- максимальный ответ
-        maxGradeText = ((TextView) findViewById(R.id.activity_settings_edit_max_answers_count_text));
+        maxGradeText = ((TextView) findViewById(R.id.activity_settings_edit_max_answers_count_button));
         maxGradeText.setText(String.format(
                 getResources().getString(R.string.settings_activity_button_edit_max_answer),
                 Integer.toString(db.getSettingsMaxGrade(1))
@@ -159,7 +175,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         // достаем названия языков
         String[] localeNames = getResources().getStringArray(R.array.locale_names);
         // выводим название
-        ((TextView) findViewById(R.id.activity_settings_edit_locale_button_locale_text)).setText(localeNames[lastLocaleNumber]);
+        ((TextView) findViewById(R.id.activity_settings_edit_locale_button)).setText(getResources().getString(
+                R.string.settings_activity_button_edit_locale, localeNames[lastLocaleNumber]));
 
         // -- цветные оценки
         coloredGradesSwitch = findViewById(R.id.activity_settings_are_grades_colored_switch);
@@ -211,7 +228,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             //создаем диалог
             SettingsRemoveDataDialogFragment removeDialog = new SettingsRemoveDataDialogFragment();
             // запускаем
-            removeDialog.show(getFragmentManager(), "removeSettingsDialog");
+            removeDialog.show(getSupportFragmentManager(), "removeSettingsDialog");
         }
         // экспорт данных
         else if (vId == R.id.activity_settings_export_all_data_button) {
@@ -389,7 +406,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             localeDialog.show(getSupportFragmentManager(), "editLocaleDialog");
         }
         // подписка
-        else if (vId == R.id.settings_activity_button_subscribe) {
+        else if (vId == R.id.settings_activity_button_subscribe_background) {
             startResultHelper.launch(0);
         }
     }

@@ -41,6 +41,8 @@
     <string name="learners_classes_out_activity_dialog_title_edit_class">编辑班级</string>
     <string name="learners_classes_out_activity_dialog_hint_class_name">班级名称</string>
     <string name="learners_classes_out_activity_dialog_button_add">添加</string>
+    <string name="learners_classes_out_activity_dialog_button_delete_class">##Удалить</string>
+    <string name="learners_classes_out_activity_dialog_button_delete_class_ask">##Вы точно хотите удалить класс?</string>
     <!-- тост -->
     <string name="learners_classes_out_activity_toast_empty_name">沒有輸入班級名稱</string>
     <!-- подсказка на экране -->
@@ -129,7 +131,7 @@
     <string name="cabinets_out_activity_title_delete_cabinet_ask">##Вы точно хотите удалить кабинет?</string>
     <!-- диалоги -->
     <string name="cabinets_out_activity_dialog_title_create_cabinet">新课堂</string>
-    <string name="cabinets_out_activity_dialog_hint_cabinet_name">新课堂/号</string>
+    <string name="cabinets_out_activity_dialog_hint_cabinet_name">新课堂:</string>
     <!-- подсказка на экране -->
     <string name="cabinets_out_activity_text_help">要创建课堂，请按+并输入其名称。 \n要摆好课桌，点击所需的课堂。 \n要重命名或删除课堂按住它。</string>
 
@@ -152,13 +154,13 @@
     <string name="schedule_month_activity_table_additional_title_learners">给学生安排坐位!</string>
     <string name="schedule_month_activity_table_additional_title_ready">万事俱备。开始?</string>
     <!-- уведомления -->
-    <string name="schedule_month_activity_toast_learners">你不能开始上课，直到学生坐下！</string>
+    <string name="schedule_month_activity_toast_learners">##У вас есть не рассаженные ученики</string>
 
 
     <!-- активность редактора уроков-->
     <!-- заголовок активности -->
-    <string name="title_activity_lesson_redactor_create">创造课</string>
-    <string name="title_activity_lesson_redactor_edit">编辑课</string>
+    <string name="title_activity_lesson_redactor_create" formatted="true">创造课:\n%d %s, %s</string>
+    <string name="title_activity_lesson_redactor_edit" formatted="true">编辑课:\n%d %s, %s</string>
     <!-- тексты спиннеров -->
     <string name="lesson_redactor_activity_spinner_text_create_subject">+ 为此班级创造学科</string>
     <string name="lesson_redactor_activity_spinner_text_remove_subject">- 删除学科</string>
@@ -167,12 +169,12 @@
     <string name="lesson_redactor_activity_spinner_text_repeat_daily">每日</string>
     <string name="lesson_redactor_activity_spinner_text_repeat_weekly">每周</string>
     <!-- тексты -->
-    <string name="lesson_redactor_activity_title_class">班级</string>
-    <string name="lesson_redactor_activity_title_subject">学科</string>
-    <string name="lesson_redactor_activity_title_cabinet">课堂</string>
-    <string name="lesson_redactor_activity_title_time">日期</string>
-    <string name="lesson_redactor_activity_spinner_title_lesson">课</string>
-    <string name="lesson_redactor_activity_title_repeat">课的重复性</string>
+    <string name="lesson_redactor_activity_title_class">班级:</string>
+    <string name="lesson_redactor_activity_title_subject">学科:</string>
+    <string name="lesson_redactor_activity_title_cabinet">课堂:</string>
+    <string name="lesson_redactor_activity_title_time">日期:</string>
+    <string name="lesson_redactor_activity_spinner_title_lesson" formatted="true">%2d-课 %2d:%02d - %2d:%02d</string>
+    <string name="lesson_redactor_activity_title_repeat">课的重复性:</string>
     <string name="lesson_redactor_activity_toast_subject_not_select">课不选择！</string>
     <string name="lesson_redactor_activity_title_lesson_homework">##Заметки, д/з:</string>
     <!-- уведомления -->
@@ -228,17 +230,19 @@
     <!-- заголовок активности -->
     <string name="title_activity_settings">设置</string>
     <!-- тексты -->
-    <string name="settings_activity_title_max_answer">量分数/最高得分</string>
+    <string name="settings_activity_title_max_answer">量分数/ 最高得分</string>
     <string name="settings_activity_title_grades_type">课的工作类型</string>
     <string name="settings_activity_title_absent_type">缺席的类型</string>
     <string name="settings_activity_title_colored_grades">颜色分数</string>
     <!-- кнопки -->
-    <string name="settings_activity_button_edit_max_answer" formatted="true">量分数/最高得分: %1$s</string>
+    <string name="settings_activity_button_edit_max_answer" formatted="true">量分数/ 最高得分: %1$s</string>
     <string name="settings_activity_button_edit_time">上课时间</string>
     <string name="settings_activity_button_remove_data">删除所有数据</string>
     <string name="settings_activity_button_rate_us">请评价我们的应用!</string>
-    <string name="settings_activity_button_edit_locale">语言</string>
+    <string name="settings_activity_button_edit_locale" formatted="true">语言: %s</string>
     <string name="settings_activity_button_subscribe">##Стать спонсором</string>
+    <string name="settings_activity_button_save_data_copy">##Сохранить резервную копию</string>
+    <string name="settings_activity_button_load_data_copy">##Загрузить резервную копию</string>
     <!-- уведомления -->
     <string name="settings_activity_toast_data_delete_success">所有数据删除成功</string>
     <string name="settings_activity_toast_data_delete_falture">你输入错数了, 数据不会被删除。</string>
@@ -253,10 +257,11 @@
     <string name="settings_activity_dialog_add_type_title">+ 添加课的工作类型</string>
     <string name="settings_activity_dialog_new_type_title">新课的工作类型</string>
     <string name="settings_activity_dialog_add_absent_type_title">+ 添加缺席类型</string>
-    <string name="settings_activity_dialog_new_absent_type_long_title_hint">类型:</string>
-    <string name="settings_activity_dialog_new_absent_type_title_hint">代表符号:</string>
+    <string name="settings_activity_dialog_new_absent_type_long_title_hint">类型</string>
+    <string name="settings_activity_dialog_new_absent_type_title_hint">代表符号</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty">输入名称</string>
-    <string name="settings_activity_dialog_delete_text_confirm_delete">输入要确认的数字 </string>
+    <string name="settings_activity_dialog_new_absent_type_toast_empty_short">##Введите сокращение</string>
+    <string name="settings_activity_dialog_delete_text_confirm_delete" formatted="true">输入要确认的数字 "%d":</string>
     <string name="settings_activity_dialog_hint_number">数字</string>
     <string name="settings_activity_dialog_button_remove_data">删除</string>
     <string name="settings_activity_dialog_button_remove">删除</string>
@@ -273,8 +278,8 @@
 
     <!-- активность рекламы спонсора -->
     <string name="sponsor_activity_button_go_to_last_screen">##Попробовать премиум</string>
-    <string name="sponsor_activity_title_app_name">##Teacher\'s Assistant</string>
-    <string name="sponsor_activity_title_tag">##Спонсор</string>
+    <string name="sponsor_activity_title_app_name">Teacher\'s Assistant</string>
+    <string name="sponsor_activity_title_tag">Premium</string>
     <string name="sponsor_activity_title_screen_0">##Неограниченное количество уроков</string>
     <string name="sponsor_activity_title_screen_1">##Никаких ограничений по символам (комментарий к уроку и к ученику любой длинны)</string>
     <string name="sponsor_activity_title_screen_2">##Нет рекламы</string>
@@ -285,6 +290,8 @@
     <string name="sponsor_activity_button_sub_year" formatted="true">##1 раз в год = %s</string>
     <string name="sponsor_activity_text_free" formatted="true">##Бесплатно %d дней</string>
     <string name="sponsor_activity_title_cancel_sub">##Вы можете отменить подписку в любое время</string>
+    <string name="sponsor_activity_title_promocode">##<u>Использовать промокод</u></string>
+    <string name="sponsor_activity_title_subs">##<u>Восстановить покупки</u></string>
     <string name="sponsor_activity_button_my_subs">##Посмотреть мои подписки</string>
     <string name="sponsor_activity_text_test_dz">##Тестовое дз для надписи, напиши здесь что-нибудь:)</string>
     <string name="sponsor_activity_text_test_info">##Тестовая информация об ученике, напиши здесь что-нибудь</string>

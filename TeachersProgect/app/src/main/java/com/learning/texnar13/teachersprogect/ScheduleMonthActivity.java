@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
@@ -87,10 +88,13 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         // выводим разметку
         setContentView(R.layout.schedule_month_activity);
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
-        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        setSupportActionBar(findViewById(R.id.base_blue_toolbar));
         // убираем заголовок, там свой
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setTitle("");
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setTitle("");
+        }
         ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_schedule_month);
 
 
@@ -104,6 +108,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             // вертикальная ориентация
             cellSize = getResources().getDisplayMetrics().widthPixels / 7F;
         }
+        cellSize -= (getResources().getDimensionPixelOffset(R.dimen.shedule_month_calendar_margin) / 7.0 * 2);
         // получаем поле вывода заголовка
         dateText = findViewById(R.id.schedule_month_date_text);
         // получаем поле вывода дня
@@ -118,39 +123,33 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
 
         // нажатие на кнопку предыдущий месяц
-        findViewById(R.id.schedule_month_button_previous).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ((viewCalendar.get(Calendar.MONTH)) == 0) {
-                    viewCalendar.set(Calendar.MONTH, 11);
-                    viewCalendar.set(Calendar.YEAR, viewCalendar.get(Calendar.YEAR) - 1);
-                } else {
-                    viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) - 1);
-                }
-                // по выбранной дате выводим месяц и заголовок
-                chosenOutDayNumber = -1;
-                outMonth();
-                outDay();
-                outCurrentData();
+        findViewById(R.id.schedule_month_button_previous).setOnClickListener(v -> {
+            if ((viewCalendar.get(Calendar.MONTH)) == 0) {
+                viewCalendar.set(Calendar.MONTH, 11);
+                viewCalendar.set(Calendar.YEAR, viewCalendar.get(Calendar.YEAR) - 1);
+            } else {
+                viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) - 1);
             }
+            // по выбранной дате выводим месяц и заголовок
+            chosenOutDayNumber = -1;
+            outMonth();
+            outDay();
+            outCurrentData();
         });
 
         // нажатие на кнопку следующий месяц
-        findViewById(R.id.schedule_month_button_next).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ((viewCalendar.get(Calendar.MONTH)) == 11) {
-                    viewCalendar.set(Calendar.MONTH, 0);
-                    viewCalendar.set(Calendar.YEAR, viewCalendar.get(Calendar.YEAR) + 1);
-                } else {
-                    viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) + 1);
-                }
-                // по выбранной дате выводим месяц и заголовок
-                chosenOutDayNumber = -1;
-                outMonth();
-                outDay();
-                outCurrentData();
+        findViewById(R.id.schedule_month_button_next).setOnClickListener(v -> {
+            if ((viewCalendar.get(Calendar.MONTH)) == 11) {
+                viewCalendar.set(Calendar.MONTH, 0);
+                viewCalendar.set(Calendar.YEAR, viewCalendar.get(Calendar.YEAR) + 1);
+            } else {
+                viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) + 1);
             }
+            // по выбранной дате выводим месяц и заголовок
+            chosenOutDayNumber = -1;
+            outMonth();
+            outDay();
+            outCurrentData();
         });
 
 
@@ -219,7 +218,9 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         int countOfWeeks = 1 + (int) Math.ceil((viewCalendar.getActualMaximum(Calendar.DAY_OF_MONTH) + firstDayOfFirstWeek - 7) / 7F);
 
         // выставляем размеры linear-а календаря
-        calendarOut.setLayoutParams(new LinearLayout.LayoutParams((int) (cellSize * 7), (int) (cellSize * (countOfWeeks + 1))));
+        LinearLayout.LayoutParams calendarOutParams = new LinearLayout.LayoutParams((int) (cellSize * 7), (int) (cellSize * (countOfWeeks + 1)));
+        calendarOutParams.gravity = Gravity.CENTER;
+        calendarOut.setLayoutParams(calendarOutParams);
         calendarOut.setWeightSum(countOfWeeks + 0.8f);
         // создаем 7 строк и помещаем их в контейнер
         LinearLayout[] weekLinearRows = new LinearLayout[countOfWeeks + 1];
@@ -239,11 +240,11 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         String[] weekDaysNames = getResources().getStringArray(R.array.schedule_month_activity_week_days_short_array);
         for (int i = 0; i < 7; i++) {
             TextView day = new TextView(this);
-            //day.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
+            //day.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
             day.setText(weekDaysNames[i]);
-            day.setAllCaps(true);
-            day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-            day.setTextColor(getResources().getColor(R.color.backgroundDarkGray));
+            day.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_semibold));
+            day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.shedule_month_calendar_day_text_size));
+            day.setTextColor(getResources().getColor(R.color.backgroundMediumGray));
             day.setGravity(Gravity.CENTER);
             LinearLayout.LayoutParams dayParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -265,7 +266,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
                 // создаем текст дня
                 final TextView day = new TextView(this);
-                day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+                day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.shedule_month_calendar_day_text_size));
                 day.setTextColor(Color.BLACK);
                 day.setGravity(Gravity.CENTER);
                 LinearLayout.LayoutParams dayParams = new LinearLayout.LayoutParams(0,
@@ -279,7 +280,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 );
                 weekLinearRows[weekOfMonthI + 1].addView(day, dayParams);
 
-                // выводим обычный день (пропуская пустые клетки в начале и в конце)
+                // этим условием пропускаем пустые клетки в начале и в конце и не ставим в них текст
                 if (0 <= monthDay && monthDay < countOfDaysInMonth) {
                     // ставим в ячейку текущее число
                     day.setText(Integer.toString(monthDay + 1));
@@ -293,8 +294,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                     );
                     // если в дне есть уроки, помечаем его
                     if (lessonsAttitudes.getCount() != 0) {
-                        day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-                        day.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_bold));
+                        day.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
                         day.setTextColor(Color.BLACK);
                     }
                     lessonsAttitudes.close();
@@ -387,7 +387,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             TextView head = new TextView(this);
             head.setBackgroundResource(R.drawable.base_background_dialog_head_round_blue);
             head.setTextColor(getResources().getColor(R.color.backgroundWhite));
-            head.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            head.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_semibold));
+            head.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.shedule_month_day_title_text_size));
             head.setGravity(Gravity.CENTER);
             head.setPadding(
                     getResources().getDimensionPixelOffset(R.dimen.double_margin),
@@ -395,9 +396,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                     getResources().getDimensionPixelOffset(R.dimen.double_margin),
                     getResources().getDimensionPixelOffset(R.dimen.double_margin)
             );
-            LinearLayout.LayoutParams headParams = new LinearLayout.LayoutParams(
+            dayOut.addView(head,
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            dayOut.addView(head, headParams);
 
 
             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
@@ -442,99 +442,63 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             for (int lessonI = 0; lessonI < standardLessonsPeriods.length; lessonI++) {
                 final int finalLessonI = lessonI;
 
-                // выводим общую пустую разметку урока
-                // контейнер урока
-                TableRow lessonContainer = new TableRow(this);
-                lessonContainer.setGravity(Gravity.CENTER_VERTICAL);
-                lessonContainer.setOrientation(LinearLayout.HORIZONTAL);
-                dayOut.addView(lessonContainer, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                // текст номера урока
-                TextView lessonNumberText = new TextView(this);
-                lessonNumberText.setGravity(Gravity.CENTER);
-                lessonNumberText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
-                lessonNumberText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-                lessonNumberText.setText(" " + (lessonI + 1) + ".");
-                TableRow.LayoutParams lessonNumberTextParams = new TableRow.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
-                );
-                lessonNumberTextParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-                lessonNumberTextParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-                lessonContainer.addView(lessonNumberText, lessonNumberTextParams);
+
+                // раздуваем корневой view одного элемента
+                View rootElement = getLayoutInflater().inflate(R.layout.schedule_month_lesson_pattern, null);
+                dayOut.addView(rootElement, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                TextView lessonNumberText = rootElement.findViewById(R.id.schedule_month_lesson_pattern_number);
+                TextView startTimeText = rootElement.findViewById(R.id.schedule_month_lesson_pattern_start_time);
+                TextView endTimeText = rootElement.findViewById(R.id.schedule_month_lesson_pattern_end_time);
+                TextView subjectText = rootElement.findViewById(R.id.schedule_month_lesson_pattern_subject);
+                TextView classText = rootElement.findViewById(R.id.schedule_month_lesson_pattern_class);
+                TextView cabinetText = rootElement.findViewById(R.id.schedule_month_lesson_pattern_cabinet);
 
 
-                // контейнер времени
-                LinearLayout timeContainer = new LinearLayout(this);
-                timeContainer.setGravity(Gravity.CENTER);
-                timeContainer.setOrientation(LinearLayout.VERTICAL);
-                TableRow.LayoutParams timeContainerParams = new TableRow.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
-                );
-                timeContainerParams.setMargins(
-                        0,
-                        (int) getResources().getDimension(R.dimen.half_margin),
-                        0,
-                        (int) getResources().getDimension(R.dimen.half_margin)
-                );
-                lessonContainer.addView(timeContainer, timeContainerParams);
+                lessonNumberText.setText(((lessonI >= 9) ? ((lessonI + 1)) : (" " + (lessonI + 1))) + ".");
+                startTimeText.setText(getTwoSymbols(standardLessonsPeriods[lessonI][0]) + ':' + getTwoSymbols(standardLessonsPeriods[lessonI][1]));
+                endTimeText.setText(getTwoSymbols(standardLessonsPeriods[lessonI][2]) + ':' + getTwoSymbols(standardLessonsPeriods[lessonI][3]));
 
-                // текст времени начала урока
-                TextView lessonBeginTimeText = new TextView(this);
-                lessonBeginTimeText.setGravity(Gravity.CENTER);
-                lessonBeginTimeText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
-                lessonBeginTimeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-                lessonBeginTimeText.setText(getTwoSymbols(standardLessonsPeriods[lessonI][0]) + ':' + getTwoSymbols(standardLessonsPeriods[lessonI][1]));
-                timeContainer.addView(lessonBeginTimeText, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                // текст времени конца урока
-                TextView lessonEndTimeText = new TextView(this);
-                lessonEndTimeText.setGravity(Gravity.CENTER);
-                lessonEndTimeText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
-                lessonEndTimeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-                lessonEndTimeText.setText(getTwoSymbols(standardLessonsPeriods[lessonI][2]) + ':' + getTwoSymbols(standardLessonsPeriods[lessonI][3]));
-                timeContainer.addView(lessonEndTimeText, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                // если урок текущй
-                if (lessonI == 0) {
-                    if (currentLesson == lessonI) {
-                        lessonContainer.setBackgroundResource(R.color.baseOrange);
-                        lessonNumberText.setTextColor(getResources().getColor(R.color.backgroundWhite));
-                        lessonBeginTimeText.setTextColor(getResources().getColor(R.color.backgroundWhite));
-                        lessonEndTimeText.setTextColor(getResources().getColor(R.color.backgroundWhite));
-                    } else {
-                        lessonContainer.setBackgroundResource(R.color.backgroundWhite);
-                        lessonNumberText.setTextColor(Color.BLACK);
-                        lessonBeginTimeText.setTextColor(getResources().getColor(R.color.backgroundMediumGray));
-                        lessonEndTimeText.setTextColor(getResources().getColor(R.color.backgroundMediumGray));
-                    }
+                // проставляем цвета
+                int textColor;
+                if (currentLesson == lessonI) {// если урок текущй
+                    rootElement.setBackgroundResource(R.color.baseOrange);
+                    textColor = getResources().getColor(R.color.backgroundWhite);
                 } else {
-                    if (currentLesson == lessonI) {
-                        lessonContainer.setBackgroundResource(R.drawable.shedule_month_activity_background_lesson_active);
-                        lessonNumberText.setTextColor(getResources().getColor(R.color.backgroundWhite));
-                        lessonBeginTimeText.setTextColor(getResources().getColor(R.color.backgroundWhite));
-                        lessonEndTimeText.setTextColor(getResources().getColor(R.color.backgroundWhite));
+                    if (lessonI == 0) {
+                        rootElement.setBackgroundResource(R.color.backgroundWhite);
                     } else {
-                        lessonContainer.setBackgroundResource(R.drawable.shedule_month_activity_background_lesson_not_active);
-                        lessonNumberText.setTextColor(Color.BLACK);
-                        lessonBeginTimeText.setTextColor(getResources().getColor(R.color.backgroundMediumGray));
-                        lessonEndTimeText.setTextColor(getResources().getColor(R.color.backgroundMediumGray));
+                        if (currentLesson == lessonI - 1) {
+                            rootElement.setBackgroundResource(R.color.backgroundWhite);
+                        } else {
+                            rootElement.setBackgroundResource(R.drawable.shedule_month_activity_background_lesson_not_active);
+                        }
                     }
+                    textColor = Color.BLACK;
                 }
+                lessonNumberText.setTextColor(textColor);
+                startTimeText.setTextColor(textColor);
+                endTimeText.setTextColor(textColor);
+                subjectText.setTextColor(textColor);
+                classText.setTextColor(textColor);
+                cabinetText.setTextColor(textColor);
+
 
                 // ищем в базе данных урок
                 Cursor attitudeId = db.getSubjectAndTimeCabinetAttitudeByDateAndLessonNumber(outStringDate, lessonI);
                 if (attitudeId.getCount() == 0) {// если не нашли зависимость урока
+                    // чистим поля
+                    subjectText.setText("");
+                    classText.setText("");
+                    cabinetText.setText("");
                     // при нажатиина контейнер
-                    lessonContainer.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // диалог создания урока
-
-                            Intent intent = new Intent(ScheduleMonthActivity.this, LessonRedactorActivity.class);
-                            intent.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, -1L);
-                            intent.putExtra(LessonRedactorActivity.LESSON_CHECK_DATE, outStringDate);
-                            intent.putExtra(LessonRedactorActivity.LESSON_NUMBER, finalLessonI);
-                            startActivityForResult(intent, LessonRedactorActivity.LESSON_REDACTOR_RESULT_ID);
-                        }
+                    rootElement.setOnClickListener(v -> {
+                        // диалог создания урока
+                        Intent intent = new Intent(ScheduleMonthActivity.this, LessonRedactorActivity.class);
+                        intent.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, -1L);
+                        intent.putExtra(LessonRedactorActivity.LESSON_CHECK_DATE, outStringDate);
+                        intent.putExtra(LessonRedactorActivity.LESSON_NUMBER, finalLessonI);
+                        startActivityForResult(intent, LessonRedactorActivity.LESSON_REDACTOR_RESULT_ID);
                     });
                 } else {// если нашли
                     attitudeId.moveToFirst();
@@ -570,104 +534,42 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                     String cabinetName = cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
                     cabinetCursor.close();
 
-
                     // текст предмета
-                    TextView subjectText = new TextView(this);
-                    subjectText.setGravity(Gravity.CENTER);
-                    subjectText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria));
-                    subjectText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                     subjectText.setText(subjectName);
-                    TableRow.LayoutParams subjectTextParams = new TableRow.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
-                    );
-                    subjectTextParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-                    subjectTextParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-                    lessonContainer.addView(subjectText, subjectTextParams);
-
-
                     // текст класса
-                    TextView classText = new TextView(this);
-                    classText.setGravity(Gravity.CENTER);
-                    classText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_medium));
-                    classText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                     classText.setText(learnersClassName);
-                    TableRow.LayoutParams classTextParams = new TableRow.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
-                    );
-                    classTextParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-                    lessonContainer.addView(classText, classTextParams);
-
-
                     // текст кабинета
-                    TextView cabinetText = new TextView(this);
-                    cabinetText.setGravity(Gravity.CENTER);
-                    cabinetText.setTypeface(ResourcesCompat.getFont(this, R.font.geometria_family));
-                    cabinetText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
                     cabinetText.setText(cabinetName);
-                    TableRow.LayoutParams cabinetTextParams = new TableRow.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
-                    );
-                    cabinetTextParams.rightMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-                    lessonContainer.addView(cabinetText, cabinetTextParams);
 
-                    // если урок текущй
-                    if (currentLesson == lessonI) {
-                        subjectText.setTextColor(getResources().getColor(R.color.backgroundWhite));
-                        classText.setTextColor(getResources().getColor(R.color.backgroundWhite));
-                        cabinetText.setTextColor(getResources().getColor(R.color.backgroundWhite));
-                    } else {
-                        subjectText.setTextColor(Color.BLACK);
-                        classText.setTextColor(Color.BLACK);
-                        cabinetText.setTextColor(Color.BLACK);
-                    }
 
                     // при нажатиина контейнер
-                    lessonContainer.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-                            //проверяем все ли ученики рассажены
-                            if (db.getNotPutLearnersIdByCabinetIdAndClassId(cabinetId, learnersClassId).size() == 0) {
-                                //начать урок
-                                Intent intentForStartLesson = new Intent(getApplicationContext(), LessonActivity.class);
-                                intentForStartLesson.putExtra(LessonActivity.ARGS_LESSON_ATTITUDE_ID, lessonId);
-                                intentForStartLesson.putExtra(LessonActivity.ARGS_LESSON_DATE, outStringDate);
-                                intentForStartLesson.putExtra(LessonActivity.ARGS_LESSON_NUMBER, finalLessonI);
-                                startActivity(intentForStartLesson);
-                            } else {
-                                // todo, а это точно нужно или лучше выводить надпись "у вас есть не рассаженные ученики"
-                                // тост о не рассаженных учениках
-                                Toast.makeText(getApplicationContext(), R.string.schedule_month_activity_toast_learners, Toast.LENGTH_LONG).show();
-                                //редактировать рассадку
-                                Intent intentForStartSeatingRedactor = new Intent(getApplicationContext(), SeatingRedactorActivity.class);
-                                intentForStartSeatingRedactor.putExtra(SeatingRedactorActivity.CABINET_ID, cabinetId);
-                                intentForStartSeatingRedactor.putExtra(SeatingRedactorActivity.CLASS_ID, learnersClassId);
-                                startActivity(intentForStartSeatingRedactor);
-                            }
-                            db.close();
-                        }
+                    rootElement.setOnClickListener(v -> {
+                        //проверяем все ли ученики рассажены
+                        DataBaseOpenHelper db1 = new DataBaseOpenHelper(getApplicationContext());
+                        if (db1.getNotPutLearnersIdByCabinetIdAndClassId(cabinetId, learnersClassId).size() != 0)
+                            Toast.makeText(getApplicationContext(), R.string.schedule_month_activity_toast_learners, Toast.LENGTH_LONG).show();
+                        db1.close();
+                        //начать урок
+                        Intent intentForStartLesson = new Intent(getApplicationContext(), LessonActivity.class);
+                        intentForStartLesson.putExtra(LessonActivity.ARGS_LESSON_ATTITUDE_ID, lessonId);
+                        intentForStartLesson.putExtra(LessonActivity.ARGS_LESSON_DATE, outStringDate);
+                        intentForStartLesson.putExtra(LessonActivity.ARGS_LESSON_NUMBER, finalLessonI);
+                        startActivity(intentForStartLesson);
                     });
 
                     // при долгом нажатиина контейнер
-                    lessonContainer.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-                            // редактирование урока
-                            Intent intent = new Intent(ScheduleMonthActivity.this, LessonRedactorActivity.class);
-                            intent.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, lessonId);
-                            intent.putExtra(LessonRedactorActivity.LESSON_CHECK_DATE, outStringDate);
-                            intent.putExtra(LessonRedactorActivity.LESSON_NUMBER, finalLessonI);
-                            startActivityForResult(intent, LessonRedactorActivity.LESSON_REDACTOR_RESULT_ID);
-                            return true;
-                        }
+                    rootElement.setOnLongClickListener(v -> {
+                        // редактирование урока
+                        Intent intent = new Intent(ScheduleMonthActivity.this, LessonRedactorActivity.class);
+                        intent.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, lessonId);
+                        intent.putExtra(LessonRedactorActivity.LESSON_CHECK_DATE, outStringDate);
+                        intent.putExtra(LessonRedactorActivity.LESSON_NUMBER, finalLessonI);
+                        startActivityForResult(intent, LessonRedactorActivity.LESSON_REDACTOR_RESULT_ID);
+                        return true;
                     });
-
                 }
             }
-
             db.close();
-
         }
     }
 
@@ -685,11 +587,9 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
     // -- метод трансформации числа в текст с двумя позициями --
     String getTwoSymbols(int number) {
-        if (number < 10 && number >= 0) {
+        if (number < 10 && number >= 0)
             return '0' + Integer.toString(number);
-        } else {
-            return Integer.toString(number);
-        }
+        return Integer.toString(number);
     }
 
     // кнопка назад в actionBar
@@ -698,8 +598,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
-        } else
-            return super.onOptionsItemSelected(item);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

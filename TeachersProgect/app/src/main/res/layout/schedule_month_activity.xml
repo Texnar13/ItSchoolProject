@@ -22,44 +22,50 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/forth_margin">
+                android:layout_height="@dimen/shedule_month_month_buttons_heght">
 
-                <ImageView
+                <RelativeLayout
                     android:id="@+id/schedule_month_button_previous"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                    android:layout_height="match_parent"
                     android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_toStartOf="@+id/schedule_month_date_text"
-                    android:layout_toLeftOf="@+id/schedule_month_date_text"
-                    app:srcCompat="@drawable/base_button_arrow_back_blue" />
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/schedule_month_date_text">
 
-                <ImageView
+                    <ImageView
+                        android:layout_width="@dimen/shedule_month_arrow_size"
+                        android:layout_height="@dimen/shedule_month_arrow_size"
+                        android:layout_centerInParent="true"
+                        app:srcCompat="@drawable/base_button_arrow_back_blue" />
+                </RelativeLayout>
+
+
+                <RelativeLayout
                     android:id="@+id/schedule_month_button_next"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                    android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_toEndOf="@+id/schedule_month_date_text"
-                    android:layout_toRightOf="@+id/schedule_month_date_text"
-                    app:srcCompat="@drawable/base_button_arrow_forward_blue" />
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/schedule_month_date_text">
+
+                    <ImageView
+                        android:layout_width="@dimen/shedule_month_arrow_size"
+                        android:layout_height="@dimen/shedule_month_arrow_size"
+                        android:layout_centerInParent="true"
+                        app:srcCompat="@drawable/base_button_arrow_forward_blue" />
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/schedule_month_date_text"
+                    style="@style/TextViewSemiBoldStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
+                    android:layout_centerInParent="true"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:fontFamily="@font/geometria_bold"
                     android:text="TextView"
-                    android:textAllCaps="true"
                     android:textColor="@color/baseBlue"
-                    android:textSize="@dimen/text_title_size" />
+                    android:textSize="@dimen/shedule_month_month_text_size" />
 
             </RelativeLayout>
 
@@ -67,6 +73,8 @@
                 android:id="@+id/schedule_month_table"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/shedule_month_calendar_margin"
+                android:layout_marginEnd="@dimen/shedule_month_calendar_margin"
                 android:orientation="vertical" />
 
             <LinearLayout
@@ -74,7 +82,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="bottom"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/shedule_month_lesson_top_bottom_margin"/>
 
             <LinearLayout
                 android:id="@+id/schedule_month_day_table"
