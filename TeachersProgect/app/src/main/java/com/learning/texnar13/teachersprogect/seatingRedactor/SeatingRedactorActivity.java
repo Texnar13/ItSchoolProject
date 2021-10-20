@@ -7,6 +7,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
@@ -132,53 +133,50 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.seating_redactor_menu_clear).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
+        menu.findItem(R.id.seating_redactor_menu_clear).setOnMenuItemClickListener(item -> {
 
-                // убираем парту и место из выбранного
-                chosenDeskPosition = -1;
-                chosenPlacePosition = -1;
+            // убираем парту и место из выбранного
+            chosenDeskPosition = -1;
+            chosenPlacePosition = -1;
 
-                // если количество учеников не нулевое выводим картинку + на всех местах
-                isPlus = (learners.length != 0);
+            // если количество учеников не нулевое выводим картинку + на всех местах
+            isPlus = (learners.length != 0);
 
-                // ткрываем бд
-                DataBaseOpenHelper db = new DataBaseOpenHelper(SeatingRedactorActivity.this);
+            // ткрываем бд
+            DataBaseOpenHelper db = new DataBaseOpenHelper(SeatingRedactorActivity.this);
 
-                for (DeskUnit desk : desks)// по массиву с партами
-                    for (int placeI = 0; placeI < desk.placesId.length; placeI++) {// по местам за партой
-                        if (desk.learnersIndexes[placeI] != -1) {// если на этом месте сидит ученик
-                            // удаляем из базы данных
-                            db.deleteLearnerAndPlaceAttitudeById(desk.attitudesId[placeI]);
+            for (DeskUnit desk : desks)// по массиву с партами
+                for (int placeI = 0; placeI < desk.placesId.length; placeI++) {// по местам за партой
+                    if (desk.learnersIndexes[placeI] != -1) {// если на этом месте сидит ученик
+                        // удаляем из базы данных
+                        db.deleteLearnerAndPlaceAttitudeById(desk.attitudesId[placeI]);
 
-                            // разрываем связи в списках
-                            learners[desk.learnersIndexes[placeI]].deskNumber = -1;
-                            learners[desk.learnersIndexes[placeI]].placeNumber = -1;
-                            desk.learnersIndexes[placeI] = -1;
-                            desk.attitudesId[placeI] = -1;
-                        }
-
-                        // чистим рзметку
-                        desk.viewPlaceOut[placeI].removeAllViews();
-                        // если можно выводим плюс
-                        if (isPlus) {
-                            // выводим картинку +
-                            ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
-                            LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                            lernerImageParams.setMargins(
-                                    (int) getResources().getDimension(R.dimen.half_margin),
-                                    (int) getResources().getDimension(R.dimen.half_margin),
-                                    (int) getResources().getDimension(R.dimen.half_margin),
-                                    (int) getResources().getDimension(R.dimen.half_margin)
-                            );
-                            lernerImage.setImageResource(R.drawable.seating_redactor_activity_button_add_learner_background);
-                            desk.viewPlaceOut[placeI].addView(lernerImage, lernerImageParams);
-                        }
+                        // разрываем связи в списках
+                        learners[desk.learnersIndexes[placeI]].deskNumber = -1;
+                        learners[desk.learnersIndexes[placeI]].placeNumber = -1;
+                        desk.learnersIndexes[placeI] = -1;
+                        desk.attitudesId[placeI] = -1;
                     }
-                db.close();
-                return true;
-            }
+
+                    // чистим рзметку
+                    desk.viewPlaceOut[placeI].removeAllViews();
+                    // если можно выводим плюс
+                    if (isPlus) {
+                        // выводим картинку +
+                        ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
+                        LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                        lernerImageParams.setMargins(
+                                (int) getResources().getDimension(R.dimen.half_margin),
+                                (int) getResources().getDimension(R.dimen.half_margin),
+                                (int) getResources().getDimension(R.dimen.half_margin),
+                                (int) getResources().getDimension(R.dimen.half_margin)
+                        );
+                        lernerImage.setImageResource(R.drawable.seating_redactor_activity_button_add_learner_background);
+                        desk.viewPlaceOut[placeI].addView(lernerImage, lernerImageParams);
+                    }
+                }
+            db.close();
+            return true;
         });
         return super.onPrepareOptionsMenu(menu);
     }
@@ -193,10 +191,13 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
         // раздуваем layout
         setContentView(R.layout.seating_redactor_activity);
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
-        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        setSupportActionBar(findViewById(R.id.base_blue_toolbar));
         // убираем заголовок, там свой
-        getSupportActionBar().setTitle("");
-
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setTitle("");
+        }
 
         // настраиваем программный вывод векторных изображений
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -776,9 +777,9 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             for (int placeI = 0; placeI < placesId.length; placeI++) {
 
                 // отступы и размеры места
-                ((RelativeLayout.LayoutParams) this.viewPlaceOut[placeI].getLayoutParams()).width =
+                 this.viewPlaceOut[placeI].getLayoutParams().width =
                         (int) pxFromDp((NO_ZOOMED_DESK_SIZE - NO_ZOOMED_LEARNER_BORDER_SIZE * 2) * multiplier);
-                ((RelativeLayout.LayoutParams) this.viewPlaceOut[placeI].getLayoutParams()).height =
+                this.viewPlaceOut[placeI].getLayoutParams().height =
                         (int) pxFromDp((NO_ZOOMED_DESK_SIZE - NO_ZOOMED_LEARNER_BORDER_SIZE * 2) * multiplier);
                 ((RelativeLayout.LayoutParams) this.viewPlaceOut[placeI].getLayoutParams()).leftMargin =
                         (int) pxFromDp((NO_ZOOMED_DESK_SIZE * placeI + NO_ZOOMED_LEARNER_BORDER_SIZE) * multiplier);

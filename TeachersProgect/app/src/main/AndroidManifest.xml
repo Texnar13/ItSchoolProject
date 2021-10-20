@@ -83,7 +83,7 @@
         <activity
             android:name=".lessonRedactor.LessonRedactorActivity"
             android:configChanges="locale"
-            android:theme="@style/myActivityDialogTheme" />
+            android:theme="@style/LessonRedactorThemeLikeDialog" />
         <activity
             android:name=".settings.SettingsActivity"
             android:configChanges="locale"

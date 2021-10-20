@@ -116,34 +116,28 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
         //чекбокс выравнивания
-        menu.findItem(R.id.cabinet_redactor_menu_gird).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                //если чекбокс нажат
-                if (menuItem.isChecked()) {
-                    //убираем подведение парт
-                    isLeveling = false;
-                    //убираем галочку
-                    menuItem.setChecked(false);
-                } else {
-                    //возвращаем подведение парт
-                    isLeveling = true;
-                    //ставим галочку
-                    menuItem.setChecked(true);
-                }
-                return true;
+        menu.findItem(R.id.cabinet_redactor_menu_gird).setOnMenuItemClickListener(menuItem -> {
+            //если чекбокс нажат
+            if (menuItem.isChecked()) {
+                //убираем подведение парт
+                isLeveling = false;
+                //убираем галочку
+                menuItem.setChecked(false);
+            } else {
+                //возвращаем подведение парт
+                isLeveling = true;
+                //ставим галочку
+                menuItem.setChecked(true);
             }
+            return true;
         });
         //чекбокс сетки
-        menu.findItem(R.id.cabinet_redactor_menu_gird_lines).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                //если чекбокс нажат
-                isGird = !menuItem.isChecked();
-                menuItem.setChecked(isGird);
-                outLines();
-                return true;
-            }
+        menu.findItem(R.id.cabinet_redactor_menu_gird_lines).setOnMenuItemClickListener(menuItem -> {
+            //если чекбокс нажат
+            isGird = !menuItem.isChecked();
+            menuItem.setChecked(isGird);
+            outLines();
+            return true;
         });
         return super.onPrepareOptionsMenu(menu);
     }
@@ -200,7 +194,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         // раздуваем layout
         setContentView(R.layout.cabinet_redactor_activity);
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
-        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        setSupportActionBar(findViewById(R.id.base_blue_toolbar));
         // убираем заголовок, там свой
         getSupportActionBar().setTitle("");
 

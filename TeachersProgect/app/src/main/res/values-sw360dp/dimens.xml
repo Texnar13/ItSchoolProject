@@ -19,6 +19,10 @@
     <dimen name="start_screen_week_day_text_size">@dimen/start_screen_date_text_size</dimen>
     <dimen name="start_screen_now_text_size">@dimen/simple_buttons_text_size</dimen>
 
+    <!-- активность настроек кабинета -->
+    <dimen name="cabinet_edit_activity_sub_menu_buttons_height">55dp</dimen>
+
+
     <!-- календарь на месяц -->
     <dimen name="shedule_month_month_text_size">19sp</dimen>
     <dimen name="shedule_month_calendar_margin">30dp</dimen>
@@ -62,6 +66,10 @@
     <dimen name="premium_activity_messages_small_text_size">16sp</dimen>
 
 
+    <!-- конец урока -->
+    <dimen name="lesson_list_element_height">40sp</dimen>
+
+
     <!-- пиздец близко, беги друг -->
 
     <dimen name="activity_horizontal_margin">0dp</dimen>
@@ -70,7 +78,7 @@
 
     <!-- высота кнопок -->
     <dimen name="my_buttons_height_size">48sp</dimen>
-    <dimen name="spinner_height_size">48dp</dimen>
+    <dimen name="spinner_height_size">40dp</dimen>
     <dimen name="my_toolbar_text_container_height_size">40sp</dimen>
 
     <dimen name="my_toolbar_size">60dp</dimen>

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 import android.util.Log;
 import android.util.Xml;
 
@@ -15,7 +16,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.xmlpull.v1.XmlSerializer;
 
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,7 +29,7 @@ import java.util.GregorianCalendar;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
     private static final boolean IS_DEBUG = true;
-    private static final int DB_VERSION = 20;
+    private static final int DB_VERSION = 20; // googlePlay -> 18
     private final Context context;
 
     private static final String LOG_TAG = "DBOpenHelper";
@@ -60,8 +63,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 1) {//то приложение либо новое, либо удаляются данные
 
-            //чистка бд
-            db.execSQL("PRAGMA foreign_keys = OFF;");
+            // чистка бд
+            db.execSQL("PRAGMA foreign_keys = OFF;");// этот список нужно синхронизировать со списком в обновлениях БД, и с экспортом всех данных
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableDesks.NAME_TABLE_DESKS + ";");
@@ -74,6 +77,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES + ";");
+            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersAbsentTypes.NAME_TABLE_LEARNERS_ABSENT_TYPES + ";");
             db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT + ";");
             db.execSQL("PRAGMA foreign_keys = ON;");
 
@@ -146,30 +150,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY(" + SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID + ") REFERENCES " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + " (" + SchoolContract.TableLearners.KEY_LEARNER_ID + ") ON DELETE CASCADE, " +
                     "FOREIGN KEY(" + SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID + ") REFERENCES " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + " (" + SchoolContract.TablePlaces.KEY_PLACE_ID + ") ON DELETE CASCADE ); ";
             db.execSQL(sql);
-            //оценки учеников
-            db.execSQL(SchoolContract.TableLearnersGrades.CREATE_TABLE_STRING);
-
-            //предмет
-            sql = "CREATE TABLE " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " ( " + SchoolContract.TableSubjects.KEY_SUBJECT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    SchoolContract.TableSubjects.COLUMN_NAME + " VARCHAR, " +
-                    SchoolContract.TableSubjects.KEY_CLASS_ID + " INTEGER, " +
-                    "FOREIGN KEY(" + SchoolContract.TableSubjects.KEY_CLASS_ID + ") REFERENCES " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + " (" + SchoolContract.TableClasses.KEY_CLASS_ID + ") ON DELETE CASCADE ); ";
-            db.execSQL(sql);
-            //урок и его время проведения
-            sql = "CREATE TABLE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " ( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + " INTEGER, " +
-                    SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + " INTEGER, " +
-                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0 NOT NULL," +
-                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " TIMESTRING DEFAULT \"0000-00-00\" NOT NULL," +
-                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " INTEGER DEFAULT " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER + ", " +
-                    "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + " (" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ON DELETE CASCADE ," +
-                    "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE ); ";
-            db.execSQL(sql);
-            // профили статистики
-            db.execSQL("CREATE TABLE " + SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES + " ( " + SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME + " TEXT, " +
-                    SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE + " TIMESTRING DEFAULT \"1000-00-00\" NOT NULL, " +
-                    SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE + " TIMESTRING DEFAULT \"1000-00-00\" NOT NULL); ");
             // типы оценок
             db.execSQL(
                     "CREATE TABLE " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES +
@@ -216,6 +196,30 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         null,
                         values2);
             }
+            //оценки учеников
+            db.execSQL(SchoolContract.TableLearnersGrades.CREATE_TABLE_STRING);
+
+            //предмет
+            sql = "CREATE TABLE " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " ( " + SchoolContract.TableSubjects.KEY_SUBJECT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    SchoolContract.TableSubjects.COLUMN_NAME + " VARCHAR, " +
+                    SchoolContract.TableSubjects.KEY_CLASS_ID + " INTEGER, " +
+                    "FOREIGN KEY(" + SchoolContract.TableSubjects.KEY_CLASS_ID + ") REFERENCES " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + " (" + SchoolContract.TableClasses.KEY_CLASS_ID + ") ON DELETE CASCADE ); ";
+            db.execSQL(sql);
+            //урок и его время проведения
+            sql = "CREATE TABLE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " ( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + " INTEGER, " +
+                    SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + " INTEGER, " +
+                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0 NOT NULL," +
+                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " TIMESTRING DEFAULT \"0000-00-00\" NOT NULL," +
+                    SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " INTEGER DEFAULT " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER + ", " +
+                    "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + " (" + SchoolContract.TableCabinets.KEY_CABINET_ID + ") ON DELETE CASCADE ," +
+                    "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_SUBJECT_ID + ") ON DELETE CASCADE ); ";
+            db.execSQL(sql);
+            // профили статистики
+            db.execSQL("CREATE TABLE " + SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES + " ( " + SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME + " TEXT, " +
+                    SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE + " TIMESTRING DEFAULT \"1000-00-00\" NOT NULL, " +
+                    SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE + " TIMESTRING DEFAULT \"1000-00-00\" NOT NULL); ");
             // комментарий к уроку
             db.execSQL(
                     "CREATE TABLE " + SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT + " ( " +
@@ -523,6 +527,23 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             }
 
             if (oldVersion < 19) {
+                // типы оценок
+                db.execSQL(
+                        "CREATE TABLE " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES +
+                                " ( " + SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                                SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE + " TEXT);"
+                );
+                {// ---- вставляем одну запись "работа на уроке" ----  <-- эту запись нельзя удалить но можно переименовать
+                    String name = context.getResources().getString(R.string.db_table_grade_text_first_default_value);
+                    ContentValues values = new ContentValues();
+                    values.put(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE, name);
+                    values.put(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID, 1);
+                    db.insert(
+                            SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES,
+                            null,
+                            values);
+                }
+
                 // добавляем типы пропусков
                 db.execSQL(
                         "CREATE TABLE " + SchoolContract.TableLearnersAbsentTypes.NAME_TABLE_LEARNERS_ABSENT_TYPES +
@@ -555,8 +576,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 }
 
                 // изменяем поля оценок
-
-
                 /*
                  * переделываем старую таблицу оценок в специальную таблицу оценок
                  * переименовываем старые поля COLUMNS_GRADE_NAMES[0] KEYS_GRADES_TITLES_ID[0]
@@ -579,21 +598,12 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
                 // --- переделываем таблицу ---
                 db.execSQL("PRAGMA foreign_keys = OFF");
-                // переделываем старую таблицу оценок в специальную таблицу оценок
-                // переименовываем старые колонки
-//                db.execSQL("ALTER TABLE learnersGrades RENAME COLUMN grade to grade1;"
-//                );
-//                db.execSQL("ALTER TABLE " + SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES +
-//                        " RENAME COLUMN titleId TO " + SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[0] + ";"
-//                );
 
                 // переименовываем старую таблицу
-                db.execSQL("ALTER TABLE " +
-                        SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES +
-                        " RENAME TO learnersGrades_old;");
+                db.execSQL("ALTER TABLE learnersGrades RENAME TO learnersGrades_old;");
                 // создаём новую таблицу
                 db.execSQL(SchoolContract.TableLearnersGrades.CREATE_TABLE_STRING);
-                //переносим значения
+                // переносим значения
                 db.execSQL("INSERT INTO " +
                         SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES +
                         " SELECT " +
@@ -2056,133 +2066,253 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     }
 
 
-    public void writeXMLDataBaseInFile(FileWriter bw) {
+    public void writeXMLDataBaseInFile(OutputStreamWriter bw) throws RuntimeException {
         XmlSerializer serializer = Xml.newSerializer();
+        SQLiteDatabase sqDB = getReadableDatabase();
+
         try {
             // назначаем файл в который будем писать
             serializer.setOutput(bw);
             serializer.startDocument("UTF-8", true);
-
-            // таблица настроек
-            serializer.startTag("", SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS);
-            Cursor settings = getReadableDatabase()
-                    .query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null, null, null, null, null, null);
-            while (settings.moveToNext()) {
-                serializer.startTag("", "element");
-                serializer.attribute("", "elementId", settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID)));
-                serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME)));
-                serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_LOCALE, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_LOCALE)));
-                serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE)));
-                serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER)));
-                serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_TIME, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_TIME)));
-                serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED)));
-                serializer.endTag("", "element");
-            }
-            settings.close();
-            serializer.endTag("", SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS);
-
-            // таблица кабинетов
-            serializer.startTag("", SchoolContract.TableCabinets.NAME_TABLE_CABINETS);
-            Cursor cabinets = getCabinets();
-            while (cabinets.moveToNext()) {
-                serializer.startTag("", "element");
-                serializer.attribute("", "elementId", cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.KEY_CABINET_ID)));
-                serializer.attribute("", SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER)));
-                serializer.attribute("", SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X)));
-                serializer.attribute("", SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y)));
-                serializer.attribute("", SchoolContract.TableCabinets.COLUMN_NAME, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)));
-                serializer.endTag("", "element");
-            }
-            cabinets.close();
-            serializer.endTag("", SchoolContract.TableCabinets.NAME_TABLE_CABINETS);
-
-            // таблица парт
-            serializer.startTag("", SchoolContract.TableDesks.NAME_TABLE_DESKS);
-            Cursor desks = getDesks();
-            while (desks.moveToNext()) {
-                serializer.startTag("", "element");
-                serializer.attribute("", "elementId", desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
-                serializer.attribute("", SchoolContract.TableDesks.COLUMN_X, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)));
-                serializer.attribute("", SchoolContract.TableDesks.COLUMN_Y, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)));
-                serializer.attribute("", SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES)));
-                serializer.attribute("", SchoolContract.TableDesks.KEY_CABINET_ID, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.KEY_CABINET_ID)));
-                serializer.endTag("", "element");
-            }
-            desks.close();
-            serializer.endTag("", SchoolContract.TableDesks.NAME_TABLE_DESKS);
-
-            //// таблица парт
-            //            serializer.startTag("", SchoolContract..);
-            //            Cursor desks = get();
-            //            while (desks.moveToNext()){
-            //                serializer.startTag("", "element");
-            //                serializer.attribute("", "elementId", desks.getString(desks.getColumnIndex(SchoolContract..)));
-            //                serializer.attribute("", SchoolContract.., desks.getString(desks.getColumnIndex(SchoolContract..)));
-            //                serializer.endTag("", "element");
-            //            }
-            //            desks.close();
-            //            serializer.endTag("", SchoolContract..);
-
-
-//            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TablePlaces.NAME_TABLE_PLACES + ";");
-//            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableClasses.NAME_TABLE_CLASSES + ";");
-//            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearners.NAME_TABLE_LEARNERS + ";");
-//            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES + ";");
-
-            // таблица оценок
-            serializer.startTag("", SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES);
-            Cursor grades = getReadableDatabase().query(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
-                    null, null, null, null, null, null);
-            while (grades.moveToNext()) {
-                serializer.startTag("", "element");
-                serializer.attribute("", "elementId", grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID)));
-
-                serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMN_DATE,
-                        grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_DATE)));
-                serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER,
-                        grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER)));
-                for (int i = 0; i < SchoolContract.TableLearnersGrades.COLUMNS_GRADE.length; i++) {
-                    serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMNS_GRADE[i],
-                            grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[i])));
+            serializer.startTag("", SchoolContract.DB_NAME);
+            serializer.attribute("", "db_file_version", "1");
+            // пишем содержимое таблиц
+            {
+                // таблица настроек
+                {
+                    serializer.startTag("", SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS);
+                    Cursor settings = sqDB.query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS,
+                            null, null, null, null, null, null);
+                    while (settings.moveToNext()) {
+                        serializer.startTag("", "element");
+                        serializer.attribute("", SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.KEY_SETTINGS_PROFILE_ID)));
+                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME)));
+                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_LOCALE, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_LOCALE)));
+                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE)));
+                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER)));
+                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_TIME, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_TIME)));
+                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED)));
+                        serializer.endTag("", "element");
+                    }
+                    settings.close();
+                    serializer.endTag("", SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS);
                 }
-                for (int i = 0; i < SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID.length; i++) {
-                    serializer.attribute("", SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[i],
-                            grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[i])));
+                // таблица кабинетов
+                {
+                    serializer.startTag("", SchoolContract.TableCabinets.NAME_TABLE_CABINETS);
+                    Cursor cabinets = getCabinets();
+                    while (cabinets.moveToNext()) {
+                        serializer.startTag("", "element");
+                        serializer.attribute("", SchoolContract.TableCabinets.KEY_CABINET_ID, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.KEY_CABINET_ID)));
+                        serializer.attribute("", SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER)));
+                        serializer.attribute("", SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X)));
+                        serializer.attribute("", SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y)));
+                        serializer.attribute("", SchoolContract.TableCabinets.COLUMN_NAME, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)));
+                        serializer.endTag("", "element");
+                    }
+                    cabinets.close();
+                    serializer.endTag("", SchoolContract.TableCabinets.NAME_TABLE_CABINETS);
                 }
+                // таблица парт
+                {
+                    serializer.startTag("", SchoolContract.TableDesks.NAME_TABLE_DESKS);
+                    Cursor desks = getDesks();
+                    while (desks.moveToNext()) {
+                        serializer.startTag("", "element");
+                        serializer.attribute("", SchoolContract.TableDesks.KEY_CABINET_ID, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID)));
+                        serializer.attribute("", SchoolContract.TableDesks.COLUMN_X, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)));
+                        serializer.attribute("", SchoolContract.TableDesks.COLUMN_Y, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)));
+                        serializer.attribute("", SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES)));
+                        serializer.attribute("", SchoolContract.TableDesks.KEY_CABINET_ID, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.KEY_CABINET_ID)));
+                        serializer.endTag("", "element");
+                    }
+                    desks.close();
+                    serializer.endTag("", SchoolContract.TableDesks.NAME_TABLE_DESKS);
+                }
+                // таблица мест за партами
+                {
+                    serializer.startTag("", SchoolContract.TablePlaces.NAME_TABLE_PLACES);
+                    Cursor places = sqDB.query(SchoolContract.TablePlaces.NAME_TABLE_PLACES,
+                            null, null, null, null, null, null);
+                    while (places.moveToNext()) {
+                        serializer.startTag("", "element");
+                        serializer.attribute("", SchoolContract.TablePlaces.KEY_PLACE_ID, places.getString(places.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID)));
+                        serializer.attribute("", SchoolContract.TablePlaces.KEY_DESK_ID, places.getString(places.getColumnIndex(SchoolContract.TablePlaces.KEY_DESK_ID)));
+                        serializer.attribute("", SchoolContract.TablePlaces.COLUMN_ORDINAL, places.getString(places.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)));
+                        serializer.endTag("", "element");
+                    }
+                    places.close();
+                    serializer.endTag("", SchoolContract.TablePlaces.NAME_TABLE_PLACES);
+                }
+                // таблица классов с учениками
+                {
+                    serializer.startTag("", SchoolContract.TableClasses.NAME_TABLE_CLASSES);
+                    Cursor learnersClasses = sqDB.query(SchoolContract.TableClasses.NAME_TABLE_CLASSES,
+                            null, null, null, null, null, null);
+                    while (learnersClasses.moveToNext()) {
+                        serializer.startTag("", "element");
+                        serializer.attribute("", SchoolContract.TableClasses.KEY_CLASS_ID, learnersClasses.getString(learnersClasses.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID)));
+                        serializer.attribute("", SchoolContract.TableClasses.COLUMN_CLASS_NAME, learnersClasses.getString(learnersClasses.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
+                        serializer.endTag("", "element");
+                    }
+                    learnersClasses.close();
+                    serializer.endTag("", SchoolContract.TableClasses.NAME_TABLE_CLASSES);
+                }
+                // таблица с учениками
+                {
+                    serializer.startTag("", SchoolContract.TableLearners.NAME_TABLE_LEARNERS);
+                    Cursor learners = sqDB.query(SchoolContract.TableLearners.NAME_TABLE_LEARNERS,
+                            null, null, null, null, null, null);
+                    while (learners.moveToNext()) {
+                        serializer.startTag("", "element");
+                        serializer.attribute("", SchoolContract.TableLearners.KEY_LEARNER_ID, learners.getString(learners.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)));
+                        serializer.attribute("", SchoolContract.TableLearners.COLUMN_FIRST_NAME, learners.getString(learners.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)));
+                        serializer.attribute("", SchoolContract.TableLearners.COLUMN_SECOND_NAME, learners.getString(learners.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)));
+                        serializer.attribute("", SchoolContract.TableLearners.COLUMN_COMMENT, learners.getString(learners.getColumnIndex(SchoolContract.TableLearners.COLUMN_COMMENT)));
+                        serializer.attribute("", SchoolContract.TableLearners.KEY_CLASS_ID, learners.getString(learners.getColumnIndex(SchoolContract.TableLearners.KEY_CLASS_ID)));
+                        serializer.endTag("", "element");
+                    }
+                    learners.close();
+                    serializer.endTag("", SchoolContract.TableLearners.NAME_TABLE_LEARNERS);
+                }
+                // таблица зависимостей ученик-место
+                {
+                    serializer.startTag("", SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES);
+                    Cursor attitude = sqDB.query(SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES,
+                            null, null, null, null, null, null);
+                    while (attitude.moveToNext()) {
+                        serializer.startTag("", "element");
+                        serializer.attribute("", SchoolContract.TableLearnersOnPlaces.KEY_ATTITUDE_ID, attitude.getString(attitude.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_ATTITUDE_ID)));
+                        serializer.attribute("", SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID, attitude.getString(attitude.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID)));
+                        serializer.attribute("", SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID, attitude.getString(attitude.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID)));
+                        serializer.endTag("", "element");
+                    }
+                    attitude.close();
+                    serializer.endTag("", SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES);
+                }
+                // таблица оценок
+                {
+                    serializer.startTag("", SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES);
+                    Cursor grades = sqDB.query(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
+                            null, null, null, null, null, null);
+                    while (grades.moveToNext()) {
+                        serializer.startTag("", "element");
+                        serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_GRADE_ID, grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID)));
+                        serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMN_DATE, grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_DATE)));
+                        serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER, grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER)));
+                        for (int i = 0; i < SchoolContract.TableLearnersGrades.COLUMNS_GRADE.length; i++)
+                            serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMNS_GRADE[i], grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[i])));
+                        for (int i = 0; i < SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID.length; i++)
+                            serializer.attribute("", SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[i], grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[i])));
+                        if(!grades.isNull(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))){
+                            serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID, grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID)));
+                        }else{
+                            serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID, "null");
+                        }
+                        serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID, grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID)));
+                        serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_LEARNER_ID, grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_LEARNER_ID)));
 
-                serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID,
-                        "" + grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID)));
-                serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID,
-                        grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID)));
-                serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_LEARNER_ID,
-                        grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_LEARNER_ID)));
-
-                serializer.endTag("", "element");
+                        serializer.endTag("", "element");
+                    }
+                    grades.close();
+                    serializer.endTag("", SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES);
+                }
+                // таблица предметов
+                {
+                    serializer.startTag("", SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS);
+                    Cursor subjects = sqDB.query(SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS,
+                            null, null, null, null, null, null);
+                    while (subjects.moveToNext()) {
+                        serializer.startTag("", "element");
+                        serializer.attribute("", SchoolContract.TableSubjects.KEY_SUBJECT_ID, subjects.getString(subjects.getColumnIndex(SchoolContract.TableSubjects.KEY_SUBJECT_ID)));
+                        serializer.attribute("", SchoolContract.TableSubjects.COLUMN_NAME, subjects.getString(subjects.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME)));
+                        serializer.attribute("", SchoolContract.TableSubjects.KEY_CLASS_ID, subjects.getString(subjects.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID)));
+                        serializer.endTag("", "element");
+                    }
+                    subjects.close();
+                    serializer.endTag("", SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS);
+                }
+                // таблица уроков (предмет-время-кабинет)
+                {
+                    serializer.startTag("", SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE);
+                    Cursor lessons = sqDB.query(SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE,
+                            null, null, null, null, null, null);
+                    while (lessons.moveToNext()) {
+                        serializer.startTag("", "element");
+                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID, lessons.getString(lessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID)));
+                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID, lessons.getString(lessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID)));
+                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID, lessons.getString(lessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID)));
+                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER, lessons.getString(lessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER)));
+                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE, lessons.getString(lessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE)));
+                        //serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_END_REPEAT_DATE, desks.getString(desks.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_END_REPEAT_DATE)));// todo это поле еще не реализовано
+                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT, lessons.getString(lessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT)));
+                        serializer.endTag("", "element");
+                    }
+                    lessons.close();
+                    serializer.endTag("", SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE);
+                }
+                // таблица профилей статистики
+                {
+                    serializer.startTag("", SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES);
+                    Cursor statistics = sqDB.query(SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES,
+                            null, null, null, null, null, null);
+                    while (statistics.moveToNext()) {
+                        serializer.startTag("", "element");
+                        serializer.attribute("", SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID, statistics.getString(statistics.getColumnIndex(SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID)));
+                        serializer.attribute("", SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME, statistics.getString(statistics.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME)));
+                        serializer.attribute("", SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE, statistics.getString(statistics.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE)));
+                        serializer.attribute("", SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE, statistics.getString(statistics.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE)));
+                        serializer.endTag("", "element");
+                    }
+                    statistics.close();
+                    serializer.endTag("", SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES);
+                }
+                // таблица типов оценок
+                {
+                    serializer.startTag("", SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES);
+                    Cursor gradesTypes = sqDB.query(SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES,
+                            null, null, null, null, null, null);
+                    while (gradesTypes.moveToNext()) {
+                        serializer.startTag("", "element");
+                        serializer.attribute("", SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID, gradesTypes.getString(gradesTypes.getColumnIndex(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID)));
+                        serializer.attribute("", SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE, gradesTypes.getString(gradesTypes.getColumnIndex(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE)));
+                        serializer.endTag("", "element");
+                    }
+                    gradesTypes.close();
+                    serializer.endTag("", SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES);
+                }
+                // таблица типов пропусков
+                {
+                    serializer.startTag("", SchoolContract.TableLearnersAbsentTypes.NAME_TABLE_LEARNERS_ABSENT_TYPES);
+                    Cursor absTypes = sqDB.query(SchoolContract.TableLearnersAbsentTypes.NAME_TABLE_LEARNERS_ABSENT_TYPES,
+                            null, null, null, null, null, null);
+                    while (absTypes.moveToNext()) {
+                        serializer.startTag("", "element");
+                        serializer.attribute("", SchoolContract.TableLearnersAbsentTypes.KEY_LEARNERS_ABSENT_TYPE_ID, absTypes.getString(absTypes.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.KEY_LEARNERS_ABSENT_TYPE_ID)));
+                        serializer.attribute("", SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME, absTypes.getString(absTypes.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME)));
+                        serializer.attribute("", SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME, absTypes.getString(absTypes.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME)));
+                        serializer.endTag("", "element");
+                    }
+                    absTypes.close();
+                    serializer.endTag("", SchoolContract.TableLearnersAbsentTypes.NAME_TABLE_LEARNERS_ABSENT_TYPES);
+                }
+                // таблица комментариев к уроку
+                {
+                    serializer.startTag("", SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT);
+                    Cursor comments = sqDB.query(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, null, null, null, null, null, null);
+                    while (comments.moveToNext()) {
+                        serializer.startTag("", "element");
+                        serializer.attribute("", SchoolContract.TableLessonComment.KEY_LESSON_TEXT_ID, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.KEY_LESSON_TEXT_ID)));
+                        serializer.attribute("", SchoolContract.TableLessonComment.KEY_LESSON_ID, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.KEY_LESSON_ID)));
+                        serializer.attribute("", SchoolContract.TableLessonComment.COLUMN_LESSON_DATE, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.COLUMN_LESSON_DATE)));
+                        serializer.attribute("", SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT)));
+                        serializer.endTag("", "element");
+                    }
+                    comments.close();
+                    serializer.endTag("", SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT);
+                }
             }
-            grades.close();
-            serializer.endTag("", SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES);
-
-
-//            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + ";");
-//            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + ";");
-//            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES + ";");
-//            db.execSQL("DROP TABLE IF EXISTS " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES + ";");
-
-            // таблица комментариев к уроку
-            serializer.startTag("", SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT);
-            Cursor comments = getReadableDatabase().query(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, null, null, null, null, null, null);
-            ;
-            while (comments.moveToNext()) {
-                serializer.startTag("", "element");
-                serializer.attribute("", "elementId", comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.KEY_LESSON_TEXT_ID)));
-                serializer.attribute("", SchoolContract.TableLessonComment.KEY_LESSON_ID, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.KEY_LESSON_ID)));
-                serializer.attribute("", SchoolContract.TableLessonComment.COLUMN_LESSON_DATE, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.COLUMN_LESSON_DATE)));
-                serializer.attribute("", SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT)));
-                serializer.endTag("", "element");
-            }
-            comments.close();
-            serializer.endTag("", SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT);
-
+            serializer.endTag("", SchoolContract.DB_NAME);
             serializer.endDocument();
         } catch (Exception e) {
             throw new RuntimeException(e);

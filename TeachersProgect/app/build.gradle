@@ -7,7 +7,7 @@ android {
         applicationId "com.learning.texnar13.teachersprogect"
         minSdkVersion 19
         targetSdkVersion 30
-        //multiDexEnabled true// todo multiDex
+        // multiDexEnabled true// todo включение multiDex, если понадобится
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

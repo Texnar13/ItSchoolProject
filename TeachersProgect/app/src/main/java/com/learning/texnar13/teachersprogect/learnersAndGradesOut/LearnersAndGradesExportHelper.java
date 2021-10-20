@@ -273,7 +273,7 @@ public class LearnersAndGradesExportHelper {
         }
         if (fioCell.getCellType() == HSSFCell.CELL_TYPE_STRING) {//1
             if (!fioCell.getStringCellValue().trim().equals(
-                    "ФИО")) //todo перенести в константы
+                    "ФИО")) //todo перенести в константы (а также при считывании можно проверять константы на всех языках)
                 return false;
         } else return false;
         /*

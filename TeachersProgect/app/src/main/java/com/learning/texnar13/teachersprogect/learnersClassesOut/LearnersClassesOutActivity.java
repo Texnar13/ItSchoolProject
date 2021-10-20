@@ -65,7 +65,8 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements
             bar.setDisplayHomeAsUpEnabled(true);
             bar.setTitle("");
         }
-        ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_learners_classes_out);
+        ((TextView) findViewById(R.id.base_blue_toolbar_title))
+                .setText(R.string.title_activity_learners_classes_out);
 
 
         // вертикальная ориентация

@@ -186,7 +186,7 @@
     <string name="lesson_redactor_activity_toast_text_class_not_chosen">¡No elegiste los alumnos! Puede crearlo en la sección "Alumnos"</string>
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">Debes sentar a los alumnos</string>
-    <string name="lesson_redactor_activity_button_remove"><u>Eliminar clase</u></string>
+    <string name="lesson_redactor_activity_button_remove">Eliminar clase</string>
     <!-- диалоги -->
     <string name="lesson_redactor_activity_dialog_button_remove">eliminar</string>
     <string name="lesson_redactor_activity_dialog_button_add">agregar</string>
@@ -216,14 +216,11 @@
 
     <!-- активность окончания урока-->
     <!-- заголовок активности -->
-    <string name="title_activity_lesson_list">Resumen de la lección</string>
-    <!-- меню сверху -->
-    <!-- уведомления -->
-    <string name="lesson_list_activity_menu_toast_grades_saved">Todas las respuestas se guardan con éxito!</string>
+    <string name="title_activity_lesson_list">##Resumen de la lección</string>
     <!-- диалоги -->
     <string name="lesson_list_activity_dialog_title">Editar las respuestas</string>
     <!-- подсказка на экране -->
-    <string name="lesson_list_activity_text_help">Aquí se muestran los resultados de la lección. \n Para cambiar las respuestas, haga clic en ellas. \n Para guardar las respuestas, haga clic en el botón GUARDAR. \n Si no desea guardar las respuestas, haga clic en el botón atrás en su dispositivo.</string>
+    <string name="lesson_list_activity_text_help">Aquí se muestran los resultados de la lección. \n Para cambiar las respuestas, haga clic en ellas. \n Para guardar las respuestas, haga clic en el botón GUARDAR.</string>
 
 
     <!-- активность настроек-->
@@ -235,7 +232,7 @@
     <string name="settings_activity_title_absent_type">Tipos de ausencia</string>
     <string name="settings_activity_title_colored_grades">Calificaciónes de colores</string>
     <!-- кнопки -->
-    <string name="settings_activity_button_edit_max_answer" formatted="true">Puntuación máxima/ número de respuestas: %1$s</string>
+    <string name="settings_activity_button_edit_max_answer" formatted="true">Puntuación máxima/ número de respuestas: %d</string>
     <string name="settings_activity_button_edit_time">Tiempo de lecciones</string>
     <string name="settings_activity_button_remove_data">Eliminar todos los datos</string>
     <string name="settings_activity_button_rate_us">Califique nuestra aplicación!</string>
@@ -252,6 +249,11 @@
     <string name="settings_activity_toast_grade_too_min">Se ha introducido un valor demasiado pequeño (debe haber al menos 1)</string>
     <string name="settings_activity_toast_time_successfully_saved">Tiempo guardado</string>
     <string name="settings_activity_toast_time_no_saved">Error, tiempo no guardado</string>
+    <string name="settings_activity_data_export_theme" formatted="true">##Save copy from %s</string>
+    <string name="settings_activity_data_export_title">##Отправить через:</string>
+    <string name="settings_activity_data_import_title">##Select file to upload:</string>
+    <string name="settings_activity_data_import_message_incorrect_type">##Низя, низя! файл не того формата</string>
+    <string name="settings_activity_data_import_message_unrtedable_file">##Низя, низя! файл не прочесть…</string>
     <!-- диалоги -->
     <string name="settings_activity_dialog_delete_title">¿Quieres borrar todos los datos?</string>
     <string name="settings_activity_dialog_add_type_title">+ Agregar nueva tipo de calificaciónes</string>
@@ -274,6 +276,8 @@
     <string name="settings_activity_dialog_text_time_colon">:</string>
     <string name="settings_activity_dialog_text_time_dash">—</string>
     <string name="settings_activity_dialog_edit_locale_title">Seleccione un idioma:</string>
+    <string name="settings_activity_dialog_data_import_accept_title">##Результаты чтения файла:</string>
+    <string name="settings_activity_dialog_data_import_accept_button">##Импортировать данные</string>
 
 
     <!-- активность рекламы спонсора -->

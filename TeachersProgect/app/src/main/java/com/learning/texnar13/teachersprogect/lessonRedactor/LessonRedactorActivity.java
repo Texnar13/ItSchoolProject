@@ -78,8 +78,6 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
     TextView subjectText;
     // текстовое поле дз
     EditText homeworkEdit;
-    // индикатор состояния рассадки
-    ImageView seatingStateImage;
     // --- спиннеры ---
     Spinner classSpinner;
     Spinner cabinetSpinner;
@@ -222,12 +220,11 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
             int[][] time = db.getSettingsTime(1);
 
             timeTexts = new String[time.length];
-            for (int i = 0; i < timeTexts.length; i++) {
-                //'  4 урок 11:30 - 12:15  '
+            for (int i = 0; i < timeTexts.length; i++)
+                //'4 урок 11:30 - 12:15'
                 timeTexts[i] = getResources().getString(
                         R.string.lesson_redactor_activity_spinner_title_lesson,
                         i + 1, time[i][0], time[i][1], time[i][2], time[i][3]);
-            }
         }
 
         // повторы
@@ -330,7 +327,6 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
         // ----------------------------------- компоненты экрана -----------------------------------
 
 
-
         // TODO -------------------------------------------------
         // TODO -------------------------------------------------
         // TODO -------------------------------------------------
@@ -344,7 +340,6 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
 
         // текстовое поле предмета
         subjectText = findViewById(R.id.activity_lesson_redactor_lesson_name_text_button);
-        subjectText.setPaintFlags(subjectText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         //  спиннер классов 
         classSpinner = findViewById(R.id.activity_lesson_redactor_class_spinner);
@@ -378,7 +373,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
         // кнопка удаления урока
         TextView removeButton = findViewById(R.id.activity_lesson_redactor_remove_button);
         if (lessonUnit1.attitudeId == -1) {
-            ((LinearLayout) findViewById(R.id.activity_lesson_redactor_buttons_container)).removeView(removeButton);
+            ((LinearLayout) findViewById(R.id.activity_lesson_redactor_body_container)).removeView(removeButton);
         } else {
             //buttonsOut.removeView(backButton);
             // удаление урока
@@ -414,8 +409,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
         });
 
         // ---- кнопка рассадить учеников ----
-        RelativeLayout editSeatingButton = findViewById(R.id.activity_lesson_redactor_seating_redactor_button);
-        seatingStateImage = findViewById(R.id.activity_lesson_redactor_seating_state);
+        TextView editSeatingButton = findViewById(R.id.activity_lesson_redactor_seating_redactor_button);
         editSeatingButton.setOnClickListener(view -> {
 
             if (lessonUnit1.chosenClassPosition == -1) {
@@ -637,23 +631,12 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
 
     // текст рассадки 
     void seatingTextUpdate() {
-
-        if (lessonUnit1.chosenCabinetPosition != -1 && lessonUnit1.chosenClassPosition != -1) {
-            // проверяем рассажены ли ученики
-            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-            ArrayList<Long> arrayList = db.getNotPutLearnersIdByCabinetIdAndClassId(
-                    cabinetUnit1s[lessonUnit1.chosenCabinetPosition].cabinetId,
-                    classUnits[lessonUnit1.chosenClassPosition].classId
-            );
-            if (arrayList.size() == 0) {// если да
-                seatingStateImage.setImageResource(R.drawable.lesson_redactor_activity_icon_correct);
-            } else {// если нет
-                seatingStateImage.setImageResource(R.drawable.lesson_redactor_activity_icon_wrong);
-            }
-            db.close();
-        } else {
-            seatingStateImage.setBackgroundColor(Color.TRANSPARENT);
-        }
+        if (lessonUnit1.chosenCabinetPosition == -1 || lessonUnit1.chosenClassPosition == -1)
+            ((TextView) findViewById(R.id.activity_lesson_redactor_seating_redactor_button))
+                    .setTextColor(Color.TRANSPARENT);
+        else
+            ((TextView) findViewById(R.id.activity_lesson_redactor_seating_redactor_button))
+                .setTextColor(Color.BLACK);
     }
 
 

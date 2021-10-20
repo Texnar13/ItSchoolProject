@@ -29,7 +29,6 @@ public class GradeEditLessonDialogFragment extends DialogFragment {
     static final String ARGS_LEARNER_NAME = "name";
     static final String ARGS_STRING_GRADES_TYPES_ARRAY = "gradesTypes";
     static final String ARGS_INT_GRADES_ABSENT_TYPE_NUMBER = "chosenAbsTypeNumber";
-    static final String ARGS_STRING_ABSENT_TYPES_NAMES_ARRAY = "absentTypeNameArray";
     static final String ARGS_STRING_ABSENT_TYPES_LONG_NAMES_ARRAY = "absentTypeLongNameArray";
     static final String ARGS_INT_GRADES_ARRAY = "grades";
     static final String ARGS_INT_MAX_GRADE = "maxGrade";
@@ -76,7 +75,6 @@ public class GradeEditLessonDialogFragment extends DialogFragment {
         absTypePoz = getArguments().getInt(ARGS_INT_GRADES_ABSENT_TYPE_NUMBER, -1);
 
         // названия типов пропусков
-        final String[] absentTypesNames = getArguments().getStringArray(ARGS_STRING_ABSENT_TYPES_NAMES_ARRAY);
         final String[] absentTypesLongNames = getArguments().getStringArray(ARGS_STRING_ABSENT_TYPES_LONG_NAMES_ARRAY);
 
         // названия типов оценок

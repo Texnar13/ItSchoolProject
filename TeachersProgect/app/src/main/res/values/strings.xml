@@ -186,7 +186,7 @@
     <string name="lesson_redactor_activity_toast_text_class_not_chosen">Group not chosen, you can create it in «Students»</string>
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">Seat the students</string>
-    <string name="lesson_redactor_activity_button_remove"><u>Remove lesson</u></string>
+    <string name="lesson_redactor_activity_button_remove">Remove lesson</string>
     <!-- диалоги -->
     <string name="lesson_redactor_activity_dialog_button_remove">Remove</string>
     <string name="lesson_redactor_activity_dialog_button_add">Create</string>
@@ -216,14 +216,11 @@
 
     <!-- активность окончания урока-->
     <!-- заголовок активности -->
-    <string name="title_activity_lesson_list">Lessons learned</string>
-    <!-- меню сверху -->
-    <!-- уведомления -->
-    <string name="lesson_list_activity_menu_toast_grades_saved">All answers saved successfully!</string>
+    <string name="title_activity_lesson_list">##Lessons learned</string>
     <!-- диалоги -->
     <string name="lesson_list_activity_dialog_title">Edit answer</string>
     <!-- подсказка на экране -->
-    <string name="lesson_list_activity_text_help">Here are the results of the lesson. \nTo change the answer, click on it. \nTo save the answers, click the SAVE button. \nIf you do not want to save answers, click the «Back» button on your device.</string>
+    <string name="lesson_list_activity_text_help">Here are the results of the lesson. \nTo change the answer, click on it. \nTo save the answers, click the SAVE button.</string>
 
 
     <!-- активность настроек -->
@@ -235,7 +232,7 @@
     <string name="settings_activity_title_absent_type">Types of absence</string>
     <string name="settings_activity_title_colored_grades">Colored grades in table</string>
     <!-- кнопки -->
-    <string name="settings_activity_button_edit_max_answer" formatted="true">Max. answers count: %1$s</string>
+    <string name="settings_activity_button_edit_max_answer" formatted="true">Max. answers count: %d</string>
     <string name="settings_activity_button_edit_time">Edit lessons time</string>
     <string name="settings_activity_button_remove_data">Remove all data</string>
     <string name="settings_activity_button_rate_us">Rate our app!</string>
@@ -252,6 +249,11 @@
     <string name="settings_activity_toast_grade_too_min">Too small value entered (it must be greater than 1)</string>
     <string name="settings_activity_toast_time_successfully_saved">Time parameters saved</string>
     <string name="settings_activity_toast_time_no_saved">Error, time parameters not saved</string>
+    <string name="settings_activity_data_export_theme" formatted="true">##Save copy from %s</string>
+    <string name="settings_activity_data_export_title">##Отправить через:</string>
+    <string name="settings_activity_data_import_title">##Select file to upload:</string>
+    <string name="settings_activity_data_import_message_incorrect_type">##Низя, низя! файл не того формата</string>
+    <string name="settings_activity_data_import_message_unrtedable_file">##Низя, низя! файл не прочесть…</string>
     <!-- диалоги -->
     <string name="settings_activity_dialog_delete_title">Are you sure you want to delete all data?</string>
     <string name="settings_activity_dialog_add_type_title">+ Add type</string>
@@ -274,6 +276,8 @@
     <string name="settings_activity_dialog_text_time_colon">:</string>
     <string name="settings_activity_dialog_text_time_dash">—</string>
     <string name="settings_activity_dialog_edit_locale_title">Choose language:</string>
+    <string name="settings_activity_dialog_data_import_accept_title">##Результаты чтения файла:</string>
+    <string name="settings_activity_dialog_data_import_accept_button">##Импортировать данные</string>
 
 
     <!-- активность рекламы спонсора -->

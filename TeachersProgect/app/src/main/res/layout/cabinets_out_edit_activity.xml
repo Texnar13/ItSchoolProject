@@ -20,69 +20,60 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/double_margin"
-            android:paddingRight="@dimen/double_margin"
             android:paddingBottom="@dimen/double_margin">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/double_margin"
-                android:layout_marginBottom="@dimen/double_margin"
+                android:layout_height="@dimen/simple_buttons_height"
+                android:layout_margin="@dimen/double_margin"
+                android:gravity="center_vertical"
                 android:background="@drawable/base_background_button_round_gray"
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/ButtonSimpleStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_margin="@dimen/half_more_margin"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:gravity="center"
-                    android:text="@string/cabinets_out_activity_button_text_cabinet_title"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/text_subtitle_size" />
+                    android:text="@string/cabinets_out_activity_button_text_cabinet_title" />
 
                 <EditText
                     android:id="@+id/cabinet_out_edit_cabinet_name_field"
+                    style="@style/ButtonSimpleStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/simple_margin"
                     android:layout_marginRight="@dimen/simple_margin"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:gravity="center"
                     android:hint="@string/cabinets_out_activity_dialog_hint_cabinet_name"
+                    android:importantForAutofill="no"
                     android:inputType="textCapWords"
-                    android:singleLine="true"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/text_subtitle_size"
-                    android:importantForAutofill="no" />
+                    android:singleLine="true" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/cabinet_out_edit_cabinet_classes_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/double_margin"
+                android:layout_marginRight="@dimen/double_margin"
                 android:layout_marginBottom="@dimen/double_margin"
+                android:paddingBottom="@dimen/half_margin"
                 android:background="@drawable/base_background_button_round_gray"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/double_margin"
-                android:paddingRight="@dimen/double_margin">
+                android:orientation="vertical">
 
                 <TextView
+                    style="@style/ButtonSimpleStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/double_margin"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:gravity="center"
-                    android:text="@string/cabinets_out_activity_button_text_seat_students"
-                    android:textColor="@color/backgroundDarkGray"
-                    android:textSize="@dimen/text_subtitle_size" />
+                    android:text="@string/cabinets_out_activity_button_text_seat_students" />
 
                 <LinearLayout
+
+                    android:layout_marginStart="@dimen/double_margin"
+                    android:layout_marginEnd="@dimen/double_margin"
                     android:id="@+id/cabinet_out_edit_cabinet_classes_out"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -91,27 +82,17 @@
 
             <TextView
                 android:id="@+id/cabinet_out_edit_cabinet_arrange_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/double_margin"
-                android:background="@drawable/base_background_button_round_gray"
+                style="@style/SettingsButtonSimpleStyle"
                 android:gravity="center"
-                android:padding="@dimen/half_more_margin"
-                android:text="@string/cabinets_out_activity_button_text_arrange_desks"
-                android:textColor="#000000"
-                android:textSize="@dimen/text_subtitle_size" />
+                android:text="@string/cabinets_out_activity_button_text_arrange_desks" />
 
             <TextView
                 android:id="@+id/cabinet_out_edit_cabinet_delete_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/double_margin"
-                android:background="@drawable/base_background_button_round_gray"
+                style="@style/SettingsButtonSimpleStyle"
                 android:gravity="center"
                 android:padding="@dimen/half_more_margin"
                 android:text="@string/cabinets_out_activity_button_text_delete_cabinet"
-                android:textColor="@color/signalRed"
-                android:textSize="@dimen/text_subtitle_size" />
+                android:textColor="@color/signalRed" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

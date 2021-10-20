@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/lesson_list_element_height"
+    android:gravity="center_vertical|end"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/double_margin"
+    android:paddingEnd="@dimen/double_margin">
+
+    <TextView
+        android:id="@+id/lesson_list_element_pattern_name"
+        style="@style/ButtonSimpleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/lesson_list_element_pattern_grade"
+        android:singleLine="true"
+        android:text="ivanov I I" />
+
+    <TextView
+        android:id="@+id/lesson_list_element_pattern_grade"
+        style="@style/ButtonSimpleStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:text="12 12 12" />
+</RelativeLayout>

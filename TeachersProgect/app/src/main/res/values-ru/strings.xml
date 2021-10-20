@@ -173,7 +173,7 @@
     <string name="lesson_redactor_activity_title_subject">Предмет:</string>
     <string name="lesson_redactor_activity_title_cabinet">Кабинет:</string>
     <string name="lesson_redactor_activity_title_time">Время:</string>
-    <string name="lesson_redactor_activity_spinner_title_lesson" formatted="true">%2d-урок %2d:%02d - %2d:%02d</string>
+    <string name="lesson_redactor_activity_spinner_title_lesson" formatted="true">%d-урок %2d:%02d - %2d:%02d</string>
     <string name="lesson_redactor_activity_title_repeat">Повтор:</string>
     <string name="lesson_redactor_activity_toast_subject_not_select">Не выбран урок!</string>
     <string name="lesson_redactor_activity_title_lesson_homework">##Заметки, д/з:</string>
@@ -186,7 +186,7 @@
     <string name="lesson_redactor_activity_toast_text_class_not_chosen">Не выбрана группа, вы можете создать ее в разделе «Ученики»</string>
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">Рассадить учеников</string>
-    <string name="lesson_redactor_activity_button_remove"><u>Удалить урок</u></string>
+    <string name="lesson_redactor_activity_button_remove">Удалить урок</string>
     <!-- диалоги -->
     <string name="lesson_redactor_activity_dialog_button_remove">удалить</string>
     <string name="lesson_redactor_activity_dialog_button_add">добавить</string>
@@ -216,14 +216,11 @@
 
     <!-- активность окончания урока-->
     <!-- заголовок активности -->
-    <string name="title_activity_lesson_list">Итоги урока</string>
-    <!-- меню сверху -->
-    <!-- уведомления -->
-    <string name="lesson_list_activity_menu_toast_grades_saved">Все ответы успешно сохранены!</string>
+    <string name="title_activity_lesson_list">##Итоги урока</string>
     <!-- диалоги -->
     <string name="lesson_list_activity_dialog_title">Редактировать ответы</string>
     <!-- подсказка на экране -->
-    <string name="lesson_list_activity_text_help">Здесь выводятся результаты урока. \nЧтобы изменить ответы, нажмите на них. \nЧтобы сохранить ответы, нажмите кнопку СОХРАНИТЬ. \nЕсли не хотите сохранять ответы, нажмите кнопку "Назад" на вашем устройстве.</string>
+    <string name="lesson_list_activity_text_help">Здесь выводятся результаты урока. \nЧтобы изменить ответы, нажмите на них. \nЧтобы сохранить ответы, нажмите кнопку СОХРАНИТЬ.</string>
 
 
     <!-- активность настроек-->
@@ -235,7 +232,7 @@
     <string name="settings_activity_title_absent_type">Типы отсутствия</string>
     <string name="settings_activity_title_colored_grades">Цветные оценки</string>
     <!-- кнопки -->
-    <string name="settings_activity_button_edit_max_answer" formatted="true">Макс. балл/ число ответов: %1$s</string>
+    <string name="settings_activity_button_edit_max_answer" formatted="true">Макс. балл/ число ответов: %d</string>
     <string name="settings_activity_button_edit_time">Время уроков</string>
     <string name="settings_activity_button_remove_data">Удалить все данные</string>
     <string name="settings_activity_button_rate_us">Оцените наше приложение!</string>
@@ -252,6 +249,11 @@
     <string name="settings_activity_toast_grade_too_min">Введено слишком маленькое значение (должно быть не менее 1)</string>
     <string name="settings_activity_toast_time_successfully_saved">Время сохранено</string>
     <string name="settings_activity_toast_time_no_saved">Ошибка, время не сохранено</string>
+    <string name="settings_activity_data_export_theme" formatted="true">##Резервная копия от %s</string>
+    <string name="settings_activity_data_export_title">##Отправить через:</string>
+    <string name="settings_activity_data_import_title">##Выберите файл:</string>
+    <string name="settings_activity_data_import_message_incorrect_type">##Низя, низя! файл не того формата</string>
+    <string name="settings_activity_data_import_message_unrtedable_file">##Низя, низя! файл не прочесть…</string>
     <!-- диалоги -->
     <string name="settings_activity_dialog_delete_title">Вы точно хотите удалить все данные?</string>
     <string name="settings_activity_dialog_add_type_title">+ Добавить тип оценок</string>
@@ -274,6 +276,8 @@
     <string name="settings_activity_dialog_text_time_colon">:</string>
     <string name="settings_activity_dialog_text_time_dash">—</string>
     <string name="settings_activity_dialog_edit_locale_title">Выберите язык:</string>
+    <string name="settings_activity_dialog_data_import_accept_title">##Результаты чтения файла:</string>
+    <string name="settings_activity_dialog_data_import_accept_button">##Импортировать данные</string>
 
 
     <!-- активность рекламы спонсора -->

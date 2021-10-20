@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import androidx.documentfile.provider.DocumentFile;
 
 import com.learning.texnar13.teachersprogect.R;
+import com.learning.texnar13.teachersprogect.settings.SettingsActivity;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
@@ -44,7 +45,8 @@ public class LearnersAndGradesImportActivity extends AppCompatActivity {
                     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setType("*/*");
-                    Intent.createChooser(intent, "Select file to upload ");//todo перенести в константы
+                    Intent.createChooser(intent,
+                            getResources().getString(R.string.settings_activity_data_import_title));
 
                     return intent;
                 }
@@ -54,18 +56,16 @@ public class LearnersAndGradesImportActivity extends AppCompatActivity {
                     if (resultCode == RESULT_OK) {
                         if (data == null) return null;
                         if (data.getData() == null) return null;
-                        // если какой-то путь есть, пытаемся екго обработать
-                        Uri path = data.getData();
-                        if (getFileName(data.getData()).trim().endsWith(".xls")) {
-                            // отлично, возвращаем результат
-                            return path;
-                        } else {
-                            //todo говорим что файл не того формата
+                        // если какой-то путь есть, пытаемся его обработать
+                        if (!getFileName(data.getData()).trim().endsWith(".xls")) {
+                            // todo говорим что файл не того формата
                             Toast.makeText(LearnersAndGradesImportActivity.this,
                                     "низя, низя! файл не того формата", Toast.LENGTH_SHORT).show();
                             //Toast.makeText(this, getResources().getText(R.string.teacher_settings_toast_text_file_format), Toast.LENGTH_SHORT).show();
                             return null;
                         }
+                        // отлично, возвращаем результат
+                        return data.getData();
                     }
                     return null;
                 }
@@ -224,7 +224,8 @@ public class LearnersAndGradesImportActivity extends AppCompatActivity {
                         }
                     }
                 }
-            });
+            }
+    );
 
     // получение имени файла из uri
     private String getFileName(Uri uri) {

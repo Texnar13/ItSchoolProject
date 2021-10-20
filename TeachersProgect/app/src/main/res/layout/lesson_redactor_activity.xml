@@ -9,32 +9,32 @@
     android:layout_marginBottom="@dimen/simple_margin"
     android:background="@drawable/base_background_dialog_full_round_white"
     tools:context="com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity">
-    <!--android:layout_margin="@dimen/simple_margin"-->
-
 
     <LinearLayout
         android:id="@+id/activity_lesson_redactor_head_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:padding="@dimen/half_more_margin">
 
         <ImageView
             android:id="@+id/activity_lesson_redactor_back_button"
             android:layout_width="@dimen/my_icon_size"
             android:layout_height="@dimen/my_icon_size"
-            android:adjustViewBounds="true"/>
+            android:adjustViewBounds="true" />
 
         <TextView
             android:id="@+id/activity_lesson_redactor_head_text"
             style="@style/ButtonSimpleStyle"
+            android:fontFamily="@font/montserrat_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/double_margin" />
 
     </LinearLayout>
 
     <ScrollView
+        android:paddingTop="@dimen/simple_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/activity_lesson_redactor_save_button"
@@ -42,6 +42,7 @@
         android:background="@color/backgroundWhite">
 
         <LinearLayout
+            android:id="@+id/activity_lesson_redactor_body_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -53,12 +54,16 @@
                 android:layout_marginLeft="@dimen/double_margin"
                 android:layout_marginRight="@dimen/double_margin"
                 android:background="@drawable/base_background_button_round_gray"
-                android:padding="@dimen/double_margin">
+                android:paddingStart="@dimen/double_margin"
+                android:paddingEnd="@dimen/double_margin"
+                android:paddingTop="@dimen/simple_margin"
+                android:paddingBottom="@dimen/simple_margin">
 
                 <TableRow android:gravity="center_vertical">
 
                     <TextView
                         style="@style/LessonRedactorDescriptionTextStyle"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:text="@string/lesson_redactor_activity_title_time" />
 
                     <Spinner
@@ -73,6 +78,7 @@
 
                     <TextView
                         style="@style/LessonRedactorDescriptionTextStyle"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:text="@string/lesson_redactor_activity_title_class" />
 
                     <Spinner
@@ -87,15 +93,16 @@
 
                     <TextView
                         style="@style/LessonRedactorDescriptionTextStyle"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:text="@string/lesson_redactor_activity_title_subject" />
 
                     <TextView
                         android:id="@+id/activity_lesson_redactor_lesson_name_text_button"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/half_margin"
-                        android:layout_marginRight="@dimen/half_margin"
+                        android:layout_height="@dimen/spinner_height_size"
                         android:gravity="center_vertical"
+                        android:paddingStart="@dimen/simple_margin"
+                        android:layout_gravity="center_vertical"
                         android:text="@string/lesson_redactor_activity_spinner_text_create_subject"
                         android:textColor="#000000"
                         android:textSize="@dimen/text_simple_size" />
@@ -105,6 +112,7 @@
 
                     <TextView
                         style="@style/LessonRedactorDescriptionTextStyle"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:text="@string/lesson_redactor_activity_title_cabinet" />
 
                     <Spinner
@@ -119,6 +127,7 @@
 
                     <TextView
                         style="@style/LessonRedactorDescriptionTextStyle"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:text="@string/lesson_redactor_activity_title_repeat" />
 
                     <Spinner
@@ -141,6 +150,7 @@
                 <TextView
                     style="@style/LessonRedactorDescriptionTextStyle"
                     android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/montserrat_semibold"
                     android:text="@string/lesson_redactor_activity_title_lesson_homework" />
 
                 <EditText
@@ -155,70 +165,20 @@
                     android:textSize="@dimen/text_simple_size" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/activity_lesson_redactor_seating_redactor_button"
+                style="@style/SettingsButtonSimpleStyle"
+                android:fontFamily="@font/montserrat_semibold"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:text="@string/lesson_redactor_activity_button_edit_seating" />
 
-                <RelativeLayout
-                    android:id="@+id/activity_lesson_redactor_seating_redactor_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:id="@+id/activity_lesson_redactor_seating_state_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/simple_margin"
-                        android:layout_marginTop="@dimen/simple_margin"
-                        android:layout_marginRight="@dimen/simple_margin"
-                        android:layout_marginBottom="@dimen/simple_margin"
-                        android:background="@drawable/base_background_button_round_gray"
-                        android:gravity="center">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/double_margin"
-                            android:layout_marginTop="@dimen/simple_margin"
-                            android:layout_marginRight="@dimen/double_margin"
-                            android:layout_marginBottom="@dimen/simple_margin"
-                            android:text="@string/lesson_redactor_activity_button_edit_seating"
-                            android:textColor="@color/backgroundDarkGray"
-                            android:textSize="@dimen/text_simple_size" />
-                    </LinearLayout>
-
-                    <ImageView
-                        android:id="@+id/activity_lesson_redactor_seating_state"
-                        android:layout_width="@dimen/my_icon_small_size"
-                        android:layout_height="@dimen/my_icon_small_size"
-                        app:srcCompat="@drawable/lesson_redactor_activity_icon_correct" />
-                </RelativeLayout>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/activity_lesson_redactor_buttons_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/activity_lesson_redactor_remove_button"
+                style="@style/SettingsButtonSimpleStyle"
+                android:text="@string/lesson_redactor_activity_button_remove"
                 android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/activity_lesson_redactor_remove_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/half_more_margin"
-                    android:layout_marginBottom="@dimen/half_more_margin"
-                    android:gravity="center"
-                    android:text="@string/lesson_redactor_activity_button_remove"
-                    android:textColor="@color/signalRed"
-                    android:textSize="@dimen/text_simple_size" />
-
-
-            </LinearLayout>
+                android:fontFamily="@font/montserrat_semibold"
+                android:textColor="@color/signalRed" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -242,6 +202,7 @@
         android:layout_height="@dimen/simple_buttons_height"
         android:layout_alignParentBottom="true"
         android:background="@drawable/base_background_dialog_bottom_round_blue"
+        android:fontFamily="@font/montserrat_semibold"
         android:gravity="center"
         android:text="@string/button_save"
         android:textColor="@color/backgroundWhite" />

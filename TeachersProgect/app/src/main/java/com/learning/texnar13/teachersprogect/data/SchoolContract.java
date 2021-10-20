@@ -35,8 +35,6 @@ public final class SchoolContract {
         public static final String COLUMN_PROFILE_NAME = "profileName";
         public static final String COLUMN_START_DATE = "startDate";
         public static final String COLUMN_END_DATE = "endDate";
-        //public static final String COLUMN_START_PERIOD_TIME = "startTime";
-        //public static final String COLUMN_END_PERIOD_TIME = "endTime";
     }
 
     public static final class TableCabinets {
@@ -57,7 +55,7 @@ public final class SchoolContract {
         public static final String KEY_CABINET_ID = "cabinetId";
     }
 
-    public static final class TablePlaces {
+    public static final class TablePlaces {// todo помоему нужно убрать эту таблицу, а все данные переместить в парты
         public static final String NAME_TABLE_PLACES = "places";
         public static final String KEY_PLACE_ID = BaseColumns._ID;
         public static final String KEY_DESK_ID = "deskId";
@@ -95,7 +93,7 @@ public final class SchoolContract {
 
         public static final String[] COLUMNS_GRADE = {"grade1", "grade2", "grade3"};
         public static final String[] KEYS_GRADES_TITLES_ID = {"title1Id", "title2Id", "title3Id"};
-        public static final String KEY_ABSENT_TYPE_ID = "absentTypeId";
+        public static final String KEY_ABSENT_TYPE_ID = "absentTypeId";// внимание! может храниться как нулевое поле (обозначает что пропуска нет)
 
         public static final String KEY_SUBJECT_ID = "subjectId";
         public static final String KEY_LEARNER_ID = "learnerId";
@@ -140,12 +138,13 @@ public final class SchoolContract {
     }
 
     public static final class TableSubjects {
-        public static final String NAME_TABLE_SUBJECTS = "subjects";//rename to subject
+        public static final String NAME_TABLE_SUBJECTS = "subjects";
         public static final String KEY_SUBJECT_ID = BaseColumns._ID;
         public static final String COLUMN_NAME = "name";
         public static final String KEY_CLASS_ID = "classId";
     }
 
+    // таблица уроков (предмет-время-кабинет)
     public static final class TableSubjectAndTimeCabinetAttitude {
         public static final String NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE = "lessonAndTimeWithCabinet";
         public static final String KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID = BaseColumns._ID;

@@ -5,6 +5,7 @@
     android:layout_height="@dimen/spinner_height_size"
     android:background="@color/backgroundDarkWhite"
     android:ellipsize="marquee"
+    android:paddingStart="@dimen/simple_margin"
     android:gravity="center_vertical"
     android:singleLine="true"
     android:textAlignment="inherit"

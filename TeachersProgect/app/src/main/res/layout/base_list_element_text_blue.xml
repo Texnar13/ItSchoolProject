@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:fontFamily="@font/montserrat_medium"
-    android:gravity="center"
-    android:padding="@dimen/half_more_margin"
     android:textColor="@color/backgroundWhite"
-    android:textSize="@dimen/text_subtitle_size"
-    android:background="@drawable/base_background_dialog_full_round_blue">
+    android:background="@drawable/base_background_button_round_blue"
+    style="@style/SettingsButtonSimpleStyle">
 
 
 </TextView>

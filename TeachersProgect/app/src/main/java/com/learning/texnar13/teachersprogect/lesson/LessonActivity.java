@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -265,7 +266,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
 
@@ -274,16 +274,21 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
         setSupportActionBar(findViewById(R.id.base_blue_toolbar));
         // убираем заголовок, там свой
-        getSupportActionBar().setTitle("");
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setTitle("");
+        }
+        ((TextView) findViewById(R.id.base_blue_toolbar_title))
+                .setText(R.string.title_activity_learners_classes_out);
 
         // цвета статус бара
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
-            // темный шрифт todo https://habr.com/ru/company/oleg-bunin/blog/488196/
-            window.getDecorView().setSystemUiVisibility(
-                    window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
+                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
 
@@ -475,9 +480,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     learnersAndTheirGrades[i].learnerGrades[0] = 0;
                     learnersAndTheirGrades[i].learnerGrades[1] = 0;
                     learnersAndTheirGrades[i].learnerGrades[2] = 0;
-                    learnersAndTheirGrades[i].learnerGradesTypes[0] = 0;
-                    learnersAndTheirGrades[i].learnerGradesTypes[1] = 0;
-                    learnersAndTheirGrades[i].learnerGradesTypes[2] = 0;
+                    learnersAndTheirGrades[i].learnerGradesTypes[0] = 1;
+                    learnersAndTheirGrades[i].learnerGradesTypes[1] = 1;
+                    learnersAndTheirGrades[i].learnerGradesTypes[2] = 1;
                 } else {// если пропуска нет
                     for (int gradeI = 0; gradeI < SchoolContract.TableLearnersGrades.COLUMNS_GRADE.length; gradeI++) {
                         // оценка

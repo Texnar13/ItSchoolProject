@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialog;
@@ -58,13 +59,18 @@ public class CabinetEditActivity extends AppCompatActivity implements AcceptDial
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);// todo что это за строка, в Start Screen она не используется
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
         setContentView(R.layout.cabinets_out_edit_activity);
         // тулбар
+        // убираем заголовок, там свой
         setSupportActionBar(findViewById(R.id.base_blue_toolbar));
-        getSupportActionBar().setTitle("");
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setTitle("");
+        }
         ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(
                 R.string.cabinets_out_activity_title_edit_cabinet);
 
@@ -124,10 +130,10 @@ public class CabinetEditActivity extends AppCompatActivity implements AcceptDial
 
                 LinearLayout.LayoutParams elementParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
+                        getResources().getDimensionPixelSize(R.dimen.cabinet_edit_activity_sub_menu_buttons_height)
                 );
                 elementParams.gravity = Gravity.CENTER;
-                elementParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.double_margin);
+                elementParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.half_more_margin);
                 classesOut.addView(element, elementParams);
 
                 // нажатие

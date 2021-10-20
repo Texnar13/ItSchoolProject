@@ -186,7 +186,7 @@
     <string name="lesson_redactor_activity_toast_text_class_not_chosen">没有选择课堂，您可以在 «学生» 中创建</string>
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">让学生们坐下</string>
-    <string name="lesson_redactor_activity_button_remove"><u>删除课</u></string>
+    <string name="lesson_redactor_activity_button_remove">删除课</string>
     <!-- диалоги -->
     <string name="lesson_redactor_activity_dialog_button_remove">删除</string>
     <string name="lesson_redactor_activity_dialog_button_add">添加</string>
@@ -216,14 +216,11 @@
 
     <!-- активность окончания урока-->
     <!-- заголовок активности -->
-    <string name="title_activity_lesson_list">课的结果</string>
-    <!-- меню сверху -->
-    <!-- уведомления -->
-    <string name="lesson_list_activity_menu_toast_grades_saved">所有分数已成功保存！</string>
+    <string name="title_activity_lesson_list">##课的结果</string>
     <!-- диалоги -->
     <string name="lesson_list_activity_dialog_title">编辑分数</string>
     <!-- подсказка на экране -->
-    <string name="lesson_list_activity_text_help">课程结果显示在这里。 \n要更改答案，请单击它们。 \n保存答案，点击 保存。\n如果您不想保存答案，请单击设备上的后退按钮。</string>
+    <string name="lesson_list_activity_text_help">课程结果显示在这里。\n要更改答案，请单击它们。\n保存答案，点击 保存。</string>
 
 
     <!-- активность настроек-->
@@ -235,7 +232,7 @@
     <string name="settings_activity_title_absent_type">缺席的类型</string>
     <string name="settings_activity_title_colored_grades">颜色分数</string>
     <!-- кнопки -->
-    <string name="settings_activity_button_edit_max_answer" formatted="true">量分数/ 最高得分: %1$s</string>
+    <string name="settings_activity_button_edit_max_answer" formatted="true">量分数/ 最高得分: %d</string>
     <string name="settings_activity_button_edit_time">上课时间</string>
     <string name="settings_activity_button_remove_data">删除所有数据</string>
     <string name="settings_activity_button_rate_us">请评价我们的应用!</string>
@@ -252,6 +249,11 @@
     <string name="settings_activity_toast_grade_too_min">输入的值太小（必须至少为1)</string>
     <string name="settings_activity_toast_time_successfully_saved">时间保存了。</string>
     <string name="settings_activity_toast_time_no_saved">错误，时间未保存。</string>
+    <string name="settings_activity_data_export_theme" formatted="true">##Save copy from %s</string>
+    <string name="settings_activity_data_export_title">##Отправить через:</string>
+    <string name="settings_activity_data_import_title">##Select file to upload:</string>
+    <string name="settings_activity_data_import_message_incorrect_type">##Низя, низя! файл не того формата</string>
+    <string name="settings_activity_data_import_message_unrtedable_file">##Низя, низя! файл не прочесть…</string>
     <!-- диалоги -->
     <string name="settings_activity_dialog_delete_title">您确定要删除所有应用程序数据吗？</string>
     <string name="settings_activity_dialog_add_type_title">+ 添加课的工作类型</string>
@@ -274,6 +276,8 @@
     <string name="settings_activity_dialog_text_time_colon">:</string>
     <string name="settings_activity_dialog_text_time_dash">—</string>
     <string name="settings_activity_dialog_edit_locale_title">选择语言</string>
+    <string name="settings_activity_dialog_data_import_accept_title">##Результаты чтения файла:</string>
+    <string name="settings_activity_dialog_data_import_accept_button">##Импортировать данные</string>
 
 
     <!-- активность рекламы спонсора -->

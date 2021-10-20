@@ -326,7 +326,7 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             absText.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
             absText.setText(R.string.start_screen_activity_title_current_no_lesson);
             absText.setTextColor(getResources().getColor(R.color.backgroundGray));
-            absText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
+            absText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.simple_buttons_text_size));
             LinearLayout.LayoutParams absTextParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
@@ -562,6 +562,10 @@ this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowMana
 
         // настраиваем программный вывод векторных изображений в диалогах
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+
+// подчеркивание текста
+subjectText.setPaintFlags(subjectText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
 * */
 

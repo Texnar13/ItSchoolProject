@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,44 +22,38 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.documentfile.provider.DocumentFile;
 
-import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialog;
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
+import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialog;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.sponsor.SponsorActivity;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.Objects;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener, EditMaxAnswersDialogInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface, EditGradesTypeDialogFragmentInterface, EditAbsentTypeDialogFragmentInterface, SettingsRemoveInterface {
 
     TextView maxGradeText;
-
     boolean isColoredGrades;
     ImageView coloredGradesSwitch;
-
-
     // межстраничный баннер открывающийся при выходе из настроек
     com.yandex.mobile.ads.InterstitialAd settingsBack;
 
-    // путь для файла с данными
-    static final String SAVE_DATA_DIRECTORY = "/teachersAssistant";
-    static final String SAVE_DATA_FILE_NAME = "saved_data.xml";
+
+    // -------------------------- помощники запуска с callBack-ами --------------------------
+
 
     // помощник запуска активности SponsorActivity с результатом
-    private final ActivityResultLauncher<Integer> startResultHelper = registerForActivityResult(
+    private final ActivityResultLauncher<Integer> showSponsorAndGetResultHelper = registerForActivityResult(
             new ActivityResultContract<Integer, Integer>() {
                 @NonNull
                 @Override
@@ -85,6 +78,70 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 }
             });
 
+    // регистрируем callback для диалога выбора файла
+    private final ActivityResultLauncher<Integer> selectFileLaunchHelper = registerForActivityResult(
+            new ActivityResultContract<Integer, Uri>() {// как будем запускать намерение/активность
+
+                @NonNull
+                @Override
+                public Intent createIntent(@NonNull Context context, Integer input) {
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("*/*");
+                    Intent.createChooser(intent,
+                            getResources().getString(R.string.settings_activity_data_import_title));
+                    return intent;
+                }
+
+                @Override
+                public Uri parseResult(int resultCode, @Nullable Intent data) {
+                    if (resultCode == RESULT_OK) {
+                        if (data == null) return null;
+                        // если какой-то путь есть, возвращаем его
+                        return data.getData();
+                    }
+                    return null;
+                }
+            }, selectedUriPath -> {// что будем получать
+                if (selectedUriPath == null) return;
+                if (!getFileName(selectedUriPath).trim().endsWith(".tadb")) {
+                    // если файл не того формата
+                    Toast.makeText(this, getResources().getText(R.string.settings_activity_data_import_message_incorrect_type),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // если какой-то путь есть, пытаемся его обработать
+                // начинаем чтение из файла
+                SettingsImportExportHelper.ImportDataBaseData data =
+                        SettingsImportExportHelper.importDataBase(SettingsActivity.this, selectedUriPath);
+
+                // запускаем диалог с результатами обработки
+                DataImportLogDialog logDialog = new DataImportLogDialog();
+                Bundle arguments = new Bundle();
+                arguments.putString(DataImportLogDialog.PARAM_LOG_MESSAGE, data.outputLog.toString());
+                logDialog.setArguments(arguments);
+                logDialog.show(getSupportFragmentManager(), "importLogDialog");
+            });
+
+    // получение имени файла из uri
+    private String getFileName(Uri uri) {
+        DocumentFile documentFile = DocumentFile.fromSingleUri(this, uri);
+        return (documentFile != null) ? documentFile.getName() : "";
+    }
+
+    // регистрируем callback для диалога разрешений
+    private final ActivityResultLauncher<String> requestPermissionHelper = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    // разрешение выдано, отлично!
+                    selectFileLaunchHelper.launch(null);
+                } else// Обьясняем, зачем это нужно
+                    Toast.makeText(this,
+                            R.string.learners_and_grades_import_give_me_a_reason,
+                            Toast.LENGTH_SHORT).show();
+
+            });
+
 
     // создание экрана
     @SuppressLint("SourceLockedOrientationActivity")
@@ -98,7 +155,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);// todo что это за строка, в Start Screen она не используется
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
         // разрешаем только вертикальную ориентацию
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
@@ -124,7 +181,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }
 
         ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_settings);
-
 
         // слушатели кнопкам
         // настройка локализации
@@ -154,10 +210,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
         // -- максимальный ответ
-        maxGradeText = ((TextView) findViewById(R.id.activity_settings_edit_max_answers_count_button));
+        maxGradeText = findViewById(R.id.activity_settings_edit_max_answers_count_button);
         maxGradeText.setText(String.format(
                 getResources().getString(R.string.settings_activity_button_edit_max_answer),
-                Integer.toString(db.getSettingsMaxGrade(1))
+                db.getSettingsMaxGrade(1)
         ));
 
         // -- настройка локализации
@@ -194,7 +250,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         int vId = v.getId();
-
         // кнопка оцените нас
         if (vId == R.id.settings_rate_button) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -232,76 +287,19 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }
         // экспорт данных
         else if (vId == R.id.activity_settings_export_all_data_button) {
-
-            // диалог разрешения на запись файлов
-            if (ContextCompat.checkSelfPermission(SettingsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_DENIED) {// если нет разрешения запрашиваем его
-
-                Toast.makeText(SettingsActivity.this, "#Чтобы экспортировать данные, нужно разрешение на запись файлов#", Toast.LENGTH_SHORT).show();
-                ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1234);
-            } else {// если разрешение есть
-
-                // проверяем доступность SD
-                if (!Environment.getExternalStorageState().equals(
-                        Environment.MEDIA_MOUNTED)) {
-                    Toast.makeText(SettingsActivity.this, "SD-карта не доступна ", Toast.LENGTH_LONG).show();
-                    Log.d("test", "SD-карта не доступна: " + Environment.getExternalStorageState());
-                    return;
-                }
-                // получаем путь к SD
-                File sdPath = Environment.getExternalStorageDirectory();
-                // добавляем свой каталог к пути
-                sdPath = new File(sdPath.getAbsolutePath() + SAVE_DATA_DIRECTORY);
-                // создаем каталог
-                Log.e("test", Boolean.toString(sdPath.mkdirs()));
-                // формируем объект File, который содержит путь к файлу
-                File sdFile = new File(sdPath, SAVE_DATA_FILE_NAME);
-                try {
-                    // открываем поток для записи
-                    FileWriter fw = new FileWriter(sdFile);
-                    // пишем данные
-                    DataBaseOpenHelper db = new DataBaseOpenHelper(SettingsActivity.this);
-                    db.writeXMLDataBaseInFile(fw);
-                    db.close();
-                    // закрываем поток
-                    fw.close();
-                    Toast.makeText(SettingsActivity.this, "Файл записан на SD ", Toast.LENGTH_LONG).show();
-                    Log.d("test", "Файл записан на SD: " + sdFile.getAbsolutePath());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            SettingsImportExportHelper.exportDB(this);
         }
         // импорт данных
         else if (vId == R.id.activity_settings_import_all_data_button) {
-//                // проверяем доступность SD
-//                if (!Environment.getExternalStorageState().equals(
-//                        Environment.MEDIA_MOUNTED)) {
-//                    Toast.makeText(this, "SD-карта не доступна: ", Toast.LENGTH_LONG).show();
-//                    Log.d(LOG_TAG, "SD-карта не доступна: " + Environment.getExternalStorageState());
-//                    return;
-//                }
-//                // получаем путь к SD
-//                File sdPath = Environment.getExternalStorageDirectory();
-//                // добавляем свой каталог к пути
-//                sdPath = new File(sdPath.getAbsolutePath() + "/" + DIR_SD);
-//                // формируем объект File, который содержит путь к файлу
-//                File sdFile = new File(sdPath, FILENAME_SD);
-//                try {
-//                    // открываем поток для чтения
-//                    BufferedReader br = new BufferedReader(new FileReader(sdFile));
-//                    String str;
-//                    // читаем содержимое
-//                    while ((str = br.readLine()) != null) {
-//                        Toast.makeText(this, str, Toast.LENGTH_LONG).show();
-//                        Log.d(LOG_TAG, str);
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                public void getXMLFromDB(){
-//
-//                }
+            // необходимо получить доступ к памяти
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                // разрешение выдано, сразу запускаем выбор файла
+                selectFileLaunchHelper.launch(null);
+            } else {
+                // запрашиваем разрешение, а затем, возможно, запускаем выбор файла
+                requestPermissionHelper.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
         }
         // изменить время
         else if (vId == R.id.activity_settings_edit_time_button) {
@@ -407,7 +405,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }
         // подписка
         else if (vId == R.id.settings_activity_button_subscribe_background) {
-            startResultHelper.launch(0);
+            showSponsorAndGetResultHelper.launch(0);
         }
     }
 
@@ -450,81 +448,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     public void settingsRemove() {
         DataBaseOpenHelper dbOpenHelper = new DataBaseOpenHelper(getApplicationContext());
         dbOpenHelper.restartTable();
-
-//        dbOpenHelper.createClass("1\"A\"");
-//        long classId = dbOpenHelper.createClass("2\"A\"");
-//
-//        long lerner1Id = dbOpenHelper.createLearner("Зинченко", "Сократ", classId);
-//        long lerner2Id = dbOpenHelper.createLearner("Шумякин", "Феофан", classId);
-//        long lerner3Id = dbOpenHelper.createLearner("Рябец", "Валентин", classId);
-//        long lerner4Id = dbOpenHelper.createLearner("Гроша", "Любава", classId);
-//        long lerner5Id = dbOpenHelper.createLearner("Авдонина", "Алиса", classId);
-//
-//
-//        long cabinetId = dbOpenHelper.createCabinet("406");
-//
-//        ArrayList<Long> places = new ArrayList<>();
-//        {
-//            long desk1Id = dbOpenHelper.createDesk(2, 160, 200, cabinetId);//1
-//            places.add(dbOpenHelper.createPlace(desk1Id, 1));
-//            places.add(dbOpenHelper.createPlace(desk1Id, 2));
-//        }
-//        {
-//            long desk2Id = dbOpenHelper.createDesk(2, 40, 200, cabinetId);//2
-//            places.add(dbOpenHelper.createPlace(desk2Id, 1));
-//            places.add(dbOpenHelper.createPlace(desk2Id, 2));
-//        }
-//        {
-//            long desk3Id = dbOpenHelper.createDesk(2, 160, 120, cabinetId);//3
-//            places.add(dbOpenHelper.createPlace(desk3Id, 1));
-//            places.add(dbOpenHelper.createPlace(desk3Id, 2));
-//        }
-//        {
-//            long desk4Id = dbOpenHelper.createDesk(2, 40, 120, cabinetId);//4
-//            places.add(dbOpenHelper.createPlace(desk4Id, 1));
-//            places.add(dbOpenHelper.createPlace(desk4Id, 2));
-//        }
-//        {
-//            long desk5Id = dbOpenHelper.createDesk(2, 160, 40, cabinetId);//5
-//            places.add(dbOpenHelper.createPlace(desk5Id, 1));
-//            places.add(dbOpenHelper.createPlace(desk5Id, 2));
-//        }
-//        {
-//            long desk6Id = dbOpenHelper.createDesk(2, 40, 40, cabinetId);//6
-//            places.add(dbOpenHelper.createPlace(desk6Id, 1));
-//            places.add(dbOpenHelper.createPlace(desk6Id, 2));
-//        }
-//        //   |6|  |5|   |    |  |  |  |
-//        //   |4|  |3|   |    | 4|  |  |
-//        //   |2|  |1|   |    |35|  |21|
-//        //       [-]
-//
-//
-//        long lessonId = dbOpenHelper.createSubject("физика", classId
-//                //, cabinetId
-//        );
-//        dbOpenHelper.setLessonTimeAndCabinet(lessonId, cabinetId, "2017-10-17", 1, SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER);
-//
-//        //создание настроек после удаления таблицы
-//        //db.createNewSettingsProfileWithId1("default", 50);
-//
-//        dbOpenHelper.setLearnerOnPlace(//lessonId,
-//                lerner1Id, places.get(1));
-//        dbOpenHelper.setLearnerOnPlace(//lessonId,
-//                lerner2Id, places.get(0));
-//        dbOpenHelper.setLearnerOnPlace(//lessonId,
-//                lerner3Id, places.get(2));
-//        dbOpenHelper.setLearnerOnPlace(//lessonId,
-//                lerner4Id, places.get(7));
-//        dbOpenHelper.setLearnerOnPlace(//lessonId,
-//                lerner5Id, places.get(3));
-//        dbOpenHelper.close();
-
         Toast toast = Toast.makeText(this, R.string.settings_activity_toast_data_delete_success, Toast.LENGTH_LONG);
         toast.show();
     }
 
-    //редактирование времени
+    // редактирование времени
     @Override
     public void editTime(int[][] time) {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
@@ -539,7 +467,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    //смена локали
+    // смена локали
     @Override
     public void editLocale(String newLocale) {
         //извлекаем язык

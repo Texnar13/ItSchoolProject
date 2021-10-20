@@ -547,7 +547,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                         //проверяем все ли ученики рассажены
                         DataBaseOpenHelper db1 = new DataBaseOpenHelper(getApplicationContext());
                         if (db1.getNotPutLearnersIdByCabinetIdAndClassId(cabinetId, learnersClassId).size() != 0)
-                            Toast.makeText(getApplicationContext(), R.string.schedule_month_activity_toast_learners, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.schedule_month_activity_toast_learners, Toast.LENGTH_SHORT).show();
                         db1.close();
                         //начать урок
                         Intent intentForStartLesson = new Intent(getApplicationContext(), LessonActivity.class);
