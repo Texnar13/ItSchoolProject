@@ -119,7 +119,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements
             learnersClass.moveToPosition(i);
             //получаем id класса
             learnersClassesId[i] = learnersClass.getLong(
-                    learnersClass.getColumnIndex(SchoolContract.TableClasses.KEY_CLASS_ID)
+                    learnersClass.getColumnIndex(SchoolContract.TableClasses.KEY_ROW_ID)
             );
             classesNames[i] = learnersClass.getString(
                     learnersClass.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)

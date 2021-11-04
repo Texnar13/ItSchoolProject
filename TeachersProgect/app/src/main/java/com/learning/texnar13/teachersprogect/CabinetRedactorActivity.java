@@ -253,7 +253,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         Cursor desksCursor = db.getDesksByCabinetId(cabinetId);//курсор с партами
         while (desksCursor.moveToNext()) {//начальный вывод парт (какой view появился позже тот и отображаться будет выше)
             // достаем данные из бд
-            long deskId = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID));
+            long deskId = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_ROW_ID));
             int numberOfPlaces = desksCursor.getInt(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES));
             long deskXDp = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X));
             long deskYDp = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y));

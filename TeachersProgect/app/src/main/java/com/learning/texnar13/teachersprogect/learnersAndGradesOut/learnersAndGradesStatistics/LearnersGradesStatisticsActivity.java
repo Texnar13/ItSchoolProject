@@ -139,7 +139,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 
                 // создаем период
                 periods.add(new PeriodUnit(
-                        periodsCursor.getLong(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.KEY_STATISTICS_PROFILE_ID)),
+                        periodsCursor.getLong(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.KEY_ROW_ID)),
                         periodsCursor.getString(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME)),
                         dates
                 ));
@@ -162,7 +162,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             for (int learnerI = 0; learnerI < learners.length; learnerI++) {
                 learnersCursor.moveToPosition(learnerI);
                 learners[learnerI] = new LearnerUnit(
-                        learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)),
+                        learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_ROW_ID)),
                         learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)),
                         learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME))
                 );

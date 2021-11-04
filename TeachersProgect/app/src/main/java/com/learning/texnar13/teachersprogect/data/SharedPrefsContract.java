@@ -18,6 +18,11 @@ public class SharedPrefsContract {// менять значение конста�
     public static final String PREFS_INT_WHATS_NEW = "whatsNew";
     public static final int PREFS_INT_NOW_VERSION = BuildConfig.VERSION_CODE;
 
+
+    // активность результатов урока
+    public static final String IS_LESSON_LIST_HELP_TEXT_SHOWED_TAG = "is_lesson_list_help_text_showed";
+
+
     // ctrl + shift + F  SharedPreferences
 }
 

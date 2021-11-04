@@ -106,7 +106,7 @@ public class CabinetEditActivity extends AppCompatActivity implements AcceptDial
                 classesCursor.moveToNext();
                 // id классов
                 classesIds[classesI] = classesCursor.getLong(classesCursor.getColumnIndex(
-                        SchoolContract.TableClasses.KEY_CLASS_ID));
+                        SchoolContract.TableClasses.KEY_ROW_ID));
                 // имена классов
                 classesNames[classesI] = classesCursor.getString(classesCursor.getColumnIndex(
                         SchoolContract.TableClasses.COLUMN_CLASS_NAME));

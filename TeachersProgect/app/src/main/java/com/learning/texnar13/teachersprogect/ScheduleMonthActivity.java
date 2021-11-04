@@ -504,7 +504,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                     attitudeId.moveToFirst();
 
                     // получаем id самого урока
-                    final long lessonId = attitudeId.getLong(attitudeId.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_AND_TIME_CABINET_ATTITUDE_ID));
+                    final long lessonId = attitudeId.getLong(attitudeId.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_ROW_ID));
                     // получаем id предмета
                     long subjectId = attitudeId.getLong(attitudeId.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
                     // получаем id кабинета
@@ -581,6 +581,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         // обратная связь от редактора урока
         if (requestCode == LessonRedactorActivity.LESSON_REDACTOR_RESULT_ID
                 && resultCode == LessonRedactorActivity.LESSON_REDACTOR_RESULT_CODE_UPDATE) {
+            outMonth();// чтобы если менялись повторы вывести изменения в календарь
             outDay();
         }
     }

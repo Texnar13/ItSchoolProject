@@ -9,6 +9,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -22,6 +23,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.learning.texnar13.teachersprogect.R;
+
+import java.util.Arrays;
 
 
 public class GradeEditLessonDialogFragment extends DialogFragment {
@@ -79,6 +82,14 @@ public class GradeEditLessonDialogFragment extends DialogFragment {
 
         // названия типов оценок
         final String[] gradesTypesNames = getArguments().getStringArray(ARGS_STRING_GRADES_TYPES_ARRAY);
+
+
+        Log.e("TAG", "onCreateDialog: aaaaaaaaaa+grades"+ Arrays.toString(grades));
+        Log.e("TAG", "onCreateDialog: aaaaaaaaaa+chosenTypes"+ Arrays.toString(chosenTypes));
+        Log.e("TAG", "onCreateDialog: aaaaaaaaaa+absTypePoz"+ absTypePoz);
+        Log.e("TAG", "onCreateDialog: ---");
+        Log.e("TAG", "onCreateDialog: aaaaaaaaaa+absentTypesLongNames"+ Arrays.toString(absentTypesLongNames));
+        Log.e("TAG", "onCreateDialog: aaaaaaaaaa+gradesTypesNames"+ Arrays.toString(gradesTypesNames));
 
 
         // если оценок нет, то проставляем типы по умолчанию

@@ -103,6 +103,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                     return null;
                 }
             }, selectedUriPath -> {// что будем получать
+
+                // получили путь на файл, проверяем сам путь
                 if (selectedUriPath == null) return;
                 if (!getFileName(selectedUriPath).trim().endsWith(".tadb")) {
                     // если файл не того формата
@@ -335,7 +337,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             for (int i = 0; i < types.getCount(); i++) {
                 types.moveToNext();
 
-                typesId[i] = types.getLong(types.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.KEY_LEARNERS_ABSENT_TYPE_ID));
+                typesId[i] = types.getLong(types.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.KEY_ROW_ID));
                 typesNames[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME));
                 typesLongNames[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME));
             }
@@ -363,7 +365,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             for (int i = 0; i < types.getCount(); i++) {
                 types.moveToNext();
 
-                typesId[i] = types.getLong(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID));
+                typesId[i] = types.getLong(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID));
                 typesStrings[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE));
             }
             types.close();
@@ -493,7 +495,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         maxGradeText.setText(
                 String.format(
                         getResources().getString(R.string.settings_activity_button_edit_max_answer),
-                        "" + max
+                        max
                 )
         );
     }

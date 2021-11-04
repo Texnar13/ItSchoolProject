@@ -270,7 +270,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
         for (int learnerI = 0; learnerI < learnersCursor.getCount(); learnerI++) {
             learnersCursor.moveToPosition(learnerI);
             learners[learnerI] = new MyLearner(
-                    learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_LEARNER_ID)),
+                    learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_ROW_ID)),
                     learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)),
                     learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME))
             );
@@ -285,7 +285,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             desksCursor.moveToPosition(deskI);
 
             // id парты
-            long deskId = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_DESK_ID));
+            long deskId = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_ROW_ID));
 
             // получаем места на парте
             Cursor placesCursor = db.getPlacesByDeskId(deskId);
@@ -302,7 +302,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                 // номер места на парте
                 int placePoz = (int) placesCursor.getLong(placesCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1;
                 // находим id места
-                placesId[placePoz] = placesCursor.getLong(placesCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_PLACE_ID));
+                placesId[placePoz] = placesCursor.getLong(placesCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_ROW_ID));
 
                 // получаем id зависимости и номер ученика сидящего на этой парте
                 attitudesId[placePoz] = -1;
@@ -317,7 +317,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
                         // сохраняем id зависимоси в парту
                         attitudesId[placePoz] =
-                                attitudesCursor.getLong(attitudesCursor.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_ATTITUDE_ID));
+                                attitudesCursor.getLong(attitudesCursor.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_ROW_ID));
                         // и номер ученика в парту
                         learnersIndexes[placePoz] = learnerI;
 

@@ -108,7 +108,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
             cabinets.moveToPosition(i);
             //получаем id кабинета
             cabinetsId[i] = cabinets.getLong(
-                    cabinets.getColumnIndex(SchoolContract.TableCabinets.KEY_CABINET_ID)
+                    cabinets.getColumnIndex(SchoolContract.TableCabinets.KEY_ROW_ID)
             );
             cabinetsNames[i] = cabinets.getString(
                     cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)

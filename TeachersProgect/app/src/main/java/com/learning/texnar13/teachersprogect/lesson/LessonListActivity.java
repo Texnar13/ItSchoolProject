@@ -16,20 +16,16 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 
 public class LessonListActivity extends AppCompatActivity implements GradesDialogInterface {
 
-    //public static final String LESSON_TIME = "startTime";
-    public static final String LESSON_DATE = "lessonDate";
-    public static final String LESSON_NUMBER = "lessonNumber";
-    public static final String SUBJECT_ID = "subjectId";
 
     // данные об урооке
     private static long lessonAttitudeId;
@@ -44,64 +40,12 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
     // данные учеников
     LessonListLearnerAndGradesData[] learners;
 
-
-//    public static final String ARGS_STRING_ARRAY_LEARNERS_NAMES = "learnersNames";
-//    public static final String ARGS_INT_ARRAY_LEARNERS_ID = "learnersID";
-//    public static final String STRING_GRADES_TYPES_ARRAY = "gradesTypesArray";
-//    public static final String INT_GRADES_TYPES_ID_ARRAY = "gradesTypesIdArray";
-//    public static final String STRING_ABSENT_TYPES_ARRAY = "absentTypesArray";
-//    public static final String STRING_ABSENT_TYPES_LONG_ARRAY = "absentTypesLongArray";
-//    public static final String LONG_ABSENT_TYPES_ID_ARRAY = "absentTypesIdArray";
-//    public static final String INT_MAX_GRADE = "maxGrade";
-//
-//    public static final String FIRST_GRADES = "grades1";
-//    public static final String SECOND_GRADES = "grades2";
-//    public static final String THIRD_GRADES = "grades3";
-//    public static final String FIRST_GRADES_TYPES = "gradesTypes1";
-//    public static final String SECOND_GRADES_TYPES = "gradesTypes2";
-//    public static final String THIRD_GRADES_TYPES = "gradesTypes3";
-//    public static final String INT_ABSENT_TYPE_POZ_ARRAY = "absTypePoz";
-
     public static final int RESULT_BACK = 100;
     public static final int RESULT_SAVE = 101;
 
     // номер выбранного ученика
     int chosenLearnerPos;
 
-
-    // ---------
-    // массив учеников и их оценок
-    //static LearnerAndHisGrades[] learnerAndHisGrades;
-
-//    // id предмета
-//    static long subjectId;
-//
-//    // ученики
-//    static long[] learnersId;
-//    static String[] learnersNames;
-//
-//    // массив с TextView учеников
-//    static TextView[] learnersGradesTexts;
-//
-//    // массив типов оценок
-//    static long[] gradesTypesId;
-//    static String[] gradesTypesNames;
-//
-//    // массив типов пропусков
-//    static long[] absentTypesId;
-//    static String[] absentTypesNames;
-//    static String[] absentTypesLongNames;
-//
-//    // размер максимальной оценки
-//    static int maxGrade;
-//
-//    // массивы оценок и выбранных типов
-//    static int[][] grades;
-//    static int[][] gradesTypesIndexes;
-//    static int[] absentPoses;
-
-
-    private static final String IS_HELP_TEXT_SHOWED_TAG = "is_lesson_list_help_text_showed";
 
     // создание активности
     @Override
@@ -113,7 +57,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         // раздуваем layout
         setContentView(R.layout.lesson_list_activity);
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
-        setSupportActionBar((Toolbar) findViewById(R.id.base_blue_toolbar));
+        setSupportActionBar(findViewById(R.id.base_blue_toolbar));
         // убираем заголовок, там свойAction
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
@@ -192,50 +136,14 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         ));
         subjectCursor.close();
 
-
         // макс. оценка, типы пропусков и оценок
-        graduationSettings = new GraduationSettings();
-        // максимальная оценка
-        graduationSettings.maxAnswersCount = db.getSettingsMaxGrade(1);
-        // названия типов ответов
-        Cursor typesCursor = db.getGradesTypes();
-        graduationSettings.answersTypes = new GraduationSettings.AnswersType[typesCursor.getCount()];
-        // извлекаем данные из курсора
-        for (int typeI = 0; typeI < typesCursor.getCount(); typeI++) {
-            typesCursor.moveToNext();
-            // добавляем новый тип во внутренний список
-            graduationSettings.answersTypes[typeI] = new GraduationSettings.AnswersType(
-                    typesCursor.getLong(typesCursor.getColumnIndex(
-                            SchoolContract.TableLearnersGradesTitles.KEY_LEARNERS_GRADES_TITLE_ID)),
-                    typesCursor.getString(typesCursor.getColumnIndex(
-                            SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE))
-            );
-        }
-        typesCursor.close();
-        // названия типов пропусков
-        Cursor typesAbsCursor = db.getAbsentTypes();
-        graduationSettings.absentTypes = new GraduationSettings.AbsentType[typesAbsCursor.getCount()];
-        // извлекаем данные из курсора
-        for (int typeI = 0; typeI < typesAbsCursor.getCount(); typeI++) {
-            typesAbsCursor.moveToNext();
-            // добавляем новый тип во внутренний список
-            graduationSettings.absentTypes[typeI] = new GraduationSettings.AbsentType(
-                    typesAbsCursor.getLong(typesAbsCursor.getColumnIndex(
-                            SchoolContract.TableLearnersAbsentTypes.KEY_LEARNERS_ABSENT_TYPE_ID)),
-                    typesAbsCursor.getString(typesAbsCursor.getColumnIndex(
-                            SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME)),
-                    typesAbsCursor.getString(typesAbsCursor.getColumnIndex(
-                            SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME))
-            );
-        }
-        typesAbsCursor.close();
+        graduationSettings = GraduationSettings.newInstance(db);
 
         // номер выбранного ученика
         chosenLearnerPos = -1;
         // инициализируем учеников
         initLearners(db);
         db.close();
-
     }
 
     // инициализируем учеников
@@ -245,13 +153,13 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         Cursor learnersCursor = db.getLearnersByClassId(learnersClassId);
         // инициализируем массив с учениками
         learners = new LessonListLearnerAndGradesData[learnersCursor.getCount()];
-        //заполняем его
+        // заполняем его
         for (int learnerPoz = 0; learnerPoz < learners.length; learnerPoz++) {
             learnersCursor.moveToNext();
 
             // получаем id
             long learnerId = learnersCursor.getLong(learnersCursor.getColumnIndex(
-                    SchoolContract.TableLearners.KEY_LEARNER_ID
+                    SchoolContract.TableLearners.KEY_ROW_ID
             ));
 
             // получаем имя
@@ -271,7 +179,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
             long gradeId = -1;
             if (grades.moveToNext()) {// если оценки за этот урок уже проставлялись
                 // id самой оценки
-                gradeId = grades.getLong(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_GRADE_ID));
+                gradeId = grades.getLong(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID));
                 // получаем id пропуска
                 int absId;
                 if (grades.isNull(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {
@@ -302,11 +210,9 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
                                 gradeUnits[gradeI].gradeTypePoz = answerI;
                     }
                 }
-            } else {// если не проставлялись оставляем пустые значения
-                gradeUnits = new LessonListLearnerAndGradesData.GradeUnit[3];
-            }
-            grades.close();
+            }// если не проставлялись оставляем пустые значения
 
+            grades.close();
 
             // создаем нового ученика
             learners[learnerPoz] = new LessonListLearnerAndGradesData(
@@ -360,6 +266,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
                 args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ARRAY, learners[finalLearnersI].getGradesArray());
                 args.putInt(GradeEditLessonDialogFragment.ARGS_INT_MAX_GRADE, graduationSettings.maxAnswersCount);
                 args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY, learners[finalLearnersI].getGradesTypesArray());
+                // этот диалог работает и в уроке, по этому нужно передавать номер главной оценки (а в этой активности их нет)
                 args.putInt(GradeEditLessonDialogFragment.ARGS_INT_CHOSEN_GRADE_POSITION, -1);
                 gradeEditLessonDialogFragment.setArguments(args);
                 // показываем диалог
@@ -370,14 +277,14 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             int currentValue;
-            if (!sharedPreferences.contains(IS_HELP_TEXT_SHOWED_TAG)) {
+            if (!sharedPreferences.contains(SharedPrefsContract.IS_LESSON_LIST_HELP_TEXT_SHOWED_TAG)) {
                 currentValue = 1;
             } else {
-                currentValue = sharedPreferences.getInt(IS_HELP_TEXT_SHOWED_TAG, 0) + 1;
+                currentValue = sharedPreferences.getInt(SharedPrefsContract.IS_LESSON_LIST_HELP_TEXT_SHOWED_TAG, 0) + 1;
             }
             if (currentValue <= 2) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(IS_HELP_TEXT_SHOWED_TAG, currentValue);
+                editor.putInt(SharedPrefsContract.IS_LESSON_LIST_HELP_TEXT_SHOWED_TAG, currentValue);
                 editor.apply();
 
                 TextView helpText = new TextView(this);
@@ -406,28 +313,27 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
         // выводим оценки
         StringBuilder gradeText = new StringBuilder();
-
         if (learners[learnersI].absTypePozNumber == -1) {// обычные оценки
-            if (learners[learnersI].gradeUnit[0].grade == 0 &&
-                    learners[learnersI].gradeUnit[1].grade == 0 &&
-                    learners[learnersI].gradeUnit[2].grade == 0) {
+            if (learners[learnersI].gradesUnits[0].grade == 0 &&
+                    learners[learnersI].gradesUnits[1].grade == 0 &&
+                    learners[learnersI].gradesUnits[2].grade == 0) {
                 gradeText.append('-');
             } else {
-                if (learners[learnersI].gradeUnit[0].grade != 0) {
-                    gradeText.append(learners[learnersI].gradeUnit[0].grade);
-                    if (learners[learnersI].gradeUnit[1].grade != 0 || learners[learnersI].gradeUnit[2].grade != 0) {
+                if (learners[learnersI].gradesUnits[0].grade != 0) {
+                    gradeText.append(learners[learnersI].gradesUnits[0].grade);
+                    if (learners[learnersI].gradesUnits[1].grade != 0 || learners[learnersI].gradesUnits[2].grade != 0) {
                         gradeText.append(' ');
                     }
                 }
-                if (learners[learnersI].gradeUnit[1].grade != 0) {
-                    gradeText.append(learners[learnersI].gradeUnit[1].grade);
+                if (learners[learnersI].gradesUnits[1].grade != 0) {
+                    gradeText.append(learners[learnersI].gradesUnits[1].grade);
 
-                    if (learners[learnersI].gradeUnit[2].grade != 0) {
+                    if (learners[learnersI].gradesUnits[2].grade != 0) {
                         gradeText.append(' ');
                     }
                 }
-                if (learners[learnersI].gradeUnit[2].grade != 0) {
-                    gradeText.append(learners[learnersI].gradeUnit[2].grade);
+                if (learners[learnersI].gradesUnits[2].grade != 0) {
+                    gradeText.append(learners[learnersI].gradesUnits[2].grade);
                 }
             }
         } else {// пропуск
@@ -451,8 +357,8 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
                 // меняем списки
                 curLearner.absTypePozNumber = -1;
                 for (int i = 0; i < 3; i++) {
-                    curLearner.gradeUnit[i].grade = newGrades[i];
-                    curLearner.gradeUnit[i].gradeTypePoz = chosenTypesNumbers[i];
+                    curLearner.gradesUnits[i].grade = newGrades[i];
+                    curLearner.gradesUnits[i].gradeTypePoz = chosenTypesNumbers[i];
                 }
 
             } else {// стоит пропуск
@@ -460,39 +366,44 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
                 // меняем списки
                 curLearner.absTypePozNumber = chosenAbsPoz;
                 for (int i = 0; i < 3; i++) {
-                    curLearner.gradeUnit[i].grade = 0;
-                    curLearner.gradeUnit[i].gradeTypePoz = 1;
+                    curLearner.gradesUnits[i].grade = 0;
+                    curLearner.gradesUnits[i].gradeTypePoz = 0;
                 }
             }
 
             // сохраняем значения в бд
             DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
             if (curLearner.gradeId == -1) {
-                db.createGrade(
+                curLearner.gradeId = db.createGrade(
                         curLearner.learnerId,
-                        curLearner.gradeUnit[0].grade,
-                        curLearner.gradeUnit[1].grade,
-                        curLearner.gradeUnit[2].grade,
-                        curLearner.gradeUnit[0].gradeTypePoz,
-                        curLearner.gradeUnit[1].gradeTypePoz,
-                        curLearner.gradeUnit[2].gradeTypePoz,
+                        curLearner.gradesUnits[0].grade,
+                        curLearner.gradesUnits[1].grade,
+                        curLearner.gradesUnits[2].grade,
+                        graduationSettings.answersTypes[curLearner.gradesUnits[0].gradeTypePoz].id,
+                        graduationSettings.answersTypes[curLearner.gradesUnits[1].gradeTypePoz].id,
+                        graduationSettings.answersTypes[curLearner.gradesUnits[2].gradeTypePoz].id,
                         (chosenAbsPoz == -1) ? (-1) : (graduationSettings.absentTypes[chosenAbsPoz].id),
                         subjectId, lessonDate, lessonNumber
                 );
             } else {
-                db.editGrade(curLearner.gradeId,
-                        curLearner.gradeUnit[0].grade,
-                        curLearner.gradeUnit[1].grade,
-                        curLearner.gradeUnit[2].grade,
-                        curLearner.gradeUnit[0].gradeTypePoz,
-                        curLearner.gradeUnit[1].gradeTypePoz,
-                        curLearner.gradeUnit[2].gradeTypePoz,
-                        (chosenAbsPoz == -1) ? (-1) : (graduationSettings.absentTypes[chosenAbsPoz].id));
+                // если все поля нулевые удаляем оценку
+                if (curLearner.gradesUnits[0].grade == 0 && curLearner.gradesUnits[1].grade == 0 &&
+                        curLearner.gradesUnits[2].grade == 0 && chosenAbsPoz == -1) {
+                    db.removeGrade(curLearner.gradeId);
+                } else
+                    db.editGrade(curLearner.gradeId,
+                            curLearner.gradesUnits[0].grade,
+                            curLearner.gradesUnits[1].grade,
+                            curLearner.gradesUnits[2].grade,
+                            graduationSettings.answersTypes[curLearner.gradesUnits[0].gradeTypePoz].id,
+                            graduationSettings.answersTypes[curLearner.gradesUnits[1].gradeTypePoz].id,
+                            graduationSettings.answersTypes[curLearner.gradesUnits[2].gradeTypePoz].id,
+                            (chosenAbsPoz == -1) ? (-1) : (graduationSettings.absentTypes[chosenAbsPoz].id));
             }
             db.close();
 
             // выводим изменения в интерфейс
-            writeGradesToViewByPoz(chosenAbsPoz);
+            writeGradesToViewByPoz(chosenLearnerPos);
         }
         // убираем выбор с ученика
         chosenLearnerPos = -1;
@@ -519,7 +430,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
     }
 
 
-    private static class LessonListLearnerAndGradesData {
+    static class LessonListLearnerAndGradesData {
         // параметры ученика
         long learnerId;
         String name;
@@ -527,7 +438,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         // id оценки
         long gradeId;
         // массив оценок
-        GradeUnit[] gradeUnit;
+        GradeUnit[] gradesUnits;
         // тип пропуска
         int absTypePozNumber;
 
@@ -535,24 +446,24 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         TextView gradesView;
 
         private LessonListLearnerAndGradesData(long learnerId, String name,
-                                               long gradeId, GradeUnit[] gradeUnit, int absTypePozNumber) {
+                                               long gradeId, GradeUnit[] gradesUnits, int absTypePozNumber) {
             this.learnerId = learnerId;
             this.name = name;
             this.gradeId = gradeId;
-            this.gradeUnit = gradeUnit;
+            this.gradesUnits = gradesUnits;
             this.absTypePozNumber = absTypePozNumber;
         }
 
         // заготовка аргументов для диалога оценок
         int[] getGradesArray() {
-            int[] result = new int[gradeUnit.length];
-            for (int i = 0; i < result.length; i++) result[i] = gradeUnit[i].grade;
+            int[] result = new int[gradesUnits.length];
+            for (int i = 0; i < result.length; i++) result[i] = gradesUnits[i].grade;
             return result;
         }
 
         int[] getGradesTypesArray() {
-            int[] result = new int[gradeUnit.length];
-            for (int i = 0; i < result.length; i++) result[i] = gradeUnit[i].gradeTypePoz;
+            int[] result = new int[gradesUnits.length];
+            for (int i = 0; i < result.length; i++) result[i] = gradesUnits[i].gradeTypePoz;
             return result;
         }
 
@@ -564,56 +475,11 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
             public GradeUnit() {
                 this.grade = 0;
-                this.gradeTypePoz = 1;
+                this.gradeTypePoz = 0;
             }
         }
     }
 
-    private static class GraduationSettings {
-        // размер максимальной оценки
-        int maxAnswersCount;
-        // массив типов оценок
-        AnswersType[] answersTypes;
-        // массив типов пропусков
-        AbsentType[] absentTypes;
-
-        // заготовка аргументов для диалога оценок
-        String[] getAnswersTypesArray() {
-            String[] result = new String[answersTypes.length];
-            for (int i = 0; i < result.length; i++) result[i] = answersTypes[i].typeName;
-            return result;
-        }
-
-        String[] getAbsentTypesLongNames() {
-            String[] result = new String[absentTypes.length];
-            for (int i = 0; i < result.length; i++) result[i] = absentTypes[i].typeAbsLongName;
-            return result;
-        }
-
-        // класс для хранения типов ответов
-        static class AnswersType {
-            long id;
-            String typeName;
-
-            AnswersType(long id, String typeName) {
-                this.id = id;
-                this.typeName = typeName;
-            }
-        }
-
-        // класс для хранения типов пропусков
-        static class AbsentType {
-            long id;
-            String typeAbsName;
-            String typeAbsLongName;
-
-            AbsentType(long id, String typeAbsName, String typeAbsLongName) {
-                this.id = id;
-                this.typeAbsName = typeAbsName;
-                this.typeAbsLongName = typeAbsLongName;
-            }
-        }
-    }
 }
 
 
