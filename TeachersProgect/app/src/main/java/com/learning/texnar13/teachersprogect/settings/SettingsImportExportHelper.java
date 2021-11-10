@@ -334,198 +334,100 @@ public class SettingsImportExportHelper {
                 case SchoolContract.TableCabinets.NAME_TABLE_CABINETS: {
 
 
+                    // создаем новый обьект с данными таблицы
+                    SchoolContractImportModel.CabinetsImportData tempImportProfile =
+                            new SchoolContractImportModel.CabinetsImportData();
+
                     // проверяем запись на ошибки
                     boolean errorFlag = false;
 
-
-                    // создаем новый обьект с данными таблицы
-                    SchoolContractImportModel.SettingsImportData newSettingsProfile =
-                            new SchoolContractImportModel.SettingsImportData(localeCodes);
-
-
                     // проходимся по всем полям записи и читаем их из файла
-                    for (int i = 0; i < newSettingsProfile.rowData.length && !errorFlag; i++) {
+                    for (int columnI = 0; columnI < tempImportProfile.rowData.length && !errorFlag; columnI++) {
+
                         // получаем значение поля по названию
                         String rowValue = xpp.getAttributeValue("",
-                                newSettingsProfile.rowData[i].getFieldDBName());
+                                tempImportProfile.rowData[columnI].getFieldDBName());
+
                         // сразу отбрасываем пустые поля
                         if (rowValue != null) {
-                            // пытаемся его обработать
+
+                            // пытаемся обработать полученное значение
                             try {
-                                switch (newSettingsProfile.rowData[i].getElementType()) {
+                                switch (tempImportProfile.rowData[columnI].getElementType()) {
                                     case ImportFieldData.TYPE_LONG:
                                         // парсим цифру
                                         long longValue = Long.parseLong(rowValue);
                                         // пытаемся записать значение (там же и проверяем на валидность)
-                                        newSettingsProfile.rowData[i].setLongValue(longValue);
+                                        tempImportProfile.rowData[columnI].setLongValue(longValue);
                                         break;
                                     case ImportFieldData.TYPE_STRING:
                                         // пытаемся записать значение (там же и проверяем на валидность)
-                                        newSettingsProfile.rowData[i].setStringValue(rowValue);
+                                        tempImportProfile.rowData[columnI].setStringValue(rowValue);
                                         break;
                                     case ImportFieldData.TYPE_BOOLEAN:
                                         // парсим boolean
                                         boolean booleanValue = Boolean.parseBoolean(rowValue);
                                         // пытаемся записать значение (там же и проверяем на валидность)
-                                        newSettingsProfile.rowData[i].setBooleanValue(booleanValue);
+                                        tempImportProfile.rowData[columnI].setBooleanValue(booleanValue);
                                         break;
                                     case ImportFieldData.TYPE_REF:
                                         // парсим цифру
                                         long refIdValue = Long.parseLong(rowValue);
                                         // пытаемся записать значение (там же и проверяем на валидность)
-                                        newSettingsProfile.rowData[i].setRefId(refIdValue);
+                                        tempImportProfile.rowData[columnI].setRefId(refIdValue);
                                         break;
                                 }
                             } catch (Exception e) {
-                                output.outputLog.append("error: table-\"").append(currentTable)
-                                        .append("\", field-\"").append(newSettingsProfile.rowData[i].getFieldDBName()).append("\"").append('\n');
+                                output.outputLog.append("error: table-\"")
+                                        .append(currentTable)
+                                        .append("\", field-\"")
+                                        .append(tempImportProfile.rowData[columnI].getFieldDBName())
+                                        .append("\"\n");
                                 e.printStackTrace();
                                 errorFlag = true;
                             }
+
                         } else {
-                            output.outputLog.append("error e: table-\"").append(currentTable)
-                                    .append("\", field-\"").append(newSettingsProfile.rowData[i].getFieldDBName()).append("\"").append('\n');
+                            output.outputLog.append("error e: table-\"")
+                                    .append(currentTable)
+                                    .append("\", field-\"")
+                                    .append(tempImportProfile.rowData[columnI].getFieldDBName())
+                                    .append("\"\n");
                             errorFlag = true;
                         }
                     }
 
-
-                    if (!errorFlag)
-                        output.dataOutput.cabinetsImportData.add(new SchoolContractImportModel.CabinetsImportData(
-
-                        ));
-
-
-                    // импортируем таблицу кабинетов
-
-//                    long keyId;
-//                    long multiplier;
-//                    long offsetX;
-//                    long offsetY;
-//                    String name;
-//
-//                    // id кабинета todo сделать методы для парсинга чисел, строк id итд
-//                    keyId = getIdFromXml(xpp, SchoolContract.TableCabinets.NAME_TABLE_CABINETS, output.outputLog);
-//                    if (keyId == -1) break;
-//
-//
-//                    // множитель
-//                    try {
-//                        multiplier = Long.parseLong(xpp.getAttributeValue("",
-//                                SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER));
-//                        if (1 > multiplier || multiplier > 100) throw new NumberFormatException();
-//                    } catch (Exception e) {
-//                        output.outputLog.append("error: parse multiplier:")
-//                                .append(xpp.getAttributeValue("",
-//                                        SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER)).append('\n');
-//                        break;
-//                    }
-//                    // отступ х
-//                    try {
-//                        offsetX = Long.parseLong(xpp.getAttributeValue("",
-//                                SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X));
-//                    } catch (Exception e) {
-//                        output.outputLog.append("error: parse offsetX:")
-//                                .append(xpp.getAttributeValue("",
-//                                        SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X)).append('\n');
-//                        break;
-//                    }
-//                    // отступ y
-//                    try {
-//                        offsetY = Long.parseLong(xpp.getAttributeValue("",
-//                                SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y));
-//                    } catch (Exception e) {
-//                        output.outputLog.append("error: parse offsetY:")
-//                                .append(xpp.getAttributeValue("",
-//                                        SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y)).append('\n');
-//                        break;
-//                    }
-//                    // название профиля
-//                    name = xpp.getAttributeValue("",
-//                            SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME);
-//                    if (name == null) {
-//                        output.outputLog.append("error: empty settings profile name").append('\n');
-//                        break;
-//                    }
-//
-//                    output.dataOutput.cabinetsImportData.add(new SchoolContractImportModel.CabinetsImportData(
-//                            keyId,
-//                            multiplier,
-//                            offsetX,
-//                            offsetY,
-//                            name
-//                    ));
+                    // если все поля в порядке, сохраняем запись
+                    if (!errorFlag) output.dataOutput.cabinetsImportData.add(tempImportProfile);
                     break;
                 }
                 //
-                case SchoolContract.TableDesks.NAME_TABLE_DESKS: {
-                    // парсим запись таблицы парт
+                case SchoolContract.TableDesks.NAME_TABLE_DESKS: {// парсим запись таблицы парт
 
-                    long keyId;
-                    long offsetX;
-                    long offsetY;
-                    long numberOfPlaces;
+                    // создаем новый обьект с данными таблицы
+                    SchoolContractImportModel.DesksImportData tempImportProfile =
+                            new SchoolContractImportModel.DesksImportData();
 
+                    // парсим содержимое тега проверяя на ошибки
+                    boolean errorFlag = parseParseTag(xpp, currentTable, output.outputLog, tempImportProfile.rowData);
 
-                    // id парты
-                    keyId = getIdFromXml(xpp, SchoolContract.TableDesks.NAME_TABLE_DESKS, output.outputLog);
-                    if (keyId == -1) break;
-
-                    // отступ х
-                    try {
-                        offsetX = Long.parseLong(xpp.getAttributeValue("",
-                                SchoolContract.TableDesks.COLUMN_X));
-                    } catch (Exception e) {
-                        output.outputLog.append("error: parse desk offsetX:")
-                                .append(xpp.getAttributeValue("",
-                                        SchoolContract.TableDesks.COLUMN_X)).append('\n');
-                        break;
-                    }
-                    // отступ y
-                    try {
-                        offsetY = Long.parseLong(xpp.getAttributeValue("",
-                                SchoolContract.TableDesks.COLUMN_Y));
-                    } catch (Exception e) {
-                        output.outputLog.append("error: parse desk offsetY:")
-                                .append(xpp.getAttributeValue("",
-                                        SchoolContract.TableDesks.COLUMN_Y)).append('\n');
-                        break;
-                    }
-                    // количество мест на парте
-                    try {
-                        numberOfPlaces = Long.parseLong(xpp.getAttributeValue("",
-                                SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES));
-                    } catch (Exception e) {
-                        output.outputLog.append("error: parse desk " + SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES + ':')
-                                .append(xpp.getAttributeValue("",
-                                        SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES)).append('\n');
-                        break;
-                    }
-
-                    output.dataOutput.desksImportData.add(new SchoolContractImportModel.DesksImportData(
-                            keyId,
-                            offsetX,
-                            offsetY,
-                            numberOfPlaces,
-                            null
-                    ));
+                    // если все поля в порядке, сохраняем запись
+                    if (!errorFlag) output.dataOutput.desksImportData.add(tempImportProfile);
                     break;
                 }
 
                 //
-                case SchoolContract.TablePlaces.NAME_TABLE_PLACES: {
+                case SchoolContract.TablePlaces.NAME_TABLE_PLACES: {// парсим запись таблицы мест
 
+                    // создаем новый обьект с данными таблицы
+                    SchoolContractImportModel.PlacesImportData tempImportProfile =
+                            new SchoolContractImportModel.PlacesImportData();
 
-                    long keyId;
-                    long deskId;
-                    long offsetY;
-                    long numberOfPlaces;
+                    // парсим содержимое тега проверяя на ошибки
+                    boolean errorFlag = parseParseTag(xpp, currentTable, output.outputLog, tempImportProfile.rowData);
 
-                    // id парты
-                    keyId = getIdFromXml(xpp, SchoolContract.TablePlaces.NAME_TABLE_PLACES, output.outputLog);
-                    if (keyId == -1) break;
-
-
+                    // если все поля в порядке, сохраняем запись
+                    if (!errorFlag) output.dataOutput.placesImportData.add(tempImportProfile);
                     break;
                 }
                 //
@@ -542,6 +444,9 @@ public class SettingsImportExportHelper {
                 }
                 //
                 case SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES: {
+
+                    // todo там где пропуск, может храниться null, по этому надо будет добавить дополнительные проверки
+                    //  например, если null то ставить в id -1
                     break;
                 }
                 //
@@ -580,6 +485,70 @@ public class SettingsImportExportHelper {
         }
 
     }
+
+    private static boolean parseParseTag(XmlPullParser xpp, String parseTable, StringBuilder outputLog,
+                                         ImportFieldData[] rowData) {
+        // проверяем запись на ошибки
+        boolean errorFlag = false;
+
+        // проходимся по всем полям записи и читаем их из файла
+        for (int columnI = 0; columnI < rowData.length && !errorFlag; columnI++) {
+
+            // получаем значение поля по названию
+            String rowValue = xpp.getAttributeValue("",
+                    rowData[columnI].getFieldDBName());
+
+            // сразу отбрасываем пустые поля
+            if (rowValue != null) {
+
+                // пытаемся обработать полученное значение
+                try {
+                    switch (rowData[columnI].getElementType()) {
+                        case ImportFieldData.TYPE_LONG:
+                            // парсим цифру
+                            long longValue = Long.parseLong(rowValue);
+                            // пытаемся записать значение (там же и проверяем на валидность)
+                            rowData[columnI].setLongValue(longValue);
+                            break;
+                        case ImportFieldData.TYPE_STRING:
+                            // пытаемся записать значение (там же и проверяем на валидность)
+                            rowData[columnI].setStringValue(rowValue);
+                            break;
+                        case ImportFieldData.TYPE_BOOLEAN:
+                            // парсим boolean
+                            boolean booleanValue = Boolean.parseBoolean(rowValue);
+                            // пытаемся записать значение (там же и проверяем на валидность)
+                            rowData[columnI].setBooleanValue(booleanValue);
+                            break;
+                        case ImportFieldData.TYPE_REF:
+                            // парсим цифру
+                            long refIdValue = Long.parseLong(rowValue);
+                            // пытаемся записать значение (там же и проверяем на валидность)
+                            rowData[columnI].setRefId(refIdValue);
+                            break;
+                    }
+                } catch (Exception e) {
+                    outputLog.append("error: table-\"")
+                            .append(parseTable)
+                            .append("\", field-\"")
+                            .append(rowData[columnI].getFieldDBName())
+                            .append("\"\n");
+                    e.printStackTrace();
+                    errorFlag = true;
+                }
+
+            } else {
+                outputLog.append("error e: table-\"")
+                        .append(parseTable)
+                        .append("\", field-\"")
+                        .append(rowData[columnI].getFieldDBName())
+                        .append("\"\n");
+                errorFlag = true;
+            }
+        }
+        return errorFlag;
+    }
+
 
     // пытаемся парсить id записей из файла
     private static long getIdFromXml(XmlPullParser from, String tableName, StringBuilder outputLog) {
