@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/base_background_dialog_full_round_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/base_subjects_dialog_create_head_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/base_background_dialog_head_round_white"
+        android:padding="@dimen/double_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/base_subjects_dialog_create_button_back"
+            android:layout_width="@dimen/my_icon_size"
+            android:layout_height="@dimen/my_icon_size"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/base_button_arrow_standart_back_blue" />
+
+        <TextView
+            style="@style/ButtonSimpleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/double_margin"
+            android:text="@string/learners_and_grades_out_activity_dialog_subject_title_create" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/double_margin"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="@string/learners_and_grades_out_activity_dialog_hint_subject_name"
+            android:textColor="@color/backgroundDarkGray"
+            android:textSize="@dimen/text_subtitle_size" />
+
+        <EditText
+            android:id="@+id/base_subjects_dialog_create_field_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:inputType="textCapWords"
+            android:textColor="#000000"
+            android:textSize="@dimen/text_subtitle_size" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/base_subjects_dialog_create_button_save"
+        style="@style/ButtonSimpleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/simple_buttons_height"
+        android:background="@drawable/base_background_dialog_bottom_round_blue"
+        android:gravity="center"
+        android:text="@string/button_save"
+        android:textColor="@color/backgroundWhite" />
+</LinearLayout>

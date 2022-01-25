@@ -151,7 +151,7 @@ public class SchoolContract {
     public static class TableLessonComment extends Table {
         public static final String NAME_TABLE_LESSON_TEXT = "lessonComment";
         public static final String KEY_LESSON_ID = "commentLessonId";
-        // номер урока не нужен, тк даже две математики в один день будут иметь разный id
+        // если возникнут вопросы: номер урока не нужен, тк даже две математики в один день будут иметь разный id
         public static final String COLUMN_LESSON_DATE = "commentDate";
         public static final String COLUMN_LESSON_TEXT = "commentText";
     }

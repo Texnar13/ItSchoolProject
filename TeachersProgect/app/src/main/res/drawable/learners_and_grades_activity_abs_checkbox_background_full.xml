@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="79dp"
     android:height="79dp"
-    android:viewportWidth="79"
-    android:viewportHeight="79">
-
+    android:autoMirrored="true"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
     <path
-        android:fillColor="#7FADE5"
-        android:pathData="M77.8,39.5c0,21.1-17.1,38.2-38.2,38.2c-21.1,0-38.2-17.1-38.2-38.2S18.5,1.3,39.6,1.3 C60.6,1.3,77.8,18.4,77.8,39.5z" />
+        android:fillColor="#7EADE1"
+        android:pathData="M12,12m-12,0a12,12 0,1 1,24 0a12,12 0,1 1,-24 0" />
     <path
-        android:fillColor="#F7F7F7"
-        android:pathData="M62.4,22.1c-0.7-0.5-1.6-0.3-2.1,0.3l-22.9,31L22.7,37.5c-0.6-0.6-1.5-0.6-2.1-0.1C20,38,20,38.9,20.5,39.5 l16,17.2c0.3,0.3,0.7,0.5,1.1,0.5h0.1c0.4,0,0.9-0.2,1.1-0.6l23.9-32.5C63.2,23.5,63,22.6,62.4,22.1z" />
+        android:fillColor="#FFFFFF"
+        android:pathData="M11.2,17.5c-0.3,0 -0.6,-0.1 -0.8,-0.3l-5.1,-4.5c-0.5,-0.5 -0.6,-1.2 -0.1,-1.8c0.5,-0.5 1.2,-0.6 1.8,-0.1l4.1,3.6l6.2,-7.1c0.5,-0.5 1.2,-0.6 1.8,-0.1c0.5,0.5 0.6,1.2 0.1,1.8l-7,8.1C11.9,17.3 11.6,17.4 11.2,17.5C11.2,17.5 11.2,17.5 11.2,17.5z" />
 </vector>

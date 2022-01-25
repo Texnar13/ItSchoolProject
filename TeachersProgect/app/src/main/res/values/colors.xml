@@ -1,36 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- базовые цвета -->
     <color name="baseBlue">#7fade5</color>
     <color name="basePink">#c477a9</color>
     <color name="baseOrange">#ffb000</color>
     <color name="baseGreen">#9dc646</color>
-
-    <!-- сигнализирующие цвета -->
-    <color name="signalGreen">#9dc646</color>
-    <color name="signalRed">#DB4437</color>
-
-    <!--  -->
-    <color name="backgroundWhite">#ffffff</color>
-    <color name="backgroundDarkWhite">#F2F2F2</color>
-    <color name="backgroundLiteGray">#d1d1d1</color>
-    <color name="backgroundMediumGray">#C4C4C4</color>
-    <color name="backgroundGray">#a3a3a3</color>
-    <color name="backgroundDarkGray">#5D5D5D</color>
-
-
-    <color name="dopDarkBlue">#1D7CBC</color>
-    <color name="premiumAddBackground">#6296CF</color>
-
-
     <color name="transparent">#00000000</color>
 
-    <!-- цвета оценок #fff74a -->
+
+    <!-- цвета оценок -->
     <color name="grade1">#ea5757</color>
     <color name="grade2">#F9892D</color>
     <color name="grade3">#f9ba2d</color>
     <color name="grade4">#AED600</color>
     <color name="grade5">#8bc837</color>
     <color name="gradeMix">#8ab5f9</color>
+
+    <!-- сигнализирующие цвета -->
+    <color name="signalGreen">#9dc646</color>
+    <color name="signalRed">#DB4437</color>
+
+    <!-- цвета фона иконки -->
+    <color name="app_icon_background_light">#80A9DB</color>
+    <color name="app_icon_background_dark">#6A91D4</color>
+
+    <!-- Цвет фона в премиуме -->
+    <color name="premiumAddBackground">#6296CF</color>
+    <!--color name="dopDarkBlue">#1D7CBC</color-->
+
+
+    <!-- todo это надо переделать, тк непонятно за что эти цвета отвечают -->
+    <color name="backgroundWhite">#ffffff</color>
+    <color name="backgroundDarkWhite">#F2F2F2</color>
+    <color name="backgroundLiteGray">#d1d1d1</color>
+    <color name="backgroundMediumGray">#C4C4C4</color>
+    <color name="backgroundGray">#A3A3A3</color>
+    <color name="backgroundDarkGray">#5D5D5D</color>
+
+    <!-- todo распростарнить на всё приложение -->
+    <color name="text_color_not_active">#A3A3A3</color>
+    <color name="text_color_simple">#000000</color>
+    <!-- todo text_color_hint -->
 
 </resources>

@@ -11,9 +11,8 @@ import androidx.core.content.FileProvider;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.settings.ImportModel.ImportModel_v1;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -23,9 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.Locale;
 
 public class SettingsImportExportHelper {
@@ -104,8 +101,7 @@ public class SettingsImportExportHelper {
             inputStream = (FileInputStream) toContext.getContentResolver().openInputStream(selectedUriPath);
             // пытаемся прочитать данные из файла
             parseDBFile(inputStream, returnData,
-                    toContext.getResources().getStringArray(R.array.locale_code)
-            );
+                    toContext.getResources().getStringArray(R.array.locale_code));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -177,312 +173,328 @@ public class SettingsImportExportHelper {
         }
     }
 
-    // парсим текущий тег
+    // текущий тег
     private static String currentTable;
+    // версия файла
+    private static String currentFileVersion;
 
     private static void parseTag(XmlPullParser xpp, ImportDataBaseData output,
                                  String[] localeCodes) {
 
-
-        if (xpp.getName().equals("element")) {
-            // парсим строку таблицы
-            switch (currentTable) {
-
-                // базовый тег
-                case SchoolContract.DB_NAME: {
-                    // проверяем был ли уже этот тег
-                    if (output.dataOutput.fileVersion == -1) {
-                        try {
-                            output.dataOutput.fileVersion = Integer.parseInt(xpp.getAttributeValue("", "db_file_version"));
-                            Log.e("TAG", "db_file_version" + xpp.getAttributeValue("", "db_file_version"));
-                            if (output.dataOutput.fileVersion != 1)
-                                throw new NumberFormatException("incorrect db_file_version");
-                        } catch (NumberFormatException e) {
-                            e.printStackTrace();
-                            output.outputLog.append("error:incorrect db_file_version").append('\n');
-                            output.criticalErrorFlag = true;
-                        }
-                    } else {
-                        output.outputLog.append("error:duplicate tag: " + SchoolContract.DB_NAME).append('\n');
-                        output.criticalErrorFlag = true;
-                    }
-                    break;
-                }
-
-                case SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS:
-                    // импортируем таблицу настроек
-                    if (output.dataOutput.settingsData == null) {
-
-                        // создаем новый обьект с данными таблицы
-                        SchoolContractImportModel.SettingsImportData newSettingsProfile =
-                                new SchoolContractImportModel.SettingsImportData(localeCodes);
-
-                        // флаг ошибки
-                        boolean errorFlag = false;
-
-                        // проходимся по всем полям записи и читаем их из файла
-                        for (int i = 0; i < newSettingsProfile.rowData.length && !errorFlag; i++) {
-                            // получаем значение поля по названию
-                            String rowValue = xpp.getAttributeValue("",
-                                    newSettingsProfile.rowData[i].getFieldDBName());
-                            // сразу отбрасываем пустые поля
-                            if (rowValue != null) {
-                                // пытаемся его обработать
-                                try {
-                                    switch (newSettingsProfile.rowData[i].getElementType()) {
-                                        case ImportFieldData.TYPE_LONG:
-                                            // парсим цифру
-                                            long longValue = Long.parseLong(rowValue);
-                                            // пытаемся записать значение (там же и проверяем на валидность)
-                                            newSettingsProfile.rowData[i].setLongValue(longValue);
-                                            break;
-                                        case ImportFieldData.TYPE_STRING:
-                                            // пытаемся записать значение (там же и проверяем на валидность)
-                                            newSettingsProfile.rowData[i].setStringValue(rowValue);
-                                            break;
-                                        case ImportFieldData.TYPE_BOOLEAN:
-                                            // парсим boolean
-                                            boolean booleanValue = Boolean.parseBoolean(rowValue);
-                                            // пытаемся записать значение (там же и проверяем на валидность)
-                                            newSettingsProfile.rowData[i].setBooleanValue(booleanValue);
-                                            break;
-                                        case ImportFieldData.TYPE_REF:
-                                            // парсим цифру
-                                            long refIdValue = Long.parseLong(rowValue);
-                                            // пытаемся записать значение (там же и проверяем на валидность)
-                                            newSettingsProfile.rowData[i].setRefId(refIdValue);
-                                            break;
-                                    }
-                                } catch (Exception e) {
-                                    output.outputLog.append("error: table-\"").append(currentTable)
-                                            .append("\", field-\"").append(newSettingsProfile.rowData[i].getFieldDBName()).append("\"").append('\n');
-                                    e.printStackTrace();
-                                    errorFlag = true;
-                                }
-                            } else {
-                                output.outputLog.append("error e: table-\"").append(currentTable)
-                                        .append("\", field-\"").append(newSettingsProfile.rowData[i].getFieldDBName()).append("\"").append('\n');
-                                errorFlag = true;
-                            }
-                        }
-//                        String profileName;
-//                        String locale;
-//                        int maxAnswer;
-//                        String timePeriods;
-//                        boolean coloredGrades;
-
-//                        // название профиля
-//                        profileName = xpp.getAttributeValue("",
-//                                SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME);
-//                        if (profileName == null) {
-//                            output.outputLog.append("error: empty settings profile name").append('\n');
-//                            break;
-//                        }
 //
-//                        // локаль приложения
-//                        locale = xpp.getAttributeValue("",
-//                                SchoolContract.TableSettingsData.COLUMN_LOCALE);
-//                        if (locale == null) break;// todo прописать сообщения ошибок
-//                        if (!Arrays.asList(localecodes).contains(locale)) break;
+//        if (xpp.getName().equals("element")) {
+//            // парсим строку таблицы
+//            switch (currentTable) {
 //
+//                // базовый тег
+//                case SchoolContract.DB_NAME: {
+//                    // проверяем был ли уже этот тег
+//                    if (output.dataOutput == null) {
 //                        try {
-//                            maxAnswer = Integer.parseInt(xpp.getAttributeValue("",
-//                                    SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER));
-//                            if (maxAnswer < 1) throw new NumberFormatException();
+//
+//                            // ищем в теге номер версии
+//                            int fileVersion = Integer.parseInt(xpp.getAttributeValue("", "db_file_version"));
+//                            Log.e("TAG", "db_file_version" + xpp.getAttributeValue("", "db_file_version"));
+//                            if (fileVersion != 1)
+//                                throw new NumberFormatException("incorrect db_file_version");
+//
+//                            // открываем как модель первой версии
+//                            output.dataOutput = new ImportModel_v1(localeCodes);
+//
 //                        } catch (NumberFormatException e) {
 //                            e.printStackTrace();
-//                            break;
+//                            output.outputLog.append("error:incorrect db_file_version").append('\n');
+//                            output.criticalErrorFlag = true;
 //                        }
-//                        // время уроков
-//                        timePeriods = xpp.getAttributeValue("",
-//                                SchoolContract.TableSettingsData.COLUMN_TIME);
-//                        try {
-//                            new JSONObject(timePeriods);
-//                        } catch (Exception e) {
-//                            output.outputLog.append("error: settings time periods error").append('\n');
-//                            break;
-//                        }
-//                        // время уроков
-//                        try {
-//                            coloredGrades = Boolean.parseBoolean(xpp.getAttributeValue("",
-//                                    SchoolContract.TableSettingsData.COLUMN_TIME));
-//                        } catch (Exception e) {
-//                            output.outputLog.append("error: settings colored grades error").append('\n');
-//                            break;
-//                        }
+//                    } else {
+//                        output.outputLog.append("error:duplicate tag: " + SchoolContract.DB_NAME).append('\n');
+//                        output.criticalErrorFlag = true;
+//                    }
+//                    break;
+//                }
+//
+//                case SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS:
+//                    // импортируем таблицу настроек
+//                    ImportModel_v1.TableModel table =
+//                            output.dataOutput.getTableModelByName(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS);
+//                    if (table.rows.size() == 0){
+//
+//                    }
 //
 //
-//                        // если в записи есть ошибки, просто оставим ее пустой
-//                        // сохраняем загруженное в файл
-//                        output.dataOutput.settingsData =
-//                                new SchoolContractImportModel.SettingsImportData(
-//                                        1,
-//                                        profileName,
-//                                        locale,
-//                                        50,// не парюсь по поводу размера интерфейса, он все равно нигде не используется
-//                                        maxAnswer,
-//                                        timePeriods,
-//                                        coloredGrades
-//                                );
-                    } else {
-                        // вторая запись настроек, не читаем её
-                        output.outputLog.append("error:duplicate settingsRecord: " +
-                                SchoolContract.DB_NAME).append('\n');
-                    }
-                    break;
-
-                case SchoolContract.TableCabinets.NAME_TABLE_CABINETS: {
-
-
-                    // создаем новый обьект с данными таблицы
-                    SchoolContractImportModel.CabinetsImportData tempImportProfile =
-                            new SchoolContractImportModel.CabinetsImportData();
-
-                    // проверяем запись на ошибки
-                    boolean errorFlag = false;
-
-                    // проходимся по всем полям записи и читаем их из файла
-                    for (int columnI = 0; columnI < tempImportProfile.rowData.length && !errorFlag; columnI++) {
-
-                        // получаем значение поля по названию
-                        String rowValue = xpp.getAttributeValue("",
-                                tempImportProfile.rowData[columnI].getFieldDBName());
-
-                        // сразу отбрасываем пустые поля
-                        if (rowValue != null) {
-
-                            // пытаемся обработать полученное значение
-                            try {
-                                switch (tempImportProfile.rowData[columnI].getElementType()) {
-                                    case ImportFieldData.TYPE_LONG:
-                                        // парсим цифру
-                                        long longValue = Long.parseLong(rowValue);
-                                        // пытаемся записать значение (там же и проверяем на валидность)
-                                        tempImportProfile.rowData[columnI].setLongValue(longValue);
-                                        break;
-                                    case ImportFieldData.TYPE_STRING:
-                                        // пытаемся записать значение (там же и проверяем на валидность)
-                                        tempImportProfile.rowData[columnI].setStringValue(rowValue);
-                                        break;
-                                    case ImportFieldData.TYPE_BOOLEAN:
-                                        // парсим boolean
-                                        boolean booleanValue = Boolean.parseBoolean(rowValue);
-                                        // пытаемся записать значение (там же и проверяем на валидность)
-                                        tempImportProfile.rowData[columnI].setBooleanValue(booleanValue);
-                                        break;
-                                    case ImportFieldData.TYPE_REF:
-                                        // парсим цифру
-                                        long refIdValue = Long.parseLong(rowValue);
-                                        // пытаемся записать значение (там же и проверяем на валидность)
-                                        tempImportProfile.rowData[columnI].setRefId(refIdValue);
-                                        break;
-                                }
-                            } catch (Exception e) {
-                                output.outputLog.append("error: table-\"")
-                                        .append(currentTable)
-                                        .append("\", field-\"")
-                                        .append(tempImportProfile.rowData[columnI].getFieldDBName())
-                                        .append("\"\n");
-                                e.printStackTrace();
-                                errorFlag = true;
-                            }
-
-                        } else {
-                            output.outputLog.append("error e: table-\"")
-                                    .append(currentTable)
-                                    .append("\", field-\"")
-                                    .append(tempImportProfile.rowData[columnI].getFieldDBName())
-                                    .append("\"\n");
-                            errorFlag = true;
-                        }
-                    }
-
-                    // если все поля в порядке, сохраняем запись
-                    if (!errorFlag) output.dataOutput.cabinetsImportData.add(tempImportProfile);
-                    break;
-                }
-                //
-                case SchoolContract.TableDesks.NAME_TABLE_DESKS: {// парсим запись таблицы парт
-
-                    // создаем новый обьект с данными таблицы
-                    SchoolContractImportModel.DesksImportData tempImportProfile =
-                            new SchoolContractImportModel.DesksImportData();
-
-                    // парсим содержимое тега проверяя на ошибки
-                    boolean errorFlag = parseParseTag(xpp, currentTable, output.outputLog, tempImportProfile.rowData);
-
-                    // если все поля в порядке, сохраняем запись
-                    if (!errorFlag) output.dataOutput.desksImportData.add(tempImportProfile);
-                    break;
-                }
-
-                //
-                case SchoolContract.TablePlaces.NAME_TABLE_PLACES: {// парсим запись таблицы мест
-
-                    // создаем новый обьект с данными таблицы
-                    SchoolContractImportModel.PlacesImportData tempImportProfile =
-                            new SchoolContractImportModel.PlacesImportData();
-
-                    // парсим содержимое тега проверяя на ошибки
-                    boolean errorFlag = parseParseTag(xpp, currentTable, output.outputLog, tempImportProfile.rowData);
-
-                    // если все поля в порядке, сохраняем запись
-                    if (!errorFlag) output.dataOutput.placesImportData.add(tempImportProfile);
-                    break;
-                }
-                //
-                case SchoolContract.TableClasses.NAME_TABLE_CLASSES: {
-                    break;
-                }
-                //
-                case SchoolContract.TableLearners.NAME_TABLE_LEARNERS: {
-                    break;
-                }
-                //
-                case SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES: {
-                    break;
-                }
-                //
-                case SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES: {
-
-                    // todo там где пропуск, может храниться null, по этому надо будет добавить дополнительные проверки
-                    //  например, если null то ставить в id -1
-                    break;
-                }
-                //
-                case SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS: {
-                    break;
-                }
-                //
-                case SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE: {
-                    break;
-                }
-                //
-                case SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES: {
-                    break;
-                }
-                //
-                case SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES: {
-                    break;
-                }
-                //
-                case SchoolContract.TableLearnersAbsentTypes.NAME_TABLE_LEARNERS_ABSENT_TYPES: {
-                    break;
-                }
-                //
-                case SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT: {
-                    break;
-                }
-
-                default:// другие теги не распознаются
-                    output.outputLog.append("error:incorrect tag: ").append(currentTable).append('\n');
-                    output.criticalErrorFlag = true;
-            }
-
-        } else {
-            // меняем считываемую таблицу
-            currentTable = xpp.getName();
-        }
+//
+//                    if (output.dataOutput.settingsData == null) {
+//
+//                        // создаем новый обьект с данными таблицы
+//                        SchoolContractImportModel.SettingsImportData newSettingsProfile =
+//                                new SchoolContractImportModel.SettingsImportData();
+//
+//                        // флаг ошибки
+//                        boolean errorFlag = false;
+//
+//                        // проходимся по всем полям записи и читаем их из файла
+//                        for (int i = 0; i < newSettingsProfile.rowData.length && !errorFlag; i++) {
+//                            // получаем значение поля по названию
+//                            String rowValue = xpp.getAttributeValue("",
+//                                    newSettingsProfile.rowData[i].getFieldDBName());
+//                            // сразу отбрасываем пустые поля
+//                            if (rowValue != null) {
+//                                // пытаемся его обработать
+//                                try {
+//                                    switch (newSettingsProfile.rowData[i].getElementType()) {
+//                                        case ImportFieldData.TYPE_LONG:
+//                                            // парсим цифру
+//                                            long longValue = Long.parseLong(rowValue);
+//                                            // пытаемся записать значение (там же и проверяем на валидность)
+//                                            newSettingsProfile.rowData[i].setLongValue(longValue);
+//                                            break;
+//                                        case ImportFieldData.TYPE_STRING:
+//                                            // пытаемся записать значение (там же и проверяем на валидность)
+//                                            newSettingsProfile.rowData[i].setStringValue(rowValue);
+//                                            break;
+//                                        case ImportFieldData.TYPE_BOOLEAN:
+//                                            // парсим boolean
+//                                            boolean booleanValue = Boolean.parseBoolean(rowValue);
+//                                            // пытаемся записать значение (там же и проверяем на валидность)
+//                                            newSettingsProfile.rowData[i].setBooleanValue(booleanValue);
+//                                            break;
+//                                        case ImportFieldData.TYPE_REF:
+//                                            // парсим цифру
+//                                            long refIdValue = Long.parseLong(rowValue);
+//                                            // пытаемся записать значение (там же и проверяем на валидность)
+//                                            newSettingsProfile.rowData[i].setRefId(refIdValue);
+//                                            break;
+//                                    }
+//                                } catch (Exception e) {
+//                                    output.outputLog.append("error: table-\"").append(currentTable)
+//                                            .append("\", field-\"").append(newSettingsProfile.rowData[i].getFieldDBName()).append("\"").append('\n');
+//                                    e.printStackTrace();
+//                                    errorFlag = true;
+//                                }
+//                            } else {
+//                                output.outputLog.append("error e: table-\"").append(currentTable)
+//                                        .append("\", field-\"").append(newSettingsProfile.rowData[i].getFieldDBName()).append("\"").append('\n');
+//                                errorFlag = true;
+//                            }
+//                        }
+////                        String profileName;
+////                        String locale;
+////                        int maxAnswer;
+////                        String timePeriods;
+////                        boolean coloredGrades;
+//
+////                        // название профиля
+////                        profileName = xpp.getAttributeValue("",
+////                                SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME);
+////                        if (profileName == null) {
+////                            output.outputLog.append("error: empty settings profile name").append('\n');
+////                            break;
+////                        }
+////
+////                        // локаль приложения
+////                        locale = xpp.getAttributeValue("",
+////                                SchoolContract.TableSettingsData.COLUMN_LOCALE);
+////                        if (locale == null) break;// todo прописать сообщения ошибок
+////                        if (!Arrays.asList(localecodes).contains(locale)) break;
+////
+////                        try {
+////                            maxAnswer = Integer.parseInt(xpp.getAttributeValue("",
+////                                    SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER));
+////                            if (maxAnswer < 1) throw new NumberFormatException();
+////                        } catch (NumberFormatException e) {
+////                            e.printStackTrace();
+////                            break;
+////                        }
+////                        // время уроков
+////                        timePeriods = xpp.getAttributeValue("",
+////                                SchoolContract.TableSettingsData.COLUMN_TIME);
+////                        try {
+////                            new JSONObject(timePeriods);
+////                        } catch (Exception e) {
+////                            output.outputLog.append("error: settings time periods error").append('\n');
+////                            break;
+////                        }
+////                        // время уроков
+////                        try {
+////                            coloredGrades = Boolean.parseBoolean(xpp.getAttributeValue("",
+////                                    SchoolContract.TableSettingsData.COLUMN_TIME));
+////                        } catch (Exception e) {
+////                            output.outputLog.append("error: settings colored grades error").append('\n');
+////                            break;
+////                        }
+////
+////
+////                        // если в записи есть ошибки, просто оставим ее пустой
+////                        // сохраняем загруженное в файл
+////                        output.dataOutput.settingsData =
+////                                new SchoolContractImportModel.SettingsImportData(
+////                                        1,
+////                                        profileName,
+////                                        locale,
+////                                        50,// не парюсь по поводу размера интерфейса, он все равно нигде не используется
+////                                        maxAnswer,
+////                                        timePeriods,
+////                                        coloredGrades
+////                                );
+//                    } else {
+//                        // вторая запись настроек, не читаем её
+//                        output.outputLog.append("error:duplicate settingsRecord: " +
+//                                SchoolContract.DB_NAME).append('\n');
+//                    }
+//                    break;
+//
+//                case SchoolContract.TableCabinets.NAME_TABLE_CABINETS: {
+//
+//
+//                    // создаем новый обьект с данными таблицы
+//                    SchoolContractImportModel.CabinetsImportData tempImportProfile =
+//                            new SchoolContractImportModel.CabinetsImportData();
+//
+//                    // проверяем запись на ошибки
+//                    boolean errorFlag = false;
+//
+//                    // проходимся по всем полям записи и читаем их из файла
+//                    for (int columnI = 0; columnI < tempImportProfile.rowData.length && !errorFlag; columnI++) {
+//
+//                        // получаем значение поля по названию
+//                        String rowValue = xpp.getAttributeValue("",
+//                                tempImportProfile.rowData[columnI].getFieldDBName());
+//
+//                        // сразу отбрасываем пустые поля
+//                        if (rowValue != null) {
+//
+//                            // пытаемся обработать полученное значение
+//                            try {
+//                                switch (tempImportProfile.rowData[columnI].getElementType()) {
+//                                    case ImportFieldData.TYPE_LONG:
+//                                        // парсим цифру
+//                                        long longValue = Long.parseLong(rowValue);
+//                                        // пытаемся записать значение (там же и проверяем на валидность)
+//                                        tempImportProfile.rowData[columnI].setLongValue(longValue);
+//                                        break;
+//                                    case ImportFieldData.TYPE_STRING:
+//                                        // пытаемся записать значение (там же и проверяем на валидность)
+//                                        tempImportProfile.rowData[columnI].setStringValue(rowValue);
+//                                        break;
+//                                    case ImportFieldData.TYPE_BOOLEAN:
+//                                        // парсим boolean
+//                                        boolean booleanValue = Boolean.parseBoolean(rowValue);
+//                                        // пытаемся записать значение (там же и проверяем на валидность)
+//                                        tempImportProfile.rowData[columnI].setBooleanValue(booleanValue);
+//                                        break;
+//                                    case ImportFieldData.TYPE_REF:
+//                                        // парсим цифру
+//                                        long refIdValue = Long.parseLong(rowValue);
+//                                        // пытаемся записать значение (там же и проверяем на валидность)
+//                                        tempImportProfile.rowData[columnI].setRefId(refIdValue);
+//                                        break;
+//                                }
+//                            } catch (Exception e) {
+//                                output.outputLog.append("error: table-\"")
+//                                        .append(currentTable)
+//                                        .append("\", field-\"")
+//                                        .append(tempImportProfile.rowData[columnI].getFieldDBName())
+//                                        .append("\"\n");
+//                                e.printStackTrace();
+//                                errorFlag = true;
+//                            }
+//
+//                        } else {
+//                            output.outputLog.append("error e: table-\"")
+//                                    .append(currentTable)
+//                                    .append("\", field-\"")
+//                                    .append(tempImportProfile.rowData[columnI].getFieldDBName())
+//                                    .append("\"\n");
+//                            errorFlag = true;
+//                        }
+//                    }
+//
+//                    // если все поля в порядке, сохраняем запись
+//                    if (!errorFlag) output.dataOutput.cabinetsImportData.add(tempImportProfile);
+//                    break;
+//                }
+//                //
+//                case SchoolContract.TableDesks.NAME_TABLE_DESKS: {// парсим запись таблицы парт
+//
+//                    // создаем новый обьект с данными таблицы
+//                    SchoolContractImportModel.DesksImportData tempImportProfile =
+//                            new SchoolContractImportModel.DesksImportData();
+//
+//                    // парсим содержимое тега проверяя на ошибки
+//                    boolean errorFlag = parseParseTag(xpp, currentTable, output.outputLog, tempImportProfile.rowData);
+//
+//                    // если все поля в порядке, сохраняем запись
+//                    if (!errorFlag) output.dataOutput.desksImportData.add(tempImportProfile);
+//                    break;
+//                }
+//
+//                //
+//                case SchoolContract.TablePlaces.NAME_TABLE_PLACES: {// парсим запись таблицы мест
+//
+//                    // создаем новый обьект с данными таблицы
+//                    SchoolContractImportModel.PlacesImportData tempImportProfile =
+//                            new SchoolContractImportModel.PlacesImportData();
+//
+//                    // парсим содержимое тега проверяя на ошибки
+//                    boolean errorFlag = parseParseTag(xpp, currentTable, output.outputLog, tempImportProfile.rowData);
+//
+//                    // если все поля в порядке, сохраняем запись
+//                    if (!errorFlag) output.dataOutput.placesImportData.add(tempImportProfile);
+//                    break;
+//                }
+//                //
+//                case SchoolContract.TableClasses.NAME_TABLE_CLASSES: {
+//                    break;
+//                }
+//                //
+//                case SchoolContract.TableLearners.NAME_TABLE_LEARNERS: {
+//                    break;
+//                }
+//                //
+//                case SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES: {
+//                    break;
+//                }
+//                //
+//                case SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES: {
+//
+//                    // todo там где пропуск, может храниться null, по этому надо будет добавить дополнительные проверки
+//                    //  например, если null то ставить в id -1
+//                    break;
+//                }
+//                //
+//                case SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS: {
+//                    break;
+//                }
+//                //
+//                case SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE: {
+//                    break;
+//                }
+//                //
+//                case SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES: {
+//                    break;
+//                }
+//                //
+//                case SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES: {
+//                    break;
+//                }
+//                //
+//                case SchoolContract.TableLearnersAbsentTypes.NAME_TABLE_LEARNERS_ABSENT_TYPES: {
+//                    break;
+//                }
+//                //
+//                case SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT: {
+//                    break;
+//                }
+//
+//                default:// другие теги не распознаются
+//                    output.outputLog.append("error:incorrect tag: ").append(currentTable).append('\n');
+//                    output.criticalErrorFlag = true;
+//            }
+//
+//        } else {
+//            // меняем считываемую таблицу
+//            currentTable = xpp.getName();
+//        }
 
     }
 
@@ -574,11 +586,11 @@ public class SettingsImportExportHelper {
 
 
         // класс буфер для преобразования данных в xml
-        SchoolContractImportModel dataOutput;
+        ImportModel_v1 dataOutput;
 
         public ImportDataBaseData() {
             outputLog = new StringBuilder();
-            dataOutput = new SchoolContractImportModel();
+            dataOutput = null;
         }
     }
 

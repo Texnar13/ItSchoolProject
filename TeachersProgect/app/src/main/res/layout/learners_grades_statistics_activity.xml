@@ -71,7 +71,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/begin_lesson_start_screen_button_height_half"
-                    android:background="@drawable/base_background_dialog_head_round_wite"
+                    android:background="@drawable/base_background_dialog_head_round_white"
                     android:orientation="vertical">
 
                     <LinearLayout

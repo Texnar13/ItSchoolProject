@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- мой телефон A71 -->
 
@@ -12,6 +12,7 @@
     <dimen name="simple_buttons_height">62dp</dimen>
 
     <dimen name="base_buttons_arrow_size">18dp</dimen>
+    <dimen name="base_classic_arrow_immutable_size">24dp</dimen>
 
     <!-- главный экран -->
     <dimen name="start_screen_time_text_size">45sp</dimen>

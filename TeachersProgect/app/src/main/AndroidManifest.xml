@@ -35,7 +35,8 @@
             android:exported="true" />
         <activity
             android:name=".startScreen.StartScreenActivity"
-            android:configChanges="locale">
+            android:configChanges="locale"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
