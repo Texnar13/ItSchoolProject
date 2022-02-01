@@ -254,6 +254,9 @@
     <string name="settings_activity_data_import_title">##Select file to upload:</string>
     <string name="settings_activity_data_import_message_incorrect_type">##Низя, низя! файл не того формата</string>
     <string name="settings_activity_data_import_message_unrtedable_file">##Низя, низя! файл не прочесть…</string>
+    <string name="settings_activity_data_import_message_error_tag">\n ##Ошибка: </string>
+    <string name="settings_activity_data_import_message_read_success">\n\n##Файл успешно прочтён!</string>
+    <string name="settings_activity_data_import_message_read_error">\n\n##Чтение не завершено, в файле ошибки! (Вы можете копировать содержимое окна)</string>
     <!-- диалоги -->
     <string name="settings_activity_dialog_delete_title">您确定要删除所有应用程序数据吗？</string>
     <string name="settings_activity_dialog_add_type_title">+ 添加课的工作类型</string>

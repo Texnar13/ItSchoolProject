@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -36,6 +35,8 @@ import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialog;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.settings.ImportModel.ImportDataBaseData;
+import com.learning.texnar13.teachersprogect.settings.ImportModel.SettingsImportHelper;
 import com.learning.texnar13.teachersprogect.sponsor.SponsorActivity;
 
 import java.io.Serializable;
@@ -114,13 +115,13 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 }
                 // если какой-то путь есть, пытаемся его обработать
                 // начинаем чтение из файла
-                SettingsImportExportHelper.ImportDataBaseData data =
-                        SettingsImportExportHelper.importDataBase(SettingsActivity.this, selectedUriPath);
+                ImportDataBaseData data =
+                        SettingsImportHelper.importDataBase(SettingsActivity.this, selectedUriPath);
 
                 // запускаем диалог с результатами обработки
                 DataImportLogDialog logDialog = new DataImportLogDialog();
                 Bundle arguments = new Bundle();
-                arguments.putString(DataImportLogDialog.PARAM_LOG_MESSAGE, data.outputLog.toString());
+                arguments.putString(DataImportLogDialog.PARAM_LOG_MESSAGE, data.getErrorsLog());
                 logDialog.setArguments(arguments);
                 logDialog.show(getSupportFragmentManager(), "importLogDialog");
             });
@@ -289,7 +290,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }
         // экспорт данных
         else if (vId == R.id.activity_settings_export_all_data_button) {
-            SettingsImportExportHelper.exportDB(this);
+            SettingsExportHelper.exportDB(this);
+            //Toast.makeText(this, "ddd", Toast.LENGTH_SHORT).show();
         }
         // импорт данных
         else if (vId == R.id.activity_settings_import_all_data_button) {
@@ -337,9 +339,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             for (int i = 0; i < types.getCount(); i++) {
                 types.moveToNext();
 
-                typesId[i] = types.getLong(types.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.KEY_ROW_ID));
-                typesNames[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME));
-                typesLongNames[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME));
+                typesId[i] = types.getLong(types.getColumnIndexOrThrow(SchoolContract.TableLearnersAbsentTypes.KEY_ROW_ID));
+                typesNames[i] = types.getString(types.getColumnIndexOrThrow(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME));
+                typesLongNames[i] = types.getString(types.getColumnIndexOrThrow(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME));
             }
             types.close();
             db.close();
@@ -365,8 +367,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             for (int i = 0; i < types.getCount(); i++) {
                 types.moveToNext();
 
-                typesId[i] = types.getLong(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID));
-                typesStrings[i] = types.getString(types.getColumnIndex(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE));
+                typesId[i] = types.getLong(types.getColumnIndexOrThrow(SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID));
+                typesStrings[i] = types.getString(types.getColumnIndexOrThrow(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE));
             }
             types.close();
             db.close();

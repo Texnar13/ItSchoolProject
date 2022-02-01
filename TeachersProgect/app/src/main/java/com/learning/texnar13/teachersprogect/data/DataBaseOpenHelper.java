@@ -18,6 +18,7 @@ import org.xmlpull.v1.XmlSerializer;
 
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -256,7 +257,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                         JSONArray endHour;
                         JSONArray endMinute;
                         try {
-                            json = new JSONObject(timeCursor.getString(timeCursor.getColumnIndex("time")));
+                            json = new JSONObject(timeCursor.getString(timeCursor.getColumnIndexOrThrow("time")));
                             beginHour = json.getJSONArray("beginHour");
                             beginMinute = json.getJSONArray("beginMinute");
                             endHour = json.getJSONArray("endHour");
@@ -291,14 +292,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     try {
                         beginDate.setTime(timeDateFormat.parse(
                                 cursor.getString(
-                                        cursor.getColumnIndex(
+                                        cursor.getColumnIndexOrThrow(
                                                 "lessonDateBegin"
                                         )
                                 )
                         ));
                         endDate.setTime(timeDateFormat.parse(
                                 cursor.getString(
-                                        cursor.getColumnIndex(
+                                        cursor.getColumnIndexOrThrow(
                                                 "lessonDateEnd"
                                         )
                                 )
@@ -321,7 +322,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             ContentValues values = new ContentValues();
                             values.put("lessonNumber", i);
                             db.update("lessonAndTimeWithCabinet", values,
-                                    "_id = " + cursor.getLong(cursor.getColumnIndex("_id")), null);
+                                    "_id = " + cursor.getLong(cursor.getColumnIndexOrThrow("_id")), null);
                             break;
                         }
                     }
@@ -330,7 +331,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     ContentValues values = new ContentValues();
                     values.put("lessonDate", dateFormat.format(beginDate.getTime()));
                     db.update("lessonAndTimeWithCabinet", values,
-                            "_id = " + cursor.getLong(cursor.getColumnIndex("_id")), null);
+                            "_id = " + cursor.getLong(cursor.getColumnIndexOrThrow("_id")), null);
                 }
 
                 cursor.close();
@@ -353,7 +354,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
                     try {
                         date.setTime(timeDateFormat.parse(
-                                gradesCursor.getString(gradesCursor.getColumnIndex("time"))
+                                gradesCursor.getString(gradesCursor.getColumnIndexOrThrow("time"))
                         ));
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -371,7 +372,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             ContentValues values = new ContentValues();
                             values.put("lessonNumber", i);
                             db.update("learnersGrades", values,
-                                    "_id = " + gradesCursor.getLong(gradesCursor.getColumnIndex("_id")),
+                                    "_id = " + gradesCursor.getLong(gradesCursor.getColumnIndexOrThrow("_id")),
                                     null);
                             break;
                         }
@@ -385,7 +386,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             dateFormat.format(date.getTime())
                     );
                     db.update("learnersGrades", values,
-                             "_id = " + gradesCursor.getLong(gradesCursor.getColumnIndex("_id")),
+                             "_id = " + gradesCursor.getLong(gradesCursor.getColumnIndexOrThrow("_id")),
                             null
                     );
                 }
@@ -411,7 +412,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     // -- начальная дата --
 
                     // проверяем строку
-                    String startDate = statCursor.getString(statCursor.getColumnIndex("startTime"));
+                    String startDate = statCursor.getString(statCursor.getColumnIndexOrThrow("startTime"));
                     try {
                         timeDateFormat.parse(startDate);
                         // если ошибок нет
@@ -427,14 +428,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     ContentValues values = new ContentValues();
                     values.put("startDate", startDate);
                     db.update("statisticsProfiles", values,
-                            "_id = " + statCursor.getLong(statCursor.getColumnIndex("_id")),
+                            "_id = " + statCursor.getLong(statCursor.getColumnIndexOrThrow("_id")),
                             null);
 
 
                     // -- конечная дата --
 
                     // проверяем строку
-                    String endDate = statCursor.getString(statCursor.getColumnIndex("endTime"));
+                    String endDate = statCursor.getString(statCursor.getColumnIndexOrThrow("endTime"));
                     try {
                         timeDateFormat.parse(endDate);
                         // если ошибок нет
@@ -449,7 +450,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     ContentValues valuesEnd = new ContentValues();
                     valuesEnd.put("endDate", endDate);
                     db.update("statisticsProfiles", valuesEnd,
-                            "_id = " + statCursor.getLong(statCursor.getColumnIndex("_id")),
+                            "_id = " + statCursor.getLong(statCursor.getColumnIndexOrThrow("_id")),
                             null);
 
                 }
@@ -569,30 +570,30 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     Cursor sameGrades = db.query(
                             SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
                             null,
-                            SchoolContract.TableLearnersGrades.COLUMN_DATE + " == \"" + allGrades.getString(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_DATE)) + "\" AND " +
-                                    SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER + " == " + allGrades.getLong(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER)) + " AND " +
-                                    SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " == " + allGrades.getLong(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID)) + " AND " +
-                                    SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " == " + allGrades.getLong(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_LEARNER_ID)) + " AND " +
-                                    SchoolContract.TableLearnersGrades.KEY_ROW_ID + " != " + allGrades.getLong(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
+                            SchoolContract.TableLearnersGrades.COLUMN_DATE + " == \"" + allGrades.getString(allGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMN_DATE)) + "\" AND " +
+                                    SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER + " == " + allGrades.getLong(allGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER)) + " AND " +
+                                    SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID + " == " + allGrades.getLong(allGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID)) + " AND " +
+                                    SchoolContract.TableLearnersGrades.KEY_LEARNER_ID + " == " + allGrades.getLong(allGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_LEARNER_ID)) + " AND " +
+                                    SchoolContract.TableLearnersGrades.KEY_ROW_ID + " != " + allGrades.getLong(allGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
                             null, null, null, null
                     );
 
                     // Если стоит пропуск
-                    if (allGrades.getInt(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[0])) == -2) {
+                    if (allGrades.getInt(allGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[0])) == -2) {
                         // выставляем первый тип пропуска и пустую оценку
                         ContentValues content = new ContentValues();
                         content.put(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID, 1);
                         content.put(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[0], 0);
                         db.update(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
                                 content,
-                                SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + allGrades.getLong(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
+                                SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + allGrades.getLong(allGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
                                 null
                         );
 
                         // удаляем все остальные оценки (которых на самом деле и не должно быть)
                         while (sameGrades.moveToNext()) {
                             db.delete(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
-                                    SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + sameGrades.getLong(sameGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
+                                    SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + sameGrades.getLong(sameGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
                                     null
                             );
                         }
@@ -609,7 +610,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
                             sameGrades.moveToNext();
 
-                            long grade = sameGrades.getLong(sameGrades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[0]));
+                            long grade = sameGrades.getLong(sameGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[0]));
                             ContentValues content = new ContentValues();
                             if (grade == -2) {
 
@@ -619,7 +620,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                                 content.put(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[0], 1);
                                 db.update(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
                                         content,
-                                        SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + allGrades.getLong(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
+                                        SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + allGrades.getLong(allGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
                                         null
                                 );
 
@@ -627,7 +628,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                                 // удаляем все остальные оценки (которых на самом деле и не должно быть)
                                 while (sameGrades.moveToNext()) {
                                     db.delete(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
-                                            SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + sameGrades.getLong(sameGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
+                                            SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + sameGrades.getLong(sameGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
                                             null
                                     );
                                 }
@@ -635,25 +636,25 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             } else {
                                 // ставим на вторую позицию оценку из первой временной
                                 content.put(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[1],
-                                        sameGrades.getLong(sameGrades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[0]))
+                                        sameGrades.getLong(sameGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[0]))
                                 );
                                 content.put(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[1],
-                                        sameGrades.getLong(sameGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[0]))
+                                        sameGrades.getLong(sameGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[0]))
                                 );
                                 db.update(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
                                         content,
-                                        SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + allGrades.getLong(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
+                                        SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + allGrades.getLong(allGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
                                         null
                                 );
                                 // удаляем временную
                                 db.delete(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
-                                        SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + sameGrades.getLong(sameGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
+                                        SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + sameGrades.getLong(sameGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
                                         null
                                 );
 
                                 // переходим к проверке второй временной оценки
                                 if (sameGrades.moveToNext()) {
-                                    grade = sameGrades.getLong(sameGrades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[0]));
+                                    grade = sameGrades.getLong(sameGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[0]));
                                     ContentValues content2 = new ContentValues();
                                     if (grade == -2) {
 
@@ -665,7 +666,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                                         content2.put(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[1], 1);
                                         db.update(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
                                                 content2,
-                                                SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + allGrades.getLong(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
+                                                SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + allGrades.getLong(allGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
                                                 null
                                         );
 
@@ -673,7 +674,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                                         // удаляем все остальные оценки (которых на самом деле и не должно быть)
                                         while (sameGrades.moveToNext()) {
                                             db.delete(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
-                                                    SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + sameGrades.getLong(sameGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
+                                                    SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + sameGrades.getLong(sameGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
                                                     null
                                             );
                                         }
@@ -681,19 +682,19 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                                     } else {
                                         // ставим на третью позицию оценку из первой временной
                                         content2.put(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[2],
-                                                sameGrades.getLong(sameGrades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[0]))
+                                                sameGrades.getLong(sameGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[0]))
                                         );
                                         content2.put(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[2],
-                                                sameGrades.getLong(sameGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[0]))
+                                                sameGrades.getLong(sameGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[0]))
                                         );
                                         db.update(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
                                                 content2,
-                                                SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + allGrades.getLong(allGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
+                                                SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + allGrades.getLong(allGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
                                                 null
                                         );
                                         // удаляем временную
                                         db.delete(SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES,
-                                                SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + sameGrades.getLong(sameGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
+                                                SchoolContract.TableLearnersGrades.KEY_ROW_ID + " == " + sameGrades.getLong(sameGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID)),
                                                 null
                                         );
                                     }
@@ -790,7 +791,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             return SchoolContract.TableSettingsData.COLUMN_LOCALE_DEFAULT_CODE;
         }
         cursor.moveToFirst();
-        String answer = cursor.getString(cursor.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_LOCALE));
+        String answer = cursor.getString(cursor.getColumnIndexOrThrow(SchoolContract.TableSettingsData.COLUMN_LOCALE));
         cursor.close();
         if (IS_DEBUG)
             Log.i(LOG_TAG, "setSettingsProfileParameters return = " + answer + " profileId= " + profileId);
@@ -818,7 +819,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             return -1;
         }
         cursor.moveToFirst();
-        int answer = cursor.getInt(cursor.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER));
+        int answer = cursor.getInt(cursor.getColumnIndexOrThrow(SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER));
         cursor.close();
         if (IS_DEBUG)
             Log.i(LOG_TAG, "setSettingsProfileParameters return = " + answer + " profileId= " + profileId);
@@ -898,7 +899,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         JSONArray endMinute;
         // пытаемся прочитать json
         try {
-            json = new JSONObject(settingsCursor.getString(settingsCursor.getColumnIndex(
+            json = new JSONObject(settingsCursor.getString(settingsCursor.getColumnIndexOrThrow(
                     SchoolContract.TableSettingsData.COLUMN_TIME)));
             // получаем нужные массивы
             beginHour = json.getJSONArray(SchoolContract.TableSettingsData.COLUMN_TIME_BEGIN_HOUR_NAME);
@@ -956,7 +957,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 //        long answer;
 //        if (cursor.getCount() != 0) {
 //            cursor.moveToFirst();
-//            answer = cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE));
+//            answer = cursor.getLong(cursor.getColumnIndexOrThrow(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE));
 //        } else {
 //            answer = -1;
 //        }
@@ -990,7 +991,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         boolean answer = false;
         if (cursor.getCount() != 0) {
             cursor.moveToFirst();
-            if (cursor.getLong(cursor.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED)) != 0) {
+            if (cursor.getLong(cursor.getColumnIndexOrThrow(SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED)) != 0) {
                 answer = true;
             }
         }
@@ -1169,7 +1170,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             {
                 Cursor desksCursor = this.getDesksByCabinetId(cabinetId);
                 while (desksCursor.moveToNext()) {
-                    desksId.add(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_ROW_ID)));
+                    desksId.add(desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.KEY_ROW_ID)));
                 }
                 desksCursor.close();
             }
@@ -1177,7 +1178,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             for (int i = 0; i < desksId.size(); i++) {
                 Cursor placeCursor = this.getPlacesByDeskId(desksId.get(i));
                 while (placeCursor.moveToNext()) {
-                    placesId.add(placeCursor.getLong(placeCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_ROW_ID)));
+                    placesId.add(placeCursor.getLong(placeCursor.getColumnIndexOrThrow(SchoolContract.TablePlaces.KEY_ROW_ID)));
                 }
                 placeCursor.close();
             }
@@ -1186,7 +1187,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         {//получаем id
             Cursor learnersCursor = this.getLearnersByClassId(classId);
             while (learnersCursor.moveToNext()) {
-                learnersId.add(learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_ROW_ID)));
+                learnersId.add(learnersCursor.getLong(learnersCursor.getColumnIndexOrThrow(SchoolContract.TableLearners.KEY_ROW_ID)));
             }
             learnersCursor.close();
         }
@@ -2008,11 +2009,11 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     }
 
 
-    public void writeXMLDataBaseInFile(OutputStreamWriter bw) throws RuntimeException {
+    public void writeXMLDataBaseInFile(OutputStreamWriter bw) throws RuntimeException, IOException {
         XmlSerializer serializer = Xml.newSerializer();
         SQLiteDatabase sqDB = getReadableDatabase();
 
-        try {
+        {
             // назначаем файл в который будем писать
             serializer.setOutput(bw);
             serializer.startDocument("UTF-8", true);
@@ -2027,13 +2028,17 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             null, null, null, null, null, null);
                     while (settings.moveToNext()) {
                         serializer.startTag("", "element");
-                        serializer.attribute("", SchoolContract.TableSettingsData.KEY_ROW_ID, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.KEY_ROW_ID)));
-                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME)));
-                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_LOCALE, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_LOCALE)));
-                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE)));
-                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER)));
-                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_TIME, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_TIME)));
-                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED, settings.getString(settings.getColumnIndex(SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED)));
+                        serializer.attribute("", SchoolContract.TableSettingsData.KEY_ROW_ID, settings.getString(settings.getColumnIndexOrThrow(SchoolContract.TableSettingsData.KEY_ROW_ID)));
+                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME, settings.getString(settings.getColumnIndexOrThrow(SchoolContract.TableSettingsData.COLUMN_PROFILE_NAME)));
+                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_LOCALE, settings.getString(settings.getColumnIndexOrThrow(SchoolContract.TableSettingsData.COLUMN_LOCALE)));
+                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE,
+                                settings.isNull(settings.getColumnIndexOrThrow(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE)) ?
+                                        "null" :
+                                        settings.getString(settings.getColumnIndexOrThrow(SchoolContract.TableSettingsData.COLUMN_INTERFACE_SIZE))
+                        );
+                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER, settings.getString(settings.getColumnIndexOrThrow(SchoolContract.TableSettingsData.COLUMN_MAX_ANSWER)));
+                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_TIME, settings.getString(settings.getColumnIndexOrThrow(SchoolContract.TableSettingsData.COLUMN_TIME)));
+                        serializer.attribute("", SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED, settings.getString(settings.getColumnIndexOrThrow(SchoolContract.TableSettingsData.COLUMN_ARE_THE_GRADES_COLORED)));
                         serializer.endTag("", "element");
                     }
                     settings.close();
@@ -2045,11 +2050,11 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     Cursor cabinets = getCabinets();
                     while (cabinets.moveToNext()) {
                         serializer.startTag("", "element");
-                        serializer.attribute("", SchoolContract.TableCabinets.KEY_ROW_ID, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.KEY_ROW_ID)));
-                        serializer.attribute("", SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER)));
-                        serializer.attribute("", SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X)));
-                        serializer.attribute("", SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y)));
-                        serializer.attribute("", SchoolContract.TableCabinets.COLUMN_NAME, cabinets.getString(cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)));
+                        serializer.attribute("", SchoolContract.TableCabinets.KEY_ROW_ID, cabinets.getString(cabinets.getColumnIndexOrThrow(SchoolContract.TableCabinets.KEY_ROW_ID)));
+                        serializer.attribute("", SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER, cabinets.getString(cabinets.getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER)));
+                        serializer.attribute("", SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X, cabinets.getString(cabinets.getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X)));
+                        serializer.attribute("", SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y, cabinets.getString(cabinets.getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y)));
+                        serializer.attribute("", SchoolContract.TableCabinets.COLUMN_NAME, cabinets.getString(cabinets.getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_NAME)));
                         serializer.endTag("", "element");
                     }
                     cabinets.close();
@@ -2061,11 +2066,11 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     Cursor desks = getDesks();
                     while (desks.moveToNext()) {
                         serializer.startTag("", "element");
-                        serializer.attribute("", SchoolContract.TableDesks.KEY_CABINET_ID, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.KEY_ROW_ID)));
-                        serializer.attribute("", SchoolContract.TableDesks.COLUMN_X, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)));
-                        serializer.attribute("", SchoolContract.TableDesks.COLUMN_Y, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)));
-                        serializer.attribute("", SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES)));
-                        serializer.attribute("", SchoolContract.TableDesks.KEY_CABINET_ID, desks.getString(desks.getColumnIndex(SchoolContract.TableDesks.KEY_CABINET_ID)));
+                        serializer.attribute("", SchoolContract.TableDesks.KEY_ROW_ID, desks.getString(desks.getColumnIndexOrThrow(SchoolContract.TableDesks.KEY_ROW_ID)));
+                        serializer.attribute("", SchoolContract.TableDesks.COLUMN_X, desks.getString(desks.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_X)));
+                        serializer.attribute("", SchoolContract.TableDesks.COLUMN_Y, desks.getString(desks.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_Y)));
+                        serializer.attribute("", SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES, desks.getString(desks.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES)));
+                        serializer.attribute("", SchoolContract.TableDesks.KEY_CABINET_ID, desks.getString(desks.getColumnIndexOrThrow(SchoolContract.TableDesks.KEY_CABINET_ID)));
                         serializer.endTag("", "element");
                     }
                     desks.close();
@@ -2078,9 +2083,9 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             null, null, null, null, null, null);
                     while (places.moveToNext()) {
                         serializer.startTag("", "element");
-                        serializer.attribute("", SchoolContract.TablePlaces.KEY_ROW_ID, places.getString(places.getColumnIndex(SchoolContract.TablePlaces.KEY_ROW_ID)));
-                        serializer.attribute("", SchoolContract.TablePlaces.KEY_DESK_ID, places.getString(places.getColumnIndex(SchoolContract.TablePlaces.KEY_DESK_ID)));
-                        serializer.attribute("", SchoolContract.TablePlaces.COLUMN_ORDINAL, places.getString(places.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)));
+                        serializer.attribute("", SchoolContract.TablePlaces.KEY_ROW_ID, places.getString(places.getColumnIndexOrThrow(SchoolContract.TablePlaces.KEY_ROW_ID)));
+                        serializer.attribute("", SchoolContract.TablePlaces.KEY_DESK_ID, places.getString(places.getColumnIndexOrThrow(SchoolContract.TablePlaces.KEY_DESK_ID)));
+                        serializer.attribute("", SchoolContract.TablePlaces.COLUMN_ORDINAL, places.getString(places.getColumnIndexOrThrow(SchoolContract.TablePlaces.COLUMN_ORDINAL)));
                         serializer.endTag("", "element");
                     }
                     places.close();
@@ -2093,8 +2098,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             null, null, null, null, null, null);
                     while (learnersClasses.moveToNext()) {
                         serializer.startTag("", "element");
-                        serializer.attribute("", SchoolContract.TableClasses.KEY_ROW_ID, learnersClasses.getString(learnersClasses.getColumnIndex(SchoolContract.TableClasses.KEY_ROW_ID)));
-                        serializer.attribute("", SchoolContract.TableClasses.COLUMN_CLASS_NAME, learnersClasses.getString(learnersClasses.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
+                        serializer.attribute("", SchoolContract.TableClasses.KEY_ROW_ID, learnersClasses.getString(learnersClasses.getColumnIndexOrThrow(SchoolContract.TableClasses.KEY_ROW_ID)));
+                        serializer.attribute("", SchoolContract.TableClasses.COLUMN_CLASS_NAME, learnersClasses.getString(learnersClasses.getColumnIndexOrThrow(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
                         serializer.endTag("", "element");
                     }
                     learnersClasses.close();
@@ -2107,11 +2112,11 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             null, null, null, null, null, null);
                     while (learners.moveToNext()) {
                         serializer.startTag("", "element");
-                        serializer.attribute("", SchoolContract.TableLearners.KEY_ROW_ID, learners.getString(learners.getColumnIndex(SchoolContract.TableLearners.KEY_ROW_ID)));
-                        serializer.attribute("", SchoolContract.TableLearners.COLUMN_FIRST_NAME, learners.getString(learners.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)));
-                        serializer.attribute("", SchoolContract.TableLearners.COLUMN_SECOND_NAME, learners.getString(learners.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME)));
-                        serializer.attribute("", SchoolContract.TableLearners.COLUMN_COMMENT, learners.getString(learners.getColumnIndex(SchoolContract.TableLearners.COLUMN_COMMENT)));
-                        serializer.attribute("", SchoolContract.TableLearners.KEY_CLASS_ID, learners.getString(learners.getColumnIndex(SchoolContract.TableLearners.KEY_CLASS_ID)));
+                        serializer.attribute("", SchoolContract.TableLearners.KEY_ROW_ID, learners.getString(learners.getColumnIndexOrThrow(SchoolContract.TableLearners.KEY_ROW_ID)));
+                        serializer.attribute("", SchoolContract.TableLearners.COLUMN_FIRST_NAME, learners.getString(learners.getColumnIndexOrThrow(SchoolContract.TableLearners.COLUMN_FIRST_NAME)));
+                        serializer.attribute("", SchoolContract.TableLearners.COLUMN_SECOND_NAME, learners.getString(learners.getColumnIndexOrThrow(SchoolContract.TableLearners.COLUMN_SECOND_NAME)));
+                        serializer.attribute("", SchoolContract.TableLearners.COLUMN_COMMENT, learners.getString(learners.getColumnIndexOrThrow(SchoolContract.TableLearners.COLUMN_COMMENT)));
+                        serializer.attribute("", SchoolContract.TableLearners.KEY_CLASS_ID, learners.getString(learners.getColumnIndexOrThrow(SchoolContract.TableLearners.KEY_CLASS_ID)));
                         serializer.endTag("", "element");
                     }
                     learners.close();
@@ -2124,9 +2129,9 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             null, null, null, null, null, null);
                     while (attitude.moveToNext()) {
                         serializer.startTag("", "element");
-                        serializer.attribute("", SchoolContract.TableLearnersOnPlaces.KEY_ROW_ID, attitude.getString(attitude.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_ROW_ID)));
-                        serializer.attribute("", SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID, attitude.getString(attitude.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID)));
-                        serializer.attribute("", SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID, attitude.getString(attitude.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID)));
+                        serializer.attribute("", SchoolContract.TableLearnersOnPlaces.KEY_ROW_ID, attitude.getString(attitude.getColumnIndexOrThrow(SchoolContract.TableLearnersOnPlaces.KEY_ROW_ID)));
+                        serializer.attribute("", SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID, attitude.getString(attitude.getColumnIndexOrThrow(SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID)));
+                        serializer.attribute("", SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID, attitude.getString(attitude.getColumnIndexOrThrow(SchoolContract.TableLearnersOnPlaces.KEY_PLACE_ID)));
                         serializer.endTag("", "element");
                     }
                     attitude.close();
@@ -2139,20 +2144,20 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             null, null, null, null, null, null);
                     while (grades.moveToNext()) {
                         serializer.startTag("", "element");
-                        serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_ROW_ID, grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID)));
-                        serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMN_DATE, grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_DATE)));
-                        serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER, grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER)));
+                        serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_ROW_ID, grades.getString(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID)));
+                        serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMN_DATE, grades.getString(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMN_DATE)));
+                        serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER, grades.getString(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER)));
                         for (int i = 0; i < SchoolContract.TableLearnersGrades.COLUMNS_GRADE.length; i++)
-                            serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMNS_GRADE[i], grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[i])));
+                            serializer.attribute("", SchoolContract.TableLearnersGrades.COLUMNS_GRADE[i], grades.getString(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[i])));
                         for (int i = 0; i < SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID.length; i++)
-                            serializer.attribute("", SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[i], grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[i])));
-                        if (!grades.isNull(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {
-                            serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID, grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID)));
+                            serializer.attribute("", SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[i], grades.getString(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[i])));
+                        if (!grades.isNull(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {
+                            serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID, grades.getString(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID)));
                         } else {
                             serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID, "null");
                         }
-                        serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID, grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID)));
-                        serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_LEARNER_ID, grades.getString(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_LEARNER_ID)));
+                        serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID, grades.getString(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_SUBJECT_ID)));
+                        serializer.attribute("", SchoolContract.TableLearnersGrades.KEY_LEARNER_ID, grades.getString(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_LEARNER_ID)));
 
                         serializer.endTag("", "element");
                     }
@@ -2166,9 +2171,9 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             null, null, null, null, null, null);
                     while (subjects.moveToNext()) {
                         serializer.startTag("", "element");
-                        serializer.attribute("", SchoolContract.TableSubjects.KEY_ROW_ID, subjects.getString(subjects.getColumnIndex(SchoolContract.TableSubjects.KEY_ROW_ID)));
-                        serializer.attribute("", SchoolContract.TableSubjects.COLUMN_NAME, subjects.getString(subjects.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME)));
-                        serializer.attribute("", SchoolContract.TableSubjects.KEY_CLASS_ID, subjects.getString(subjects.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID)));
+                        serializer.attribute("", SchoolContract.TableSubjects.KEY_ROW_ID, subjects.getString(subjects.getColumnIndexOrThrow(SchoolContract.TableSubjects.KEY_ROW_ID)));
+                        serializer.attribute("", SchoolContract.TableSubjects.COLUMN_NAME, subjects.getString(subjects.getColumnIndexOrThrow(SchoolContract.TableSubjects.COLUMN_NAME)));
+                        serializer.attribute("", SchoolContract.TableSubjects.KEY_CLASS_ID, subjects.getString(subjects.getColumnIndexOrThrow(SchoolContract.TableSubjects.KEY_CLASS_ID)));
                         serializer.endTag("", "element");
                     }
                     subjects.close();
@@ -2181,13 +2186,13 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             null, null, null, null, null, null);
                     while (lessons.moveToNext()) {
                         serializer.startTag("", "element");
-                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_ROW_ID, lessons.getString(lessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_ROW_ID)));
-                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID, lessons.getString(lessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID)));
-                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID, lessons.getString(lessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID)));
-                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER, lessons.getString(lessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER)));
-                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE, lessons.getString(lessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE)));
-                        //serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_END_REPEAT_DATE, desks.getString(desks.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_END_REPEAT_DATE)));// todo это поле еще не реализовано
-                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT, lessons.getString(lessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT)));
+                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_ROW_ID, lessons.getString(lessons.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_ROW_ID)));
+                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID, lessons.getString(lessons.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID)));
+                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID, lessons.getString(lessons.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID)));
+                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER, lessons.getString(lessons.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER)));
+                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE, lessons.getString(lessons.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE)));
+                        //serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_END_REPEAT_DATE, desks.getString(desks.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_END_REPEAT_DATE)));// todo это поле еще не реализовано
+                        serializer.attribute("", SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT, lessons.getString(lessons.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT)));
                         serializer.endTag("", "element");
                     }
                     lessons.close();
@@ -2200,10 +2205,10 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             null, null, null, null, null, null);
                     while (statistics.moveToNext()) {
                         serializer.startTag("", "element");
-                        serializer.attribute("", SchoolContract.TableStatisticsProfiles.KEY_ROW_ID, statistics.getString(statistics.getColumnIndex(SchoolContract.TableStatisticsProfiles.KEY_ROW_ID)));
-                        serializer.attribute("", SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME, statistics.getString(statistics.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME)));
-                        serializer.attribute("", SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE, statistics.getString(statistics.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE)));
-                        serializer.attribute("", SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE, statistics.getString(statistics.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE)));
+                        serializer.attribute("", SchoolContract.TableStatisticsProfiles.KEY_ROW_ID, statistics.getString(statistics.getColumnIndexOrThrow(SchoolContract.TableStatisticsProfiles.KEY_ROW_ID)));
+                        serializer.attribute("", SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME, statistics.getString(statistics.getColumnIndexOrThrow(SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME)));
+                        serializer.attribute("", SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE, statistics.getString(statistics.getColumnIndexOrThrow(SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE)));
+                        serializer.attribute("", SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE, statistics.getString(statistics.getColumnIndexOrThrow(SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE)));
                         serializer.endTag("", "element");
                     }
                     statistics.close();
@@ -2216,8 +2221,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             null, null, null, null, null, null);
                     while (gradesTypes.moveToNext()) {
                         serializer.startTag("", "element");
-                        serializer.attribute("", SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID, gradesTypes.getString(gradesTypes.getColumnIndex(SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID)));
-                        serializer.attribute("", SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE, gradesTypes.getString(gradesTypes.getColumnIndex(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE)));
+                        serializer.attribute("", SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID, gradesTypes.getString(gradesTypes.getColumnIndexOrThrow(SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID)));
+                        serializer.attribute("", SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE, gradesTypes.getString(gradesTypes.getColumnIndexOrThrow(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE)));
                         serializer.endTag("", "element");
                     }
                     gradesTypes.close();
@@ -2230,9 +2235,9 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                             null, null, null, null, null, null);
                     while (absTypes.moveToNext()) {
                         serializer.startTag("", "element");
-                        serializer.attribute("", SchoolContract.TableLearnersAbsentTypes.KEY_ROW_ID, absTypes.getString(absTypes.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.KEY_ROW_ID)));
-                        serializer.attribute("", SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME, absTypes.getString(absTypes.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME)));
-                        serializer.attribute("", SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME, absTypes.getString(absTypes.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME)));
+                        serializer.attribute("", SchoolContract.TableLearnersAbsentTypes.KEY_ROW_ID, absTypes.getString(absTypes.getColumnIndexOrThrow(SchoolContract.TableLearnersAbsentTypes.KEY_ROW_ID)));
+                        serializer.attribute("", SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME, absTypes.getString(absTypes.getColumnIndexOrThrow(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME)));
+                        serializer.attribute("", SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME, absTypes.getString(absTypes.getColumnIndexOrThrow(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME)));
                         serializer.endTag("", "element");
                     }
                     absTypes.close();
@@ -2244,10 +2249,10 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                     Cursor comments = sqDB.query(SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT, null, null, null, null, null, null);
                     while (comments.moveToNext()) {
                         serializer.startTag("", "element");
-                        serializer.attribute("", SchoolContract.TableLessonComment.KEY_ROW_ID, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.KEY_ROW_ID)));
-                        serializer.attribute("", SchoolContract.TableLessonComment.KEY_LESSON_ID, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.KEY_LESSON_ID)));
-                        serializer.attribute("", SchoolContract.TableLessonComment.COLUMN_LESSON_DATE, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.COLUMN_LESSON_DATE)));
-                        serializer.attribute("", SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT, comments.getString(comments.getColumnIndex(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT)));
+                        serializer.attribute("", SchoolContract.TableLessonComment.KEY_ROW_ID, comments.getString(comments.getColumnIndexOrThrow(SchoolContract.TableLessonComment.KEY_ROW_ID)));
+                        serializer.attribute("", SchoolContract.TableLessonComment.KEY_LESSON_ID, comments.getString(comments.getColumnIndexOrThrow(SchoolContract.TableLessonComment.KEY_LESSON_ID)));
+                        serializer.attribute("", SchoolContract.TableLessonComment.COLUMN_LESSON_DATE, comments.getString(comments.getColumnIndexOrThrow(SchoolContract.TableLessonComment.COLUMN_LESSON_DATE)));
+                        serializer.attribute("", SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT, comments.getString(comments.getColumnIndexOrThrow(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT)));
                         serializer.endTag("", "element");
                     }
                     comments.close();
@@ -2256,8 +2261,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             }
             serializer.endTag("", SchoolContract.DB_NAME);
             serializer.endDocument();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+
         }
     }
 
