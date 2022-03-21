@@ -7,7 +7,7 @@ import java.util.LinkedList;
 /**
  * Модель таблицы с проверками колонок и данными
  */
-class TableModel {
+public class TableModel {
 
     // название таблицы
     final String tableName;
@@ -48,8 +48,6 @@ class TableModel {
             switch (tableHead[fieldI].getElementType()) {
 
                 case ImportDataBaseData.ColumnCheck.TYPE_REF: {
-
-
                     // проверяем сам тип данных
                     long longValue;
 

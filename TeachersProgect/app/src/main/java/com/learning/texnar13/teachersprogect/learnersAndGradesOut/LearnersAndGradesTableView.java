@@ -193,7 +193,7 @@ public class LearnersAndGradesTableView extends View {
         // --- кисть для отрисовки жирных дат ---
         drawPaintFatDate = new TextPaint();
         drawPaintFatDate.setTextSize(getResources().getDimension(R.dimen.learners_and_grades_activity_content_text_size));
-        drawPaintFatDate.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_bold));
+        drawPaintFatDate.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_extrabold));
         drawPaintFatDate.setColor(Color.BLACK);
         drawPaintFatDate.setAntiAlias(true);// сглаживание
 
@@ -1661,3 +1661,12 @@ class LearnerAndHisGradesWithSize {
 
 // подчеркнутый текст
 // negativeTextButton.setPaintFlags(negativeTextButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+//
+////  вродебы так можно выбрать жирность текста, но по моему, это более тяжелый способ
+////        if (Build.VERSION.SDK_INT >= 28) {
+////            Typeface typefaceA = ResourcesCompat.getFont(this, R.font.montserrat_family);
+////            drawPaintFatDate.setTypeface(Typeface.create(typefaceA, 700, false));
+////        } else {
+////            drawPaintFatDate.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_extrabold));
+////        }
+//

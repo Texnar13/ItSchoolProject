@@ -62,8 +62,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
     // ---------- константы ----------
 
-    public static final String TAG = "TeachersApp";
-
     // режимы зума
     private static final int NONE = 0;
     private static final int ZOOM = 2;
@@ -261,14 +259,14 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         for (int i = 0; i < learnersAndTheirGrades.length; i++) {
             learnersCursor.moveToPosition(i);
 
-            long learnerId = learnersCursor.getLong(learnersCursor.getColumnIndex(
+            long learnerId = learnersCursor.getLong(learnersCursor.getColumnIndexOrThrow(
                     SchoolContract.TableLearners.KEY_ROW_ID
             ));
 
             // создаем нового ученика с пустыми оценками
-            String firstName = learnersCursor.getString(learnersCursor.getColumnIndex(
+            String firstName = learnersCursor.getString(learnersCursor.getColumnIndexOrThrow(
                     SchoolContract.TableLearners.COLUMN_FIRST_NAME));
-            String secondName = learnersCursor.getString(learnersCursor.getColumnIndex(
+            String secondName = learnersCursor.getString(learnersCursor.getColumnIndexOrThrow(
                     SchoolContract.TableLearners.COLUMN_SECOND_NAME));
 
             LessonListActivity.LessonListLearnerAndGradesData.GradeUnit[] emptyGrades =
@@ -301,16 +299,16 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             if (grades.moveToNext()) {
                 // сразу получаем id оценки
                 currentLearner.gradeId =
-                        grades.getLong(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID));
+                        grades.getLong(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID));
 
                 // если пропуска нет
-                if (grades.isNull(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {// если пропуска нет
+                if (grades.isNull(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {// если пропуска нет
                     for (int gradeI = 0; gradeI < SchoolContract.TableLearnersGrades.COLUMNS_GRADE.length; gradeI++) {
                         // оценка
                         currentLearner.gradesUnits[gradeI].grade =
-                                grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[gradeI]));
+                                grades.getInt(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[gradeI]));
                         // тип оценки
-                        long typeId = grades.getLong(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[gradeI]));
+                        long typeId = grades.getLong(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[gradeI]));
                         // проходимся в цикле по всем типам оценок запоминая номер попавшегося
                         currentLearner.gradesUnits[gradeI].gradeTypePoz = -1;// единица всегда должна перекрываться другим значение иначе будет ошибка
                         int poz = 0;
@@ -326,7 +324,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     // пропуск по умолчанию пустой
                     currentLearner.absTypePozNumber = -1;
                 } else {
-                    int absId = grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID));
+                    int absId = grades.getInt(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID));
 
                     // проходимся в цикле по всем типам оценок и пишем в ученика уже не id а номер в массиве
                     currentLearner.absTypePozNumber = -1;
@@ -382,11 +380,11 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         Cursor cabinetCursor = db.getCabinet(lessonBaseData.cabinetId);
         cabinetCursor.moveToFirst();
         // получаем множитель  (0.25 <-> 4)
-        multiplier = 0.0375F * cabinetCursor.getLong(cabinetCursor.getColumnIndex(
+        multiplier = 0.0375F * cabinetCursor.getLong(cabinetCursor.getColumnIndexOrThrow(
                 SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER)) + 0.25F;
         // и отступы
-        xAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X));
-        yAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y));
+        xAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X));
+        yAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y));
         cabinetCursor.close();
     }
 
@@ -408,10 +406,10 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         while (desksCursor.moveToNext()) {
 
             // данные одной парты
-            long deskId = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_ROW_ID));
-            int numberOfPlaces = desksCursor.getInt(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES));
-            long deskXDp = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X));
-            long deskYDp = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y));
+            long deskId = desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.KEY_ROW_ID));
+            int numberOfPlaces = desksCursor.getInt(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES));
+            long deskXDp = desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_X));
+            long deskYDp = desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_Y));
 
             // создаем новую парту  парту и данные в массив (в конструкторе заполняя позицию и размеры view)
             DeskUnit currentDeskUnit = new DeskUnit(
@@ -859,7 +857,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         private String lessonDate;
         private int lessonNumber;
 
-        // имя класса todo проверить нужность этих полей, возможно их можно заменить например такими вещами как заголовок, описание, итд
+        // имя класса
         private String className;
         // имя предмета
         private String subjectName;
@@ -880,11 +878,11 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             Cursor attitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(lessonAttitudeId);
             attitudeCursor.moveToFirst();
             // получаем из завмсимости id кабинета
-            result.cabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(
+            result.cabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndexOrThrow(
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID
             ));
             // получаем из завмсимости id предмета
-            result.subjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(
+            result.subjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndexOrThrow(
                     SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID
             ));
             attitudeCursor.close();
@@ -893,9 +891,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             Cursor subjectCursor = db.getSubjectById(result.subjectId);
             subjectCursor.moveToFirst();
             // получаем имя предмета
-            result.subjectName = subjectCursor.getString(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME));
+            result.subjectName = subjectCursor.getString(subjectCursor.getColumnIndexOrThrow(SchoolContract.TableSubjects.COLUMN_NAME));
             // получаем id класса
-            result.learnersClassId = subjectCursor.getLong(subjectCursor.getColumnIndex(
+            result.learnersClassId = subjectCursor.getLong(subjectCursor.getColumnIndexOrThrow(
                     SchoolContract.TableSubjects.KEY_CLASS_ID
             ));
             subjectCursor.close();
@@ -903,13 +901,13 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             // получаем имя класа
             Cursor learnersClass = db.getLearnersClases(result.learnersClassId);
             learnersClass.moveToFirst();
-            result.className = learnersClass.getString(learnersClass.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
+            result.className = learnersClass.getString(learnersClass.getColumnIndexOrThrow(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
             learnersClass.close();
 
             // получаем имя кабинета
             Cursor cabinetNameCursor = db.getCabinet(result.cabinetId);
             cabinetNameCursor.moveToFirst();
-            result.cabinetName = cabinetNameCursor.getString(cabinetNameCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
+            result.cabinetName = cabinetNameCursor.getString(cabinetNameCursor.getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_NAME));
             cabinetNameCursor.close();
 
             return result;

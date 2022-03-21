@@ -189,7 +189,9 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
                                         parseDaysCount(skuDetails.getFreeTrialPeriod()), // количество бесплатных дней
                                         getSubsPeriodTypeByCode(skuDetails.getSubscriptionPeriod()),
                                         skuDetails.getPrice(),
-                                        skuDetails.getDescription()
+                                        skuDetails.getDescription(),
+                                        skuDetails.getPriceAmountMicros()/1000000F,
+                                        skuDetails.getPriceCurrencyCode()
                                 );
                             }
                             // применяем изменения
@@ -317,17 +319,21 @@ class LoadedPrice {
     public static final int SUBSCRIPTION_PERIOD_MONTH = 1;
 
     SkuDetails skuDetailsObject;
-    int trialPeriodDays; //P4W2D
-    int subscriptionPeriodType; // 0 - year 1 - month // P1M
-    String price;
-    String description;
+    int trialPeriodDays; // пример исходных данных: P4W2D
+    int subscriptionPeriodType; // 0 - year 1 - month // пример исходных данных: P1M
+    String price;// красиво отформатированная цена
+    String description;// описание
+    float payValue; // численная стоимость в местной валюте
+    String code; // код валюты
 
-    public LoadedPrice(SkuDetails skuDetailsObject, int trialPeriodDays, int subscriptionPeriodType, String price, String description) {
+    public LoadedPrice(SkuDetails skuDetailsObject, int trialPeriodDays, int subscriptionPeriodType, String price, String description, float payValue, String code) {
         this.skuDetailsObject = skuDetailsObject;
         this.trialPeriodDays = trialPeriodDays;
         this.subscriptionPeriodType = subscriptionPeriodType;
         this.price = price;
         this.description = description;
+        this.payValue = payValue;
+        this.code = code;
     }
 }
 

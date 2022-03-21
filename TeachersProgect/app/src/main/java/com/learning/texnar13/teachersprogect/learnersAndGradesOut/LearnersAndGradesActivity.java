@@ -239,7 +239,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         // название класса
         Cursor classCursor = db.getLearnersClases(classId);
         classCursor.moveToFirst();
-        ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
+        ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(classCursor.getString(classCursor.getColumnIndexOrThrow(SchoolContract.TableClasses.COLUMN_CLASS_NAME)));
         classCursor.close();
         // параллельно находим максимальную оценку
         maxGrade = db.getSettingsMaxGrade(1);
@@ -254,8 +254,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             typesCursor.moveToPosition(typeI);
             // добавляем новый тип во внутренний список
             answersTypes[typeI] = new AnswersType(
-                    typesCursor.getLong(typesCursor.getColumnIndex(SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID)),
-                    typesCursor.getString(typesCursor.getColumnIndex(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE))
+                    typesCursor.getLong(typesCursor.getColumnIndexOrThrow(SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID)),
+                    typesCursor.getString(typesCursor.getColumnIndexOrThrow(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE))
             );
         }
         typesCursor.close();
@@ -268,9 +268,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             absCursor.moveToPosition(typeI);
             // добавляем новый тип во внутренний список
             absentTypes[typeI] = new AbsentType(
-                    absCursor.getLong(absCursor.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.KEY_ROW_ID)),
-                    absCursor.getString(absCursor.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME)),
-                    absCursor.getString(absCursor.getColumnIndex(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME))
+                    absCursor.getLong(absCursor.getColumnIndexOrThrow(SchoolContract.TableLearnersAbsentTypes.KEY_ROW_ID)),
+                    absCursor.getString(absCursor.getColumnIndexOrThrow(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME)),
+                    absCursor.getString(absCursor.getColumnIndexOrThrow(SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME))
 
             );
         }
@@ -493,8 +493,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         for (int subjectsIterator = 0; subjectsIterator < subjectsCursor.getCount(); subjectsIterator++) {
             subjectsCursor.moveToNext();
             subjects[subjectsIterator] = new NewSubjectUnit(
-                    subjectsCursor.getLong(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_ROW_ID)),
-                    subjectsCursor.getString(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME))
+                    subjectsCursor.getLong(subjectsCursor.getColumnIndexOrThrow(SchoolContract.TableSubjects.KEY_ROW_ID)),
+                    subjectsCursor.getString(subjectsCursor.getColumnIndexOrThrow(SchoolContract.TableSubjects.COLUMN_NAME))
             );
         }
 
@@ -542,13 +542,13 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             learnersCursor.moveToNext();
             // создаем нового ученика
             dataLearnersAndGrades.learnersAndHisGrades[learnerI] = new NewLearnerAndHisGrades(
-                    learnersCursor.getLong(learnersCursor.getColumnIndex(
+                    learnersCursor.getLong(learnersCursor.getColumnIndexOrThrow(
                             SchoolContract.TableLearners.KEY_ROW_ID)),
-                    learnersCursor.getString(learnersCursor.getColumnIndex(
+                    learnersCursor.getString(learnersCursor.getColumnIndexOrThrow(
                             SchoolContract.TableLearners.COLUMN_FIRST_NAME)),
-                    learnersCursor.getString(learnersCursor.getColumnIndex(
+                    learnersCursor.getString(learnersCursor.getColumnIndexOrThrow(
                             SchoolContract.TableLearners.COLUMN_SECOND_NAME)),
-                    learnersCursor.getString(learnersCursor.getColumnIndex(
+                    learnersCursor.getString(learnersCursor.getColumnIndexOrThrow(
                             SchoolContract.TableLearners.COLUMN_COMMENT)),
                     new GradeUnit[][]{}
             );
@@ -688,20 +688,20 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                             }
 
                             // id оценки
-                            long gradesId = allDayGrades.getLong(allDayGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID));
+                            long gradesId = allDayGrades.getLong(allDayGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID));
                             // номер урока
-                            int lessonPoz = allDayGrades.getInt(allDayGrades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER));
+                            int lessonPoz = allDayGrades.getInt(allDayGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMN_LESSON_NUMBER));
 
                             // оценки
                             int[] grades = new int[3];
                             for (int gradeI = 0; gradeI < 3; gradeI++) {
-                                grades[gradeI] = allDayGrades.getInt(allDayGrades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[gradeI]));
+                                grades[gradeI] = allDayGrades.getInt(allDayGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[gradeI]));
                             }
 
                             // номера типов оценок
                             int[] gradesTypesIndexes = new int[3];
                             for (int gradesI = 0; gradesI < 3; gradesI++) {
-                                int typeId = allDayGrades.getInt(allDayGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[gradesI]));
+                                int typeId = allDayGrades.getInt(allDayGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[gradesI]));
                                 for (int typeI = 0; typeI < answersTypes.length; typeI++) {
                                     if (typeId == answersTypes[typeI].id) {
                                         gradesTypesIndexes[gradesI] = typeI;
@@ -712,8 +712,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                             // номер типа пропуска
                             int absTypePoz = -1;
-                            if (!allDayGrades.isNull(allDayGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {
-                                int absTypeId = allDayGrades.getInt(allDayGrades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID));
+                            if (!allDayGrades.isNull(allDayGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {
+                                int absTypeId = allDayGrades.getInt(allDayGrades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID));
                                 for (int absI = 0; absI < absentTypes.length; absI++) {
                                     if (absTypeId == absentTypes[absI].id) {
                                         absTypePoz = absI;
@@ -789,12 +789,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 );
 
                 while (baseLessons.moveToNext()) {
-                    int lessonNumber = baseLessons.getInt(baseLessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER));
-                    long lessonId = baseLessons.getLong(baseLessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_ROW_ID));
-                    long subjectId = baseLessons.getLong(baseLessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
-                    long cabinetId = baseLessons.getLong(baseLessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
-                    String lessonDate = baseLessons.getString(baseLessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE));
-                    int repeat = baseLessons.getInt(baseLessons.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT));
+                    int lessonNumber = baseLessons.getInt(baseLessons.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER));
+                    long lessonId = baseLessons.getLong(baseLessons.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_ROW_ID));
+                    long subjectId = baseLessons.getLong(baseLessons.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
+                    long cabinetId = baseLessons.getLong(baseLessons.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
+                    String lessonDate = baseLessons.getString(baseLessons.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE));
+                    int repeat = baseLessons.getInt(baseLessons.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT));
 
                     // получаем дз
                     Cursor comment = db.getLessonCommentsByDateAndLesson(lessonId, checkDate);
@@ -808,8 +808,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     lessonDate,
                                     lessonNumber,
                                     repeat,
-                                    comment.getLong(comment.getColumnIndex(SchoolContract.TableLessonComment.KEY_ROW_ID)),
-                                    comment.getString(comment.getColumnIndex(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT))
+                                    comment.getLong(comment.getColumnIndexOrThrow(SchoolContract.TableLessonComment.KEY_ROW_ID)),
+                                    comment.getString(comment.getColumnIndexOrThrow(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT))
                             );
                     } else {
                         // записываем полученный урок (если его еще не было)

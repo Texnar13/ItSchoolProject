@@ -167,23 +167,23 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
             Cursor attitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(dbAttitudeId);
             attitudeCursor.moveToFirst();
             // предмет
-            tempCurrentChosenSubjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
+            tempCurrentChosenSubjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
             Cursor subjectCursor = db.getSubjectById(tempCurrentChosenSubjectId);
             subjectCursor.moveToFirst();
             // id класса (получаем из предмета)
-            tempClassId = subjectCursor.getLong(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
+            tempClassId = subjectCursor.getLong(subjectCursor.getColumnIndexOrThrow(SchoolContract.TableSubjects.KEY_CLASS_ID));
             // id кабинета
-            tempCabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
+            tempCabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
             // повторы
-            tempRepeat = attitudeCursor.getInt(attitudeCursor.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT));
+            tempRepeat = attitudeCursor.getInt(attitudeCursor.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT));
             subjectCursor.close();
             attitudeCursor.close();
             // дз
             Cursor homework = db.getLessonCommentsByDateAndLesson(dbAttitudeId, checkLessonDate);
             if (homework.moveToNext()) {
                 tempHomeworkUnit1 = new HomeWorkUnit(
-                        homework.getLong(homework.getColumnIndex(SchoolContract.TableLessonComment.KEY_ROW_ID)),
-                        homework.getString(homework.getColumnIndex(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT))
+                        homework.getLong(homework.getColumnIndexOrThrow(SchoolContract.TableLessonComment.KEY_ROW_ID)),
+                        homework.getString(homework.getColumnIndexOrThrow(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT))
                 );
             } else {
                 tempHomeworkUnit1 = null;
@@ -242,7 +242,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
             classUnits = new LearnersClassUnit[classesCursor.getCount()];
             for (int i = 0; i < classUnits.length; i++) {
                 classesCursor.moveToNext();
-                long classId = classesCursor.getLong(classesCursor.getColumnIndex(SchoolContract.TableClasses.KEY_ROW_ID));
+                long classId = classesCursor.getLong(classesCursor.getColumnIndexOrThrow(SchoolContract.TableClasses.KEY_ROW_ID));
 
 
                 // получаем предметы
@@ -252,8 +252,8 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                     subjectsCursor.moveToNext();
 
                     subjects.add(new SubjectUnit(
-                            subjectsCursor.getLong(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_ROW_ID)),
-                            subjectsCursor.getString(subjectsCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME))
+                            subjectsCursor.getLong(subjectsCursor.getColumnIndexOrThrow(SchoolContract.TableSubjects.KEY_ROW_ID)),
+                            subjectsCursor.getString(subjectsCursor.getColumnIndexOrThrow(SchoolContract.TableSubjects.COLUMN_NAME))
                     ));
 
                     // смотрим id выбранного предмета и сравниваем его с полученными предметами
@@ -270,7 +270,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                 // создаем класс
                 classUnits[i] = new LearnersClassUnit(
                         classId,
-                        classesCursor.getString(classesCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)),
+                        classesCursor.getString(classesCursor.getColumnIndexOrThrow(SchoolContract.TableClasses.COLUMN_CLASS_NAME)),
                         subjects
                 );
             }
@@ -285,8 +285,8 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
             for (int i = 0; i < cabinetUnit1s.length; i++) {
                 cabinetsCursor.moveToNext();
                 cabinetUnit1s[i] = new CabinetUnit(
-                        cabinetsCursor.getLong(cabinetsCursor.getColumnIndex(SchoolContract.TableCabinets.KEY_ROW_ID)),
-                        cabinetsCursor.getString(cabinetsCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME))
+                        cabinetsCursor.getLong(cabinetsCursor.getColumnIndexOrThrow(SchoolContract.TableCabinets.KEY_ROW_ID)),
+                        cabinetsCursor.getString(cabinetsCursor.getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_NAME))
                 );
 
                 // считаем позицию выбранного в уроке

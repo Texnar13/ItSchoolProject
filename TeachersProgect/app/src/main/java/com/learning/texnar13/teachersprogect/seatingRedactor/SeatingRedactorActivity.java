@@ -234,13 +234,13 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
         Cursor cabinetCursor = db.getCabinet(cabinetId);
         cabinetCursor.moveToFirst();
         // получаем множитель из кабинета  (0.25 <-> 4)
-        multiplier = 0.0375F * cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER))
+        multiplier = 0.0375F * cabinetCursor.getLong(cabinetCursor.getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_CABINET_MULTIPLIER))
                 + 0.25F;
         // и отступы
-        xAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X));
-        yAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y));
+        xAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_X));
+        yAxisPXOffset = cabinetCursor.getLong(cabinetCursor.getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_CABINET_OFFSET_Y));
         // получаем название кабинета
-        String cabinetName = cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
+        String cabinetName = cabinetCursor.getString(cabinetCursor.getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_NAME));
         cabinetCursor.close();
 
 
@@ -248,7 +248,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
         Cursor classCursor = db.getLearnersClases(learnersClassId);
         classCursor.moveToFirst();
         // получаем название класса
-        String learnersClassName = classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
+        String learnersClassName = classCursor.getString(classCursor.getColumnIndexOrThrow(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
         classCursor.close();
 
         // укорачиваем поля если они слишком длинные Loading…
@@ -270,9 +270,9 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
         for (int learnerI = 0; learnerI < learnersCursor.getCount(); learnerI++) {
             learnersCursor.moveToPosition(learnerI);
             learners[learnerI] = new MyLearner(
-                    learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_ROW_ID)),
-                    learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)),
-                    learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME))
+                    learnersCursor.getLong(learnersCursor.getColumnIndexOrThrow(SchoolContract.TableLearners.KEY_ROW_ID)),
+                    learnersCursor.getString(learnersCursor.getColumnIndexOrThrow(SchoolContract.TableLearners.COLUMN_FIRST_NAME)),
+                    learnersCursor.getString(learnersCursor.getColumnIndexOrThrow(SchoolContract.TableLearners.COLUMN_SECOND_NAME))
             );
         }
         learnersCursor.close();
@@ -285,12 +285,12 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             desksCursor.moveToPosition(deskI);
 
             // id парты
-            long deskId = desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.KEY_ROW_ID));
+            long deskId = desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.KEY_ROW_ID));
 
             // получаем места на парте
             Cursor placesCursor = db.getPlacesByDeskId(deskId);
             // количество мест на парте
-            int countOfPlaces = desksCursor.getInt(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES));
+            int countOfPlaces = desksCursor.getInt(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES));
             // id мест
             long[] placesId = new long[countOfPlaces];
             int[] learnersIndexes = new int[countOfPlaces];
@@ -300,9 +300,9 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                 placesCursor.moveToPosition(placeI);
 
                 // номер места на парте
-                int placePoz = (int) placesCursor.getLong(placesCursor.getColumnIndex(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1;
+                int placePoz = (int) placesCursor.getLong(placesCursor.getColumnIndexOrThrow(SchoolContract.TablePlaces.COLUMN_ORDINAL)) - 1;
                 // находим id места
-                placesId[placePoz] = placesCursor.getLong(placesCursor.getColumnIndex(SchoolContract.TablePlaces.KEY_ROW_ID));
+                placesId[placePoz] = placesCursor.getLong(placesCursor.getColumnIndexOrThrow(SchoolContract.TablePlaces.KEY_ROW_ID));
 
                 // получаем id зависимости и номер ученика сидящего на этой парте
                 attitudesId[placePoz] = -1;
@@ -317,7 +317,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
                         // сохраняем id зависимоси в парту
                         attitudesId[placePoz] =
-                                attitudesCursor.getLong(attitudesCursor.getColumnIndex(SchoolContract.TableLearnersOnPlaces.KEY_ROW_ID));
+                                attitudesCursor.getLong(attitudesCursor.getColumnIndexOrThrow(SchoolContract.TableLearnersOnPlaces.KEY_ROW_ID));
                         // и номер ученика в парту
                         learnersIndexes[placePoz] = learnerI;
 
@@ -338,8 +338,8 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             // создаем парту
             desks[deskI] = new DeskUnit(
                     deskLayout,
-                    pxFromDp(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_X)) * multiplier) + xAxisPXOffset,
-                    pxFromDp(desksCursor.getLong(desksCursor.getColumnIndex(SchoolContract.TableDesks.COLUMN_Y)) * multiplier) + yAxisPXOffset,
+                    pxFromDp(desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_X)) * multiplier) + xAxisPXOffset,
+                    pxFromDp(desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_Y)) * multiplier) + yAxisPXOffset,
                     learnersIndexes,
                     deskId,
                     placesId,

@@ -504,34 +504,34 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                     attitudeId.moveToFirst();
 
                     // получаем id самого урока
-                    final long lessonId = attitudeId.getLong(attitudeId.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_ROW_ID));
+                    final long lessonId = attitudeId.getLong(attitudeId.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_ROW_ID));
                     // получаем id предмета
-                    long subjectId = attitudeId.getLong(attitudeId.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
+                    long subjectId = attitudeId.getLong(attitudeId.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID));
                     // получаем id кабинета
-                    final long cabinetId = attitudeId.getLong(attitudeId.getColumnIndex(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
+                    final long cabinetId = attitudeId.getLong(attitudeId.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
                     attitudeId.close();
 
                     // получаем предмет
                     Cursor subjectCursor = db.getSubjectById(subjectId);
                     subjectCursor.moveToFirst();
                     // получаем имя предмета
-                    String subjectName = subjectCursor.getString(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.COLUMN_NAME));
+                    String subjectName = subjectCursor.getString(subjectCursor.getColumnIndexOrThrow(SchoolContract.TableSubjects.COLUMN_NAME));
                     // получаем id класса
-                    final long learnersClassId = subjectCursor.getLong(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
+                    final long learnersClassId = subjectCursor.getLong(subjectCursor.getColumnIndexOrThrow(SchoolContract.TableSubjects.KEY_CLASS_ID));
                     subjectCursor.close();
 
                     // получаем класс
                     Cursor classCursor = db.getLearnersClases(learnersClassId);
                     classCursor.moveToFirst();
                     // получаем имя класса
-                    String learnersClassName = classCursor.getString(classCursor.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
+                    String learnersClassName = classCursor.getString(classCursor.getColumnIndexOrThrow(SchoolContract.TableClasses.COLUMN_CLASS_NAME));
                     classCursor.close();
 
                     // получаем кабинет
                     Cursor cabinetCursor = db.getCabinet(cabinetId);
                     cabinetCursor.moveToFirst();
                     // получаем имя кабинета
-                    String cabinetName = cabinetCursor.getString(cabinetCursor.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
+                    String cabinetName = cabinetCursor.getString(cabinetCursor.getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_NAME));
                     cabinetCursor.close();
 
                     // текст предмета

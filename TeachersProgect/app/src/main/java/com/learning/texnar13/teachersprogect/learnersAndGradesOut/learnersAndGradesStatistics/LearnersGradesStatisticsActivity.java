@@ -125,9 +125,9 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             periods = new ArrayList<>(periodsCursor.getCount());
             while (periodsCursor.moveToNext()) {
                 // дата начала
-                String startDate = periodsCursor.getString(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE));
+                String startDate = periodsCursor.getString(periodsCursor.getColumnIndexOrThrow(SchoolContract.TableStatisticsProfiles.COLUMN_START_DATE));
                 // дата конца
-                String endDate = periodsCursor.getString(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE));
+                String endDate = periodsCursor.getString(periodsCursor.getColumnIndexOrThrow(SchoolContract.TableStatisticsProfiles.COLUMN_END_DATE));
                 // переводим дату из строки в числа
                 int[] dates = new int[6];
                 dates[0] = Integer.parseInt(startDate.substring(8, 10));
@@ -139,8 +139,8 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
 
                 // создаем период
                 periods.add(new PeriodUnit(
-                        periodsCursor.getLong(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.KEY_ROW_ID)),
-                        periodsCursor.getString(periodsCursor.getColumnIndex(SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME)),
+                        periodsCursor.getLong(periodsCursor.getColumnIndexOrThrow(SchoolContract.TableStatisticsProfiles.KEY_ROW_ID)),
+                        periodsCursor.getString(periodsCursor.getColumnIndexOrThrow(SchoolContract.TableStatisticsProfiles.COLUMN_PROFILE_NAME)),
                         dates
                 ));
             }
@@ -151,7 +151,7 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             Cursor subjectCursor = db.getSubjectById(subjectId);
             subjectCursor.moveToFirst();
             // получаем id класса
-            long classId = subjectCursor.getLong(subjectCursor.getColumnIndex(SchoolContract.TableSubjects.KEY_CLASS_ID));
+            long classId = subjectCursor.getLong(subjectCursor.getColumnIndexOrThrow(SchoolContract.TableSubjects.KEY_CLASS_ID));
             subjectCursor.close();
 
 
@@ -162,9 +162,9 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
             for (int learnerI = 0; learnerI < learners.length; learnerI++) {
                 learnersCursor.moveToPosition(learnerI);
                 learners[learnerI] = new LearnerUnit(
-                        learnersCursor.getLong(learnersCursor.getColumnIndex(SchoolContract.TableLearners.KEY_ROW_ID)),
-                        learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_FIRST_NAME)),
-                        learnersCursor.getString(learnersCursor.getColumnIndex(SchoolContract.TableLearners.COLUMN_SECOND_NAME))
+                        learnersCursor.getLong(learnersCursor.getColumnIndexOrThrow(SchoolContract.TableLearners.KEY_ROW_ID)),
+                        learnersCursor.getString(learnersCursor.getColumnIndexOrThrow(SchoolContract.TableLearners.COLUMN_FIRST_NAME)),
+                        learnersCursor.getString(learnersCursor.getColumnIndexOrThrow(SchoolContract.TableLearners.COLUMN_SECOND_NAME))
                 );
             }
             learnersCursor.close();
@@ -379,12 +379,12 @@ public class LearnersGradesStatisticsActivity extends AppCompatActivity implemen
                     grades.moveToPosition(j);
 
                     // если есть пропуск
-                    if (!grades.isNull(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {
+                    if (!grades.isNull(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {
                         nCount++;
                     } else // иначе просто считаем оценки
                         for (int gradePozIterator = 0; gradePozIterator < SchoolContract.TableLearnersGrades.COLUMNS_GRADE.length; gradePozIterator++) {
 
-                            int grade = grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[gradePozIterator]));
+                            int grade = grades.getInt(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[gradePozIterator]));
                             switch (grade) {
                                 case -1:
                                     Log.wtf(TAG, "LearnersGradesStatisticsActivity.getAndOutGrades - grade is -1!");

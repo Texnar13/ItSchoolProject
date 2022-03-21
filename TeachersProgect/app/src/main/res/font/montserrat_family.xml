@@ -9,8 +9,8 @@
     <!--500    Medium-->
     <!--600    Semibold, Demibold-->
     <!--700    Bold-->
-    <!--800    Black, Extra Bold or Heavy-->
-    <!--900    Extra Black, Fat, Poster or Ultra Black-->
+    <!--800    Extra Bold or Heavy-->
+    <!--900    Black -->
 
     <font
         app:font="@font/montserrat_medium"
@@ -26,4 +26,15 @@
         app:font="@font/montserrat_bold"
         app:fontStyle="normal"
         app:fontWeight="700" />
+
+    <font
+        app:font="@font/montserrat_extrabold"
+        app:fontStyle="normal"
+        app:fontWeight="800" />
+
+    <font
+        app:font="@font/montserrat_black"
+        app:fontStyle="normal"
+        app:fontWeight="900" />
+
 </font-family>

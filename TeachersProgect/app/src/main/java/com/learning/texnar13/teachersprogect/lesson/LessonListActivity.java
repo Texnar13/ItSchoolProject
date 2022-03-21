@@ -122,7 +122,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         Cursor attitudeCursor = db.getSubjectAndTimeCabinetAttitudeById(lessonAttitudeId);
         attitudeCursor.moveToFirst();
         // получаем из завмсимости id предмета
-        subjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndex(
+        subjectId = attitudeCursor.getLong(attitudeCursor.getColumnIndexOrThrow(
                 SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID
         ));
         attitudeCursor.close();
@@ -131,7 +131,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         Cursor subjectCursor = db.getSubjectById(subjectId);
         subjectCursor.moveToFirst();
         // получаем id класса
-        learnersClassId = subjectCursor.getLong(subjectCursor.getColumnIndex(
+        learnersClassId = subjectCursor.getLong(subjectCursor.getColumnIndexOrThrow(
                 SchoolContract.TableSubjects.KEY_CLASS_ID
         ));
         subjectCursor.close();
@@ -158,14 +158,14 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
             learnersCursor.moveToNext();
 
             // получаем id
-            long learnerId = learnersCursor.getLong(learnersCursor.getColumnIndex(
+            long learnerId = learnersCursor.getLong(learnersCursor.getColumnIndexOrThrow(
                     SchoolContract.TableLearners.KEY_ROW_ID
             ));
 
             // получаем имя
-            String name = learnersCursor.getString(learnersCursor.getColumnIndex(
+            String name = learnersCursor.getString(learnersCursor.getColumnIndexOrThrow(
                     SchoolContract.TableLearners.COLUMN_SECOND_NAME)) + " " +
-                    learnersCursor.getString(learnersCursor.getColumnIndex(
+                    learnersCursor.getString(learnersCursor.getColumnIndexOrThrow(
                             SchoolContract.TableLearners.COLUMN_FIRST_NAME));
 
             // инициализируем поля оценок
@@ -179,13 +179,13 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
             long gradeId = -1;
             if (grades.moveToNext()) {// если оценки за этот урок уже проставлялись
                 // id самой оценки
-                gradeId = grades.getLong(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ROW_ID));
+                gradeId = grades.getLong(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID));
                 // получаем id пропуска
                 int absId;
-                if (grades.isNull(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {
+                if (grades.isNull(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {
                     absId = -1;
                 } else
-                    absId = grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID));
+                    absId = grades.getInt(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID));
 
                 if (absId != -1) {// если стоит пропуск
                     // ищем в списках пропуск с таким же id
@@ -198,9 +198,9 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
                     for (int gradeI = 0; gradeI < 3; gradeI++) {
                         // оценка
                         gradeUnits[gradeI].grade =
-                                grades.getInt(grades.getColumnIndex(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[gradeI]));
+                                grades.getInt(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[gradeI]));
                         // тип оценки
-                        long typeId = grades.getLong(grades.getColumnIndex(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[gradeI]));
+                        long typeId = grades.getLong(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[gradeI]));
                         // проходимся в цикле по всем типам оценок запоминая номер попавшегося
                         gradeUnits[gradeI].gradeTypePoz = -1;// единица всегда должна перекрываться другим значение иначе будет ошибка
 

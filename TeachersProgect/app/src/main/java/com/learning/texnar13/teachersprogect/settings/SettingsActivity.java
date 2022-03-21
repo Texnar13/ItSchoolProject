@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -160,8 +159,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
-        // разрешаем только вертикальную ориентацию
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
         // начинаем загрузку межстраничного баннера конца урока
         settingsBack = new com.yandex.mobile.ads.InterstitialAd(this);

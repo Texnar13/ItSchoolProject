@@ -13,11 +13,11 @@ public class SCursor {
     }
 
     public long getInt(String name) {
-        return cursor.getInt(cursor.getColumnIndex(name));
+        return cursor.getInt(cursor.getColumnIndexOrThrow(name));
     }
 
     public long getLong(String name) {
-        return cursor.getLong(cursor.getColumnIndex(name));
+        return cursor.getLong(cursor.getColumnIndexOrThrow(name));
     }
 
     public boolean moveToNext() {

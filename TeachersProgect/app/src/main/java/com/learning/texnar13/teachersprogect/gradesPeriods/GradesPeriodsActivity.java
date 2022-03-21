@@ -21,6 +21,10 @@ import java.util.LinkedList;
 
 public class GradesPeriodsActivity extends AppCompatActivity {
 
+    // todo точно не помню что за классы в этом пакете,
+    //  но вроде как они создавались для того, чтобы сделать новую активность статистики
+    //
+    // todo или это для импорта данных... надо разобраться
 
     GradesPeriodsDataModel data;
 

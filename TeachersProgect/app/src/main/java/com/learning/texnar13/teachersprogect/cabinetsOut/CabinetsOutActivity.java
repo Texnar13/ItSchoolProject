@@ -57,10 +57,6 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
         }
         ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_cabinets_out);
 
-
-        // вертикальная ориентация
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -108,10 +104,10 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
             cabinets.moveToPosition(i);
             //получаем id кабинета
             cabinetsId[i] = cabinets.getLong(
-                    cabinets.getColumnIndex(SchoolContract.TableCabinets.KEY_ROW_ID)
+                    cabinets.getColumnIndexOrThrow(SchoolContract.TableCabinets.KEY_ROW_ID)
             );
             cabinetsNames[i] = cabinets.getString(
-                    cabinets.getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME)
+                    cabinets.getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_NAME)
             );
         }
         //заканчиваем работу

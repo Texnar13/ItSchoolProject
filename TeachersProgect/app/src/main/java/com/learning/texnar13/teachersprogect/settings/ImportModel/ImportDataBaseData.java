@@ -1,5 +1,13 @@
 package com.learning.texnar13.teachersprogect.settings.ImportModel;
 
+import android.util.Log;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 public class ImportDataBaseData {
 
 
@@ -61,26 +69,33 @@ public class ImportDataBaseData {
 
     /**
      * Добавить ошибку
-     * */
-    void addError(String errorMessage){
+     */
+    void addError(String errorMessage) {
         outputLog.append(errorLocaleTag).append(errorMessage);
     }
-    void addMessage(String message){
+
+    void addMessage(String message) {
         outputLog.append(message);
     }
 
-    public String getErrorsLog(){
+
+    // ------------------------------ Вывод результатов ------------------------------
+
+    public String getErrorsLog() {
         return outputLog.toString();
     }
 
-    // ------------------------------ классы сущностей ------------------------------
+    public ImportDBModel getImportResult() { return dataBaseOutput; }
+
+
+    // ------------------------------ Классы сущностей ------------------------------
 
     /**
      * Класс от которого наследуются реализации моделей бд, бредставляет из себя абстрактную модель БД
      */
-    static abstract class ImportDBModel {
+    public static abstract class ImportDBModel {
         // структура содержащая в себе описание таблиц и их данные
-        protected TableModel[] tables;
+        public TableModel[] tables;
     }
 
 
@@ -163,30 +178,6 @@ public class ImportDataBaseData {
     }
 
 
-    /**
-     * Класс ссылки на другую таблицу
-     */
-    static class RefTableField {
-
-        private final String REF_TABLE_NAME;
-        private final long rowIdRef; // просто считанный id
-        public Object ref; // ссылка на другую запись
-
-        public RefTableField(String REF_TABLE_NAME, long rowIdRef) {
-            this.REF_TABLE_NAME = REF_TABLE_NAME;
-            this.rowIdRef = rowIdRef;
-        }
-
-        public String getREF_TABLE_NAME() {
-            return REF_TABLE_NAME;
-        }
-
-        public long getRowIdRef() {
-            return rowIdRef;
-        }
-    }
-
-
     // ------------------------------ Вспомогательные методы ------------------------------
 
     /**
@@ -202,4 +193,89 @@ public class ImportDataBaseData {
         return null;
     }
 
+    // ------------------------------ работа с зависимостями ------------------------------
+
+
+    /**
+     * Проверяем связи foreign key (внешние ключи) в считанных таблицах
+     */
+    void checkForeignDependencies() {
+        // проверка уникальности ключей
+        checkUniqueKeys();
+        if (criticalErrorFlag) return;
+
+
+        // работа с foreign key
+        // необходимо поля типа TABLE_REF, в которых лежат числа long
+        // в таком случае можно просто проверить, есть ли в таблицах такие id, которые есть в ссылках.
+        // Все равно потом при добалении записей прям ссылки на обьекты не понадобятся
+
+        // пробегаемся по всем тааблицам в бд
+        for (TableModel currentTable : this.dataBaseOutput.tables) {
+            // находим колонки с TABLE_REF
+            for (int currentColumn = 0; currentColumn < currentTable.tableHead.length; currentColumn++)
+                if (currentTable.tableHead[currentColumn].elementType == ColumnCheck.TYPE_REF) {
+
+                    // смотрим на какую таблицу ссылается
+                    // получаем из этой таблицы все id и помещаем их в лонг массив   long[] refTableIds
+                    long[] refIds;
+                    {
+                        List<TableModel.Row> refTableRows = getTableModelByName(currentTable.tableHead[currentColumn].refTableName).rows;
+                        refIds = new long[refTableRows.size()];
+                        int row = 0;
+                        for (TableModel.Row refTableRow : refTableRows) {
+                            refIds[row] = (long) refTableRow.data[0];
+                            row++;
+                        }
+                    }
+
+                    for (TableModel.Row currentCheckRow : currentTable.rows) {// проходимся по всем строкам текущей (проверяемой) таблицы
+
+                        // пробегаемся по созданному массиву id ссылаемой таблицы
+                        int refTableIdI = 0;
+                        while (refTableIdI < refIds.length) {
+                            if (refIds[refTableIdI] == (long) currentCheckRow.data[currentColumn])
+                                break;
+                            refTableIdI++;
+                        }
+
+                        // если просмотрены все записи, и нужная строка не найдена, то
+                        if (refTableIdI == refIds.length) {
+                            // обнаружена неправильная ссылка
+                            criticalErrorFlag = true;
+                            addError("Wrong reference in (" + currentTable.tableName + ") : " + (long) currentCheckRow.data[currentColumn]);
+                            return;
+                        }
+                    }
+                }
+        }
+    }
+
+
+    /**
+     * Проверка уникальности ключей
+     */
+    // todo по хорошему надо переделать главные списки с записями в LinkedSet
+    //  чтобы заранее избежать дублирующихся записей сразу при добавлении
+    private void checkUniqueKeys() {
+        for (TableModel currentTable : this.dataBaseOutput.tables) {
+            Log.i("TAG", "checkUniqueKeys: " + currentTable.tableHead);
+
+            // находим позицию "_id"
+            int pos = 0;
+            while (!currentTable.tableHead[pos].dbFieldName.equals("_id")) pos++;
+
+            // пробегаемся по всем строкам ища одинаковые id
+            final Set<Long> checkedId = new HashSet<>();
+            for (TableModel.Row row : currentTable.rows) {
+                // Если id нельзя добавить в checkedId, то он там уже есть -> дубликат
+                long currentId = (long) row.data[pos];
+                if (!checkedId.add(currentId)) {
+                    addError("Duplicate _id in (" + currentTable.tableName + ") : " + currentId);
+                    criticalErrorFlag = true;
+                    return;
+                }
+            }
+        }
+    }
 }

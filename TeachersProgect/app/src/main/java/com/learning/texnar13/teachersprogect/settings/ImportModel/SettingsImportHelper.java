@@ -4,8 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.learning.texnar13.teachersprogect.R;
+import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
-import com.learning.texnar13.teachersprogect.settings.ImportFieldData;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -54,8 +54,29 @@ public class SettingsImportHelper {// импорт данных
         }
 
 
-        // --- устанавливаем связи foreign key (внешний ключ) в считанных таблицах ---
+        // --- Проверяем связи foreign key (внешние ключи) в считанных таблицах ---
         returnData.addMessage("### Считываю связи между полученными таблицами");
+        returnData.checkForeignDependencies();
+
+        returnData.addMessage(
+                (returnData.criticalErrorFlag) ?
+                        "###Ошибка, связи на основе импортируемого файла не построены" :
+                        "###Успешно созданы связи на основе импортируемого файла"
+        );
+
+
+
+        // --- Пытаемся записать данные в тестовые таблицы ---
+        DataBaseOpenHelper db = new DataBaseOpenHelper(toContext);
+
+        db.testParsedData(returnData);
+
+        db.close();
+
+
+
+
+
 
 
         // после чтения возвращем готовый обьект
@@ -94,6 +115,7 @@ public class SettingsImportHelper {// импорт данных
 
     // текущий тег
     private static String currentTable = null;
+
     /**
      * Пасим 1 тег из xml
      */

@@ -35,17 +35,17 @@ dependencies {
     })
     implementation 'com.yandex.android:mobileads:2.130'
     implementation 'com.yandex.android:mobmetricalib:3.13.1'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'com.google.android.material:material:1.5.0'
     testImplementation 'junit:junit:4.13.2'
     implementation "com.github.SUPERCILEX.poi-android:poi:3.17"
     implementation "com.github.SUPERCILEX.poi-android:proguard:3.17"
 
     // неужели у меня так много методов?? разобраться с этим гребаным апаче пой
-    //implementation "androidx.multidex:multidex:2.0.1"// todo multiDex
+    //implementation "androidx.multidex:multidex:2.0.1"// todo multiDex, если надо
     //implementation files('/libs/poishadow-all.jar')
 
     // play market billing api
-    implementation "com.android.billingclient:billing:4.0.0"
+    implementation "com.android.billingclient:billing:4.1.0"
 }

@@ -136,6 +136,7 @@
                 style="@style/SettingsButtonSimpleStyle"
                 android:background="@drawable/base_background_button_round_orange"
                 android:text="@string/settings_activity_button_rate_us"
+                android:gravity="center"
                 android:textColor="@color/backgroundWhite" />
 
         </LinearLayout>

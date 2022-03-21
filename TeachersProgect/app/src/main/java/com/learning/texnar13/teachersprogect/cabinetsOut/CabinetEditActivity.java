@@ -93,7 +93,7 @@ public class CabinetEditActivity extends AppCompatActivity implements AcceptDial
             Cursor cabinetCursor = db.getCabinet(cabinetId);
             cabinetCursor.moveToFirst();
             startName = cabinetCursor.getString(cabinetCursor
-                    .getColumnIndex(SchoolContract.TableCabinets.COLUMN_NAME));
+                    .getColumnIndexOrThrow(SchoolContract.TableCabinets.COLUMN_NAME));
             cabinetCursor.close();
 
             // получаем список классов
@@ -105,10 +105,10 @@ public class CabinetEditActivity extends AppCompatActivity implements AcceptDial
             for (int classesI = 0; classesI < classesCursor.getCount(); classesI++) {
                 classesCursor.moveToNext();
                 // id классов
-                classesIds[classesI] = classesCursor.getLong(classesCursor.getColumnIndex(
+                classesIds[classesI] = classesCursor.getLong(classesCursor.getColumnIndexOrThrow(
                         SchoolContract.TableClasses.KEY_ROW_ID));
                 // имена классов
-                classesNames[classesI] = classesCursor.getString(classesCursor.getColumnIndex(
+                classesNames[classesI] = classesCursor.getString(classesCursor.getColumnIndexOrThrow(
                         SchoolContract.TableClasses.COLUMN_CLASS_NAME));
             }
             db.close();

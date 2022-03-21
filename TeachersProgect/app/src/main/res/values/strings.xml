@@ -41,8 +41,8 @@
     <string name="learners_classes_out_activity_dialog_title_edit_class">Group editing</string>
     <string name="learners_classes_out_activity_dialog_hint_class_name">Group name</string>
     <string name="learners_classes_out_activity_dialog_button_add">Add</string>
-    <string name="learners_classes_out_activity_dialog_button_delete_class">##Удалить</string>
-    <string name="learners_classes_out_activity_dialog_button_delete_class_ask">##Вы точно хотите удалить класс?</string>
+    <string name="learners_classes_out_activity_dialog_button_delete_class">Delete</string>
+    <string name="learners_classes_out_activity_dialog_button_delete_class_ask">Are you sure you want to delete the class?</string>
     <!-- тост -->
     <string name="learners_classes_out_activity_toast_empty_name">Group name not entered</string>
     <!-- подсказка на экране -->
@@ -60,25 +60,25 @@
     <string name="learners_and_grades_out_activity_text_add_learner">Add learner</string>
     <!-- меню сверху -->
     <string name="learners_and_grades_out_activity_menu_title_statistics">Statistics</string>
-    <string name="learners_and_grades_out_activity_menu_title_show_all">##Показать все</string>
-    <string name="learners_and_grades_out_activity_menu_title_learners_import">##Импортировать учеников и оценки</string>
-    <string name="learners_and_grades_out_activity_menu_title_learners_export">##Выгрузить учеников и оценки</string>
+    <string name="learners_and_grades_out_activity_menu_title_show_all">Show empty days</string>
+    <string name="learners_and_grades_out_activity_menu_title_learners_import">Upload students and grades</string>
+    <string name="learners_and_grades_out_activity_menu_title_learners_export">Download students and grades</string>
     <!-- диалоги -->
     <string name="learners_and_grades_out_activity_dialog_title_create_learner">Add a student</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_learner">Edit student</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_grade">Edit answers</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_name">First name</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_second_name">Last name</string>
-    <string name="learners_and_grades_out_activity_dialog_title_learner_info">##Информация:</string>
+    <string name="learners_and_grades_out_activity_dialog_title_learner_info">Information:</string>
     <string name="learners_and_grades_out_activity_dialog_button_add">+ Add</string>
     <string name="learners_and_grades_out_activity_dialog_button_create">Create</string>
     <string name="learners_and_grades_out_activity_dialog_button_change">Change</string>
     <string name="learners_and_grades_out_activity_dialog_title_choose_subject">Choose subject:</string>
     <string name="learners_and_grades_out_activity_dialog_subject_title_create">Create subject:</string>
-    <string name="learners_and_grades_out_activity_dialog_hint_subject_name">##Название:</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_subject_name">
+Title:</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson">lesson</string>
-    <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">##ДЗ и заметки:</string>
-    <string name="learners_and_grades_out_activity_dialog_hint_lesson_comment">##Комментарий…</string>
+    <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">Homework and Notes:</string>
     <!-- уведомления диалогов -->
     <string name="learners_and_grades_out_activity_dialog_toast_no_name">No first name entered</string>
     <string name="learners_and_grades_out_activity_dialog_toast_no_last_name">No last name entered</string>
@@ -89,7 +89,7 @@
 
 
     <!-- активность импорта экспорта оценок и учеников -->
-    <string name="learners_and_grades_import_give_me_a_reason">##Ну позязя :3 Ну дай рарешение!</string>
+    <string name="learners_and_grades_import_give_me_a_reason">Give permission to read files.</string>
 
 
     <!-- активность списка статистик -->
@@ -124,11 +124,11 @@
     <string name="title_activity_cabinets_out">My classrooms</string>
     <!-- тексты -->
     <string name="cabinets_out_activity_title_edit_cabinet">Edit classroom</string>
-    <string name="cabinets_out_activity_button_text_cabinet_title">##Название:</string>
-    <string name="cabinets_out_activity_button_text_seat_students">##Пересадить учеников:</string>
-    <string name="cabinets_out_activity_button_text_arrange_desks">##Переставить парты</string>
-    <string name="cabinets_out_activity_button_text_delete_cabinet">##Удалить кабинет</string>
-    <string name="cabinets_out_activity_title_delete_cabinet_ask">##Вы точно хотите удалить кабинет?</string>
+    <string name="cabinets_out_activity_button_text_cabinet_title">Title:</string>
+    <string name="cabinets_out_activity_button_text_seat_students">Move students:</string>
+    <string name="cabinets_out_activity_button_text_arrange_desks">Move desks</string>
+    <string name="cabinets_out_activity_button_text_delete_cabinet">Delete the cabinet</string>
+    <string name="cabinets_out_activity_title_delete_cabinet_ask">Are you sure you want to delete the classroom?</string>
     <!-- диалоги -->
     <string name="cabinets_out_activity_dialog_title_create_cabinet">New classroom</string>
     <string name="cabinets_out_activity_dialog_hint_cabinet_name">Title:</string>
@@ -148,13 +148,13 @@
     <!-- заголовок активности -->
     <string name="title_activity_schedule_month">Schedule</string>
     <!-- тексты -->
-    <string name="schedule_month_activity_current_day_title">##Сегодня:</string>
+    <string name="schedule_month_activity_current_day_title">Today:</string>
 
     <string name="schedule_month_activity_table_additional_title_empty">no lesson, add?</string>
     <string name="schedule_month_activity_table_additional_title_learners">Seat the students!</string>
     <string name="schedule_month_activity_table_additional_title_ready">Ready, start the lesson?</string>
     <!-- уведомления -->
-    <string name="schedule_month_activity_toast_learners">##У вас есть не рассаженные ученики</string>
+    <string name="schedule_month_activity_toast_learners">You have students who are not seated</string>
 
 
     <!-- активность редактора уроков-->
@@ -176,7 +176,7 @@
     <string name="lesson_redactor_activity_spinner_title_lesson" formatted="true">%2d-lesson %2d:%02d - %2d:%02d</string>
     <string name="lesson_redactor_activity_title_repeat">Repeat:</string>
     <string name="lesson_redactor_activity_toast_subject_not_select">No subject selected!</string>
-    <string name="lesson_redactor_activity_title_lesson_homework">##Заметки, д/з:</string>
+    <string name="lesson_redactor_activity_title_lesson_homework">Homework and Notes:</string>
     <!-- уведомления -->
     <string name="lesson_redactor_activity_text_learners_ready">Students are seated in this classroom.</string>
     <string name="lesson_redactor_activity_text_learners_not_ready">Students are not seated!</string>
@@ -216,7 +216,7 @@
 
     <!-- активность окончания урока-->
     <!-- заголовок активности -->
-    <string name="title_activity_lesson_list">##Lessons learned</string>
+    <string name="title_activity_lesson_list">Lesson results</string>
     <!-- диалоги -->
     <string name="lesson_list_activity_dialog_title">Edit answer</string>
     <!-- подсказка на экране -->
@@ -237,9 +237,9 @@
     <string name="settings_activity_button_remove_data">Remove all data</string>
     <string name="settings_activity_button_rate_us">Rate our app!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">Language: %s</string>
-    <string name="settings_activity_button_subscribe">##Стать спонсором</string>
-    <string name="settings_activity_button_save_data_copy">##Сохранить резервную копию</string>
-    <string name="settings_activity_button_load_data_copy">##Загрузить резервную копию</string>
+    <string name="settings_activity_button_subscribe">Become a sponsor</string>
+    <string name="settings_activity_button_save_data_copy">Save a backup</string>
+    <string name="settings_activity_button_load_data_copy">Upload a backup</string>
     <!-- уведомления -->
     <string name="settings_activity_toast_data_delete_success">Data deleted successfully!</string>
     <string name="settings_activity_toast_data_delete_falture">Was entered an incorrect number, the data is not removed</string>
@@ -249,14 +249,14 @@
     <string name="settings_activity_toast_grade_too_min">Too small value entered (it must be greater than 1)</string>
     <string name="settings_activity_toast_time_successfully_saved">Time parameters saved</string>
     <string name="settings_activity_toast_time_no_saved">Error, time parameters not saved</string>
-    <string name="settings_activity_data_export_theme" formatted="true">##Save copy from %s</string>
-    <string name="settings_activity_data_export_title">##Отправить через:</string>
-    <string name="settings_activity_data_import_title">##Select file to upload:</string>
-    <string name="settings_activity_data_import_message_incorrect_type">##Низя, низя! файл не того формата</string>
-    <string name="settings_activity_data_import_message_unrtedable_file">##Низя, низя! файл не прочесть…</string>
-    <string name="settings_activity_data_import_message_error_tag">\n ##Ошибка: </string>
-    <string name="settings_activity_data_import_message_read_success">\n\n##Файл успешно прочтён!</string>
-    <string name="settings_activity_data_import_message_read_error">\n\n##Чтение не завершено, в файле ошибки! (Вы можете копировать содержимое окна)</string>
+    <string name="settings_activity_data_export_theme" formatted="true">Backup from %s</string>
+    <string name="settings_activity_data_export_title">Send to:</string>
+    <string name="settings_activity_data_import_title">Select file:</string>
+    <string name="settings_activity_data_import_message_incorrect_type">Invalid file format. Supports .tadb files</string>
+    <string name="settings_activity_data_import_message_unrtedable_file">File cannot be read.</string>
+    <string name="settings_activity_data_import_message_error_tag">\nError:</string>
+    ?<string name="settings_activity_data_import_message_read_success">\n\n##Файл успешно прочтён!</string>
+    <string name="settings_activity_data_import_message_read_error">\n\nReading not finished, error in file!</string>
     <!-- диалоги -->
     <string name="settings_activity_dialog_delete_title">Are you sure you want to delete all data?</string>
     <string name="settings_activity_dialog_add_type_title">+ Add type</string>
@@ -265,48 +265,48 @@
     <string name="settings_activity_dialog_new_absent_type_long_title_hint">Type</string>
     <string name="settings_activity_dialog_new_absent_type_title_hint">Abbreviation</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty">Enter the name</string>
-    <string name="settings_activity_dialog_new_absent_type_toast_empty_short">##Введите сокращение</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_empty_short">Enter an abbreviation</string>
     <string name="settings_activity_dialog_delete_text_confirm_delete" formatted="true">Enter the number "%d" to confirm:</string>
     <string name="settings_activity_dialog_hint_number">NUMBER </string>
     <string name="settings_activity_dialog_button_remove_data">Delete</string>
     <string name="settings_activity_dialog_button_remove">Remove</string>
     <string name="settings_activity_dialog_edit_time_title">Change lessons time</string>
-    <string name="settings_activity_dialog_edit_time_button_add_lesson">##+ Добавить урок</string>
-    <string name="settings_activity_dialog_edit_time_toast_last_lesson_error">##Вы не можете создать урок после 23:58</string>
+    <string name="settings_activity_dialog_edit_time_button_add_lesson">+ Add a lesson</string>
+    <string name="settings_activity_dialog_edit_time_toast_last_lesson_error">You can\'t create a lesson after 23:58</string>
     <string name="settings_activity_dialog_hint_hour">HOUR</string>
     <string name="settings_activity_dialog_hint_minute">MIN</string>
     <string name="settings_activity_dialog_text_time_dot">.</string>
     <string name="settings_activity_dialog_text_time_colon">:</string>
     <string name="settings_activity_dialog_text_time_dash">—</string>
     <string name="settings_activity_dialog_edit_locale_title">Choose language:</string>
-    <string name="settings_activity_dialog_data_import_accept_title">##Результаты чтения файла:</string>
-    <string name="settings_activity_dialog_data_import_accept_button">##Импортировать данные</string>
+    <string name="settings_activity_dialog_data_import_accept_title">File reading results:</string>
+    <string name="settings_activity_dialog_data_import_accept_button">Upload data</string>
 
 
     <!-- активность рекламы спонсора -->
-    <string name="sponsor_activity_button_go_to_last_screen">##Попробовать премиум</string>
+    <string name="sponsor_activity_button_go_to_last_screen">Try Premium</string>
     <string name="sponsor_activity_title_app_name">Teacher\'s Assistant</string>
     <string name="sponsor_activity_title_tag">Premium</string>
-    <string name="sponsor_activity_title_screen_0">##Неограниченное количество уроков</string>
-    <string name="sponsor_activity_title_screen_1">##Никаких ограничений по символам (комментарий к уроку и к ученику любой длинны)</string>
-    <string name="sponsor_activity_title_screen_2">##Нет рекламы</string>
-    <string name="sponsor_activity_title_screen_3">##Сколько угодно типов пропусков и типов работы на уроке</string>
-    <string name="sponsor_activity_title_screen_4">##Импорт и экспорт данных</string>
-    <string name="sponsor_activity_title_screen_last">##Выберите подходящую для вас подписку:</string>
-    <string name="sponsor_activity_button_sub_month" formatted="true">##Ежемесячно: %s</string>
-    <string name="sponsor_activity_button_sub_year" formatted="true">##1 раз в год = %s</string>
-    <string name="sponsor_activity_text_free" formatted="true">##Бесплатно %d дней</string>
-    <string name="sponsor_activity_title_cancel_sub">##Вы можете отменить подписку в любое время</string>
-    <string name="sponsor_activity_title_promocode">##<u>Использовать промокод</u></string>
-    <string name="sponsor_activity_title_subs">##<u>Восстановить покупки</u></string>
-    <string name="sponsor_activity_button_my_subs">##Посмотреть мои подписки</string>
-    <string name="sponsor_activity_text_test_dz">##Тестовое дз для надписи, напиши здесь что-нибудь:)</string>
-    <string name="sponsor_activity_text_test_info">##Тестовая информация об ученике, напиши здесь что-нибудь</string>
+    <string name="sponsor_activity_title_screen_0">Unlimited number of lessons</string>
+    <string name="sponsor_activity_title_screen_1">Comment (to the lesson and to the student) of any length</string>
+    <string name="sponsor_activity_title_screen_2">No ads</string>
+    <string name="sponsor_activity_title_screen_3">Any number of types of absences and types of classwork</string>
+    <string name="sponsor_activity_title_screen_4">Import and export data</string>
+    <string name="sponsor_activity_title_screen_last">Choose the tariff that suits you:</string>
+    <string name="sponsor_activity_button_sub_month" formatted="true">Monthly: %s per month</string>
+    <string name="sponsor_activity_button_sub_year" formatted="true">then %s per year (%s per month)</string>
+    <string name="sponsor_activity_text_free" formatted="true">Free %d days</string>
+    <string name="sponsor_activity_title_cancel_sub">You can cancel your subscription at any time</string>
+    <string name="sponsor_activity_title_promocode"><u>Use a promo code</u></string>
+    <string name="sponsor_activity_title_subs"><u>Restore the purchases</u></string>
+    <string name="sponsor_activity_button_my_subs">View my subscriptions</string>
+    <string name="sponsor_activity_text_test_dz">White textbook, p. 7 ; workbook p. 24 4–17; don\'t forget to ask Angela.</string>
+    <string name="sponsor_activity_text_test_info">Mother: mrs Brown, phone +1123456890 Chemistry quarter will be 2, have her learn the table.</string>
 
-    <string name="sponsor_activity_text_error_send_purchase_request" formatted="true">##Ошибка отправки запроса на сервер: %d</string>
-    <string name="sponsor_activity_text_error_send_purchase_response" formatted="true">##Ошибка сервера покупка не выполнена: %d</string>
-    <string name="sponsor_activity_text_error_connection">##Нет связи с GooglePlay</string>
-    <string name="sponsor_activity_text_error_to_acknowledge">##Не могу отправить в плеймаркет ответ, что покупка прошла успешно. Просто зайдите в приложение позже, с пордключенным интернетом</string>
+    <string name="sponsor_activity_text_error_send_purchase_request" formatted="true">Error in sending request to server: %d</string>
+    <string name="sponsor_activity_text_error_send_purchase_response" formatted="true">Server error purchase failed: %d</string>
+    <string name="sponsor_activity_text_error_connection">No connection to Google Play</string>
+    <string name="sponsor_activity_text_error_to_acknowledge">Can\'t send a response to the Play Market that the purchase was successful. Open the app later, with the internet connected, and we will confirm it</string>
 
 
     <!-- база данных -->

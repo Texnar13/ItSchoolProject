@@ -30,9 +30,9 @@ final class GraduationSettings {
             typesCursor.moveToNext();
             // добавляем новый тип во внутренний список
             answer.answersTypes[typeI] = new AnswersType(
-                    typesCursor.getLong(typesCursor.getColumnIndex(
+                    typesCursor.getLong(typesCursor.getColumnIndexOrThrow(
                             SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID)),
-                    typesCursor.getString(typesCursor.getColumnIndex(
+                    typesCursor.getString(typesCursor.getColumnIndexOrThrow(
                             SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE))
             );
         }
@@ -45,11 +45,11 @@ final class GraduationSettings {
             typesAbsCursor.moveToNext();
             // добавляем новый тип во внутренний список
             answer.absentTypes[typeI] = new AbsentType(
-                    typesAbsCursor.getLong(typesAbsCursor.getColumnIndex(
+                    typesAbsCursor.getLong(typesAbsCursor.getColumnIndexOrThrow(
                             SchoolContract.TableLearnersAbsentTypes.KEY_ROW_ID)),
-                    typesAbsCursor.getString(typesAbsCursor.getColumnIndex(
+                    typesAbsCursor.getString(typesAbsCursor.getColumnIndexOrThrow(
                             SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_NAME)),
-                    typesAbsCursor.getString(typesAbsCursor.getColumnIndex(
+                    typesAbsCursor.getString(typesAbsCursor.getColumnIndexOrThrow(
                             SchoolContract.TableLearnersAbsentTypes.COLUMN_LEARNERS_ABSENT_TYPE_LONG_NAME))
             );
         }

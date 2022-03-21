@@ -41,8 +41,8 @@
     <string name="learners_classes_out_activity_dialog_title_edit_class">编辑班级</string>
     <string name="learners_classes_out_activity_dialog_hint_class_name">班级名称</string>
     <string name="learners_classes_out_activity_dialog_button_add">添加</string>
-    <string name="learners_classes_out_activity_dialog_button_delete_class">##Удалить</string>
-    <string name="learners_classes_out_activity_dialog_button_delete_class_ask">##Вы точно хотите удалить класс?</string>
+    <string name="learners_classes_out_activity_dialog_button_delete_class">删除</string>
+    <string name="learners_classes_out_activity_dialog_button_delete_class_ask">确定要删除该班级吗？</string>
     <!-- тост -->
     <string name="learners_classes_out_activity_toast_empty_name">沒有輸入班級名稱</string>
     <!-- подсказка на экране -->
@@ -60,25 +60,24 @@
     <string name="learners_and_grades_out_activity_text_add_learner">添加学生</string>
     <!-- меню сверху -->
     <string name="learners_and_grades_out_activity_menu_title_statistics">统计</string>
-    <string name="learners_and_grades_out_activity_menu_title_show_all">##Показать все</string>
-    <string name="learners_and_grades_out_activity_menu_title_learners_import">##Импортировать учеников и оценки</string>
-    <string name="learners_and_grades_out_activity_menu_title_learners_export">##Выгрузить учеников и оценки</string>
+    <string name="learners_and_grades_out_activity_menu_title_show_all">显示空日</string>
+    <string name="learners_and_grades_out_activity_menu_title_learners_import">上传学生和分数</string>
+    <string name="learners_and_grades_out_activity_menu_title_learners_export">下载学生和分数</string>
     <!-- диалоги -->
     <string name="learners_and_grades_out_activity_dialog_title_create_learner">添加学生</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_learner">编辑学生</string>
     <string name="learners_and_grades_out_activity_dialog_title_edit_grade">编辑分数</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_name">名字</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_second_name">姓氏</string>
-    <string name="learners_and_grades_out_activity_dialog_title_learner_info">##Информация:</string>
+    <string name="learners_and_grades_out_activity_dialog_title_learner_info">信息:</string>
     <string name="learners_and_grades_out_activity_dialog_button_add">+ 添加</string>
     <string name="learners_and_grades_out_activity_dialog_button_change">编辑</string>
     <string name="learners_and_grades_out_activity_dialog_button_create">创造</string>
-    <string name="learners_and_grades_out_activity_dialog_title_choose_subject">选择学科:</string>
-    <string name="learners_and_grades_out_activity_dialog_subject_title_create">输入学科名称:##Создать предмет:</string>
-    <string name="learners_and_grades_out_activity_dialog_hint_subject_name">名称学科##Название:</string>
+    <string name="learners_and_grades_out_activity_dialog_title_choose_subject">选择学:</string>
+    <string name="learners_and_grades_out_activity_dialog_subject_title_create">创造学科</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_subject_name">名称学科</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson">课</string>
-    <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">##ДЗ и заметки:</string>
-    <string name="learners_and_grades_out_activity_dialog_hint_lesson_comment">##Комментарий…</string>
+    <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">家庭作业和笔记:</string>
     <!-- уведомления диалогов -->
     <string name="learners_and_grades_out_activity_dialog_toast_no_name">没有输入名字</string>
     <string name="learners_and_grades_out_activity_dialog_toast_no_last_name">没有输入姓氏</string>
@@ -89,7 +88,7 @@
 
 
     <!-- активность импорта экспорта оценок и учеников -->
-    <string name="learners_and_grades_import_give_me_a_reason">##Ну позязя :3 Ну дай рарешение!</string>
+    <string name="learners_and_grades_import_give_me_a_reason">授予读取文件的权限</string>
 
 
     <!-- активность списка статистик -->
@@ -124,11 +123,11 @@
     <string name="title_activity_cabinets_out">课堂</string>
     <!-- тексты -->
     <string name="cabinets_out_activity_title_edit_cabinet">编辑课堂</string>
-    <string name="cabinets_out_activity_button_text_cabinet_title">##Название:</string>
-    <string name="cabinets_out_activity_button_text_seat_students">##Пересадить учеников:</string>
-    <string name="cabinets_out_activity_button_text_arrange_desks">##Переставить парты</string>
-    <string name="cabinets_out_activity_button_text_delete_cabinet">##Удалить кабинет</string>
-    <string name="cabinets_out_activity_title_delete_cabinet_ask">##Вы точно хотите удалить кабинет?</string>
+    <string name="cabinets_out_activity_button_text_cabinet_title">名称</string>
+    <string name="cabinets_out_activity_button_text_seat_students">使学生换坐位</string>
+    <string name="cabinets_out_activity_button_text_arrange_desks">重新布置课桌</string>
+    <string name="cabinets_out_activity_button_text_delete_cabinet">删除课堂</string>
+    <string name="cabinets_out_activity_title_delete_cabinet_ask">确定要删除课堂吗？</string>
     <!-- диалоги -->
     <string name="cabinets_out_activity_dialog_title_create_cabinet">新课堂</string>
     <string name="cabinets_out_activity_dialog_hint_cabinet_name">新课堂:</string>
@@ -148,13 +147,13 @@
     <!-- заголовок активности -->
     <string name="title_activity_schedule_month">时间表</string>
     <!-- тексты -->
-    <string name="schedule_month_activity_current_day_title">##Сегодня:</string>
+    <string name="schedule_month_activity_current_day_title">今天：</string>
 
     <string name="schedule_month_activity_table_additional_title_empty">没有教训，添加？</string>
     <string name="schedule_month_activity_table_additional_title_learners">给学生安排坐位!</string>
     <string name="schedule_month_activity_table_additional_title_ready">万事俱备。开始?</string>
     <!-- уведомления -->
-    <string name="schedule_month_activity_toast_learners">##У вас есть не рассаженные ученики</string>
+    <string name="schedule_month_activity_toast_learners">你有非座位学生</string>
 
 
     <!-- активность редактора уроков-->
@@ -176,7 +175,7 @@
     <string name="lesson_redactor_activity_spinner_title_lesson" formatted="true">%2d-课 %2d:%02d - %2d:%02d</string>
     <string name="lesson_redactor_activity_title_repeat">课的重复性:</string>
     <string name="lesson_redactor_activity_toast_subject_not_select">课不选择！</string>
-    <string name="lesson_redactor_activity_title_lesson_homework">##Заметки, д/з:</string>
+    <string name="lesson_redactor_activity_title_lesson_homework">家庭作业和笔记:</string>
     <!-- уведомления -->
     <string name="lesson_redactor_activity_text_learners_ready">学生们坐在这间课堂里.</string>
     <string name="lesson_redactor_activity_text_learners_not_ready">学生没有坐在教室里。</string>
@@ -216,7 +215,7 @@
 
     <!-- активность окончания урока-->
     <!-- заголовок активности -->
-    <string name="title_activity_lesson_list">##课的结果</string>
+    <string name="title_activity_lesson_list">课的结果</string>
     <!-- диалоги -->
     <string name="lesson_list_activity_dialog_title">编辑分数</string>
     <!-- подсказка на экране -->
@@ -237,9 +236,9 @@
     <string name="settings_activity_button_remove_data">删除所有数据</string>
     <string name="settings_activity_button_rate_us">请评价我们的应用!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">语言: %s</string>
-    <string name="settings_activity_button_subscribe">##Стать спонсором</string>
-    <string name="settings_activity_button_save_data_copy">##Сохранить резервную копию</string>
-    <string name="settings_activity_button_load_data_copy">##Загрузить резервную копию</string>
+    <string name="settings_activity_button_subscribe">成为赞助商</string>
+    <string name="settings_activity_button_save_data_copy">保存备份</string>
+    <string name="settings_activity_button_load_data_copy">下载备份</string>
     <!-- уведомления -->
     <string name="settings_activity_toast_data_delete_success">所有数据删除成功</string>
     <string name="settings_activity_toast_data_delete_falture">你输入错数了, 数据不会被删除。</string>
@@ -249,14 +248,14 @@
     <string name="settings_activity_toast_grade_too_min">输入的值太小（必须至少为1)</string>
     <string name="settings_activity_toast_time_successfully_saved">时间保存了。</string>
     <string name="settings_activity_toast_time_no_saved">错误，时间未保存。</string>
-    <string name="settings_activity_data_export_theme" formatted="true">##Save copy from %s</string>
-    <string name="settings_activity_data_export_title">##Отправить через:</string>
-    <string name="settings_activity_data_import_title">##Select file to upload:</string>
-    <string name="settings_activity_data_import_message_incorrect_type">##Низя, низя! файл не того формата</string>
-    <string name="settings_activity_data_import_message_unrtedable_file">##Низя, низя! файл не прочесть…</string>
-    <string name="settings_activity_data_import_message_error_tag">\n ##Ошибка: </string>
-    <string name="settings_activity_data_import_message_read_success">\n\n##Файл успешно прочтён!</string>
-    <string name="settings_activity_data_import_message_read_error">\n\n##Чтение не завершено, в файле ошибки! (Вы можете копировать содержимое окна)</string>
+    <string name="settings_activity_data_export_theme" formatted="true">%s起备份</string>
+    <string name="settings_activity_data_export_title">发送到</string>
+    <string name="settings_activity_data_import_title">选择文件：</string>
+    <string name="settings_activity_data_import_message_incorrect_type">文件格式不正确。 .支持adb文件</string>
+    <string name="settings_activity_data_import_message_unrtedable_file">文件无法读取。</string>
+    <string name="settings_activity_data_import_message_error_tag">\n 错误:</string>
+    ?<string name="settings_activity_data_import_message_read_success">\n\n##Файл успешно прочтён!</string>
+    <string name="settings_activity_data_import_message_read_error">\n\n读出未完成，文件有错误!</string>
     <!-- диалоги -->
     <string name="settings_activity_dialog_delete_title">您确定要删除所有应用程序数据吗？</string>
     <string name="settings_activity_dialog_add_type_title">+ 添加课的工作类型</string>
@@ -265,48 +264,48 @@
     <string name="settings_activity_dialog_new_absent_type_long_title_hint">类型</string>
     <string name="settings_activity_dialog_new_absent_type_title_hint">代表符号</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty">输入名称</string>
-    <string name="settings_activity_dialog_new_absent_type_toast_empty_short">##Введите сокращение</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_empty_short">输入缩写</string>
     <string name="settings_activity_dialog_delete_text_confirm_delete" formatted="true">输入要确认的数字 "%d":</string>
     <string name="settings_activity_dialog_hint_number">数字</string>
     <string name="settings_activity_dialog_button_remove_data">删除</string>
     <string name="settings_activity_dialog_button_remove">删除</string>
     <string name="settings_activity_dialog_edit_time_title">上课时间</string>
-    <string name="settings_activity_dialog_edit_time_button_add_lesson">##+ Добавить урок</string>
-    <string name="settings_activity_dialog_edit_time_toast_last_lesson_error">##Вы не можете создать урок после 23:58</string>
+    <string name="settings_activity_dialog_edit_time_button_add_lesson">+ 添加课程</string>
+    <string name="settings_activity_dialog_edit_time_toast_last_lesson_error">你不能在23:58之后创建课</string>
     <string name="settings_activity_dialog_hint_hour">点</string>
     <string name="settings_activity_dialog_hint_minute">分</string>
     <string name="settings_activity_dialog_text_time_dot">.</string>
     <string name="settings_activity_dialog_text_time_colon">:</string>
     <string name="settings_activity_dialog_text_time_dash">—</string>
     <string name="settings_activity_dialog_edit_locale_title">选择语言</string>
-    <string name="settings_activity_dialog_data_import_accept_title">##Результаты чтения файла:</string>
-    <string name="settings_activity_dialog_data_import_accept_button">##Импортировать данные</string>
+    <string name="settings_activity_dialog_data_import_accept_title">文件读取结果:</string>
+    <string name="settings_activity_dialog_data_import_accept_button">上传数据</string>
 
 
     <!-- активность рекламы спонсора -->
-    <string name="sponsor_activity_button_go_to_last_screen">##Попробовать премиум</string>
+    <string name="sponsor_activity_button_go_to_last_screen">试用高级版</string>
     <string name="sponsor_activity_title_app_name">Teacher\'s Assistant</string>
     <string name="sponsor_activity_title_tag">Premium</string>
-    <string name="sponsor_activity_title_screen_0">##Неограниченное количество уроков</string>
-    <string name="sponsor_activity_title_screen_1">##Никаких ограничений по символам (комментарий к уроку и к ученику любой длинны)</string>
-    <string name="sponsor_activity_title_screen_2">##Нет рекламы</string>
-    <string name="sponsor_activity_title_screen_3">##Сколько угодно типов пропусков и типов работы на уроке</string>
-    <string name="sponsor_activity_title_screen_4">##Импорт и экспорт данных</string>
-    <string name="sponsor_activity_title_screen_last">##Выберите подходящую для вас подписку:</string>
-    <string name="sponsor_activity_button_sub_month" formatted="true">##1 раз в месяц = %s</string>
-    <string name="sponsor_activity_button_sub_year" formatted="true">##1 раз в год = %s</string>
-    <string name="sponsor_activity_text_free" formatted="true">##Бесплатно %d дней</string>
-    <string name="sponsor_activity_title_cancel_sub">##Вы можете отменить подписку в любое время</string>
-    <string name="sponsor_activity_title_promocode">##<u>Использовать промокод</u></string>
-    <string name="sponsor_activity_title_subs">##<u>Восстановить покупки</u></string>
-    <string name="sponsor_activity_button_my_subs">##Посмотреть мои подписки</string>
-    <string name="sponsor_activity_text_test_dz">##Тестовое дз для надписи, напиши здесь что-нибудь:)</string>
-    <string name="sponsor_activity_text_test_info">##Тестовая информация об ученике, напиши здесь что-нибудь</string>
+    <string name="sponsor_activity_title_screen_0">无限数量的课</string>
+    <string name="sponsor_activity_title_screen_1">任何长度的评论（对课和学生）</string>
+    <string name="sponsor_activity_title_screen_2">没有广告</string>
+    <string name="sponsor_activity_title_screen_3">任何数量的缺勤类型和课的课的工作类</string>
+    <string name="sponsor_activity_title_screen_4">数据导入和导出</string>
+    <string name="sponsor_activity_title_screen_last">选择适合您的资费:</string>
+    <string name="sponsor_activity_button_sub_month" formatted="true">每月%s</string>
+    <string name="sponsor_activity_button_sub_year" formatted="true">然后每年%s(每月%s)</string>
+    <string name="sponsor_activity_text_free" formatted="true">免费%d天</string>
+    <string name="sponsor_activity_title_cancel_sub">你可以在任何时候取消你的订阅</string>
+    <string name="sponsor_activity_title_promocode"><u>使用促销代码</u></string>
+    <string name="sponsor_activity_title_subs"><u>恢复我的购买</u></string>
+    <string name="sponsor_activity_button_my_subs">查看我的订阅</string>
+    <string name="sponsor_activity_text_test_dz">白色教科书，页 7; 工作簿 页24 4-17；别忘了问陈志强。</string>
+    <string name="sponsor_activity_text_test_info">母亲：布朗夫人，电话 +86123456890</string>
 
-    <string name="sponsor_activity_text_error_send_purchase_request" formatted="true">##Ошибка отправки запроса на сервер: %d</string>
-    <string name="sponsor_activity_text_error_send_purchase_response" formatted="true">##Ошибка сервера покупка не выполнена: %d</string>
-    <string name="sponsor_activity_text_error_connection">##Нет связи с GooglePlay</string>
-    <string name="sponsor_activity_text_error_to_acknowledge">##Не могу отправить в плеймаркет ответ, что покупка прошла успешно. Просто зайдите в приложение позже, с пордключенным интернетом</string>
+    <string name="sponsor_activity_text_error_send_purchase_request" formatted="true">向服务器发送请求时出错。%d</string>
+    <string name="sponsor_activity_text_error_send_purchase_response" formatted="true">服务器错误购买失败: %d</string>
+    <string name="sponsor_activity_text_error_connection">未连接到 Google Play</string>
+    <string name="sponsor_activity_text_error_to_acknowledge">无法向Play Market发送购买成功的响应。稍后打开应用程序，连接互联网，我们将确认购买。</string>
 
 
     <!-- база данных -->

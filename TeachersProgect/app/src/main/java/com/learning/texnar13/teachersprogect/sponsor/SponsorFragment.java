@@ -3,7 +3,6 @@ package com.learning.texnar13.teachersprogect.sponsor;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.learning.texnar13.teachersprogect.R;
+
+import java.util.Locale;
 
 // фрагмент последнего слайда
 public class SponsorFragment extends Fragment {
@@ -89,12 +90,19 @@ public class SponsorFragment extends Fragment {
                 buttonParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.double_margin);
             container.addView(button, buttonParams);
             // выставляем основной текст
-            ((TextView) button.findViewById(R.id.sponsor_activity_screen_final_button_title)).setText(getResources().getString(
-                    (loadedPriceList[priceItemI].subscriptionPeriodType == LoadedPrice.SUBSCRIPTION_PERIOD_MONTH)
-                            ? (R.string.sponsor_activity_button_sub_month)
-                            : (R.string.sponsor_activity_button_sub_year),
-                    loadedPriceList[priceItemI].price
-            ));
+            ((TextView) button.findViewById(R.id.sponsor_activity_screen_final_button_title)).setText(
+
+                    (loadedPriceList[priceItemI].subscriptionPeriodType == LoadedPrice.SUBSCRIPTION_PERIOD_MONTH) ?
+                            (getResources().getString(
+                                    R.string.sponsor_activity_button_sub_month,
+                                    loadedPriceList[priceItemI].price
+                            )) :
+                            (getResources().getString(
+                                    R.string.sponsor_activity_button_sub_year,
+                                    loadedPriceList[priceItemI].price,
+                                    String.format(Locale.getDefault(), "%.2f", loadedPriceList[priceItemI].payValue / 12)
+                            ))
+            );
 
             // нажатие на кнопку
             int finalI = priceItemI;

@@ -69,9 +69,6 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements
                 .setText(R.string.title_activity_learners_classes_out);
 
 
-        // вертикальная ориентация
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -119,10 +116,10 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements
             learnersClass.moveToPosition(i);
             //получаем id класса
             learnersClassesId[i] = learnersClass.getLong(
-                    learnersClass.getColumnIndex(SchoolContract.TableClasses.KEY_ROW_ID)
+                    learnersClass.getColumnIndexOrThrow(SchoolContract.TableClasses.KEY_ROW_ID)
             );
             classesNames[i] = learnersClass.getString(
-                    learnersClass.getColumnIndex(SchoolContract.TableClasses.COLUMN_CLASS_NAME)
+                    learnersClass.getColumnIndexOrThrow(SchoolContract.TableClasses.COLUMN_CLASS_NAME)
             );
         }
         //заканчиваем работу
@@ -222,7 +219,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements
                 //создаем обьект с данными
                 Bundle args = new Bundle();
                 args.putString("name", classCursor.getString(
-                        classCursor.getColumnIndex(
+                        classCursor.getColumnIndexOrThrow(
                                 SchoolContract.TableClasses.COLUMN_CLASS_NAME)
                 ));
                 //данные диалогу
