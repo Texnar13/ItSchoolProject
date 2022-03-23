@@ -231,6 +231,8 @@ Title:</string>
     <string name="settings_activity_title_grades_type">Answers types</string>
     <string name="settings_activity_title_absent_type">Types of absence</string>
     <string name="settings_activity_title_colored_grades">Colored grades in table</string>
+    <string name="settings_activity_title_silent_lesson">##Отключать звук пока открыт урок</string>
+    <string name="settings_activity_toast_silent_lesson">##Найдите в списке приложение "Помощник учителя"</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">Max. answers count: %d</string>
     <string name="settings_activity_button_edit_time">Edit lessons time</string>

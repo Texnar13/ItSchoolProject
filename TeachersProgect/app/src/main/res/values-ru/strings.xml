@@ -231,6 +231,8 @@
     <string name="settings_activity_title_grades_type">Типы работы на уроке</string>
     <string name="settings_activity_title_absent_type">Типы отсутствия</string>
     <string name="settings_activity_title_colored_grades">Цветные оценки</string>
+    <string name="settings_activity_title_silent_lesson">##Отключать звук пока открыт урок</string>
+    <string name="settings_activity_toast_silent_lesson">##Найдите в списке приложение "Помощник учителя"</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">Макс. балл/ число ответов: %d</string>
     <string name="settings_activity_button_edit_time">Время уроков</string>

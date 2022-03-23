@@ -2,6 +2,7 @@ package com.learning.texnar13.teachersprogect.settings;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +46,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     TextView maxGradeText;
     boolean isColoredGrades;
     ImageView coloredGradesSwitch;
+    ImageView silentLessonSwitch;
     // межстраничный баннер открывающийся при выходе из настроек
     com.yandex.mobile.ads.InterstitialAd settingsBack;
 
@@ -196,6 +198,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         // экспорт и импорт данных
         findViewById(R.id.activity_settings_export_all_data_button).setOnClickListener(this);
         findViewById(R.id.activity_settings_import_all_data_button).setOnClickListener(this);
+        // беззвучный режим на уроке
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            findViewById(R.id.activity_settings_lesson_silent_mode_container).setOnClickListener(this);
         // цветные оценки
         findViewById(R.id.activity_settings_are_grades_colored_container).setOnClickListener(this);
         // удаление данных
@@ -245,6 +250,23 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         db.close();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // -- настройка тихого урока при переходе на эту активность
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // получаем информацию о разрешениях
+            NotificationManager notificationManager =
+                    (NotificationManager) SettingsActivity.this.getSystemService(Context.NOTIFICATION_SERVICE);
+            // ставим переключатель в состояние из менеджера
+            silentLessonSwitch = findViewById(R.id.activity_settings_lesson_silent_mode_switch);
+            silentLessonSwitch.setClickable(false);
+            silentLessonSwitch.setImageResource(
+                    (notificationManager.isNotificationPolicyAccessGranted()) ?
+                            (R.drawable.test_switch_4) : (R.drawable.test_switch_0));
+        }
+    }
 
     // =================================== обработка всех кнопок ===================================
     @Override
@@ -378,6 +400,23 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             typesDialogFragment.setArguments(args);
             // запуск
             typesDialogFragment.show(getSupportFragmentManager(), "editGradesTypesDialogFragment");
+        }
+        // беззвучный режим на уроке
+        else if (vId == R.id.activity_settings_lesson_silent_mode_container) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // получаем информацию о разрешениях
+                NotificationManager notificationManager =
+                        (NotificationManager) SettingsActivity.this.getSystemService(Context.NOTIFICATION_SERVICE);
+                // показываем диалог, где можно редактировать разрешения
+                startActivity(new Intent(
+                            android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+                // говорим пользователю что ему там делать вообще
+                Toast.makeText(getApplicationContext(),
+                        R.string.settings_activity_toast_silent_lesson,
+                        Toast.LENGTH_LONG).show();
+                // https://stackoverflow.com/questions/11699603/is-it-possible-to-turn-off-the-silent-mode-programmatically-in-android
+                // https://stackoverflow.com/questions/39151453/in-android-7-api-level-24-my-app-is-not-allowed-to-mute-phone-set-ringer-mode
+            }
         }
         // цветные оценки
         else if (vId == R.id.activity_settings_are_grades_colored_container) {

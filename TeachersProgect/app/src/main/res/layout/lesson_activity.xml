@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/backgroundWhite"
-    tools:context="com.learning.texnar13.teachersprogect.lesson.LessonActivity">
+    android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/activity_lesson_room_layout"
+        android:id="@+id/activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"/>
+        android:background="@color/backgroundWhite"
+        tools:context="com.learning.texnar13.teachersprogect.lesson.LessonActivity">
 
-    <include layout="@layout/base_toolbar_blue"/>
+        <RelativeLayout
+            android:id="@+id/activity_lesson_room_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" />
 
-</RelativeLayout>
+        <include layout="@layout/base_toolbar_blue" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/lesson_activity_bottomsheet"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

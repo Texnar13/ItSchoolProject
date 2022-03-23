@@ -230,6 +230,8 @@
     <string name="settings_activity_title_grades_type">课的工作类型</string>
     <string name="settings_activity_title_absent_type">缺席的类型</string>
     <string name="settings_activity_title_colored_grades">颜色分数</string>
+    <string name="settings_activity_title_silent_lesson">##Отключать звук пока открыт урок</string>
+    <string name="settings_activity_toast_silent_lesson">##Найдите в списке приложение "Помощник учителя"</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">量分数/ 最高得分: %d</string>
     <string name="settings_activity_button_edit_time">上课时间</string>

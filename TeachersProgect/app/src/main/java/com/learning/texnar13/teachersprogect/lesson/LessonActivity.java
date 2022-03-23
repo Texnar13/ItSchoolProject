@@ -1,27 +1,35 @@
 package com.learning.texnar13.teachersprogect.lesson;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
@@ -186,9 +194,58 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                         | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             }
 
-
             // для того, чтобы векторные изображения созданные в коде отображались нормально
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+
+            // события происходящие с выдвигающейся с низу менюшкой
+            // обращаемся к вью, как к элементу с поведением bottomSheet
+            BottomSheetBehavior<LinearLayout> bottomSheetBehavior =
+                    BottomSheetBehavior.from(findViewById(R.id.activity_lesson_bottom_sheet));
+
+            final FrameLayout titleBackground = findViewById(R.id.activity_lesson_bottom_sheet_title_background);
+            bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                @Override
+                public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                    if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+
+                    }
+                }
+
+                @Override
+                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                    titleBackground.animate().alpha(slideOffset).setDuration(0).start();
+
+
+                    /*
+                    * .setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+
+                        }
+                    })
+                    *
+                    *
+                    * */
+
+                }
+            });
+
         }
 
 
@@ -231,6 +288,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                         ((lessonBaseData.cabinetName.length() > 4) ? (lessonBaseData.cabinetName.substring(0, 3) + "…") : (lessonBaseData.cabinetName))
         );
     }
+
 
     // начальная подгрузка данных из бд
     void initData(DataBaseOpenHelper db) {
@@ -358,6 +416,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 
+    static int ringerMode = -1;
+
     // при каждом показе экрана или если экран перекрыли, а потом показали еще раз
     @Override
     protected void onResume() {
@@ -372,8 +432,39 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
         // и выводим все
         outAll();
+
+
+        // настройка тихого урока
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            NotificationManager notificationManager =
+                    (NotificationManager) LessonActivity.this.getSystemService(Context.NOTIFICATION_SERVICE);
+            // если настройка включена
+            if (notificationManager.isNotificationPolicyAccessGranted()) {
+                AudioManager am = (AudioManager) getBaseContext().getSystemService(LessonActivity.AUDIO_SERVICE);
+                // сохраняем старую настройку чтобы при выходе из активности вернуть её
+                ringerMode = am.getRingerMode();
+                // убираем звук
+                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            }
+        }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // настройка тихого урока
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            NotificationManager notificationManager =
+                    (NotificationManager) LessonActivity.this.getSystemService(Context.NOTIFICATION_SERVICE);
+            // если настройка включена
+            if (ringerMode != -1 && notificationManager.isNotificationPolicyAccessGranted()) {
+                AudioManager am = (AudioManager) getBaseContext().getSystemService(LessonActivity.AUDIO_SERVICE);
+                // возвращаем старую настройку
+                am.setRingerMode(ringerMode);
+            }
+        }
+    }
 
     // обновляем трансформацию (размеры и отступы) кабинета
     void updateCabinetTransformFromDB(DataBaseOpenHelper db) {
@@ -738,7 +829,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                                 if (deskUnit.seatingLearnerNumber[placeI] != -1) {
                                     learnersAndTheirGrades[deskUnit.seatingLearnerNumber[placeI]].viewData
                                             .updateSizesForZoom(multiplier, placeI);
-                                 }
+                                }
                             }
 
                         }
