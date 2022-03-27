@@ -186,7 +186,7 @@
                 android:gravity="bottom"
                 android:orientation="horizontal">
 
-                <com.yandex.mobile.ads.AdView
+                <com.yandex.mobile.ads.banner.BannerAdView
                     android:id="@+id/activity_lesson_redactor_banner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

@@ -42,7 +42,9 @@ import com.learning.texnar13.teachersprogect.learnersClassesOut.LearnersClassesO
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity;
 import com.learning.texnar13.teachersprogect.settings.SettingsActivity;
-import com.yandex.mobile.ads.AdSize;
+import com.yandex.mobile.ads.banner.AdSize;
+import com.yandex.mobile.ads.banner.BannerAdView;
+import com.yandex.mobile.ads.common.AdRequest;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -242,13 +244,12 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
 
     // показ раеламы
     void loadAdd() {
-        com.yandex.mobile.ads.AdView mAdView = findViewById(R.id.start_screen_ad_banner);
+        // создаем рекламу яндекса внизу календаря
+        BannerAdView mAdView = findViewById(R.id.start_screen_ad_banner);
         mAdView.setBlockId(getResources().getString(R.string.banner_id_start_screen));
         mAdView.setAdSize(AdSize.BANNER_320x50);
-        // Создание объекта таргетирования рекламы.
-        final com.yandex.mobile.ads.AdRequest adRequest = new com.yandex.mobile.ads.AdRequest.Builder().build();
-        // Загрузка объявления.
-        mAdView.loadAd(adRequest);
+        // Создание объекта таргетирования рекламы и загрузка объявления.
+        mAdView.loadAd(new AdRequest.Builder().build());
     }
 
 

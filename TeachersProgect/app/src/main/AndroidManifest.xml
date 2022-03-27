@@ -8,8 +8,10 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         tools:node="replace" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission
-        android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+        android:name="com.google.android.gms.permission.AD_ID"
+        tools:node="remove" />
 
     <application
         android:name=".MyApplication"
@@ -19,9 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity
-            android:name=".gradesPeriods.GradesPeriodsActivity"
-            android:exported="true" />
+
+        <!-- Отключение учета контекстных данных для всего приложения -->
+        <meta-data
+            android:name="@string/yandex_ads_context"
+            android:value="@string/yandex_ads_context_do_not_parse" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -32,6 +37,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider> <!-- content://com.texnar13.exel2 -->
+
+        <activity
+            android:name=".gradesPeriods.GradesPeriodsActivity"
+            android:exported="true" />
         <activity
             android:name=".learnersAndGradesOut.LearnersAndGradesImportActivity"
             android:exported="true" />

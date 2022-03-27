@@ -259,7 +259,7 @@
             </RelativeLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.yandex.mobile.ads.AdView
+        <com.yandex.mobile.ads.banner.BannerAdView
             android:id="@+id/start_screen_ad_banner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

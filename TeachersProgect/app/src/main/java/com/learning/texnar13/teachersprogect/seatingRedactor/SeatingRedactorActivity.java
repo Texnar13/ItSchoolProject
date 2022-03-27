@@ -206,7 +206,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
+            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite, getTheme()));
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 

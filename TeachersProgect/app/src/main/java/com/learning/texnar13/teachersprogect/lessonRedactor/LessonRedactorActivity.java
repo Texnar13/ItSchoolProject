@@ -25,7 +25,9 @@ import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogInterf
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
-import com.yandex.mobile.ads.AdSize;
+import com.yandex.mobile.ads.banner.AdSize;
+import com.yandex.mobile.ads.banner.BannerAdView;
+import com.yandex.mobile.ads.common.AdRequest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -106,15 +108,15 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                         getResources().getDimensionPixelOffset(R.dimen.forth_margin);
 
         // --- загрузка рекламы яндекса ---
-        com.yandex.mobile.ads.AdView mAdView = findViewById(R.id.activity_lesson_redactor_banner);
+        BannerAdView mAdView = findViewById(R.id.activity_lesson_redactor_banner);
         mAdView.setBlockId(getResources().getString(R.string.banner_id_lesson_redactor));
         mAdView.setAdSize(AdSize.BANNER_320x100);
-        // Загрузка объявления.
-        final com.yandex.mobile.ads.AdRequest adRequest = new com.yandex.mobile.ads.AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        // Создание объекта таргетирования рекламы и загрузка объявления.
+        mAdView.loadAd(new AdRequest.Builder().build());
 
 
-        // если редактор закроется, ставим по умолчанию сообщение, что ничего не поменялось
+        // На случай если пользователь сразу закроет редактор,
+        // ставим по умолчанию сообщение, что ничего не поменялось
         setResult(LESSON_REDACTOR_RESULT_CODE_CANCELED, new Intent());
 
         // ---------------------------------- получение аргументов ---------------------------------

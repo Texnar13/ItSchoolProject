@@ -14,6 +14,8 @@
 
         <item name="android:actionMenuTextAppearance">@style/MyActionBar.MenuTextStyle</item>
 
+        <!--item name="bottomSheetStyle">@style/BottomSheetDialogTheme</item-->
+
     </style>
 
 
@@ -54,6 +56,17 @@
 
 
         <item name="android:actionMenuTextAppearance">@style/MyActionBar.MenuTextStyle</item>
+    </style>
+
+
+    <!-- стиль bottom sheet -->
+    <style name="BottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/base_background_dialog_head_round_blue</item>
     </style>
 
 

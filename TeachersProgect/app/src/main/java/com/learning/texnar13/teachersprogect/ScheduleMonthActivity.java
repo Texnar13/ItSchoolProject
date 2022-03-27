@@ -14,22 +14,21 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity;
-import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
-import com.yandex.mobile.ads.AdSize;
+import com.yandex.mobile.ads.banner.AdSize;
+import com.yandex.mobile.ads.banner.BannerAdView;
+import com.yandex.mobile.ads.common.AdRequest;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -81,7 +80,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
+            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite, getTheme()));
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);// todo что это за строка, в Start Screen она не используется
         }
 
@@ -154,7 +153,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
 
         // создаем рекламу яндекса внизу календаря
-        com.yandex.mobile.ads.AdView mAdView = new com.yandex.mobile.ads.AdView(this);
+        BannerAdView mAdView = new BannerAdView(this);
         adOut.removeAllViews();
         adOut.addView(mAdView,
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -167,10 +166,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             mAdView.setBlockId(getResources().getString(R.string.banner_id_calendar_big));
             mAdView.setAdSize(AdSize.BANNER_320x100);
         }
-        // Создание объекта таргетирования рекламы.
-        final com.yandex.mobile.ads.AdRequest adRequest = new com.yandex.mobile.ads.AdRequest.Builder().build();
-        // Загрузка объявления.
-        mAdView.loadAd(adRequest);
+        // Создание объекта таргетирования рекламы и загрузка объявления.
+        mAdView.loadAd(new AdRequest.Builder().build());
 
 
         // при старте выставляем в основной календарь текущую дату
@@ -244,7 +241,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             day.setText(weekDaysNames[i]);
             day.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_semibold));
             day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.shedule_month_calendar_day_text_size));
-            day.setTextColor(getResources().getColor(R.color.backgroundMediumGray));
+            day.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
+                    (getResources().getColor(R.color.backgroundMediumGray, getTheme())) :
+                    (getResources().getColor(R.color.backgroundMediumGray))
+            );
             day.setGravity(Gravity.CENTER);
             LinearLayout.LayoutParams dayParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -306,8 +306,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                             viewCalendar.get(Calendar.DAY_OF_MONTH) == currTime.get(Calendar.DATE);
                     // выделяем текущую дату
                     if (isItCurrentDay)
-                        day.setTextColor(getResources().getColor(R.color.baseOrange));
-
+                        day.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
+                                (getResources().getColor(R.color.baseOrange, getTheme())) :
+                                (getResources().getColor(R.color.baseOrange))
+                        );
 
                     // если этот день стоял как выбранный
                     if (chosenOutDayNumber == monthDay + 1) {
@@ -322,7 +324,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                             isPressedCellCurrentDay = false;
                             day.setBackgroundResource(R.drawable.shedule_month_activity_background_chosen_cell);
                         }
-                        day.setTextColor(getResources().getColor(R.color.backgroundWhite));
+                        day.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
+                                (getResources().getColor(R.color.backgroundWhite, getTheme())) :
+                                (getResources().getColor(R.color.backgroundWhite))
+                        );
                     }
 
 
@@ -335,7 +340,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                             if (pressedCell != null) {
                                 pressedCell.setBackground(null);
                                 if (isPressedCellCurrentDay) {
-                                    pressedCell.setTextColor(getResources().getColor(R.color.baseOrange));
+                                    pressedCell.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
+                                            (getResources().getColor(R.color.baseOrange, getTheme())) :
+                                            (getResources().getColor(R.color.baseOrange))
+                                    );
                                 } else {
                                     pressedCell.setTextColor(Color.BLACK);
                                 }
@@ -353,8 +361,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                                 isPressedCellCurrentDay = false;
                                 day.setBackgroundResource(R.drawable.shedule_month_activity_background_chosen_cell);
                             }
-                            day.setTextColor(getResources().getColor(R.color.backgroundWhite));
-
+                            day.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
+                                    (getResources().getColor(R.color.backgroundWhite, getTheme())) :
+                                    (getResources().getColor(R.color.backgroundWhite))
+                            );
                             // и выводим по ней день
                             outDay();
                         }
@@ -386,7 +396,11 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             // выводим заголовок
             TextView head = new TextView(this);
             head.setBackgroundResource(R.drawable.base_background_dialog_head_round_blue);
-            head.setTextColor(getResources().getColor(R.color.backgroundWhite));
+
+            head.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
+                    (getResources().getColor(R.color.backgroundWhite, getTheme())) :
+                    (getResources().getColor(R.color.backgroundWhite))
+            );
             head.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_semibold));
             head.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.shedule_month_day_title_text_size));
             head.setGravity(Gravity.CENTER);
@@ -463,7 +477,9 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 int textColor;
                 if (currentLesson == lessonI) {// если урок текущй
                     rootElement.setBackgroundResource(R.color.baseOrange);
-                    textColor = getResources().getColor(R.color.backgroundWhite);
+                    textColor = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
+                            (getResources().getColor(R.color.backgroundWhite, getTheme())) :
+                            (getResources().getColor(R.color.backgroundWhite));
                 } else {
                     if (lessonI == 0) {
                         rootElement.setBackgroundResource(R.color.backgroundWhite);

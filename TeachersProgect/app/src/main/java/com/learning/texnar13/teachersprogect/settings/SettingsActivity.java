@@ -38,6 +38,10 @@ import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.settings.ImportModel.ImportDataBaseData;
 import com.learning.texnar13.teachersprogect.settings.ImportModel.SettingsImportHelper;
 import com.learning.texnar13.teachersprogect.sponsor.SponsorActivity;
+import com.yandex.mobile.ads.banner.AdSize;
+import com.yandex.mobile.ads.banner.BannerAdView;
+import com.yandex.mobile.ads.common.AdRequest;
+import com.yandex.mobile.ads.interstitial.InterstitialAd;
 
 import java.io.Serializable;
 
@@ -48,7 +52,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     ImageView coloredGradesSwitch;
     ImageView silentLessonSwitch;
     // межстраничный баннер открывающийся при выходе из настроек
-    com.yandex.mobile.ads.InterstitialAd settingsBack;
+    InterstitialAd settingsBack;
 
 
     // -------------------------- помощники запуска с callBack-ами --------------------------
@@ -163,13 +167,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }
 
         // начинаем загрузку межстраничного баннера конца урока
-        settingsBack = new com.yandex.mobile.ads.InterstitialAd(this);
+        settingsBack = new InterstitialAd(this);
         settingsBack.setBlockId(getResources().getString(R.string.banner_id_after_settings));
-        // Создание объекта таргетирования рекламы.
-        final com.yandex.mobile.ads.AdRequest adRequest =
-                new com.yandex.mobile.ads.AdRequest.Builder().build();
-        // Загрузка объявления.
-        settingsBack.loadAd(adRequest);
+        // Создание объекта таргетирования рекламы и загрузка объявления.
+        settingsBack.loadAd(new AdRequest.Builder().build());
 
         // раздуваем layout
         setContentView(R.layout.settings_activity);
@@ -409,7 +410,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                         (NotificationManager) SettingsActivity.this.getSystemService(Context.NOTIFICATION_SERVICE);
                 // показываем диалог, где можно редактировать разрешения
                 startActivity(new Intent(
-                            android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+                        android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
                 // говорим пользователю что ему там делать вообще
                 Toast.makeText(getApplicationContext(),
                         R.string.settings_activity_toast_silent_lesson,
@@ -598,7 +599,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         // выводим рекламу при закрытии активности настроек
         if (settingsBack.isLoaded()) {
-            // settingsBack.show(); todo wtf? не работает, Only fullscreen activities can request orientation
+            settingsBack.show(); //todo wtf? не работает, Only fullscreen activities can request orientation
         }
     }
 }

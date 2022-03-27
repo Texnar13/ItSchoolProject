@@ -10,7 +10,6 @@
     app:behavior_saveFlags="all"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-
     <FrameLayout
         android:id="@+id/activity_lesson_bottom_sheet_title"
         android:layout_width="match_parent"
@@ -31,12 +30,19 @@
             android:text="Привет, я текст" />
     </FrameLayout>
 
-    <TextView
-        style="@style/ButtonSimpleStyle"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#22FF00FF"
-        android:gravity="center"
-        android:text="Привет, я скрытый текст" />
+        android:fillViewport="true">
+
+        <EditText
+            style="@style/ButtonSimpleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#22FF00FF"
+            android:gravity="center"
+            android:text="Привет, я скрытый текст" />
+    </ScrollView>
+
 
 </LinearLayout>
