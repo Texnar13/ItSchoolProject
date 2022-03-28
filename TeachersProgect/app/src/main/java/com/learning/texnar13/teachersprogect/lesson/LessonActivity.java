@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
@@ -59,8 +60,11 @@ todo переделать описание?
 
 public class LessonActivity extends AppCompatActivity implements View.OnTouchListener, GradesDialogInterface {
 
+    // ---------- константы ----------
+    // размер одноместной парты
+    static final int NO_ZOOMED_DESK_SIZE = 40;
 
-    // ---------- константы для аргументов ----------
+    // константы для аргументов
     // константа по которой получаеми id зависимости
     public static final String ARGS_LESSON_ATTITUDE_ID = "lessonAttitudeId";
     // константа по которой получаем время урока
@@ -68,43 +72,27 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     public static final String ARGS_LESSON_NUMBER = "lessonNumber";
 
 
-    // ---------- константы ----------
+    // ---------- Переменные ----------
 
-    // режимы зума
-    private static final int NONE = 0;
-    private static final int ZOOM = 2;
-
-    // размер одноместной парты
-    static final int NO_ZOOMED_DESK_SIZE = 40;
-
-
-    // ---------- переменные для промежуточных расчётов ----------
-
-    // для перемещения и зума
-    // режим: нет, перемещение, zoom
-    private int mode = NONE;
-    // точка середины между пальцами за предыдущую итерацию
-    private Point oldMid = new Point();
-    // предыдущее растояние между пальцам
-    private float oldDist = 1f;
-
-    // слой с партами
+    // view слоя с партами
     private RelativeLayout out;
+    private LessonOutView outView;
 
-    // ---------- данные не исчезающие при повороте экрана ----------
-    // -- параметры из бд --
+    // плотность экрана нужна для расчета размеров парт
+    static float density;
+
+    // --- параметры из бд не исчезающие при повороте экрана, но обновляющиеся при заходе на активность ----------
+
+    // максимальная оценка, типи пропусков, итд
     private static GraduationSettings graduationSettings;
-
     // данные об уроке
     private static LessonBaseData lessonBaseData;
     // массив учеников
-    private static MyLearnerAndHisGrades[] learnersAndTheirGrades;
+    private static LessonLearnerAndHisGrades[] learnersAndTheirGrades;
     // номер выбранного ученика
     private static int chosenLearnerPosition;
-
     // лист с обьектами парт
     private static ArrayList<DeskUnit> desksList;
-
     // растяжение по осям
     private static float multiplier = 0;//0,1;10
     // текущее смещение по осям
@@ -112,8 +100,11 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     private static float yAxisPXOffset = 0;
 
 
-    // подготовка меню
-    // раздуваем
+    // ---------------------------------------------------------------------------------------------
+    // ------ Меню
+    // ---------------------------------------------------------------------------------------------
+
+    // раздуваем меню
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.lesson_menu, menu);
@@ -121,138 +112,83 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         return true;
     }
 
-    // назначаем действия
+    // нажатие кнопок меню, просто переход в разные активности
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        // посмотреть оценки списком
+        // активность конца урока
         menu.findItem(R.id.lesson_menu_end_lesson).setOnMenuItemClickListener(menuItem -> {
-
             // переходим к активности списка оценок
             Intent intent = new Intent(getApplicationContext(), LessonListActivity.class);
             // передаем координаты этого урока
             intent.putExtra(ARGS_LESSON_ATTITUDE_ID, lessonBaseData.lessonAttitudeId);
             intent.putExtra(ARGS_LESSON_DATE, lessonBaseData.lessonDate);
             intent.putExtra(ARGS_LESSON_NUMBER, lessonBaseData.lessonNumber);
-            // запускаем активность
             startActivityForResult(intent, 1);
-
             return true;
         });
-        // посадить учеников
+        // активность рассадки учеников
         menu.findItem(R.id.lesson_menu_edit_seating).setOnMenuItemClickListener(menuItem -> {
-            // намерение перехода на редактор рассадки
             Intent intent = new Intent(getApplicationContext(), SeatingRedactorActivity.class);
-            // кладем id в intent
             intent.putExtra(SeatingRedactorActivity.CLASS_ID, lessonBaseData.learnersClassId);
             intent.putExtra(SeatingRedactorActivity.CABINET_ID, lessonBaseData.cabinetId);
-            // переходим
             startActivity(intent);
             return true;
         });
-        // расставить парты
+        // активность редактор кабинета (расставить парты)
         menu.findItem(R.id.lesson_menu_edit_tables).setOnMenuItemClickListener(menuItem -> {
-            // намерение перехода на редактор кабинета
             Intent intent = new Intent(getApplicationContext(), CabinetRedactorActivity.class);
-            // кладем id в intent
             intent.putExtra(CabinetRedactorActivity.EDITED_CABINET_ID, lessonBaseData.cabinetId);
-            // переходим
             startActivity(intent);
             return true;
         });
         return true;
     }
 
+
+    // ---------------------------------------------------------------------------------------------
+    // ------ Жизненный цикл
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Переменная храняящая значение звукового режима при входе на эту активность.
+     * нужна для того, чтобы при выходе вернуть это значение на место
+     */
+    static int ringerMode = -1;
+
+
     // создание экрана
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // разметка
-        {
-            // обновляем значение локали
-            MyApplication.updateLangForContext(this);
+        // обновляем значение локали
+        MyApplication.updateLangForContext(this);
+        // чтобы векторные изображения созданные отображались
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        // раздуваем layout
+        setContentView(R.layout.lesson_activity);
 
-            // раздуваем layout
-            setContentView(R.layout.lesson_activity);
-            // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
-            setSupportActionBar(findViewById(R.id.base_blue_toolbar));
-            // убираем заголовок, там свой
-            ActionBar bar = getSupportActionBar();
-            if (bar != null) {
-                bar.setDisplayHomeAsUpEnabled(true);
-                bar.setTitle("");
-            }
-            ((TextView) findViewById(R.id.base_blue_toolbar_title))
-                    .setText(R.string.title_activity_learners_classes_out);
-
-            // цвета статус бара
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Window window = getWindow();
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite));
-                window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
-                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            }
-
-            // для того, чтобы векторные изображения созданные в коде отображались нормально
-            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-
-
-            // события происходящие с выдвигающейся с низу менюшкой
-            // обращаемся к вью, как к элементу с поведением bottomSheet
-            BottomSheetBehavior<LinearLayout> bottomSheetBehavior =
-                    BottomSheetBehavior.from(findViewById(R.id.activity_lesson_bottom_sheet));
-
-            final FrameLayout titleBackground = findViewById(R.id.activity_lesson_bottom_sheet_title_background);
-            bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                @Override
-                public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                    if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-
-                    }
-                }
-
-                @Override
-                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                    titleBackground.animate().alpha(slideOffset).setDuration(0).start();
-
-
-                    /*
-                    * .setListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animator) {
-
-                        }
-                    })
-                    *
-                    *
-                    * */
-
-                }
-            });
-
+        // -------- подготовка заголовка --------
+        // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
+        setSupportActionBar(findViewById(R.id.base_blue_toolbar));
+        // убираем заголовок, там свой
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setTitle("");
+        }
+        // цвета статус бара
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite, getTheme()));
+            window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
+                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
-
+        // -------- подгрузка данных --------
         // проверяем был создан новый экран или он просто переворачивался
         if (savedInstanceState == null) {
-            // todo написать ошибку и проверить все моменты с подгрузкой данных при повороте
-
             // получаем зависимость и дату урока из intent
             long lessonAttitudeId = getIntent().getLongExtra(ARGS_LESSON_ATTITUDE_ID, -1);
             String lessonDate = getIntent().getStringExtra(ARGS_LESSON_DATE);
@@ -275,20 +211,103 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         }
 
 
+        // -------- настройка view --------
+
+        // плотность экрана нужна для расчета размеров парт
+        density = getResources().getDisplayMetrics().density;
+
         // слой с партами
         out = findViewById(R.id.activity_lesson_room_layout);
         out.setOnTouchListener(this);
+        outView = findViewById(R.id.lesson_activity_out_view);
 
 
-        // выставляем название предмета и класса в заголовок
-        // укорачиваем поля если они слишком длинные …
-        ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(// abcde -> abc…  abcd->abcd
+        // заголовок - выставляем название предмета и класса
+        ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(// abcde -> abc…  abcd->abcd укорачиваем поля если они слишком длинные …
                 ((lessonBaseData.subjectName.length() > 10) ? (lessonBaseData.subjectName.substring(0, 9) + "…") : (lessonBaseData.subjectName)) + ", " +
                         ((lessonBaseData.className.length() > 4) ? (lessonBaseData.className.substring(0, 3) + "…") : (lessonBaseData.className)) + ", " +
                         ((lessonBaseData.cabinetName.length() > 4) ? (lessonBaseData.cabinetName.substring(0, 3) + "…") : (lessonBaseData.cabinetName))
         );
+
+        {// bottomSheet - (выдвигающейся с низу менюшкой)
+            // обращаемся к вью, как к элементу с поведением
+            BottomSheetBehavior<LinearLayout> bottomSheetBehavior =
+                    BottomSheetBehavior.from(findViewById(R.id.activity_lesson_bottom_sheet));
+            // Находим заголовок для анимации
+            final FrameLayout titleBackground = findViewById(R.id.activity_lesson_bottom_sheet_title_background);
+            // события пролистывания
+            bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                @Override
+                public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                    if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+
+                    }
+                }
+
+                @Override
+                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                    titleBackground.animate().alpha(slideOffset).setDuration(0).start();
+                    //.setListener(new Animator.AnimatorListener() {
+
+
+                }
+            });
+        }
     }
 
+
+    // при каждом показе экрана или если экран перекрыли, а потом показали еще раз
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // --- обновляем все данные из бд ---
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        // обновляем трансформацию (размеры и отступы) кабинета
+        updateCabinetTransformFromDB(db);
+        // обновляем список парт и рассадку учеников
+        checkDesksAndAndPlacesFromDB(db);
+        db.close();
+        // и выводим все
+        outAll();
+
+
+        // --- настройка тихого урока --- (включение режима)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            NotificationManager notificationManager =
+                    (NotificationManager) LessonActivity.this.getSystemService(Context.NOTIFICATION_SERVICE);
+            // если настройка включена
+            if (notificationManager.isNotificationPolicyAccessGranted()) {
+                AudioManager am = (AudioManager) getBaseContext().getSystemService(LessonActivity.AUDIO_SERVICE);
+                // сохраняем старую настройку чтобы при выходе из активности вернуть её
+                ringerMode = am.getRingerMode();
+                // убираем звук
+                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // --- настройка тихого урока --- (выключение)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            NotificationManager notificationManager =
+                    (NotificationManager) LessonActivity.this.getSystemService(Context.NOTIFICATION_SERVICE);
+            // если настройка включена
+            if (ringerMode != -1 && notificationManager.isNotificationPolicyAccessGranted()) {
+                AudioManager am = (AudioManager) getBaseContext().getSystemService(LessonActivity.AUDIO_SERVICE);
+                // возвращаем старую настройку
+                am.setRingerMode(ringerMode);
+            }
+        }
+    }
+
+
+    // ---------------------------------------------------------------------------------------------
+    // ------ Методы подгрузки данных из бд (при запуске активности)
+    // ---------------------------------------------------------------------------------------------
 
     // начальная подгрузка данных из бд
     void initData(DataBaseOpenHelper db) {
@@ -312,7 +331,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         Cursor learnersCursor = db.getLearnersByClassId(lessonBaseData.learnersClassId);
 
         // инициализируем массив с учениками
-        learnersAndTheirGrades = new MyLearnerAndHisGrades[learnersCursor.getCount()];
+        learnersAndTheirGrades = new LessonLearnerAndHisGrades[learnersCursor.getCount()];
         // заполняем его
         for (int i = 0; i < learnersAndTheirGrades.length; i++) {
             learnersCursor.moveToPosition(i);
@@ -332,11 +351,10 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             for (int gradeI = 0; gradeI < 3; gradeI++)
                 emptyGrades[gradeI] = new LessonListActivity.LessonListLearnerAndGradesData.GradeUnit();
 
-            learnersAndTheirGrades[i] = new MyLearnerAndHisGrades(learnerId,
+            learnersAndTheirGrades[i] = new LessonLearnerAndHisGrades(learnerId,
                     (firstName.length() == 0) ? (secondName) : (firstName.charAt(0) + " " + secondName),
                     secondName + " " + firstName, -1, emptyGrades, -1
             );
-
 
         }
         learnersCursor.close();
@@ -345,9 +363,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         chosenLearnerPosition = -1;
     }
 
-    // обновляем оценки учеников из бд
+    // обновляем оценки учеников из бд (+ отрабатывает при возврате из LessonListActivity)
     private void getGradesFromDB(DataBaseOpenHelper db) {
-        for (MyLearnerAndHisGrades currentLearner : learnersAndTheirGrades) {
+        for (LessonLearnerAndHisGrades currentLearner : learnersAndTheirGrades) {
 
             // получаем оценки ученика за этот урок (если уже проставлялись)
             Cursor grades = db.getGradesByLearnerIdSubjectDateAndLesson(currentLearner.learnerId,
@@ -360,48 +378,54 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                         grades.getLong(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ROW_ID));
 
                 // если пропуска нет
-                if (grades.isNull(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {// если пропуска нет
+                if (grades.isNull(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID))) {
+
+                    // пробегаемся по оценкам
                     for (int gradeI = 0; gradeI < SchoolContract.TableLearnersGrades.COLUMNS_GRADE.length; gradeI++) {
-                        // оценка
+
+                        // поле оценки
                         currentLearner.gradesUnits[gradeI].grade =
                                 grades.getInt(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.COLUMNS_GRADE[gradeI]));
-                        // тип оценки
+
+                        // поле типа оценки
                         long typeId = grades.getLong(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[gradeI]));
-                        // проходимся в цикле по всем типам оценок запоминая номер попавшегося
-                        currentLearner.gradesUnits[gradeI].gradeTypePoz = -1;// единица всегда должна перекрываться другим значение иначе будет ошибка
-                        int poz = 0;
-                        while (graduationSettings.answersTypes.length > poz) {
-                            if (graduationSettings.answersTypes[poz].id != typeId) {
+                        {// Ищем этот тип по Id в списке, запоминая номер в массиве а не id
+                            int poz = 0;
+                            while (graduationSettings.answersTypes.length > poz && graduationSettings.answersTypes[poz].id == typeId)
                                 poz++;
-                            } else {
+                            if (graduationSettings.answersTypes.length != poz) {
                                 currentLearner.gradesUnits[gradeI].gradeTypePoz = poz;
-                                break;
+                            } else {
+                                // По идее такого не должно быть
+                                currentLearner.gradesUnits[gradeI].gradeTypePoz = -1;
+                                Log.wtf("teachersApp", "lesson - gradeTypePoz = -1");
                             }
                         }
                     }
+
                     // пропуск по умолчанию пустой
                     currentLearner.absTypePozNumber = -1;
                 } else {
-                    int absId = grades.getInt(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID));
+                    // оценок нет, зануляем все
+                    for (int gradeI = 0; gradeI < 3; gradeI++) {
+                        currentLearner.gradesUnits[gradeI].grade = 0;
+                        currentLearner.gradesUnits[gradeI].gradeTypePoz = 0;
+                    }
 
-                    // проходимся в цикле по всем типам оценок и пишем в ученика уже не id а номер в массиве
-                    currentLearner.absTypePozNumber = -1;
-                    int poz = 0;
-                    while (graduationSettings.absentTypes.length > poz) {
-                        if (graduationSettings.absentTypes[poz].id != absId) {
+                    // пропуск
+                    int absId = grades.getInt(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID));
+                    {// Ищем этот тип по Id в списке, запоминая номер в массиве а не id
+                        int poz = 0;
+                        while (graduationSettings.absentTypes.length > poz && graduationSettings.absentTypes[poz].id == absId)
                             poz++;
-                        } else {
+                        if (graduationSettings.absentTypes.length != poz) {
                             currentLearner.absTypePozNumber = poz;
-                            break;
+                        } else {
+                            // По идее такого не должно быть
+                            currentLearner.absTypePozNumber = -1;
+                            Log.wtf("teachersApp", "lesson - absTypePozNumber = -1");
                         }
                     }
-                    // проставляем оценки
-                    currentLearner.gradesUnits[0].grade = 0;
-                    currentLearner.gradesUnits[1].grade = 0;
-                    currentLearner.gradesUnits[2].grade = 0;
-                    currentLearner.gradesUnits[0].gradeTypePoz = 0;
-                    currentLearner.gradesUnits[1].gradeTypePoz = 0;
-                    currentLearner.gradesUnits[2].gradeTypePoz = 0;
                 }
             } else {
                 // если оценок у ученика на этом уроке вообще не найдено, то зануляем все
@@ -409,6 +433,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     currentLearner.gradesUnits[gradeI].grade = 0;
                     currentLearner.gradesUnits[gradeI].gradeTypePoz = 0;
                 }
+
+                // пропуск
                 currentLearner.absTypePozNumber = -1;
             }
             grades.close();
@@ -416,55 +442,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 
-    static int ringerMode = -1;
-
-    // при каждом показе экрана или если экран перекрыли, а потом показали еще раз
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        // обновляем трансформацию (размеры и отступы) кабинета
-        updateCabinetTransformFromDB(db);
-        // обновляем список парт и рассадку учеников
-        checkDesksAndAndPlacesFromDB(db);
-        db.close();
-
-        // и выводим все
-        outAll();
-
-
-        // настройка тихого урока
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            NotificationManager notificationManager =
-                    (NotificationManager) LessonActivity.this.getSystemService(Context.NOTIFICATION_SERVICE);
-            // если настройка включена
-            if (notificationManager.isNotificationPolicyAccessGranted()) {
-                AudioManager am = (AudioManager) getBaseContext().getSystemService(LessonActivity.AUDIO_SERVICE);
-                // сохраняем старую настройку чтобы при выходе из активности вернуть её
-                ringerMode = am.getRingerMode();
-                // убираем звук
-                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-            }
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        // настройка тихого урока
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            NotificationManager notificationManager =
-                    (NotificationManager) LessonActivity.this.getSystemService(Context.NOTIFICATION_SERVICE);
-            // если настройка включена
-            if (ringerMode != -1 && notificationManager.isNotificationPolicyAccessGranted()) {
-                AudioManager am = (AudioManager) getBaseContext().getSystemService(LessonActivity.AUDIO_SERVICE);
-                // возвращаем старую настройку
-                am.setRingerMode(ringerMode);
-            }
-        }
-    }
+    // ---------------------------------------------------------------------------------------------
+    // ------ Методы обновления данных активности из бд, и вывода графики
+    // ---------------------------------------------------------------------------------------------
 
     // обновляем трансформацию (размеры и отступы) кабинета
     void updateCabinetTransformFromDB(DataBaseOpenHelper db) {
@@ -479,7 +459,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         cabinetCursor.close();
     }
 
-
     /**
      * получаем данные о партах, а также зависимости ученик-место
      * на этих партах связывая учеников с их местом за партой.
@@ -491,6 +470,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         desksList.clear();
         // чистим view
         out.removeAllViews();
+
+        // цвет парт
+        int desksColor = getResources().getColor(R.color.backgroundLiteGray);
 
         // загружаем парты из бд
         Cursor desksCursor = db.getDesksByCabinetId(lessonBaseData.cabinetId);
@@ -507,7 +489,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     pxFromDp(deskXDp * multiplier) + xAxisPXOffset,
                     pxFromDp(deskYDp * multiplier) + yAxisPXOffset,
                     numberOfPlaces,
-                    new RelativeLayout(this)// создаем view парты
+                    new RelativeLayout(this),// создаем view парты
+                    desksColor
             );
             desksList.add(currentDeskUnit);
             // выводим парту
@@ -552,7 +535,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     currentDeskUnit.desk.addView(placeRoot);
 
                     // сохраняем ссылки на все view
-                    MyLearnerAndHisGrades learner = learnersAndTheirGrades[learnerArrPos];
+                    LessonLearnerAndHisGrades learner = learnersAndTheirGrades[learnerArrPos];
                     learner.viewData = learner.new LearnerViewData(
                             // контейнер места на парте
                             placeRoot.findViewById(R.id.lesson_desk_place_element_place_out),
@@ -617,6 +600,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
     // перерисовываем содержимое всего кабинета с новыми размерами и текстами из данных
+    // (+ отрабатывает при возврате из LessonListActivity)
+    // метод просто обновляет размеры парт и учеников, todo был еще вариант не хранить view в учениках, а рисовать все по новой
     @SuppressLint("ResourceType")
     void outAll() {
         // парты (сами view парт инициализируются при создании обьеекта парта)
@@ -642,8 +627,175 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 
+    // ---------------------------------------------------------------------------------------------
+    // ------ Зум и перемещение экрана
+    // ---------------------------------------------------------------------------------------------
+
+
+    // для перемещения и зума
+    // режимы зума
+    private static final int NONE = 0;
+    private static final int ZOOM = 2;
+    private int mode = NONE;
+    // точка середины между пальцами за предыдущую итерацию
+    private Point oldMid = new Point();
+    // предыдущее растояние между пальцам
+    private float oldDist = 1f;
+
+
+    // зум и перемещение экрана
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        /*
+         * -действие
+         * =состояние
+         *  комментарий
+         *
+         * первое нажатие
+         *   =перемещение=
+         *   -ищем парту и омечаем-
+         * нажатие
+         *   -заканчиваем перемещение, сохраняем-
+         *   =zoom=
+         *   -инициализируем зум-
+         * движение
+         *   -при перемещении меняем-
+         *   -при зуме зумим-
+         * отпускание
+         *    если есть зум прекращаем его, не начиная касания
+         *   =none=
+         * последнее отпускание
+         *   -если есть перемещение завершаем его-
+         *   =none=
+         */
+
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN: // поставили первый палец
+                break;
+            case MotionEvent.ACTION_POINTER_DOWN:// поставили следующий палец
+                // если уже поставлен второй палец на остальные не реагируем
+                if (motionEvent.getPointerCount() == 2) {
+                    // --------- начинаем zoom -----------
+                    // находим изначальное растояние между пальцами
+                    oldDist = spacing(motionEvent);
+                    // готовимся к зуму
+                    mode = ZOOM;
+                    // начальные данные о пальцах
+                    oldMid = findMidPoint(motionEvent);
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                // зумим и перемещаем
+                if (mode == ZOOM) {
+                    // текущая середина касания пальцев
+                    Point nowMid = findMidPoint(motionEvent);
+                    //находим коэффициент разницы между новым и изначальным расстоянием между пальцами
+                    float nowDist = spacing(motionEvent);
+                    float scale = nowDist * 100 / oldDist;
+                    // -------- сам зум --------
+                    if ((multiplier * scale / 100 >= 0.25f) &&//слишком маленький размер
+                            (multiplier * scale / 100 <= 4f)//слишком большой размер
+                    ) {
+                        // переназначаем смещение осей из-за зума
+                        xAxisPXOffset = nowMid.x - (((nowMid.x - xAxisPXOffset) * scale)) / 100;
+                        yAxisPXOffset = nowMid.y - (((nowMid.y - yAxisPXOffset) * scale)) / 100;
+                        // меняя множитель назначаем растяжение осей
+                        multiplier = multiplier * scale / 100;
+                        // пробегаемся по партам
+                        for (DeskUnit deskUnit : desksList) {
+                            // новые координаты и размеры
+                            deskUnit.setDeskParams(
+                                    // трансформация координаты относительно центра пальцев
+                                    nowMid.x - ((scale * (nowMid.x - deskUnit.pxX))) / 100,
+                                    nowMid.y - ((scale * (nowMid.y - deskUnit.pxY))) / 100,
+                                    // трансформация размера за счет мультипликатора
+                                    pxFromDp(NO_ZOOMED_DESK_SIZE * deskUnit.numberOfPlaces * multiplier),
+                                    pxFromDp(NO_ZOOMED_DESK_SIZE * multiplier)
+                            );
+                            // новые размеры элементам ученика
+                            for (int placeI = 0; placeI < deskUnit.seatingLearnerNumber.length; placeI++) {
+                                if (deskUnit.seatingLearnerNumber[placeI] != -1) {
+                                    learnersAndTheirGrades[deskUnit.seatingLearnerNumber[placeI]].viewData
+                                            .updateSizesForZoom(multiplier, placeI);
+                                }
+                            }
+
+                        }
+                    }
+
+                    // -------- перемещение центра пальцев --------
+                    // пробегаемся по партам
+                    for (DeskUnit deskUnit : desksList) {
+                        // обновляем координаты изменяя только положение парт
+                        deskUnit.setDeskPosition(
+                                deskUnit.pxX + nowMid.x - oldMid.x,
+                                deskUnit.pxY + nowMid.y - oldMid.y
+                        );
+                    }
+                    //переназначаем центр осей по перемещению центра пальцев
+                    xAxisPXOffset = xAxisPXOffset + nowMid.x - oldMid.x;
+                    yAxisPXOffset = yAxisPXOffset + nowMid.y - oldMid.y;
+
+                    // текущие позиции пальцев становятся предыдущими
+                    oldDist = nowDist;
+                    oldMid = nowMid;
+
+
+                    // вызов у view отрисовки с новыми размерами
+                    outView.setNewScaleParams(multiplier, new PointF(nowMid.x, nowMid.y));
+
+                }
+                break;
+
+            case MotionEvent.ACTION_POINTER_UP: {
+                DataBaseOpenHelper db = new DataBaseOpenHelper(this);//todo Сделать переменную бд полем класса и поместить ее открытие и закрытие в onPause и onResume
+                // сохраняем множитель и смещение для этого кабинета
+                db.setCabinetMultiplierOffsetXOffsetY(
+                        lessonBaseData.cabinetId,
+                        (int) ((multiplier - 0.25F) / 0.0375F),
+                        (int) xAxisPXOffset,
+                        (int) yAxisPXOffset
+                );
+                mode = NONE;
+                break;
+            }
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                // прекращаем перемещение
+                mode = NONE;
+        }
+
+        return true;// todo не везде->?
+    }
+
+    // Расстояние между первым и вторым пальцами из event
+    private float spacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
+    // координата середины между первым и вторым пальцами из event
+    private Point findMidPoint(MotionEvent event) {
+        float x = event.getX(0) + event.getX(1);
+        float y = event.getY(0) + event.getY(1);
+        return new Point((int) (x / 2), (int) (y / 2));
+    }
+
+
+    // ------ сделал -------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+
+
     // нажатие на ученика
-    void tapOnLearner(MyLearnerAndHisGrades tappedLearner) {
+    void tapOnLearner(LessonLearnerAndHisGrades tappedLearner) {
 
         // если стоит попуск, оценку менять нельзя
         if (tappedLearner.absTypePozNumber == -1) {
@@ -695,7 +847,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     public void setGrades(int[] grades, int[] chosenTypesNumbers, int chosenAbsPoz) {
 
         if (chosenLearnerPosition != -1) {
-            MyLearnerAndHisGrades chosenOne = learnersAndTheirGrades[chosenLearnerPosition];
+            LessonLearnerAndHisGrades chosenOne = learnersAndTheirGrades[chosenLearnerPosition];
 
             // меняем списки
 
@@ -757,140 +909,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 
-    // зум и перемещение экрана
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-
-        //-действие
-        //=состояние
-        // комментарий
-
-        //первое нажатие
-        //  =перемещение=
-        //  -ищем парту и омечаем-
-        //нажатие
-        //  -заканчиваем перемещение, сохраняем-
-        //  =zoom=
-        //  -инициализируем зум-
-        //движение
-        //  -при перемещении меняем-
-        //  -при зуме зумим-
-        //отпускание
-        //   если есть зум прекращаем его, не начиная касания
-        //  =none=
-        //последнее отпускание
-        //  -если есть перемещение завершаем его-
-        //  =none=
-
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN: // поставили первый палец
-                break;
-            case MotionEvent.ACTION_POINTER_DOWN:// поставили следующий палец
-                // если уже поставлен второй палец на остальные не реагируем
-                if (motionEvent.getPointerCount() == 2) {
-                    // --------- начинаем zoom -----------
-                    // находим изначальное растояние между пальцами
-                    oldDist = spacing(motionEvent);
-                    // готовимся к зуму
-                    mode = ZOOM;
-                    // начальные данные о пальцах
-                    oldMid = findMidPoint(motionEvent);
-                }
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (mode == ZOOM) {//зумим
-                    // текущая середина касания пальцев
-                    Point nowMid = findMidPoint(motionEvent);
-                    //находим коэффициент разницы между новым и изначальным расстоянием между пальцами
-                    float nowDist = spacing(motionEvent);
-                    float scale = nowDist * 100 / oldDist;
-                    // -------- сам зум --------
-                    if ((multiplier * scale / 100 >= 0.25f) &&//слишком маленький размер
-                            (multiplier * scale / 100 <= 4f)//слишком большой размер
-                    ) {
-                        // переназначаем смещение осей из-за зума
-                        xAxisPXOffset = nowMid.x - (((nowMid.x - xAxisPXOffset) * scale)) / 100;
-                        yAxisPXOffset = nowMid.y - (((nowMid.y - yAxisPXOffset) * scale)) / 100;
-                        // меняя множитель назначаем растяжение осей
-                        multiplier = multiplier * scale / 100;
-                        // пробегаемся по партам
-                        for (DeskUnit deskUnit : desksList) {
-                            // новые координаты и размеры
-                            deskUnit.setDeskParams(
-                                    // трансформация координаты относительно центра пальцев
-                                    nowMid.x - ((scale * (nowMid.x - deskUnit.pxX))) / 100,
-                                    nowMid.y - ((scale * (nowMid.y - deskUnit.pxY))) / 100,
-                                    // трансформация размера за счет мультипликатора
-                                    pxFromDp(NO_ZOOMED_DESK_SIZE * deskUnit.numberOfPlaces * multiplier),
-                                    pxFromDp(NO_ZOOMED_DESK_SIZE * multiplier)
-                            );
-                            // новые размеры элементам ученика
-                            for (int placeI = 0; placeI < deskUnit.seatingLearnerNumber.length; placeI++) {
-                                if (deskUnit.seatingLearnerNumber[placeI] != -1) {
-                                    learnersAndTheirGrades[deskUnit.seatingLearnerNumber[placeI]].viewData
-                                            .updateSizesForZoom(multiplier, placeI);
-                                }
-                            }
-
-                        }
-                    }
-
-                    // -------- перемещение центра пальцев --------
-                    // пробегаемся по партам
-                    for (DeskUnit deskUnit : desksList) {
-                        // обновляем координаты изменяя только положение парт
-                        deskUnit.setDeskPosition(
-                                deskUnit.pxX + nowMid.x - oldMid.x,
-                                deskUnit.pxY + nowMid.y - oldMid.y
-                        );
-                    }
-                    //переназначаем центр осей по перемещению центра пальцев
-                    xAxisPXOffset = xAxisPXOffset + nowMid.x - oldMid.x;
-                    yAxisPXOffset = yAxisPXOffset + nowMid.y - oldMid.y;
-
-                    // текущие позиции пальцев становятся предыдущими
-                    oldDist = nowDist;
-                    oldMid = nowMid;
-                }
-                break;
-
-            case MotionEvent.ACTION_POINTER_UP: {
-                DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-                // сохраняем множитель и смещение для этого кабинета
-                db.setCabinetMultiplierOffsetXOffsetY(
-                        lessonBaseData.cabinetId,
-                        (int) ((multiplier - 0.25F) / 0.0375F),
-                        (int) xAxisPXOffset,
-                        (int) yAxisPXOffset
-                );
-                mode = NONE;
-                break;
-            }
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                // прекращаем перемещение
-                mode = NONE;
-        }
-
-        return true;// todo не везде->?
-    }
-
-    // Расстояние между первым и вторым пальцами из event
-    private float spacing(MotionEvent event) {
-        float x = event.getX(0) - event.getX(1);
-        float y = event.getY(0) - event.getY(1);
-        return (float) Math.sqrt(x * x + y * y);
-    }
-
-    // координата середины между первым и вторым пальцами из event
-    private Point findMidPoint(MotionEvent event) {
-        float x = event.getX(0) + event.getX(1);
-        float y = event.getY(0) + event.getY(1);
-        return new Point((int) (x / 2), (int) (y / 2));
-    }
-
-
-    // обратная связь
+    // обратная связь от активности LesonList
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -928,9 +947,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         return super.onOptionsItemSelected(item);
     }
 
-
-    private int pxFromDp(float dp) {
-        return (int) (dp * getResources().getDisplayMetrics().density);
+    private static int pxFromDp(float dp) {
+        return (int) (dp * density);
     }
 
 
@@ -1009,19 +1027,30 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 
-    // класс содержащий в себе парту // todo static
-    private class DeskUnit {
+    // класс содержащий в себе парту
+    private static class DeskUnit {
+        //так и есть. сделать хранение учеников в обход мест.
+        // упростить класс ученика, и переместить сюда.
+        // как итог, парта хранит массив учеников,
+        // ученик хранит все остальное
+        // /цикл вызывает отрисовку у парты, парта вызывает отрисовку у ученика
+
+        // todo переделать все на customView (изменится только отрисовка и в данных не будут храниться view)
+
         int numberOfPlaces;
         int[] seatingLearnerNumber;// ссылки на учеников сидящих за партой
         RelativeLayout desk;
         float pxX;
         float pxY;
+        // цвет парты
+        int deskColor;
 
-        DeskUnit(float pxX, float pxY, int numberOfPlaces, RelativeLayout relativeLayout) {
+        DeskUnit(float pxX, float pxY, int numberOfPlaces, RelativeLayout relativeLayout, int deskColor) {
             this.pxX = pxX;
             this.pxY = pxY;
             this.numberOfPlaces = numberOfPlaces;
             this.seatingLearnerNumber = new int[numberOfPlaces];
+            this.deskColor = deskColor;
 
             // заполняем места на партах пустыми учениками
             Arrays.fill(seatingLearnerNumber, -1);
@@ -1047,7 +1076,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     new RectF(0, 0, 0, 0),
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}
             ));
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
+            rectDrawable.getPaint().setColor(deskColor);
 
             this.desk.setBackground(rectDrawable);
         }
@@ -1075,7 +1104,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     new RectF(0, 0, 0, 0),
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}
             ));
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
+            rectDrawable.getPaint().setColor(deskColor);
             desk.setBackground(rectDrawable);
         }
 
@@ -1102,7 +1131,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}// внутренний радиус скругления
             ));
             // задаем цвет
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
+            rectDrawable.getPaint().setColor(deskColor);
             // и ставим его на задний фон layout
             desk.setBackground(rectDrawable);
 
@@ -1117,8 +1146,3 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 }
-
-/*
- * getResources().getConfiguration().orientation = Configuration.ORIENTATION_PORTRAIT;
-//getSupportActionBar().setHomeAsUpIndicator(R.drawable._button_back_arrow_blue);
- * */

@@ -72,10 +72,10 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
         setContentView(R.layout.start_screen_activity);
 
         // ставим цвет статус бара
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.baseBlue));
+            window.setStatusBarColor(getResources().getColor(R.color.baseBlue, getTheme()));
         }
 
 

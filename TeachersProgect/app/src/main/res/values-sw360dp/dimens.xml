@@ -99,6 +99,7 @@
     <!-- радиус скругления углов кнопок -->
     <dimen name="radius_rounding_buttons">10dp</dimen><!-- будешь с Аней скруглять углы, это значение стоит в плеймаркете: 20dp-->
     <dimen name="radius_rounding_dialogs">20dp</dimen>
+    <dimen name="radius_rounding_desks">10dp</dimen>
 
     <!--размеры текста-->
     <dimen name="text_fat_size">52sp</dimen>

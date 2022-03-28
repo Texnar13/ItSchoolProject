@@ -18,7 +18,13 @@
             android:layout_height="match_parent"
             android:orientation="horizontal" />
 
-        <include layout="@layout/base_toolbar_blue" />
+        <com.learning.texnar13.teachersprogect.lesson.LessonOutView
+            android:id="@+id/lesson_activity_out_view"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_below="@+id/test_id" />
+
+        <include android:id="@+id/test_id" layout="@layout/base_toolbar_blue" />
 
     </RelativeLayout>
 

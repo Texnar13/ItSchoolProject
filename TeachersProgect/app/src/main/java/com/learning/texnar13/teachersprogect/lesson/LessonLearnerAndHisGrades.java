@@ -10,7 +10,7 @@ import com.learning.texnar13.teachersprogect.R;
 
 
 // класс для хранения ученика и его оценок
-class MyLearnerAndHisGrades {
+class LessonLearnerAndHisGrades {
 
     // параметры ученика
     long learnerId;
@@ -29,9 +29,9 @@ class MyLearnerAndHisGrades {
     // View данные
     LearnerViewData viewData;
 
-    MyLearnerAndHisGrades(long learnerId, String shortName, String fullName,
-                          long gradeId, LessonListActivity.LessonListLearnerAndGradesData.GradeUnit[] gradesUnits,
-                          int absTypePozNumber
+    LessonLearnerAndHisGrades(long learnerId, String shortName, String fullName,
+                              long gradeId, LessonListActivity.LessonListLearnerAndGradesData.GradeUnit[] gradesUnits,
+                              int absTypePozNumber
     ) {
         this.learnerId = learnerId;
         this.shortName = shortName;
