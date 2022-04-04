@@ -9,6 +9,9 @@
     <color name="transparent">#00000000</color>
 
 
+    <!-- цвета текстов -->
+    <color name="simple_text_color">#000000</color>
+
     <!-- цвета оценок -->
     <color name="grade1">#ea5757</color>
     <color name="grade2">#F9892D</color>
@@ -16,6 +19,7 @@
     <color name="grade4">#AED600</color>
     <color name="grade5">#8bc837</color>
     <color name="gradeMix">#8ab5f9</color>
+    <color name="absent_text_color">#A3A3A3</color>
 
     <!-- сигнализирующие цвета -->
     <color name="signalGreen">#9dc646</color>

@@ -309,7 +309,10 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     // ------ Методы подгрузки данных из бд (при запуске активности)
     // ---------------------------------------------------------------------------------------------
 
-    // начальная подгрузка данных из бд
+    /**
+    * Начальная подгрузка данных из бд
+    * (Вызывается в OnCreate)
+    * */
     void initData(DataBaseOpenHelper db) {
 
         // ------ получаем не меняющиеся настроки для всех классов ------
@@ -321,11 +324,15 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         // получаем учеников
         getLearnersFromDB(db);
 
-        // получаем их ооценки
+        // получаем их оценки
         getGradesFromDB(db);
     }
 
-    // получаем учеников с пустыми оценками
+
+    /**
+     * Получаем учеников с пустыми оценками
+     * (Вызывается в initData)
+     * */
     void getLearnersFromDB(DataBaseOpenHelper db) {
         // получаем учеников по id класса
         Cursor learnersCursor = db.getLearnersByClassId(lessonBaseData.learnersClassId);
@@ -363,7 +370,12 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         chosenLearnerPosition = -1;
     }
 
-    // обновляем оценки учеников из бд (+ отрабатывает при возврате из LessonListActivity)
+
+    /**
+     * Обновляем оценки учеников из бд (+ отрабатывает при возврате из LessonListActivity)
+     * (Вызывается в initData)
+     * (Вызывается в onActivityResult(lesson list) )
+     * */
     private void getGradesFromDB(DataBaseOpenHelper db) {
         for (LessonLearnerAndHisGrades currentLearner : learnersAndTheirGrades) {
 
@@ -391,7 +403,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                         long typeId = grades.getLong(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEYS_GRADES_TITLES_ID[gradeI]));
                         {// Ищем этот тип по Id в списке, запоминая номер в массиве а не id
                             int poz = 0;
-                            while (graduationSettings.answersTypes.length > poz && graduationSettings.answersTypes[poz].id == typeId)
+                            while (graduationSettings.answersTypes.length > poz && graduationSettings.answersTypes[poz].id != typeId)
                                 poz++;
                             if (graduationSettings.answersTypes.length != poz) {
                                 currentLearner.gradesUnits[gradeI].gradeTypePoz = poz;
@@ -416,7 +428,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     int absId = grades.getInt(grades.getColumnIndexOrThrow(SchoolContract.TableLearnersGrades.KEY_ABSENT_TYPE_ID));
                     {// Ищем этот тип по Id в списке, запоминая номер в массиве а не id
                         int poz = 0;
-                        while (graduationSettings.absentTypes.length > poz && graduationSettings.absentTypes[poz].id == absId)
+                        while (graduationSettings.absentTypes.length > poz && graduationSettings.absentTypes[poz].id != absId)
                             poz++;
                         if (graduationSettings.absentTypes.length != poz) {
                             currentLearner.absTypePozNumber = poz;
@@ -446,7 +458,10 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     // ------ Методы обновления данных активности из бд, и вывода графики
     // ---------------------------------------------------------------------------------------------
 
-    // обновляем трансформацию (размеры и отступы) кабинета
+    /**
+     * Обновляем трансформацию (размеры и отступы) кабинета
+     * (Вызывается в OnResume)
+     * */
     void updateCabinetTransformFromDB(DataBaseOpenHelper db) {
         Cursor cabinetCursor = db.getCabinet(lessonBaseData.cabinetId);
         cabinetCursor.moveToFirst();
@@ -463,6 +478,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
      * получаем данные о партах, а также зависимости ученик-место
      * на этих партах связывая учеников с их местом за партой.
      * Также инициализируем все view (только инициализируем, без размеров и фонов)
+     * (Вызывается в OnResume)
      */
     void checkDesksAndAndPlacesFromDB(DataBaseOpenHelper db) {
 
@@ -599,11 +615,23 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         db.close();
     }
 
-    // перерисовываем содержимое всего кабинета с новыми размерами и текстами из данных
-    // (+ отрабатывает при возврате из LessonListActivity)
-    // метод просто обновляет размеры парт и учеников, todo был еще вариант не хранить view в учениках, а рисовать все по новой
+    /**
+     * перерисовываем содержимое всего кабинета с новыми размерами и текстами из данных
+     * (+ отрабатывает при возврате из LessonListActivity)
+     * метод просто обновляет размеры парт и учеников, todo был еще вариант не хранить view в учениках, а рисовать все по новой
+     * (Вызывается в OnResume)
+     * (Вызывается в onActivityResult(lesson list) )
+     */
     @SuppressLint("ResourceType")
     void outAll() {
+        // todo здесь графика
+
+        // передаем данные во view
+        //outView.setData(graduationSettings.maxAnswersCount);
+        outView.setNewScaleParams();
+
+
+
         // парты (сами view парт инициализируются при создании обьеекта парта)
         for (DeskUnit currentDesk : desksList) {
             // по местам за партой
@@ -624,6 +652,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                 }
             }
         }
+
+
     }
 
 
@@ -703,6 +733,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                         multiplier = multiplier * scale / 100;
                         // пробегаемся по партам
                         for (DeskUnit deskUnit : desksList) {
+                            // todo здесь графика
                             // новые координаты и размеры
                             deskUnit.setDeskParams(
                                     // трансформация координаты относительно центра пальцев
@@ -741,8 +772,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     oldMid = nowMid;
 
 
+                    // todo здесь графика
                     // вызов у view отрисовки с новыми размерами
-                    outView.setNewScaleParams(multiplier, new PointF(nowMid.x, nowMid.y));
+                    outView.setNewScaleParams(multiplier, new PointF(xAxisPXOffset, yAxisPXOffset));
 
                 }
                 break;
@@ -783,7 +815,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 
-    // ------ сделал -------------------------------------------------------------------------------
+    // ------ упорядочивание кода закончил здесь ---------------------------------------------------
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
@@ -795,7 +827,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
 
     // нажатие на ученика
-    void tapOnLearner(LessonLearnerAndHisGrades tappedLearner) {
+    void tapOnLearner(LessonLearnerAndHisGrades tappedLearner) {// todo проверка для больших оценок, которые вне диапазона
 
         // если стоит попуск, оценку менять нельзя
         if (tappedLearner.absTypePozNumber == -1) {
@@ -807,6 +839,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
             // вызываем перерисовку у ученика
             tappedLearner.viewData.updateGradesTexts();
+            // todo здесь графика
 
             // сохраняем результат в бд
             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
@@ -897,6 +930,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             db.close();
 
             // выводим изменения в интерфейс
+            // todo здесь графика
             // ставим выбранной следующую оценку
             chosenOne.chosenGradePosition = (chosenOne.chosenGradePosition + 1) % 3;
             // обновляем текст и картинки на ученике
