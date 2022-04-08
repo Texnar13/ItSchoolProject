@@ -60,11 +60,7 @@ todo переделать описание?
 
 public class LessonActivity extends AppCompatActivity implements View.OnTouchListener, GradesDialogInterface {
 
-    // ---------- константы ----------
-    // размер одноместной парты
-    static final int NO_ZOOMED_DESK_SIZE = 40;
-
-    // константы для аргументов
+    // ---------- константы для аргументов ----------
     // константа по которой получаеми id зависимости
     public static final String ARGS_LESSON_ATTITUDE_ID = "lessonAttitudeId";
     // константа по которой получаем время урока
@@ -75,7 +71,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     // ---------- Переменные ----------
 
     // view слоя с партами
-    private RelativeLayout out;
     private LessonOutView outView;
 
     // плотность экрана нужна для расчета размеров парт
@@ -94,7 +89,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     // лист с обьектами парт
     private static ArrayList<DeskUnit> desksList;
     // растяжение по осям
-    private static float multiplier = 0;//0,1;10
+    private static float multiplier = 0;//0,1;10 (обновляется в updateCabinetTransformFromDB и onTouch)
     // текущее смещение по осям
     private static float xAxisPXOffset = 0;
     private static float yAxisPXOffset = 0;
@@ -217,10 +212,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         density = getResources().getDisplayMetrics().density;
 
         // слой с партами
-        out = findViewById(R.id.activity_lesson_room_layout);
-        out.setOnTouchListener(this);
         outView = findViewById(R.id.lesson_activity_out_view);
-
+        outView.setOnTouchListener(this);
 
         // заголовок - выставляем название предмета и класса
         ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(// abcde -> abc…  abcd->abcd укорачиваем поля если они слишком длинные …
@@ -229,12 +222,24 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                         ((lessonBaseData.cabinetName.length() > 4) ? (lessonBaseData.cabinetName.substring(0, 3) + "…") : (lessonBaseData.cabinetName))
         );
 
-        {// bottomSheet - (выдвигающейся с низу менюшкой)
+        // bottomSheet - (выдвигающейся с низу менюшкой)
+        {
             // обращаемся к вью, как к элементу с поведением
             BottomSheetBehavior<LinearLayout> bottomSheetBehavior =
                     BottomSheetBehavior.from(findViewById(R.id.activity_lesson_bottom_sheet));
+
             // Находим заголовок для анимации
             final FrameLayout titleBackground = findViewById(R.id.activity_lesson_bottom_sheet_title_background);
+
+            // назначаем раскрытие и закрытие по нажатию заголовка
+            findViewById(R.id.activity_lesson_bottom_sheet_title).setOnClickListener(
+                    view -> bottomSheetBehavior.setState(
+                            (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) ?
+                                    (BottomSheetBehavior.STATE_EXPANDED) :
+                                    (BottomSheetBehavior.STATE_COLLAPSED)
+                    )
+            );
+
             // события пролистывания
             bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
                 @Override
@@ -248,7 +253,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                 public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                     titleBackground.animate().alpha(slideOffset).setDuration(0).start();
                     //.setListener(new Animator.AnimatorListener() {
-
 
                 }
             });
@@ -310,9 +314,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     // ---------------------------------------------------------------------------------------------
 
     /**
-    * Начальная подгрузка данных из бд
-    * (Вызывается в OnCreate)
-    * */
+     * Начальная подгрузка данных из бд
+     * (Вызывается в OnCreate)
+     */
     void initData(DataBaseOpenHelper db) {
 
         // ------ получаем не меняющиеся настроки для всех классов ------
@@ -332,7 +336,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     /**
      * Получаем учеников с пустыми оценками
      * (Вызывается в initData)
-     * */
+     */
     void getLearnersFromDB(DataBaseOpenHelper db) {
         // получаем учеников по id класса
         Cursor learnersCursor = db.getLearnersByClassId(lessonBaseData.learnersClassId);
@@ -358,11 +362,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             for (int gradeI = 0; gradeI < 3; gradeI++)
                 emptyGrades[gradeI] = new LessonListActivity.LessonListLearnerAndGradesData.GradeUnit();
 
-            learnersAndTheirGrades[i] = new LessonLearnerAndHisGrades(learnerId,
-                    (firstName.length() == 0) ? (secondName) : (firstName.charAt(0) + " " + secondName),
-                    secondName + " " + firstName, -1, emptyGrades, -1
-            );
-
+            learnersAndTheirGrades[i] = new LessonLearnerAndHisGrades(
+                    learnerId, firstName, secondName, -1, emptyGrades, -1);
         }
         learnersCursor.close();
 
@@ -375,7 +376,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
      * Обновляем оценки учеников из бд (+ отрабатывает при возврате из LessonListActivity)
      * (Вызывается в initData)
      * (Вызывается в onActivityResult(lesson list) )
-     * */
+     */
     private void getGradesFromDB(DataBaseOpenHelper db) {
         for (LessonLearnerAndHisGrades currentLearner : learnersAndTheirGrades) {
 
@@ -461,7 +462,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     /**
      * Обновляем трансформацию (размеры и отступы) кабинета
      * (Вызывается в OnResume)
-     * */
+     */
     void updateCabinetTransformFromDB(DataBaseOpenHelper db) {
         Cursor cabinetCursor = db.getCabinet(lessonBaseData.cabinetId);
         cabinetCursor.moveToFirst();
@@ -484,36 +485,21 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
         // чистим список парт
         desksList.clear();
-        // чистим view
-        out.removeAllViews();
-
-        // цвет парт
-        int desksColor = getResources().getColor(R.color.backgroundLiteGray);
 
         // загружаем парты из бд
         Cursor desksCursor = db.getDesksByCabinetId(lessonBaseData.cabinetId);
         while (desksCursor.moveToNext()) {
 
-            // данные одной парты
-            long deskId = desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.KEY_ROW_ID));
-            int numberOfPlaces = desksCursor.getInt(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES));
-            long deskXDp = desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_X));
-            long deskYDp = desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_Y));
-
             // создаем новую парту  парту и данные в массив (в конструкторе заполняя позицию и размеры view)
             DeskUnit currentDeskUnit = new DeskUnit(
-                    pxFromDp(deskXDp * multiplier) + xAxisPXOffset,
-                    pxFromDp(deskYDp * multiplier) + yAxisPXOffset,
-                    numberOfPlaces,
-                    new RelativeLayout(this),// создаем view парты
-                    desksColor
+                    desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_X)),
+                    desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_Y)),
+                    desksCursor.getInt(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_NUMBER_OF_PLACES))
             );
             desksList.add(currentDeskUnit);
-            // выводим парту
-            out.addView(currentDeskUnit.desk);
 
-
-            // получаем места на парте
+            // получаем места на парте из её id
+            long deskId = desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.KEY_ROW_ID));
             SCursor placesCursor = new SCursor(db.getPlacesByDeskId(deskId));
             while (placesCursor.moveToNext()) {
 
@@ -523,91 +509,23 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
                 // получаем номер ученика (который сидит на этом месте) в массиве с учениками и их оценками
                 int learnerArrPos = -1;
-                {
-                    // все записи с таким местом
-                    SCursor placesAttitudes = new SCursor(db.getAttitudesByPlaceId(placeId));
-                    while (placesAttitudes.moveToNext() && learnerArrPos == -1) {
-                        // id ученика связанного с этим местом
-                        long learnerId = placesAttitudes
-                                .getLong(SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID);
-                        // есть ли такой id в этом классе
-                        for (int learnerPoz = 0; learnerPoz < learnersAndTheirGrades.length && learnerArrPos == -1; learnerPoz++)
-                            if (learnersAndTheirGrades[learnerPoz].learnerId == learnerId)
-                                learnerArrPos = learnerPoz;
-                    }
-                    placesAttitudes.close();
-
-                    // позиция ученика за партой
-                    int learnerOrdinal = (int) (placesCursor.getLong(SchoolContract.TablePlaces.COLUMN_ORDINAL));
-                    // помещаем в текущую парту номер связанного ученика на позицию на которой он сидит
-                    currentDeskUnit.seatingLearnerNumber[learnerOrdinal - 1] = learnerArrPos;
+                // все записи с таким местом
+                SCursor placesAttitudes = new SCursor(db.getAttitudesByPlaceId(placeId));
+                while (placesAttitudes.moveToNext() && learnerArrPos == -1) {
+                    // получаем из места id ученика связанного с этим местом
+                    long learnerId = placesAttitudes
+                            .getLong(SchoolContract.TableLearnersOnPlaces.KEY_LEARNER_ID);
+                    // есть ли такой id в этом классе
+                    for (int learnerPoz = 0; learnerPoz < learnersAndTheirGrades.length && learnerArrPos == -1; learnerPoz++)
+                        if (learnersAndTheirGrades[learnerPoz].learnerId == learnerId)
+                            learnerArrPos = learnerPoz;
                 }
+                placesAttitudes.close();
 
-                // если нашли ученика, получаем его данные и ссылки на view места
-                if (learnerArrPos != -1) {
-                    // инициализируем разметку места на парте
-                    View placeRoot = getLayoutInflater().inflate(
-                            R.layout.lesson_desk_place_element, null);
-                    currentDeskUnit.desk.addView(placeRoot);
-
-                    // сохраняем ссылки на все view
-                    LessonLearnerAndHisGrades learner = learnersAndTheirGrades[learnerArrPos];
-                    learner.viewData = learner.new LearnerViewData(
-                            // контейнер места на парте
-                            placeRoot.findViewById(R.id.lesson_desk_place_element_place_out),
-                            // имя ученика
-                            placeRoot.findViewById(R.id.lesson_desk_place_element_learner_text),
-                            // главная оценка
-                            placeRoot.findViewById(R.id.lesson_desk_place_element_center_grade),
-                            // оценка слева сверху
-                            placeRoot.findViewById(R.id.lesson_desk_place_element_left_grade),
-                            // оценка справа сверху
-                            placeRoot.findViewById(R.id.lesson_desk_place_element_right_grade),
-                            // иконка ученика
-                            placeRoot.findViewById(R.id.lesson_desk_place_element_learner_background),
-                            graduationSettings,
-                            this
-                    );
-
-                    // при нажатии на контейнер ученика
-                    int finalLearnerArrPos = learnerArrPos;
-                    learnersAndTheirGrades[learnerArrPos].viewData.viewPlaceOut.setOnClickListener(view -> {
-                        // меняем его оценку
-                        tapOnLearner(learnersAndTheirGrades[finalLearnerArrPos]);
-                    });
-
-                    // при долгом клике на ученика
-                    learnersAndTheirGrades[learnerArrPos].viewData.viewPlaceOut.setOnLongClickListener(view -> {
-
-                        // выставляем этого ученика как выбранного
-                        chosenLearnerPosition = finalLearnerArrPos;
-
-                        // вызываем диалог изменения оценок
-                        GradeEditLessonDialogFragment gradeDialog = new GradeEditLessonDialogFragment();
-                        // передаем на вход данные
-                        Bundle args = new Bundle();
-                        args.putString(GradeEditLessonDialogFragment.ARGS_LEARNER_NAME,
-                                learnersAndTheirGrades[finalLearnerArrPos].fullName);
-                        args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_GRADES_TYPES_ARRAY,
-                                graduationSettings.getAnswersTypesArray());
-                        args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ARRAY,
-                                learnersAndTheirGrades[finalLearnerArrPos].getGradesArray());
-                        args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY,
-                                learnersAndTheirGrades[finalLearnerArrPos].getGradesTypesArray());
-                        args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_ABSENT_TYPES_LONG_NAMES_ARRAY,
-                                graduationSettings.getAbsentTypesLongNames());
-                        args.putInt(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ABSENT_TYPE_NUMBER,
-                                learnersAndTheirGrades[finalLearnerArrPos].absTypePozNumber);
-                        args.putInt(GradeEditLessonDialogFragment.ARGS_INT_MAX_GRADE,
-                                graduationSettings.maxAnswersCount);
-                        args.putInt(GradeEditLessonDialogFragment.ARGS_INT_CHOSEN_GRADE_POSITION,
-                                learnersAndTheirGrades[finalLearnerArrPos].chosenGradePosition);
-                        gradeDialog.setArguments(args);
-                        // показываем диалог
-                        gradeDialog.show(getFragmentManager(), "gradeDialog - Hello");
-                        return true;
-                    });
-                }
+                // позиция ученика за партой
+                int learnerOrdinal = (int) (placesCursor.getLong(SchoolContract.TablePlaces.COLUMN_ORDINAL));
+                // помещаем в текущую парту номер связанного ученика на позицию на которой он сидит
+                currentDeskUnit.seatingLearnerNumber[learnerOrdinal - 1] = learnerArrPos;
             }
             placesCursor.close();
         }
@@ -618,7 +536,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     /**
      * перерисовываем содержимое всего кабинета с новыми размерами и текстами из данных
      * (+ отрабатывает при возврате из LessonListActivity)
-     * метод просто обновляет размеры парт и учеников, todo был еще вариант не хранить view в учениках, а рисовать все по новой
+     * метод просто обновляет размеры парт и учеников,
      * (Вызывается в OnResume)
      * (Вызывается в onActivityResult(lesson list) )
      */
@@ -627,32 +545,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         // todo здесь графика
 
         // передаем данные во view
-        //outView.setData(graduationSettings.maxAnswersCount);
-        outView.setNewScaleParams();
-
-
-
-        // парты (сами view парт инициализируются при создании обьеекта парта)
-        for (DeskUnit currentDesk : desksList) {
-            // по местам за партой
-            for (int placeI = 0; placeI < currentDesk.numberOfPlaces; placeI++) {
-                // если на этом месте сидит ученик
-                int learnerArrPos = currentDesk.seatingLearnerNumber[placeI];
-                if (learnerArrPos != -1) {
-                    // контейнер места на парте, ставим размеры
-                    learnersAndTheirGrades[learnerArrPos].viewData.updateSizePlaceView(multiplier, placeI);
-                    // иконка ученика
-                    learnersAndTheirGrades[learnerArrPos].viewData.updateLearnerBackground();
-                    // имя ученика
-                    learnersAndTheirGrades[learnerArrPos].viewData.updateLearnerNameText();
-                    learnersAndTheirGrades[learnerArrPos].viewData.updateSizeLearnerNameView(multiplier);
-                    // обновляем размеры и содержимое оценок
-                    learnersAndTheirGrades[learnerArrPos].viewData.updateGradesTexts();
-                    learnersAndTheirGrades[learnerArrPos].viewData.updateSizesGradesViews(multiplier);
-                }
-            }
-        }
-
+        outView.setData(graduationSettings.maxAnswersCount, learnersAndTheirGrades, desksList);
+        // выводим графику
+        outView.setNewScaleParams(multiplier, new PointF(xAxisPXOffset, yAxisPXOffset));
 
     }
 
@@ -725,45 +620,16 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     // -------- сам зум --------
                     if ((multiplier * scale / 100 >= 0.25f) &&//слишком маленький размер
                             (multiplier * scale / 100 <= 4f)//слишком большой размер
-                    ) {
+                    ) {// todo проверка на слишком большиее и маленькие xAxisPXOffset yAxisPXOffset
                         // переназначаем смещение осей из-за зума
                         xAxisPXOffset = nowMid.x - (((nowMid.x - xAxisPXOffset) * scale)) / 100;
                         yAxisPXOffset = nowMid.y - (((nowMid.y - yAxisPXOffset) * scale)) / 100;
                         // меняя множитель назначаем растяжение осей
                         multiplier = multiplier * scale / 100;
-                        // пробегаемся по партам
-                        for (DeskUnit deskUnit : desksList) {
-                            // todo здесь графика
-                            // новые координаты и размеры
-                            deskUnit.setDeskParams(
-                                    // трансформация координаты относительно центра пальцев
-                                    nowMid.x - ((scale * (nowMid.x - deskUnit.pxX))) / 100,
-                                    nowMid.y - ((scale * (nowMid.y - deskUnit.pxY))) / 100,
-                                    // трансформация размера за счет мультипликатора
-                                    pxFromDp(NO_ZOOMED_DESK_SIZE * deskUnit.numberOfPlaces * multiplier),
-                                    pxFromDp(NO_ZOOMED_DESK_SIZE * multiplier)
-                            );
-                            // новые размеры элементам ученика
-                            for (int placeI = 0; placeI < deskUnit.seatingLearnerNumber.length; placeI++) {
-                                if (deskUnit.seatingLearnerNumber[placeI] != -1) {
-                                    learnersAndTheirGrades[deskUnit.seatingLearnerNumber[placeI]].viewData
-                                            .updateSizesForZoom(multiplier, placeI);
-                                }
-                            }
-
-                        }
                     }
 
-                    // -------- перемещение центра пальцев --------
-                    // пробегаемся по партам
-                    for (DeskUnit deskUnit : desksList) {
-                        // обновляем координаты изменяя только положение парт
-                        deskUnit.setDeskPosition(
-                                deskUnit.pxX + nowMid.x - oldMid.x,
-                                deskUnit.pxY + nowMid.y - oldMid.y
-                        );
-                    }
-                    //переназначаем центр осей по перемещению центра пальцев
+                    // переназначаем центр осей по перемещению центра пальцев
+                    // todo проверка на слишком большиее и маленькие xAxisPXOffset yAxisPXOffset
                     xAxisPXOffset = xAxisPXOffset + nowMid.x - oldMid.x;
                     yAxisPXOffset = yAxisPXOffset + nowMid.y - oldMid.y;
 
@@ -797,8 +663,53 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                 mode = NONE;
         }
 
-        return true;// todo не везде->?
+        return true; // todo не везде->?
     }
+
+
+    /* todo нажатие на ученика
+    * // при нажатии на контейнер ученика
+                    int finalLearnerArrPos = learnerArrPos;
+                    learnersAndTheirGrades[learnerArrPos].viewData.viewPlaceOut.setOnClickListener(view -> {
+                        // меняем его оценку
+                        tapOnLearner(learnersAndTheirGrades[finalLearnerArrPos]);
+                    });
+
+                    // при долгом клике на ученика
+                    learnersAndTheirGrades[learnerArrPos].viewData.viewPlaceOut.setOnLongClickListener(view -> {
+
+                        // выставляем этого ученика как выбранного
+                        chosenLearnerPosition = finalLearnerArrPos;
+
+                        // вызываем диалог изменения оценок
+                        GradeEditLessonDialogFragment gradeDialog = new GradeEditLessonDialogFragment();
+                        // передаем на вход данные
+                        Bundle args = new Bundle();
+                        args.putString(GradeEditLessonDialogFragment.ARGS_LEARNER_NAME,
+                                learnersAndTheirGrades[finalLearnerArrPos].fullName);
+                        args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_GRADES_TYPES_ARRAY,
+                                graduationSettings.getAnswersTypesArray());
+                        args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ARRAY,
+                                learnersAndTheirGrades[finalLearnerArrPos].getGradesArray());
+                        args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY,
+                                learnersAndTheirGrades[finalLearnerArrPos].getGradesTypesArray());
+                        args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_ABSENT_TYPES_LONG_NAMES_ARRAY,
+                                graduationSettings.getAbsentTypesLongNames());
+                        args.putInt(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ABSENT_TYPE_NUMBER,
+                                learnersAndTheirGrades[finalLearnerArrPos].absTypePozNumber);
+                        args.putInt(GradeEditLessonDialogFragment.ARGS_INT_MAX_GRADE,
+                                graduationSettings.maxAnswersCount);
+                        args.putInt(GradeEditLessonDialogFragment.ARGS_INT_CHOSEN_GRADE_POSITION,
+                                learnersAndTheirGrades[finalLearnerArrPos].chosenGradePosition);
+                        gradeDialog.setArguments(args);
+                        // показываем диалог
+                        gradeDialog.show(getFragmentManager(), "gradeDialog - Hello");
+                        return true;
+                    });
+    *
+    *
+    * */
+
 
     // Расстояние между первым и вторым пальцами из event
     private float spacing(MotionEvent event) {
@@ -837,8 +748,11 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     tappedLearner.gradesUnits[tappedLearner.chosenGradePosition];
             tappedGrade.grade = (tappedGrade.grade % graduationSettings.maxAnswersCount) + 1;
 
-            // вызываем перерисовку у ученика
-            tappedLearner.viewData.updateGradesTexts();
+            // обновляем данные ученика
+            outView.updateLearner();
+            // выводим графику
+            outView.setNewScaleParams(multiplier, new PointF(xAxisPXOffset, yAxisPXOffset));
+
             // todo здесь графика
 
             // сохраняем результат в бд
@@ -929,13 +843,15 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             }
             db.close();
 
-            // выводим изменения в интерфейс
-            // todo здесь графика
             // ставим выбранной следующую оценку
             chosenOne.chosenGradePosition = (chosenOne.chosenGradePosition + 1) % 3;
-            // обновляем текст и картинки на ученике
-            chosenOne.viewData.updateGradesTexts();
-            chosenOne.viewData.updateSizesGradesViews(multiplier);
+
+            // todo здесь графика
+            // обновляем данные ученика
+            outView.updateLearner();
+            // выводим графику
+            outView.setNewScaleParams(multiplier, new PointF(xAxisPXOffset, yAxisPXOffset));
+
         }
         // убираем выбор с ученика
         chosenLearnerPosition = -1;
@@ -980,11 +896,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private static int pxFromDp(float dp) {
-        return (int) (dp * density);
-    }
-
 
     private static class LessonBaseData {
 
@@ -1062,121 +973,68 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
 
     // класс содержащий в себе парту
-    private static class DeskUnit {
-        //так и есть. сделать хранение учеников в обход мест.
-        // упростить класс ученика, и переместить сюда.
-        // как итог, парта хранит массив учеников,
-        // ученик хранит все остальное
-        // /цикл вызывает отрисовку у парты, парта вызывает отрисовку у ученика
-
-        // todo переделать все на customView (изменится только отрисовка и в данных не будут храниться view)
-
+    static class DeskUnit {
         int numberOfPlaces;
         int[] seatingLearnerNumber;// ссылки на учеников сидящих за партой
-        RelativeLayout desk;
-        float pxX;
-        float pxY;
-        // цвет парты
-        int deskColor;
+        float startNoZoomedDeskX;
+        float startNoZoomedDeskY;
 
-        DeskUnit(float pxX, float pxY, int numberOfPlaces, RelativeLayout relativeLayout, int deskColor) {
-            this.pxX = pxX;
-            this.pxY = pxY;
+        DeskUnit(float startNoZoomedDeskX, float startNoZoomedDeskY, int numberOfPlaces) {
+            this.startNoZoomedDeskX = startNoZoomedDeskX;
+            this.startNoZoomedDeskY = startNoZoomedDeskY;
             this.numberOfPlaces = numberOfPlaces;
             this.seatingLearnerNumber = new int[numberOfPlaces];
-            this.deskColor = deskColor;
 
             // заполняем места на партах пустыми учениками
             Arrays.fill(seatingLearnerNumber, -1);
-
-            // --- получаем графический контейнер ---
-            this.desk = relativeLayout;
-
-            // и создаем для него параметры
-            RelativeLayout.LayoutParams newDeskLayoutParams = new RelativeLayout.LayoutParams(
-                    pxFromDp(NO_ZOOMED_DESK_SIZE * numberOfPlaces * multiplier),
-                    pxFromDp(NO_ZOOMED_DESK_SIZE * multiplier)
-            );
-            newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            newDeskLayoutParams.leftMargin = (int) pxX;
-            newDeskLayoutParams.topMargin = (int) pxY;
-            this.desk.setLayoutParams(newDeskLayoutParams);
-
-            // ставим парте Drawable
-            int radius = (int) (pxFromDp(7) * multiplier);
-            ShapeDrawable rectDrawable = new ShapeDrawable(new RoundRectShape(
-                    new float[]{radius, radius, radius, radius, radius, radius, radius, radius},
-                    new RectF(0, 0, 0, 0),
-                    new float[]{0, 0, 0, 0, 0, 0, 0, 0}
-            ));
-            rectDrawable.getPaint().setColor(deskColor);
-
-            this.desk.setBackground(rectDrawable);
-        }
-
-        void setDeskParams(float pxX, float pxY, int pxWidth, int pxHeight) {
-            this.pxX = pxX;
-            this.pxY = pxY;
-
-            // создаем новые параметры
-            RelativeLayout.LayoutParams newDeskLayoutParams = new RelativeLayout.LayoutParams(
-                    pxWidth,
-                    pxHeight
-            );
-            newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            newDeskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            newDeskLayoutParams.leftMargin = (int) pxX;
-            newDeskLayoutParams.topMargin = (int) pxY;
-            // и присваиваем их парте
-            desk.setLayoutParams(newDeskLayoutParams);
-
-            // ставим парте Drawable
-            int radius = (int) (pxFromDp(7) * multiplier);
-            ShapeDrawable rectDrawable = new ShapeDrawable(new RoundRectShape(
-                    new float[]{radius, radius, radius, radius, radius, radius, radius, radius},
-                    new RectF(0, 0, 0, 0),
-                    new float[]{0, 0, 0, 0, 0, 0, 0, 0}
-            ));
-            rectDrawable.getPaint().setColor(deskColor);
-            desk.setBackground(rectDrawable);
-        }
-
-        void setDeskPosition(float pxX, float pxY) {//desk.getLayoutParams().width и desk.getWidth() это совершенно разные переменные
-            // ----- двигаем координаты в списке -----
-            this.pxX = pxX;
-            this.pxY = pxY;
-
-            // ----- двигаем парту -----
-            RelativeLayout.LayoutParams newParams = new RelativeLayout.LayoutParams(
-                    desk.getLayoutParams().width,
-                    desk.getLayoutParams().height
-            );
-            newParams.leftMargin = (int) pxX;
-            newParams.topMargin = (int) pxY;
-            desk.setLayoutParams(newParams);
-
-            // ----- создаем drawable -----
-            // радиус скругления
-            int radius = (int) (pxFromDp(7) * multiplier);
-            ShapeDrawable rectDrawable = new ShapeDrawable(new RoundRectShape(
-                    new float[]{radius, radius, radius, radius, radius, radius, radius, radius},// внешний радиус скругления
-                    new RectF(0, 0, 0, 0),// размеры внутренней пустой области
-                    new float[]{0, 0, 0, 0, 0, 0, 0, 0}// внутренний радиус скругления
-            ));
-            // задаем цвет
-            rectDrawable.getPaint().setColor(deskColor);
-            // и ставим его на задний фон layout
-            desk.setBackground(rectDrawable);
-
-            //    |    A   |     new float[]{A, B, A, B, A, B, A, B}
-            // _  _________________________
-            //    |       /|
-            //    |    /   |
-            // B  |  /     |
-            // _  |/_______|
-            //    |
         }
     }
+
+
+    // класс для хранения ученика и его оценок
+    static class LessonLearnerAndHisGrades {
+
+        // параметры ученика
+        long learnerId;
+        String firstName;
+        String secondName;
+
+        // id оценки
+        long gradeId;
+        // номер текущей оценки
+        int chosenGradePosition = 0;
+        // массив оценок
+        LessonListActivity.LessonListLearnerAndGradesData.GradeUnit[] gradesUnits;
+        // тип пропуска
+        int absTypePozNumber;
+
+        LessonLearnerAndHisGrades(long learnerId, String firstName, String secondName,
+                                  long gradeId, LessonListActivity.LessonListLearnerAndGradesData.GradeUnit[] gradesUnits,
+                                  int absTypePozNumber
+        ) {
+            this.learnerId = learnerId;
+            this.firstName = firstName;
+            this.secondName = secondName;
+            this.gradeId = gradeId;
+            this.gradesUnits = gradesUnits;
+            this.absTypePozNumber = absTypePozNumber;
+        }
+
+
+        // заготовка аргументов для диалога оценок
+        int[] getGradesArray() {
+            int[] result = new int[gradesUnits.length];
+            for (int i = 0; i < result.length; i++) result[i] = gradesUnits[i].grade;
+            return result;
+        }
+
+        int[] getGradesTypesArray() {
+            int[] result = new int[gradesUnits.length];
+            for (int i = 0; i < result.length; i++) result[i] = gradesUnits[i].gradeTypePoz;
+            return result;
+        }
+
+    }
+
 
 }

@@ -68,6 +68,8 @@
 
     <!-- активность урока -->
     <dimen name="lesson_activity_learner_name_text_size">12sp</dimen>
+    <dimen name="lesson_activity_learner_main_grade_text_size">30sp</dimen>
+    <dimen name="lesson_activity_learner_small_grade_text_size">22sp</dimen>
 
     <!-- конец урока -->
     <dimen name="lesson_list_element_height">40sp</dimen>

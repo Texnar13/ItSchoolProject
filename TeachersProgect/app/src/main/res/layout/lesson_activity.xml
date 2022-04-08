@@ -12,22 +12,17 @@
         android:background="@color/backgroundWhite"
         tools:context="com.learning.texnar13.teachersprogect.lesson.LessonActivity">
 
-        <RelativeLayout
-            android:id="@+id/activity_lesson_room_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal" />
-
         <com.learning.texnar13.teachersprogect.lesson.LessonOutView
             android:id="@+id/lesson_activity_out_view"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_below="@+id/test_id" />
+            android:layout_height="match_parent"/>
 
-        <include android:id="@+id/test_id" layout="@layout/base_toolbar_blue" />
+        <include
+            android:id="@+id/test_id"
+            layout="@layout/base_toolbar_blue" />
 
     </RelativeLayout>
 
-    <include layout="@layout/lesson_activity_bottomsheet"/>
+    <include layout="@layout/lesson_activity_bottomsheet" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
