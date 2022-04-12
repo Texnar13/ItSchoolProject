@@ -7,13 +7,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.RectF;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RoundRectShape;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.view.HapticFeedbackConstants;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -22,7 +22,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -78,6 +77,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
     // --- параметры из бд не исчезающие при повороте экрана, но обновляющиеся при заходе на активность ----------
 
+    // сам обьект базы данных
+    DataBaseOpenHelper db;
+
     // максимальная оценка, типи пропусков, итд
     private static GraduationSettings graduationSettings;
     // данные об уроке
@@ -88,6 +90,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     private static int chosenLearnerPosition;
     // лист с обьектами парт
     private static ArrayList<DeskUnit> desksList;
+
     // растяжение по осям
     private static float multiplier = 0;//0,1;10 (обновляется в updateCabinetTransformFromDB и onTouch)
     // текущее смещение по осям
@@ -192,7 +195,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                 return;
             }
             // получаем начальные данные об уроке из бд
-            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+            db = new DataBaseOpenHelper(this);
             lessonBaseData = LessonBaseData.newInstance(
                     db,
                     lessonAttitudeId,
@@ -202,7 +205,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
             // подгружаем все остальное
             initData(db);
-            db.close();
         }
 
 
@@ -266,12 +268,12 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         super.onResume();
 
         // --- обновляем все данные из бд ---
-        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        if (db == null)
+            db = new DataBaseOpenHelper(this);
         // обновляем трансформацию (размеры и отступы) кабинета
         updateCabinetTransformFromDB(db);
         // обновляем список парт и рассадку учеников
         checkDesksAndAndPlacesFromDB(db);
-        db.close();
         // и выводим все
         outAll();
 
@@ -294,6 +296,10 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     @Override
     protected void onPause() {
         super.onPause();
+
+        // закрываем базу данных после использования
+        db.close();
+        db = null;
 
         // --- настройка тихого урока --- (выключение)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -530,7 +536,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             placesCursor.close();
         }
         desksCursor.close();
-        db.close();
     }
 
     /**
@@ -542,7 +547,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
      */
     @SuppressLint("ResourceType")
     void outAll() {
-        // todo здесь графика
 
         // передаем данные во view
         outView.setData(graduationSettings.maxAnswersCount, learnersAndTheirGrades, desksList);
@@ -553,7 +557,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
 
     // ---------------------------------------------------------------------------------------------
-    // ------ Зум и перемещение экрана
+    // ------ Зум, перемещение экрана, нажатие на экран
     // ---------------------------------------------------------------------------------------------
 
 
@@ -567,6 +571,19 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     // предыдущее растояние между пальцам
     private float oldDist = 1f;
 
+
+    // для долгого нажатия - продолжается ли оно ещё, или уже нет
+    // коллбэк последнего не остановленного хэндлера
+    abstract static class LongClickHandlerCallback implements Handler.Callback {
+        boolean longPressCanBe = true;// переменная которая говорит хэндлеру нужен он ещё, или уже нет
+    }
+
+    LongClickHandlerCallback longClickHandlerCallback;
+
+
+    // номер нажатого ученика в массиве
+    int pressedLearner = -1;
+    PointF currentPress = new PointF();
 
     // зум и перемещение экрана
     @Override
@@ -594,12 +611,55 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
          *   =none=
          */
 
+        currentPress.x = motionEvent.getX(0);
+        currentPress.y = motionEvent.getY(0);
+
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN: // поставили первый палец
+
+                // проверка было ли нажатие на ученика
+                pressedLearner = outView.getPressedLearnerNumber(motionEvent.getX(0), motionEvent.getY(0));
+
+                // действия выполняемые хэндлером
+                longClickHandlerCallback = new LongClickHandlerCallback() {
+                    @Override
+                    public boolean handleMessage(@NonNull Message message) {
+                        if (message.what == 101 && longPressCanBe) {
+                            // останавливаем нажатие
+                            longPressCanBe = false;
+                            mode = NONE;
+
+                            // если нажатие началось на ученике и палец пользователя до сих пор на нем
+                            if (pressedLearner != -1 &&
+                                    pressedLearner == outView.getPressedLearnerNumber(currentPress.x, currentPress.y)) {
+
+                                // говорим системе, что нажатие обработано
+                                view.performLongClick();
+                                // говорим системе, чтобы та вызвала событие вибрации
+                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY,
+                                        HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+
+                                // выполнение действия на длинном нажатии
+                                learnerLongPress();
+                            }
+                        }
+                        return false;
+                    }
+                };
+
+                // создаем отложенный вызов хэндлера для срабатывания лонг клика
+                (new Handler(getMainLooper(), longClickHandlerCallback))
+                        .sendEmptyMessageDelayed(101, android.view.ViewConfiguration.getLongPressTimeout());
                 break;
+
             case MotionEvent.ACTION_POINTER_DOWN:// поставили следующий палец
                 // если уже поставлен второй палец на остальные не реагируем
                 if (motionEvent.getPointerCount() == 2) {
+
+                    // завершаем нажатие на ученика
+                    pressedLearner = -1;
+                    longClickHandlerCallback.longPressCanBe = false;
+
                     // --------- начинаем zoom -----------
                     // находим изначальное растояние между пальцами
                     oldDist = spacing(motionEvent);
@@ -638,7 +698,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     oldMid = nowMid;
 
 
-                    // todo здесь графика
                     // вызов у view отрисовки с новыми размерами
                     outView.setNewScaleParams(multiplier, new PointF(xAxisPXOffset, yAxisPXOffset));
 
@@ -646,7 +705,11 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                 break;
 
             case MotionEvent.ACTION_POINTER_UP: {
-                DataBaseOpenHelper db = new DataBaseOpenHelper(this);//todo Сделать переменную бд полем класса и поместить ее открытие и закрытие в onPause и onResume
+                // прекращаем долгое нажатие
+                longClickHandlerCallback.longPressCanBe = false;
+                // прекращаем перемещение
+                mode = NONE;
+
                 // сохраняем множитель и смещение для этого кабинета
                 db.setCabinetMultiplierOffsetXOffsetY(
                         lessonBaseData.cabinetId,
@@ -654,61 +717,39 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                         (int) xAxisPXOffset,
                         (int) yAxisPXOffset
                 );
-                mode = NONE;
                 break;
             }
             case MotionEvent.ACTION_UP:
+
+                // если долгое нажатие еще не успело отработать (longPressCanBe==true),
+                // а пользователь уже отпустил палец (ACTION_UP) не дожидаясь
+                if (longClickHandlerCallback.longPressCanBe) {
+
+                    // прекращаем долгое нажатие
+                    longClickHandlerCallback.longPressCanBe = false;
+                    // прекращаем нажатие
+                    mode = NONE;
+
+                    // если нажатие началось на ученике и палец пользователя до сих пор на нем,
+                    if (pressedLearner != -1 &&
+                            pressedLearner == outView.getPressedLearnerNumber(motionEvent.getX(0), motionEvent.getY(0))) {
+                        // говорим системе, что нажатие обработано
+                        view.performClick();
+                        // вызываем обновление ученика
+                        tapOnLearner(pressedLearner);
+                    }
+                }
+                break;
+
             case MotionEvent.ACTION_CANCEL:
-                // прекращаем перемещение
+                // прекращаем долгое нажатие
+                longClickHandlerCallback.longPressCanBe = false;
+                // прекращаем любое перемещение/нажатие
                 mode = NONE;
         }
 
-        return true; // todo не везде->?
+        return true;
     }
-
-
-    /* todo нажатие на ученика
-    * // при нажатии на контейнер ученика
-                    int finalLearnerArrPos = learnerArrPos;
-                    learnersAndTheirGrades[learnerArrPos].viewData.viewPlaceOut.setOnClickListener(view -> {
-                        // меняем его оценку
-                        tapOnLearner(learnersAndTheirGrades[finalLearnerArrPos]);
-                    });
-
-                    // при долгом клике на ученика
-                    learnersAndTheirGrades[learnerArrPos].viewData.viewPlaceOut.setOnLongClickListener(view -> {
-
-                        // выставляем этого ученика как выбранного
-                        chosenLearnerPosition = finalLearnerArrPos;
-
-                        // вызываем диалог изменения оценок
-                        GradeEditLessonDialogFragment gradeDialog = new GradeEditLessonDialogFragment();
-                        // передаем на вход данные
-                        Bundle args = new Bundle();
-                        args.putString(GradeEditLessonDialogFragment.ARGS_LEARNER_NAME,
-                                learnersAndTheirGrades[finalLearnerArrPos].fullName);
-                        args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_GRADES_TYPES_ARRAY,
-                                graduationSettings.getAnswersTypesArray());
-                        args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ARRAY,
-                                learnersAndTheirGrades[finalLearnerArrPos].getGradesArray());
-                        args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY,
-                                learnersAndTheirGrades[finalLearnerArrPos].getGradesTypesArray());
-                        args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_ABSENT_TYPES_LONG_NAMES_ARRAY,
-                                graduationSettings.getAbsentTypesLongNames());
-                        args.putInt(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ABSENT_TYPE_NUMBER,
-                                learnersAndTheirGrades[finalLearnerArrPos].absTypePozNumber);
-                        args.putInt(GradeEditLessonDialogFragment.ARGS_INT_MAX_GRADE,
-                                graduationSettings.maxAnswersCount);
-                        args.putInt(GradeEditLessonDialogFragment.ARGS_INT_CHOSEN_GRADE_POSITION,
-                                learnersAndTheirGrades[finalLearnerArrPos].chosenGradePosition);
-                        gradeDialog.setArguments(args);
-                        // показываем диалог
-                        gradeDialog.show(getFragmentManager(), "gradeDialog - Hello");
-                        return true;
-                    });
-    *
-    *
-    * */
 
 
     // Расстояние между первым и вторым пальцами из event
@@ -726,19 +767,12 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 
-    // ------ упорядочивание кода закончил здесь ---------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-
-
     // нажатие на ученика
-    void tapOnLearner(LessonLearnerAndHisGrades tappedLearner) {// todo проверка для больших оценок, которые вне диапазона
+    void tapOnLearner(int pressedLearnerListNumber) {
+
+        LessonLearnerAndHisGrades tappedLearner = learnersAndTheirGrades[pressedLearnerListNumber];
+
+        Log.e("TAG", "tapOnLearner: learnerId=" + tappedLearner.learnerId);
 
         // если стоит попуск, оценку менять нельзя
         if (tappedLearner.absTypePozNumber == -1) {
@@ -748,15 +782,21 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     tappedLearner.gradesUnits[tappedLearner.chosenGradePosition];
             tappedGrade.grade = (tappedGrade.grade % graduationSettings.maxAnswersCount) + 1;
 
-            // обновляем данные ученика
-            outView.updateLearner();
-            // выводим графику
+            // передаем данные ученика во view
+            outView.updateLearner(
+                    pressedLearnerListNumber,
+                    new int[]{
+                            tappedLearner.gradesUnits[0].grade,
+                            tappedLearner.gradesUnits[1].grade,
+                            tappedLearner.gradesUnits[2].grade,
+                    },
+                    tappedLearner.chosenGradePosition,
+                    tappedLearner.absTypePozNumber
+            );
+            // перерисовка тех данных, которые во view
             outView.setNewScaleParams(multiplier, new PointF(xAxisPXOffset, yAxisPXOffset));
 
-            // todo здесь графика
-
             // сохраняем результат в бд
-            DataBaseOpenHelper db = new DataBaseOpenHelper(this);
             if (tappedLearner.gradeId == -1) {
                 tappedLearner.gradeId = db.createGrade(
                         tappedLearner.learnerId,
@@ -774,6 +814,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                 if (tappedLearner.gradesUnits[0].grade == 0 && tappedLearner.gradesUnits[1].grade == 0 &&
                         tappedLearner.gradesUnits[2].grade == 0 && tappedLearner.absTypePozNumber == -1) {
                     db.removeGrade(tappedLearner.gradeId);
+                    tappedLearner.gradeId = -1;
                 } else
                     db.editGrade(tappedLearner.gradeId,
                             tappedLearner.gradesUnits[0].grade,
@@ -784,10 +825,53 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                             graduationSettings.answersTypes[tappedLearner.gradesUnits[2].gradeTypePoz].id,
                             (tappedLearner.absTypePozNumber == -1) ? (-1) : (graduationSettings.absentTypes[tappedLearner.absTypePozNumber].id));
             }
-            db.close();
-
         }
     }
+
+    // долгое нажатие на ученика
+    private void learnerLongPress() {
+
+
+        // выставляем этого ученика как выбранного
+        chosenLearnerPosition = pressedLearner;
+
+        // вызываем диалог изменения оценок
+        GradeEditLessonDialogFragment gradeDialog = new GradeEditLessonDialogFragment();
+        // передаем на вход данные
+        Bundle args = new Bundle();
+        args.putString(GradeEditLessonDialogFragment.ARGS_LEARNER_NAME,
+                learnersAndTheirGrades[chosenLearnerPosition].secondName + " " +
+                        learnersAndTheirGrades[chosenLearnerPosition].firstName
+        );
+        args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_GRADES_TYPES_ARRAY,
+                graduationSettings.getAnswersTypesArray());
+        args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ARRAY,
+                learnersAndTheirGrades[chosenLearnerPosition].getGradesArray());
+        args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY,
+                learnersAndTheirGrades[chosenLearnerPosition].getGradesTypesArray());
+        args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_ABSENT_TYPES_LONG_NAMES_ARRAY,
+                graduationSettings.getAbsentTypesLongNames());
+        args.putInt(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ABSENT_TYPE_NUMBER,
+                learnersAndTheirGrades[chosenLearnerPosition].absTypePozNumber);
+        args.putInt(GradeEditLessonDialogFragment.ARGS_INT_MAX_GRADE,
+                graduationSettings.maxAnswersCount);
+        args.putInt(GradeEditLessonDialogFragment.ARGS_INT_CHOSEN_GRADE_POSITION,
+                learnersAndTheirGrades[chosenLearnerPosition].chosenGradePosition);
+        gradeDialog.setArguments(args);
+        // показываем диалог
+        gradeDialog.show(getFragmentManager(), "gradeDialog");
+    }
+
+    // ------ упорядочивание кода закончил здесь ---------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+
 
     // обратная связь от диалога оценок GradeDialogFragment
     @Override
@@ -798,8 +882,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
             // меняем списки
 
-            // если стоят оценки
             chosenOne.absTypePozNumber = chosenAbsPoz;
+            // если стоят оценки
             if (chosenAbsPoz == -1) {
                 for (int i = 0; i < 3; i++) {
                     chosenOne.gradesUnits[i].grade = grades[i];
@@ -813,7 +897,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             }
 
             // сохраняем значения в бд
-            DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
             if (chosenOne.gradeId == -1) {
                 chosenOne.gradeId = db.createGrade(
                         chosenOne.learnerId,
@@ -831,6 +914,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                 if (chosenOne.gradesUnits[0].grade == 0 && chosenOne.gradesUnits[1].grade == 0 &&
                         chosenOne.gradesUnits[2].grade == 0 && chosenAbsPoz == -1) {
                     db.removeGrade(chosenOne.gradeId);
+                    chosenOne.gradeId = -1;
                 } else
                     db.editGrade(chosenOne.gradeId,
                             chosenOne.gradesUnits[0].grade,
@@ -841,14 +925,12 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                             graduationSettings.answersTypes[chosenOne.gradesUnits[2].gradeTypePoz].id,
                             (chosenAbsPoz == -1) ? (-1) : (graduationSettings.absentTypes[chosenAbsPoz].id));
             }
-            db.close();
 
             // ставим выбранной следующую оценку
             chosenOne.chosenGradePosition = (chosenOne.chosenGradePosition + 1) % 3;
 
-            // todo здесь графика
             // обновляем данные ученика
-            outView.updateLearner();
+            outView.updateLearner(chosenLearnerPosition, grades, chosenOne.chosenGradePosition, chosenOne.absTypePozNumber);
             // выводим графику
             outView.setNewScaleParams(multiplier, new PointF(xAxisPXOffset, yAxisPXOffset));
 
@@ -859,7 +941,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 
-    // обратная связь от активности LesonList
+    // обратная связь от активности LesonList (срабатывает раньше onResume)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -868,9 +950,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
             // пользователь вернулся с активности в которой можно редактировать оценки
             // значит надо подгрузить их из бд
-            DataBaseOpenHelper db = new DataBaseOpenHelper(LessonActivity.this);
+            if(db == null)
+                db = new DataBaseOpenHelper(this);
             getGradesFromDB(db);
-            db.close();
 
             // и вывести подгруженное
             outAll();
@@ -1005,7 +1087,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         int chosenGradePosition = 0;
         // массив оценок
         LessonListActivity.LessonListLearnerAndGradesData.GradeUnit[] gradesUnits;
-        // тип пропуска
+        // тип пропуска (может быть -1)
         int absTypePozNumber;
 
         LessonLearnerAndHisGrades(long learnerId, String firstName, String secondName,
@@ -1033,8 +1115,5 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             for (int i = 0; i < result.length; i++) result[i] = gradesUnits[i].gradeTypePoz;
             return result;
         }
-
     }
-
-
 }

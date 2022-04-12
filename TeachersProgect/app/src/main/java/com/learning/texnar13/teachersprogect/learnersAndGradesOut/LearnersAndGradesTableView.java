@@ -13,6 +13,7 @@ import android.os.Build;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -1363,6 +1364,7 @@ public class LearnersAndGradesTableView extends View {
                     }
                 }
                 // пробегаемся по содержимому таблицы оценок
+                // cellYOffset -> переменная, через которую считается смещение рядов
                 int cellYOffset = learnersAndGradesOffsetForTitle + titleWeekdaysHeight + learnersAndGradesYOffset;
                 for (int learnerIterator = 0; learnerIterator < learnersDataAndSizes.length; learnerIterator++) {
                     cellXOffset = learnersShowedWidth + gradesXOffset;
@@ -1383,7 +1385,8 @@ public class LearnersAndGradesTableView extends View {
                             cellXOffset += learnersGrades[learnerIterator][dayIterator][lessonIterator].cellWidth;
                         }
                     }
-                    cellYOffset += learnersGrades[learnerIterator][0][0].cellHeight;
+                    // исходя из выоты имени ученика считаем смещение для следующей строки
+                    cellYOffset += learnersDataAndSizes[learnerIterator].cellHeight;
                 }
 
             } else {

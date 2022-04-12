@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -29,17 +28,17 @@ public class LessonOutView extends View {
 
     // ---------- константы ----------
     // размер одноместной парты
-    static final int NO_ZOOMED_DESK_SIZE = 40;
-    static final int NO_ZOOMED_LEARNER_SIZE = NO_ZOOMED_DESK_SIZE / 2;
-    static final int NO_ZOOMED_DESK_BORDER = 3;
-    static final int NO_ZOOMED_DESK_RADIUS = 5;
+    private static final int NO_ZOOMED_DESK_SIZE = 40;
+    private static final int NO_ZOOMED_LEARNER_SIZE = NO_ZOOMED_DESK_SIZE / 2;
+    private static final int NO_ZOOMED_DESK_BORDER = 3;
+    private static final int NO_ZOOMED_DESK_RADIUS = 5;
 
     // ----- Переменные назначенные при инициализации -----
     // цвета коэффициентЭкрана(screenDensity)
     // Набор кистей для отрисовки
 
     // кисть для фона парты
-    Paint deskFillPaint;
+    private Paint deskFillPaint;
     // кисть для отрисовки имени(внизу клетки)
     private TextPaint textPaintName;
     // кисть для отрисовки большой оценки
@@ -49,26 +48,26 @@ public class LessonOutView extends View {
 
     // цвета
     // фон
-    int cabinetColor;
+    private int cabinetColor;
     // простая парта
-    int simpleDeskColor;
+    private int simpleDeskColor;
     // цвета оценок
-    int[] gradesColors;
+    private int[] gradesColors;
     // цвет обычного текста
-    int simpleTextColor;
+    private int simpleTextColor;
     // цвет отсутствия
-    int absentColor;
+    private int absentColor;
 
 
     // плотность экрана нужна для расчета размеров парт
-    static float screenDensity;
+    private static float screenDensity;
     // максимальная оценка
-    int maxAnswersCount;
+    private int maxAnswersCount;
 
     // ----- Отрисовываемые данные -----
-    float scale;
-    PointF coordinateCenter;
-    DrawableDesk[] desks;
+    private float scale;
+    private PointF coordinateCenter;
+    private DrawableDesk[] desks;
 
 
     // ----- Переменные назначенные при инициализации, меняющиеся в процессе работы view -----
@@ -186,9 +185,9 @@ public class LessonOutView extends View {
 
     // Передача данных без отрисовки (отрисовка есть в setNewScaleParams)
     public void setData(
-                        int maxAnswersCount,
-                        LessonActivity.LessonLearnerAndHisGrades[] learnersAndTheirGrades,
-                        ArrayList<LessonActivity.DeskUnit> desksList) {
+            int maxAnswersCount,
+            LessonActivity.LessonLearnerAndHisGrades[] learnersAndTheirGrades,
+            ArrayList<LessonActivity.DeskUnit> desksList) {
 
         // максимальное количество ответов
         this.maxAnswersCount = maxAnswersCount;
@@ -244,27 +243,45 @@ public class LessonOutView extends View {
     }
 
 
-    // метод обновления информации об одном ученике
-    void updateLearner() {// todo
-
+    // метод обновления информации об одном ученике (без вывода графики)
+    void updateLearner(int pressedLearnerListNumber, int[] grades, int chosenGradePosition, int chosenAbsPoz) {
+        // поиск нужного ученика в партах
+        for (DrawableDesk desk : desks) {
+            for (int learnerI = 0; learnerI < desk.learners.length; learnerI++) {
+                // если не пустой ученик с нужным id (номером в массиве) найден
+                if (desk.learners[learnerI] != null)
+                    if (desk.learners[learnerI].learnerArrayPoz == pressedLearnerListNumber) {
+                        // меняем его параметры
+                        desk.learners[learnerI].grades = grades;
+                        desk.learners[learnerI].mainGradePos = chosenGradePosition;
+                        desk.learners[learnerI].absent = chosenAbsPoz != -1;
+                        return;
+                    }
+            }
+        }
     }
 
 
     int getPressedLearnerNumber(float pressX, float pressY) {
+
         for (DrawableDesk desk : desks) {
             // если координата в парте по y
-            if (pressY - pxScaledAndOffsetByYFromDp(desk.deskPosition.y) <= pxScaledFromDp(NO_ZOOMED_DESK_SIZE)) {
+            if (pxScaledAndOffsetByYFromDp(desk.deskPosition.y) <= pressY &&
+                    pressY <= pxScaledAndOffsetByYFromDp(desk.deskPosition.y) + pxScaledFromDp(NO_ZOOMED_DESK_SIZE)) {
 
                 // нажатие на первую половину парты c не пустым учеником
-                if (pressX - pxScaledAndOffsetByYFromDp(desk.deskPosition.x) <= pxScaledFromDp(NO_ZOOMED_DESK_SIZE)) {
+                if (pxScaledAndOffsetByXFromDp(desk.deskPosition.x) <= pressX &&
+                        pressX <= pxScaledAndOffsetByXFromDp(desk.deskPosition.x) + pxScaledFromDp(NO_ZOOMED_DESK_SIZE)) {
                     if (desk.learners[0] != null) {
 
+                        // возвращаем количество учеников
                         return desk.learners[0].learnerArrayPoz;
                     }
                     // нажатие было на конкретную парту, но на ней нет ученика, дальше проверять смысла нет
                     return -1;
                 } else if (desk.learners.length > 1)
-                    if (pressX - pxScaledAndOffsetByYFromDp(desk.deskPosition.x) <= pxScaledFromDp(NO_ZOOMED_DESK_SIZE * 2)) {
+                    if (pxScaledAndOffsetByXFromDp(desk.deskPosition.x) <= pressX &&
+                            pressX <= pxScaledAndOffsetByXFromDp(desk.deskPosition.x) + pxScaledFromDp(NO_ZOOMED_DESK_SIZE * 2)) {
                         if (desk.learners[1] != null) {
                             // нажатие на вторую половину парты c не пустым учеником
                             return desk.learners[1].learnerArrayPoz;
@@ -350,9 +367,9 @@ public class LessonOutView extends View {
             // выбираем цвет фона
             if (learner.absent) {// пропуск
                 deskFillPaint.setColor(simpleDeskColor);
-            } else if(learner.mainGradePos == -1){
+            } else if (learner.mainGradePos == -1) {
                 deskFillPaint.setColor(simpleDeskColor);
-            }else if (learner.grades[learner.mainGradePos] == 0) {
+            } else if (learner.grades[learner.mainGradePos] == 0) {
                 deskFillPaint.setColor(simpleDeskColor);
             } else {
                 float currentGrade = (float) learner.grades[learner.mainGradePos] / maxAnswersCount;
@@ -455,7 +472,7 @@ public class LessonOutView extends View {
     }
 
     // метод рисования текста имени ученика
-    Rect tempRect = new Rect();
+    private Rect tempRect = new Rect();
 
     private void drawLearnerTexts(DrawableLearner learner, PointF deskPosition, int mode, Canvas canvas) {
 

@@ -14,6 +14,7 @@
 
         <com.learning.texnar13.teachersprogect.lesson.LessonOutView
             android:id="@+id/lesson_activity_out_view"
+            android:hapticFeedbackEnabled="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
