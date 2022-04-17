@@ -140,7 +140,7 @@ public class PeriodDialogFragment extends DialogFragment {
 
         // кнопка закрыть
         ImageView closeImageView = new ImageView(getActivity());
-        closeImageView.setImageResource(R.drawable.base_button_close);
+        closeImageView.setImageResource(R.drawable.base_button_close_blue);
         LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),
                 (int) getResources().getDimension(R.dimen.my_icon_size)
@@ -325,7 +325,7 @@ public class PeriodDialogFragment extends DialogFragment {
 
         // кнопка назад
         ImageView closeImageView = new ImageView(getActivity());
-        closeImageView.setImageResource(R.drawable.__button_back_arrow_dark_gray);
+        closeImageView.setImageResource(R.drawable._base_button_arrow_back_white);
 
         LinearLayout.LayoutParams closeImageViewParams = new LinearLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),
@@ -481,7 +481,7 @@ public class PeriodDialogFragment extends DialogFragment {
 
         // кнопка назад
         ImageView closeImageView = new ImageView(getActivity());
-        closeImageView.setImageResource(R.drawable.__button_back_arrow_dark_gray);
+        closeImageView.setImageResource(R.drawable._base_button_arrow_back_white);
 
         RelativeLayout.LayoutParams closeImageViewParams = new RelativeLayout.LayoutParams((int) getResources().getDimension(R.dimen.my_icon_size), (int) getResources().getDimension(R.dimen.my_icon_size));
         closeImageViewParams.setMargins(

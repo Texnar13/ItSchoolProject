@@ -80,8 +80,14 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite, getTheme()));
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);// todo что это за строка, в Start Screen она не используется
+            window.setStatusBarColor(getResources().getColor(R.color.base_background_color, getTheme()));
+
+            // включен ли ночной режим
+            int currentNightMode = getResources().getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK;
+            if (Configuration.UI_MODE_NIGHT_YES != currentNightMode)
+                window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
+                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
         // выводим разметку
@@ -107,7 +113,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             // вертикальная ориентация
             cellSize = getResources().getDisplayMetrics().widthPixels / 7F;
         }
-        cellSize -= (getResources().getDimensionPixelOffset(R.dimen.shedule_month_calendar_margin) / 7.0 * 2);
+        cellSize -= (getResources().getDimensionPixelOffset(R.dimen.shedule_month_calendar_margin) * 1f);
         // получаем поле вывода заголовка
         dateText = findViewById(R.id.schedule_month_date_text);
         // получаем поле вывода дня
@@ -217,6 +223,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         // выставляем размеры linear-а календаря
         LinearLayout.LayoutParams calendarOutParams = new LinearLayout.LayoutParams((int) (cellSize * 7), (int) (cellSize * (countOfWeeks + 1)));
         calendarOutParams.gravity = Gravity.CENTER;
+        calendarOutParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.forth_margin);
         calendarOut.setLayoutParams(calendarOutParams);
         calendarOut.setWeightSum(countOfWeeks + 0.8f);
         // создаем 7 строк и помещаем их в контейнер
@@ -242,8 +249,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             day.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_semibold));
             day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.shedule_month_calendar_day_text_size));
             day.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
-                    (getResources().getColor(R.color.backgroundMediumGray, getTheme())) :
-                    (getResources().getColor(R.color.backgroundMediumGray))
+                    (getResources().getColor(R.color.text_color_not_active, getTheme())) :
+                    (getResources().getColor(R.color.text_color_not_active))
             );
             day.setGravity(Gravity.CENTER);
             LinearLayout.LayoutParams dayParams = new LinearLayout.LayoutParams(
@@ -267,16 +274,17 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 // создаем текст дня
                 final TextView day = new TextView(this);
                 day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.shedule_month_calendar_day_text_size));
-                day.setTextColor(Color.BLACK);
+                day.setPadding(0,0,0,0);
+                day.setTextColor(getResources().getColor(R.color.text_color_simple));
                 day.setGravity(Gravity.CENTER);
                 LinearLayout.LayoutParams dayParams = new LinearLayout.LayoutParams(0,
                         LinearLayout.LayoutParams.MATCH_PARENT, 1);
                 dayParams.gravity = Gravity.CENTER;
                 dayParams.setMargins(
-                        getResources().getDimensionPixelOffset(R.dimen.half_margin),
-                        getResources().getDimensionPixelOffset(R.dimen.half_margin),
-                        getResources().getDimensionPixelOffset(R.dimen.half_margin),
-                        getResources().getDimensionPixelOffset(R.dimen.half_margin)
+                        getResources().getDimensionPixelOffset(R.dimen.shedule_month_days_cells_free_space),
+                        getResources().getDimensionPixelOffset(R.dimen.shedule_month_days_cells_free_space),
+                        getResources().getDimensionPixelOffset(R.dimen.shedule_month_days_cells_free_space),
+                        getResources().getDimensionPixelOffset(R.dimen.shedule_month_days_cells_free_space)
                 );
                 weekLinearRows[weekOfMonthI + 1].addView(day, dayParams);
 
@@ -294,8 +302,9 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                     );
                     // если в дне есть уроки, помечаем его
                     if (lessonsAttitudes.getCount() != 0) {
-                        day.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_bold));
-                        day.setTextColor(Color.BLACK);
+                        day.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_black));
+                    }else{
+                        day.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_semibold));
                     }
                     lessonsAttitudes.close();
                     db.close();
@@ -325,8 +334,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                             day.setBackgroundResource(R.drawable.shedule_month_activity_background_chosen_cell);
                         }
                         day.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
-                                (getResources().getColor(R.color.backgroundWhite, getTheme())) :
-                                (getResources().getColor(R.color.backgroundWhite))
+                                (getResources().getColor(R.color.text_color_inverse, getTheme())) :
+                                (getResources().getColor(R.color.text_color_inverse))
                         );
                     }
 
@@ -345,7 +354,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                                             (getResources().getColor(R.color.baseOrange))
                                     );
                                 } else {
-                                    pressedCell.setTextColor(Color.BLACK);
+                                    pressedCell.setTextColor(getResources().getColor(R.color.text_color_simple));
                                 }
                             }
 
@@ -362,8 +371,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                                 day.setBackgroundResource(R.drawable.shedule_month_activity_background_chosen_cell);
                             }
                             day.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
-                                    (getResources().getColor(R.color.backgroundWhite, getTheme())) :
-                                    (getResources().getColor(R.color.backgroundWhite))
+                                    (getResources().getColor(R.color.base_background_color, getTheme())) :
+                                    (getResources().getColor(R.color.base_background_color))
                             );
                             // и выводим по ней день
                             outDay();
@@ -398,8 +407,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             head.setBackgroundResource(R.drawable.base_background_dialog_head_round_blue);
 
             head.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
-                    (getResources().getColor(R.color.backgroundWhite, getTheme())) :
-                    (getResources().getColor(R.color.backgroundWhite))
+                    (getResources().getColor(R.color.base_background_color, getTheme())) :
+                    (getResources().getColor(R.color.base_background_color))
             );
             head.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_semibold));
             head.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.shedule_month_day_title_text_size));
@@ -456,6 +465,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             for (int lessonI = 0; lessonI < standardLessonsPeriods.length; lessonI++) {
                 final int finalLessonI = lessonI;
 
+                // ищем в базе данных урок
+                Cursor attitudeId = db.getSubjectAndTimeCabinetAttitudeByDateAndLessonNumber(outStringDate, lessonI);
 
                 // раздуваем корневой view одного элемента
                 View rootElement = getLayoutInflater().inflate(R.layout.schedule_month_lesson_pattern, null);
@@ -478,19 +489,24 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 if (currentLesson == lessonI) {// если урок текущй
                     rootElement.setBackgroundResource(R.color.baseOrange);
                     textColor = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
-                            (getResources().getColor(R.color.backgroundWhite, getTheme())) :
-                            (getResources().getColor(R.color.backgroundWhite));
+                            (getResources().getColor(R.color.text_color_inverse, getTheme())) :
+                            (getResources().getColor(R.color.text_color_inverse));
                 } else {
                     if (lessonI == 0) {
-                        rootElement.setBackgroundResource(R.color.backgroundWhite);
+                        rootElement.setBackgroundResource(R.color.base_background_color);
                     } else {
                         if (currentLesson == lessonI - 1) {
-                            rootElement.setBackgroundResource(R.color.backgroundWhite);
+                            rootElement.setBackgroundResource(R.color.base_background_color);
                         } else {
                             rootElement.setBackgroundResource(R.drawable.shedule_month_activity_background_lesson_not_active);
                         }
                     }
-                    textColor = Color.BLACK;
+                    // если не нашли зависимость урока
+                    if (attitudeId.getCount() == 0) {
+                        textColor = getResources().getColor(R.color.text_color_not_active);
+                    } else {
+                        textColor = getResources().getColor(R.color.text_color_simple);
+                    }
                 }
                 lessonNumberText.setTextColor(textColor);
                 startTimeText.setTextColor(textColor);
@@ -500,9 +516,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 cabinetText.setTextColor(textColor);
 
 
-                // ищем в базе данных урок
-                Cursor attitudeId = db.getSubjectAndTimeCabinetAttitudeByDateAndLessonNumber(outStringDate, lessonI);
-                if (attitudeId.getCount() == 0) {// если не нашли зависимость урока
+                // если не нашли зависимость урока
+                if (attitudeId.getCount() == 0) {
                     // чистим поля
                     subjectText.setText("");
                     classText.setText("");

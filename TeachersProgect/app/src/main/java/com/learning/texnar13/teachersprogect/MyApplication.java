@@ -5,6 +5,8 @@ import android.content.res.Configuration;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.multidex.MultiDexApplication;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
@@ -19,6 +21,11 @@ public class MyApplication extends MultiDexApplication {//MultiDexApplication/Ap
 
     @Override
     public void onCreate() {
+
+        // настраиваем программный вывод векторных изображений
+        //  https://stackoverflow.com/questions/43004886/resourcescompat-getdrawable-vs-appcompatresources-getdrawable
+        //AppCompatResources.getDrawable(this, R.drawable.base_button_close_background_round));
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // обновляем значение локали
         MyApplication.updateLangForContext(getApplicationContext());
@@ -52,12 +59,19 @@ public class MyApplication extends MultiDexApplication {//MultiDexApplication/Ap
         if (lang.equals(SchoolContract.TableSettingsData.COLUMN_LOCALE_DEFAULT_CODE)) {
             lang = context.getResources().getConfiguration().locale.getLanguage();
         }
-        // и ставим его
+
+        // создаем нужный обьект локали
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        // config.fontScale todo почитать про динамическое изменение шрифта
+
+        // получаем текущую конфигурацию в контексте
+        Configuration config = context.getResources().getConfiguration();
+
+        // добавляем конфигурации новые параметры
         config.locale = locale;
-        context.getResources().updateConfiguration(config, null);
+        // config.fontScale todo почитать про динамическое изменение шрифта
+
+        // ставим обратно получившуюся конфигурацию
+        context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
     }
 }

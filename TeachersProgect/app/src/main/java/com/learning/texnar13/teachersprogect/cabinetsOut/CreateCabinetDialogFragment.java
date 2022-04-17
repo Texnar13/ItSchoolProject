@@ -27,9 +27,6 @@ public class CreateCabinetDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        // настраиваем программный вывод векторных изображений
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // layout диалога

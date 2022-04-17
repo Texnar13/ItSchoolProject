@@ -105,10 +105,10 @@ public class LessonOutView extends View {
             Resources.Theme theme = context.getTheme();
 
             // фон
-            cabinetColor = r.getColor(R.color.backgroundWhite, theme);
+            cabinetColor = r.getColor(R.color.base_background_color, theme);
 
             // простая парта
-            simpleDeskColor = r.getColor(R.color.backgroundLiteGray, theme);
+            simpleDeskColor = r.getColor(R.color.desks_color, theme);
 
             // цвета оценок
             gradesColors = new int[]{
@@ -119,14 +119,14 @@ public class LessonOutView extends View {
                     r.getColor(R.color.grade5, theme)
             };
             // цвет обычного текста
-            simpleTextColor = r.getColor(R.color.simple_text_color, theme);
+            simpleTextColor = r.getColor(R.color.text_color_simple, theme);
             // цвет отсутствия
             absentColor = r.getColor(R.color.absent_text_color, theme);
         } else {
             // фон
-            cabinetColor = r.getColor(R.color.backgroundWhite);
+            cabinetColor = r.getColor(R.color.base_background_color);
             // простая парта
-            simpleDeskColor = r.getColor(R.color.backgroundLiteGray);
+            simpleDeskColor = r.getColor(R.color.desks_color);
 
             // цвета оценок
             gradesColors = new int[]{
@@ -137,7 +137,7 @@ public class LessonOutView extends View {
                     r.getColor(R.color.grade5)
             };
             // цвет обычного текста
-            simpleTextColor = r.getColor(R.color.simple_text_color);
+            simpleTextColor = r.getColor(R.color.text_color_simple);
             // цвет отсутствия
             absentColor = r.getColor(R.color.absent_text_color);
         }
@@ -304,7 +304,7 @@ public class LessonOutView extends View {
     protected void onDraw(Canvas canvas) {
 
         // запрет вывода графики, пока данные не подготовлены
-        if (desks != null && coordinateCenter != null) {// todo canDraw &&
+        if (desks != null && coordinateCenter != null) {
 
             // назначение элементам размеров, заданных по scale
             // (сделано это дабы не назначать одно и то же по сто раз)
@@ -665,7 +665,7 @@ public class LessonOutView extends View {
 
     private static class DrawableDesk {
 
-        // -- Переменные посчитанные для всех парт назначенные при инициализации, меняющиеся в процессе зума --todo записывается она сюда уже в пикселях, посчитанная с density
+        // -- Переменные посчитанные для всех парт назначенные при инициализации, меняющиеся в процессе зума
         // ширина одного квадрата парты
         static float deskSquareSize;
         // радиус скругления углов
@@ -673,7 +673,7 @@ public class LessonOutView extends View {
 
 
         // -- Локальные переменные парты --
-        // позиция парты todo записывается она сюда уже в пикселях, посчитанная с density
+        // позиция парты
         PointF deskPosition;
         // ученики сидящие за партой (null - место пустое)
         DrawableLearner[] learners;

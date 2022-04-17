@@ -6,6 +6,7 @@
     android:background="@color/transparent"
     app:elevation="0dp">
 
+    <!-- тулбар с заданным стилем копок, стрелок, текста, ит.д. -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/base_blue_toolbar"
         android:layout_width="match_parent"

@@ -50,7 +50,7 @@ public class GDPRDialogFragment extends DialogFragment {
 
     private void onButtonClicked(final Context context, final boolean userConsent) {
         //todo Это все одно большое todo
-//        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+//        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 //        preferences.edit()
 //                .putBoolean(SettingsFragment.USER_CONSENT_KEY, userConsent)
 //                .putBoolean(SettingsFragment.DIALOG_SHOWN_KEY, true)

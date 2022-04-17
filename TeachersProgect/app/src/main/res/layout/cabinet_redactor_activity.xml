@@ -63,7 +63,7 @@
                     android:layout_width="@dimen/cabinet_redactor_button_add_image_size"
                     android:layout_height="@dimen/cabinet_redactor_button_add_image_size"
                     android:layout_centerInParent="true"
-                    app:srcCompat="@drawable/base_button_add_white" />
+                    app:srcCompat="@drawable/base_button_fab_add_white" />
             </RelativeLayout>
 
 

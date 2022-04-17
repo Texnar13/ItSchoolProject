@@ -8,6 +8,7 @@
 
     <TextView
         android:id="@+id/schedule_month_lesson_pattern_number"
+        style="@style/TextViewSemiBoldStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/shedule_month_lesson_number_margin"
@@ -18,11 +19,12 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/schedule_month_lesson_pattern_start_time"
+            style="@style/TextViewSemiBoldStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="08.30"
@@ -31,6 +33,7 @@
 
         <TextView
             android:id="@+id/schedule_month_lesson_pattern_end_time"
+            style="@style/TextViewSemiBoldStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="09.30"

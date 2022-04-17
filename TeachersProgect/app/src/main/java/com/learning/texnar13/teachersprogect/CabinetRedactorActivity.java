@@ -9,7 +9,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -420,7 +419,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         // прекращаем перемещение
                         mode = NONE;
                         // ставим изображение в плюс
-                        instrumentalImage.setImageResource(R.drawable.base_button_add_white);
+                        instrumentalImage.setImageResource(R.drawable.base_button_fab_add_white);
                         instrumentalImageBackground.setBackgroundResource(R.drawable.cabinet_redactor_activity_button_add_desk);
                         // снимаем выбор с парты
                         checkedDeskId = -1;
@@ -458,7 +457,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         // из списка
                         desksList.remove(i);
                         // возвращаем картинку
-                        instrumentalImage.setImageResource(R.drawable.base_button_add_white);
+                        instrumentalImage.setImageResource(R.drawable.base_button_fab_add_white);
                         instrumentalImageBackground.setBackgroundResource(R.drawable.cabinet_redactor_activity_button_add_desk);
 
                         // прекращаем перемещение парты
@@ -574,7 +573,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     db.close();
 
                     // ставим изображение в плюс
-                    instrumentalImage.setImageResource(R.drawable.base_button_add_white);
+                    instrumentalImage.setImageResource(R.drawable.base_button_fab_add_white);
                     instrumentalImageBackground.setBackgroundResource(R.drawable.cabinet_redactor_activity_button_add_desk);
                     // снимаем с парты выбор
                     checkedDeskId = -1;

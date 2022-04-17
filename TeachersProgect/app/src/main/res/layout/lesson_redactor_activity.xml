@@ -26,20 +26,20 @@
         <TextView
             android:id="@+id/activity_lesson_redactor_head_text"
             style="@style/ButtonSimpleStyle"
-            android:fontFamily="@font/montserrat_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/double_margin" />
+            android:layout_marginStart="@dimen/double_margin"
+            android:fontFamily="@font/montserrat_semibold" />
 
     </LinearLayout>
 
     <ScrollView
-        android:paddingTop="@dimen/simple_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/activity_lesson_redactor_save_button"
         android:layout_below="@+id/activity_lesson_redactor_head_container"
-        android:background="@color/backgroundWhite">
+        android:background="@color/backgroundWhite"
+        android:paddingTop="@dimen/simple_margin">
 
         <LinearLayout
             android:id="@+id/activity_lesson_redactor_body_container"
@@ -55,8 +55,8 @@
                 android:layout_marginRight="@dimen/double_margin"
                 android:background="@drawable/base_background_button_round_gray"
                 android:paddingStart="@dimen/double_margin"
-                android:paddingEnd="@dimen/double_margin"
                 android:paddingTop="@dimen/simple_margin"
+                android:paddingEnd="@dimen/double_margin"
                 android:paddingBottom="@dimen/simple_margin">
 
                 <TableRow android:gravity="center_vertical">
@@ -100,9 +100,9 @@
                         android:id="@+id/activity_lesson_redactor_lesson_name_text_button"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/spinner_height_size"
+                        android:layout_gravity="center_vertical"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/simple_margin"
-                        android:layout_gravity="center_vertical"
                         android:text="@string/lesson_redactor_activity_spinner_text_create_subject"
                         android:textColor="#000000"
                         android:textSize="@dimen/text_simple_size" />
@@ -175,10 +175,16 @@
             <TextView
                 android:id="@+id/activity_lesson_redactor_remove_button"
                 style="@style/SettingsButtonSimpleStyle"
-                android:text="@string/lesson_redactor_activity_button_remove"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
+                android:text="@string/lesson_redactor_activity_button_remove"
                 android:textColor="@color/signalRed" />
+
+            <Button
+                android:id="@+id/activity_lesson_redactor_remove_next_lessons"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="EУдалить этот урок и все последующие Ы!Ы!Ы!" />
 
             <LinearLayout
                 android:layout_width="match_parent"

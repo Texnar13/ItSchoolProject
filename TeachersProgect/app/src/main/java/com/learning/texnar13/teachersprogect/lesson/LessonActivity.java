@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -20,7 +21,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,21 +38,18 @@ import com.learning.texnar13.teachersprogect.data.SCursor;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /*
 todo переделать описание?
  * onCreate(),
  * подгружаются все ученики, id кабинета, класса, предмета, зав. урок-время
  * подгружаются массивы с оценками
- *
- * эти поля должны быть статичными, и с проверкой на существование(для переворота)
- * при переходе удалить
- *
- * OnResume(), todo сделать как ActivityResult
- * выводятся парты и ученики
- *
  *
  *
  * */
@@ -67,10 +64,17 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     public static final String ARGS_LESSON_NUMBER = "lessonNumber";
 
 
+    // обьект для преобразования календаря в строку
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
     // ---------- Переменные ----------
 
     // view слоя с партами
     private LessonOutView outView;
+
+    // View от bottomSheet
+    TextView commentText;
+    TextView commentTitleText;
 
     // плотность экрана нужна для расчета размеров парт
     static float density;
@@ -82,14 +86,18 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
     // максимальная оценка, типи пропусков, итд
     private static GraduationSettings graduationSettings;
-    // данные об уроке
+    // неизменные данные об уроке
     private static LessonBaseData lessonBaseData;
+    // текущий обьект дз
+    HomeWorkUnit homeWork;
+
     // массив учеников
     private static LessonLearnerAndHisGrades[] learnersAndTheirGrades;
     // номер выбранного ученика
     private static int chosenLearnerPosition;
     // лист с обьектами парт
     private static ArrayList<DeskUnit> desksList;
+
 
     // растяжение по осям
     private static float multiplier = 0;//0,1;10 (обновляется в updateCabinetTransformFromDB и onTouch)
@@ -153,7 +161,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
      */
     static int ringerMode = -1;
 
-
     // создание экрана
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     @Override
@@ -161,8 +168,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         super.onCreate(savedInstanceState);
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
-        // чтобы векторные изображения созданные отображались
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         // раздуваем layout
         setContentView(R.layout.lesson_activity);
 
@@ -179,9 +184,14 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite, getTheme()));
-            window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
-                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            window.setStatusBarColor(getResources().getColor(R.color.base_background_color, getTheme()));
+
+            // включен ли ночной режим
+            int currentNightMode = getResources().getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK;
+            if (Configuration.UI_MODE_NIGHT_YES != currentNightMode)
+                window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
+                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
         // -------- подгрузка данных --------
@@ -204,7 +214,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             );
 
             // подгружаем все остальное
-            initData(db);
+            initData();
         }
 
 
@@ -231,10 +241,24 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     BottomSheetBehavior.from(findViewById(R.id.activity_lesson_bottom_sheet));
 
             // Находим заголовок для анимации
-            final FrameLayout titleBackground = findViewById(R.id.activity_lesson_bottom_sheet_title_background);
+            final View textView = findViewById(R.id.activity_lesson_bottom_sheet_title_text);
+            final View bottomContainer = findViewById(R.id.activity_lesson_bottom_sheet_bottom_content);
+
+            // кнопки переключения дат дз
+            final View buttonForward = findViewById(R.id.activity_lesson_bottom_sheet_button_date_back);
+            final View buttonBack = findViewById(R.id.activity_lesson_bottom_sheet_button_date_forward);
+
+
+            // выставляем данные полученные из бд
+            commentTitleText = findViewById(R.id.activity_lesson_bottom_sheet_date_text);
+            commentText = findViewById(R.id.activity_lesson_bottom_sheet_edit_text);
+
+            commentTitleText.setText(homeWork.title);// todo null pointer
+            commentText.setText(homeWork.text);
+
 
             // назначаем раскрытие и закрытие по нажатию заголовка
-            findViewById(R.id.activity_lesson_bottom_sheet_title).setOnClickListener(
+            findViewById(R.id.activity_lesson_bottom_sheet_title_text).setOnClickListener(
                     view -> bottomSheetBehavior.setState(
                             (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) ?
                                     (BottomSheetBehavior.STATE_EXPANDED) :
@@ -253,9 +277,11 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
                 @Override
                 public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                    titleBackground.animate().alpha(slideOffset).setDuration(0).start();
+                    // анимация скрытия и показа bottomSheet
+                    textView.setAlpha(slideOffset);
+                    bottomContainer.setAlpha(slideOffset);
+                    //.animate().alpha(slideOffset).setDuration(0).start();
                     //.setListener(new Animator.AnimatorListener() {
-
                 }
             });
         }
@@ -271,9 +297,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         if (db == null)
             db = new DataBaseOpenHelper(this);
         // обновляем трансформацию (размеры и отступы) кабинета
-        updateCabinetTransformFromDB(db);
+        updateCabinetTransformFromDB();
         // обновляем список парт и рассадку учеников
-        checkDesksAndAndPlacesFromDB(db);
+        checkDesksAndAndPlacesFromDB();
         // и выводим все
         outAll();
 
@@ -296,6 +322,23 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     @Override
     protected void onPause() {
         super.onPause();
+
+        // сохраняем дз
+        String lessonComment = commentText.getText().toString().trim();
+        if (lessonComment.length() > 0) {
+            if (homeWork.dbId == -1) {
+                db.createLessonComment(
+                        lessonBaseData.lessonDate,
+                        lessonBaseData.lessonAttitudeId,
+                        lessonComment
+                );
+            } else {
+                db.setLessonCommentStringById(
+                        homeWork.dbId,
+                        lessonComment
+                );
+            }
+        }
 
         // закрываем базу данных после использования
         db.close();
@@ -323,7 +366,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
      * Начальная подгрузка данных из бд
      * (Вызывается в OnCreate)
      */
-    void initData(DataBaseOpenHelper db) {
+    void initData() {
 
         // ------ получаем не меняющиеся настроки для всех классов ------
         graduationSettings = GraduationSettings.newInstance(db);
@@ -332,10 +375,51 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
         desksList = new ArrayList<>();
 
         // получаем учеников
-        getLearnersFromDB(db);
+        getLearnersFromDB();
 
         // получаем их оценки
-        getGradesFromDB(db);
+        getGradesFromDB();
+
+
+        // получаем дз
+
+        GregorianCalendar calendar = new GregorianCalendar();
+        try {
+            calendar.setTime(dateFormat.parse(lessonBaseData.lessonDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // "17 Октября, ПН, 1 урок"
+        String title = getResources().getString(R.string.lesson_activity_bottom_sheet_date_text,
+                calendar.get(GregorianCalendar.DAY_OF_MONTH),
+                getResources().getStringArray(R.array.months_names_with_ending)[
+                        calendar.get(GregorianCalendar.MONTH)],
+                getResources().getStringArray(R.array.schedule_month_activity_week_days_short_array)[
+                        (calendar.get(GregorianCalendar.DAY_OF_WEEK) >= 2) ?
+                                (calendar.get(GregorianCalendar.DAY_OF_WEEK) - 2) :
+                                (calendar.get(GregorianCalendar.DAY_OF_WEEK) + 5)
+                        ],
+                lessonBaseData.lessonNumber + 1
+        );
+
+
+        Cursor homework = db.getLessonCommentsByDateAndLesson(lessonBaseData.lessonAttitudeId, lessonBaseData.lessonDate);
+        if (homework.moveToNext()) {
+            homeWork = new HomeWorkUnit(
+                    homework.getLong(homework.getColumnIndexOrThrow(SchoolContract.TableLessonComment.KEY_ROW_ID)),
+                    title,
+                    homework.getString(homework.getColumnIndexOrThrow(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT))
+            );
+        } else {
+            homeWork = new HomeWorkUnit(
+                    -1,
+                    title,
+                    ""
+            );
+        }
+        homework.close();
+
     }
 
 
@@ -343,7 +427,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
      * Получаем учеников с пустыми оценками
      * (Вызывается в initData)
      */
-    void getLearnersFromDB(DataBaseOpenHelper db) {
+    void getLearnersFromDB() {
         // получаем учеников по id класса
         Cursor learnersCursor = db.getLearnersByClassId(lessonBaseData.learnersClassId);
 
@@ -383,7 +467,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
      * (Вызывается в initData)
      * (Вызывается в onActivityResult(lesson list) )
      */
-    private void getGradesFromDB(DataBaseOpenHelper db) {
+    private void getGradesFromDB() {
         for (LessonLearnerAndHisGrades currentLearner : learnersAndTheirGrades) {
 
             // получаем оценки ученика за этот урок (если уже проставлялись)
@@ -469,7 +553,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
      * Обновляем трансформацию (размеры и отступы) кабинета
      * (Вызывается в OnResume)
      */
-    void updateCabinetTransformFromDB(DataBaseOpenHelper db) {
+    void updateCabinetTransformFromDB() {
         Cursor cabinetCursor = db.getCabinet(lessonBaseData.cabinetId);
         cabinetCursor.moveToFirst();
         // получаем множитель  (0.25 <-> 4)
@@ -487,7 +571,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
      * Также инициализируем все view (только инициализируем, без размеров и фонов)
      * (Вызывается в OnResume)
      */
-    void checkDesksAndAndPlacesFromDB(DataBaseOpenHelper db) {
+    void checkDesksAndAndPlacesFromDB() {
 
         // чистим список парт
         desksList.clear();
@@ -950,9 +1034,9 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
             // пользователь вернулся с активности в которой можно редактировать оценки
             // значит надо подгрузить их из бд
-            if(db == null)
+            if (db == null)
                 db = new DataBaseOpenHelper(this);
-            getGradesFromDB(db);
+            getGradesFromDB();
 
             // и вывести подгруженное
             outAll();
@@ -1116,4 +1200,24 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             return result;
         }
     }
+
+
+    // класс для хранения дз
+    static class HomeWorkUnit {
+
+        // id
+        long dbId;
+        // текст даты
+        String title;
+
+        // текст дз
+        String text;
+
+        public HomeWorkUnit(long dbId, String title, String text) {
+            this.dbId = dbId;
+            this.title = title;
+            this.text = text;
+        }
+    }
 }
+

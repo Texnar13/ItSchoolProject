@@ -49,7 +49,6 @@
 
         <EditText
             android:id="@+id/learners_classes_out_dialog_create_class_name_input"
-            style="@style/SimpleEditTextUnderlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

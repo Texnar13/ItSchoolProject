@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundWhite"
     android:orientation="vertical"
     tools:context="com.learning.texnar13.teachersprogect.ScheduleMonthActivity">
 
@@ -29,29 +28,46 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="@dimen/shedule_month_month_buttons_heght">
 
-                    <ImageView
+                    <RelativeLayout
                         android:id="@+id/schedule_month_button_previous"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_alignParentStart="true"
-                        android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:layout_toStartOf="@+id/schedule_month_date_text"
-                        android:layout_toLeftOf="@+id/schedule_month_date_text"
-                        app:srcCompat="@drawable/base_button_arrow_back_blue" />
+                        android:layout_toStartOf="@+id/schedule_month_date_text">
 
-                    <ImageView
+                        <ImageView
+                            android:layout_width="@dimen/shedule_month_arrow_size"
+                            android:layout_height="@dimen/shedule_month_arrow_size"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/double_margin"
+                            app:srcCompat="@drawable/shedule_month_activity_button_arrow_back" />
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
                         android:id="@+id/schedule_month_button_next"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_toEndOf="@+id/schedule_month_date_text"
-                        android:layout_toRightOf="@+id/schedule_month_date_text"
-                        app:srcCompat="@drawable/base_button_arrow_forward_blue" />
+                        android:layout_toEndOf="@+id/schedule_month_date_text">
+
+                        <ImageView
+                            android:layout_width="@dimen/shedule_month_arrow_size"
+                            android:layout_height="@dimen/shedule_month_arrow_size"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerInParent="true"
+                            android:layout_marginStart="@dimen/double_margin"
+                            app:srcCompat="@drawable/shedule_month_activity_button_arrow_forward" />
+                    </RelativeLayout>
+
+
+
+
 
                     <TextView
                         android:id="@+id/schedule_month_date_text"
@@ -62,7 +78,7 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
                         android:text="TextView"
-                        android:textColor="@color/baseBlue"
+                        android:textColor="@color/base_blue"
                         android:textSize="@dimen/shedule_month_month_text_size" />
 
                 </RelativeLayout>

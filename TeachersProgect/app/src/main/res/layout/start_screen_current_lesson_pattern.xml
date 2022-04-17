@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="08.30"
-            android:textColor="@color/baseBlue"
+            android:textColor="@color/start_screen_top_sheet_inverse_text_color"
             android:textSize="@dimen/shedule_month_lessons_time_size" />
 
         <TextView
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="09.30"
-            android:textColor="@color/baseBlue"
+            android:textColor="@color/start_screen_top_sheet_inverse_text_color"
             android:textSize="@dimen/shedule_month_lessons_time_size" />
     </LinearLayout>
 
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Математика"
-            android:textColor="@color/baseBlue"
+            android:textColor="@color/start_screen_top_sheet_inverse_text_color"
             android:textSize="@dimen/shedule_month_lessons_content_text_size" />
 
         <LinearLayout
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="8а"
-                android:textColor="@color/baseBlue"
+                android:textColor="@color/start_screen_top_sheet_inverse_text_color"
                 android:textSize="@dimen/shedule_month_lessons_content_text_size" />
 
             <TextView
@@ -76,7 +76,7 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:text="304 каб."
-                android:textColor="@color/baseBlue"
+                android:textColor="@color/start_screen_top_sheet_inverse_text_color"
                 android:textSize="@dimen/shedule_month_lessons_content_text_size" />
         </LinearLayout>
 

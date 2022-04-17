@@ -5,7 +5,7 @@
             <item>
                 <shape android:shape="rectangle">
                     <corners android:topLeftRadius="@dimen/radius_rounding_dialogs" android:topRightRadius="@dimen/radius_rounding_dialogs" />
-                    <solid android:color="@color/backgroundWhite" />
+                    <solid android:color="@color/base_background_color" />
                 </shape>
             </item>
         </layer-list>

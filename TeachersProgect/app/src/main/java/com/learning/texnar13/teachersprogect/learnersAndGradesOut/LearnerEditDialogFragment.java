@@ -39,8 +39,6 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        // настраиваем программный вывод векторных изображений
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         View dialogView = getActivity().getLayoutInflater().inflate(R.layout.learners_and_grades_dialog_learner_edit, null);
         builder.setView(dialogView);
 

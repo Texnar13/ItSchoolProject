@@ -20,7 +20,7 @@
             android:layout_width="@dimen/my_icon_size"
             android:layout_height="@dimen/my_icon_size"
             android:adjustViewBounds="true"
-            app:srcCompat="@drawable/base_button_arrow_standart_back_blue" />
+            app:srcCompat="@drawable/base_button_return_blue" />
 
         <TextView
             android:id="@+id/base_subjects_dialog_edit_title"

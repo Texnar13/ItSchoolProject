@@ -1,48 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_lesson_bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="340dp"
+    android:layout_height="@dimen/lesson_activity_bottom_sheet_height"
     android:orientation="vertical"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="60dp"
+    app:behavior_peekHeight="@dimen/simple_buttons_height"
     app:behavior_saveFlags="all"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <FrameLayout
-        android:id="@+id/activity_lesson_bottom_sheet_title"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="@dimen/simple_buttons_height">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/lesson_activity_bottom_sheet_up_arrow_size"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            android:alpha="100"
+            android:src="@drawable/lesson_activity_bottom_shet_up_arrow" />
 
         <FrameLayout
-            android:id="@+id/activity_lesson_bottom_sheet_title_background"
+            android:id="@+id/activity_lesson_bottom_sheet_title_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:alpha="00"
-            android:background="#22FF0000" />
+            android:alpha="0"
+            android:background="@drawable/base_background_dialog_head_round_blue">
 
-        <TextView
-            style="@style/ButtonSimpleStyle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Привет, я текст" />
-    </FrameLayout>
+            <TextView
+                style="@style/ButtonSimpleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/lesson_activity_bottom_sheet_frame_width"
+                android:layout_marginTop="@dimen/lesson_activity_bottom_sheet_frame_width"
+                android:layout_marginEnd="@dimen/lesson_activity_bottom_sheet_frame_width"
+                android:background="@drawable/base_background_dialog_head_round_white"
+                android:gravity="center"
+                android:text="@string/lesson_redactor_activity_title_lesson_homework"
+                android:textColor="@color/baseBlue" />
+        </FrameLayout>
+    </RelativeLayout>
 
     <ScrollView
+        android:id="@+id/activity_lesson_bottom_sheet_bottom_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/baseBlue"
         android:fillViewport="true">
 
-        <EditText
-            style="@style/ButtonSimpleStyle"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#22FF00FF"
-            android:gravity="center"
-            android:text="Привет, я скрытый текст" />
+            android:layout_marginStart="@dimen/lesson_activity_bottom_sheet_frame_width"
+            android:layout_marginEnd="@dimen/lesson_activity_bottom_sheet_frame_width"
+            android:background="@color/base_background_color"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:id="@+id/activity_lesson_bottom_sheet_button_date_back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                app:layout_constrainedHeight="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@+id/activity_lesson_bottom_sheet_date_guideline"
+                app:layout_constraintEnd_toStartOf="@+id/activity_lesson_bottom_sheet_date_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="@dimen/lesson_activity_bottom_sheet_date_arrow_size"
+                    android:layout_height="@dimen/lesson_activity_bottom_sheet_date_arrow_size"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/base_button_arrow_back" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/activity_lesson_bottom_sheet_button_date_forward"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                app:layout_constrainedHeight="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@+id/activity_lesson_bottom_sheet_date_guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/activity_lesson_bottom_sheet_date_text"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="@dimen/lesson_activity_bottom_sheet_date_arrow_size"
+                    android:layout_height="@dimen/lesson_activity_bottom_sheet_date_arrow_size"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/base_button_arrow_forward" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/activity_lesson_bottom_sheet_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="17 Октября, ПН, 1 урок"
+                app:layout_constraintBottom_toBottomOf="@+id/activity_lesson_bottom_sheet_date_guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/activity_lesson_bottom_sheet_date_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="@dimen/simple_buttons_height" />
+
+            <EditText
+                android:id="@+id/activity_lesson_bottom_sheet_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Привет, я скрытый текст"
+                android:gravity="top"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/activity_lesson_bottom_sheet_date_guideline" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-
 </LinearLayout>

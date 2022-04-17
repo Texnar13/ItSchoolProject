@@ -199,8 +199,6 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             bar.setTitle("");
         }
 
-        // настраиваем программный вывод векторных изображений
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // цвета статус бара
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -716,8 +714,6 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                 // если на этом месте сидит ученик
                 if (learnersIndexes[placeI] != -1) {
 
-                    // настраиваем программный вывод векторных изображений
-                    AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
                     // создаем картинку ученика
                     ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);

@@ -32,7 +32,6 @@
 
     <EditText
         android:id="@+id/dialog_fragment_layout_settings_edit_maximum_grade_edit_text"
-        style="@style/SimpleEditTextUnderlinedStyle"
         android:layout_width="@dimen/text_field_four_simple_symbols_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

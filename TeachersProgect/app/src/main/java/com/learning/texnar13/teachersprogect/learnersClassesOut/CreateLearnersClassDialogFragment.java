@@ -15,8 +15,6 @@ import com.learning.texnar13.teachersprogect.R;
 public class CreateLearnersClassDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // настраиваем программный вывод векторных изображений
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

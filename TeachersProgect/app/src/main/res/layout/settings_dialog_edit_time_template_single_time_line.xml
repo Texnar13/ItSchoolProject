@@ -18,7 +18,6 @@
 
     <EditText
         android:id="@+id/settings_dialog_edit_time_template_single_time_line_start_hour"
-        style="@style/SimpleEditTextUnderlinedStyle"
         android:layout_width="0dp"
         android:layout_height="@dimen/settings_activity_edit_time_text_view_height"
         android:layout_weight="1"
@@ -37,7 +36,6 @@
 
     <EditText
         android:id="@+id/settings_dialog_edit_time_template_single_time_line_start_minute"
-        style="@style/SimpleEditTextUnderlinedStyle"
         android:layout_width="0dp"
         android:layout_height="@dimen/settings_activity_edit_time_text_view_height"
         android:layout_weight="1"
@@ -55,7 +53,6 @@
 
     <EditText
         android:id="@+id/settings_dialog_edit_time_template_single_time_line_end_hour"
-        style="@style/SimpleEditTextUnderlinedStyle"
         android:layout_width="0dp"
         android:layout_height="@dimen/settings_activity_edit_time_text_view_height"
         android:layout_weight="1"
@@ -74,7 +71,6 @@
 
     <EditText
         android:id="@+id/settings_dialog_edit_time_template_single_time_line_end_minute"
-        style="@style/SimpleEditTextUnderlinedStyle"
         android:layout_width="0dp"
         android:layout_height="@dimen/settings_activity_edit_time_text_view_height"
         android:layout_weight="1"

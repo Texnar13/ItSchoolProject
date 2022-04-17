@@ -16,15 +16,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.FragmentActivity;
 
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
-import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogFragment;
-import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogInterface;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
+import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogFragment;
+import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogInterface;
 import com.yandex.mobile.ads.banner.AdSize;
 import com.yandex.mobile.ads.banner.BannerAdView;
 import com.yandex.mobile.ads.common.AdRequest;
@@ -97,8 +98,6 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
-        // настраиваем программный вывод векторных изображений
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         // получаем разметку
         setContentView(R.layout.lesson_redactor_activity);
 
@@ -141,6 +140,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
         long tempClassId;
         long tempCabinetId;
         int tempRepeat;
+        String startDate;
         HomeWorkUnit tempHomeworkUnit1;
 
 
@@ -178,6 +178,9 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
             tempCabinetId = attitudeCursor.getLong(attitudeCursor.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID));
             // повторы
             tempRepeat = attitudeCursor.getInt(attitudeCursor.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT));
+            // начальная дата
+            startDate = attitudeCursor.getString(attitudeCursor.getColumnIndexOrThrow(SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE));
+
             subjectCursor.close();
             attitudeCursor.close();
             // дз
@@ -205,6 +208,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
             tempCurrentChosenSubjectId = -1;
             tempCabinetId = -1;
             tempRepeat = 0;
+            startDate = checkLessonDate;
 
             // дз
             tempHomeworkUnit1 = null;
@@ -323,6 +327,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
         lessonUnit = new LessonUnit(
                 dbAttitudeId,
                 tempRepeat,
+                startDate,
                 tempClassPos,
                 tempCabinetPos,
                 tempSubjectPos,
@@ -331,17 +336,6 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
 
         // ----------------------------------- компоненты экрана -----------------------------------
 
-
-        // TODO -------------------------------------------------
-        // TODO -------------------------------------------------
-        // TODO -------------------------------------------------
-        // TODO -------------------------------------------------
-        // TODO -------------------------------------------------
-        // TODO -------------------------------------------------
-        // TODO -------------------------------------------------
-        // TODO -------------------------------------------------
-        // TODO -------------------------------------------------
-        // TODO -------------------------------------------------
 
         // текстовое поле предмета
         subjectText = findViewById(R.id.activity_lesson_redactor_lesson_name_text_button);
@@ -377,22 +371,65 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
 
         // кнопка удаления урока
         TextView removeButton = findViewById(R.id.activity_lesson_redactor_remove_button);
+        // кнопка удаления последующих уроков
+        TextView removeThisAndOtherLessonsButton = findViewById(R.id.activity_lesson_redactor_remove_next_lessons);
+
+
         if (lessonUnit.attitudeId == -1) {
+            // эти кнопки не нужны, тк урок новый
             ((LinearLayout) findViewById(R.id.activity_lesson_redactor_body_container)).removeView(removeButton);
+            ((LinearLayout) findViewById(R.id.activity_lesson_redactor_body_container)).removeView(removeThisAndOtherLessonsButton);
         } else {
-            //buttonsOut.removeView(backButton);
-            // удаление урока
-            removeButton.setOnClickListener(view -> {
-                DataBaseOpenHelper db12 = new DataBaseOpenHelper(LessonRedactorActivity.this);
-                db12.deleteSubjectAndTimeCabinetAttitude(lessonUnit.attitudeId);
-                db12.close();
-                // сообщаем активности, что редактор закрылся
-                Intent closeIntent = new Intent();
-                setResult(LESSON_REDACTOR_RESULT_CODE_UPDATE, closeIntent);
-                // закрываем редактор
-                finish();
-            });
+
+
+            // если повторов нет
+            if (lessonUnit.repeat == SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER) {
+
+                // удаление урока
+                removeButton.setOnClickListener(view -> {
+                    DataBaseOpenHelper db12 = new DataBaseOpenHelper(LessonRedactorActivity.this);
+                    db12.deleteSubjectAndTimeCabinetAttitude(lessonUnit.attitudeId);
+                    db12.close();
+                    // сообщаем активности, что редактор закрылся
+                    Intent closeIntent = new Intent();
+                    setResult(LESSON_REDACTOR_RESULT_CODE_UPDATE, closeIntent);
+                    // закрываем редактор
+                    finish();
+                });
+
+                ((LinearLayout) findViewById(R.id.activity_lesson_redactor_body_container)).removeView(removeThisAndOtherLessonsButton);
+
+            } else {
+                // удаление последующих уроков
+                removeThisAndOtherLessonsButton.setOnClickListener(view -> {
+
+                    DataBaseOpenHelper dbase = new DataBaseOpenHelper(LessonRedactorActivity.this);
+
+                    // если дата начала повторов равна дате конца повторов
+                    if(checkLessonDate.equals(lessonUnit.startDate)){
+                        // просто удаляем этот урок
+                        dbase.deleteSubjectAndTimeCabinetAttitude(lessonUnit.attitudeId);
+                    }else{
+                        // удаление последующих уроков
+                        dbase.setEndRepeatSubjectAndTimeCabinetAttitude(lessonUnit.attitudeId, checkLessonDate);
+                    }
+                    dbase.close();
+
+                    // сообщаем вызвавшей активности, что редактор закрылся
+                    Intent closeIntent = new Intent();
+                    setResult(LESSON_REDACTOR_RESULT_CODE_UPDATE, closeIntent);
+                    // закрываем редактор
+                    finish();
+                });
+
+                ((LinearLayout) findViewById(R.id.activity_lesson_redactor_body_container)).removeView(removeButton);
+            }
+
+
         }
+
+
+
 
         // ---- кнопка выбора предмета ----
         subjectText.setOnClickListener(view -> {
@@ -444,7 +481,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                         lessonUnit.attitudeId = db1.createLessonTimeAndCabinetAttitude(
                                 classUnits[lessonUnit.chosenClassPosition].subjects.get(lessonUnit.chosenSubjectPosition).subjectId,
                                 cabinetUnit1s[lessonUnit.chosenCabinetPosition].cabinetId,
-                                checkLessonDate,
+                                lessonUnit.startDate,
                                 lessonNumber,
                                 lessonUnit.repeat
                         );
@@ -494,7 +531,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
 
         // кнопка назад
         findViewById(R.id.activity_lesson_redactor_back_button).setBackground(
-                getResources().getDrawable(R.drawable.base_button_close_background_round));
+                AppCompatResources.getDrawable(this, R.drawable.base_button_close_background_round));
         findViewById(R.id.activity_lesson_redactor_back_button).setOnClickListener(f -> finish());
     }
 
@@ -808,6 +845,9 @@ class LessonUnit {
     // какие повторения
     int repeat;
 
+    // дата урока/самого первого урока
+    String startDate;
+
     // номера класса, кабинета и предмета в массивах
     int chosenClassPosition;
     int chosenCabinetPosition;
@@ -816,9 +856,10 @@ class LessonUnit {
     // дз
     HomeWorkUnit homework;
 
-    public LessonUnit(long attitudeId, int repeat, int chosenClassPosition, int chosenCabinetPosition, int chosenSubjectPosition, HomeWorkUnit homework) {
+    public LessonUnit(long attitudeId, int repeat, String startDate, int chosenClassPosition, int chosenCabinetPosition, int chosenSubjectPosition, HomeWorkUnit homework) {
         this.attitudeId = attitudeId;
         this.repeat = repeat;
+        this.startDate = startDate;
         this.chosenClassPosition = chosenClassPosition;
         this.chosenCabinetPosition = chosenCabinetPosition;
         this.chosenSubjectPosition = chosenSubjectPosition;

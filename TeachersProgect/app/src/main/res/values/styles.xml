@@ -1,25 +1,72 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+        <!-- основной цвет и его доп оттенок -->
+        <item name="colorPrimary">@color/baseBlue</item>
+        <item name="colorPrimaryVariant">@color/baseBlue</item>
+        <item name="colorPrimaryDark">@color/baseBlue</item>
+
+        <!-- цвет подложек активности -->
+        <item name="android:colorBackground">@color/base_background_color</item>
+
+        <!-- цвет курсора -->
+        <item name="colorAccent">@color/base_blue</item>
+
         <!-- семейство шрифтов -->
         <item name="android:fontFamily">@font/montserrat_family</item>
 
-        <item name="colorPrimary">@color/baseBlue</item>
-        <item name="android:textColorPrimary">@color/baseOrange</item>
-        <item name="colorPrimaryDark">@color/backgroundLiteGray</item>
-        <item name="colorAccent">@color/baseBlue</item>
 
+        <!-- стандартные стили компонентов -->
         <item name="android:textViewStyle">@style/TextViewSimpleStyle</item>
-        <item name="android:editTextStyle">@style/SimpleEditTextUnderlinedStyle</item>
+        <item name="android:editTextStyle">@style/MyEditTextStyle</item>
+        <item name="editTextStyle">@style/MyEditTextStyle</item>
 
-        <item name="android:actionMenuTextAppearance">@style/MyActionBar.MenuTextStyle</item>
-
-        <!--item name="bottomSheetStyle">@style/BottomSheetDialogTheme</item-->
 
     </style>
 
 
-    <!-- отдельный стиль для редактора уроков -->
+    <!-- Стиль текстовых полей ввода (все поля проверены и работают) -->
+    <style name="MyEditTextStyle" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">@color/text_color_simple</item>
+        <item name="android:textColorHint">@color/text_color_not_active</item>
+        <item name="android:background">@drawable/base_background_edit_text_selector</item>
+        <item name="android:textSize">@dimen/simple_buttons_text_size</item>
+        <item name="fontFamily">@font/montserrat_medium</item>
+        <item name="android:padding">@dimen/double_margin</item>
+    </style>
+
+
+    <!-- оформление общего тулбара (base_toolbar_blue) -->
+    <style name="MyToolbarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <!-- цвет точек меню и стрелки-->
+        <item name="colorControlNormal">@color/baseBlue</item>
+        <!--item name="android:colorControlNormal" tools:targetApi="lollipop">@color/baseBlue</item-->
+        <item name="titleTextColor">@color/baseBlue</item>
+        <!-- цвет фона -->
+        <item name="colorPrimary">@color/transparent</item>
+        <!-- подсветка фона кнопок при нажатии -->
+        <item name="colorControlHighlight">@color/backgroundLiteGray</item>
+
+        <item name="android:singleLineTitle" tools:targetApi="o">true</item>
+
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+
+        <!-- стиль popup меню на тулбаре (его можно поместить в корневую тему если нужно) -->
+        <item name="popupTheme">@style/PopupMenuStyle</item>
+
+    </style>
+
+    <!-- стиль popup меню на тулбаре -->
+    <style name="PopupMenuStyle" parent="Theme.AppCompat.DayNight">
+        <item name="android:background">@color/base_background_color</item>
+        <item name="android:textColor">@color/text_color_simple</item>
+    </style>
+
+
+    <!-- ================== lesson redactor ================== -->
     <!-- без предка Theme.AppCompat.Light.Dialog не открываются внутренние диалоги -->
     <style name="LessonRedactorThemeLikeDialog" parent="Theme.AppCompat.Light.Dialog">
         <!-- убираем отступы-вставки по краям -->
@@ -31,75 +78,25 @@
         <!-- нажатия за пределами диалога закрывают его -->
         <item name="android:windowCloseOnTouchOutside">true</item>
 
-
         <!-- семейство шрифтов -->
         <item name="android:fontFamily">@font/montserrat_family</item>
     </style>
 
-    <!-- оформление тулбара -->
-    <style name="MyToolbarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
-        <!-- цвет точек меню и стрелки-->
-        <item name="colorControlNormal">@color/baseBlue</item>
-        <!--item name="android:colorControlNormal" tools:targetApi="lollipop">@color/baseBlue</item-->
-        <item name="titleTextColor">@color/baseBlue</item>
-        <!-- цвет фона -->
-        <item name="colorPrimary">@color/backgroundWhite</item>
-        <!-- подсветка фона кнопок при нажатии -->
-        <item name="colorControlHighlight">@color/backgroundLiteGray</item>
-
-
-        <item name="android:singleLineTitle" tools:targetApi="o">true</item>
-
+    <!-- ================== тексты больших кнопок в start screen ================== -->
+    <style name="StartScreenBigButtonsTextStyle" parent="TextViewSemiBoldStyle">
+        <item name="android:textColor">@color/text_color_simple</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:layout_gravity">center</item>
-
-
-        <item name="android:actionMenuTextAppearance">@style/MyActionBar.MenuTextStyle</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/simple_buttons_text_size</item>
+        <item name="android:layout_weight">1</item>
     </style>
 
 
-    <!-- стиль bottom sheet -->
-    <style name="BottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/AppModalStyle</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowSoftInputMode">adjustResize</item>
-    </style>
-    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/base_background_dialog_head_round_blue</item>
-    </style>
+    <!-- =========================== дальше не отсортировано =========================== -->
 
-
-    <!-- дальше не отсортировано -->
-
-    <!-- стиль пунктов выкидного меню -->
-<style name="MyMenuStyle" parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
-    <item name="actionMenuTextColor">@color/basePink</item>
-    <item name="android:actionMenuTextColor">@color/basePink</item>
-    <item name="android:textColorPrimary">@color/baseOrange</item>
-</style>
-    <style name="MyActionBar.MenuTextStyle"
-        parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">#F0F</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">24dip</item>
-    </style>
-
-    <!-- Стиль текстовых полей ввода -->
-    <style name="Widget.EditText.MyEditTextStyle" parent="@android:style/Widget.EditText">
-
-        <item name="android:textColor">@color/baseBlue</item>
-        <item name="android:textColorPrimary">@color/baseBlue</item>
-        <item name="android:textCursorDrawable">@color/baseBlue</item>
-
-
-        <item name="editTextBackground">@color/baseGreen</item>
-        <item name="background">@color/baseGreen</item>
-        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/baseGreen</item>
-
-        <!-- выделенный текст -->
-        <item name="colorAccent">@color/baseBlue</item>
-    </style>
 
     <!-- Стиль текстов -->
     <style name="TextViewSimpleStyle" parent="Widget.AppCompat.TextView">
@@ -114,17 +111,6 @@
         <item name="fontFamily">@font/montserrat_bold</item>
     </style>
 
-    <!-- текксты больших кнопок в "начать урок" -->
-    <style name="StartScreenBigButtonsTextStyle" parent="TextViewSemiBoldStyle">
-        <item name="android:textColor">#000000</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:textSize">@dimen/simple_buttons_text_size</item>
-        <item name="android:layout_weight">1</item>
-    </style>
-
 
     <!-- текст названий пунктов в редакторе урока -->
     <style name="LessonRedactorDescriptionTextStyle" parent="TextViewSemiBoldStyle">
@@ -136,21 +122,13 @@
     </style>
 
 
+    <!--  стили для текстов -->
+
     <style name="ButtonSimpleStyle" parent="Widget.AppCompat.TextView">
         <item name="fontFamily">@font/montserrat_semibold</item>
         <item name="android:textSize">@dimen/simple_buttons_text_size</item>
         <item name="android:textColor">#000000</item>
         <item name="android:gravity">center_vertical</item>
-    </style>
-
-    <style name="SimpleEditTextUnderlinedStyle" parent="@android:style/Widget.EditText">
-        <item name="android:background">@drawable/base_background_edit_text_selector</item>
-        <item name="fontFamily">@font/montserrat_medium</item>
-        <item name="android:textSize">@dimen/simple_buttons_text_size</item>
-        <item name="android:textColor">#000000</item>
-        <item name="android:textColorPrimary">#000000</item>
-        <item name="android:textColorHint">@color/backgroundLiteGray</item>
-        <item name="android:gravity">center</item>
     </style>
 
     <style name="SettingsButtonSimpleStyle" parent="Widget.AppCompat.TextView">
@@ -174,10 +152,5 @@
         <item name="android:layout_marginBottom">@dimen/double_margin</item>
         <item name="android:background">@color/backgroundDarkWhite</item>
     </style>
-
-    <!--style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style-->
 
 </resources>

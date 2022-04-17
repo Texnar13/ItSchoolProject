@@ -217,13 +217,13 @@ public class SchoolContract {
 
     // таблица уроков (предмет-время-кабинет)
     public static class TableSubjectAndTimeCabinetAttitude extends Table {
-        public static final String NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE = "lessonAndTimeWithCabinet";
+        public static final String NAME_TABLE = "lessonAndTimeWithCabinet";
         public static final String KEY_SUBJECT_ID = "subjectId";
         public static final String KEY_CABINET_ID = "cabinetId";
 
         public static final String COLUMN_LESSON_NUMBER = "lessonNumber";
         public static final String COLUMN_LESSON_DATE = "lessonDate";// todo исправить баг с исправлением даты
-        public static final String COLUMN_END_REPEAT_DATE = "endRepeatDate";// todo TODO TODO!!!!!
+        public static final String COLUMN_END_REPEAT_DATE = "endRepeatDate";
         public static final String COLUMN_REPEAT = "repeat";
 
         // repeat constants(посмотри LessonRedactorDialogFragment):
@@ -234,11 +234,12 @@ public class SchoolContract {
         public static final int CONSTANT_REPEAT_MONTHLY = 4;
 
 
-        public static final String CREATE_TABLE_STRING = "CREATE TABLE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE +"( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        public static final String CREATE_TABLE_STRING = "CREATE TABLE " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE +"( " + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + " INTEGER, " +
                 SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + " INTEGER, " +
                 SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " INTEGER DEFAULT 0 NOT NULL," +
                 SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " TIMESTRING DEFAULT \"0000-00-00\" NOT NULL," +
+                SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_END_REPEAT_DATE + " TIMESTRING," +// может быть пустое значение (null) это значит что повторы не прекратятся
                 SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " INTEGER DEFAULT " + SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_NEVER + ", " +
                 "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_CABINET_ID + ") REFERENCES " + SchoolContract.TableCabinets.NAME_TABLE_CABINETS + " (" + SchoolContract.TableCabinets.KEY_ROW_ID + ") ON DELETE CASCADE ," +
                 "FOREIGN KEY(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID + ") REFERENCES " + SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS + " (" + SchoolContract.TableSubjects.KEY_ROW_ID + ") ON DELETE CASCADE ); ";
@@ -256,7 +257,7 @@ public class SchoolContract {
                 SchoolContract.TableLessonComment.KEY_LESSON_ID + " INTEGER NOT NULL, " +
                 SchoolContract.TableLessonComment.COLUMN_LESSON_DATE + " TIMESTRING NOT NULL, " +
                 SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT + " TEXT NOT NULL, " +
-                "FOREIGN KEY(" + SchoolContract.TableLessonComment.KEY_LESSON_ID + ") REFERENCES " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE + " (" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_ROW_ID + ") ON DELETE CASCADE);";
+                "FOREIGN KEY(" + SchoolContract.TableLessonComment.KEY_LESSON_ID + ") REFERENCES " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE + " (" + SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_ROW_ID + ") ON DELETE CASCADE);";
     }
 
     private static abstract class Table {

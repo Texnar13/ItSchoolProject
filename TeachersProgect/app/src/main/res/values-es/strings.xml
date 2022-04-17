@@ -15,7 +15,7 @@
     <string name="start_screen_activity_title_my_schedule">Horario</string>
     <string name="start_screen_activity_title_settings">Ajustes</string>
     <string name="start_screen_activity_title_now">Ahora:</string>
-    <string name="start_screen_activity_title_current_no_lesson">Ahora no hay clase.</string>
+    <string name="start_screen_activity_title_current_no_lesson">Ahora no hay clase</string>
     <string name="start_screen_activity_title_current_start_lesson">¿Сomience la clase?</string>
     <string name="start_screen_activity_title_current_create_lesson">¿Crear una lección?</string>
     <string name="start_screen_activity_time_field" formatted="true">%d:%02d</string>
@@ -211,6 +211,8 @@
     <string name="lesson_activity_learner_dialog_out_text">¿Estás seguro de querer salir de la lección sin guardar?</string>
     <string name="lesson_activity_learner_dialog_out_yes">Salir (se eliminarán todos los datos)</string>
     <string name="lesson_activity_learner_dialog_out_no">Volver a la lección</string>
+
+    <string name="lesson_activity_bottom_sheet_date_text" formatted="true">##%d %s, %s, %d урок</string>
 
 
     <!-- активность окончания урока-->

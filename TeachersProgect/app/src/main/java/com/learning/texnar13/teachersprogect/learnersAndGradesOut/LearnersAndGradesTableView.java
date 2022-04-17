@@ -13,7 +13,6 @@ import android.os.Build;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -43,14 +42,10 @@ public class LearnersAndGradesTableView extends View {
     private TextPaint drawPaintFatDate;
     // кисть для отрисовки предмета и месяца
     private TextPaint drawPaintTitles;
+
     // кисть для отрисовки фона
     private Paint backgroundPaint;
 
-//    // кисть для отрисовки текста
-//    private TextPaint drawTextPaint;
-//    // кисть для отрисовки маленького текста
-//    private TextPaint drawSmallTextPaint;
-//
 
     // переменная разрешающая вывод графики
     private boolean canDraw = true;
@@ -1236,7 +1231,7 @@ public class LearnersAndGradesTableView extends View {
                     // рисуем картинки
                     Bitmap arrowLeft = getBitmapFromVectorDrawable(
                             getContext(),
-                            R.drawable.learners_and_grades_button_date_back,
+                            R.drawable.base_button_arrow_back_inverse,
                             imageSize,
                             imageSize
                     );
@@ -1249,7 +1244,7 @@ public class LearnersAndGradesTableView extends View {
 
                     Bitmap arrowRight = getBitmapFromVectorDrawable(
                             getContext(),
-                            R.drawable.learners_and_grades_button_date_forward,
+                            R.drawable.base_button_arrow_forvard_inverse,
                             imageSize,
                             imageSize
                     );

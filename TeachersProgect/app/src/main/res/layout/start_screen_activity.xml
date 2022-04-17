@@ -16,18 +16,18 @@
             android:id="@+id/start_screen_top_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/base_background_dialog_bottom_round_blue"
+            android:background="@color/start_screen_top_sheet_color"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/start_screen_text_time"
-                style="@style/TextViewSimpleStyle"
+                style="@style/TextViewBoldStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/half_more_margin"
                 android:text="*10:35*"
-                android:textColor="@color/backgroundWhite"
+                android:textColor="@color/start_screen_top_sheet_text_color"
                 android:textSize="@dimen/start_screen_time_text_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="*31 Октября*"
-                android:textColor="@color/backgroundWhite"
+                android:textColor="@color/start_screen_top_sheet_text_color"
                 android:textSize="@dimen/start_screen_date_text_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="*понедельник*"
-                android:textColor="@color/backgroundWhite"
+                android:textColor="@color/start_screen_top_sheet_text_color"
                 android:textSize="@dimen/start_screen_week_day_text_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -66,9 +66,10 @@
                 android:layout_marginLeft="@dimen/half_margin"
                 android:layout_marginRight="@dimen/half_margin"
                 android:layout_marginBottom="@dimen/half_margin"
+                android:layout_marginTop="@dimen/simple_margin"
                 android:gravity="bottom"
                 android:text="@string/start_screen_activity_title_now"
-                android:textColor="@color/backgroundWhite"
+                android:textColor="@color/start_screen_top_sheet_text_color"
                 android:textSize="@dimen/start_screen_now_text_size"
                 app:layout_constraintBottom_toTopOf="@+id/start_screen_layout_now"
                 app:layout_constraintLeft_toLeftOf="@+id/start_screen_layout_now"
@@ -81,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/double_margin"
                 android:layout_marginEnd="@dimen/double_margin"
-                android:layout_marginBottom="@dimen/forth_margin"
+                android:layout_marginBottom="@dimen/start_screen_create_lesson_button_top_margin"
                 android:background="@drawable/start_screen_activity_background_button_current_lesson"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -126,8 +127,8 @@
 
                 <ImageView
                     android:id="@+id/start_screen_button_my_classes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     app:srcCompat="@drawable/start_screen_activity_background_button_2_girl" />
 
@@ -163,8 +164,8 @@
 
                 <ImageView
                     android:id="@+id/start_screen_button_my_cabinets"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     app:srcCompat="@drawable/start_screen_activity_background_button_3_cabinets" />
 
@@ -200,13 +201,13 @@
 
                 <ImageView
                     android:id="@+id/start_screen_button_schedule"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     app:srcCompat="@drawable/start_screen_activity_background_button_1_calendar" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/start_screen_button_schedule"
                     android:layout_alignTop="@+id/start_screen_button_schedule"
@@ -237,8 +238,8 @@
 
                 <ImageView
                     android:id="@+id/start_screen_button_settings"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     app:srcCompat="@drawable/start_screen_activity_background_button_4_settings" />
 
@@ -275,13 +276,12 @@
         android:id="@+id/start_screen_button_start_lesson_text"
         style="@style/TextViewSemiBoldStyle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/simple_buttons_height"
         android:background="@drawable/start_screen_activity_background_button_start_lesson"
         android:fontFamily="@font/montserrat_medium"
+        android:gravity="center"
         android:paddingStart="@dimen/forth_margin"
-        android:paddingTop="@dimen/half_more_margin"
         android:paddingEnd="@dimen/forth_margin"
-        android:paddingBottom="@dimen/half_more_margin"
         android:text="@string/start_screen_activity_title_current_start_lesson"
         android:textColor="@color/backgroundWhite"
         android:textSize="@dimen/simple_buttons_text_size"

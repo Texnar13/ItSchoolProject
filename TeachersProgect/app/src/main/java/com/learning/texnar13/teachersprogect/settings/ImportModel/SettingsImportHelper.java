@@ -155,7 +155,7 @@ public class SettingsImportHelper {// импорт данных
             case SchoolContract.TableLearnersOnPlaces.NAME_TABLE_LEARNERS_ON_PLACES:
             case SchoolContract.TableLearnersGrades.NAME_TABLE_LEARNERS_GRADES: // todo там где пропуск, может храниться null, по этому надо будет добавить дополнительные проверки
             case SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS:
-            case SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE:
+            case SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE:
             case SchoolContract.TableStatisticsProfiles.NAME_TABLE_STATISTICS_PROFILES:
             case SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES:
             case SchoolContract.TableLearnersAbsentTypes.NAME_TABLE_LEARNERS_ABSENT_TYPES:

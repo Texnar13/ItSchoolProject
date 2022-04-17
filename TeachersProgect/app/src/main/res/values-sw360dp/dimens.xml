@@ -19,6 +19,7 @@
     <dimen name="start_screen_date_text_size">19sp</dimen>
     <dimen name="start_screen_week_day_text_size">@dimen/start_screen_date_text_size</dimen>
     <dimen name="start_screen_now_text_size">@dimen/simple_buttons_text_size</dimen>
+    <dimen name="start_screen_create_lesson_button_top_margin">50dp</dimen>
 
     <!-- активность настроек кабинета -->
     <dimen name="cabinet_edit_activity_sub_menu_buttons_height">55dp</dimen>
@@ -26,10 +27,11 @@
 
     <!-- календарь на месяц -->
     <dimen name="shedule_month_month_text_size">19sp</dimen>
-    <dimen name="shedule_month_calendar_margin">30dp</dimen>
     <dimen name="shedule_month_month_buttons_heght">60dp</dimen>
-    <dimen name="shedule_month_arrow_size">20dp</dimen>
+    <dimen name="shedule_month_arrow_size">15dp</dimen>
     <dimen name="shedule_month_days_text_size">17sp</dimen>
+    <dimen name="shedule_month_calendar_margin">10dp</dimen>
+    <dimen name="shedule_month_days_cells_free_space">2dp</dimen>
 
     <dimen name="shedule_month_calendar_day_text_size">@dimen/simple_buttons_text_size</dimen>
 
@@ -37,9 +39,9 @@
     <dimen name="shedule_month_lesson_number_margin">12dp</dimen>
     <dimen name="shedule_month_lesson_texts_margin">20dp</dimen>
     <dimen name="shedule_month_lesson_top_bottom_margin">6dp</dimen>
-    <dimen name="shedule_month_lessons_number_size">19sp</dimen>
-    <dimen name="shedule_month_lessons_time_size">16sp</dimen>
-    <dimen name="shedule_month_lessons_content_text_size">@dimen/simple_buttons_text_size</dimen>
+    <dimen name="shedule_month_lessons_number_size">15sp</dimen>
+    <dimen name="shedule_month_lessons_time_size">15sp</dimen>
+    <dimen name="shedule_month_lessons_content_text_size">17sp</dimen>
 
 
     <!-- активность учеников -->
@@ -70,6 +72,11 @@
     <dimen name="lesson_activity_learner_name_text_size">12sp</dimen>
     <dimen name="lesson_activity_learner_main_grade_text_size">30sp</dimen>
     <dimen name="lesson_activity_learner_small_grade_text_size">22sp</dimen>
+
+    <dimen name="lesson_activity_bottom_sheet_height">400dp</dimen>
+    <dimen name="lesson_activity_bottom_sheet_up_arrow_size">@dimen/my_icon_small_size</dimen>
+    <dimen name="lesson_activity_bottom_sheet_date_arrow_size">18dp</dimen>
+    <dimen name="lesson_activity_bottom_sheet_frame_width">2dp</dimen>
 
     <!-- конец урока -->
     <dimen name="lesson_list_element_height">40sp</dimen>

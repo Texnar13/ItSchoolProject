@@ -9,7 +9,6 @@ import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,8 +32,6 @@ public class EditLearnersClassDialogFragment extends DialogFragment {
         //начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        // настраиваем программный вывод векторных изображений
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // layout диалога
         LinearLayout linearLayout = new LinearLayout(getActivity());
@@ -64,20 +61,10 @@ public class EditLearnersClassDialogFragment extends DialogFragment {
 
         );
 
-        // картинка
-        ImageView imageBackground = new ImageView(getActivity());
-        imageBackground.setImageResource(R.drawable.__background_add_class);
-        imageBackground.setAdjustViewBounds(true);
-        RelativeLayout.LayoutParams imageBackgroundParams = new RelativeLayout.LayoutParams(
-                (int) getResources().getDimension(R.dimen.classes_out_add_class_image_width),
-                (int) getResources().getDimension(R.dimen.classes_out_add_class_image_height)
-        );
-        imageBackgroundParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        imageContainer.addView(imageBackground, imageBackgroundParams);
 
         // кнопка назад
         ImageView backImage = new ImageView(getActivity());
-        backImage.setImageResource(R.drawable.base_button_arrow_back_blue);
+        backImage.setImageResource(R.drawable._base_button_arrow_back_blue);
         backImage.setAdjustViewBounds(true);
         RelativeLayout.LayoutParams backImageParams = new RelativeLayout.LayoutParams(
                 (int) getResources().getDimension(R.dimen.my_icon_size),

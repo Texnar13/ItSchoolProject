@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -75,7 +76,7 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.baseBlue, getTheme()));
+            window.setStatusBarColor(getResources().getColor(R.color.start_screen_top_sheet_color, getTheme()));
         }
 
 
@@ -105,25 +106,20 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
 
         if (savedInstanceState == null) {// при создании активности
 
-            // todo переходим со старого SharedPreferences на новое а также копируем настройки из бд
+            // todo переходим со старого SharedPreferences на новое
+            // (тут имелось в виду, что можно перенести параметр is rate, однако раз он переделывается на наовое можно с этим повременить)
+            // //SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE); <- старая схема без указания имени файла, получала данные по названию активности (startScreen.StartScreenActivity.xml)
+            // ( это я уже переделал, осталось перенести)
+
+
+
 
             // проверяем статус подписки
             checkSubscriptionStatusAndSavePrefs();
 
             // ------ сохраненные параметры ------
-            //SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-            //hrftdhgsfgdhgh();
-            //todo
-            //todo
-            //todo
-            //todo
-            //todo
-            //todo
-            //todo
-            //todo
-            //todo
-            //todo
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
             //начинаем редактировать
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -131,7 +127,7 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             // через семь заходов в приложение открывает диалог 'оцените'
             if (!sharedPreferences.getBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE, false)) {
                 editor.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 0) + 1);
-                if (sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 0) == 10) {
+                if (sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 0) == 20) {
                     //на всякий случай обнуляем счетчик
                     editor.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 1);
                     editor.putBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE, false);
@@ -324,22 +320,22 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
 
             // текст пустоты
             TextView absText = new TextView(this);
-            absText.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
+            absText.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_semibold));
             absText.setText(R.string.start_screen_activity_title_current_no_lesson);
-            absText.setTextColor(getResources().getColor(R.color.backgroundGray));
+            absText.setGravity(Gravity.CENTER_VERTICAL);
+            absText.setTextColor(getResources().getColor(R.color.start_screen_top_sheet_inverse_text_color));
             absText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.simple_buttons_text_size));
             LinearLayout.LayoutParams absTextParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
+                    getResources().getDimensionPixelSize(R.dimen.simple_buttons_height)
             );
-            absTextParams.topMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-            absTextParams.bottomMargin = (int) getResources().getDimension(R.dimen.simple_margin);
-            absTextParams.leftMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+            absTextParams.leftMargin = (int) getResources().getDimension(R.dimen.double_margin);
             currentLessonContainer.addView(absText, absTextParams);
 
 
             // меняем кнопку на создание урока
             lessonButtonText.setBackgroundResource(R.drawable.start_screen_activity_background_button_create_lesson);
+            lessonButtonText.setTextColor(getResources().getColor(R.color.text_color_simple));
             lessonButtonText.setText(R.string.start_screen_activity_title_current_create_lesson);
 
             // назначаем создание при нажатии
@@ -423,6 +419,7 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
 
             // делаем кнопку видимой если она была скрыта
             lessonButtonText.setBackgroundResource(R.drawable.start_screen_activity_background_button_start_lesson);
+            lessonButtonText.setTextColor(getResources().getColor(R.color.text_color_inverse));
             lessonButtonText.setText(R.string.start_screen_activity_title_current_start_lesson);
 
             // назначаем открытие урока при нажатии
@@ -451,19 +448,8 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
     @Override
     public void rate(int rateId) {
 
-        //SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        //hrftdhgsfgdhgh();
-        //todo
-        //todo
-        //todo
-        //todo
-        //todo
-        //todo
-        //todo
-        //todo
-        //todo
-        //todo
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
         //начинаем редактировать
         SharedPreferences.Editor ed = sharedPreferences.edit();
         switch (rateId) {
@@ -561,8 +547,6 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
-        // настраиваем программный вывод векторных изображений в диалогах
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
 
 // подчеркивание текста

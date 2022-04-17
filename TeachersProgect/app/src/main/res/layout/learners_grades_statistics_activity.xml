@@ -19,7 +19,7 @@
             android:layout_height="@dimen/my_icon_small_size"
             android:layout_marginLeft="@dimen/simple_margin"
             android:adjustViewBounds="true"
-            app:srcCompat="@drawable/__button_back_arrow_dark_gray"/>
+            app:srcCompat="@drawable/_base_button_arrow_back_white"/>
 
 
         <LinearLayout

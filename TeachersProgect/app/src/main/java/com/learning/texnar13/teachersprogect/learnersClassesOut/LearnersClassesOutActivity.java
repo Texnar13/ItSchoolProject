@@ -2,7 +2,6 @@ package com.learning.texnar13.teachersprogect.learnersClassesOut;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
@@ -13,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
 
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -176,7 +174,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements
 
             // стрелочка
             ImageView arrow = new ImageView(this);
-            arrow.setImageResource(R.drawable.base_button_arrow_forward_blue);
+            arrow.setImageResource(R.drawable._base_button_arrow_forward_blue);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
                     (int) getResources().getDimension(R.dimen.base_buttons_arrow_size),
                     (int) getResources().getDimension(R.dimen.base_buttons_arrow_size)

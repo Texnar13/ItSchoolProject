@@ -74,8 +74,6 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
         // начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        // настраиваем программный вывод векторных изображений
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         //layout диалога
         LinearLayout linearLayout = new LinearLayout(getActivity());

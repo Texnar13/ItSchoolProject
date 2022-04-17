@@ -31,8 +31,6 @@ public class LearnerCreateDialogFragment extends DialogFragment {
         Log.i("TeachersApp", "LearnerCreateDialogFragment - onCreateDialog");
         // начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        // настраиваем программный вывод векторных изображений
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         View dialogView = getActivity().getLayoutInflater().inflate(R.layout.learners_and_grades_dialog_learner_create, null);
         builder.setView(dialogView);
 

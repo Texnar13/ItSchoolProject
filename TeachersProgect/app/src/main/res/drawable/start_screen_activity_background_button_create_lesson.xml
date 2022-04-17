@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/basePink"/>
+            <solid android:color="@color/start_screen_top_sheet_start_lesson_button_color"/>
             <corners android:radius="1000dp"/>
         </shape>
     </item>

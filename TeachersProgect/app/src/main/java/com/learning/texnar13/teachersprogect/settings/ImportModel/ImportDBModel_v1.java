@@ -173,7 +173,7 @@ public class ImportDBModel_v1 extends ImportDBModel {
 
                 // описание таблицы уроков (предмет-время-кабинет)
                 new TableModel(
-                        SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE,
+                        SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE,
                         new ColumnCheck[]{
                                 new ColumnCheck(BaseColumns._ID, ColumnCheck.TYPE_LONG, notNullIdCheck),
                                 new ColumnCheck(SchoolContract.TableSubjectAndTimeCabinetAttitude.KEY_SUBJECT_ID, SchoolContract.TableSubjects.NAME_TABLE_SUBJECTS, notNullIdCheck),
@@ -192,7 +192,7 @@ public class ImportDBModel_v1 extends ImportDBModel {
                         SchoolContract.TableLessonComment.NAME_TABLE_LESSON_TEXT,
                         new ColumnCheck[]{
                                 new ColumnCheck(BaseColumns._ID, ColumnCheck.TYPE_LONG, notNullIdCheck),
-                                new ColumnCheck(SchoolContract.TableLessonComment.KEY_LESSON_ID, SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE_SUBJECT_AND_TIME_CABINET_ATTITUDE, emptyCheck),
+                                new ColumnCheck(SchoolContract.TableLessonComment.KEY_LESSON_ID, SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE, emptyCheck),
                                 new ColumnCheck(SchoolContract.TableLessonComment.COLUMN_LESSON_DATE, ColumnCheck.TYPE_STRING, dateCheck),
                                 new ColumnCheck(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT, ColumnCheck.TYPE_STRING, emptyCheck)
                         })

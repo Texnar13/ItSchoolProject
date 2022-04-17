@@ -2,7 +2,6 @@ package com.learning.texnar13.teachersprogect.cabinetsOut;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
@@ -162,7 +161,7 @@ public class CabinetsOutActivity extends AppCompatActivity implements CreateCabi
 
             // стрелочка
             ImageView arrow = new ImageView(this);
-            arrow.setImageResource(R.drawable.base_button_arrow_forward_blue);
+            arrow.setImageResource(R.drawable._base_button_arrow_forward_blue);
             RelativeLayout.LayoutParams arrowParams = new RelativeLayout.LayoutParams(
                     (int) getResources().getDimension(R.dimen.base_buttons_arrow_size),
                     (int) getResources().getDimension(R.dimen.base_buttons_arrow_size)

@@ -45,8 +45,6 @@ public class EditTimeDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // настраиваем программный вывод векторных изображений
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // начинаем строить диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -206,7 +204,7 @@ public class EditTimeDialogFragment extends DialogFragment {
     void setLastElementOnClickListener() {
         if (lines.size() > 1) {
             ImageView deleteImage = lines.get(lines.size() - 1).deleteImage;
-            deleteImage.setImageResource(R.drawable.base_button_close);
+            deleteImage.setImageResource(R.drawable.base_button_close_blue);
             deleteImage.setOnClickListener(v -> {
                 // удаляем view урока
                 outContainer.removeView(lines.get(lines.size() - 1).container);

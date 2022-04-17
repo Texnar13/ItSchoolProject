@@ -41,7 +41,6 @@
 
     <EditText
         android:id="@+id/settings_dialog_remove_data_input"
-        style="@style/SimpleEditTextUnderlinedStyle"
         android:layout_width="@dimen/text_field_four_simple_symbols_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

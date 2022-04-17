@@ -16,7 +16,7 @@
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/baseBlue"
         app:elevation="0.1dp"
-        app:srcCompat="@drawable/base_button_add_white" />
+        app:srcCompat="@drawable/base_button_fab_add_white" />
 
 
     <include layout="@layout/learners_classes_out_content" />
