@@ -52,6 +52,7 @@
 
 
     <!-- ==================== gbpltw близко, беги друг ==================== -->
+    <!-- todo это надо переделать, тк непонятно за что эти цвета отвечают -->
 
     <!-- базовые цвета -->
     <color name="baseBlue">#7FADE5</color>
@@ -78,7 +79,6 @@
     <!--color name="dopDarkBlue">#1D7CBC</color-->
 
 
-    <!-- todo это надо переделать, тк непонятно за что эти цвета отвечают -->
     <color name="backgroundWhite">#ffffff</color>
     <color name="backgroundDarkWhite">#F2F2F2</color>
     <color name="backgroundLiteGray">#d1d1d1</color>

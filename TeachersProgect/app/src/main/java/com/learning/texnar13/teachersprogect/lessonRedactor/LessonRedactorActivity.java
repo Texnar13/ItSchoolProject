@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -509,6 +510,11 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                                     lessonUnit.homework.homeworkId,
                                     lessonComment
                             );
+                        }
+                    }else{
+                        // удаляем комментарий если он есть
+                        if (lessonUnit.homework != null) {
+                            db1.removeLessonCommentById(lessonUnit.homework.homeworkId);
                         }
                     }
                     db1.close();

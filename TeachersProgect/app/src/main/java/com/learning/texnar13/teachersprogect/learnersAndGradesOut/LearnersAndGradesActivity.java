@@ -811,6 +811,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     comment.getLong(comment.getColumnIndexOrThrow(SchoolContract.TableLessonComment.KEY_ROW_ID)),
                                     comment.getString(comment.getColumnIndexOrThrow(SchoolContract.TableLessonComment.COLUMN_LESSON_TEXT))
                             );
+                        // todo мне кажется здесь нужна ветка else с заданием домашки в уже созданный урок, наверное по этому я и ловлю null. А может и нет
+
                     } else {
                         // записываем полученный урок (если его еще не было)
                         if (dataLearnersAndGrades.lessonsUnits[dayI][lessonNumber] == null)
