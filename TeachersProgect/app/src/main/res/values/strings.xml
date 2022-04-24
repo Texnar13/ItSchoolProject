@@ -131,7 +131,7 @@ Title:</string>
     <string name="cabinets_out_activity_title_delete_cabinet_ask">Are you sure you want to delete the classroom?</string>
     <!-- диалоги -->
     <string name="cabinets_out_activity_dialog_title_create_cabinet">New classroom</string>
-    <string name="cabinets_out_activity_dialog_hint_cabinet_name">Title:</string>
+    <string name="cabinets_out_activity_dialog_hint_cabinet_name">Title</string>
     <!-- подсказка на экране -->
     <string name="cabinets_out_activity_text_help">To create a classroom, press + and enter its name. \nTo arrange the desks, click on the classroom you need. \nTo rename or delete the classroom, press and hold it.</string>
 
@@ -241,6 +241,7 @@ Title:</string>
     <string name="settings_activity_button_remove_data">Remove all data</string>
     <string name="settings_activity_button_rate_us">Rate our app!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">Language: %s</string>
+    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Темная тема: %s</string>
     <string name="settings_activity_button_subscribe">Become a sponsor</string>
     <string name="settings_activity_button_save_data_copy">Save a backup</string>
     <string name="settings_activity_button_load_data_copy">Upload a backup</string>
@@ -270,6 +271,7 @@ Title:</string>
     <string name="settings_activity_dialog_new_absent_type_title_hint">Abbreviation</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty">Enter the name</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">Enter an abbreviation</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_subscrybe" formatted="true">##Без подписки число типов ограничено до %d</string>
     <string name="settings_activity_dialog_delete_text_confirm_delete" formatted="true">Enter the number "%d" to confirm:</string>
     <string name="settings_activity_dialog_hint_number">NUMBER </string>
     <string name="settings_activity_dialog_button_remove_data">Delete</string>

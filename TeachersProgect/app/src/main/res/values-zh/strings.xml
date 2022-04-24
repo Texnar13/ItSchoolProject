@@ -130,7 +130,7 @@
     <string name="cabinets_out_activity_title_delete_cabinet_ask">确定要删除课堂吗？</string>
     <!-- диалоги -->
     <string name="cabinets_out_activity_dialog_title_create_cabinet">新课堂</string>
-    <string name="cabinets_out_activity_dialog_hint_cabinet_name">新课堂:</string>
+    <string name="cabinets_out_activity_dialog_hint_cabinet_name">新课堂</string>
     <!-- подсказка на экране -->
     <string name="cabinets_out_activity_text_help">要创建课堂，请按+并输入其名称。 \n要摆好课桌，点击所需的课堂。 \n要重命名或删除课堂按住它。</string>
 
@@ -240,6 +240,7 @@
     <string name="settings_activity_button_remove_data">删除所有数据</string>
     <string name="settings_activity_button_rate_us">请评价我们的应用!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">语言: %s</string>
+    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Темная тема: %s</string>
     <string name="settings_activity_button_subscribe">成为赞助商</string>
     <string name="settings_activity_button_save_data_copy">保存备份</string>
     <string name="settings_activity_button_load_data_copy">下载备份</string>
@@ -269,6 +270,7 @@
     <string name="settings_activity_dialog_new_absent_type_title_hint">代表符号</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty">输入名称</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">输入缩写</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_subscrybe" formatted="true">##Без подписки число типов ограничено до %d</string>
     <string name="settings_activity_dialog_delete_text_confirm_delete" formatted="true">输入要确认的数字 "%d":</string>
     <string name="settings_activity_dialog_hint_number">数字</string>
     <string name="settings_activity_dialog_button_remove_data">删除</string>

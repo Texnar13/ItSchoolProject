@@ -2,6 +2,7 @@ package com.learning.texnar13.teachersprogect.learnersClassesOut;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
@@ -70,8 +71,14 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite, getTheme()));
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            window.setStatusBarColor(getResources().getColor(R.color.base_background_color, getTheme()));
+
+            // включен ли ночной режим
+            int currentNightMode = getResources().getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK;
+            if (Configuration.UI_MODE_NIGHT_YES != currentNightMode)
+                window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
+                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
         // ------ кнопка добавления класса ------
@@ -154,7 +161,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements
             item.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_semibold));
             item.setGravity(Gravity.CENTER_VERTICAL);
             item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.simple_buttons_text_size));
-            item.setTextColor(Color.BLACK);
+            item.setTextColor(getResources().getColor(R.color.text_color_simple));
             item.setText(classesNames[i]);
             //параметры пункта
             RelativeLayout.LayoutParams itemParams = new RelativeLayout.LayoutParams(
@@ -256,7 +263,7 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements
             item.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
             item.setGravity(Gravity.CENTER_VERTICAL);
             item.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-            item.setTextColor(Color.BLACK);
+            item.setTextColor(getResources().getColor(R.color.text_color_simple));
             item.setText(R.string.learners_classes_out_activity_dialog_title_create_class);
             // параметры пункта
             RelativeLayout.LayoutParams itemParams = new RelativeLayout.LayoutParams(

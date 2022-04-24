@@ -1,6 +1,7 @@
 package com.learning.texnar13.teachersprogect.cabinetsOut;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -58,8 +59,14 @@ public class CabinetEditActivity extends AppCompatActivity implements AcceptDial
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite, getTheme()));
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            window.setStatusBarColor(getResources().getColor(R.color.base_background_color, getTheme()));
+
+            // включен ли ночной режим
+            int currentNightMode = getResources().getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK;
+            if (Configuration.UI_MODE_NIGHT_YES != currentNightMode)
+                window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
+                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
         setContentView(R.layout.cabinets_out_edit_activity);
@@ -133,7 +140,7 @@ public class CabinetEditActivity extends AppCompatActivity implements AcceptDial
                         getResources().getDimensionPixelSize(R.dimen.cabinet_edit_activity_sub_menu_buttons_height)
                 );
                 elementParams.gravity = Gravity.CENTER;
-                elementParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.half_more_margin);
+                elementParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.double_margin);
                 classesOut.addView(element, elementParams);
 
                 // нажатие

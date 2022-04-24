@@ -3,7 +3,7 @@
     <item>
         <shape android:shape="rectangle">
             <corners android:topLeftRadius="@dimen/radius_rounding_dialogs" android:topRightRadius="@dimen/radius_rounding_dialogs" />
-            <solid android:color="@color/baseBlue" />
+            <solid android:color="@color/base_blue" />
         </shape>
     </item>
 </selector>

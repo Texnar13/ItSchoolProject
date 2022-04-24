@@ -22,7 +22,7 @@
     <dimen name="start_screen_create_lesson_button_top_margin">50dp</dimen>
 
     <!-- активность настроек кабинета -->
-    <dimen name="cabinet_edit_activity_sub_menu_buttons_height">55dp</dimen>
+    <dimen name="cabinet_edit_activity_sub_menu_buttons_height">@dimen/simple_buttons_height</dimen>
 
 
     <!-- календарь на месяц -->
@@ -89,7 +89,6 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <!-- высота кнопок -->
-    <dimen name="my_buttons_height_size">48sp</dimen>
     <dimen name="spinner_height_size">40dp</dimen>
     <dimen name="my_toolbar_text_container_height_size">40sp</dimen>
 

@@ -7,10 +7,12 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -35,11 +37,10 @@ import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialog;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import com.learning.texnar13.teachersprogect.settings.ImportModel.ImportDataBaseData;
 import com.learning.texnar13.teachersprogect.settings.ImportModel.SettingsImportHelper;
 import com.learning.texnar13.teachersprogect.sponsor.SponsorActivity;
-import com.yandex.mobile.ads.banner.AdSize;
-import com.yandex.mobile.ads.banner.BannerAdView;
 import com.yandex.mobile.ads.common.AdRequest;
 import com.yandex.mobile.ads.interstitial.InterstitialAd;
 
@@ -53,6 +54,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     ImageView silentLessonSwitch;
     // межстраничный баннер открывающийся при выходе из настроек
     InterstitialAd settingsBack;
+
+    // статус подписки обновляемый в onStart
+    boolean isSubscribe;
 
 
     // -------------------------- помощники запуска с callBack-ами --------------------------
@@ -162,8 +166,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite, getTheme()));
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            window.setStatusBarColor(getResources().getColor(R.color.base_background_color, getTheme()));
+
+            // включен ли ночной режим
+            int currentNightMode = getResources().getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK;
+            if (Configuration.UI_MODE_NIGHT_YES != currentNightMode)
+                window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
+                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
         // начинаем загрузку межстраничного баннера конца урока
@@ -187,9 +197,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         // слушатели кнопкам
         // настройка локализации
-        findViewById(R.id.activity_settings_edit_locale_button).setOnClickListener(this);
+        findViewById(R.id.activity_settings_button_edit_locale).setOnClickListener(this);
         // изменить время
-        findViewById(R.id.activity_settings_edit_time_button).setOnClickListener(this);
+        findViewById(R.id.activity_settings_button_edit_time).setOnClickListener(this);
         // максимальое число ответов
         findViewById(R.id.activity_settings_edit_max_answers_count_button).setOnClickListener(this);
         // изменение типов оценок
@@ -237,7 +247,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         // достаем названия языков
         String[] localeNames = getResources().getStringArray(R.array.locale_names);
         // выводим название
-        ((TextView) findViewById(R.id.activity_settings_edit_locale_button)).setText(getResources().getString(
+        ((TextView) findViewById(R.id.activity_settings_button_edit_locale)).setText(getResources().getString(
                 R.string.settings_activity_button_edit_locale, localeNames[lastLocaleNumber]));
 
         // -- цветные оценки
@@ -254,6 +264,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
+
+        // проверка статуса подписки
+        isSubscribe = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false);
+        // todo менять кнопку подписки
 
         // -- настройка тихого урока при переходе на эту активность
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -326,7 +341,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }
         }
         // изменить время
-        else if (vId == R.id.activity_settings_edit_time_button) {
+        else if (vId == R.id.activity_settings_button_edit_time) {
             //диалог
             EditTimeDialogFragment editTimeDialogFragment = new EditTimeDialogFragment();
             // получаем данные о времени из бд
@@ -372,6 +387,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             args.putLongArray(EditAbsentTypesDialogFragment.ARGS_TYPES_ID_ARRAY_TAG, typesId);
             args.putStringArray(EditAbsentTypesDialogFragment.ARGS_TYPES_NAMES_ARRAY_TAG, typesNames);
             args.putStringArray(EditAbsentTypesDialogFragment.ARGS_TYPES_LONG_NAMES_ARRAY_TAG, typesLongNames);
+            // ограничеиваем число типов, если подписки нет
+            args.putInt(EditAbsentTypesDialogFragment.ARGS_TYPES_MAX_COUNT, -1);
+
             typesDialogFragment.setArguments(args);
             // запуск
             typesDialogFragment.show(getSupportFragmentManager(), "editAbsentTypesDialogFragment");
@@ -383,21 +401,28 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
             // массивы из базы данных
             long[] typesId = new long[types.getCount()];
-            String[] typesStrings = new String[types.getCount()];
+            String[] typesNames = new String[types.getCount()];
             for (int i = 0; i < types.getCount(); i++) {
                 types.moveToNext();
 
                 typesId[i] = types.getLong(types.getColumnIndexOrThrow(SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID));
-                typesStrings[i] = types.getString(types.getColumnIndexOrThrow(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE));
+                typesNames[i] = types.getString(types.getColumnIndexOrThrow(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE));
             }
             types.close();
             db.close();
+
             // запуск диалога
             EditGradesTypesDialogFragment typesDialogFragment = new EditGradesTypesDialogFragment();
             // данные
             Bundle args = new Bundle();
             args.putLongArray(EditGradesTypesDialogFragment.ARGS_TYPES_ID_ARRAY_TAG, typesId);
-            args.putStringArray(EditGradesTypesDialogFragment.ARGS_TYPES_NAMES_ARRAY_TAG, typesStrings);
+            args.putStringArray(EditGradesTypesDialogFragment.ARGS_TYPES_NAMES_ARRAY_TAG, typesNames);
+            // ограничеиваем число типов, если подписки нет
+            if (!isSubscribe)
+                args.putInt(EditGradesTypesDialogFragment.ARGS_TYPES_MAX_COUNT, 2);
+            else
+                args.putInt(EditGradesTypesDialogFragment.ARGS_TYPES_MAX_COUNT, -1);
+
             typesDialogFragment.setArguments(args);
             // запуск
             typesDialogFragment.show(getSupportFragmentManager(), "editGradesTypesDialogFragment");
@@ -432,7 +457,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             );
         }
         // настройка локализации
-        else if (vId == R.id.activity_settings_edit_locale_button) {
+        else if (vId == R.id.activity_settings_button_edit_locale) {
             // создаем диалог
             EditLocaleDialogFragment localeDialog = new EditLocaleDialogFragment();
             Bundle args = new Bundle();
@@ -577,7 +602,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public boolean removeAbsentType(long typeId) {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        return db.removeAbsentType(typeId) >= 0;
+        return db.removeAbsentType(typeId) > 0;
     }
 
 

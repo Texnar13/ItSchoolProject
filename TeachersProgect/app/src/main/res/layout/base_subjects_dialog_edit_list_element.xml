@@ -17,7 +17,7 @@
     <EditText
         android:id="@+id/base_subjects_dialog_edit_list_element_text"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/my_buttons_height_size"
+        android:layout_height="@dimen/simple_buttons_height"
         android:layout_marginStart="@dimen/double_margin"
         android:fontFamily="@font/montserrat_medium"
         android:hint="@string/learners_and_grades_out_activity_dialog_hint_subject_name"

@@ -207,7 +207,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         }
 
         // раздуваем layout
-        setContentView(R.layout.learners_and_grades_content);
+        setContentView(R.layout.learners_and_grades_activity);
 
         // даем обработчикам из активити ссылку на тулбар (для кнопки назад и меню)
         setSupportActionBar(findViewById(R.id.base_blue_toolbar));

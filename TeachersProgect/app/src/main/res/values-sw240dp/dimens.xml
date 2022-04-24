@@ -6,7 +6,6 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <!-- высота кнопок -->
-    <dimen name="my_buttons_height_size">40sp</dimen>
     <dimen name="spinner_height_size">30dp</dimen>
     <dimen name="my_toolbar_text_container_height_size">36sp</dimen>
 

@@ -8,23 +8,28 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/double_margin">
+        android:layout_height="@dimen/simple_buttons_height"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <ImageView
+        <RelativeLayout
             android:id="@+id/dialog_fragment_layout_settings_edit_absent_types_cancel_button"
-            android:layout_width="@dimen/my_icon_size"
-            android:layout_height="@dimen/my_icon_size"
-            android:adjustViewBounds="true"
-            app:srcCompat="@drawable/base_button_close_background_round" />
+            android:layout_width="@dimen/simple_buttons_height"
+            android:layout_height="@dimen/simple_buttons_height">
+
+            <ImageView
+                android:layout_width="@dimen/base_classic_arrow_immutable_size"
+                android:layout_height="@dimen/base_classic_arrow_immutable_size"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/base_button_return_inverse" />
+
+        </RelativeLayout>
 
         <TextView
             style="@style/ButtonSimpleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/double_margin"
             android:text="@string/settings_activity_title_absent_type" />
 
     </LinearLayout>
@@ -44,19 +49,10 @@
                 android:id="@+id/dialog_fragment_layout_settings_edit_absent_types_list_out"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/half_more_margin"
-                android:layout_marginEnd="@dimen/half_more_margin"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/dialog_fragment_layout_settings_edit_absent_types_text_button_add"
-                style="@style/SettingsButtonSimpleStyle"
-                android:layout_marginTop="@dimen/simple_margin"
-                android:text="@string/settings_activity_dialog_add_absent_type_title" />
-
+                android:layout_marginStart="@dimen/double_margin"
+                android:layout_marginEnd="@dimen/double_margin"
+                android:gravity="center"
+                android:orientation="vertical"></LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

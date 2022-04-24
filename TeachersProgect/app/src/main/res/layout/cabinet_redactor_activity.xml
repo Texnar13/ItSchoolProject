@@ -10,8 +10,7 @@
         android:id="@+id/redactor_out_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:background="@color/backgroundWhite"/>
+        android:layout_alignParentBottom="true"/>
 
     <RelativeLayout
         android:id="@+id/redactor_out"
@@ -30,7 +29,7 @@
             android:fontFamily="@font/montserrat_medium"
             android:gravity="center"
             android:text="@string/cabinet_redactor_activity_text_help"
-            android:textColor="@color/backgroundLiteGray"
+            android:textColor="@color/text_color_not_active"
             android:textSize="@dimen/text_subtitle_size" />
     </RelativeLayout>
 

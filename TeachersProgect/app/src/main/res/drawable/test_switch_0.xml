@@ -6,9 +6,9 @@
     android:viewportHeight="56.1">
 
     <path
-        android:fillColor="@color/backgroundMediumGray"
+        android:fillColor="@color/settings_activity_switch_not_active_background_color"
         android:pathData="M28.1,0l53.2,0c15.4,0,28.1,12.6,28.1,28.1v0c0,15.4-12.6,28.1-28.1,28.1H28.1C12.6,56.1,0,43.5,0,28.1v0 C0,12.6,12.6,0,28.1,0z" />
     <path
-        android:fillColor="@color/backgroundDarkWhite"
+        android:fillColor="@color/settings_activity_switch_dot_color"
         android:pathData="M 28.3 5.9 C 40.5607214462 5.9 50.5 15.8392785538 50.5 28.1 C 50.5 40.3607214462 40.5607214462 50.3 28.3 50.3 C 16.0392785538 50.3 6.1 40.3607214462 6.1 28.1 C 6.1 15.8392785538 16.0392785538 5.9 28.3 5.9 Z" />
 </vector>

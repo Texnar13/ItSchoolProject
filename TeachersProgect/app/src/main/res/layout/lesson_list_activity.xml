@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,29 +10,28 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/backgroundWhite">
+        android:layout_height="match_parent">
+
         <ScrollView
-            android:layout_above="@+id/lesson_list_activity_button_save"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/lesson_list_activity_button_save"
             android:fillViewport="true">
 
             <LinearLayout
                 android:id="@+id/lesson_list_activity_out_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-            </LinearLayout>
+                android:orientation="vertical"/>
         </ScrollView>
 
         <TextView
             android:id="@+id/lesson_list_activity_button_save"
-            android:background="@color/baseBlue"
+            android:background="@color/base_blue"
             android:layout_width="match_parent"
             style="@style/ButtonSimpleStyle"
             android:text="@string/button_save"
-            android:textColor="@color/backgroundWhite"
+            android:textColor="@color/text_color_inverse"
             android:gravity="center"
             android:layout_height="@dimen/simple_buttons_height"
             android:layout_alignParentBottom="true" />

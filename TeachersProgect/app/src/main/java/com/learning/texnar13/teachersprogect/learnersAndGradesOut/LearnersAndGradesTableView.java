@@ -169,7 +169,7 @@ public class LearnersAndGradesTableView extends View {
         drawPaintWeekDaysAndIndexes = new TextPaint();
         drawPaintWeekDaysAndIndexes.setTextSize(getResources().getDimension(R.dimen.learners_and_grades_activity_index_text_size));
         drawPaintWeekDaysAndIndexes.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_semibold));
-        drawPaintWeekDaysAndIndexes.setColor(Color.BLACK);
+        drawPaintWeekDaysAndIndexes.setColor(getResources().getColor(R.color.text_color_simple));
         drawPaintWeekDaysAndIndexes.setAntiAlias(true);// сглаживание
 
         // --- кисть для отрисовки оценок (цвет меняется динамически) ---
@@ -182,28 +182,28 @@ public class LearnersAndGradesTableView extends View {
         drawPaintName = new TextPaint();
         drawPaintName.setTextSize(getResources().getDimension(R.dimen.learners_and_grades_activity_content_text_size));
         drawPaintName.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_medium));
-        drawPaintName.setColor(Color.BLACK);
+        drawPaintName.setColor(getResources().getColor(R.color.text_color_simple));
         drawPaintName.setAntiAlias(true);// сглаживание
 
         // --- кисть для отрисовки фамилии(вверху клетки) и дат ---
         drawPaintSecondNameAndDate = new TextPaint();
         drawPaintSecondNameAndDate.setTextSize(getResources().getDimension(R.dimen.learners_and_grades_activity_content_text_size));
         drawPaintSecondNameAndDate.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_semibold));
-        drawPaintSecondNameAndDate.setColor(Color.BLACK);
+        drawPaintSecondNameAndDate.setColor(getResources().getColor(R.color.text_color_simple));
         drawPaintSecondNameAndDate.setAntiAlias(true);// сглаживание
 
         // --- кисть для отрисовки жирных дат ---
         drawPaintFatDate = new TextPaint();
         drawPaintFatDate.setTextSize(getResources().getDimension(R.dimen.learners_and_grades_activity_content_text_size));
         drawPaintFatDate.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_extrabold));
-        drawPaintFatDate.setColor(Color.BLACK);
+        drawPaintFatDate.setColor(getResources().getColor(R.color.text_color_simple));
         drawPaintFatDate.setAntiAlias(true);// сглаживание
 
         // --- кисть для отрисовки предмета и месяца ---
         drawPaintTitles = new TextPaint();
         drawPaintTitles.setTextSize(getResources().getDimension(R.dimen.learners_and_grades_activity_subject_and_month_text_size));
         drawPaintTitles.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_semibold));
-        drawPaintTitles.setColor(getResources().getColor(R.color.backgroundWhite));
+        drawPaintTitles.setColor(getResources().getColor(R.color.text_color_inverse));
         drawPaintTitles.setAntiAlias(true);// сглаживание
 
 
@@ -694,7 +694,7 @@ public class LearnersAndGradesTableView extends View {
 
 
             // закрашиваем фон
-            canvas.drawColor(getResources().getColor(R.color.backgroundWhite));
+            canvas.drawColor(getResources().getColor(R.color.base_background_color));
 
 //            // выводим надпись загрузка на месте оценок
 //            if (learnersDataAndSizes.length != 0) {
@@ -768,7 +768,7 @@ public class LearnersAndGradesTableView extends View {
 
                         // рисуем рамку
                         backgroundPaint.setColor(getResources().getColor((learnerI % 2 == 0) ?
-                                R.color.backgroundWhite : R.color.backgroundDarkWhite
+                                R.color.base_background_color : R.color.base_light
                         ));
                         canvas.drawRect(
                                 currentGradesCellOffsetX,
@@ -781,10 +781,10 @@ public class LearnersAndGradesTableView extends View {
                         // рисуем внутреннюю часть клетки
                         // проверяем не нажата ли ячейка
                         if (learnerI == chosenCellPoz[0] && dayIterator == chosenCellPoz[1] && lessonIterator == chosenCellPoz[2]) {
-                            backgroundPaint.setColor(getResources().getColor(R.color.baseBlue));
+                            backgroundPaint.setColor(getResources().getColor(R.color.base_blue));
                         } else
                             backgroundPaint.setColor(getResources().getColor((learnerI % 2 == 1) ?
-                                    R.color.backgroundWhite : R.color.backgroundDarkWhite
+                                    R.color.base_background_color : R.color.base_light
                             ));
                         canvas.drawRect(
                                 currentGradesCellOffsetX,
@@ -801,9 +801,9 @@ public class LearnersAndGradesTableView extends View {
 
                             // выбираем цвет текста, проверяя не нажата ли ячейка
                             if (learnerI == chosenCellPoz[0] && dayIterator == chosenCellPoz[1] && lessonIterator == chosenCellPoz[2]) {
-                                drawPaintGrade.setColor(Color.WHITE);
+                                drawPaintGrade.setColor(getResources().getColor(R.color.text_color_inverse));
                             } else {
-                                drawPaintGrade.setColor(Color.BLACK);
+                                drawPaintGrade.setColor(getResources().getColor(R.color.text_color_simple));
                             }
 
                             // ---- выводим текст ----
@@ -823,7 +823,7 @@ public class LearnersAndGradesTableView extends View {
                                     // ------ если это не нулевой балл ------
 
                                     // ---- выбираем цвет текста  ----
-                                    int gradeColor = getResources().getColor(R.color.backgroundDarkGray);// это цвет любых значений вне пределов, а также Н
+                                    int gradeColor = getResources().getColor(R.color.absent_text_color);// это цвет любых значений вне пределов, а также Н
                                     if (maxAnswersCount != -1) {
                                         int percentGrade = (int) (
                                                 learnersGrades[learnerI][dayIterator][lessonIterator].grades[gradeI] * 100F / maxAnswersCount);
@@ -865,7 +865,7 @@ public class LearnersAndGradesTableView extends View {
                 // рисуем рамку ученика
 
                 backgroundPaint.setColor(getResources().getColor((learnerI % 2 == 0) ?
-                        R.color.backgroundWhite : R.color.backgroundDarkWhite
+                        R.color.base_background_color : R.color.base_light
                 ));
                 canvas.drawRect(
                         learnersXOffset,
@@ -878,7 +878,7 @@ public class LearnersAndGradesTableView extends View {
                 // рисуем фон ученика
 
                 backgroundPaint.setColor(getResources().getColor((learnerI % 2 == 1) ?
-                        R.color.backgroundWhite : R.color.backgroundDarkWhite
+                        R.color.base_background_color : R.color.base_light
                 ));
                 canvas.drawRect(
                         learnersXOffset + cellBorderSize,
@@ -928,7 +928,7 @@ public class LearnersAndGradesTableView extends View {
             // выводим кнопку добавить ученика
 
             drawPaintGrade.setUnderlineText(true);
-            drawPaintGrade.setColor(Color.BLACK);
+            drawPaintGrade.setColor(getResources().getColor(R.color.text_color_simple));
             if (learnersDataAndSizes.length != 0) {
 //                // ее фон
 //                backgroundPaint.setColor(getResources().getColor(R.color.baseOrange));
@@ -970,7 +970,7 @@ public class LearnersAndGradesTableView extends View {
                     if (learnersGrades[0][dayIterator].length == 1) {
 
                         // рисуем фон
-                        backgroundPaint.setColor(getResources().getColor((R.color.backgroundWhite)));
+                        backgroundPaint.setColor(getResources().getColor((R.color.base_background_color)));
                         canvas.drawRect(
                                 currentHeadCellOffsetX,
                                 titleWeekdaysHeight,
@@ -983,7 +983,7 @@ public class LearnersAndGradesTableView extends View {
                         // если этот день сегодняшний, то выделяем его
                         if (dayIterator == currentDate) {
                             // рисуем круг
-                            backgroundPaint.setColor(getResources().getColor(R.color.baseBlue));
+                            backgroundPaint.setColor(getResources().getColor(R.color.base_blue));
                             canvas.drawCircle(
                                     currentHeadCellOffsetX + learnersGrades[0][dayIterator][0].cellWidth / 2F,
                                     learnersAndGradesOffsetForTitle / 2F + titleWeekdaysHeight,
@@ -1016,7 +1016,7 @@ public class LearnersAndGradesTableView extends View {
                             // если на уроке есть домашнее задание
                             if (isHomeworkOnLesson[dayIterator][learnersGrades[0][dayIterator][0].lessonNumber]) {
                                 // Рисуем точку дз
-                                backgroundPaint.setColor(getResources().getColor(R.color.baseOrange));
+                                backgroundPaint.setColor(getResources().getColor(R.color.base_orange));
                                 canvas.drawCircle(
                                         currentHeadCellOffsetX +
                                                 (learnersGrades[0][dayIterator][0].cellWidth) / 2f - projectedRadiusForeHomeworkDot,
@@ -1047,7 +1047,7 @@ public class LearnersAndGradesTableView extends View {
                         }
 
                         // рисуем фон полоски месяца
-                        backgroundPaint.setColor(getResources().getColor(R.color.backgroundWhite));
+                        backgroundPaint.setColor(getResources().getColor(R.color.base_background_color));
                         canvas.drawRect(
                                 currentHeadCellOffsetX,
                                 0,
@@ -1057,7 +1057,7 @@ public class LearnersAndGradesTableView extends View {
                         );
 
                         // фон дня недели
-                        backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
+                        backgroundPaint.setColor(getResources().getColor(R.color.base_light));
                         canvas.drawRect(
                                 currentHeadCellOffsetX,
                                 0,
@@ -1089,13 +1089,13 @@ public class LearnersAndGradesTableView extends View {
 
                             
                             // задаем фон клетки todo или использовать это для   цвет фона закрашивания дня (общий фон дня)
-                            int dayColor = getResources().getColor(R.color.backgroundWhite);
+                            int dayColor = getResources().getColor(R.color.base_background_color);
                             // прооверяем, если этот день сегодняшний
                             if (dayIterator == currentDate) {
                                 // и в нем нет урока, который идет конкретно сейчас
                                 if (!isLesson[dayIterator][currentLesson]) {
                                     // то меняем цвет фоновой кисти на цвета всего дня
-                                    dayColor = getResources().getColor(R.color.baseBlue);
+                                    dayColor = getResources().getColor(R.color.base_blue);
                                 }
                             }
 
@@ -1114,7 +1114,7 @@ public class LearnersAndGradesTableView extends View {
                             // рисуем общий фон дня
                             if (lessonI == 0) {// начальный полукруг и прямоугольник
                                 // рисуем полукруг
-                                backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
+                                backgroundPaint.setColor(getResources().getColor(R.color.base_light));
                                 headEllipseRect.set(
                                         currentHeadCellOffsetX +
                                                 learnersGrades[0][dayIterator][lessonI].cellWidth / 2F - dateCircleRadius + cellBorderSize / 2F,
@@ -1127,7 +1127,7 @@ public class LearnersAndGradesTableView extends View {
                                 backgroundPaint.setStyle(Paint.Style.FILL);
 
                                 // рисуем прямоугольник
-                                backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
+                                backgroundPaint.setColor(getResources().getColor(R.color.base_light));
                                 canvas.drawRect(
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F,
                                         learnersAndGradesOffsetForTitle / 2F - dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight,
@@ -1137,7 +1137,7 @@ public class LearnersAndGradesTableView extends View {
                                 );
                             } else if (lessonI == learnersGrades[0][dayIterator].length - 1) {// окончание и прямоугольник
                                 // рисуем прямоугольник
-                                backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
+                                backgroundPaint.setColor(getResources().getColor(R.color.base_light));
                                 canvas.drawRect(
                                         currentHeadCellOffsetX,
                                         learnersAndGradesOffsetForTitle / 2F - dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight,
@@ -1158,7 +1158,7 @@ public class LearnersAndGradesTableView extends View {
 
                             } else {// урок посередине
                                 // рисуем прямоугольник
-                                backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
+                                backgroundPaint.setColor(getResources().getColor(R.color.base_light));
                                 canvas.drawRect(
                                         currentHeadCellOffsetX,
                                         learnersAndGradesOffsetForTitle / 2F - dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight,
@@ -1172,7 +1172,7 @@ public class LearnersAndGradesTableView extends View {
                             // если этот день сегодняшний и урок текущй, то выделяем его
                             if (dayIterator == currentDate && learnersGrades[0][dayIterator][lessonI].lessonNumber == currentLesson) {
                                 // рисуем круг
-                                backgroundPaint.setColor(getResources().getColor(R.color.baseBlue));
+                                backgroundPaint.setColor(getResources().getColor(R.color.base_blue));
                                 canvas.drawCircle(
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F,
                                         learnersAndGradesOffsetForTitle / 2F + titleWeekdaysHeight,
@@ -1191,7 +1191,7 @@ public class LearnersAndGradesTableView extends View {
                                 // если на уроке есть домашнее задание
                                 if (isHomeworkOnLesson[dayIterator][learnersGrades[0][dayIterator][lessonI].lessonNumber]) {
                                     // Рисуем точку дз
-                                    backgroundPaint.setColor(getResources().getColor(R.color.baseOrange));
+                                    backgroundPaint.setColor(getResources().getColor(R.color.base_orange));
                                     canvas.drawCircle(
                                             currentHeadCellOffsetX +
                                                     (learnersGrades[0][dayIterator][0].cellWidth) / 2f - projectedRadiusForeHomeworkDot,
@@ -1226,13 +1226,13 @@ public class LearnersAndGradesTableView extends View {
                             );
 
                             // рисуем фон полоски месяца
-                            backgroundPaint.setColor(getResources().getColor(R.color.backgroundWhite));
+                            backgroundPaint.setColor(getResources().getColor(R.color.base_background_color));
                             canvas.drawRect(currentHeadCellOffsetX, 0, currentHeadCellOffsetX +
                                             learnersGrades[0][dayIterator][lessonI].cellWidth,
                                     titleWeekdaysHeight, backgroundPaint);
 
                             // фон дня недели
-                            backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
+                            backgroundPaint.setColor(getResources().getColor(R.color.base_light));
                             canvas.drawRect(
                                     currentHeadCellOffsetX,
                                     0,
@@ -1275,7 +1275,7 @@ public class LearnersAndGradesTableView extends View {
                     float headSize = (learnersAndGradesOffsetForTitle + titleWeekdaysHeight);
 
                     // рисуем фон
-                    backgroundPaint.setColor(getResources().getColor(R.color.baseBlue));
+                    backgroundPaint.setColor(getResources().getColor(R.color.base_blue));
                     canvas.drawRect(0, 0, learnersShowedWidth, learnersAndGradesOffsetForTitle + titleWeekdaysHeight, backgroundPaint);
 
                     // рисуем текст предмета
@@ -1336,11 +1336,11 @@ public class LearnersAndGradesTableView extends View {
                 } else {
                     // если уголок серый
                     // рамка уголка
-                    backgroundPaint.setColor(getResources().getColor(R.color.backgroundWhite));
+                    backgroundPaint.setColor(getResources().getColor(R.color.base_background_color));
                     canvas.drawRect(0, 0, learnersShowedWidth, learnersAndGradesOffsetForTitle +
                             titleWeekdaysHeight, backgroundPaint);
                     // фон уголка
-                    backgroundPaint.setColor(getResources().getColor(R.color.backgroundDarkWhite));
+                    backgroundPaint.setColor(getResources().getColor(R.color.base_light));
                     canvas.drawRect(0, 0, learnersShowedWidth - cellBorderSize,
                             learnersAndGradesOffsetForTitle + titleWeekdaysHeight - cellBorderSize, backgroundPaint);
                 }

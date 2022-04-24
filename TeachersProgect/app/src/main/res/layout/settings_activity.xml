@@ -38,10 +38,10 @@
                     android:id="@+id/settings_activity_button_subscribe_text"
                     style="@style/ButtonSimpleStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/my_buttons_height_size"
+                    android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="@string/settings_activity_button_subscribe"
-                    android:textColor="@color/backgroundWhite" />
+                    android:textColor="@color/text_color_inverse" />
 
                 <ImageView
                     android:layout_width="@dimen/settings_activity_sponsor_icon_size"
@@ -57,14 +57,21 @@
             <FrameLayout style="@style/SettingsDividerStyle" />
 
             <TextView
-                android:id="@+id/activity_settings_edit_locale_button"
+                android:id="@+id/activity_settings_button_edit_locale"
                 style="@style/SettingsButtonSimpleStyle"
                 android:text="@string/settings_activity_button_edit_locale" />
+
+
+            <TextView
+                android:id="@+id/activity_settings_edit_button_dark_mode"
+                style="@style/SettingsButtonSimpleStyle"
+                android:text="@string/settings_activity_button_edit_dark_mode" />
+
 
             <FrameLayout style="@style/SettingsDividerStyle" />
 
             <TextView
-                android:id="@+id/activity_settings_edit_time_button"
+                android:id="@+id/activity_settings_button_edit_time"
                 style="@style/SettingsButtonSimpleStyle"
                 android:text="@string/settings_activity_button_edit_time" />
 
@@ -136,7 +143,7 @@
                 android:background="@drawable/base_background_button_round_orange"
                 android:text="@string/settings_activity_button_rate_us"
                 android:gravity="center"
-                android:textColor="@color/backgroundWhite" />
+                android:textColor="@color/text_color_inverse" />
 
         </LinearLayout>
     </ScrollView>

@@ -55,6 +55,8 @@ public class LessonOutView extends View {
     private int[] gradesColors;
     // цвет обычного текста
     private int simpleTextColor;
+    // цвет обычного текста если есть оценочный фон
+    private int gradedTextColor;
     // цвет отсутствия
     private int absentColor;
 
@@ -120,6 +122,8 @@ public class LessonOutView extends View {
             };
             // цвет обычного текста
             simpleTextColor = r.getColor(R.color.text_color_simple, theme);
+            // цвет обычного текста если есть оценочный фон
+            gradedTextColor = r.getColor(R.color.lesson_text_color, theme);
             // цвет отсутствия
             absentColor = r.getColor(R.color.absent_text_color, theme);
         } else {
@@ -138,6 +142,8 @@ public class LessonOutView extends View {
             };
             // цвет обычного текста
             simpleTextColor = r.getColor(R.color.text_color_simple);
+            // цвет обычного текста если есть оценочный фон
+            gradedTextColor = r.getColor(R.color.lesson_text_color);
             // цвет отсутствия
             absentColor = r.getColor(R.color.absent_text_color);
         }
@@ -155,13 +161,11 @@ public class LessonOutView extends View {
         // кисть для отрисовки большой оценки
         textPaintMainGrade = new TextPaint();
         textPaintMainGrade.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_semibold));
-        textPaintMainGrade.setColor(simpleTextColor);
         textPaintMainGrade.setAntiAlias(true);
 
         // кисть для отрисовки маленькой оценки
         textPaintSmallGrade = new TextPaint();
         textPaintSmallGrade.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_semibold));
-        textPaintSmallGrade.setColor(simpleTextColor);
         textPaintSmallGrade.setAntiAlias(true);
 
     }
@@ -364,13 +368,23 @@ public class LessonOutView extends View {
                     DrawableDesk.cornersRadius, mode);
         } else {
             // если ученик на парте есть
-            // выбираем цвет фона
+
+            // выбираем цвет фона а также цвет текста оценок и имени
             if (learner.absent) {// пропуск
                 deskFillPaint.setColor(simpleDeskColor);
+                textPaintName.setColor(absentColor);
+                textPaintMainGrade.setColor(absentColor);
+                textPaintSmallGrade.setColor(absentColor);
             } else if (learner.mainGradePos == -1) {
                 deskFillPaint.setColor(simpleDeskColor);
+                textPaintName.setColor(simpleTextColor);
+                textPaintMainGrade.setColor(simpleTextColor);
+                textPaintSmallGrade.setColor(simpleTextColor);
             } else if (learner.grades[learner.mainGradePos] == 0) {
                 deskFillPaint.setColor(simpleDeskColor);
+                textPaintName.setColor(simpleTextColor);
+                textPaintMainGrade.setColor(simpleTextColor);
+                textPaintSmallGrade.setColor(simpleTextColor);
             } else {
                 float currentGrade = (float) learner.grades[learner.mainGradePos] / maxAnswersCount;
                 if (currentGrade <= 0.2F) {
@@ -386,6 +400,9 @@ public class LessonOutView extends View {
                 } else {// оценка вне диапазона
                     deskFillPaint.setColor(simpleDeskColor);
                 }
+                textPaintName.setColor(gradedTextColor);
+                textPaintMainGrade.setColor(gradedTextColor);
+                textPaintSmallGrade.setColor(gradedTextColor);
             }
             // рисуем фон парты (место)
             drawRoundedRect(canvas, deskFillPaint,
@@ -475,9 +492,6 @@ public class LessonOutView extends View {
     private Rect tempRect = new Rect();
 
     private void drawLearnerTexts(DrawableLearner learner, PointF deskPosition, int mode, Canvas canvas) {
-
-        // подставление подходящего цвета текста
-        textPaintName.setColor((learner.absent) ? (absentColor) : (simpleTextColor));
 
         // вычисление смещения парты по X для левой и правой половинок парт
         float deskPosX = deskPosition.x + ((mode == RECT_MODE_END) ? (NO_ZOOMED_DESK_SIZE) : (0));

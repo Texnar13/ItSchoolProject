@@ -11,7 +11,7 @@
         <item name="android:colorBackground">@color/base_background_color</item>
 
         <!-- цвет курсора -->
-        <item name="colorAccent">@color/base_blue</item>
+        <item name="colorAccent">@color/cursor_color</item>
 
         <!-- семейство шрифтов -->
         <item name="android:fontFamily">@font/montserrat_family</item>
@@ -41,9 +41,9 @@
     <style name="MyToolbarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
         <!-- цвет точек меню и стрелки-->
-        <item name="colorControlNormal">@color/baseBlue</item>
+        <item name="colorControlNormal">@color/base_blue</item>
         <!--item name="android:colorControlNormal" tools:targetApi="lollipop">@color/baseBlue</item-->
-        <item name="titleTextColor">@color/baseBlue</item>
+        <item name="titleTextColor">@color/base_blue</item>
         <!-- цвет фона -->
         <item name="colorPrimary">@color/transparent</item>
         <!-- подсветка фона кнопок при нажатии -->
@@ -61,8 +61,10 @@
 
     <!-- стиль popup меню на тулбаре -->
     <style name="PopupMenuStyle" parent="Theme.AppCompat.DayNight">
-        <item name="android:background">@color/base_background_color</item>
+        <item name="android:background">@color/popup_menu_background</item>
         <item name="android:textColor">@color/text_color_simple</item>
+        <!-- цвет чекбоксов -->
+        <item name="buttonTint">@color/base_blue</item>
     </style>
 
 
@@ -127,14 +129,14 @@
     <style name="ButtonSimpleStyle" parent="Widget.AppCompat.TextView">
         <item name="fontFamily">@font/montserrat_semibold</item>
         <item name="android:textSize">@dimen/simple_buttons_text_size</item>
-        <item name="android:textColor">#000000</item>
+        <item name="android:textColor">@color/text_color_simple</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="SettingsButtonSimpleStyle" parent="Widget.AppCompat.TextView">
         <item name="fontFamily">@font/montserrat_semibold</item>
         <item name="android:textSize">@dimen/simple_buttons_text_size</item>
-        <item name="android:textColor">#000000</item>
+        <item name="android:textColor">@color/text_color_simple</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/simple_buttons_height</item>
         <item name="android:background">@drawable/base_background_button_round_gray</item>
@@ -150,7 +152,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/settings_activity_divider_height</item>
         <item name="android:layout_marginBottom">@dimen/double_margin</item>
-        <item name="android:background">@color/backgroundDarkWhite</item>
+        <item name="android:background">@color/base_light</item>
     </style>
 
 </resources>

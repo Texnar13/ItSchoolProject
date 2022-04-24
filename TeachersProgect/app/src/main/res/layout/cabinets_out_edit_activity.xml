@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundWhite"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".cabinetsOut.CabinetEditActivity">
@@ -27,39 +26,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/simple_buttons_height"
                 android:layout_margin="@dimen/double_margin"
-                android:gravity="center_vertical"
                 android:background="@drawable/base_background_button_round_gray"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
-
-                <TextView
-                    style="@style/ButtonSimpleStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/half_more_margin"
-                    android:text="@string/cabinets_out_activity_button_text_cabinet_title" />
 
                 <EditText
                     android:id="@+id/cabinet_out_edit_cabinet_name_field"
-                    style="@style/ButtonSimpleStyle"
+                    style="@style/TextViewSemiBoldStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/simple_margin"
-                    android:layout_marginRight="@dimen/simple_margin"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
                     android:hint="@string/cabinets_out_activity_dialog_hint_cabinet_name"
                     android:importantForAutofill="no"
                     android:inputType="textCapWords"
                     android:singleLine="true" />
             </LinearLayout>
 
+
+            <FrameLayout style="@style/SettingsDividerStyle" />
+
             <LinearLayout
                 android:id="@+id/cabinet_out_edit_cabinet_classes_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/double_margin"
-                android:layout_marginRight="@dimen/double_margin"
-                android:layout_marginBottom="@dimen/double_margin"
-                android:paddingBottom="@dimen/half_margin"
-                android:background="@drawable/base_background_button_round_gray"
                 android:orientation="vertical">
 
                 <TextView
@@ -67,32 +56,35 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="@dimen/double_margin"
+                    android:layout_marginBottom="@dimen/double_margin"
                     android:text="@string/cabinets_out_activity_button_text_seat_students" />
 
                 <LinearLayout
-
-                    android:layout_marginStart="@dimen/double_margin"
-                    android:layout_marginEnd="@dimen/double_margin"
                     android:id="@+id/cabinet_out_edit_cabinet_classes_out"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/double_margin"
+                    android:layout_marginRight="@dimen/double_margin"
                     android:orientation="vertical" />
+
+                <FrameLayout style="@style/SettingsDividerStyle" />
+
             </LinearLayout>
 
             <TextView
                 android:id="@+id/cabinet_out_edit_cabinet_arrange_button"
                 style="@style/SettingsButtonSimpleStyle"
-                android:gravity="center"
-                android:text="@string/cabinets_out_activity_button_text_arrange_desks" />
+                android:background="@drawable/base_background_button_round_blue"
+                android:text="@string/cabinets_out_activity_button_text_arrange_desks"
+                android:textColor="@color/text_color_inverse" />
 
             <TextView
                 android:id="@+id/cabinet_out_edit_cabinet_delete_button"
                 style="@style/SettingsButtonSimpleStyle"
-                android:gravity="center"
+                android:background="@drawable/base_background_button_round_blue"
                 android:padding="@dimen/half_more_margin"
                 android:text="@string/cabinets_out_activity_button_text_delete_cabinet"
-                android:textColor="@color/signalRed" />
+                android:textColor="@color/text_color_inverse" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

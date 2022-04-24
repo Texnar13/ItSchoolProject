@@ -131,7 +131,7 @@
     <string name="cabinets_out_activity_title_delete_cabinet_ask">Вы точно хотите удалить кабинет?</string>
     <!-- диалоги -->
     <string name="cabinets_out_activity_dialog_title_create_cabinet">Новый кабинет</string>
-    <string name="cabinets_out_activity_dialog_hint_cabinet_name">Название:</string>
+    <string name="cabinets_out_activity_dialog_hint_cabinet_name">Название</string>
     <!-- подсказка на экране -->
     <string name="cabinets_out_activity_text_help">Чтобы создать кабинет, нажмите + и введите его название. \nЧтобы расставить парты, нажмите на нужный вам кабинет. \nЧтобы переименовать или удалить кабинет, нажмите на него и удерживайте.</string>
 
@@ -241,6 +241,7 @@
     <string name="settings_activity_button_remove_data">Удалить все данные</string>
     <string name="settings_activity_button_rate_us">Оцените наше приложение!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">Язык: %s</string>
+    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Темная тема: %s</string>
     <string name="settings_activity_button_subscribe">Стать спонсором</string>
     <string name="settings_activity_button_save_data_copy">Сохранить резервную копию</string>
     <string name="settings_activity_button_load_data_copy">Загрузить резервную копию</string>
@@ -270,6 +271,7 @@
     <string name="settings_activity_dialog_new_absent_type_title_hint">Сокращение</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty">Введите название</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">Введите сокращение</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_subscrybe" formatted="true">##Без подписки число типов ограничено до %d</string>
     <string name="settings_activity_dialog_delete_text_confirm_delete" formatted="true">Для подтверждения введите число "%d":</string>
     <string name="settings_activity_dialog_hint_number">ЧИСЛО</string>
     <string name="settings_activity_dialog_button_remove_data">Удалить</string>

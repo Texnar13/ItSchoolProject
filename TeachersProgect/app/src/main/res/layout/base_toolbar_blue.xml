@@ -21,7 +21,7 @@
             android:layout_gravity="center"
             android:singleLine="true"
             android:text="@string/app_name"
-            android:textColor="@color/baseBlue"
+            android:textColor="@color/base_blue"
             android:textSize="@dimen/base_toolbar_text_size" />
     </androidx.appcompat.widget.Toolbar>
 </com.google.android.material.appbar.AppBarLayout>

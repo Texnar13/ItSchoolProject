@@ -8,7 +8,7 @@
             android:topLeftRadius="@dimen/radius_rounding_buttons"
             android:topRightRadius="@dimen/radius_rounding_buttons"
             />
-        <solid android:color="@color/backgroundDarkWhite" />
+        <solid android:color="@color/base_light" />
     </shape>
 </item>
 </selector>

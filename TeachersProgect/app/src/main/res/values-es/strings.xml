@@ -130,7 +130,7 @@
     <string name="cabinets_out_activity_title_delete_cabinet_ask">¿Está seguro de querer eliminar el aula?</string>
     <!-- диалоги -->
     <string name="cabinets_out_activity_dialog_title_create_cabinet">Nuevas aulas</string>
-    <string name="cabinets_out_activity_dialog_hint_cabinet_name">Nombre:</string>
+    <string name="cabinets_out_activity_dialog_hint_cabinet_name">Nombre</string>
     <!-- подсказка на экране -->
     <string name="cabinets_out_activity_text_help">Para crear una cuenta, haga clic en + y escriba su nombre. \n Para organizar los escritorios haga clic en el aula que desea. \n Para cambiar el nombre o eliminar un aula, mantén presionado.</string>
 
@@ -240,6 +240,7 @@
     <string name="settings_activity_button_remove_data">Eliminar todos los datos</string>
     <string name="settings_activity_button_rate_us">Califique nuestra aplicación!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">Idioma: %s</string>
+    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Темная тема: %s</string>
     <string name="settings_activity_button_subscribe">Conviértase en patrocinador</string>
     <string name="settings_activity_button_save_data_copy">Guardar una copia de seguridad</string>
     <string name="settings_activity_button_load_data_copy">Subir una copia de seguridad</string>
@@ -269,6 +270,7 @@
     <string name="settings_activity_dialog_new_absent_type_title_hint">Abreviatura</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty">Introduzca el nombre</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">Ingrese la abreviatura</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_subscrybe" formatted="true">##Без подписки число типов ограничено до %d</string>
     <string name="settings_activity_dialog_delete_text_confirm_delete" formatted="true">Para confirmar, escriba un número "%d":</string>
     <string name="settings_activity_dialog_hint_number">Número</string>
     <string name="settings_activity_dialog_button_remove_data">Eliminar</string>

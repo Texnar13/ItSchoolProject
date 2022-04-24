@@ -1,5 +1,6 @@
 package com.learning.texnar13.teachersprogect;
 
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -201,8 +202,14 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite, getTheme()));
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            window.setStatusBarColor(getResources().getColor(R.color.base_background_color, getTheme()));
+
+            // включен ли ночной режим
+            int currentNightMode = getResources().getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK;
+            if (Configuration.UI_MODE_NIGHT_YES != currentNightMode)
+                window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
+                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
 
@@ -616,7 +623,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 verticalLineLayoutParams.leftMargin = (int) x;
                 verticalLineLayoutParams.topMargin = 0;
                 verticalLine.setLayoutParams(verticalLineLayoutParams);
-                verticalLine.setBackgroundColor(getResources().getColor(R.color.backgroundDarkWhite));
+                verticalLine.setBackgroundColor(getResources().getColor(R.color.base_light));
                 outBackground.addView(verticalLine);
                 x = x + pxFromDp(NO_ZOOMED_GIRD_MARGIN * multiplier);
             }
@@ -634,7 +641,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                 horizontalLineLayoutParams.leftMargin = 0;
                 horizontalLineLayoutParams.topMargin = (int) y;
                 horizontalLine.setLayoutParams(horizontalLineLayoutParams);
-                horizontalLine.setBackgroundColor(getResources().getColor(R.color.backgroundDarkWhite));
+                horizontalLine.setBackgroundColor(getResources().getColor(R.color.base_light));
                 outBackground.addView(horizontalLine);
                 y = y + pxFromDp(NO_ZOOMED_GIRD_MARGIN * multiplier);
 
@@ -782,7 +789,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     new RectF(0, 0, 0, 0),
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}
             ));
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.desks_color));
 
             this.desk.setBackground(rectDrawable);
         }
@@ -810,7 +817,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     new RectF(0, 0, 0, 0),
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}
             ));
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.desks_color));
             desk.setBackground(rectDrawable);
         }
 
@@ -837,7 +844,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}// внутренний радиус скругления
             ));
             // задаем цвет
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.desks_color));
             // и ставим его на задний фон layout
             desk.setBackground(rectDrawable);
 

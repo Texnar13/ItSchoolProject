@@ -14,10 +14,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/baseBlue"
+        app:backgroundTint="@color/base_blue"
         app:borderWidth="0dp"
         app:elevation="0.1dp"
-        app:srcCompat="@drawable/base_button_fab_add_white" />
+        android:src="@drawable/base_button_fab_add_white" />
 
     <include layout="@layout/cabinets_out_content" />
 

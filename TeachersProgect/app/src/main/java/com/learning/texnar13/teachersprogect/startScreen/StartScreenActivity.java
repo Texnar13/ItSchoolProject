@@ -112,8 +112,6 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             // ( это я уже переделал, осталось перенести)
 
 
-
-
             // проверяем статус подписки
             checkSubscriptionStatusAndSavePrefs();
 
@@ -297,7 +295,7 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
         if (times == null) times = new int[0][0];
 
         // определяем текущий урок
-        int lessonNumber = -1;
+        int lessonNumber = 0;
         for (int lessonI = 0; lessonI < times.length; lessonI++) {
             if (nowCalendar.get(Calendar.HOUR_OF_DAY) > times[lessonI][0] || (
                     nowCalendar.get(Calendar.HOUR_OF_DAY) == times[lessonI][0] &&
@@ -339,20 +337,19 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             lessonButtonText.setText(R.string.start_screen_activity_title_current_create_lesson);
 
             // назначаем создание при нажатии
-            if (lessonNumber != -1) {
-                final int finalLessonNumber = lessonNumber;
-                View.OnClickListener clickListener = v -> {
-                    // создаем активность
-                    Intent intent = new Intent(StartScreenActivity.this, LessonRedactorActivity.class);
-                    intent.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, -1L);
-                    intent.putExtra(LessonRedactorActivity.LESSON_CHECK_DATE, lessonDate);
-                    intent.putExtra(LessonRedactorActivity.LESSON_NUMBER, finalLessonNumber);
-                    startActivityForResult(intent, LessonRedactorActivity.LESSON_REDACTOR_RESULT_ID);
-                };
-                // нажатие на контейнер с датой и кнопку урока
-                currentLessonContainer.setOnClickListener(clickListener);
-                lessonButtonText.setOnClickListener(clickListener);
-            }
+            final int finalLessonNumber = lessonNumber;
+            View.OnClickListener clickListener = v -> {
+                // создаем активность
+                Intent intent = new Intent(StartScreenActivity.this, LessonRedactorActivity.class);
+                intent.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, -1L);
+                intent.putExtra(LessonRedactorActivity.LESSON_CHECK_DATE, lessonDate);
+                intent.putExtra(LessonRedactorActivity.LESSON_NUMBER, finalLessonNumber);
+                startActivityForResult(intent, LessonRedactorActivity.LESSON_REDACTOR_RESULT_ID);
+            };
+            // нажатие на контейнер с датой и кнопку урока
+            currentLessonContainer.setOnClickListener(clickListener);
+            lessonButtonText.setOnClickListener(clickListener);
+
         } else {// если урок есть
 
             // получаем поля урока
