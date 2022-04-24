@@ -3,7 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable-v28/ic_launcher.xml" value="0.264" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable-v28/ic_launcher.xml" value="0.10400000000000001" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable-v28/ic_launcher2.xml" value="0.2351851851851852" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable-v28/ic_launcher3.xml" value="0.2351851851851852" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable-v28/ic_launcher_.xml" value="0.2351851851851852" />
@@ -16,6 +16,10 @@
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/__background_add_cabinet.xml" value="0.21203703703703702" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/__background_add_class.xml" value="0.1205" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/__button_forward_arrow_dark_gray.xml" value="0.1205" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/__ic______.xml" value="0.1" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/__ic_ar.xml" value="0.1" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/__ic_arrow_left.xml" value="0.1" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/__ic_arrow_right.xml" value="0.1" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/_base_button_arrow_forward_blue.xml" value="0.217" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/_dialog_head_background_white_underlined.xml" value="0.1205" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_arrow_back.xml" value="0.1205" />
@@ -24,6 +28,7 @@
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_background_button_round_blue.xml" value="0.20555555555555555" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_background_button_round_gray.xml" value="0.2351851851851852" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_background_button_round_orange.xml" value="0.2351851851851852" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_background_dialog_bottom_round_blue.xml" value="0.254" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_background_dialog_full_round_dwite.xml" value="0.175" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_background_dialog_full_round_gray.xml" value="0.2351851851851852" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_background_dialog_full_round_white.xml" value="0.2351851851851852" />
@@ -45,6 +50,7 @@
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_button_arrow_standart_back_blue.xml" value="0.21944444444444444" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_button_close.xml" value="0.2101851851851852" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_button_close_background_round.xml" value="0.1205" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_button_close_blue.xml" value="0.1275" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_button_close_white.xml" value="0.2101851851851852" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_button_fab_add_white.xml" value="0.217" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/base_button_return_blue.xml" value="0.217" />
@@ -53,15 +59,18 @@
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/cabinet_redactor_activity_button_add_desk.xml" value="0.23194444444444445" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/cabinet_redactor_activity_button_delete_desk.xml" value="0.23194444444444445" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/cabinets_activity_button_add___kitkat.xml" value="0.21203703703703702" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic_12.xml" value="0.156" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic_123.xml" value="0.2351851851851852" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic__234.xml" value="0.2351851851851852" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic__2345.xml" value="0.2351851851851852" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic__23456.xml" value="0.2351851851851852" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic__fff.xml" value="0.2351851851851852" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic__shadow__launcher_content.xml" value="0.2351851851851852" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic_group112.xml" value="0.1275" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic_group12.xml" value="0.156" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic_icon.xml" value="0.6" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic_icon_for_old_phones.xml" value="0.2351851851851852" />
-        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic_launcher.xml" value="0.536" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic_launcher.xml" value="0.152" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic_launcher2.xml" value="0.264" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic_launcher3.xml" value="0.2351851851851852" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/ic_launcher_.xml" value="0.2351851851851852" />
@@ -73,6 +82,7 @@
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/learners_classes_activity_button_add___kitkat.xml" value="0.2351851851851852" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/lesson_activity_bottom_shet_up_arrow.xml" value="0.1205" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/lesson_activity_learner_abs_ic.xml" value="0.188" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/lesson_activity_learner_add.xml" value="0.185" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/lesson_activity_learner_ic.xml" value="0.176" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/lesson_activity_learner_icon_1.xml" value="0.2311191992720655" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/lesson_activity_learner_icon_2.xml" value="0.2311191992720655" />
@@ -83,6 +93,7 @@
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/lesson_activity_learner_icon_base.xml" value="0.23194444444444445" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/lesson_activity_learner_icon_gray_0.xml" value="0.23194444444444445" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/lesson_actvity_learner_ic.xml" value="0.188" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/lesson_add_learner.xml" value="0.185" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/lesson_redactor_activity_icon_correct.xml" value="0.2311191992720655" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/lesson_redactor_activity_icon_wrong.xml" value="0.2311191992720655" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/drawable/lesson_redactor_dialog_background_no_insert.xml" value="0.23472222222222222" />
@@ -146,20 +157,23 @@
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/cabinets_out_dialog_create_cabinet.xml" value="0.264" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/cabinets_out_dialog_edit_cabinet.xml" value="0.2" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/cabinets_out_edit_activity.xml" value="0.4" />
-        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/learners_and_grades_activity.xml" value="0.21712962962962962" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/learners_and_grades_activity.xml" value="0.41259640102827766" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/learners_and_grades_content.xml" value="0.264" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/learners_and_grades_dialog_learner_create.xml" value="0.2930780559646539" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/learners_and_grades_dialog_learner_edit.xml" value="0.1675925925925926" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/learners_classes_out_activity.xml" value="0.21712962962962962" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/learners_classes_out_content.xml" value="0.21712962962962962" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/learners_classes_out_dialog_create_class.xml" value="0.264" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/learners_classes_out_dialog_edit_class.xml" value="0.12962962962962962" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/learners_grades_statistics_activity.xml" value="0.1712962962962963" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/leson_list_activity.xml" value="0.21712962962962962" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/lesson_activity.xml" value="0.21712962962962962" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/lesson_activity_bottomsheet.xml" value="0.264" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/lesson_desk_place_element.xml" value="0.21712962962962962" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/lesson_list_activity.xml" value="0.21712962962962962" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/lesson_list_pattern_learner.xml" value="0.21712962962962962" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/lesson_redactor_activity.xml" value="0.264" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/lesson_redactor_dialog_choose_learner.xml" value="0.1" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/lesson_redactor_spinner_dropdown_element.xml" value="0.21666666666666667" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/schedule_month_activity.xml" value="0.264" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/schedule_month_lesson_pattern.xml" value="0.264" />
@@ -174,6 +188,7 @@
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/settings_dialog_edit_maximum_grade.xml" value="0.13858695652173914" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/settings_dialog_edit_time.xml" value="0.13858695652173914" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/settings_dialog_edit_time_template_single_time_line.xml" value="0.2" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/settings_dialog_edit_ttttt.xml" value="0.21712962962962962" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/settings_dialog_edit_types_absent.xml" value="0.19814814814814816" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/settings_dialog_edit_types_absent_active_container.xml" value="0.19814814814814816" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/settings_dialog_edit_types_grades.xml" value="0.19814814814814816" />

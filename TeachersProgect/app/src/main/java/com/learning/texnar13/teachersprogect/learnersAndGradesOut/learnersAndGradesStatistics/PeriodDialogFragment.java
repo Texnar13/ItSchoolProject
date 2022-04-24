@@ -402,7 +402,7 @@ public class PeriodDialogFragment extends DialogFragment {
                 (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.half_more_margin)
+                (int) getResources().getDimension(R.dimen.one_and_half_margin)
         );
         saveTextButtonContainerParams.gravity = Gravity.CENTER;
         bottomLayout.addView(createButtonContainer, saveTextButtonContainerParams);
@@ -652,7 +652,7 @@ public class PeriodDialogFragment extends DialogFragment {
         );
         saveTextButtonContainerParams.setMargins(
                 (int) getResources().getDimension(R.dimen.simple_margin),
-                (int) getResources().getDimension(R.dimen.half_more_margin),
+                (int) getResources().getDimension(R.dimen.one_and_half_margin),
                 (int) getResources().getDimension(R.dimen.simple_margin),
                 (int) getResources().getDimension(R.dimen.double_margin)
         );

@@ -240,7 +240,7 @@
     <string name="settings_activity_button_remove_data">删除所有数据</string>
     <string name="settings_activity_button_rate_us">请评价我们的应用!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">语言: %s</string>
-    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Темная тема: %s</string>
+    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Тема: %s</string>
     <string name="settings_activity_button_subscribe">成为赞助商</string>
     <string name="settings_activity_button_save_data_copy">保存备份</string>
     <string name="settings_activity_button_load_data_copy">下载备份</string>
@@ -259,10 +259,10 @@
     <string name="settings_activity_data_import_message_incorrect_type">文件格式不正确。 .支持adb文件</string>
     <string name="settings_activity_data_import_message_unrtedable_file">文件无法读取。</string>
     <string name="settings_activity_data_import_message_error_tag">\n 错误:</string>
-    ?<string name="settings_activity_data_import_message_read_success">\n\n##Файл успешно прочтён!</string>
+    <string name="settings_activity_data_import_message_read_success">\n\n##Файл успешно прочтён!</string>
     <string name="settings_activity_data_import_message_read_error">\n\n读出未完成，文件有错误!</string>
     <!-- диалоги -->
-    <string name="settings_activity_dialog_delete_title">您确定要删除所有应用程序数据吗？</string>
+    <string name="settings_activity_dialog_delete_title" formatted="true">##Чтобы удалить все данные, введите число %d:</string>
     <string name="settings_activity_dialog_add_type_title">+ 添加课的工作类型</string>
     <string name="settings_activity_dialog_new_type_title">新课的工作类型</string>
     <string name="settings_activity_dialog_add_absent_type_title">+ 添加缺席类型</string>
@@ -271,8 +271,7 @@
     <string name="settings_activity_dialog_new_absent_type_toast_empty">输入名称</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">输入缩写</string>
     <string name="settings_activity_dialog_new_absent_type_toast_subscrybe" formatted="true">##Без подписки число типов ограничено до %d</string>
-    <string name="settings_activity_dialog_delete_text_confirm_delete" formatted="true">输入要确认的数字 "%d":</string>
-    <string name="settings_activity_dialog_hint_number">数字</string>
+    <string name="settings_activity_dialog_hint_number">##Введите число</string>
     <string name="settings_activity_dialog_button_remove_data">删除</string>
     <string name="settings_activity_dialog_button_remove">删除</string>
     <string name="settings_activity_dialog_edit_time_title">上课时间</string>
@@ -281,11 +280,13 @@
     <string name="settings_activity_dialog_hint_hour">点</string>
     <string name="settings_activity_dialog_hint_minute">分</string>
     <string name="settings_activity_dialog_text_time_dot">.</string>
-    <string name="settings_activity_dialog_text_time_colon">:</string>
-    <string name="settings_activity_dialog_text_time_dash">—</string>
+    <string name="settings_activity_dialog_text_time_colon"> : </string>
+    <string name="settings_activity_dialog_text_time_dash"> - </string>
     <string name="settings_activity_dialog_edit_locale_title">选择语言</string>
+    <string name="settings_activity_dialog_edit_theme_title">##Выберите тему:</string>
     <string name="settings_activity_dialog_data_import_accept_title">文件读取结果:</string>
     <string name="settings_activity_dialog_data_import_accept_button">上传数据</string>
+    <string name="settings_activity_dialog_max_answer_hint">##Ведите балл</string>
 
 
     <!-- активность рекламы спонсора -->

@@ -60,7 +60,7 @@
             android:orientation="vertical">
 
 
-            <LinearLayout
+            <!--LinearLayout
                 android:id="@+id/activity_lesson_bottom_sheet_button_date_back"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -77,9 +77,9 @@
                     android:layout_height="@dimen/lesson_activity_bottom_sheet_date_arrow_size"
                     android:adjustViewBounds="true"
                     android:src="@drawable/base_button_arrow_back" />
-            </LinearLayout>
+            </LinearLayout-->
 
-            <LinearLayout
+            <!--LinearLayout
                 android:id="@+id/activity_lesson_bottom_sheet_button_date_forward"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -96,7 +96,7 @@
                     android:layout_height="@dimen/lesson_activity_bottom_sheet_date_arrow_size"
                     android:adjustViewBounds="true"
                     android:src="@drawable/base_button_arrow_forward" />
-            </LinearLayout>
+            </LinearLayout-->
 
             <TextView
                 android:id="@+id/activity_lesson_bottom_sheet_date_text"

@@ -3,7 +3,6 @@ package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
@@ -13,7 +12,6 @@ import android.os.Build;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -175,7 +173,7 @@ public class LearnersAndGradesTableView extends View {
         // --- кисть для отрисовки оценок (цвет меняется динамически) ---
         drawPaintGrade = new TextPaint();
         drawPaintGrade.setTextSize(getResources().getDimension(R.dimen.learners_and_grades_activity_content_text_size));
-        drawPaintGrade.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_medium));
+        drawPaintGrade.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_semibold));
         drawPaintGrade.setAntiAlias(true);// сглаживание
 
         // --- кисть для отрисовки имени(внизу клетки) ---
@@ -218,7 +216,7 @@ public class LearnersAndGradesTableView extends View {
         cellBorderSize = (int) (getResources().getDisplayMetrics().density);// зависимые едницы в пиксели
         if (cellBorderSize < 1) cellBorderSize = 1;
         // свободное пространство в клетке вокруг текста
-        cellFreeSpaceMargin = (int) getResources().getDimension(R.dimen.simple_margin);
+        cellFreeSpaceMargin = (int) getResources().getDimension(R.dimen.one_and_half_margin);
         // отступ имен учеников слева
         learnersLeftTextMargin = cellBorderSize + cellFreeSpaceMargin;
 
@@ -236,7 +234,9 @@ public class LearnersAndGradesTableView extends View {
         homeworkDotRadius = cellBorderSize * 5;
 
         // высота шапки таблицы
-        learnersAndGradesOffsetForTitle = dateCircleRadius * 2 + cellBorderSize * 4;
+        learnersAndGradesOffsetForTitle = dateCircleRadius * 2 + cellBorderSize * 4
+                // плюс к высоте дней(дат) в шапке
+        + getResources().getDimensionPixelOffset(R.dimen.one_and_half_margin);
         // высота кнопки добавить ученика под таблицей
         addLearnerButtonHeight = cellMinimumHeight;
         // отступ кнопки добавить ученика от таблицы
@@ -823,7 +823,7 @@ public class LearnersAndGradesTableView extends View {
                                     // ------ если это не нулевой балл ------
 
                                     // ---- выбираем цвет текста  ----
-                                    int gradeColor = getResources().getColor(R.color.absent_text_color);// это цвет любых значений вне пределов, а также Н
+                                    int gradeColor = getResources().getColor(R.color.text_color_simple);// это цвет любых значений вне пределов, а также Н
                                     if (maxAnswersCount != -1) {
                                         int percentGrade = (int) (
                                                 learnersGrades[learnerI][dayIterator][lessonIterator].grades[gradeI] * 100F / maxAnswersCount);

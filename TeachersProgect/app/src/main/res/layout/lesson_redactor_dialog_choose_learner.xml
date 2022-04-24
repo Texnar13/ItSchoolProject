@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/base_background_dialog_full_round_white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/simple_buttons_height"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/lesson_redactor_dialog_choose_learner_button_close"
+                android:layout_width="@dimen/simple_buttons_height"
+                android:layout_height="@dimen/simple_buttons_height">
+                <ImageView
+                    android:layout_centerInParent="true"
+                   android:layout_width="@dimen/base_classic_arrow_immutable_size"
+                    android:layout_height="@dimen/base_classic_arrow_immutable_size"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/base_button_return_inverse" />
+
+            </RelativeLayout>
+
+
+            <TextView
+                style="@style/ButtonSimpleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lesson_redactor_activity_text_choose_learner" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lesson_redactor_dialog_choose_learner_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/settings_activity_edit_time_lessons_side_margin"
+            android:layout_marginEnd="@dimen/settings_activity_edit_time_lessons_side_margin"/>
+
+    </LinearLayout>
+</ScrollView>

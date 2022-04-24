@@ -21,7 +21,6 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.R;
@@ -83,7 +82,7 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        linearLayoutParams.setMargins((int) getResources().getDimension(R.dimen.simple_margin), (int) getResources().getDimension(R.dimen.half_more_margin), (int) getResources().getDimension(R.dimen.simple_margin), (int) getResources().getDimension(R.dimen.half_more_margin));
+        linearLayoutParams.setMargins((int) getResources().getDimension(R.dimen.simple_margin), (int) getResources().getDimension(R.dimen.one_and_half_margin), (int) getResources().getDimension(R.dimen.simple_margin), (int) getResources().getDimension(R.dimen.one_and_half_margin));
         linearLayout.setLayoutParams(linearLayoutParams);
         builder.setView(linearLayout);
 

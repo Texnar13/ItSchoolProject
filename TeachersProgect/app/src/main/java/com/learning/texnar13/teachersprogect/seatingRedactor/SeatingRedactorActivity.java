@@ -1,5 +1,6 @@
 package com.learning.texnar13.teachersprogect.seatingRedactor;
 
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -9,8 +10,6 @@ import android.graphics.drawable.shapes.RoundRectShape;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.os.Build;
@@ -171,7 +170,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                                 (int) getResources().getDimension(R.dimen.half_margin),
                                 (int) getResources().getDimension(R.dimen.half_margin)
                         );
-                        lernerImage.setImageResource(R.drawable.seating_redactor_activity_button_add_learner_background);
+                        lernerImage.setImageResource(R.drawable.lesson_activity_learner_add);
                         desk.viewPlaceOut[placeI].addView(lernerImage, lernerImageParams);
                     }
                 }
@@ -204,8 +203,14 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite, getTheme()));
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            window.setStatusBarColor(getResources().getColor(R.color.base_background_color, getTheme()));
+
+            // включен ли ночной режим
+            int currentNightMode = getResources().getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK;
+            if (Configuration.UI_MODE_NIGHT_YES != currentNightMode)
+                window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
+                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
 
@@ -623,7 +628,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     new RectF(0, 0, 0, 0),
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}
             ));
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.base_light));
             this.viewDesk.setBackground(rectDrawable);
 
 
@@ -718,7 +723,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     // создаем картинку ученика
                     ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
                     LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F);
-                    lernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_gray_0);
+                    lernerImage.setImageResource(R.drawable.lesson_activity_learner);
                     this.viewPlaceOut[placeI].addView(lernerImage, lernerImageParams);
 
                     // создаем текст ученика
@@ -727,7 +732,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     learnerText.setTextSize(7 * multiplier);
                     learnerText.setAllCaps(true);
                     learnerText.setGravity(Gravity.CENTER_HORIZONTAL);
-                    learnerText.setTextColor(Color.BLACK);
+                    learnerText.setTextColor(getResources().getColor(R.color.text_color_simple));
                     learnerText.setSingleLine(true);
                     if (learners[learnersIndexes[placeI]].name.length() == 0) {
                         learnerText.setText(learners[learnersIndexes[placeI]].lastName);
@@ -765,7 +770,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     new RectF(0, 0, 0, 0),
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}
             ));
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.base_light));
             viewDesk.setBackground(rectDrawable);
 
 
@@ -815,7 +820,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     new float[]{0, 0, 0, 0, 0, 0, 0, 0}// внутренний радиус скругления
             ));
             // задаем цвет
-            rectDrawable.getPaint().setColor(getResources().getColor(R.color.backgroundLiteGray));
+            rectDrawable.getPaint().setColor(getResources().getColor(R.color.base_light));
             // и ставим его на задний фон layout
             viewDesk.setBackground(rectDrawable);
         }
@@ -837,7 +842,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                                 (int) getResources().getDimension(R.dimen.half_margin),
                                 (int) getResources().getDimension(R.dimen.half_margin)
                         );
-                        lernerImage.setImageResource(R.drawable.seating_redactor_activity_button_add_learner_background);
+                        lernerImage.setImageResource(R.drawable.lesson_activity_learner_add);
                         viewPlaceOut[placesI].addView(lernerImage, lernerImageParams);
                     } else {
                         viewPlaceOut[placesI].removeAllViews();
@@ -851,7 +856,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             // создаем картинку ученика
             ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
             LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F);
-            lernerImage.setImageResource(R.drawable.lesson_activity_learner_icon_gray_0);
+            lernerImage.setImageResource(R.drawable.lesson_activity_learner);
             this.viewPlaceOut[place].addView(lernerImage, lernerImageParams);
 
             // создаем текст ученика
@@ -860,7 +865,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             learnerText.setTextSize(7 * multiplier);
             learnerText.setAllCaps(true);
             learnerText.setGravity(Gravity.CENTER_HORIZONTAL);
-            learnerText.setTextColor(Color.BLACK);
+            learnerText.setTextColor(getResources().getColor(R.color.text_color_simple));
             learnerText.setSingleLine(true);
             if (learners[learnersIndexes[place]].name.length() == 0) {
                 learnerText.setText(learners[learnersIndexes[place]].lastName);

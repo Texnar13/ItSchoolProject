@@ -146,7 +146,7 @@
                 android:layout_marginTop="@dimen/double_margin"
                 android:background="@drawable/base_background_button_round_gray"
                 android:gravity="center"
-                android:padding="@dimen/half_more_margin">
+                android:padding="@dimen/one_and_half_margin">
 
                 <TextView
                     android:id="@+id/learners_and_grades_dialog_learner_edit_button_remove"
@@ -168,7 +168,7 @@
             android:background="@drawable/base_background_dialog_bottom_round_blue"
             android:fontFamily="@font/montserrat_medium"
             android:gravity="center"
-            android:padding="@dimen/half_more_margin"
+            android:padding="@dimen/one_and_half_margin"
             android:text="@string/button_save"
             android:textColor="@color/backgroundWhite"
             android:textSize="@dimen/text_subtitle_size" />

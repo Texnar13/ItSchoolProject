@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -190,9 +189,9 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements
             arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
             arrowParams.setMargins(
                     (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.half_more_margin),
+                    (int) getResources().getDimension(R.dimen.one_and_half_margin),
                     (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.half_more_margin)
+                    (int) getResources().getDimension(R.dimen.one_and_half_margin)
             );
             learnersClassContainer.addView(arrow, arrowParams);
 
@@ -291,9 +290,9 @@ public class LearnersClassesOutActivity extends AppCompatActivity implements
             arrowParams.addRule(RelativeLayout.CENTER_VERTICAL);
             arrowParams.setMargins(
                     (int) getResources().getDimension(R.dimen.simple_margin),
-                    (int) getResources().getDimension(R.dimen.half_more_margin),
+                    (int) getResources().getDimension(R.dimen.one_and_half_margin),
                     (int) getResources().getDimension(R.dimen.double_margin),
-                    (int) getResources().getDimension(R.dimen.half_more_margin)
+                    (int) getResources().getDimension(R.dimen.one_and_half_margin)
             );
             learnersClassContainer.addView(arrow, arrowParams);
 

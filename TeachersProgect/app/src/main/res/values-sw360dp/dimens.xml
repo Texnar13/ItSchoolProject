@@ -46,8 +46,9 @@
 
     <!-- активность учеников -->
     <dimen name="learners_and_grades_activity_subject_and_month_text_size">@dimen/simple_buttons_text_size</dimen>
-    <dimen name="learners_and_grades_activity_content_text_size">15sp</dimen>
-    <dimen name="learners_and_grades_activity_index_text_size">15sp</dimen>
+    <dimen name="learners_and_grades_activity_content_text_size">16sp</dimen>
+    <dimen name="learners_and_grades_activity_index_text_size">13sp</dimen>
+    <dimen name="learners_and_grades_activity_date_title_heght">50dp</dimen>
 
 
     <!-- активность настроек -->
@@ -56,10 +57,9 @@
     <dimen name="settings_activity_switch_size">60dp</dimen>
     <dimen name="settings_activity_divider_height">1.5dp</dimen>
     <dimen name="settings_activity_edit_locale_buttons_height">40dp</dimen>
-    <dimen name="settings_activity_edit_locale_bottom_margin">25dp</dimen>
 
     <dimen name="settings_activity_edit_time_text_view_height">40dp</dimen>
-    <dimen name="settings_activity_edit_time_lessons_side_margin">50dp</dimen>
+    <dimen name="settings_activity_edit_time_lessons_side_margin">@dimen/double_margin</dimen>
 
     <!-- премиум активность -->
     <dimen name="premium_activity_title_text_size">28sp</dimen>
@@ -69,9 +69,9 @@
     <dimen name="premium_activity_messages_small_text_size">16sp</dimen>
 
     <!-- активность урока -->
-    <dimen name="lesson_activity_learner_name_text_size">12sp</dimen>
-    <dimen name="lesson_activity_learner_main_grade_text_size">30sp</dimen>
-    <dimen name="lesson_activity_learner_small_grade_text_size">22sp</dimen>
+    <dimen name="lesson_activity_learner_name_text_size">9sp</dimen>
+    <dimen name="lesson_activity_learner_main_grade_text_size">28sp</dimen>
+    <dimen name="lesson_activity_learner_small_grade_text_size">20sp</dimen>
 
     <dimen name="lesson_activity_bottom_sheet_height">400dp</dimen>
     <dimen name="lesson_activity_bottom_sheet_up_arrow_size">@dimen/my_icon_small_size</dimen>
@@ -99,7 +99,7 @@
 
     <dimen name="forth_margin">40dp</dimen>
     <dimen name="double_margin">20dp</dimen>
-    <dimen name="half_more_margin">15dp</dimen>
+    <dimen name="one_and_half_margin">15dp</dimen>
     <dimen name="simple_margin">10dp</dimen>
     <dimen name="half_margin">5dp</dimen>
 

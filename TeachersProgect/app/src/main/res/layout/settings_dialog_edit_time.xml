@@ -12,23 +12,28 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/double_margin">
+            android:layout_height="@dimen/simple_buttons_height"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/dialog_fragment_layout_settings_edit_time_button_close"
-                android:layout_width="@dimen/my_icon_size"
-                android:layout_height="@dimen/my_icon_size"
-                android:adjustViewBounds="true"
-                app:srcCompat="@drawable/base_button_close_background_round" />
+                android:layout_width="@dimen/simple_buttons_height"
+                android:layout_height="@dimen/simple_buttons_height">
+                <ImageView
+                    android:layout_centerInParent="true"
+                   android:layout_width="@dimen/base_classic_arrow_immutable_size"
+                    android:layout_height="@dimen/base_classic_arrow_immutable_size"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/base_button_return_inverse" />
+
+            </RelativeLayout>
+
 
             <TextView
                 style="@style/ButtonSimpleStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/double_margin"
                 android:text="@string/settings_activity_dialog_edit_time_title" />
         </LinearLayout>
 
@@ -46,17 +51,6 @@
             style="@style/SettingsButtonSimpleStyle"
             android:gravity="center"
             android:text="@string/settings_activity_dialog_edit_time_button_add_lesson" />
-
-
-        <TextView
-            android:id="@+id/dialog_fragment_layout_settings_edit_time_button_save"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/simple_buttons_height"
-            android:background="@drawable/base_background_dialog_bottom_round_blue"
-            android:gravity="center"
-            android:text="@string/button_save"
-            android:textColor="@color/backgroundWhite"
-            android:textSize="@dimen/simple_buttons_text_size" />
     </LinearLayout>
 
 

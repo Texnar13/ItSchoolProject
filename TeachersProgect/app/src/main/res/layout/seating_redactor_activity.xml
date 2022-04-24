@@ -10,7 +10,6 @@
     <include layout="@layout/base_toolbar_blue"/>
 
     <RelativeLayout
-        android:background="@color/backgroundWhite"
         android:id="@+id/seating_redactor_room"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

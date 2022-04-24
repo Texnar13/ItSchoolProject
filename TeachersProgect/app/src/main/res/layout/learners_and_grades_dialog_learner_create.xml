@@ -149,7 +149,7 @@
             android:background="@drawable/base_background_dialog_bottom_round_blue"
             android:fontFamily="@font/montserrat_medium"
             android:gravity="center"
-            android:padding="@dimen/half_more_margin"
+            android:padding="@dimen/one_and_half_margin"
             android:text="@string/button_save"
             android:textColor="@color/backgroundWhite"
             android:textSize="@dimen/text_subtitle_size" />

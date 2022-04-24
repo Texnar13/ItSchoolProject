@@ -17,7 +17,12 @@
         <item>zh</item>
         <item>es</item>
     </string-array>
-
+    <!-- названия darkMode -->
+    <string-array name="day_night">
+        <item>##Как на устройстве</item>
+        <item>##Темная</item>
+        <item>##Светлая</item>
+    </string-array>
 
     <string-array name="months_names">
         <item>January</item>

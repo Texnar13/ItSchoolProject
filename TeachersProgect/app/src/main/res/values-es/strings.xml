@@ -75,7 +75,7 @@
     <string name="learners_and_grades_out_activity_dialog_button_create">Crear</string>
     <string name="learners_and_grades_out_activity_dialog_title_choose_subject">Seleccione una asignatura</string>
     <string name="learners_and_grades_out_activity_dialog_subject_title_create">Crear una asignatura</string>
-    <string name="learners_and_grades_out_activity_dialog_hint_subject_name">Nombre:</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_subject_name">Nombre</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson">clase</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">Deberes y Notas:</string>
     <!-- уведомления диалогов -->
@@ -240,7 +240,7 @@
     <string name="settings_activity_button_remove_data">Eliminar todos los datos</string>
     <string name="settings_activity_button_rate_us">Califique nuestra aplicación!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">Idioma: %s</string>
-    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Темная тема: %s</string>
+    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Тема: %s</string>
     <string name="settings_activity_button_subscribe">Conviértase en patrocinador</string>
     <string name="settings_activity_button_save_data_copy">Guardar una copia de seguridad</string>
     <string name="settings_activity_button_load_data_copy">Subir una copia de seguridad</string>
@@ -259,10 +259,10 @@
     <string name="settings_activity_data_import_message_incorrect_type">Formato de archivo incorrecto . Archivos compatibles .tadb</string>
     <string name="settings_activity_data_import_message_unrtedable_file">No se puede leer el archivo.</string>
     <string name="settings_activity_data_import_message_error_tag">\n Error: </string>
-    ?<string name="settings_activity_data_import_message_read_success">\n\n##Файл успешно прочтён!</string>
+    <string name="settings_activity_data_import_message_read_success">\n\n##Файл успешно прочтён!</string>
     <string name="settings_activity_data_import_message_read_error">\n\n¡Lectura no terminada, error en el archivo!</string>
     <!-- диалоги -->
-    <string name="settings_activity_dialog_delete_title">¿Quieres borrar todos los datos?</string>
+    <string name="settings_activity_dialog_delete_title" formatted="true">##Чтобы удалить все данные, введите число %d:</string>
     <string name="settings_activity_dialog_add_type_title">+ Agregar nueva tipo de calificaciónes</string>
     <string name="settings_activity_dialog_new_type_title">Nueva clase</string>
     <string name="settings_activity_dialog_add_absent_type_title">+ Agregar tipo de ausencia</string>
@@ -271,8 +271,7 @@
     <string name="settings_activity_dialog_new_absent_type_toast_empty">Introduzca el nombre</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">Ingrese la abreviatura</string>
     <string name="settings_activity_dialog_new_absent_type_toast_subscrybe" formatted="true">##Без подписки число типов ограничено до %d</string>
-    <string name="settings_activity_dialog_delete_text_confirm_delete" formatted="true">Para confirmar, escriba un número "%d":</string>
-    <string name="settings_activity_dialog_hint_number">Número</string>
+    <string name="settings_activity_dialog_hint_number">##Введите число</string>
     <string name="settings_activity_dialog_button_remove_data">Eliminar</string>
     <string name="settings_activity_dialog_button_remove">Eliminar</string>
     <string name="settings_activity_dialog_edit_time_title">Tiempo de lecciones</string>
@@ -281,11 +280,13 @@
     <string name="settings_activity_dialog_hint_hour">HORA</string>
     <string name="settings_activity_dialog_hint_minute">MIN</string>
     <string name="settings_activity_dialog_text_time_dot">.</string>
-    <string name="settings_activity_dialog_text_time_colon">:</string>
-    <string name="settings_activity_dialog_text_time_dash">—</string>
+    <string name="settings_activity_dialog_text_time_colon"> : </string>
+    <string name="settings_activity_dialog_text_time_dash"> - </string>
     <string name="settings_activity_dialog_edit_locale_title">Seleccione un idioma:</string>
+    <string name="settings_activity_dialog_edit_theme_title">##Выберите тему:</string>
     <string name="settings_activity_dialog_data_import_accept_title">Resultados de lectura de archivos:</string>
     <string name="settings_activity_dialog_data_import_accept_button">Cargar datos</string>
+    <string name="settings_activity_dialog_max_answer_hint">##Ведите балл</string>
 
 
     <!-- активность рекламы спонсора -->

@@ -3,44 +3,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/base_background_dialog_full_round_white"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/base_subjects_dialog_edit_head_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/base_background_dialog_head_round_white"
-        android:padding="@dimen/double_margin"
+        android:layout_height="@dimen/simple_buttons_height"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <RelativeLayout
             android:id="@+id/base_subjects_dialog_edit_button_back"
-            android:layout_width="@dimen/my_icon_size"
-            android:layout_height="@dimen/my_icon_size"
-            android:adjustViewBounds="true"
-            app:srcCompat="@drawable/base_button_return_blue" />
+            android:layout_width="@dimen/simple_buttons_height"
+            android:layout_height="@dimen/simple_buttons_height">
 
-        <TextView
-            android:id="@+id/base_subjects_dialog_edit_title"
-            style="@style/ButtonSimpleStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/double_margin"
-            android:text="@string/button_remove"
-            android:textColor="@color/text_color_not_active" />
+            <ImageView
+                android:layout_width="@dimen/base_classic_arrow_immutable_size"
+                android:layout_height="@dimen/base_classic_arrow_immutable_size"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/base_button_return_inverse" />
+
+        </RelativeLayout>
     </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/base_background_dialog_full_white"
         android:minHeight="@dimen/simple_buttons_height"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@+id/base_subjects_dialog_edit_button_save"
+        app:layout_constraintBottom_toTopOf="@+id/base_subjects_dialog_edit_buttons_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/base_subjects_dialog_edit_head_container">
@@ -55,18 +50,38 @@
             android:minHeight="@dimen/simple_buttons_height"
             android:orientation="vertical" />
     </ScrollView>
-    
-    <TextView
-        android:id="@+id/base_subjects_dialog_edit_button_save"
-        style="@style/ButtonSimpleStyle"
+
+
+    <LinearLayout
+        android:id="@+id/base_subjects_dialog_edit_buttons_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/simple_buttons_height"
+        android:layout_height="wrap_content"
         android:background="@drawable/base_background_dialog_bottom_round_blue"
-        android:gravity="center"
-        android:text="@string/button_save"
-        android:textColor="@color/backgroundWhite"
+        android:weightSum="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
-    
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/base_subjects_dialog_edit_button_save"
+            style="@style/ButtonSimpleStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/simple_buttons_height"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/button_save"
+            android:textColor="@color/text_color_inverse"  />
+
+        <TextView
+            android:id="@+id/base_subjects_dialog_edit_button_remove"
+            style="@style/ButtonSimpleStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/simple_buttons_height"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/button_remove"
+            android:textColor="@color/text_color_inverse" />
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

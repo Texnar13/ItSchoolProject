@@ -16,25 +16,27 @@ import androidx.fragment.app.DialogFragment;
 
 import com.learning.texnar13.teachersprogect.R;
 
-public class EditLocaleDialogFragment extends DialogFragment {
+public class EditDarkModeDialogFragment extends DialogFragment {
+
 
     // передаваемые параметры
-    public static String ARGS_CURRENT_LOCALE= "locale";
+    public static String ARGS_CURRENT_DAY_NIGHT_MODE= "currentMode";
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        //начинаем строить диалог
-        android.app.AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // начинаем строить диалог
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         // layout диалога
         View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.settings_dialog_edit_locale, null);
         builder.setView(dialogLayout);
 
-
         // меняем заголовок
         ((TextView)dialogLayout.findViewById(R.id.settings_dialog_edit_locale_title)).setText(
-                R.string.settings_activity_dialog_edit_locale_title
+                R.string.settings_activity_dialog_edit_theme_title
         );
+
 
         // LinearLayout в скролле для вывода списка
         LinearLayout listOut = dialogLayout.findViewById(R.id.settings_dialog_edit_locale_out);
@@ -44,30 +46,22 @@ public class EditLocaleDialogFragment extends DialogFragment {
         dialogLayout.findViewById(R.id.settings_dialog_edit_locale_cancel_button).setOnClickListener(v -> dismiss());
 
 
-        //--список языков--
         //--------ставим диалогу список в виде view--------
-        //названия и коды из констант
-        String[] localeNames = getResources().getStringArray(R.array.locale_names);
-        final String[] localeСodes = getResources().getStringArray(R.array.locale_code);
-        String lastLocale = getArguments().getString(ARGS_CURRENT_LOCALE);
-        //номер прошлой локали
-        int lastLocaleNumber = 0;
-        for (int i = 0; i < localeСodes.length; i++) {
-            if (localeСodes[i].equals(lastLocale)) {
-                lastLocaleNumber = i;
-            }
+        // названия и коды из констант
+        String[] dayNightNames = getResources().getStringArray(R.array.day_night);
+        // номер прошлой темы
+        int lastThemePoz = getArguments().getInt(ARGS_CURRENT_DAY_NIGHT_MODE);
 
-        }
 
         // проходимся по списку
-        for (int i = 0; i < localeСodes.length; i++) {
+        for (int i = 0; i < dayNightNames.length; i++) {
             // текст
             TextView text = new TextView(getActivity());
-            text.setText(localeNames[i]);
+            text.setText(dayNightNames[i]);
             text.setGravity(Gravity.CENTER_VERTICAL);
             text.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.simple_buttons_text_size));
             text.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_semibold));
-            if (lastLocaleNumber == i) {
+            if (lastThemePoz == i) {
                 text.setTextColor(getResources().getColor(R.color.base_blue));
             } else {
                 text.setTextColor(getResources().getColor(R.color.text_color_simple));
@@ -82,11 +76,10 @@ public class EditLocaleDialogFragment extends DialogFragment {
             //нажатие на пункт списка
             final int number = i;
             text.setOnClickListener(view -> {
-                ((EditLocaleDialogFragmentInterface) getActivity()).editLocale(localeСodes[number]);
+                ((EditDarkModeDialogFragmentInterface) getActivity()).editDarkMode(number);
                 dismiss();
             });
         }
-
 
         // наконец создаем диалог и возвращаем его
         Dialog dialog = builder.create();
@@ -95,7 +88,7 @@ public class EditLocaleDialogFragment extends DialogFragment {
     }
 }
 
-interface EditLocaleDialogFragmentInterface {
-    void editLocale(String newLocale);
+interface EditDarkModeDialogFragmentInterface {
+    void editDarkMode(int newModePos);
 }
 

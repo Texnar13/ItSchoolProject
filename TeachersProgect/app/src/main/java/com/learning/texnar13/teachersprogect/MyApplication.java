@@ -2,6 +2,7 @@ package com.learning.texnar13.teachersprogect;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -11,16 +12,30 @@ import androidx.multidex.MultiDexApplication;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import com.yandex.mobile.ads.common.MobileAds;
 
 import java.util.Locale;
 
 public class MyApplication extends MultiDexApplication {//MultiDexApplication/Application // todo multiDex
-    private Locale locale;
 
 
     @Override
     public void onCreate() {
+
+        // меняем тему если она жестко задана
+        switch (PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getInt(SharedPrefsContract.PREFS_DAY_NIGHT_MODE, 0)) {
+//            case 0:
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+//                break;
+            case 1:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            case 2:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+        }
 
         // настраиваем программный вывод векторных изображений
         //  https://stackoverflow.com/questions/43004886/resourcescompat-getdrawable-vs-appcompatresources-getdrawable
@@ -36,13 +51,13 @@ public class MyApplication extends MultiDexApplication {//MultiDexApplication/Ap
         MobileAds.initialize(this, () -> Log.d("YANDEX_MOBILE_ADS_TAG", "SDK initialized"));
 
         /*
-        * Устанавливает значение, которое определяет, разрешил ли пользователь из GDPR-региона
-        * сбор персональных данных, используемых для аналитики и таргетирования рекламы.
-        * Пользовательские данные не будут собираться до тех пор, пока сбор данных не будет разрешен.
-        * Если пользователь однажды разрешил или запретил сбор данных, требуется передавать это значение
-        * при каждом запуске приложения.
-        *
-        * */
+         * Устанавливает значение, которое определяет, разрешил ли пользователь из GDPR-региона
+         * сбор персональных данных, используемых для аналитики и таргетирования рекламы.
+         * Пользовательские данные не будут собираться до тех пор, пока сбор данных не будет разрешен.
+         * Если пользователь однажды разрешил или запретил сбор данных, требуется передавать это значение
+         * при каждом запуске приложения.
+         *
+         * */
         MobileAds.setUserConsent(false);// Есть диалог на главном экране GDPR Вот из него и надо брать информацию разрешил пользователь или нет
     }
 

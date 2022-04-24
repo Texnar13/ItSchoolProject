@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -313,7 +312,7 @@ public class LessonOutView extends View {
             // назначение элементам размеров, заданных по scale
             // (сделано это дабы не назначать одно и то же по сто раз)
             // получаем картинку ученика из вектора для отрисовки
-            Bitmap learnerIcon = getBitmapFromVectorDrawable(R.drawable.lesson_activity_learner_ic,
+            Bitmap learnerIcon = getBitmapFromVectorDrawable(R.drawable.lesson_activity_learner,
                     (int) pxFromDp(NO_ZOOMED_LEARNER_SIZE * scale),
                     (int) pxFromDp(NO_ZOOMED_LEARNER_SIZE * scale)
             );
@@ -325,9 +324,9 @@ public class LessonOutView extends View {
             //  назначение размера текста
             // текст имени
             textPaintName.setTextSize(getResources().getDimension(R.dimen.lesson_activity_learner_name_text_size) * 0.65f * scale);
-            // текст имени
+            // текст главной оценки
             textPaintMainGrade.setTextSize(getResources().getDimension(R.dimen.lesson_activity_learner_main_grade_text_size) * 0.65f * scale);
-            // текст имени
+            // текст побочной оценки
             textPaintSmallGrade.setTextSize(getResources().getDimension(R.dimen.lesson_activity_learner_small_grade_text_size) * 0.65f * scale);// todo перенести размеры шрифтов в поля класса, чтобы не искать их здесь каждый раз
 
 

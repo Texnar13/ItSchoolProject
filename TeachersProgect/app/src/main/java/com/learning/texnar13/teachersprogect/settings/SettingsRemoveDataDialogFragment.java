@@ -32,7 +32,7 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         Random random = new Random();
         final int n = random.nextInt(40) + 10;
         ((TextView) root.findViewById(R.id.settings_dialog_remove_data_confirm_output)).setText(
-                getResources().getString(R.string.settings_activity_dialog_delete_text_confirm_delete, n));
+                getResources().getString(R.string.settings_activity_dialog_delete_title, n));
 
         // нажатие на кнопку удалить все данные
         root.findViewById(R.id.settings_dialog_remove_data_button).setOnClickListener(v -> {

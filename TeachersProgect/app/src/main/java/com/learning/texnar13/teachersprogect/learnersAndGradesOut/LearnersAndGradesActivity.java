@@ -202,8 +202,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.backgroundWhite, getTheme()));
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);// todo что это за строка, в Start Screen она не используется
+            window.setStatusBarColor(getResources().getColor(R.color.base_background_color, getTheme()));
+
+            // включен ли ночной режим
+            int currentNightMode = getResources().getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK;
+            if (Configuration.UI_MODE_NIGHT_YES != currentNightMode)
+                window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
+                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
         // раздуваем layout

@@ -2,7 +2,7 @@
 <resources>
 
     <!-- цвет подложек активности -->
-    <color name="base_background_color">#FFFFFF</color>
+    <color name="base_background_color">#FAFAFA</color>
 
     <!-- не меняющиеся акцентные цвета -->
     <color name="base_blue">#7EADE1</color>
@@ -17,7 +17,7 @@
     <!-- цвета текстов -->
     <color name="text_color_simple">#22272E</color>
     <color name="text_color_inverse">@color/base_background_color</color>
-    <color name="text_color_not_active">#BABEC6</color>
+    <color name="text_color_not_active">#C6CAD4</color>
     <color name="cursor_color">#5CA4F3</color>
 
 
@@ -26,7 +26,8 @@
     <!-- цвет верхней планки -->
     <color name="start_screen_top_sheet_color">@color/base_blue</color>
     <color name="start_screen_top_sheet_text_color">@color/base_background_color</color>
-    <color name="start_screen_top_sheet_inverse_text_color">@color/base_blue</color>
+    <color name="start_screen_top_sheet_lesson_active_text_color">@color/base_blue</color>
+    <color name="start_screen_top_sheet_lesson_not_active_text_color">@color/text_color_not_active</color>
     <color name="start_screen_top_sheet_start_lesson_button_color">@color/base_light</color>
 
 

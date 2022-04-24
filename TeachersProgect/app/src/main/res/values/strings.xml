@@ -75,8 +75,7 @@
     <string name="learners_and_grades_out_activity_dialog_button_change">Change</string>
     <string name="learners_and_grades_out_activity_dialog_title_choose_subject">Choose subject:</string>
     <string name="learners_and_grades_out_activity_dialog_subject_title_create">Create subject:</string>
-    <string name="learners_and_grades_out_activity_dialog_hint_subject_name">
-Title:</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_subject_name">Title</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson">lesson</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">Homework and Notes:</string>
     <!-- уведомления диалогов -->
@@ -127,7 +126,7 @@ Title:</string>
     <string name="cabinets_out_activity_button_text_cabinet_title">Title:</string>
     <string name="cabinets_out_activity_button_text_seat_students">Move students:</string>
     <string name="cabinets_out_activity_button_text_arrange_desks">Move desks</string>
-    <string name="cabinets_out_activity_button_text_delete_cabinet">Delete the cabinet</string>
+    <string name="cabinets_out_activity_button_text_delete_cabinet">Delete</string>
     <string name="cabinets_out_activity_title_delete_cabinet_ask">Are you sure you want to delete the classroom?</string>
     <!-- диалоги -->
     <string name="cabinets_out_activity_dialog_title_create_cabinet">New classroom</string>
@@ -241,7 +240,7 @@ Title:</string>
     <string name="settings_activity_button_remove_data">Remove all data</string>
     <string name="settings_activity_button_rate_us">Rate our app!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">Language: %s</string>
-    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Темная тема: %s</string>
+    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Тема: %s</string>
     <string name="settings_activity_button_subscribe">Become a sponsor</string>
     <string name="settings_activity_button_save_data_copy">Save a backup</string>
     <string name="settings_activity_button_load_data_copy">Upload a backup</string>
@@ -260,10 +259,10 @@ Title:</string>
     <string name="settings_activity_data_import_message_incorrect_type">Invalid file format. Supports .tadb files</string>
     <string name="settings_activity_data_import_message_unrtedable_file">File cannot be read.</string>
     <string name="settings_activity_data_import_message_error_tag">\nError:</string>
-    ?<string name="settings_activity_data_import_message_read_success">\n\n##Файл успешно прочтён!</string>
+    <string name="settings_activity_data_import_message_read_success">\n\n##Файл успешно прочтён!</string>
     <string name="settings_activity_data_import_message_read_error">\n\nReading not finished, error in file!</string>
     <!-- диалоги -->
-    <string name="settings_activity_dialog_delete_title">Are you sure you want to delete all data?</string>
+    <string name="settings_activity_dialog_delete_title" formatted="true">##Чтобы удалить все данные, введите число %d:</string>
     <string name="settings_activity_dialog_add_type_title">+ Add type</string>
     <string name="settings_activity_dialog_new_type_title">New type</string>
     <string name="settings_activity_dialog_add_absent_type_title">+ Add the type of absence</string>
@@ -272,8 +271,7 @@ Title:</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty">Enter the name</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">Enter an abbreviation</string>
     <string name="settings_activity_dialog_new_absent_type_toast_subscrybe" formatted="true">##Без подписки число типов ограничено до %d</string>
-    <string name="settings_activity_dialog_delete_text_confirm_delete" formatted="true">Enter the number "%d" to confirm:</string>
-    <string name="settings_activity_dialog_hint_number">NUMBER </string>
+    <string name="settings_activity_dialog_hint_number">##Введите число</string>
     <string name="settings_activity_dialog_button_remove_data">Delete</string>
     <string name="settings_activity_dialog_button_remove">Remove</string>
     <string name="settings_activity_dialog_edit_time_title">Change lessons time</string>
@@ -282,11 +280,13 @@ Title:</string>
     <string name="settings_activity_dialog_hint_hour">HOUR</string>
     <string name="settings_activity_dialog_hint_minute">MIN</string>
     <string name="settings_activity_dialog_text_time_dot">.</string>
-    <string name="settings_activity_dialog_text_time_colon">:</string>
-    <string name="settings_activity_dialog_text_time_dash">—</string>
+    <string name="settings_activity_dialog_text_time_colon"> : </string>
+    <string name="settings_activity_dialog_text_time_dash"> - </string>
     <string name="settings_activity_dialog_edit_locale_title">Choose language:</string>
+    <string name="settings_activity_dialog_edit_theme_title">##Выберите тему:</string>
     <string name="settings_activity_dialog_data_import_accept_title">File reading results:</string>
     <string name="settings_activity_dialog_data_import_accept_button">Upload data</string>
+    <string name="settings_activity_dialog_max_answer_hint">##Ведите балл</string>
 
 
     <!-- активность рекламы спонсора -->

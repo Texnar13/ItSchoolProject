@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
-            android:id="@+id/cabinets_out_dialog_create_cabinet_button_cancel"
+            android:id="@+id/learners_classes_out_dialog_edit_class_button_cancel"
             android:layout_width="@dimen/simple_buttons_height"
             android:layout_height="@dimen/simple_buttons_height">
 
@@ -34,30 +34,51 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/cabinets_out_activity_dialog_title_create_cabinet" />
+            android:text="@string/learners_classes_out_activity_dialog_title_edit_class" />
     </LinearLayout>
 
     <EditText
-        android:id="@+id/cabinets_out_dialog_create_cabinet_name_input"
+        android:id="@+id/learners_classes_out_dialog_edit_class_name_input"
+        style="@style/ButtonSimpleStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/simple_buttons_height"
-        android:hint="@string/cabinets_out_activity_dialog_hint_cabinet_name"
-        android:inputType="textCapWords"
-        style="@style/ButtonSimpleStyle"
-        android:layout_marginBottom="@dimen/simple_margin"
-        android:padding="0dp"
         android:layout_marginStart="@dimen/double_margin"
         android:layout_marginEnd="@dimen/double_margin"
+        android:layout_marginBottom="@dimen/simple_margin"
         android:background="@color/transparent"
+        android:hint="@string/learners_classes_out_activity_dialog_hint_class_name"
+        android:inputType="textCapWords"
+        android:padding="0dp"
         android:textColor="@color/text_color_simple" />
 
-    <TextView
-        android:id="@+id/cabinets_out_dialog_create_cabinet_button_save"
-        style="@style/ButtonSimpleStyle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/simple_buttons_height"
+        android:layout_height="wrap_content"
         android:background="@drawable/base_background_dialog_bottom_round_blue"
-        android:gravity="center"
-        android:text="@string/button_save"
-        android:textColor="@color/text_color_inverse" />
+        android:weightSum="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/learners_classes_out_dialog_edit_class_button_save"
+            style="@style/ButtonSimpleStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/simple_buttons_height"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/button_save"
+            android:textColor="@color/text_color_inverse" />
+
+        <TextView
+            android:id="@+id/learners_classes_out_dialog_edit_class_button_remove"
+            style="@style/ButtonSimpleStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/simple_buttons_height"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/button_remove"
+            android:textColor="@color/text_color_inverse" />
+    </LinearLayout>
 </LinearLayout>
+

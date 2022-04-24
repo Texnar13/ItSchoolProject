@@ -3,6 +3,7 @@ package com.learning.texnar13.teachersprogect.settings;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.util.Log;
@@ -14,13 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.DialogFragment;
 
 import com.learning.texnar13.teachersprogect.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class EditTimeDialogFragment extends DialogFragment {
 
@@ -51,19 +52,25 @@ public class EditTimeDialogFragment extends DialogFragment {
         ScrollView scrollLayout = (ScrollView) getActivity().getLayoutInflater().inflate(R.layout.settings_dialog_edit_time, null);
         builder.setView(scrollLayout);
 
+        // при нажатии на кнопку закрыть
+        scrollLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_time_button_close).setOnClickListener(v -> {
+
+            // проверяем все поля
+            int[][] newTime = checkFields();
+            if (newTime != null) {
+                // вызываем dismiss, а сохранение будет уже в нем
+                dismiss();
+            }else{
+                Toast.makeText(getActivity(),R.string.settings_activity_toast_time_no_saved, Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         // получаем пачку данных
-        EditTimeDialogDataTransfer dataTransfer =
-                ((EditTimeDialogDataTransfer) getArguments().getSerializable(EditTimeDialogDataTransfer.PARAM_DATA));
-        if (dataTransfer == null) {
-            dismiss();
-            Log.i("TeachersApp",
-                    "EditTimeDialogFragment: you must give time( Bungle putIntArray)"
-            );
-            Dialog dialog = builder.create();
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            return dialog;
-        }
+        EditTimeDialogDataTransfer dataTransfer = Objects.requireNonNull(((EditTimeDialogDataTransfer)
+                getArguments().getSerializable(EditTimeDialogDataTransfer.PARAM_DATA)
+        ));
+
         // распаковываем время
         int[][] rawDataArray = dataTransfer.lessonPeriods;
 
@@ -84,9 +91,6 @@ public class EditTimeDialogFragment extends DialogFragment {
         // выводим крестик на последнем уроке
         setLastElementOnClickListener();
 
-
-        // при нажатии на кнопку закрыть
-        scrollLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_time_button_close).setOnClickListener(v -> dismiss());
 
         // кнопка добавить урок
         scrollLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_time_button_add).setOnClickListener(v -> {
@@ -137,30 +141,7 @@ public class EditTimeDialogFragment extends DialogFragment {
 
             } else {
                 Toast.makeText(getActivity(), R.string.settings_activity_dialog_edit_time_toast_last_lesson_error, Toast.LENGTH_LONG).show();
-                lastLine.timeFields[3].setBackgroundResource(R.drawable.base_background_edit_text_error);
-            }
-        });
-
-        // кнопка сохранения времени из полей
-        scrollLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_time_button_save).setOnClickListener(view -> {
-
-            // массив с передаваемым временем
-            int[][] newTime = checkFields();
-            if (newTime != null) {
-                try {
-                    //вызываем в активности метод по сохранению
-                    ((EditTimeDialogFragmentInterface) getActivity()).editTime(newTime);
-                } catch (ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован класс EditTimeDialogFragmentInterface
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "EditTimeDialogFragment: you must implements EditTimeDialogFragmentInterface in your activity"
-                    );
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-                dismiss();
+                lastLine.timeFields[3].setTextColor(getResources().getColor(R.color.signalRed));
             }
         });
 
@@ -171,6 +152,21 @@ public class EditTimeDialogFragment extends DialogFragment {
         return dialog;
     }
 
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        // проверяем все поля
+        int[][] newTime = checkFields();
+        if (newTime != null) {
+            // вызываем в активности метод по сохранению и передаем время из полей
+            ((EditTimeDialogFragmentInterface) requireActivity()).editTime(newTime);
+        }else{
+            Toast.makeText(getActivity(),R.string.settings_activity_toast_time_no_saved, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     TimeViewLine inflateNewLine(int[] startTextValues, int lessonPos) {
         // создаем обьект строки
         TimeViewLine line = new TimeViewLine();
@@ -178,7 +174,10 @@ public class EditTimeDialogFragment extends DialogFragment {
         // раздуваем одну строку
         View rootOfElement = getActivity().getLayoutInflater().inflate(
                 R.layout.settings_dialog_edit_time_template_single_time_line, null);
-        outContainer.addView(rootOfElement);
+        LinearLayout.LayoutParams rootOfElementParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        outContainer.addView(rootOfElement, rootOfElementParams);
         line.container = rootOfElement;
 
         // находим в ней элементы
@@ -195,6 +194,12 @@ public class EditTimeDialogFragment extends DialogFragment {
         for (int textsI = 0; textsI < 4; textsI++) {
             line.timeFields[textsI].setText(getTwoSymbols(startTextValues[textsI]));
             line.timeFields[textsI].setFilters(new InputFilter[]{new InputFilter.LengthFilter(2)});
+            line.timeFields[textsI].setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    checkFields();
+                }
+            });
         }
         return line;
     }
@@ -204,7 +209,7 @@ public class EditTimeDialogFragment extends DialogFragment {
     void setLastElementOnClickListener() {
         if (lines.size() > 1) {
             ImageView deleteImage = lines.get(lines.size() - 1).deleteImage;
-            deleteImage.setImageResource(R.drawable.base_button_close_blue);
+            deleteImage.setImageResource(R.drawable.base_button_close);
             deleteImage.setOnClickListener(v -> {
                 // удаляем view урока
                 outContainer.removeView(lines.get(lines.size() - 1).container);
@@ -226,7 +231,6 @@ public class EditTimeDialogFragment extends DialogFragment {
 
     // проверка полей
     int[][] checkFields() {
-        Log.e("tag", "test");
         // флаг правильности всех полей
         boolean correctFlag = true;
         // флаг правильности текущего поля
@@ -244,32 +248,27 @@ public class EditTimeDialogFragment extends DialogFragment {
                 // эта ячейка до проверки правильная
                 currentCorrectFlag = true;
 
-                // проверяем длинну строки
-                if ((fieldText.length() <= 2) && (fieldText.length() != 0)) {
+                // записываем из текстовых полей в массив
+                if (fieldText.length() == 0) {
+                    fieldsTime[linesI][fieldI] = 0;
+                } else
+                    fieldsTime[linesI][fieldI] = Integer.parseInt(fieldText);
 
-                    // прооверяем на лишние символы
-                    try {
-                        fieldsTime[linesI][fieldI] = Integer.parseInt(fieldText);
-                    } catch (NumberFormatException e) {
-                        currentCorrectFlag = false;
-                        e.printStackTrace();
-                    }
-
+                if ((fieldText.length() != 0)) {
                     // численный размер
                     if ((fieldsTime[linesI][fieldI] > 23 && fieldI % 2 == 0) ||
                             (fieldsTime[linesI][fieldI] > 59 && fieldI % 2 == 1) ||
                             (fieldsTime[linesI][fieldI] < 0)
                     ) currentCorrectFlag = false;
-
                 } else {
                     currentCorrectFlag = false;
                 }
 
                 // соответствующе закрашиваем ячейку
                 if (currentCorrectFlag) {
-                    lines.get(linesI).timeFields[fieldI].setBackgroundResource(R.drawable.base_background_edit_text_selector);
+                    lines.get(linesI).timeFields[fieldI].setTextColor(getResources().getColor(R.color.text_color_simple));
                 } else {
-                    lines.get(linesI).timeFields[fieldI].setBackgroundResource(R.drawable.base_background_edit_text_error);
+                    lines.get(linesI).timeFields[fieldI].setTextColor(getResources().getColor(R.color.signalRed));
                     correctFlag = false;
                 }
 
@@ -287,11 +286,11 @@ public class EditTimeDialogFragment extends DialogFragment {
                 )) {
                     correctFlag = false;
                     for (int fieldI = 0; fieldI < 4; fieldI++)
-                        lines.get(lessonI).timeFields[fieldI].setBackgroundResource(R.drawable.base_background_edit_text_error);
+                        lines.get(lessonI).timeFields[fieldI].setTextColor(getResources().getColor(R.color.signalRed));
 
                 } else
                     for (int fieldI = 0; fieldI < 4; fieldI++)
-                        lines.get(lessonI).timeFields[fieldI].setBackgroundResource(R.drawable.base_background_edit_text_selector);
+                        lines.get(lessonI).timeFields[fieldI].setTextColor(getResources().getColor(R.color.text_color_simple));
             }
 
             if (correctFlag) {
@@ -302,10 +301,10 @@ public class EditTimeDialogFragment extends DialogFragment {
                                     (fieldsTime[lessonI][1] >= fieldsTime[lessonI + 1][1])
                     )) {
                         correctFlag = false;
-                        lines.get(lessonI).timeFields[0].setBackgroundResource(R.drawable.base_background_edit_text_error);
-                        lines.get(lessonI).timeFields[1].setBackgroundResource(R.drawable.base_background_edit_text_error);
-                        lines.get(lessonI + 1).timeFields[0].setBackgroundResource(R.drawable.base_background_edit_text_error);
-                        lines.get(lessonI + 1).timeFields[1].setBackgroundResource(R.drawable.base_background_edit_text_error);
+                        lines.get(lessonI).timeFields[0].setTextColor(getResources().getColor(R.color.signalRed));
+                        lines.get(lessonI).timeFields[1].setTextColor(getResources().getColor(R.color.signalRed));
+                        lines.get(lessonI + 1).timeFields[0].setTextColor(getResources().getColor(R.color.signalRed));
+                        lines.get(lessonI + 1).timeFields[1].setTextColor(getResources().getColor(R.color.signalRed));
                     }
 
                     // или если время конца урока больше времени конца следующего
@@ -314,10 +313,10 @@ public class EditTimeDialogFragment extends DialogFragment {
                                     (fieldsTime[lessonI][3] >= fieldsTime[lessonI + 1][3])
                     )) {
                         correctFlag = false;
-                        lines.get(lessonI).timeFields[2].setBackgroundResource(R.drawable.base_background_edit_text_error);
-                        lines.get(lessonI).timeFields[3].setBackgroundResource(R.drawable.base_background_edit_text_error);
-                        lines.get(lessonI + 1).timeFields[2].setBackgroundResource(R.drawable.base_background_edit_text_error);
-                        lines.get(lessonI + 1).timeFields[3].setBackgroundResource(R.drawable.base_background_edit_text_error);
+                        lines.get(lessonI).timeFields[2].setTextColor(getResources().getColor(R.color.signalRed));
+                        lines.get(lessonI).timeFields[3].setTextColor(getResources().getColor(R.color.signalRed));
+                        lines.get(lessonI + 1).timeFields[2].setTextColor(getResources().getColor(R.color.signalRed));
+                        lines.get(lessonI + 1).timeFields[3].setTextColor(getResources().getColor(R.color.signalRed));
                     }
                 }
             }

@@ -4,29 +4,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/base_background_dialog_full_round_white"
     android:orientation="vertical">
 
-
     <LinearLayout
+        android:layout_marginBottom="@dimen/simple_margin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/base_background_dialog_head_round_white"
+        android:layout_height="@dimen/simple_buttons_height"
         android:orientation="horizontal"
-        android:padding="@dimen/double_margin">
-
-        <ImageView
+        android:gravity="center_vertical">
+        <RelativeLayout
             android:id="@+id/accept_dialog_button_close"
-            android:layout_width="@dimen/my_icon_size"
-            android:layout_height="@dimen/my_icon_size"
-            app:srcCompat="@drawable/base_button_close_background_round" />
+            android:layout_width="@dimen/simple_buttons_height"
+            android:layout_height="@dimen/simple_buttons_height">
+
+            <ImageView
+                android:layout_width="@dimen/base_classic_arrow_immutable_size"
+                android:layout_height="@dimen/base_classic_arrow_immutable_size"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/base_button_close" />
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/accept_dialog_title"
             style="@style/ButtonSimpleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/double_margin" />
+            android:layout_gravity="center_vertical" />
     </LinearLayout>
 
     <TextView
@@ -36,5 +42,5 @@
         android:layout_height="@dimen/simple_buttons_height"
         android:background="@drawable/base_background_dialog_bottom_round_blue"
         android:gravity="center"
-        android:textColor="@color/backgroundWhite" />
+        android:textColor="@color/text_color_inverse" />
 </LinearLayout>

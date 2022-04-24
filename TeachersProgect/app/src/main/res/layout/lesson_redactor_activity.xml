@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="@dimen/half_more_margin">
+        android:padding="@dimen/one_and_half_margin">
 
         <ImageView
             android:id="@+id/activity_lesson_redactor_back_button"

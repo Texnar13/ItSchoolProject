@@ -82,7 +82,7 @@
                 android:id="@+id/cabinet_out_edit_cabinet_delete_button"
                 style="@style/SettingsButtonSimpleStyle"
                 android:background="@drawable/base_background_button_round_blue"
-                android:padding="@dimen/half_more_margin"
+                android:padding="@dimen/one_and_half_margin"
                 android:text="@string/cabinets_out_activity_button_text_delete_cabinet"
                 android:textColor="@color/text_color_inverse" />
         </LinearLayout>

@@ -8,24 +8,28 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/double_margin">
+        android:layout_height="@dimen/simple_buttons_height"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <ImageView
+        <RelativeLayout
             android:id="@+id/settings_dialog_edit_locale_cancel_button"
-            android:layout_width="@dimen/my_icon_size"
-            android:layout_height="@dimen/my_icon_size"
-            android:adjustViewBounds="true"
-            app:srcCompat="@drawable/base_button_close_background_round" />
+            android:layout_width="@dimen/simple_buttons_height"
+            android:layout_height="@dimen/simple_buttons_height">
+
+            <ImageView
+                android:layout_width="@dimen/base_classic_arrow_immutable_size"
+                android:layout_height="@dimen/base_classic_arrow_immutable_size"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/base_button_return_inverse" />
+        </RelativeLayout>
 
         <TextView
+            android:id="@+id/settings_dialog_edit_locale_title"
             style="@style/ButtonSimpleStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/double_margin"
-            android:text="@string/settings_activity_dialog_edit_locale_title" />
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <ScrollView
@@ -33,13 +37,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/double_margin"
-        android:paddingEnd="@dimen/double_margin"
-        android:paddingBottom="@dimen/settings_activity_edit_locale_bottom_margin">
+        android:paddingEnd="@dimen/double_margin">
+
         <LinearLayout
             android:id="@+id/settings_dialog_edit_locale_out"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:orientation="vertical"/>
+            android:orientation="vertical" />
     </ScrollView>
 </LinearLayout>

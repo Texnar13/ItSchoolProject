@@ -178,7 +178,7 @@ public class CabinetEditActivity extends AppCompatActivity implements AcceptDial
             args.putString(AcceptDialog.ARG_ACCEPT_MESSAGE,
                     getResources().getString(R.string.cabinets_out_activity_title_delete_cabinet_ask));
             args.putString(AcceptDialog.ARG_ACCEPT_BUTTON_TEXT,
-                    getResources().getString(R.string.cabinets_out_activity_button_text_delete_cabinet));
+                    getResources().getString(R.string.button_remove));
             accept.setArguments(args);
             accept.show(getSupportFragmentManager(), "delete accept");
         });

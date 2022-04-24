@@ -245,8 +245,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             final View bottomContainer = findViewById(R.id.activity_lesson_bottom_sheet_bottom_content);
 
             // кнопки переключения дат дз
-            final View buttonForward = findViewById(R.id.activity_lesson_bottom_sheet_button_date_back);
-            final View buttonBack = findViewById(R.id.activity_lesson_bottom_sheet_button_date_forward);
+            // final View buttonForward = findViewById(R.id.activity_lesson_bottom_sheet_button_date_back);
+            // final View buttonBack = findViewById(R.id.activity_lesson_bottom_sheet_button_date_forward);
 
 
             // выставляем данные полученные из бд

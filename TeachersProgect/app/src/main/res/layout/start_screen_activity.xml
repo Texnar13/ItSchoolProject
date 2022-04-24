@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/half_more_margin"
+                android:layout_marginTop="@dimen/one_and_half_margin"
                 android:text="*10:35*"
                 android:textColor="@color/start_screen_top_sheet_text_color"
                 android:textSize="@dimen/start_screen_time_text_size"

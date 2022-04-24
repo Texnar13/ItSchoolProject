@@ -15,7 +15,7 @@
 
     <dimen name="forth_margin">60dp</dimen>
     <dimen name="double_margin">30dp</dimen>
-    <dimen name="half_more_margin">22.5dp</dimen>
+    <dimen name="one_and_half_margin">22.5dp</dimen>
     <dimen name="simple_margin">15dp</dimen>
     <dimen name="half_margin">7.5dp</dimen>
 

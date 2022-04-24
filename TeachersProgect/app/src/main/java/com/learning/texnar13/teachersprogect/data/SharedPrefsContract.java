@@ -19,6 +19,12 @@ public class SharedPrefsContract {// менять значение конста�
     public static final int PREFS_INT_NOW_VERSION = BuildConfig.VERSION_CODE;
 
 
+    // настройки
+    // темная тема
+    public static final String PREFS_DAY_NIGHT_MODE = "dayNightMode";
+
+
+
     // активность результатов урока
     public static final String IS_LESSON_LIST_HELP_TEXT_SHOWED_TAG = "is_lesson_list_help_text_showed";
 

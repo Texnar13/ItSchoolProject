@@ -135,10 +135,10 @@ public class SubjectsDialogFragment extends DialogFragment {
 
                 // создаем текстовое поле с названием предмета
                 TextView subjectText = new TextView(getActivity());
-                subjectText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_medium));
+                subjectText.setTypeface(ResourcesCompat.getFont(requireActivity(), R.font.montserrat_semibold));
                 subjectText.setText(subjectsNames.get(subjectI));
-                subjectText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_subtitle_size));
-                subjectText.setTextColor(Color.BLACK);
+                subjectText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
+                subjectText.setTextColor(getResources().getColor(R.color.text_color_simple));
 
                 // параметры текста
                 LinearLayout.LayoutParams subjectTextParams = new LinearLayout.LayoutParams(
@@ -156,7 +156,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                 final int finalPosition = subjectI;
                 subjectText.setOnClickListener(v -> {
                     // выделяем цветом выбранный текст
-                    subjectText.setTextColor(getResources().getColor(R.color.baseBlue));
+                    subjectText.setTextColor(getResources().getColor(R.color.base_blue));
                     // вызываем в активности метод по выбору предмета
                     ((SubjectsDialogInterface) getActivity()).setSubjectPosition(finalPosition);
                     // закрываем диалог
@@ -232,7 +232,7 @@ public class SubjectsDialogFragment extends DialogFragment {
                 view -> outMainMenu(rootContainer));// возвращет опять главное меню
 
         // кнопка удалить в заголовке
-        TextView deleteButton = root.findViewById(R.id.base_subjects_dialog_edit_title);
+        TextView deleteButton = root.findViewById(R.id.base_subjects_dialog_edit_button_remove);
 
         // контейнер предметов
         LinearLayout subjectsContainer = root.findViewById(R.id.base_subjects_dialog_edit_subjects_container);
@@ -250,7 +250,12 @@ public class SubjectsDialogFragment extends DialogFragment {
 
             // раздуваем разметку одного пункта
             LinearLayout element = (LinearLayout) getLayoutInflater().inflate(R.layout.base_subjects_dialog_edit_list_element, null);
-            subjectsContainer.addView(element);
+            LinearLayout.LayoutParams elementParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            elementParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.simple_margin);
+            subjectsContainer.addView(element, elementParams);
 
 
             // кнопка чтобы отмечать предметы на удаление
@@ -268,12 +273,12 @@ public class SubjectsDialogFragment extends DialogFragment {
                                 R.drawable.learners_and_grades_activity_abs_checkbox_background_full :
                                 R.drawable.learners_and_grades_activity_abs_checkbox_background_empty
                 );
-                // состояние текста удаления
-                deleteButton.setTextColor(getResources().getColor(
-                        isActiveInDeleteList(deleteList) ?
-                                R.color.signalRed :
-                                R.color.text_color_not_active
-                ));
+//                // состояние текста удаления
+//                deleteButton.setTextColor(getResources().getColor(
+//                        isActiveInDeleteList(deleteList) ?
+//                                R.color.text_color_inverse :
+//                                R.color.text_color_not_active
+//                ));
             });
 
 

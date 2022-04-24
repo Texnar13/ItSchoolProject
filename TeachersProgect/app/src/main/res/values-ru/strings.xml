@@ -75,7 +75,7 @@
     <string name="learners_and_grades_out_activity_dialog_button_create">Создать</string>
     <string name="learners_and_grades_out_activity_dialog_title_choose_subject">Выберите предмет:</string>
     <string name="learners_and_grades_out_activity_dialog_subject_title_create">Создать предмет:</string>
-    <string name="learners_and_grades_out_activity_dialog_hint_subject_name">Название:</string>
+    <string name="learners_and_grades_out_activity_dialog_hint_subject_name">Название</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson">урок</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">Заметки, д/з:</string>
 
@@ -241,7 +241,7 @@
     <string name="settings_activity_button_remove_data">Удалить все данные</string>
     <string name="settings_activity_button_rate_us">Оцените наше приложение!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">Язык: %s</string>
-    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Темная тема: %s</string>
+    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Тема: %s</string>
     <string name="settings_activity_button_subscribe">Стать спонсором</string>
     <string name="settings_activity_button_save_data_copy">Сохранить резервную копию</string>
     <string name="settings_activity_button_load_data_copy">Загрузить резервную копию</string>
@@ -263,7 +263,7 @@
     <string name="settings_activity_data_import_message_read_success">\n\nФайл успешно прочтён!</string>
     <string name="settings_activity_data_import_message_read_error">\n\nЧтение не завершено, в файле ошибки!</string>
     <!-- диалоги -->
-    <string name="settings_activity_dialog_delete_title">Вы точно хотите удалить все данные?</string>
+    <string name="settings_activity_dialog_delete_title" formatted="true">##Чтобы удалить все данные, введите число %d:</string>
     <string name="settings_activity_dialog_add_type_title">+ Добавить тип оценок</string>
     <string name="settings_activity_dialog_new_type_title">Новый тип</string>
     <string name="settings_activity_dialog_add_absent_type_title">+ Добавить тип отсутствия</string>
@@ -272,8 +272,7 @@
     <string name="settings_activity_dialog_new_absent_type_toast_empty">Введите название</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">Введите сокращение</string>
     <string name="settings_activity_dialog_new_absent_type_toast_subscrybe" formatted="true">##Без подписки число типов ограничено до %d</string>
-    <string name="settings_activity_dialog_delete_text_confirm_delete" formatted="true">Для подтверждения введите число "%d":</string>
-    <string name="settings_activity_dialog_hint_number">ЧИСЛО</string>
+    <string name="settings_activity_dialog_hint_number">##Введите число</string>
     <string name="settings_activity_dialog_button_remove_data">Удалить</string>
     <string name="settings_activity_dialog_button_remove">Удалить</string>
     <string name="settings_activity_dialog_edit_time_title">Время уроков</string>
@@ -282,11 +281,13 @@
     <string name="settings_activity_dialog_hint_hour">ЧАС</string>
     <string name="settings_activity_dialog_hint_minute">МИН</string>
     <string name="settings_activity_dialog_text_time_dot">.</string>
-    <string name="settings_activity_dialog_text_time_colon">:</string>
-    <string name="settings_activity_dialog_text_time_dash">—</string>
+    <string name="settings_activity_dialog_text_time_colon"> : </string>
+    <string name="settings_activity_dialog_text_time_dash"> - </string>
     <string name="settings_activity_dialog_edit_locale_title">Выберите язык:</string>
+    <string name="settings_activity_dialog_edit_theme_title">##Выберите тему:</string>
     <string name="settings_activity_dialog_data_import_accept_title">Результаты чтения файла:</string>
     <string name="settings_activity_dialog_data_import_accept_button">Загрузить данные</string>
+    <string name="settings_activity_dialog_max_answer_hint">##Ведите балл</string>
 
 
     <!-- активность рекламы спонсора -->

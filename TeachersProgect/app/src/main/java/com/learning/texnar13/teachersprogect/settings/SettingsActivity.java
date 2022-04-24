@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -28,6 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.documentfile.provider.DocumentFile;
@@ -46,7 +48,7 @@ import com.yandex.mobile.ads.interstitial.InterstitialAd;
 
 import java.io.Serializable;
 
-public class SettingsActivity extends AppCompatActivity implements View.OnClickListener, EditMaxAnswersDialogInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface, EditGradesTypeDialogFragmentInterface, EditAbsentTypeDialogFragmentInterface, SettingsRemoveInterface {
+public class SettingsActivity extends AppCompatActivity implements View.OnClickListener, EditMaxAnswersDialogInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface, EditDarkModeDialogFragmentInterface, EditGradesTypeDialogFragmentInterface, EditAbsentTypeDialogFragmentInterface, SettingsRemoveInterface {
 
     TextView maxGradeText;
     boolean isColoredGrades;
@@ -198,35 +200,37 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         // слушатели кнопкам
         // настройка локализации
         findViewById(R.id.activity_settings_button_edit_locale).setOnClickListener(this);
+        // настройка темы
+        findViewById(R.id.activity_settings_button_edit_dark_mode).setOnClickListener(this);
         // изменить время
         findViewById(R.id.activity_settings_button_edit_time).setOnClickListener(this);
         // максимальое число ответов
-        findViewById(R.id.activity_settings_edit_max_answers_count_button).setOnClickListener(this);
+        findViewById(R.id.activity_settings_button_edit_max_answers_count).setOnClickListener(this);
         // изменение типов оценок
-        findViewById(R.id.activity_settings_edit_grades_type_button).setOnClickListener(this);
+        findViewById(R.id.activity_settings_button_edit_grades_type).setOnClickListener(this);
         // изменение типов пропусков
-        findViewById(R.id.activity_settings_edit_absent_type_button).setOnClickListener(this);
+        findViewById(R.id.activity_settings_button_edit_absent_type).setOnClickListener(this);
         // экспорт и импорт данных
-        findViewById(R.id.activity_settings_export_all_data_button).setOnClickListener(this);
-        findViewById(R.id.activity_settings_import_all_data_button).setOnClickListener(this);
+        findViewById(R.id.activity_settings_button_export_all_data).setOnClickListener(this);
+        findViewById(R.id.activity_settings_button_import_all_data).setOnClickListener(this);
         // беззвучный режим на уроке
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             findViewById(R.id.activity_settings_lesson_silent_mode_container).setOnClickListener(this);
         // цветные оценки
         findViewById(R.id.activity_settings_are_grades_colored_container).setOnClickListener(this);
         // удаление данных
-        findViewById(R.id.activity_settings_remove_data_button).setOnClickListener(this);
+        findViewById(R.id.activity_settings_button_remove_data).setOnClickListener(this);
         // подписка
         findViewById(R.id.settings_activity_button_subscribe_background).setOnClickListener(this);
         // оцените нас
-        findViewById(R.id.settings_rate_button).setOnClickListener(this);
+        findViewById(R.id.settings_button_rate).setOnClickListener(this);
 
 
         // получаем данные из бд
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
 
         // -- максимальный ответ
-        maxGradeText = findViewById(R.id.activity_settings_edit_max_answers_count_button);
+        maxGradeText = findViewById(R.id.activity_settings_button_edit_max_answers_count);
         maxGradeText.setText(String.format(
                 getResources().getString(R.string.settings_activity_button_edit_max_answer),
                 db.getSettingsMaxGrade(1)
@@ -249,6 +253,17 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         // выводим название
         ((TextView) findViewById(R.id.activity_settings_button_edit_locale)).setText(getResources().getString(
                 R.string.settings_activity_button_edit_locale, localeNames[lastLocaleNumber]));
+
+
+        // вывод текста в кнопку тем
+        // достаем названия тем
+        String[] themesNames = getResources().getStringArray(R.array.day_night);
+        // выводим название
+        ((TextView) findViewById(R.id.activity_settings_button_edit_dark_mode)).setText(getResources().getString(
+                R.string.settings_activity_button_edit_dark_mode,
+                themesNames[PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                        .getInt(SharedPrefsContract.PREFS_DAY_NIGHT_MODE, 0)]
+        ));
 
         // -- цветные оценки
         coloredGradesSwitch = findViewById(R.id.activity_settings_are_grades_colored_switch);
@@ -289,7 +304,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         int vId = v.getId();
         // кнопка оцените нас
-        if (vId == R.id.settings_rate_button) {
+        if (vId == R.id.settings_button_rate) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse("market://details?id=com.learning.texnar13.teachersprogect"));
             if (isActivityNotStarted(intent)) {
@@ -304,7 +319,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }
         }
         // кнопка максимальной оценки
-        else if (vId == R.id.activity_settings_edit_max_answers_count_button) {
+        else if (vId == R.id.activity_settings_button_edit_max_answers_count) {
             // аргументы
             Bundle args = new Bundle();
             DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
@@ -317,19 +332,19 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         }
         // удаление данных
-        else if (vId == R.id.activity_settings_remove_data_button) {
+        else if (vId == R.id.activity_settings_button_remove_data) {
             //создаем диалог
             SettingsRemoveDataDialogFragment removeDialog = new SettingsRemoveDataDialogFragment();
             // запускаем
             removeDialog.show(getSupportFragmentManager(), "removeSettingsDialog");
         }
         // экспорт данных
-        else if (vId == R.id.activity_settings_export_all_data_button) {
+        else if (vId == R.id.activity_settings_button_export_all_data) {
             SettingsExportHelper.exportDB(this);
             //Toast.makeText(this, "ddd", Toast.LENGTH_SHORT).show();
         }
         // импорт данных
-        else if (vId == R.id.activity_settings_import_all_data_button) {
+        else if (vId == R.id.activity_settings_button_import_all_data) {
             // необходимо получить доступ к памяти
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -363,7 +378,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }
         }
         // изменение типов пропусков
-        else if (vId == R.id.activity_settings_edit_absent_type_button) {
+        else if (vId == R.id.activity_settings_button_edit_absent_type) {
             DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
             Cursor types = db.getAbsentTypes();
 
@@ -395,7 +410,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             typesDialogFragment.show(getSupportFragmentManager(), "editAbsentTypesDialogFragment");
         }
         // изменение типов оценок
-        else if (vId == R.id.activity_settings_edit_grades_type_button) {
+        else if (vId == R.id.activity_settings_button_edit_grades_type) {
             DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
             Cursor types = db.getGradesTypes();
 
@@ -419,7 +434,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             args.putStringArray(EditGradesTypesDialogFragment.ARGS_TYPES_NAMES_ARRAY_TAG, typesNames);
             // ограничеиваем число типов, если подписки нет
             if (!isSubscribe)
-                args.putInt(EditGradesTypesDialogFragment.ARGS_TYPES_MAX_COUNT, 2);
+                args.putInt(EditGradesTypesDialogFragment.ARGS_TYPES_MAX_COUNT, 1);
             else
                 args.putInt(EditGradesTypesDialogFragment.ARGS_TYPES_MAX_COUNT, -1);
 
@@ -463,11 +478,25 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             Bundle args = new Bundle();
             // текущая локаль из бд
             DataBaseOpenHelper db = new DataBaseOpenHelper(getApplicationContext());
-            args.putString("locale", db.getSettingsLocale(1));
+            args.putString(EditLocaleDialogFragment.ARGS_CURRENT_LOCALE, db.getSettingsLocale(1));
             db.close();
             localeDialog.setArguments(args);
             // запускаем
             localeDialog.show(getSupportFragmentManager(), "editLocaleDialog");
+        }
+        // настройка темы
+        else if (vId == R.id.activity_settings_button_edit_dark_mode) {
+            // создаем диалог
+            EditDarkModeDialogFragment localeDialog = new EditDarkModeDialogFragment();
+            Bundle args = new Bundle();
+            // текущая локаль из Shared preferences
+            args.putInt(EditDarkModeDialogFragment.ARGS_CURRENT_DAY_NIGHT_MODE,
+                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                            .getInt(SharedPrefsContract.PREFS_DAY_NIGHT_MODE, 0)
+            );
+            localeDialog.setArguments(args);
+            // запускаем
+            localeDialog.show(getSupportFragmentManager(), "editDarkModeDialog");
         }
         // подписка
         else if (vId == R.id.settings_activity_button_subscribe_background) {
@@ -497,16 +526,15 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 1234:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission granted
-                    //readContacts();
-                } else {
-                    // permission denied
-                }
-        }
+//        if (requestCode == 1234) {
+//            if (grantResults.length > 0
+//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                // permission granted
+//                //readContacts();
+//            } else {
+//                // permission denied
+//            }
+//        }
     }
 
     //удаление настроек
@@ -525,10 +553,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         int answer = db.setSettingsTime(1, time);
         db.close();
         if (answer == 1) {
-            Toast toast = Toast.makeText(this, R.string.settings_activity_toast_time_successfully_saved, Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, R.string.settings_activity_toast_time_successfully_saved, Toast.LENGTH_SHORT);
             toast.show();
         } else {
-            Toast toast = Toast.makeText(this, R.string.settings_activity_toast_time_no_saved, Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, R.string.settings_activity_toast_time_no_saved, Toast.LENGTH_SHORT);
             toast.show();
         }
     }
@@ -547,6 +575,19 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         // и перезапуск
         System.exit(0);
 
+    }
+
+    // смена темной темы
+    @SuppressLint("ApplySharedPref")
+    @Override
+    public void editDarkMode(int newMode) {
+
+        // сохраняем изменения в shared preferences
+        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()
+                // специально делаю в одном потоке (не apply) чтобы изменения успели примениться до закрытия программы
+                .putInt(SharedPrefsContract.PREFS_DAY_NIGHT_MODE, newMode).commit();
+        // перезапуск (применение темы в MyApplication)
+        System.exit(0);
     }
 
     // настройка максимального ответа

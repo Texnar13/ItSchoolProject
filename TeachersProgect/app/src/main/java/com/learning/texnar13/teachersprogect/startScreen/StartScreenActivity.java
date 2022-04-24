@@ -321,7 +321,7 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             absText.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_semibold));
             absText.setText(R.string.start_screen_activity_title_current_no_lesson);
             absText.setGravity(Gravity.CENTER_VERTICAL);
-            absText.setTextColor(getResources().getColor(R.color.start_screen_top_sheet_inverse_text_color));
+            absText.setTextColor(getResources().getColor(R.color.start_screen_top_sheet_lesson_not_active_text_color));
             absText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.simple_buttons_text_size));
             LinearLayout.LayoutParams absTextParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,

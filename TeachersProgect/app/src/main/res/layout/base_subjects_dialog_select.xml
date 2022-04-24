@@ -3,38 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/base_background_dialog_full_round_white"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/base_subjects_dialog_select_head_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/base_background_dialog_head_round_white"
-        android:padding="@dimen/double_margin"
+        android:layout_height="@dimen/simple_buttons_height"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <RelativeLayout
             android:id="@+id/base_subjects_dialog_select_button_close"
-            android:layout_width="@dimen/my_icon_size"
-            android:layout_height="@dimen/my_icon_size"
-            android:adjustViewBounds="true"
-            app:srcCompat="@drawable/base_button_close_background_round" />
+            android:layout_width="@dimen/simple_buttons_height"
+            android:layout_height="@dimen/simple_buttons_height">
+            <ImageView
+                android:layout_centerInParent="true"
+                android:layout_width="@dimen/base_classic_arrow_immutable_size"
+                android:layout_height="@dimen/base_classic_arrow_immutable_size"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/base_button_return_inverse" />
+
+        </RelativeLayout>
 
         <TextView
             style="@style/ButtonSimpleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/double_margin"
             android:text="@string/learners_and_grades_out_activity_dialog_title_choose_subject" />
     </LinearLayout>
+
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/base_background_dialog_full_white"
         android:minHeight="@dimen/simple_buttons_height"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@+id/base_subjects_dialog_select_buttons_container"
@@ -72,7 +76,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/learners_and_grades_out_activity_dialog_button_change"
-            android:textColor="@color/backgroundWhite"  />
+            android:textColor="@color/text_color_inverse"  />
 
         <TextView
             android:id="@+id/base_subjects_dialog_select_button_add"
@@ -82,6 +86,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/learners_and_grades_out_activity_dialog_button_add"
-            android:textColor="@color/backgroundWhite" />
+            android:textColor="@color/text_color_inverse" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
