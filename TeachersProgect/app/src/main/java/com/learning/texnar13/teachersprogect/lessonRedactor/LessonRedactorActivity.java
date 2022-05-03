@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogFragment;
 import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogInterface;
@@ -44,8 +46,13 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
 
     // id передаваемых данных (трансферные константы)
     public static final String LESSON_ATTITUDE_ID = "lessonAttitudeId";
+
+    // todo 123 поставил заплатку, надо проверить, отладить и оптимизировать
+    public static final String LESSON_CLASS_ID = "lessonClassId";// передается если урок еще не был создан, но надо обязательно вывести определённый класс
+
     public static final String LESSON_CHECK_DATE = "lessonDate";
     public static final String LESSON_NUMBER = "lessonNumber";
+
 
     // константы результата
     public static final int LESSON_REDACTOR_RESULT_ID = 10;
@@ -70,8 +77,6 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
     static CabinetUnit[] cabinetUnit1s;
 
     LessonUnit lessonUnit;
-    // предыдущий выбор в спиннере классов
-    static int lastChosenClassPos = -1;
 
 
     // --------------------
@@ -205,7 +210,8 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                     getResources().getStringArray(R.array.week_days_simple)[calendar.get(Calendar.DAY_OF_WEEK) - 1]
             ));
 
-            tempClassId = -1;
+            // todo 123
+            tempClassId = getIntent().getLongExtra(LESSON_CLASS_ID, -1);
             tempCurrentChosenSubjectId = -1;
             tempCabinetId = -1;
             tempRepeat = 0;
@@ -221,15 +227,24 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
         int tempClassPos = -1;
         int tempSubjectPos = -1;
         int tempCabinetPos = -1;
-        lastChosenClassPos = -1;
 
         // время
         {
             int[][] time = db.getSettingsTime(1);
 
-            timeTexts = new String[time.length];
+            // проверяем подписку
+            int lessonsCount = time.length;
+            if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                    .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false) && lessonsCount > 9)
+                lessonsCount = 9;
+
+            // заодно проверка переданного в активность урока номера урока
+            if (lessonNumber > lessonsCount)
+                lessonNumber = lessonsCount - 1;
+
+            timeTexts = new String[lessonsCount];
             for (int i = 0; i < timeTexts.length; i++)
-                //'4 урок 11:30 - 12:15'
+                //'4.  11:30 - 12:15'
                 timeTexts[i] = getResources().getString(
                         R.string.lesson_redactor_activity_spinner_title_lesson,
                         i + 1, time[i][0], time[i][1], time[i][2], time[i][3]);
@@ -269,7 +284,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                         tempSubjectPos = subjectsI;
                         // А еще ставим этот класс как прошлый выбранный,
                         // чтобы позиция которую только что нашли не обнулилась потом
-                        lastChosenClassPos = tempClassPos = i;
+                        tempClassPos = i;// todo 123
                     }
                 }
                 subjectsCursor.close();
@@ -280,6 +295,13 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                         classesCursor.getString(classesCursor.getColumnIndexOrThrow(SchoolContract.TableClasses.COLUMN_CLASS_NAME)),
                         subjects
                 );
+
+                // todo 123
+                // считаем позицию выбранного в уроке класса
+                if (tempClassId == classUnits[i].classId) {
+                    tempClassPos = i;
+                }
+
             }
             classesCursor.close();
         }
@@ -407,10 +429,10 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                     DataBaseOpenHelper dbase = new DataBaseOpenHelper(LessonRedactorActivity.this);
 
                     // если дата начала повторов равна дате конца повторов
-                    if(checkLessonDate.equals(lessonUnit.startDate)){
+                    if (checkLessonDate.equals(lessonUnit.startDate)) {
                         // просто удаляем этот урок
                         dbase.deleteSubjectAndTimeCabinetAttitude(lessonUnit.attitudeId);
-                    }else{
+                    } else {
                         // удаление последующих уроков
                         dbase.setEndRepeatSubjectAndTimeCabinetAttitude(lessonUnit.attitudeId, checkLessonDate);
                     }
@@ -428,8 +450,6 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
 
 
         }
-
-
 
 
         // ---- кнопка выбора предмета ----
@@ -511,7 +531,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                                     lessonComment
                             );
                         }
-                    }else{
+                    } else {
                         // удаляем комментарий если он есть
                         if (lessonUnit.homework != null) {
                             db1.removeLessonCommentById(lessonUnit.homework.homeworkId);
@@ -536,8 +556,6 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
         });
 
         // кнопка назад
-        findViewById(R.id.activity_lesson_redactor_back_button).setBackground(
-                AppCompatResources.getDrawable(this, R.drawable.base_button_close_background_round));
         findViewById(R.id.activity_lesson_redactor_back_button).setOnClickListener(f -> finish());
     }
 
@@ -592,7 +610,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                     // если предметы есть
 
                     // проверяем менялся ли вообще класс или остался старый
-                    if (lessonUnit.chosenClassPosition != lastChosenClassPos) {
+                    if (lessonUnit.chosenClassPosition != lessonUnit.lastClassPos) {
                         // если менялся, обнуляем
                         lessonUnit.chosenSubjectPosition = 0;
                     }
@@ -600,7 +618,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                             .get(lessonUnit.chosenSubjectPosition).subjectName);
                 }
                 // записываем эту позицию как прошлую
-                lastChosenClassPos = lessonUnit.chosenClassPosition;
+                lessonUnit.lastClassPos = lessonUnit.chosenClassPosition;
             }
         });
 
@@ -685,14 +703,13 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
 
     }
 
-    // текст рассадки 
+    // текст рассадки
     void seatingTextUpdate() {
-        if (lessonUnit.chosenCabinetPosition == -1 || lessonUnit.chosenClassPosition == -1)
-            ((TextView) findViewById(R.id.activity_lesson_redactor_seating_redactor_button))
-                    .setTextColor(Color.TRANSPARENT);
-        else
-            ((TextView) findViewById(R.id.activity_lesson_redactor_seating_redactor_button))
-                    .setTextColor(Color.BLACK);
+//        if (lessonUnit.chosenCabinetPosition == -1 || lessonUnit.chosenClassPosition == -1) {
+//            ((LinearLayout)findViewById(R.id.activity_lesson_redactor_body_container)).removeView(
+//                    findViewById(R.id.activity_lesson_redactor_seating_redactor_button)
+//            );
+//        }
     }
 
 
@@ -856,6 +873,11 @@ class LessonUnit {
 
     // номера класса, кабинета и предмета в массивах
     int chosenClassPosition;
+
+    // todo 123
+    // переменная для проверки нужно ли обновлять предметы (был ли выбран новый класс)
+    int lastClassPos;
+
     int chosenCabinetPosition;
     int chosenSubjectPosition;
 
@@ -867,6 +889,7 @@ class LessonUnit {
         this.repeat = repeat;
         this.startDate = startDate;
         this.chosenClassPosition = chosenClassPosition;
+        this.lastClassPos = chosenClassPosition;// todo 123
         this.chosenCabinetPosition = chosenCabinetPosition;
         this.chosenSubjectPosition = chosenSubjectPosition;
         this.homework = homework;

@@ -3,6 +3,7 @@ package com.learning.texnar13.teachersprogect.lesson;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.PointF;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -24,8 +25,10 @@ import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
+import com.learning.texnar13.teachersprogect.learnersAndGradesOut.GradeEditDialogFragment;
+import com.learning.texnar13.teachersprogect.learnersAndGradesOut.LearnersAndGradesActivity;
 
-public class LessonListActivity extends AppCompatActivity implements GradesDialogInterface {
+public class LessonListActivity extends AppCompatActivity implements GradeEditDialogFragment.EditGradeDialogInterface {
 
 
     // данные об урооке
@@ -262,22 +265,50 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
             element.setOnClickListener(v -> {
                 // ставим этого ученика как выбранного
                 chosenLearnerPos = finalLearnersI;
-                // вызываем диалог оценок
-                GradeEditLessonDialogFragment gradeEditLessonDialogFragment = new GradeEditLessonDialogFragment();
-                // выводим аргументы
-                Bundle args = new Bundle();
-                args.putString(GradeEditLessonDialogFragment.ARGS_LEARNER_NAME, learners[finalLearnersI].name);
-                args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_GRADES_TYPES_ARRAY, graduationSettings.getAnswersTypesArray());
-                args.putInt(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ABSENT_TYPE_NUMBER, learners[finalLearnersI].absTypePozNumber);
-                args.putStringArray(GradeEditLessonDialogFragment.ARGS_STRING_ABSENT_TYPES_LONG_NAMES_ARRAY, graduationSettings.getAbsentTypesLongNames());
-                args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_ARRAY, learners[finalLearnersI].getGradesArray());
-                args.putInt(GradeEditLessonDialogFragment.ARGS_INT_MAX_GRADE, graduationSettings.maxAnswersCount);
-                args.putIntArray(GradeEditLessonDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY, learners[finalLearnersI].getGradesTypesArray());
-                // этот диалог работает и в уроке, по этому нужно передавать номер главной оценки (а в этой активности их нет)
-                args.putInt(GradeEditLessonDialogFragment.ARGS_INT_CHOSEN_GRADE_POSITION, -1);
-                gradeEditLessonDialogFragment.setArguments(args);
-                // показываем диалог
-                gradeEditLessonDialogFragment.show(getFragmentManager(), "gradeDialogFragment - Hello");
+
+                // вызываем диалог изменения оценок
+                GradeEditDialogFragment editGrade = new GradeEditDialogFragment();
+                // параметры
+                Bundle bundle = new Bundle();
+                // имя ученика
+                bundle.putString(GradeEditDialogFragment.ARGS_LEARNER_NAME,
+                        learners[finalLearnersI].name);
+                // названия типов оценок
+                bundle.putStringArray(GradeEditDialogFragment.ARGS_STRING_GRADES_TYPES_ARRAY,
+                        graduationSettings.getAnswersTypesArray());
+                // массив оценок
+                bundle.putIntArray(GradeEditDialogFragment.ARGS_INT_GRADES_ARRAY,
+                        learners[finalLearnersI].getGradesArray());
+                // массив с номерами выбранных типов
+                bundle.putIntArray(GradeEditDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY,
+                        learners[finalLearnersI].getGradesTypesArray());
+                // выбранный номер пропуска
+                bundle.putInt(GradeEditDialogFragment.ARGS_INT_GRADES_ABSENT_TYPE_NUMBER,
+                        learners[finalLearnersI].absTypePozNumber);
+                // названия типов пропусков
+                bundle.putStringArray(
+                        GradeEditDialogFragment.ARGS_STRING_ABSENT_TYPES_LONG_NAMES_ARRAY,
+                        graduationSettings.getAbsentTypesLongNames()
+                );
+                // максимальный размер оценки
+                bundle.putInt(GradeEditDialogFragment.ARGS_INT_MAX_GRADE,
+                        graduationSettings.maxAnswersCount);
+                // максимальное количество уроков
+                bundle.putInt(GradeEditDialogFragment.ARGS_INT_MAX_LESSONS_COUNT, lessonNumber);
+                // текущая дата в строке
+                bundle.putString(GradeEditDialogFragment.ARGS_STRING_CURRENT_DATE,
+                        ""//(touchDataDayNumber + 1) + " " + transformedMonthsNames[viewCalendar.get(Calendar.MONTH)]
+                );
+                // выбранный номер урока
+                bundle.putInt(GradeEditDialogFragment.ARGS_INT_LESSON_NUMBER, lessonNumber);
+
+                // фиксируем один номер урока
+                bundle.putBoolean(GradeEditDialogFragment.ARGS_BOOLEAN_IS_LESSON_NUMBER_LOCKED, true);
+
+
+                //запускаем
+                editGrade.setArguments(bundle);
+                editGrade.show(getSupportFragmentManager(), "editGradeDialog");
             });
         }
         // подсказка в низу
@@ -352,26 +383,27 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
 
 
     // -------------------------------------- обратная связь --------------------------------------
-    // обратная связь от диалога оценок GradeDialogFragment
+
+    // обратная связь от диалога оценок GradeEditDialogFragment
     @Override
-    public void setGrades(int[] newGrades, int[] chosenTypesNumbers, int chosenAbsPoz) {
+    public void editGrades(int[] grades, int absTypePoz, int[] chosenTypesNumbers, int lessonPoz) {
         if (chosenLearnerPos != -1) {
             LessonListLearnerAndGradesData curLearner = learners[chosenLearnerPos];
 
             // если стоят оценки
-            if (chosenAbsPoz == -1) {
+            if (absTypePoz == -1) {
 
                 // меняем списки
                 curLearner.absTypePozNumber = -1;
                 for (int i = 0; i < 3; i++) {
-                    curLearner.gradesUnits[i].grade = newGrades[i];
+                    curLearner.gradesUnits[i].grade = grades[i];
                     curLearner.gradesUnits[i].gradeTypePoz = chosenTypesNumbers[i];
                 }
 
             } else {// стоит пропуск
 
                 // меняем списки
-                curLearner.absTypePozNumber = chosenAbsPoz;
+                curLearner.absTypePozNumber = absTypePoz;
                 for (int i = 0; i < 3; i++) {
                     curLearner.gradesUnits[i].grade = 0;
                     curLearner.gradesUnits[i].gradeTypePoz = 0;
@@ -389,13 +421,13 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
                         graduationSettings.answersTypes[curLearner.gradesUnits[0].gradeTypePoz].id,
                         graduationSettings.answersTypes[curLearner.gradesUnits[1].gradeTypePoz].id,
                         graduationSettings.answersTypes[curLearner.gradesUnits[2].gradeTypePoz].id,
-                        (chosenAbsPoz == -1) ? (-1) : (graduationSettings.absentTypes[chosenAbsPoz].id),
+                        (absTypePoz == -1) ? (-1) : (graduationSettings.absentTypes[absTypePoz].id),
                         subjectId, lessonDate, lessonNumber
                 );
             } else {
                 // если все поля нулевые удаляем оценку
                 if (curLearner.gradesUnits[0].grade == 0 && curLearner.gradesUnits[1].grade == 0 &&
-                        curLearner.gradesUnits[2].grade == 0 && chosenAbsPoz == -1) {
+                        curLearner.gradesUnits[2].grade == 0 && absTypePoz == -1) {
                     db.removeGrade(curLearner.gradeId);
                 } else
                     db.editGrade(curLearner.gradeId,
@@ -405,7 +437,7 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
                             graduationSettings.answersTypes[curLearner.gradesUnits[0].gradeTypePoz].id,
                             graduationSettings.answersTypes[curLearner.gradesUnits[1].gradeTypePoz].id,
                             graduationSettings.answersTypes[curLearner.gradesUnits[2].gradeTypePoz].id,
-                            (chosenAbsPoz == -1) ? (-1) : (graduationSettings.absentTypes[chosenAbsPoz].id));
+                            (absTypePoz == -1) ? (-1) : (graduationSettings.absentTypes[absTypePoz].id));
             }
             db.close();
 
@@ -414,6 +446,15 @@ public class LessonListActivity extends AppCompatActivity implements GradesDialo
         }
         // убираем выбор с ученика
         chosenLearnerPos = -1;
+    }
+
+    @Override
+    public void allowUserStartGradesDialog() {
+    }
+
+    @Override
+    public LearnersAndGradesActivity.GradeUnit getLessonGrades(int lessonNumber) {
+        return null;
     }
 
 

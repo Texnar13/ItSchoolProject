@@ -100,7 +100,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
     // размер одноместной парты
     static final int NO_ZOOMED_DESK_SIZE = 40;
     // ширина границы вокруг клетки ученика на парте
-    static final int NO_ZOOMED_LEARNER_BORDER_SIZE = NO_ZOOMED_DESK_SIZE / 20;
+    static final int NO_ZOOMED_LEARNER_BORDER_SIZE = NO_ZOOMED_DESK_SIZE / 10;
 
     // режимы зума
     private static final int NONE = 0;
@@ -165,10 +165,10 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                         ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
                         LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         lernerImageParams.setMargins(
-                                (int) getResources().getDimension(R.dimen.half_margin),
-                                (int) getResources().getDimension(R.dimen.half_margin),
-                                (int) getResources().getDimension(R.dimen.half_margin),
-                                (int) getResources().getDimension(R.dimen.half_margin)
+                                (int) getResources().getDimension(R.dimen.simple_margin),
+                                (int) getResources().getDimension(R.dimen.simple_margin),
+                                (int) getResources().getDimension(R.dimen.simple_margin),
+                                (int) getResources().getDimension(R.dimen.simple_margin)
                         );
                         lernerImage.setImageResource(R.drawable.lesson_activity_learner_add);
                         desk.viewPlaceOut[placeI].addView(lernerImage, lernerImageParams);
@@ -728,8 +728,8 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
                     // создаем текст ученика
                     TextView learnerText = new TextView(SeatingRedactorActivity.this);
-                    learnerText.setTypeface(ResourcesCompat.getFont(SeatingRedactorActivity.this, R.font.montserrat_medium));
-                    learnerText.setTextSize(7 * multiplier);
+                    learnerText.setTypeface(ResourcesCompat.getFont(SeatingRedactorActivity.this, R.font.montserrat_semibold));
+                    learnerText.setTextSize(6 * multiplier);
                     learnerText.setAllCaps(true);
                     learnerText.setGravity(Gravity.CENTER_HORIZONTAL);
                     learnerText.setTextColor(getResources().getColor(R.color.text_color_simple));
@@ -837,10 +837,10 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                         ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
                         LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         lernerImageParams.setMargins(
-                                (int) getResources().getDimension(R.dimen.half_margin),
-                                (int) getResources().getDimension(R.dimen.half_margin),
-                                (int) getResources().getDimension(R.dimen.half_margin),
-                                (int) getResources().getDimension(R.dimen.half_margin)
+                                (int) getResources().getDimension(R.dimen.simple_margin),
+                                (int) getResources().getDimension(R.dimen.simple_margin),
+                                (int) getResources().getDimension(R.dimen.simple_margin),
+                                (int) getResources().getDimension(R.dimen.simple_margin)
                         );
                         lernerImage.setImageResource(R.drawable.lesson_activity_learner_add);
                         viewPlaceOut[placesI].addView(lernerImage, lernerImageParams);
@@ -861,8 +861,8 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
             // создаем текст ученика
             TextView learnerText = new TextView(SeatingRedactorActivity.this);
-            learnerText.setTypeface(ResourcesCompat.getFont(SeatingRedactorActivity.this, R.font.montserrat_medium));
-            learnerText.setTextSize(7 * multiplier);
+            learnerText.setTypeface(ResourcesCompat.getFont(SeatingRedactorActivity.this, R.font.montserrat_semibold));
+            learnerText.setTextSize(6 * multiplier);
             learnerText.setAllCaps(true);
             learnerText.setGravity(Gravity.CENTER_HORIZONTAL);
             learnerText.setTextColor(getResources().getColor(R.color.text_color_simple));

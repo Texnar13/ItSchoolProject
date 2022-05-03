@@ -69,14 +69,14 @@
     <string name="learners_and_grades_out_activity_dialog_title_edit_grade">Редактирование ответов</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_name">Имя</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_second_name">Фамилия</string>
-    <string name="learners_and_grades_out_activity_dialog_title_learner_info">Информация:</string>
+    <string name="learners_and_grades_out_activity_dialog_title_learner_info">##Информация:</string>
     <string name="learners_and_grades_out_activity_dialog_button_add">+ Добавить</string>
     <string name="learners_and_grades_out_activity_dialog_button_change">Изменить</string>
     <string name="learners_and_grades_out_activity_dialog_button_create">Создать</string>
     <string name="learners_and_grades_out_activity_dialog_title_choose_subject">Выберите предмет:</string>
     <string name="learners_and_grades_out_activity_dialog_subject_title_create">Создать предмет:</string>
     <string name="learners_and_grades_out_activity_dialog_hint_subject_name">Название</string>
-    <string name="learners_and_grades_out_activity_dialog_title_lesson">урок</string>
+    <string name="learners_and_grades_out_activity_dialog_title_lesson" formatted="true">%d урок</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">Заметки, д/з:</string>
 
     <!-- уведомления диалогов -->
@@ -173,7 +173,7 @@
     <string name="lesson_redactor_activity_title_subject">Предмет:</string>
     <string name="lesson_redactor_activity_title_cabinet">Кабинет:</string>
     <string name="lesson_redactor_activity_title_time">Время:</string>
-    <string name="lesson_redactor_activity_spinner_title_lesson" formatted="true">%d-урок %2d:%02d - %2d:%02d</string>
+    <string name="lesson_redactor_activity_spinner_title_lesson" formatted="true">%2d.  %02d:%02d - %02d:%02d</string>
     <string name="lesson_redactor_activity_title_repeat">Повтор:</string>
     <string name="lesson_redactor_activity_toast_subject_not_select">Не выбран урок!</string>
     <string name="lesson_redactor_activity_title_lesson_homework">Заметки, д/з:</string>
@@ -187,6 +187,7 @@
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">Рассадить учеников</string>
     <string name="lesson_redactor_activity_button_remove">Удалить урок</string>
+    <string name="lesson_redactor_activity_button_remove_other">##Удалить этот урок и все последующие</string>
     <!-- диалоги -->
     <string name="lesson_redactor_activity_dialog_button_remove">удалить</string>
     <string name="lesson_redactor_activity_dialog_button_add">добавить</string>

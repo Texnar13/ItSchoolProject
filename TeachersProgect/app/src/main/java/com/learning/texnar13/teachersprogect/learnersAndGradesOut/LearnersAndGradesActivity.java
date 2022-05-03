@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +28,7 @@ import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import com.learning.texnar13.teachersprogect.learnersAndGradesOut.learnersAndGradesStatistics.LearnersGradesStatisticsActivity;
 import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity;
 import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogFragment;
@@ -39,9 +41,12 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+// todo может использовать graduationSettings из урока
+
+
 public class LearnersAndGradesActivity extends AppCompatActivity implements CreateLearnerInterface,
-        EditLearnerDialogInterface, EditGradeDialogInterface, UpdateTableInterface,
-        AllowEditGradesInterface, View.OnTouchListener, SubjectsDialogInterface {
+        EditLearnerDialogInterface, GradeEditDialogFragment.EditGradeDialogInterface, UpdateTableInterface,
+        View.OnTouchListener, SubjectsDialogInterface {// todo разбей меня уже на методы и классы! Мне плохо быть таким большим!
 
     // ------------ константы ------------
 
@@ -64,6 +69,14 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
     static DataObject dataLearnersAndGrades;
     // переменная работающего в текущий момент потока
     static GetGradesThread loadGradesThread = null;
+
+    // переменные отвечающие за открытые диалоги
+    private static boolean isStartedDialogLearnerEdit = false;// 1 - ученик
+    private static boolean isStartedDialogLessonRedactor = false;// 2 - дата
+    private static boolean isStartedDialogEditGrade = false;// 3 - оценка
+    private static boolean isStartedDialogLearnerCreate = false;// 4 - добавить ученика
+    //private static boolean isStartedDialogSubjects = false;// 5 - предмет todo
+
 
     // массив с предметами
     static NewSubjectUnit[] subjects;
@@ -249,8 +262,13 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         classCursor.close();
         // параллельно находим максимальную оценку
         maxGrade = db.getSettingsMaxGrade(1);
+
         // и максимальное количество уроков
         maxLessonsCount = db.getSettingsTime(1).length;// todo оптимизировать...
+        // проверяем подписку
+        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false) && maxLessonsCount > 9)
+            maxLessonsCount = 9;
 
         // названия типов ответов
         Cursor typesCursor = db.getGradesTypes();
@@ -534,7 +552,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         while (dataLearnersAndGrades.isInCopyProcess) ;
 
         // запрещаем пользователю редактировать учеников
-        dataLearnersAndGrades.chosenLearnerPosition = 0;
+        isStartedDialogLearnerEdit = true;
+        isStartedDialogLearnerCreate = true;
 
 
         // получаем учеников из базы данных
@@ -566,7 +585,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         learnersAndGradesTableView.setData(dataLearnersAndGrades, absentTypes);
 
         //разрешаем редактировать учеников, когда все вывели
-        dataLearnersAndGrades.chosenLearnerPosition = -1;
+        allowUserEditLearners();
     }
 
 
@@ -682,7 +701,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 subjects[chosenSubjectPosition].getSubjectId(),
                                 dateFormat.format(loadGradesTempCalendar.getTime()),
                                 0,
-                                10
+                                copy.learnersAndHisGrades[learnerI].learnerGrades[dayI].length
                         );
 
 
@@ -726,7 +745,13 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                         break;
                                     }
                                 }
-                            }
+                            }//<---
+                            /*
+                            *  Process: com.learning.texnar13.teachersprogect, PID: 11409
+    java.lang.ArrayIndexOutOfBoundsException: length=9; index=10
+        at com.learning.texnar13.teachersprogect.learnersAndGradesOut.LearnersAndGradesActivity$GetGradesThread.run(LearnersAndGradesActivity.java:748)
+
+                            * */
 
                             // если оценки здесь еще не стояли, создаем их
                             if (copy.learnersAndHisGrades[learnerI].learnerGrades[dayI][lessonPoz] == null)
@@ -749,6 +774,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 dataLearnersAndGrades = copy;
                 // говорим активности что закончили подгрузку
                 updateTableHandler.sendEmptyMessage(10);
+
+                // разрешаем диалог оценок
+                isStartedDialogEditGrade = false;
             }
 
             Log.i(TAG, "threadRunEnded");
@@ -763,9 +791,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         loadGradesThread = new GetGradesThread();
 
         // запрещаем изменение оценок
-        dataLearnersAndGrades.chosenLearnerPosition = 0;
-        dataLearnersAndGrades.chosenDayPosition = -1;
-        dataLearnersAndGrades.chosenLessonPosition = -1;
+        isStartedDialogEditGrade = true;
 
         // запускаем поток
         loadGradesThread.setName("loadGradesThread - hello");
@@ -900,35 +926,38 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     // проверяем долгое ли было нажатие
                     //boolean isLongClick = System.currentTimeMillis() - startTouchTime >= 500;
 
-                    // чтобы не было нескольких вызовов одновременно и перекрытий
-                    if (dataLearnersAndGrades.chosenLearnerPosition == -1 &&
-                            dataLearnersAndGrades.chosenDayPosition == -1 &&
-                            dataLearnersAndGrades.chosenLessonPosition == -1) {
 
-                        // отправляем нажатие и получаем индексы нажатия в таблице (номер ученика, дня, урока)
-                        int tableTouchPoz;
-                        int touchDataLearnerNumber;
-                        int touchDataDayNumber;
-                        int touchDataLessonNumber;
-                        {
-                            int[] touchData = ((LearnersAndGradesTableView) view).touch(
-                                    downPointF,
-                                    true // isLongClick
-                            );
-                            tableTouchPoz = touchData[0];
-                            touchDataLearnerNumber = touchData[1];
-                            touchDataDayNumber = touchData[2];
-                            touchDataLessonNumber = touchData[3];
-                        }
-                        // вызываем перерисовку, чтобы view нарисовал нажатие на клетки
-                        learnersAndGradesTableView.invalidate();
+                    // отправляем нажатие и получаем индексы нажатия в таблице (номер ученика, дня, урока)
+                    int tableTouchPoz;
+                    int touchDataLearnerNumber;
+                    int touchDataDayNumber;
+                    int touchDataLessonNumber;
+                    {
+                        int[] touchData = ((LearnersAndGradesTableView) view).touch(
+                                downPointF,
+                                true // isLongClick
+                        );
+                        tableTouchPoz = touchData[0];
+                        touchDataLearnerNumber = touchData[1];
+                        touchDataDayNumber = touchData[2];
+                        touchDataLessonNumber = touchData[3];
+                    }
+                    // вызываем перерисовку, чтобы view нарисовал нажатие на клетки
+                    learnersAndGradesTableView.invalidate();
 
-                        switch (tableTouchPoz) {
-                            default: // 0 - мимо
-                                break;
-                            case 1: {// 1 - ученик
+                    switch (tableTouchPoz) {
+                        default: // 0 - мимо
+                            break;
+                        case 1: {// 1 - ученик
+
+
+                            // чтобы не было нескольких вызовов одновременно и перекрытий
+                            if (!isStartedDialogLearnerEdit) {
+
                                 // чтобы не было нескольких вызовов одновременно выбираем ученика
-                                dataLearnersAndGrades.chosenLearnerPosition = touchDataLearnerNumber;
+                                isStartedDialogLearnerEdit = true;
+
+                                dataLearnersAndGrades.chosenLearnerPosition = touchDataLearnerNumber;// todo нужна ли эта строка
 
                                 // останавливаем поток загрузки оценок и уничтожаем все его данные
                                 if (loadGradesThread != null) {
@@ -954,33 +983,29 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                                 // показываем диалог
                                 editDialog.show(getSupportFragmentManager(), "editLearnerDialog - hello");
-                                break;
                             }
-                            case 2: {// 2 - дата
+                            break;
+                        }
+                        case 2: {// 2 - дата
+                            // чтобы не было нескольких вызовов одновременно и перекрытий
+                            if (!isStartedDialogLessonRedactor) {
                                 // если есть предметы
                                 if (subjects.length > 0) {
+
                                     // отключаем нажатия чтобы не было нескольких вызовов одновременно
+                                    isStartedDialogLessonRedactor = true;
+
                                     dataLearnersAndGrades.chosenLearnerPosition = -1;
                                     dataLearnersAndGrades.chosenDayPosition = touchDataDayNumber;
-                                    dataLearnersAndGrades.chosenLessonPosition = touchDataLessonNumber;
-
-                                    // показываем диалог урока
-//                                    LessonRedactorDialogFragment lessonRedactor = new LessonRedactorDialogFragment();
-//                                    Bundle args = new Bundle();
-//                                    if (dataLearnersAndGrades.lessonsUnits[touchDataDayNumber][touchDataLessonNumber] == null) {
-//                                        args.putLong(LessonRedactorDialogFragment.LESSON_ATTITUDE_ID, -1);
-//                                    } else {
-//                                        args.putLong(LessonRedactorDialogFragment.LESSON_ATTITUDE_ID, dataLearnersAndGrades.lessonsUnits[touchDataDayNumber][touchDataLessonNumber].lessonId);
-//                                    }
-//                                    args.putString(LessonRedactorDialogFragment.LESSON_CHECK_DATE, String.format(Locale.getDefault(), "%04d-%02d-%02d", viewCalendar.get(Calendar.YEAR), viewCalendar.get(Calendar.MONTH) + 1, touchDataDayNumber + 1));
-//                                    args.putInt(LessonRedactorDialogFragment.LESSON_NUMBER, touchDataLessonNumber);
-//                                    lessonRedactor.setArguments(args);
-//                                    lessonRedactor.show(getSupportFragmentManager(), "LessonRedactorDialogFragment");
+                                    dataLearnersAndGrades.chosenLessonPosition = touchDataLessonNumber;// todo нужна ли эта строка
 
                                     // показываем редактор урока
                                     Intent intent = new Intent(this, LessonRedactorActivity.class);
                                     if (dataLearnersAndGrades.lessonsUnits[touchDataDayNumber][touchDataLessonNumber] == null) {
                                         intent.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, -1L);
+                                        // передаем id класса чтобы он выставился по умолчанию
+                                        intent.putExtra(LessonRedactorActivity.LESSON_CLASS_ID, classId);
+
                                     } else {
                                         intent.putExtra(LessonRedactorActivity.LESSON_ATTITUDE_ID, dataLearnersAndGrades.lessonsUnits[touchDataDayNumber][touchDataLessonNumber].lessonId);
                                     }
@@ -989,9 +1014,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     startActivityForResult(intent, LessonRedactorActivity.LESSON_REDACTOR_RESULT_ID);
 
                                 }
-                                break;
                             }
-                            case 3: {// 3 - оценка
+                            break;
+                        }
+                        case 3: {// 3 - оценка
+                            // чтобы не было нескольких вызовов одновременно и перекрытий
+                            if (!isStartedDialogEditGrade) {
                                 // если не выбран предмет то не можем редактировать оценки
                                 if (chosenSubjectPosition < 0) {
                                     // создаем диалог работы с предметами
@@ -1011,9 +1039,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
                                 } else {
                                     // ставим полученные координаты оценки как выбранные тем самым отключая нажатия
+                                    isStartedDialogEditGrade = true;
+
                                     dataLearnersAndGrades.chosenLearnerPosition = touchDataLearnerNumber;
                                     dataLearnersAndGrades.chosenDayPosition = touchDataDayNumber;
-                                    dataLearnersAndGrades.chosenLessonPosition = touchDataLessonNumber;
+                                    dataLearnersAndGrades.chosenLessonPosition = touchDataLessonNumber;// todo сделать эти переменные для каждого диалога свои
 
                                     // вызываем диалог изменения оценок
                                     GradeEditDialogFragment editGrade = new GradeEditDialogFragment();
@@ -1052,14 +1082,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     bundle.putIntArray(GradeEditDialogFragment.ARGS_INT_GRADES_TYPES_CHOSEN_NUMBERS_ARRAY, gradesTypesPoz);
                                     // выбранный номер пропуска
                                     bundle.putInt(GradeEditDialogFragment.ARGS_INT_GRADES_ABSENT_TYPE_NUMBER, absPoz);
-
-                                    // названия типов пропусков в массиве
-                                    String[] stringAbsTypes = new String[absentTypes.length];
-                                    for (int typeI = 0; typeI < absentTypes.length; typeI++) {
-                                        stringAbsTypes[typeI] = absentTypes[typeI].absTypeName;
-                                    }
-                                    bundle.putStringArray(GradeEditDialogFragment.ARGS_STRING_ABSENT_TYPES_NAMES_ARRAY, stringAbsTypes);
-
                                     // длинные названия типов пропусков в массиве
                                     String[] stringLongAbsTypes = new String[absentTypes.length];
                                     for (int typeI = 0; typeI < absentTypes.length; typeI++) {
@@ -1087,81 +1109,88 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     editGrade.setArguments(bundle);
                                     editGrade.show(getSupportFragmentManager(), "editGradeDialog - hello");// illegalState - вызов в неподходящее время
                                 }
-                                break;
                             }
-                            case 4: {// 4 - добавить ученика
+                            break;
+                        }
+                        case 4: {// 4 - добавить ученика
+                            // чтобы не было нескольких вызовов одновременно и перекрытий
+                            if (!isStartedDialogLearnerCreate) {
+
                                 // запрещаем пока работать с учениками
-                                dataLearnersAndGrades.chosenLearnerPosition = 0;
+                                isStartedDialogLearnerCreate = true;
+
+                                dataLearnersAndGrades.chosenLearnerPosition = 0;// todo нужна ли эта строка
 
                                 // создаем диалог добавления ученика
                                 LearnerCreateDialogFragment createLearnerDialog = new LearnerCreateDialogFragment();
                                 //показываем диалог
                                 createLearnerDialog.show(getSupportFragmentManager(), "createLearnerDialog");
-                                break;
                             }
-                            case 5: { // 5 - предмет
-                                // создаем диалог работы с предметами
-                                SubjectsDialogFragment subjectsDialogFragment = new SubjectsDialogFragment();
+                            break;
+                        }
+                        case 5: { // 5 - предмет
+                            // создаем диалог работы с предметами
+                            SubjectsDialogFragment subjectsDialogFragment = new SubjectsDialogFragment();
 
-                                // готоим и передаем массив названий предиметов и позицию выбранного предмета
-                                Bundle args = new Bundle();
-                                String[] subjectsArray = new String[subjects.length];
-                                for (int subjectI = 0; subjectI < subjectsArray.length; subjectI++) {
-                                    subjectsArray[subjectI] = subjects[subjectI].getSubjectName();
-                                }
-                                args.putStringArray(SubjectsDialogFragment.ARGS_LEARNERS_NAMES_STRING_ARRAY, subjectsArray);
-                                subjectsDialogFragment.setArguments(args);
-
-                                // показываем диалог
-                                subjectsDialogFragment.show(getSupportFragmentManager(), "subjectsDialogFragment");
-                                break;
+                            // готоим и передаем массив названий предиметов и позицию выбранного предмета
+                            Bundle args = new Bundle();
+                            String[] subjectsArray = new String[subjects.length];
+                            for (int subjectI = 0; subjectI < subjectsArray.length; subjectI++) {
+                                subjectsArray[subjectI] = subjects[subjectI].getSubjectName();
                             }
-                            case 6: {// 6 - дата назад
-                                // останавливаем поток загрузки оценок и уничтожаем все его данные
-                                if (loadGradesThread != null) {
-                                    loadGradesThread.stopThread();
-                                    loadGradesThread = null;
-                                }
+                            args.putStringArray(SubjectsDialogFragment.ARGS_LEARNERS_NAMES_STRING_ARRAY, subjectsArray);
+                            subjectsDialogFragment.setArguments(args);
 
-                                // переключаем дату
-                                if (viewCalendar.get(Calendar.MONTH) == Calendar.JANUARY) {
-                                    viewCalendar.set(Calendar.MONTH, Calendar.DECEMBER);
-                                    viewCalendar.set(Calendar.YEAR, viewCalendar.get(Calendar.YEAR) - 1);
-                                } else {
-                                    viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) - 1);
-                                }
-                                learnersAndGradesTableView.currentDateTitle =
-                                        monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR);
-
-                                // получаем оценки и уроки из бд по новой дате
-                                getLessonsFromDB();
-                                getGradesFromDB();
-                                break;
+                            // показываем диалог
+                            subjectsDialogFragment.show(getSupportFragmentManager(), "subjectsDialogFragment");
+                            break;
+                        }
+                        case 6: {// 6 - дата назад
+                            // останавливаем поток загрузки оценок и уничтожаем все его данные
+                            if (loadGradesThread != null) {
+                                loadGradesThread.stopThread();
+                                loadGradesThread = null;
                             }
-                            case 7: {// 7 - дата вперед
-                                // останавливаем поток загрузки оценок и уничтожаем все его данные
-                                if (loadGradesThread != null) {
-                                    loadGradesThread.stopThread();
-                                    loadGradesThread = null;
-                                }
 
-                                // переключаем дату
-                                if (viewCalendar.get(Calendar.MONTH) == Calendar.DECEMBER) {
-                                    viewCalendar.set(Calendar.MONTH, Calendar.JANUARY);
-                                    viewCalendar.set(Calendar.YEAR, viewCalendar.get(Calendar.YEAR) + 1);
-                                } else {
-                                    viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) + 1);
-                                }
-                                learnersAndGradesTableView.currentDateTitle =
-                                        monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR);
-
-                                // получаем оценки и уроки из бд по новой дате
-                                getLessonsFromDB();
-                                getGradesFromDB();
-                                break;
+                            // переключаем дату
+                            if (viewCalendar.get(Calendar.MONTH) == Calendar.JANUARY) {
+                                viewCalendar.set(Calendar.MONTH, Calendar.DECEMBER);
+                                viewCalendar.set(Calendar.YEAR, viewCalendar.get(Calendar.YEAR) - 1);
+                            } else {
+                                viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) - 1);
                             }
+                            learnersAndGradesTableView.currentDateTitle =
+                                    monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR);
+
+                            // получаем оценки и уроки из бд по новой дате
+                            getLessonsFromDB();
+                            getGradesFromDB();
+                            break;
+                        }
+                        case 7: {// 7 - дата вперед
+                            // останавливаем поток загрузки оценок и уничтожаем все его данные
+                            if (loadGradesThread != null) {
+                                loadGradesThread.stopThread();
+                                loadGradesThread = null;
+                            }
+
+                            // переключаем дату
+                            if (viewCalendar.get(Calendar.MONTH) == Calendar.DECEMBER) {
+                                viewCalendar.set(Calendar.MONTH, Calendar.JANUARY);
+                                viewCalendar.set(Calendar.YEAR, viewCalendar.get(Calendar.YEAR) + 1);
+                            } else {
+                                viewCalendar.set(Calendar.MONTH, viewCalendar.get(Calendar.MONTH) + 1);
+                            }
+                            learnersAndGradesTableView.currentDateTitle =
+                                    monthsNames[viewCalendar.get(Calendar.MONTH)] + " " + viewCalendar.get(Calendar.YEAR);
+
+                            // получаем оценки и уроки из бд по новой дате
+                            getLessonsFromDB();
+                            getGradesFromDB();
+                            break;
                         }
                     }
+
 
                 } else {
                     // --- было движение ---
@@ -1227,7 +1256,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         learnersAndGradesTableView.invalidate();
 
         // разрешаем редактировать учеников
-        dataLearnersAndGrades.chosenLearnerPosition = -1;
+        allowUserEditLearners();
     }
 
     @Override
@@ -1235,7 +1264,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         Log.i(TAG, "fromDialog-allowUserEditLearners");
 
         // разрешаем редактировать учеников
-        dataLearnersAndGrades.chosenLearnerPosition = -1;
+        isStartedDialogLearnerEdit = false;
+        isStartedDialogLearnerCreate = false;
     }
 
     // метод переименования ученика вызываемый из диалога LearnerEditDialogFragment
@@ -1272,7 +1302,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             learnersAndGradesTableView.invalidate();
 
             // разрешаем редактировать учеников
-            dataLearnersAndGrades.chosenLearnerPosition = -1;
+            allowUserEditLearners();
         }
     }
 
@@ -1310,7 +1340,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         learnersAndGradesTableView.invalidate();
 
         // разрешаем редактировать учеников
-        dataLearnersAndGrades.chosenLearnerPosition = -1;
+        allowUserEditLearners();
     }
 
     // метод редактирования оценки ученика из диалога GradeEditDialogFragment
@@ -1387,20 +1417,19 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             learnersAndGradesTableView.setData(dataLearnersAndGrades, absentTypes);
             learnersAndGradesTableView.invalidate();
         }
-//        //разрешаем пользователю менять оценки
-//        dataLearnersAndGrades.chosenLearnerPosition = -1;
-//        dataLearnersAndGrades.chosenDayPosition = -1;
-//        dataLearnersAndGrades.chosenLessonPosition = -1;
     }
 
     // метод получения оценок урока из диалога GradeEditDialogFragment
     @Override
     public GradeUnit getLessonGrades(int lessonNumber) {
-        GradeUnit temp = dataLearnersAndGrades.learnersAndHisGrades[
-                dataLearnersAndGrades.chosenLearnerPosition
-                ].learnerGrades[
-                dataLearnersAndGrades.chosenDayPosition
-                ][lessonNumber];
+
+        GradeUnit temp = null;
+        if (dataLearnersAndGrades.chosenLearnerPosition != -1 && dataLearnersAndGrades.chosenDayPosition != -1)
+            temp = dataLearnersAndGrades.learnersAndHisGrades[
+                    dataLearnersAndGrades.chosenLearnerPosition
+                    ].learnerGrades[
+                    dataLearnersAndGrades.chosenDayPosition
+                    ][lessonNumber];
 
         if (temp != null) {
             return new GradeUnit(temp);
@@ -1410,13 +1439,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
     // метод разрешающий пользователю изменять оценки из диалога GradeEditDialogFragment
     @Override
-    public void allowUserEditGrades() {
+    public void allowUserStartGradesDialog() {
         Log.i(TAG, "fromDialog-allowUserEditGrades");
 
         //разрешаем пользователю менять оценки
-        dataLearnersAndGrades.chosenLearnerPosition = -1;
-        dataLearnersAndGrades.chosenDayPosition = -1;
-        dataLearnersAndGrades.chosenLessonPosition = -1;
+        // todo (правда при повороте диалог пересоздастся, а переменная уже будет false, хз че с этим делать)
+        isStartedDialogEditGrade = false;
 
         // и обновляем таблицу, чтобы исчезли синие квадраты
         learnersAndGradesTableView.invalidate();
@@ -1590,8 +1618,13 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 // выводим изменившиеся данные во view
                 learnersAndGradesTableView.setData(dataLearnersAndGrades, absentTypes);
             }
-            // вызываем метод удаления отметок на выбранной ячейке и перерисовки таблицы
-            allowUserEditGrades();
+
+            // теперь диалог можно вызвать снова
+            isStartedDialogLessonRedactor = false;
+
+            // и перерисовываем таблицу
+            learnersAndGradesTableView.invalidate();
+
 
         }
     }
@@ -1634,6 +1667,12 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             dataLearnersAndGrades.chosenLessonPosition = -1;
             dataLearnersAndGrades = null;
         }
+        // переменные отвечающие за открытые диалоги
+        isStartedDialogLearnerEdit = false;
+        isStartedDialogLessonRedactor = false;
+        isStartedDialogEditGrade = false;
+        isStartedDialogLearnerCreate = false;
+
         subjects = null;
         chosenSubjectPosition = -1;
         viewCalendar = null;
@@ -1649,6 +1688,30 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         return dp * getApplicationContext().getResources().getDisplayMetrics().density;
     }
 
+
+    // класс хранящий в себе оценки одного ученика за 1 урок
+    public static class GradeUnit {
+        int[] grades;
+        long gradeId;
+        int[] gradesTypesIndexes;
+        int absTypePoz;
+
+        GradeUnit(int[] grades, long gradeId, int[] gradesTypesIndexes, int absTypePoz) {
+            this.grades = grades;
+            this.gradeId = gradeId;
+            this.gradesTypesIndexes = gradesTypesIndexes;
+            this.absTypePoz = absTypePoz;
+        }
+
+        // конструктор копии
+        GradeUnit(GradeUnit other) {
+            // никаких проверок на null! в конструктор нельзя предавать null!
+            this.grades = other.grades.clone();
+            this.gradeId = other.gradeId;
+            this.gradesTypesIndexes = other.gradesTypesIndexes.clone();
+            this.absTypePoz = other.absTypePoz;
+        }
+    }
 }
 
 
@@ -1692,9 +1755,9 @@ class NewLearnerAndHisGrades {
     String surname;
     String comment;
     // его оценки        ( [номер дня][номер урока] ).[номер оценки]
-    GradeUnit[][] learnerGrades;
+    LearnersAndGradesActivity.GradeUnit[][] learnerGrades;
 
-    NewLearnerAndHisGrades(long id, String name, String surname, String comment, GradeUnit[][] learnerGrades) {
+    NewLearnerAndHisGrades(long id, String name, String surname, String comment, LearnersAndGradesActivity.GradeUnit[][] learnerGrades) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -1711,13 +1774,13 @@ class NewLearnerAndHisGrades {
         this.surname = "" + other.surname;
         this.comment = "" + other.comment;
 
-        this.learnerGrades = new GradeUnit[other.learnerGrades.length][];
+        this.learnerGrades = new LearnersAndGradesActivity.GradeUnit[other.learnerGrades.length][];
         for (int dayI = 0; dayI < other.learnerGrades.length; dayI++) {
-            this.learnerGrades[dayI] = new GradeUnit[other.learnerGrades[dayI].length];
+            this.learnerGrades[dayI] = new LearnersAndGradesActivity.GradeUnit[other.learnerGrades[dayI].length];
             for (int lessonI = 0; lessonI < other.learnerGrades[dayI].length; lessonI++) {
                 // клонируем обьект
                 if (other.learnerGrades[dayI][lessonI] != null)
-                    this.learnerGrades[dayI][lessonI] = new GradeUnit(other.learnerGrades[dayI][lessonI]);
+                    this.learnerGrades[dayI][lessonI] = new LearnersAndGradesActivity.GradeUnit(other.learnerGrades[dayI][lessonI]);
             }
         }
     }
@@ -1793,29 +1856,6 @@ class LessonUnit {
     }
 }
 
-// класс хранящий в себе оценки одного ученика за 1 урок
-class GradeUnit {
-    int[] grades;
-    long gradeId;
-    int[] gradesTypesIndexes;
-    int absTypePoz;
-
-    GradeUnit(int[] grades, long gradeId, int[] gradesTypesIndexes, int absTypePoz) {
-        this.grades = grades;
-        this.gradeId = gradeId;
-        this.gradesTypesIndexes = gradesTypesIndexes;
-        this.absTypePoz = absTypePoz;
-    }
-
-    // конструктор копии
-    GradeUnit(GradeUnit other) {
-        // никаких проверок на null! в конструктор нельзя предавать null!
-        this.grades = other.grades.clone();
-        this.gradeId = other.gradeId;
-        this.gradesTypesIndexes = other.gradesTypesIndexes.clone();
-        this.absTypePoz = other.absTypePoz;
-    }
-}
 
 //класс для хранения типов ответов
 class AnswersType {

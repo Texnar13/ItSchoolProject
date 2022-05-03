@@ -1,9 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:background="@drawable/base_background_dialog_full_round_white"
+android:orientation="vertical">
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/simple_buttons_height"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/learners_and_grades_dialog_learner_create_button_close"
+            android:layout_width="@dimen/simple_buttons_height"
+            android:layout_height="@dimen/simple_buttons_height">
+
+            <ImageView
+                android:layout_width="@dimen/base_classic_arrow_immutable_size"
+                android:layout_height="@dimen/base_classic_arrow_immutable_size"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/base_button_close" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/settings_dialog_remove_data_confirm_output"
+            style="@style/ButtonSimpleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/learners_and_grades_out_activity_dialog_title_create_learner" />
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,147 +45,77 @@
         android:orientation="vertical">
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/base_background_dialog_head_round_white"
-            android:orientation="vertical"
-            android:padding="@dimen/double_margin">
+            android:layout_marginStart="@dimen/double_margin"
+            android:layout_marginEnd="@dimen/double_margin"
+            android:background="@drawable/base_background_button_round_gray"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/learners_and_grades_dialog_learner_create_edit_second_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/learners_and_grades_dialog_learner_create_button_close"
-                    android:layout_width="@dimen/my_icon_size"
-                    android:layout_height="@dimen/my_icon_size"
-                    android:layout_marginEnd="@dimen/simple_margin"
-                    android:layout_marginRight="@dimen/simple_margin"
-                    app:srcCompat="@drawable/base_button_close_background_round" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:gravity="center_vertical"
-                    android:text="@string/learners_and_grades_out_activity_dialog_title_create_learner"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/text_subtitle_size" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/double_margin"
-                android:background="@drawable/base_background_button_round_gray"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/double_margin"
+                android:layout_height="@dimen/simple_buttons_height"
+                android:background="@color/transparent"
+                android:fontFamily="@font/montserrat_semibold"
+                android:hint="@string/learners_and_grades_out_activity_dialog_hint_learner_second_name"
+                android:inputType="textCapWords"
                 android:paddingTop="@dimen/simple_margin"
-                android:paddingRight="@dimen/double_margin"
-                android:paddingBottom="@dimen/simple_margin">
+                />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:text="@string/learners_and_grades_out_activity_dialog_hint_learner_second_name"
-                        android:textColor="@color/backgroundDarkGray"
-                        android:textSize="@dimen/text_subtitle_size" />
-
-                    <EditText
-                        android:id="@+id/learners_and_grades_dialog_learner_create_edit_second_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:inputType="textCapWords"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/text_subtitle_size" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:text="@string/learners_and_grades_out_activity_dialog_hint_learner_name"
-                        android:textColor="@color/backgroundDarkGray"
-                        android:textSize="@dimen/text_subtitle_size" />
-
-                    <EditText
-                        android:id="@+id/learners_and_grades_dialog_learner_create_edit_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:inputType="textCapWords"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/text_subtitle_size" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <EditText
+                android:id="@+id/learners_and_grades_dialog_learner_create_edit_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/double_margin"
-                android:background="@drawable/base_background_button_round_gray"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/double_margin"
-                android:paddingTop="@dimen/simple_margin"
-                android:paddingRight="@dimen/double_margin"
-                android:paddingBottom="@dimen/double_margin">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:paddingBottom="@dimen/simple_margin"
-                    android:text="@string/learners_and_grades_out_activity_dialog_title_learner_info"
-                    android:textColor="@color/backgroundDarkGray"
-                    android:textSize="@dimen/text_subtitle_size" />
-
-                <EditText
-                    android:id="@+id/learners_and_grades_dialog_learner_create_edit_comment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/transparent"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:gravity="top"
-                    android:minLines="3"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/text_subtitle_size" />
-
-            </LinearLayout>
+                android:layout_height="@dimen/simple_buttons_height"
+                android:background="@color/transparent"
+                android:fontFamily="@font/montserrat_medium"
+                android:hint="@string/learners_and_grades_out_activity_dialog_hint_learner_name"
+                android:inputType="textCapWords"/>
 
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/learners_and_grades_dialog_learner_create_button_save"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/base_background_dialog_bottom_round_blue"
-            android:fontFamily="@font/montserrat_medium"
+            android:layout_marginStart="@dimen/double_margin"
+            android:layout_marginTop="@dimen/double_margin"
+            android:layout_marginEnd="@dimen/double_margin"
+            android:layout_marginBottom="@dimen/double_margin"
+            android:background="@drawable/base_background_button_round_gray"
             android:gravity="center"
-            android:padding="@dimen/one_and_half_margin"
-            android:text="@string/button_save"
-            android:textColor="@color/backgroundWhite"
-            android:textSize="@dimen/text_subtitle_size" />
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/double_margin"
+            android:paddingTop="@dimen/simple_margin"
+            android:paddingRight="@dimen/double_margin"
+            android:paddingBottom="@dimen/double_margin">
+
+
+            <EditText
+                android:id="@+id/learners_and_grades_dialog_learner_create_edit_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="top"
+                android:hint="@string/learners_and_grades_out_activity_dialog_title_learner_info"
+                android:minLines="3"
+                android:padding="0dp" />
+
+        </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/learners_and_grades_dialog_learner_create_button_save"
+        style="@style/ButtonSimpleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/simple_buttons_height"
+        android:background="@drawable/base_background_dialog_bottom_round_blue"
+        android:gravity="center"
+        android:text="@string/button_save"
+        android:textColor="@color/text_color_inverse"
+        android:textSize="@dimen/simple_buttons_text_size" />
+</LinearLayout>
 </ScrollView>

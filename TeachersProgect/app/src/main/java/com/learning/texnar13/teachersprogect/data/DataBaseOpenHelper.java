@@ -1677,6 +1677,49 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     }
 
 
+    public Cursor getSubjectAndTimeCabinetAttitudesByDateAndLessonNumbersPeriod(String date, long startLessonNumber, long endLessonNumber) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE +
+                        // по времени
+                        " WHERE ((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_NUMBER + " BETWEEN ? AND ?) AND (" +
+                        // по дате
+                        "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " = ?) OR ((" +
+                        "(" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) OR " +
+                        "((" + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_REPEAT + " = ?) AND (strftime(\"%w\"," + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + ") == strftime(\"%w\", ?)))" +
+                        ") AND " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_LESSON_DATE + " < ? AND (" +
+                        SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_END_REPEAT_DATE +
+                        " ISNULL OR ? < " + SchoolContract.TableSubjectAndTimeCabinetAttitude.COLUMN_END_REPEAT_DATE + "))))",
+                new String[]{
+                        Long.toString(startLessonNumber),
+                        Long.toString(endLessonNumber),
+                        date,
+                        Integer.toString(SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_DAILY),
+                        Integer.toString(SchoolContract.TableSubjectAndTimeCabinetAttitude.CONSTANT_REPEAT_WEEKLY),
+                        date,
+                        date,
+                        date
+                });
+
+        /*
+        * WHERE
+	    (
+	    	(COLUMN_LESSON_NUMBER BETWEEN startLessonNumber AND endLessonNumber) AND (
+	    		(COLUMN_LESSON_DATE = date) OR (
+	    			(
+	    				(COLUMN_REPEAT = CONSTANT_REPEAT_DAILY) OR
+	    				(
+	    					(COLUMN_REPEAT = CONSTANT_REPEAT_WEEKLY) AND (strftime("%w",COLUMN_LESSON_DATE) == strftime("%w", date))
+	    				)
+	    			) AND COLUMN_LESSON_DATE < date
+	    		      AND (COLUMN_END_REPEAT_DATE ISNULL OR date < COLUMN_END_REPEAT_DATE)
+	    		)
+	    	)
+	    )
+	    */
+    }
+
+
     public Cursor getSubjectAndTimeCabinetAttitudesByDateAndLessonNumbersPeriod(long subjectId, String date, long startLessonNumber, long endLessonNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM " + SchoolContract.TableSubjectAndTimeCabinetAttitude.NAME_TABLE +

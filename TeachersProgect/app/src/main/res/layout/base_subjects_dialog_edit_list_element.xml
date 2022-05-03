@@ -10,7 +10,7 @@
         android:id="@+id/base_subjects_dialog_edit_list_element_circle"
         android:layout_width="@dimen/my_icon_small_size"
         android:layout_height="@dimen/my_icon_small_size"
-        app:srcCompat="@drawable/learners_and_grades_activity_abs_checkbox_background_empty" />
+        android:background="@drawable/learners_and_grades_activity_abs_checkbox_background_empty" />
 
     <EditText
         android:id="@+id/base_subjects_dialog_edit_list_element_text"

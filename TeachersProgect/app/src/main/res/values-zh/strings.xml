@@ -69,14 +69,14 @@
     <string name="learners_and_grades_out_activity_dialog_title_edit_grade">编辑分数</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_name">名字</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_second_name">姓氏</string>
-    <string name="learners_and_grades_out_activity_dialog_title_learner_info">信息:</string>
+    <string name="learners_and_grades_out_activity_dialog_title_learner_info">##信息:</string>
     <string name="learners_and_grades_out_activity_dialog_button_add">+ 添加</string>
     <string name="learners_and_grades_out_activity_dialog_button_change">编辑</string>
     <string name="learners_and_grades_out_activity_dialog_button_create">创造</string>
     <string name="learners_and_grades_out_activity_dialog_title_choose_subject">选择学:</string>
     <string name="learners_and_grades_out_activity_dialog_subject_title_create">创造学科</string>
     <string name="learners_and_grades_out_activity_dialog_hint_subject_name">名称学科</string>
-    <string name="learners_and_grades_out_activity_dialog_title_lesson">课</string>
+    <string name="learners_and_grades_out_activity_dialog_title_lesson" formatted="true">%d 课</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">家庭作业和笔记:</string>
     <!-- уведомления диалогов -->
     <string name="learners_and_grades_out_activity_dialog_toast_no_name">没有输入名字</string>
@@ -172,7 +172,7 @@
     <string name="lesson_redactor_activity_title_subject">学科:</string>
     <string name="lesson_redactor_activity_title_cabinet">课堂:</string>
     <string name="lesson_redactor_activity_title_time">日期:</string>
-    <string name="lesson_redactor_activity_spinner_title_lesson" formatted="true">%2d-课 %2d:%02d - %2d:%02d</string>
+    <string name="lesson_redactor_activity_spinner_title_lesson" formatted="true">%2d.  %02d:%02d - %02d:%02d</string>
     <string name="lesson_redactor_activity_title_repeat">课的重复性:</string>
     <string name="lesson_redactor_activity_toast_subject_not_select">课不选择！</string>
     <string name="lesson_redactor_activity_title_lesson_homework">家庭作业和笔记:</string>
@@ -186,6 +186,7 @@
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">让学生们坐下</string>
     <string name="lesson_redactor_activity_button_remove">删除课</string>
+    <string name="lesson_redactor_activity_button_remove_other">##Удалить этот урок и все последующие</string>
     <!-- диалоги -->
     <string name="lesson_redactor_activity_dialog_button_remove">删除</string>
     <string name="lesson_redactor_activity_dialog_button_add">添加</string>

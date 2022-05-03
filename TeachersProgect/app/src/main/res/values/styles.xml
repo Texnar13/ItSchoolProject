@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- todo не забывай также менять и LessonRedactorThemeLikeDialog (тк AppTheme на неё не распространяется) -->
 
         <!-- основной цвет и его доп оттенок -->
         <item name="colorPrimary">@color/baseBlue</item>
@@ -12,6 +13,10 @@
 
         <!-- цвет курсора -->
         <item name="colorAccent">@color/cursor_color</item>
+        <!--<item name="android:textCursorDrawable">@drawable/abc_text_cursor_material</item>-->
+
+        <!-- чекбокс -->
+        <item name="checkboxStyle">@style/Widget.App.MyCheckBox</item>
 
         <!-- семейство шрифтов -->
         <item name="android:fontFamily">@font/montserrat_family</item>
@@ -22,17 +27,28 @@
         <item name="android:editTextStyle">@style/MyEditTextStyle</item>
         <item name="editTextStyle">@style/MyEditTextStyle</item>
 
+    </style>
 
+    <!-- Стиль текстовых полей ввода (все поля проверены и работают) -->
+    <style name="Widget.App.MyCheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.MyCheckBox</item>
+        <item name="android:button">@drawable/base_checkbox_background</item>
+    </style>
+
+    <style name="ThemeOverlay.App.MyCheckBox" parent="">
+        <item name="colorOnSurface">@color/base_blue</item>
+        <item name="colorSecondary">@color/base_blue</item>
+        <item name="android:paddingStart">0dp</item>
     </style>
 
 
     <!-- Стиль текстовых полей ввода (все поля проверены и работают) -->
-    <style name="MyEditTextStyle" parent="@android:style/Widget.EditText">
+    <style name="MyEditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="fontFamily">@font/montserrat_semibold</item>
         <item name="android:textColor">@color/text_color_simple</item>
         <item name="android:textColorHint">@color/text_color_not_active</item>
         <item name="android:background">@drawable/base_background_edit_text_selector</item>
         <item name="android:textSize">@dimen/simple_buttons_text_size</item>
-        <item name="fontFamily">@font/montserrat_medium</item>
         <item name="android:padding">@dimen/double_margin</item>
     </style>
 
@@ -75,13 +91,25 @@
         <item name="android:windowBackground">
             @drawable/lesson_redactor_dialog_background_no_insert
         </item>
+
+        <!-- цвет подложек активности -->
+        <item name="android:colorBackground">@color/base_background_color</item>
+
         <!-- тень позади диалога -->
         <item name="android:backgroundDimEnabled">true</item>
         <!-- нажатия за пределами диалога закрывают его -->
         <item name="android:windowCloseOnTouchOutside">true</item>
 
+        <!-- цвет курсора -->
+        <item name="colorAccent">@color/cursor_color</item>
+
         <!-- семейство шрифтов -->
-        <item name="android:fontFamily">@font/montserrat_family</item>
+        <item name="android:fontFamily">@font/montserrat_semibold</item>
+
+        <!-- стандартные стили компонентов -->
+        <item name="android:textViewStyle">@style/TextViewSimpleStyle</item>
+        <item name="android:editTextStyle">@style/MyEditTextStyle</item>
+        <item name="editTextStyle">@style/MyEditTextStyle</item>
     </style>
 
 
@@ -116,7 +144,7 @@
 
     <!-- текст названий пунктов в редакторе урока -->
     <style name="LessonRedactorDescriptionTextStyle" parent="TextViewSemiBoldStyle">
-        <item name="android:textColor">@color/backgroundGray</item>
+        <item name="android:textColor">@color/text_color_not_active</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/simple_buttons_text_size</item>

@@ -18,12 +18,13 @@
             android:id="@+id/base_subjects_dialog_select_button_close"
             android:layout_width="@dimen/simple_buttons_height"
             android:layout_height="@dimen/simple_buttons_height">
+
             <ImageView
-                android:layout_centerInParent="true"
                 android:layout_width="@dimen/base_classic_arrow_immutable_size"
                 android:layout_height="@dimen/base_classic_arrow_immutable_size"
+                android:layout_centerInParent="true"
                 android:adjustViewBounds="true"
-                app:srcCompat="@drawable/base_button_return_inverse" />
+                android:background="@drawable/base_button_return" />
 
         </RelativeLayout>
 

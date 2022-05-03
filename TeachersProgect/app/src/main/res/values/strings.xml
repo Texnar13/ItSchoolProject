@@ -69,14 +69,14 @@
     <string name="learners_and_grades_out_activity_dialog_title_edit_grade">Edit answers</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_name">First name</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_second_name">Last name</string>
-    <string name="learners_and_grades_out_activity_dialog_title_learner_info">Information:</string>
+    <string name="learners_and_grades_out_activity_dialog_title_learner_info">##Information:</string>
     <string name="learners_and_grades_out_activity_dialog_button_add">+ Add</string>
     <string name="learners_and_grades_out_activity_dialog_button_create">Create</string>
     <string name="learners_and_grades_out_activity_dialog_button_change">Change</string>
     <string name="learners_and_grades_out_activity_dialog_title_choose_subject">Choose subject:</string>
     <string name="learners_and_grades_out_activity_dialog_subject_title_create">Create subject:</string>
     <string name="learners_and_grades_out_activity_dialog_hint_subject_name">Title</string>
-    <string name="learners_and_grades_out_activity_dialog_title_lesson">lesson</string>
+    <string name="learners_and_grades_out_activity_dialog_title_lesson" formatted="true">%d lesson</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">Homework and Notes:</string>
     <!-- уведомления диалогов -->
     <string name="learners_and_grades_out_activity_dialog_toast_no_name">No first name entered</string>
@@ -172,7 +172,7 @@
     <string name="lesson_redactor_activity_title_subject">Subject:</string>
     <string name="lesson_redactor_activity_title_cabinet">Classroom:</string>
     <string name="lesson_redactor_activity_title_time">Time:</string>
-    <string name="lesson_redactor_activity_spinner_title_lesson" formatted="true">%2d-lesson %2d:%02d - %2d:%02d</string>
+    <string name="lesson_redactor_activity_spinner_title_lesson" formatted="true">%2d.  %02d:%02d - %02d:%02d</string>
     <string name="lesson_redactor_activity_title_repeat">Repeat:</string>
     <string name="lesson_redactor_activity_toast_subject_not_select">No subject selected!</string>
     <string name="lesson_redactor_activity_title_lesson_homework">Homework and Notes:</string>
@@ -186,6 +186,7 @@
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">Seat the students</string>
     <string name="lesson_redactor_activity_button_remove">Remove lesson</string>
+    <string name="lesson_redactor_activity_button_remove_other">##Удалить этот урок и все последующие</string>
     <!-- диалоги -->
     <string name="lesson_redactor_activity_dialog_button_remove">Remove</string>
     <string name="lesson_redactor_activity_dialog_button_add">Create</string>

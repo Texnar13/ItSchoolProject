@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -21,6 +22,7 @@ import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
+import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -236,7 +238,7 @@ public class LearnersAndGradesTableView extends View {
         // высота шапки таблицы
         learnersAndGradesOffsetForTitle = dateCircleRadius * 2 + cellBorderSize * 4
                 // плюс к высоте дней(дат) в шапке
-        + getResources().getDimensionPixelOffset(R.dimen.one_and_half_margin);
+                + getResources().getDimensionPixelOffset(R.dimen.one_and_half_margin);
         // высота кнопки добавить ученика под таблицей
         addLearnerButtonHeight = cellMinimumHeight;
         // отступ кнопки добавить ученика от таблицы
@@ -265,7 +267,6 @@ public class LearnersAndGradesTableView extends View {
     // здесь происходит определение размеров view, так же их можно задать жестко
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        //Log.e("TeachersApp", "LearnersAndGradesTableView: onMeasure");
         // и поставим view размеры
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
@@ -273,7 +274,6 @@ public class LearnersAndGradesTableView extends View {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        //Log.e("TeachersApp", "LearnersAndGradesTableView: onLayout");
         super.onLayout(changed, left, top, right, bottom);
         // считаем размеры этого view
         this.viewWidth = right - left;
@@ -332,8 +332,18 @@ public class LearnersAndGradesTableView extends View {
                 currentDate = currentCalendar.get(Calendar.DAY_OF_MONTH) - 1;
                 // текущий урок
                 int[][] times = (new DataBaseOpenHelper(getContext())).getSettingsTime(1);// стандартное время уроков
+                int lessonsCount;
+                // проверяем подписку
+                if (PreferenceManager.getDefaultSharedPreferences(getContext())
+                        .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
+                    lessonsCount = times.length;
+                } else {
+                    lessonsCount = 9;
+                }
+
+
                 int lessonNumber = 0;// текущий урок
-                for (int lessonI = 0; lessonI < times.length; lessonI++) {
+                for (int lessonI = 0; lessonI < lessonsCount; lessonI++) {
                     if ((currentCalendar.get(Calendar.HOUR_OF_DAY) > times[lessonI][0] ||
                             (currentCalendar.get(Calendar.HOUR_OF_DAY) == times[lessonI][0] && currentCalendar.get(Calendar.MINUTE) >= times[lessonI][1]))
                     ) {
@@ -368,12 +378,10 @@ public class LearnersAndGradesTableView extends View {
                     }
                 }
 
-
-                // asdfghj;
-
             } else {
-                isLesson = new boolean[viewYearAndMonthCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)][(new DataBaseOpenHelper(getContext())).getSettingsTime(1).length];//todo оптимизировать
-                isHomeworkOnLesson = new boolean[viewYearAndMonthCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)][(new DataBaseOpenHelper(getContext())).getSettingsTime(1).length];//todo оптимизировать
+                int length = (new DataBaseOpenHelper(getContext())).getSettingsTime(1).length;//todo оптимизировать
+                isLesson = new boolean[viewYearAndMonthCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)][length];
+                isHomeworkOnLesson = new boolean[isLesson.length][length];
             }
         }
 
@@ -535,7 +543,7 @@ public class LearnersAndGradesTableView extends View {
             // счетчик дней в новом массиве
             int lessonArrayPoz;
             // переменная хранящая текущую клетку с оценками
-            GradeUnit currentGrades;
+            LearnersAndGradesActivity.GradeUnit currentGrades;
             // временная переменная для расчета ширины текста
             int tempTextWidth = 0;
 
@@ -557,7 +565,7 @@ public class LearnersAndGradesTableView extends View {
 
                             // достаем массив текущих оценок
                             if (data[learnerI].learnerGrades[dayI][lessonI] == null) {
-                                currentGrades = new GradeUnit(new int[3], -1, new int[3], -1);
+                                currentGrades = new LearnersAndGradesActivity.GradeUnit(new int[3], -1, new int[3], -1);
                             } else {
                                 currentGrades = data[learnerI].learnerGrades[dayI][lessonI];
                             }
@@ -1087,21 +1095,8 @@ public class LearnersAndGradesTableView extends View {
                         // пробегаемся по всем урокам
                         for (int lessonI = 0; lessonI < learnersGrades[0][dayIterator].length; lessonI++) {
 
-                            
-                            // задаем фон клетки todo или использовать это для   цвет фона закрашивания дня (общий фон дня)
-                            int dayColor = getResources().getColor(R.color.base_background_color);
-                            // прооверяем, если этот день сегодняшний
-                            if (dayIterator == currentDate) {
-                                // и в нем нет урока, который идет конкретно сейчас
-                                if (!isLesson[dayIterator][currentLesson]) {
-                                    // то меняем цвет фоновой кисти на цвета всего дня
-                                    dayColor = getResources().getColor(R.color.base_blue);
-                                }
-                            }
-
-
                             // рисуем фон клетки
-                            backgroundPaint.setColor(dayColor);
+                            backgroundPaint.setColor(getResources().getColor(R.color.base_background_color));
                             canvas.drawRect(
                                     currentHeadCellOffsetX,
                                     titleWeekdaysHeight,
@@ -1113,6 +1108,35 @@ public class LearnersAndGradesTableView extends View {
 
                             // рисуем общий фон дня
                             if (lessonI == 0) {// начальный полукруг и прямоугольник
+
+                                // прооверяем, если этот день сегодняшний
+                                if (dayIterator == currentDate) {
+                                    // то рисуем часть обводки всего дня
+
+                                    // рисуем полукруг
+                                    backgroundPaint.setColor(getResources().getColor(R.color.base_blue));
+                                    headEllipseRect.set(
+                                            currentHeadCellOffsetX +
+                                                    learnersGrades[0][dayIterator][lessonI].cellWidth / 2F - dateCircleRadius - cellBorderSize / 2F,
+                                            learnersAndGradesOffsetForTitle / 2F - dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight,
+                                            currentHeadCellOffsetX +
+                                                    learnersGrades[0][dayIterator][lessonI].cellWidth / 2F + dateCircleRadius + cellBorderSize / 2F,
+                                            learnersAndGradesOffsetForTitle / 2F + dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight
+                                    );
+                                    canvas.drawArc(headEllipseRect, 90, 180, false, backgroundPaint);
+                                    backgroundPaint.setStyle(Paint.Style.FILL);
+
+                                    // рисуем прямоугольник
+                                    canvas.drawRect(
+                                            currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F,
+                                            learnersAndGradesOffsetForTitle / 2F - dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight,
+                                            currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth,
+                                            learnersAndGradesOffsetForTitle / 2F + dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight,
+                                            backgroundPaint
+                                    );
+                                }
+
+
                                 // рисуем полукруг
                                 backgroundPaint.setColor(getResources().getColor(R.color.base_light));
                                 headEllipseRect.set(
@@ -1124,18 +1148,41 @@ public class LearnersAndGradesTableView extends View {
                                         learnersAndGradesOffsetForTitle / 2F + dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight
                                 );
                                 canvas.drawArc(headEllipseRect, 90, 180, false, backgroundPaint);
-                                backgroundPaint.setStyle(Paint.Style.FILL);
 
                                 // рисуем прямоугольник
-                                backgroundPaint.setColor(getResources().getColor(R.color.base_light));
                                 canvas.drawRect(
-                                        currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F,
+                                        currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F - 1,
                                         learnersAndGradesOffsetForTitle / 2F - dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight,
                                         currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth,
                                         learnersAndGradesOffsetForTitle / 2F + dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight,
                                         backgroundPaint
                                 );
                             } else if (lessonI == learnersGrades[0][dayIterator].length - 1) {// окончание и прямоугольник
+
+                                // прооверяем, если этот день сегодняшний
+                                if (dayIterator == currentDate) {
+                                    // то рисуем часть обводки всего дня
+
+                                    // рисуем прямоугольник
+                                    backgroundPaint.setColor(getResources().getColor(R.color.base_blue));
+                                    canvas.drawRect(
+                                            currentHeadCellOffsetX,
+                                            learnersAndGradesOffsetForTitle / 2F - dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight,
+                                            currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F,
+                                            learnersAndGradesOffsetForTitle / 2F + dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight,
+                                            backgroundPaint
+                                    );
+
+                                    // рисуем полукруг
+                                    headEllipseRect.set(
+                                            currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F - dateCircleRadius - cellBorderSize / 2F,
+                                            learnersAndGradesOffsetForTitle / 2F - dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight,
+                                            currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth / 2F + dateCircleRadius + cellBorderSize / 2F,
+                                            learnersAndGradesOffsetForTitle / 2F + dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight
+                                    );
+                                    canvas.drawArc(headEllipseRect, -90, 180, false, backgroundPaint);
+                                }
+
                                 // рисуем прямоугольник
                                 backgroundPaint.setColor(getResources().getColor(R.color.base_light));
                                 canvas.drawRect(
@@ -1154,9 +1201,25 @@ public class LearnersAndGradesTableView extends View {
                                         learnersAndGradesOffsetForTitle / 2F + dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight
                                 );
                                 canvas.drawArc(headEllipseRect, -90, 180, false, backgroundPaint);
-                                backgroundPaint.setStyle(Paint.Style.FILL);
+
 
                             } else {// урок посередине
+
+                                // прооверяем, если этот день сегодняшний
+                                if (dayIterator == currentDate) {
+                                    // то рисуем часть обводки всего дня
+
+                                    // рисуем прямоугольник
+                                    backgroundPaint.setColor(getResources().getColor(R.color.base_blue));
+                                    canvas.drawRect(
+                                            currentHeadCellOffsetX,
+                                            learnersAndGradesOffsetForTitle / 2F - dateCircleRadius - cellBorderSize / 2F + titleWeekdaysHeight,
+                                            currentHeadCellOffsetX + learnersGrades[0][dayIterator][lessonI].cellWidth,
+                                            learnersAndGradesOffsetForTitle / 2F + dateCircleRadius + cellBorderSize / 2F + titleWeekdaysHeight,
+                                            backgroundPaint
+                                    );
+                                }
+
                                 // рисуем прямоугольник
                                 backgroundPaint.setColor(getResources().getColor(R.color.base_light));
                                 canvas.drawRect(

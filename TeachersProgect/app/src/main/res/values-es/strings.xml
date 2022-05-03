@@ -69,14 +69,14 @@
     <string name="learners_and_grades_out_activity_dialog_title_edit_grade">Editar respuestas</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_name">Nombre</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_second_name">Apellidos</string>
-    <string name="learners_and_grades_out_activity_dialog_title_learner_info">Información:</string>
+    <string name="learners_and_grades_out_activity_dialog_title_learner_info">##Información:</string>
     <string name="learners_and_grades_out_activity_dialog_button_add">+ Agregar</string>
     <string name="learners_and_grades_out_activity_dialog_button_change">Cambiar</string>
     <string name="learners_and_grades_out_activity_dialog_button_create">Crear</string>
     <string name="learners_and_grades_out_activity_dialog_title_choose_subject">Seleccione una asignatura</string>
     <string name="learners_and_grades_out_activity_dialog_subject_title_create">Crear una asignatura</string>
     <string name="learners_and_grades_out_activity_dialog_hint_subject_name">Nombre</string>
-    <string name="learners_and_grades_out_activity_dialog_title_lesson">clase</string>
+    <string name="learners_and_grades_out_activity_dialog_title_lesson" formatted="true">%d clase</string>
     <string name="learners_and_grades_out_activity_dialog_title_lesson_comment">Deberes y Notas:</string>
     <!-- уведомления диалогов -->
     <string name="learners_and_grades_out_activity_dialog_toast_no_name">Nombre no introducido</string>
@@ -172,7 +172,7 @@
     <string name="lesson_redactor_activity_title_subject">Asignatura:</string>
     <string name="lesson_redactor_activity_title_cabinet">Aulas:</string>
     <string name="lesson_redactor_activity_title_time">Tiempo:</string>
-    <string name="lesson_redactor_activity_spinner_title_lesson" formatted="true">%2d-lección %2d:%02d - %2d:%02d</string>
+    <string name="lesson_redactor_activity_spinner_title_lesson" formatted="true">%2d.  %02d:%02d - %02d:%02d</string>
     <string name="lesson_redactor_activity_title_repeat">Repetir:</string>
     <string name="lesson_redactor_activity_toast_subject_not_select">¡La clase no está seleccionada!</string>
     <string name="lesson_redactor_activity_title_lesson_homework">Deberes y Notas:</string>
@@ -186,6 +186,7 @@
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">Debes sentar a los alumnos</string>
     <string name="lesson_redactor_activity_button_remove">Eliminar clase</string>
+    <string name="lesson_redactor_activity_button_remove_other">##Удалить этот урок и все последующие</string>
     <!-- диалоги -->
     <string name="lesson_redactor_activity_dialog_button_remove">eliminar</string>
     <string name="lesson_redactor_activity_dialog_button_add">agregar</string>

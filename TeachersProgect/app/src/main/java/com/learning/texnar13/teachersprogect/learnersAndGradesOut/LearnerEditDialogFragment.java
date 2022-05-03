@@ -43,50 +43,30 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
         builder.setView(dialogView);
 
         // кнопка назад
-        dialogView.findViewById(R.id.learners_and_grades_dialog_learner_edit_button_close).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                try {
-                    //вызываем в активности метод по обновлению таблицы
-                    ((UpdateTableInterface) getActivity()).allowUserEditLearners();
-                } catch (java.lang.ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован класс UpdateTableInterface
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "CreateLearnerDialogFragment: you must implements UpdateTableInterface in your activity"
-                    );
-                }
-            }
+        dialogView.findViewById(R.id.learners_and_grades_dialog_learner_edit_button_close).setOnClickListener(view -> {
+            dismiss();
+
+            //вызываем в активности метод по обновлению таблицы
+            ((UpdateTableInterface) getActivity()).allowUserEditLearners();
         });
 
         // текстовое поле фамилии
         final EditText editSurname = dialogView.findViewById(R.id.learners_and_grades_dialog_learner_edit_edit_second_name);
-        try {//входные данные предыдущая фамилия
-            editSurname.setText(getArguments().getString(ARGS_LEARNER_LAST_NAME));
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            Log.i("TeachersApp", "you must give bundle argument \"" + ARGS_LEARNER_LAST_NAME + "\"");
-        }
+        // входные данные предыдущая фамилия
+        editSurname.setText(getArguments().getString(ARGS_LEARNER_LAST_NAME));
+
 
         // текстовое поле имени
         final EditText editName = dialogView.findViewById(R.id.learners_and_grades_dialog_learner_edit_edit_name);
-        try {//входные данные предыдущее имя
-            editName.setText(getArguments().getString(ARGS_LEARNER_NAME));
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            Log.i("TeachersApp", "you must give bundle argument \"" + ARGS_LEARNER_NAME + "\"");
-        }
+        // входные данные предыдущее имя
+        editName.setText(getArguments().getString(ARGS_LEARNER_NAME));
+
 
         // текстовое поле комментария
         final EditText editComment = dialogView.findViewById(R.id.learners_and_grades_dialog_learner_edit_edit_comment);
-        try {//входные данные предыдущее имя
-            editComment.setText(getArguments().getString(ARGS_LEARNER_COMMENT));
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            Log.i("TeachersApp", "you must give bundle argument \"" + ARGS_LEARNER_COMMENT + "\"");
-        }
+        //входные данные предыдущее имя
+        editComment.setText(getArguments().getString(ARGS_LEARNER_COMMENT));
+
 
         // кнопка сохранения
         dialogView.findViewById(R.id.learners_and_grades_dialog_learner_edit_button_save).setOnClickListener(new View.OnClickListener() {
@@ -95,21 +75,13 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
                 if (editSurname.getText().toString().trim().length() == 0) {
                     Toast.makeText(getActivity(), R.string.learners_and_grades_out_activity_dialog_toast_no_last_name, Toast.LENGTH_SHORT).show();
                 } else {
-                    try {
-                        //вызываем в активности метод по созданию ученика и передаем ей имя и фамилию
-                        ((EditLearnerDialogInterface) getActivity()).editLearner(
-                                editSurname.getText().toString().trim(),
-                                editName.getText().toString().trim(),
-                                editComment.getText().toString().trim()
-                        );
-                    } catch (java.lang.ClassCastException e) {
-                        //в вызвающей активности должен быть имплементирован класс EditLearnerInterface
-                        e.printStackTrace();
-                        Log.i(
-                                "TeachersApp",
-                                "LearnerEditDialogFragment: you must implements EditLearnerInterface in your activity"
-                        );
-                    }
+
+                    //вызываем в активности метод по созданию ученика и передаем ей имя и фамилию
+                    ((EditLearnerDialogInterface) getActivity()).editLearner(
+                            editSurname.getText().toString().trim(),
+                            editName.getText().toString().trim(),
+                            editComment.getText().toString().trim()
+                    );
                     dismiss();
                 }
             }
@@ -119,17 +91,10 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
         dialogView.findViewById(R.id.learners_and_grades_dialog_learner_edit_button_remove).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    //вызываем в активности метод по далению ученика и передаем id
-                    ((EditLearnerDialogInterface) getActivity()).removeLearner();
-                } catch (java.lang.ClassCastException e) {
-                    //в вызвающей активности должен быть имплементирован класс EditLearnerInterface
-                    e.printStackTrace();
-                    Log.i(
-                            "TeachersApp",
-                            "LearnerEditDialogFragment: you must implements EditLearnerInterface in your activity"
-                    );
-                }
+
+                //вызываем в активности метод по далению ученика и передаем id
+                ((EditLearnerDialogInterface) getActivity()).removeLearner();
+
                 dismiss();
             }
         });
@@ -144,22 +109,14 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
     public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
         Log.i("TeachersApp", "LearnerEditDialogFragment - onCancel");
-        try {
-            //вызываем в активности метод по обновлению таблицы
-            ((UpdateTableInterface) getActivity()).allowUserEditLearners();
-        } catch (java.lang.ClassCastException e) {
-            //в вызвающей активности должен быть имплементирован класс UpdateTableInterface
-            e.printStackTrace();
-            Log.i(
-                    "TeachersApp",
-                    "CreateLearnerDialogFragment: you must implements UpdateTableInterface in your activity"
-            );
-        }
+
+        //вызываем в активности метод по обновлению таблицы
+        ((UpdateTableInterface) getActivity()).allowUserEditLearners();
     }
 }
 
 interface EditLearnerDialogInterface {
-    void editLearner(String lastName, String name,String comment);
+    void editLearner(String lastName, String name, String comment);
 
     void removeLearner();
 }

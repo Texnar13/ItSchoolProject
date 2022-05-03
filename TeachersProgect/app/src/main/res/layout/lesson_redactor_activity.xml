@@ -13,32 +13,37 @@
     <LinearLayout
         android:id="@+id/activity_lesson_redactor_head_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/simple_buttons_height"
         android:gravity="center_vertical"
-        android:padding="@dimen/one_and_half_margin">
+        android:orientation="horizontal">
 
-        <ImageView
+        <RelativeLayout
             android:id="@+id/activity_lesson_redactor_back_button"
-            android:layout_width="@dimen/my_icon_size"
-            android:layout_height="@dimen/my_icon_size"
-            android:adjustViewBounds="true" />
+            android:layout_width="@dimen/simple_buttons_height"
+            android:layout_height="@dimen/simple_buttons_height">
+
+            <ImageView
+                android:layout_width="@dimen/base_classic_arrow_immutable_size"
+                android:layout_height="@dimen/base_classic_arrow_immutable_size"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                android:background="@drawable/base_button_close" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/activity_lesson_redactor_head_text"
             style="@style/ButtonSimpleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/double_margin"
             android:fontFamily="@font/montserrat_semibold" />
-
     </LinearLayout>
+
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/activity_lesson_redactor_save_button"
         android:layout_below="@+id/activity_lesson_redactor_head_container"
-        android:background="@color/backgroundWhite"
         android:paddingTop="@dimen/simple_margin">
 
         <LinearLayout
@@ -64,13 +69,14 @@
                     <TextView
                         style="@style/LessonRedactorDescriptionTextStyle"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="@string/lesson_redactor_activity_title_time" />
+                        android:text="@string/lesson_redactor_activity_title_time"
+                        android:textSize="@dimen/text_simple_size" />
 
                     <Spinner
                         android:id="@+id/activity_lesson_redactor_time_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/backgroundWhite"
+                        android:background="@color/transparent"
                         android:textSize="@dimen/text_subtitle_size" />
                 </TableRow>
 
@@ -85,7 +91,7 @@
                         android:id="@+id/activity_lesson_redactor_class_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/backgroundWhite" />
+                        android:background="@color/transparent" />
 
                 </TableRow>
 
@@ -103,8 +109,9 @@
                         android:layout_gravity="center_vertical"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/simple_margin"
+                        android:singleLine="true"
                         android:text="@string/lesson_redactor_activity_spinner_text_create_subject"
-                        android:textColor="#000000"
+                        android:textColor="@color/text_color_simple"
                         android:textSize="@dimen/text_simple_size" />
                 </TableRow>
 
@@ -119,7 +126,7 @@
                         android:id="@+id/activity_lesson_redactor_cabinet_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/backgroundWhite"
+                        android:background="@color/transparent"
                         android:textSize="@dimen/text_subtitle_size" />
                 </TableRow>
 
@@ -134,7 +141,7 @@
                         android:id="@+id/activity_lesson_redactor_repeat_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/backgroundWhite"
+                        android:background="@color/transparent"
                         android:textSize="@dimen/text_subtitle_size" />
                 </TableRow>
             </TableLayout>
@@ -145,46 +152,50 @@
                 android:layout_margin="@dimen/double_margin"
                 android:background="@drawable/base_background_button_round_gray"
                 android:orientation="vertical"
-                android:padding="@dimen/simple_margin">
-
-                <TextView
-                    style="@style/LessonRedactorDescriptionTextStyle"
-                    android:layout_gravity="center_horizontal"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:text="@string/lesson_redactor_activity_title_lesson_homework" />
+                android:padding="@dimen/double_margin">
 
                 <EditText
                     android:id="@+id/activity_lesson_redactor_homework_text_edit"
+                    style="@style/MyEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/simple_margin"
                     android:background="@color/transparent"
+                    android:fontFamily="@font/montserrat_semibold"
                     android:gravity="top"
+                    android:hint="@string/lesson_redactor_activity_title_lesson_homework"
                     android:minLines="4"
-                    android:textColor="#000000"
+                    android:padding="0dp"
+                    android:paddingTop="0dp"
                     android:textSize="@dimen/text_simple_size" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/activity_lesson_redactor_seating_redactor_button"
                 style="@style/SettingsButtonSimpleStyle"
+                android:background="@drawable/base_background_button_round_blue"
                 android:fontFamily="@font/montserrat_semibold"
-                android:gravity="center"
-                android:text="@string/lesson_redactor_activity_button_edit_seating" />
+                android:gravity="center_vertical"
+                android:text="@string/lesson_redactor_activity_button_edit_seating"
+                android:textColor="@color/text_color_inverse" />
 
             <TextView
                 android:id="@+id/activity_lesson_redactor_remove_button"
                 style="@style/SettingsButtonSimpleStyle"
+                android:background="@drawable/base_background_button_round_blue"
                 android:fontFamily="@font/montserrat_semibold"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:text="@string/lesson_redactor_activity_button_remove"
-                android:textColor="@color/signalRed" />
+                android:textColor="@color/text_color_inverse" />
 
-            <Button
+            <TextView
                 android:id="@+id/activity_lesson_redactor_remove_next_lessons"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="EУдалить этот урок и все последующие Ы!Ы!Ы!" />
+                style="@style/SettingsButtonSimpleStyle"
+                android:background="@drawable/base_background_button_round_blue"
+                android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center_vertical"
+                android:text="@string/lesson_redactor_activity_button_remove_other"
+                android:textColor="@color/text_color_inverse" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -211,5 +222,6 @@
         android:fontFamily="@font/montserrat_semibold"
         android:gravity="center"
         android:text="@string/button_save"
-        android:textColor="@color/backgroundWhite" />
+        android:textColor="@color/text_color_inverse"
+        android:textSize="@dimen/simple_buttons_text_size" />
 </RelativeLayout>

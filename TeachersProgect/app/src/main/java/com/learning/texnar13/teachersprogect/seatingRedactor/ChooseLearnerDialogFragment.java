@@ -60,7 +60,7 @@ public class ChooseLearnerDialogFragment extends DialogFragment {
                 learnerText.setTypeface(ResourcesCompat.getFont(getActivity(), R.font.montserrat_semibold));
                 learnerText.setText(learnersNames.get(learnerI));
                 learnerText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
-                learnerText.setTextColor(Color.BLACK);
+                learnerText.setTextColor(getResources().getColor(R.color.text_color_simple));
                 learnerText.setGravity(Gravity.CENTER_VERTICAL);
                 LinearLayout.LayoutParams learnerTextParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,

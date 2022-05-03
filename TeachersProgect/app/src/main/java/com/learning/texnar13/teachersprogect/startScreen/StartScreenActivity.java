@@ -507,6 +507,8 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
 /*
 todo хранилище полезного кода :)
 
+// узнать размер тулбара
+android:layout_marginTop="?attr/actionBarSize"
 
 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);

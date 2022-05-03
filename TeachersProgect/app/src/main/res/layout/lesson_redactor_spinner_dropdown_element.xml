@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
+    style="@style/ButtonSimpleStyle"
     android:layout_width="match_parent"
     android:layout_height="@dimen/spinner_height_size"
-    android:background="@color/backgroundDarkWhite"
+    android:background="@color/transparent"
     android:ellipsize="marquee"
     android:paddingStart="@dimen/simple_margin"
-    android:gravity="center_vertical"
+    android:paddingEnd="@dimen/simple_margin"
     android:singleLine="true"
-    android:textAlignment="inherit"
-    android:textColor="#000000"
-    android:textSize="@dimen/text_simple_size" />
+    android:textAlignment="inherit" />

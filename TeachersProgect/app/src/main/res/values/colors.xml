@@ -7,17 +7,18 @@
     <!-- не меняющиеся акцентные цвета -->
     <color name="base_blue">#7EADE1</color>
     <color name="base_orange">#FFB000</color>
+    <color name="transparent">#00000000</color>
 
 
     <!-- цвет диалогов и плашек -->
-    <color name="base_light">#F2F2F7</color>
+    <color name="base_light">#ECEFF1</color>
     <color name="popup_menu_background">@color/base_background_color</color>
 
 
     <!-- цвета текстов -->
     <color name="text_color_simple">#22272E</color>
     <color name="text_color_inverse">@color/base_background_color</color>
-    <color name="text_color_not_active">#C6CAD4</color>
+    <color name="text_color_not_active">#ABB7BF</color>
     <color name="cursor_color">#5CA4F3</color>
 
 
@@ -43,6 +44,10 @@
     <color name="start_screen_button_color_dark_blue">#507392</color>
 
 
+    <!-- ученики и оценки -->
+    <color name="grade_edit_bottom_shadow_color">#99E2E3E6</color>
+
+
     <!-- активность урока -->
     <color name="desks_color">#E8EBF4</color>
     <color name="lesson_text_color">@color/text_color_simple</color>
@@ -52,7 +57,7 @@
     <color name="grade3">#EFE95B</color>
     <color name="grade4">#C7EE58</color>
     <color name="grade5">#72DD83</color>
-    <color name="absent_text_color">@color/text_color_not_active</color>
+    <color name="absent_text_color">#B0BEC5</color>
 
 
     <!-- активность настроек -->
@@ -60,7 +65,7 @@
     <color name="settings_activity_switch_dot_color">#F2F2F7</color>
 
 
-    <!-- активность настроек -->
+    <!-- редактор кабинетов -->
     <color name="cabinet_redactor_basket_dark">#BABEC6</color>
     <color name="cabinet_redactor_basket_light">#D1D1D1</color>
 
@@ -74,7 +79,6 @@
     <color name="baseOrange">#FFB000</color>
     <color name="baseGreen">#9dc646</color>
 
-    <color name="transparent">#00000000</color>
     <color name="background_blackout_fill">#00000000</color>
 
 

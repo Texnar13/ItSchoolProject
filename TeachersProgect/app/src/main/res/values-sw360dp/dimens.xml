@@ -114,7 +114,7 @@
     <!--размеры текста-->
     <dimen name="text_fat_size">52sp</dimen>
     <dimen name="text_title_size">26sp</dimen>
-    <dimen name="text_subtitle_size">20sp</dimen>
+    <dimen name="text_subtitle_size">@dimen/base_toolbar_text_size</dimen>
     <dimen name="text_simple_size">17sp</dimen>
     <dimen name="text_sub_simple_size">14.7333sp</dimen>
     <dimen name="text_small_size">10sp</dimen>

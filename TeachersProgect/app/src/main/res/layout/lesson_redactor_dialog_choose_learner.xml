@@ -25,7 +25,7 @@
                    android:layout_width="@dimen/base_classic_arrow_immutable_size"
                     android:layout_height="@dimen/base_classic_arrow_immutable_size"
                     android:adjustViewBounds="true"
-                    app:srcCompat="@drawable/base_button_return_inverse" />
+                    app:srcCompat="@drawable/base_button_return" />
 
             </RelativeLayout>
 

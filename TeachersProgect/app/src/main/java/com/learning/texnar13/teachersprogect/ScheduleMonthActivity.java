@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity;
 import com.yandex.mobile.ads.banner.AdSize;
@@ -38,9 +40,8 @@ import java.util.Locale;
 
 public class ScheduleMonthActivity extends AppCompatActivity {
 
-    // todo разнеси это по фрагментам, читать не возможно
+    // todo разнеси это по фрагментам, читать невозможно
 
-    //private GestureLibrary gestureLib;
 
     // обьект для преобразования календаря в строку
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -52,6 +53,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
     // поле для отображаемого дня
     private LinearLayout dayOut;
 
+    // статус подписки проверяемый в onCreate
+    boolean subscriptionState;
 
     // размер одной ячейки календаря
     private float cellSize;
@@ -89,6 +92,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
                         | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
+
+        // проверяем подписку
+        subscriptionState = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false);
 
         // выводим разметку
         setContentView(R.layout.schedule_month_activity);
@@ -274,7 +281,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 // создаем текст дня
                 final TextView day = new TextView(this);
                 day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.shedule_month_calendar_day_text_size));
-                day.setPadding(0,0,0,0);
+                day.setPadding(0, 0, 0, 0);
                 day.setTextColor(getResources().getColor(R.color.text_color_simple));
                 day.setGravity(Gravity.CENTER);
                 LinearLayout.LayoutParams dayParams = new LinearLayout.LayoutParams(0,
@@ -297,13 +304,22 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                     DataBaseOpenHelper db = new DataBaseOpenHelper(this);
                     // получаем уроки в дне
                     viewCalendar.set(Calendar.DAY_OF_MONTH, monthDay + 1);
-                    Cursor lessonsAttitudes = db.getSubjectAndTimeCabinetAttitudesByDate(
-                            dateFormat.format(viewCalendar.getTime())
-                    );
+
+                    Cursor lessonsAttitudes;
+                    if (subscriptionState) {
+                        lessonsAttitudes = db.getSubjectAndTimeCabinetAttitudesByDate(
+                                dateFormat.format(viewCalendar.getTime())
+                        );
+                    } else {
+                        lessonsAttitudes = db.getSubjectAndTimeCabinetAttitudesByDateAndLessonNumbersPeriod(
+                                dateFormat.format(viewCalendar.getTime()), 0, 9
+                        );
+                    }
+
                     // если в дне есть уроки, помечаем его
                     if (lessonsAttitudes.getCount() != 0) {
                         day.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_black));
-                    }else{
+                    } else {
                         day.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_semibold));
                     }
                     lessonsAttitudes.close();
@@ -342,41 +358,38 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
                     // при нажатии на день
                     final int dayNumber = monthDay + 1;
-                    day.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // чистим фон у предыдущей ячейки
-                            if (pressedCell != null) {
-                                pressedCell.setBackground(null);
-                                if (isPressedCellCurrentDay) {
-                                    pressedCell.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
-                                            (getResources().getColor(R.color.baseOrange, getTheme())) :
-                                            (getResources().getColor(R.color.baseOrange))
-                                    );
-                                } else {
-                                    pressedCell.setTextColor(getResources().getColor(R.color.text_color_simple));
-                                }
-                            }
-
-                            // ставим эту ячейку выбранной
-                            chosenOutDayNumber = dayNumber;
-                            pressedCell = day;
-
-                            // закрашиваем фон у новой ячейки
-                            if (isItCurrentDay) {
-                                isPressedCellCurrentDay = true;
-                                day.setBackgroundResource(R.drawable.shedule_month_activity_background_chosen_cell_current_day);
+                    day.setOnClickListener(v -> {
+                        // чистим фон у предыдущей ячейки
+                        if (pressedCell != null) {
+                            pressedCell.setBackground(null);
+                            if (isPressedCellCurrentDay) {
+                                pressedCell.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
+                                        (getResources().getColor(R.color.baseOrange, getTheme())) :
+                                        (getResources().getColor(R.color.baseOrange))
+                                );
                             } else {
-                                isPressedCellCurrentDay = false;
-                                day.setBackgroundResource(R.drawable.shedule_month_activity_background_chosen_cell);
+                                pressedCell.setTextColor(getResources().getColor(R.color.text_color_simple));
                             }
-                            day.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
-                                    (getResources().getColor(R.color.base_background_color, getTheme())) :
-                                    (getResources().getColor(R.color.base_background_color))
-                            );
-                            // и выводим по ней день
-                            outDay();
                         }
+
+                        // ставим эту ячейку выбранной
+                        chosenOutDayNumber = dayNumber;
+                        pressedCell = day;
+
+                        // закрашиваем фон у новой ячейки
+                        if (isItCurrentDay) {
+                            isPressedCellCurrentDay = true;
+                            day.setBackgroundResource(R.drawable.shedule_month_activity_background_chosen_cell_current_day);
+                        } else {
+                            isPressedCellCurrentDay = false;
+                            day.setBackgroundResource(R.drawable.shedule_month_activity_background_chosen_cell);
+                        }
+                        day.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
+                                (getResources().getColor(R.color.base_background_color, getTheme())) :
+                                (getResources().getColor(R.color.base_background_color))
+                        );
+                        // и выводим по ней день
+                        outDay();
                     });
                 }
                 // считаем день месяца
@@ -426,11 +439,18 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
             // получаем стандартное время уроков
             int[][] standardLessonsPeriods = db.getSettingsTime(1);
+            int lessonsCount = standardLessonsPeriods.length;
 
+            // обрезаем количество уроков если нет подписки
+            if (!subscriptionState && lessonsCount > 9) {
+                lessonsCount = 9;
+            }
 
             // получаем текущий номер урока (-1 - не сегодня)
             int currentLesson = -1;
-            // отображаемая дата в текстовом виде
+            // отображаемая дата в текстовом виде (календарь берём от месяца, а день меняем на chosenOutDayNumber)
+            // todo поменять код так, чтобы сюда (outDay) передавалась строка с датой или готовый календарь,
+            //  чтобы расписание дня не зависело от того что отображается в месяце
             final String outStringDate = String.format(Locale.getDefault(), "%04d-%02d-%02d",
                     viewCalendar.get(Calendar.YEAR),
                     viewCalendar.get(Calendar.MONTH) + 1,
@@ -446,7 +466,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 int minute = nowCalendar.get(Calendar.MINUTE);
 
                 // определяем текущий урок
-                for (int lessonI = 0; lessonI < standardLessonsPeriods.length; lessonI++) {
+                for (int lessonI = 0; lessonI < lessonsCount; lessonI++) {
                     if ((hour > standardLessonsPeriods[lessonI][0] ||
                             (hour == standardLessonsPeriods[lessonI][0] && minute >= standardLessonsPeriods[lessonI][1])
                     ) && (hour < standardLessonsPeriods[lessonI][2] ||
@@ -462,7 +482,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             }
 
             // пробегаемся по урокам
-            for (int lessonI = 0; lessonI < standardLessonsPeriods.length; lessonI++) {
+            for (int lessonI = 0; lessonI < lessonsCount; lessonI++) {
                 final int finalLessonI = lessonI;
 
                 // ищем в базе данных урок
