@@ -471,7 +471,12 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
             } else {
                 // если подписки нет
                 // то либо просто ограничиваем число типов, ли бо ставим максимумом то, которое есть
-                String[] arr = new String[Math.max(chosenTypes[gradeI] + 1, 1)];
+                String[] arr = new String[
+                        Math.max(chosenTypes[gradeI] + 1,
+                                Math.min(gradesTypesNames.length,// ограничение может быть тупо больше длинны массива
+                                        SharedPrefsContract.PREMIUM_PARAM_GRADES_TYPES_MAXIMUM)
+                        )
+                ];
                 // копируем урезанный массив
                 System.arraycopy(gradesTypesNames, 0, arr, 0, arr.length);
 

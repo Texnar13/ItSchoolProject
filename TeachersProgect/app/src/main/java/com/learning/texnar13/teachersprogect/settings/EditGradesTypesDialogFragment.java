@@ -149,7 +149,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             Toast.makeText(
                     getActivity(),
                     getResources().getString(
-                            R.string.settings_activity_dialog_new_absent_type_toast_subscrybe,
+                            R.string.settings_activity_dialog_new_absent_type_toast_subscribe,
                             maxTypesCount),
                     Toast.LENGTH_SHORT
             ).show();
@@ -236,7 +236,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             typeRecord.typeContainer.setOnClickListener(v -> Toast.makeText(
                     getActivity(),
                     getResources().getString(
-                            R.string.settings_activity_dialog_new_absent_type_toast_subscrybe,
+                            R.string.settings_activity_dialog_new_absent_type_toast_subscribe,
                             maxTypesCount),
                     Toast.LENGTH_SHORT
             ).show());

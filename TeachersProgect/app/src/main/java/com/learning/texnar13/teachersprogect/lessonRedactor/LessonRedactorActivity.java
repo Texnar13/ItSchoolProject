@@ -235,8 +235,9 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
             // проверяем подписку
             int lessonsCount = time.length;
             if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                    .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false) && lessonsCount > 9)
-                lessonsCount = 9;
+                    .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false) &&
+                    lessonsCount > SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT)
+                lessonsCount = SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT;
 
             // заодно проверка переданного в активность урока номера урока
             if (lessonNumber > lessonsCount)

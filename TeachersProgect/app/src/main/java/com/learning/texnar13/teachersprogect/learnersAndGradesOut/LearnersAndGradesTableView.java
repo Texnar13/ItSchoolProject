@@ -338,7 +338,7 @@ public class LearnersAndGradesTableView extends View {
                         .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
                     lessonsCount = times.length;
                 } else {
-                    lessonsCount = 9;
+                    lessonsCount = Math.min(SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT, times.length);
                 }
 
 

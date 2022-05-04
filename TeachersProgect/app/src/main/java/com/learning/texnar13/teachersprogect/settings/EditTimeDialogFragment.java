@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.learning.texnar13.teachersprogect.R;
+import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,20 +27,14 @@ import java.util.Objects;
 
 public class EditTimeDialogFragment extends DialogFragment {
 
+    // статус подписки
+    boolean isSubscribe;
+
     // массив с полями
     ArrayList<TimeViewLine> lines;
 
     // контейнер вывода времени
     LinearLayout outContainer;
-
-    /* todo переделай эту жесть +
-     *  косяк: не можем добавить урок после 23:59
-     *  правим, создаем
-     *  цифра все равно красная
-     *
-     *  todo нужна проверка и сохранение после каждого on focus changed.
-     *   метод проверки по 3 ряда? (измененный ряд, один ряд сверху и один ряд снизу)
-     */
 
 
     @SuppressLint("SetTextI18n")
@@ -52,97 +48,59 @@ public class EditTimeDialogFragment extends DialogFragment {
         ScrollView scrollLayout = (ScrollView) getActivity().getLayoutInflater().inflate(R.layout.settings_dialog_edit_time, null);
         builder.setView(scrollLayout);
 
-        // при нажатии на кнопку закрыть
-        scrollLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_time_button_close).setOnClickListener(v -> {
-
-            // проверяем все поля
-            int[][] newTime = checkFields();
-            if (newTime != null) {
-                // вызываем dismiss, а сохранение будет уже в нем
-                dismiss();
-            }else{
-                Toast.makeText(getActivity(),R.string.settings_activity_toast_time_no_saved, Toast.LENGTH_SHORT).show();
-            }
-        });
-
 
         // получаем пачку данных
         EditTimeDialogDataTransfer dataTransfer = Objects.requireNonNull(((EditTimeDialogDataTransfer)
-                getArguments().getSerializable(EditTimeDialogDataTransfer.PARAM_DATA)
+                requireArguments().getSerializable(EditTimeDialogDataTransfer.PARAM_DATA)
         ));
-
         // распаковываем время
         int[][] rawDataArray = dataTransfer.lessonPeriods;
 
 
-        // массив с полями
-        lines = new ArrayList<>(rawDataArray.length);
+        // статус подписки
+        isSubscribe = PreferenceManager.getDefaultSharedPreferences(requireActivity().getApplicationContext())
+                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false);
+
 
         // выводим данные в поля
+
         // контейнер полей
         outContainer = scrollLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_time_time_out);
+        // массив с полями
+        lines = new ArrayList<>(rawDataArray.length);
         // выводим строки
         // создаем обьект строки
         for (int rowsI = 0; rowsI < rawDataArray.length; rowsI++) {
             lines.add(inflateNewLine(rawDataArray[rowsI], rowsI + 1));
         }
-
-
         // выводим крестик на последнем уроке
         setLastElementOnClickListener();
 
 
         // кнопка добавить урок
-        scrollLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_time_button_add).setOnClickListener(v -> {
-            // проверяем последнее поле
-            TimeViewLine lastLine = lines.get(lines.size() - 1);
-            int prevHour = Integer.parseInt(lastLine.timeFields[2].getText().toString());
-            int prevMinute = Integer.parseInt(lastLine.timeFields[3].getText().toString());
-
-            // если после него есть еще две минуты
-            if (prevHour != 23 || prevMinute <= 57) {
-                // убираем кнопку удалить у последнего элемента
-                lastLine.deleteImage.setImageResource(R.color.transparent);
-                lastLine.deleteImage.setOnClickListener(null);
-
-
-                // добавляем новый элемент
-                {
-                    // время начала нового урока по prev
-                    int startHour;
-                    int startMinute;
-                    if (prevMinute == 59) {
-                        startHour = prevHour + 1;
-                        startMinute = 0;
+        scrollLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_time_button_add)
+                .setOnClickListener(v -> {
+                    if (isSubscribe || lines.size() < SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT) {
+                        addNewLesson();
                     } else {
-                        startHour = prevHour;
-                        startMinute = prevMinute + 1;
+                        Toast.makeText(getActivity(),
+                                getResources().getString(R.string.settings_activity_toast_time_subscribe,
+                                        SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT),
+                                Toast.LENGTH_SHORT).show();
                     }
-                    // время конца нового урока по start
-                    int endHour;
-                    int endMinute;
-                    if (startMinute == 59) {
-                        endHour = startHour + 1;
-                        endMinute = 0;
-                    } else {
-                        endHour = startHour;
-                        endMinute = startMinute + 1;
-                    }
+                });
 
-                    // создаем обьект строки
-                    lines.add(inflateNewLine(
-                            new int[]{startHour, startMinute, endHour, endMinute}, lines.size() + 1));
-                }
 
-                // выводим крестик на последнем уроке
-                setLastElementOnClickListener();
-
-                // сохраняем изменения в бд?
-
-            } else {
-                Toast.makeText(getActivity(), R.string.settings_activity_dialog_edit_time_toast_last_lesson_error, Toast.LENGTH_LONG).show();
-                lastLine.timeFields[3].setTextColor(getResources().getColor(R.color.signalRed));
-            }
+        // при нажатии на кнопку закрыть
+        scrollLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_time_button_close).setOnClickListener(v -> {
+            // проверяем все поля
+            int[][] newTime = checkFields();
+            if (newTime != null) {
+                // вызываем dismiss, а сохранение будет уже в нем
+                dismiss();
+            } else
+                // если пользователь пытается нажать кнопку назад, с неправильными полями
+                Toast.makeText(getActivity(), R.string.settings_activity_toast_time_no_saved, Toast.LENGTH_SHORT).show();
         });
 
 
@@ -162,17 +120,72 @@ public class EditTimeDialogFragment extends DialogFragment {
         if (newTime != null) {
             // вызываем в активности метод по сохранению и передаем время из полей
             ((EditTimeDialogFragmentInterface) requireActivity()).editTime(newTime);
-        }else{
-            Toast.makeText(getActivity(),R.string.settings_activity_toast_time_no_saved, Toast.LENGTH_SHORT).show();
+        } else
+            // если пользователь вышел из диалога, оставив неправильные поля
+            Toast.makeText(getActivity(), R.string.settings_activity_toast_time_no_saved, Toast.LENGTH_SHORT).show();
+    }
+
+    // по кнопке добавить урок
+    void addNewLesson() {
+        // проверяем последнее поле
+        TimeViewLine lastLine = lines.get(lines.size() - 1);
+        int prevHour = Integer.parseInt(lastLine.timeFields[2].getText().toString());
+        int prevMinute = Integer.parseInt(lastLine.timeFields[3].getText().toString());
+
+        // если после него есть еще две минуты
+        if (prevHour != 23 || prevMinute <= 57) {
+            // убираем кнопку удалить у последнего элемента
+            lastLine.deleteImage.setImageResource(R.color.transparent);
+            lastLine.deleteImage.setOnClickListener(null);
+
+
+            // добавляем новый элемент
+            {
+                // время начала нового урока по prev
+                int startHour;
+                int startMinute;
+                if (prevMinute == 59) {
+                    startHour = prevHour + 1;
+                    startMinute = 0;
+                } else {
+                    startHour = prevHour;
+                    startMinute = prevMinute + 1;
+                }
+                // время конца нового урока по start
+                int endHour;
+                int endMinute;
+                if (startMinute == 59) {
+                    endHour = startHour + 1;
+                    endMinute = 0;
+                } else {
+                    endHour = startHour;
+                    endMinute = startMinute + 1;
+                }
+
+                // создаем обьект строки
+                lines.add(inflateNewLine(
+                        new int[]{startHour, startMinute, endHour, endMinute}, lines.size() + 1));
+            }
+
+            // выводим крестик на последнем уроке
+            setLastElementOnClickListener();
+
+            // чистка полей от красного шрифта
+            checkFields();
+
+        } else {
+            Toast.makeText(getActivity(), R.string.settings_activity_dialog_edit_time_toast_last_lesson_error, Toast.LENGTH_LONG).show();
+            lastLine.timeFields[3].setTextColor(getResources().getColor(R.color.signalRed));
         }
     }
 
+    // создание строки современем из разметки
     TimeViewLine inflateNewLine(int[] startTextValues, int lessonPos) {
         // создаем обьект строки
         TimeViewLine line = new TimeViewLine();
 
         // раздуваем одну строку
-        View rootOfElement = getActivity().getLayoutInflater().inflate(
+        View rootOfElement = requireActivity().getLayoutInflater().inflate(
                 R.layout.settings_dialog_edit_time_template_single_time_line, null);
         LinearLayout.LayoutParams rootOfElementParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -187,6 +200,19 @@ public class EditTimeDialogFragment extends DialogFragment {
         line.timeFields[3] = rootOfElement.findViewById(R.id.settings_dialog_edit_time_template_single_time_line_end_minute);
         line.deleteImage = rootOfElement.findViewById(R.id.settings_dialog_edit_time_template_single_time_line_delete_button);
 
+        // если нет подписки и урок больше чем PREMIUM_PARAM_MAX_LESSONS_COUNT, перекрашиваем его в серый
+        if(!isSubscribe && lessonPos > SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT){
+            int textColor = getResources().getColor(R.color.text_color_not_active);
+            line.timeFields[0].setTextColor(textColor);
+            line.timeFields[1].setTextColor(textColor);
+            line.timeFields[2].setTextColor(textColor);
+            line.timeFields[3].setTextColor(textColor);
+            ((TextView)rootOfElement.findViewById(R.id.settings_dialog_edit_time_template_single_time_line_divider_start_dots)).setTextColor(textColor);
+            ((TextView)rootOfElement.findViewById(R.id.settings_dialog_edit_time_template_single_time_line_divider_separator)).setTextColor(textColor);
+            ((TextView)rootOfElement.findViewById(R.id.settings_dialog_edit_time_template_single_time_line_divider_end_dots)).setTextColor(textColor);
+        }
+
+        // проставляем значение в номер урока
         ((TextView) rootOfElement.findViewById(R.id.settings_dialog_edit_time_template_single_time_line_lesson_number))
                 .setText(lessonPos + ".");
 
@@ -194,12 +220,7 @@ public class EditTimeDialogFragment extends DialogFragment {
         for (int textsI = 0; textsI < 4; textsI++) {
             line.timeFields[textsI].setText(getTwoSymbols(startTextValues[textsI]));
             line.timeFields[textsI].setFilters(new InputFilter[]{new InputFilter.LengthFilter(2)});
-            line.timeFields[textsI].setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean b) {
-                    checkFields();
-                }
-            });
+            line.timeFields[textsI].setOnFocusChangeListener((view, bool) -> checkFields());
         }
         return line;
     }
@@ -214,13 +235,7 @@ public class EditTimeDialogFragment extends DialogFragment {
                 // удаляем view урока
                 outContainer.removeView(lines.get(lines.size() - 1).container);
 
-                /*
-                 удаляем из бд?
-                 (нет, не удаляем пользовательские данные (уроки) из бд)
-                  (но вот уроки неплохо было бы редачить на лету)
-                */
-
-                //удаляем из списка
+                // удаляем из списка
                 lines.remove(lines.size() - 1);
 
                 // ставим те же параметры пункту выше
@@ -266,12 +281,17 @@ public class EditTimeDialogFragment extends DialogFragment {
 
                 // соответствующе закрашиваем ячейку
                 if (currentCorrectFlag) {
-                    lines.get(linesI).timeFields[fieldI].setTextColor(getResources().getColor(R.color.text_color_simple));
+                    // получаем основной цвет текста в соответствии с подпиской
+                    int textColor = getResources().getColor(
+                            (isSubscribe || linesI < SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT)?
+                                    R.color.text_color_simple:
+                                    R.color.text_color_not_active
+                    );
+                    lines.get(linesI).timeFields[fieldI].setTextColor(textColor);
                 } else {
                     lines.get(linesI).timeFields[fieldI].setTextColor(getResources().getColor(R.color.signalRed));
                     correctFlag = false;
                 }
-
             }
         }
 
@@ -279,18 +299,17 @@ public class EditTimeDialogFragment extends DialogFragment {
         if (correctFlag) {
 
             for (int lessonI = 0; lessonI < fieldsTime.length; lessonI++) {
+
                 // если время начала урока больше времени конца
                 if (fieldsTime[lessonI][0] > fieldsTime[lessonI][2] || (
                         (fieldsTime[lessonI][0] == fieldsTime[lessonI][2]) &&
                                 (fieldsTime[lessonI][1] >= fieldsTime[lessonI][3])
                 )) {
+                    // перекрашиваем уже покрашенные ячейки в красный
                     correctFlag = false;
                     for (int fieldI = 0; fieldI < 4; fieldI++)
                         lines.get(lessonI).timeFields[fieldI].setTextColor(getResources().getColor(R.color.signalRed));
-
-                } else
-                    for (int fieldI = 0; fieldI < 4; fieldI++)
-                        lines.get(lessonI).timeFields[fieldI].setTextColor(getResources().getColor(R.color.text_color_simple));
+                }
             }
 
             if (correctFlag) {
@@ -322,17 +341,17 @@ public class EditTimeDialogFragment extends DialogFragment {
             }
         }
 
+        // если поля не прошли проверку возвращаем null
         return correctFlag ? fieldsTime : null;
     }
 
 
     // метод трансформации числа в текст с двумя позициями
     String getTwoSymbols(int number) {
-        if (number < 10 && number >= 0) {
-            return '0' + Integer.toString(number);
-        } else {
-            return Integer.toString(number);
-        }
+        return (number < 10 ?
+                '0' + Integer.toString(number) :
+                Integer.toString(number)
+        );
     }
 
 

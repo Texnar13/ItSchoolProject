@@ -29,6 +29,7 @@
         android:textColor="@color/text_color_simple" />
 
     <TextView
+        android:id="@+id/settings_dialog_edit_time_template_single_time_line_divider_start_dots"
         style="@style/ButtonSimpleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,6 +48,7 @@
         android:textColor="@color/text_color_simple" />
 
     <TextView
+        android:id="@+id/settings_dialog_edit_time_template_single_time_line_divider_separator"
         style="@style/ButtonSimpleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,10 +66,10 @@
         android:textColor="@color/text_color_simple" />
 
     <TextView
+        android:id="@+id/settings_dialog_edit_time_template_single_time_line_divider_end_dots"
         style="@style/ButtonSimpleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:gravity="center_horizontal"
         android:text="@string/settings_activity_dialog_text_time_colon" />
 

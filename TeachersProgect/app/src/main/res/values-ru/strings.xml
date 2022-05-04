@@ -255,6 +255,7 @@
     <string name="settings_activity_toast_grade_too_min">Введено слишком маленькое значение (должно быть не менее 1)</string>
     <string name="settings_activity_toast_time_successfully_saved">Время сохранено</string>
     <string name="settings_activity_toast_time_no_saved">Ошибка, время не сохранено</string>
+    <string name="settings_activity_toast_time_subscribe" formatted="true">##Без подписки число уроков ограничено до %d</string>
     <string name="settings_activity_data_export_theme" formatted="true">Резервная копия от %s</string>
     <string name="settings_activity_data_export_title">Отправить через:</string>
     <string name="settings_activity_data_import_title">Выберите файл:</string>
@@ -272,7 +273,7 @@
     <string name="settings_activity_dialog_new_absent_type_title_hint">Сокращение</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty">Введите название</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">Введите сокращение</string>
-    <string name="settings_activity_dialog_new_absent_type_toast_subscrybe" formatted="true">##Без подписки число типов ограничено до %d</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_subscribe" formatted="true">##Без подписки число типов ограничено до %d</string>
     <string name="settings_activity_dialog_hint_number">##Введите число</string>
     <string name="settings_activity_dialog_button_remove_data">Удалить</string>
     <string name="settings_activity_dialog_button_remove">Удалить</string>

@@ -254,6 +254,7 @@
     <string name="settings_activity_toast_grade_too_min">输入的值太小（必须至少为1)</string>
     <string name="settings_activity_toast_time_successfully_saved">时间保存了。</string>
     <string name="settings_activity_toast_time_no_saved">错误，时间未保存。</string>
+    <string name="settings_activity_toast_time_subscribe" formatted="true">##Без подписки число уроков ограничено до %d</string>
     <string name="settings_activity_data_export_theme" formatted="true">%s起备份</string>
     <string name="settings_activity_data_export_title">发送到</string>
     <string name="settings_activity_data_import_title">选择文件：</string>
@@ -271,7 +272,7 @@
     <string name="settings_activity_dialog_new_absent_type_title_hint">代表符号</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty">输入名称</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">输入缩写</string>
-    <string name="settings_activity_dialog_new_absent_type_toast_subscrybe" formatted="true">##Без подписки число типов ограничено до %d</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_subscribe" formatted="true">##Без подписки число типов ограничено до %d</string>
     <string name="settings_activity_dialog_hint_number">##Введите число</string>
     <string name="settings_activity_dialog_button_remove_data">删除</string>
     <string name="settings_activity_dialog_button_remove">删除</string>

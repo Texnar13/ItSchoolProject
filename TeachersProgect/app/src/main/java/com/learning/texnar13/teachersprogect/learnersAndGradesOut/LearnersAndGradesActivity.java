@@ -18,6 +18,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
@@ -267,8 +268,9 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
         maxLessonsCount = db.getSettingsTime(1).length;// todo оптимизировать...
         // проверяем подписку
         if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false) && maxLessonsCount > 9)
-            maxLessonsCount = 9;
+                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false) &&
+                maxLessonsCount > SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT)
+            maxLessonsCount = SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT;
 
         // названия типов ответов
         Cursor typesCursor = db.getGradesTypes();
@@ -701,7 +703,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                 subjects[chosenSubjectPosition].getSubjectId(),
                                 dateFormat.format(loadGradesTempCalendar.getTime()),
                                 0,
-                                copy.learnersAndHisGrades[learnerI].learnerGrades[dayI].length
+                                copy.learnersAndHisGrades[learnerI].learnerGrades[dayI].length-1
                         );
 
 
@@ -745,13 +747,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                         break;
                                     }
                                 }
-                            }//<---
-                            /*
-                            *  Process: com.learning.texnar13.teachersprogect, PID: 11409
-    java.lang.ArrayIndexOutOfBoundsException: length=9; index=10
-        at com.learning.texnar13.teachersprogect.learnersAndGradesOut.LearnersAndGradesActivity$GetGradesThread.run(LearnersAndGradesActivity.java:748)
-
-                            * */
+                            }
 
                             // если оценки здесь еще не стояли, создаем их
                             if (copy.learnersAndHisGrades[learnerI].learnerGrades[dayI][lessonPoz] == null)
@@ -817,7 +813,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                         subjects[chosenSubjectPosition].getSubjectId(),
                         checkDate,
                         0,
-                        maxLessonsCount
+                        maxLessonsCount - 1
                 );
 
                 while (baseLessons.moveToNext()) {

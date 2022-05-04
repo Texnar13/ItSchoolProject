@@ -56,6 +56,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
     // статус подписки проверяемый в onCreate
     boolean subscriptionState;
 
+    // стандартное время уроков
+    int[][] standardLessonsPeriods ;
+    int lessonsCount;
+
     // размер одной ячейки календаря
     private float cellSize;
     // названия месяцев из ресурсов
@@ -108,6 +112,13 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             bar.setTitle("");
         }
         ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_schedule_month);
+
+
+
+        DataBaseOpenHelper db = new DataBaseOpenHelper(this);
+        // получаем стандартное время уроков
+        standardLessonsPeriods = db.getSettingsTime(1);
+        lessonsCount = standardLessonsPeriods.length;
 
 
         // получаем поле вывода календаря
@@ -312,7 +323,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                         );
                     } else {
                         lessonsAttitudes = db.getSubjectAndTimeCabinetAttitudesByDateAndLessonNumbersPeriod(
-                                dateFormat.format(viewCalendar.getTime()), 0, 9
+                                dateFormat.format(viewCalendar.getTime()), 0,
+                                Math.min(SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT, lessonsCount)
                         );
                     }
 
@@ -437,13 +449,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
 
             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-            // получаем стандартное время уроков
-            int[][] standardLessonsPeriods = db.getSettingsTime(1);
-            int lessonsCount = standardLessonsPeriods.length;
 
             // обрезаем количество уроков если нет подписки
-            if (!subscriptionState && lessonsCount > 9) {
-                lessonsCount = 9;
+            if (!subscriptionState && lessonsCount > SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT) {
+                lessonsCount = SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT;
             }
 
             // получаем текущий номер урока (-1 - не сегодня)

@@ -7,7 +7,8 @@ public class SharedPrefsContract {// менять значение конста�
     // активность подписок и иже с ней
     // статус подписки
     public static final String PREFS_BOOLEAN_PREMIUM_STATE = "premiumState";
-
+    public static final int PREMIUM_PARAM_GRADES_TYPES_MAXIMUM = 2;
+    public static final int PREMIUM_PARAM_MAX_LESSONS_COUNT = 9;
 
     // при старте приожения на главной активности
     // счетчик заходов в приложение
