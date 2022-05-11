@@ -1,6 +1,7 @@
 package com.learning.texnar13.teachersprogect.settings;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.DialogFragment;
 
 import com.learning.texnar13.teachersprogect.R;
+import com.learning.texnar13.teachersprogect.gradesPeriods.GradesPeriodsActivity;
 
 import java.util.Random;
 
@@ -37,15 +39,21 @@ public class SettingsRemoveDataDialogFragment extends DialogFragment {
         // нажатие на кнопку удалить все данные
         root.findViewById(R.id.settings_dialog_remove_data_button).setOnClickListener(v -> {
             EditText input = root.findViewById(R.id.settings_dialog_remove_data_input);
-            //если числа совпали вызываем в активности метод по удалению
+            // если числа совпали вызываем в активности метод по удалению
             if (input.getText().toString().trim().equals(Integer.toString(n))) {
                 ((SettingsRemoveInterface)
                         getActivity()).settingsRemove();
             } else {
-                //пишем пользователю о его ошибке
-                Toast toast = Toast.makeText(getActivity().getApplicationContext()
-                        , getResources().getString(R.string.settings_activity_toast_data_delete_falture), Toast.LENGTH_SHORT);
-                toast.show();
+                // пасхалка
+                if (input.getText().toString().trim().equals("666")) {
+                    Intent intent = new Intent(getActivity(), GradesPeriodsActivity.class);// для отладки новой активности статистики
+                    startActivity(intent);
+                } else {
+                    // пишем пользователю о его ошибке
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext()
+                            , getResources().getString(R.string.settings_activity_toast_data_delete_falture), Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
             dismiss();
         });

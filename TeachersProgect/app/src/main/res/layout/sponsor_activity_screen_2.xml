@@ -4,13 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/premiumAddBackground"
+    android:background="@color/premium_background"
     android:orientation="vertical">
 
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
-    android:text="aaaaaaaaaaaaaaaaaaaaa"/>
+    <TextView
+        style="@style/TextViewSemiBoldStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sponsor_activity_screen_2_content_1"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="@dimen/forth_margin"
+        android:layout_marginEnd="@dimen/forth_margin"
+        android:text="@string/sponsor_activity_title_screen_1"
+        android:textColor="@color/premium_text_color"
+        android:textSize="@dimen/premium_activity_messages_text_size" />
+
+    <ImageView
+        android:id="@+id/sponsor_activity_screen_2_content_1"
+        android:layout_width="@dimen/premium_activity_content_image_no_add_width"
+        android:layout_height="@dimen/premium_activity_content_image_no_add_width"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/sponsor_activity_content_image_no_add"/>
 
 </RelativeLayout>

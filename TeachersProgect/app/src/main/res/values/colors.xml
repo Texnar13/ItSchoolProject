@@ -70,32 +70,27 @@
     <color name="cabinet_redactor_basket_light">#D1D1D1</color>
 
 
-    <!-- ==================== gbpltw близко, беги друг ==================== -->
-    <!-- todo это надо переделать, тк непонятно за что эти цвета отвечают -->
-
-    <!-- базовые цвета -->
-    <color name="baseBlue">#7FADE5</color>
-    <color name="basePink">#c477a9</color>
-    <color name="baseOrange">#FFB000</color>
-    <color name="baseGreen">#9dc646</color>
-
-    <color name="background_blackout_fill">#00000000</color>
-
-
+    <!-- премиум -->
+    <color name="premium_background">#6296CF</color>
+    <color name="premium_text_color">#E8EDF1</color>
+    <!--color name="dopDarkBlue">#1D7CBC</color-->
 
 
     <!-- сигнализирующие цвета -->
     <color name="signalGreen">#9dc646</color>
     <color name="signalRed">#DB4437</color>
 
+
     <!-- цвета фона иконки -->
     <color name="app_icon_background_light">#80A9DB</color>
     <color name="app_icon_background_dark">#6A91D4</color>
 
-    <!-- Цвет фона в премиуме -->
-    <color name="premiumAddBackground">#6296CF</color>
-    <!--color name="dopDarkBlue">#1D7CBC</color-->
 
+    <!-- ==================== gbpltw близко, беги друг ==================== -->
+    <!-- todo это цвеа под удаление -->
+
+    <!-- базовые цвета -->
+    <color name="baseOrange">#FFB000</color>
 
     <color name="backgroundWhite">#ffffff</color>
     <color name="backgroundDarkWhite">#F2F2F2</color>

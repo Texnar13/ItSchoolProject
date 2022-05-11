@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/base_background_dialog_full_round_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/simple_buttons_height"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/start_screen_dialog_rate_us_button_close"
+            android:layout_width="@dimen/simple_buttons_height"
+            android:layout_height="@dimen/simple_buttons_height">
+
+            <ImageView
+                android:layout_width="@dimen/base_classic_arrow_immutable_size"
+                android:layout_height="@dimen/base_classic_arrow_immutable_size"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/base_button_close" />
+        </RelativeLayout>
+
+        <TextView
+            style="@style/ButtonSimpleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_screen_activity_dialog_title_rate" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/double_margin"
+        android:layout_marginStart="@dimen/double_margin"
+        android:layout_marginEnd="@dimen/double_margin"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="@dimen/my_icon_small_size"
+            android:layout_height="@dimen/my_icon_small_size"
+            android:layout_marginEnd="@dimen/simple_margin"
+            android:src="@drawable/start_screen_activity_rate_star_icon"/>
+        <ImageView
+            android:layout_width="@dimen/my_icon_small_size"
+            android:layout_height="@dimen/my_icon_small_size"
+            android:layout_marginEnd="@dimen/simple_margin"
+            android:src="@drawable/start_screen_activity_rate_star_icon"/>
+        <ImageView
+            android:layout_width="@dimen/my_icon_small_size"
+            android:layout_height="@dimen/my_icon_small_size"
+            android:layout_marginEnd="@dimen/simple_margin"
+            android:src="@drawable/start_screen_activity_rate_star_icon"/>
+        <ImageView
+            android:layout_width="@dimen/my_icon_small_size"
+            android:layout_height="@dimen/my_icon_small_size"
+            android:layout_marginEnd="@dimen/simple_margin"
+            android:src="@drawable/start_screen_activity_rate_star_icon"/>
+        <ImageView
+            android:layout_width="@dimen/my_icon_small_size"
+            android:layout_height="@dimen/my_icon_small_size"
+            android:layout_marginEnd="@dimen/simple_margin"
+            android:src="@drawable/start_screen_activity_rate_star_icon"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/start_screen_dialog_rate_us_button_rate"
+        style="@style/ButtonSimpleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/simple_buttons_height"
+        android:background="@drawable/base_background_dialog_bottom_round_blue"
+        android:gravity="center"
+        android:text="@string/start_screen_activity_dialog_button_rate_now"
+        android:textColor="@color/text_color_inverse"
+        android:textSize="@dimen/simple_buttons_text_size" />
+</LinearLayout>

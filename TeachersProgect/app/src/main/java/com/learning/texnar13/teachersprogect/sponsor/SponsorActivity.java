@@ -38,7 +38,7 @@ import java.util.List;
 public class SponsorActivity extends AppCompatActivity implements SubsClickInterface {
 
     // количество страниц в превью
-    public static final int PAGES_COUNT = 6;
+    public static final int PAGES_COUNT = 5;
     // кнопка перехода на последний экран
     TextView buttonGoToFinal;
 
@@ -57,11 +57,12 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
         MyApplication.updateLangForContext(this);
         // отключаем поворот
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
         // цвет статус бара
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.premiumAddBackground, getTheme()));
+            window.setStatusBarColor(getResources().getColor(R.color.premium_background, getTheme()));
             // цвет текста в статус баре
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
@@ -121,43 +122,58 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
         // ---- настраиваем клиент связи с googlePlay ----
         reconnectAttemptsCount = 0;
 
-        // billingClient.queryPurchasesAsync();
-        billingClient = BillingClient.newBuilder(this)
-                .setListener((billingResult, purchases) -> {
-                    // обратная связь диалога покупки google play
-                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
-                        // обрабатываем покупки, если они есть (предоставляем контент пользователю)
-                        if (purchases.size() != 0) {
-                            // проверяем что произошло именно событие покупки (а не напримекр промежуточный этап с оплато позже PENDING)
-                            if (purchases.get(0).getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-                                // сохраняем параметр в SharedPreferences
-                                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()
-                                        .putBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, true).apply();
-                                // при закрытии активности покажем в предыдущей диалог
-                                setResult(RESULT_DEAL_DONE);
-                                // закрываем активность
-                                finish();
+        Handler myHandler = new Handler(getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                if (msg.what == 123) {
+                    // также если фрагмент уже был создан, выводим внего данные о ценах
+                    if (currentLastFragment != null) {
+                        currentLastFragment.setPriceData(loadedPriceList);
+                    }
+                } else if (msg.what == 222) {
+                    // ошибка соединения с сервером
+                    Toast.makeText(SponsorActivity.this, R.string.sponsor_activity_text_error_connection, Toast.LENGTH_SHORT).show();
+                }
+                super.handleMessage(msg);
+            }
+        };
 
-                                // подтверждаем что выдали пользователю контент
-                                if (!purchases.get(0).isAcknowledged()) {
-                                    AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams
-                                            .newBuilder().setPurchaseToken(purchases.get(0).getPurchaseToken()).build();
-                                    // подтверждение на подтверждение
-                                    billingClient.acknowledgePurchase(acknowledgePurchaseParams, billingResult12 -> {
-                                        if (billingResult12.getResponseCode() != BillingClient.BillingResponseCode.OK)
-                                            Toast.makeText(this, R.string.sponsor_activity_text_error_to_acknowledge, Toast.LENGTH_LONG).show();
-                                    });
-                                }
-                            }
+        // billingClient.queryPurchasesAsync();
+        billingClient = BillingClient.newBuilder(this).setListener((billingResult, purchases) -> {
+            // обратная связь диалога покупки google play
+            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
+                // обрабатываем покупки, если они есть (предоставляем контент пользователю)
+                if (purchases.size() != 0) {
+                    // проверяем что произошло именно событие покупки (а не напримекр промежуточный этап с оплатой позже PENDING)
+                    if (purchases.get(0).getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                        // сохраняем параметр в SharedPreferences
+                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()
+                                .putBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, true).apply();
+                        // при закрытии активности покажем в предыдущей диалог
+                        setResult(RESULT_DEAL_DONE);
+                        // закрываем активность
+                        finish();
+
+                        // подтверждаем что выдали пользователю контент
+                        if (!purchases.get(0).isAcknowledged()) {
+                            AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams
+                                    .newBuilder().setPurchaseToken(purchases.get(0).getPurchaseToken()).build();
+                            // (тк нужно обязательно отпарвить в google уведомление о том, что контент предоставлен пользователю)
+                            billingClient.acknowledgePurchase(acknowledgePurchaseParams, billingResult12 -> {
+                                if (billingResult12.getResponseCode() != BillingClient.BillingResponseCode.OK)
+                                    Toast.makeText(this, R.string.sponsor_activity_text_error_to_acknowledge, Toast.LENGTH_LONG).show();
+                            });
                         }
                     }
+                }
+            }
 //            else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
 //                // пользователь отменил покупку
 //                Log.e("TAG", "Handle an error caused by a user cancelling the purchase flow");
 //            } else {
 //                // Handle any other error codes.
 //            }
-                }).enablePendingPurchases().build();
+        }).enablePendingPurchases().build();
 
         // пытаемся соединиться с сервером googlePlay
         billingClient.startConnection(new BillingClientStateListener() {
@@ -177,6 +193,7 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
                     SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
                     params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS);
                     billingClient.querySkuDetailsAsync(params.build(), (billingResult1, skuDetailsList) -> {
+                        // не выдает лог ошибок, нужно ставить try catch
 
                         try {// todo убрать try catch после разработки
                             // сохарняем данные на случай если фрамент перезапустится или еще не создан
@@ -190,7 +207,7 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
                                         getSubsPeriodTypeByCode(skuDetails.getSubscriptionPeriod()),
                                         skuDetails.getPrice(),
                                         skuDetails.getDescription(),
-                                        skuDetails.getPriceAmountMicros()/1000000F,
+                                        skuDetails.getPriceAmountMicros() / 1000000F,
                                         skuDetails.getPriceCurrencyCode()
                                 );
                             }
@@ -224,23 +241,6 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
     private BillingClient billingClient;
     // количество попыток переподключения к платежным сервисам
     private int reconnectAttemptsCount;
-
-
-    Handler myHandler = new Handler() {// todo handler
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            if (msg.what == 123) {
-                // также если фрагмент уже был создан, выводим внего данные о ценах
-                if (currentLastFragment != null) {
-                    currentLastFragment.setPriceData(loadedPriceList);
-                }
-            } else if (msg.what == 222) {
-                // ошибка соединения с сервером
-                Toast.makeText(SponsorActivity.this, R.string.sponsor_activity_text_error_connection, Toast.LENGTH_SHORT).show();
-            }
-            super.handleMessage(msg);
-        }
-    };
 
 
     // обратная связь последнего фрагмента, нажатие на кнопки покупок
@@ -311,32 +311,31 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
         billingClient = null; // одновременно должно быть только одно соединение, по этому завершаем на всякий случай
         reconnectAttemptsCount = 0;
     }
-}
 
 
-class LoadedPrice {
-    public static final int SUBSCRIPTION_PERIOD_YEAR = 0;
-    public static final int SUBSCRIPTION_PERIOD_MONTH = 1;
+    static class LoadedPrice {
+        public static final int SUBSCRIPTION_PERIOD_YEAR = 0;
+        public static final int SUBSCRIPTION_PERIOD_MONTH = 1;
 
-    SkuDetails skuDetailsObject;
-    int trialPeriodDays; // пример исходных данных: P4W2D
-    int subscriptionPeriodType; // 0 - year 1 - month // пример исходных данных: P1M
-    String price;// красиво отформатированная цена
-    String description;// описание
-    float payValue; // численная стоимость в местной валюте
-    String code; // код валюты
+        SkuDetails skuDetailsObject;
+        int trialPeriodDays; // пример исходных данных: P4W2D
+        int subscriptionPeriodType; // 0 - year 1 - month // пример исходных данных: P1M
+        String price;// красиво отформатированная цена
+        String description;// описание
+        float payValue; // численная стоимость в местной валюте
+        String code; // код валюты
 
-    public LoadedPrice(SkuDetails skuDetailsObject, int trialPeriodDays, int subscriptionPeriodType, String price, String description, float payValue, String code) {
-        this.skuDetailsObject = skuDetailsObject;
-        this.trialPeriodDays = trialPeriodDays;
-        this.subscriptionPeriodType = subscriptionPeriodType;
-        this.price = price;
-        this.description = description;
-        this.payValue = payValue;
-        this.code = code;
+        public LoadedPrice(SkuDetails skuDetailsObject, int trialPeriodDays, int subscriptionPeriodType, String price, String description, float payValue, String code) {
+            this.skuDetailsObject = skuDetailsObject;
+            this.trialPeriodDays = trialPeriodDays;
+            this.subscriptionPeriodType = subscriptionPeriodType;
+            this.price = price;
+            this.description = description;
+            this.payValue = payValue;
+            this.code = code;
+        }
     }
 }
-
 
 // подарочные коды
 //                с передачей числа

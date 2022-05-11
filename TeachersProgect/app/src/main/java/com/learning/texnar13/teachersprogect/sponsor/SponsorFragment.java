@@ -8,10 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.learning.texnar13.teachersprogect.R;
@@ -24,7 +24,7 @@ public class SponsorFragment extends Fragment {
     View root;
 
     // ссылка на загруженные днные о товарах
-    LoadedPrice[] loadedPriceList;
+    SponsorActivity.LoadedPrice[] loadedPriceList;
 
     @Nullable
     @Override
@@ -46,16 +46,10 @@ public class SponsorFragment extends Fragment {
                 // Play Store app is not installed
             }
         });
-
-        // восстановить покупки
-        root.findViewById(R.id.sponsor_activity_screen_final_purchases).setOnClickListener(v -> {
-            Toast.makeText(getActivity(), "aaaaaaaaaa", Toast.LENGTH_SHORT).show();
-        });
-
         return root;
     }
 
-    public void setPriceData(LoadedPrice[] loadedPriceList) {
+    public void setPriceData(SponsorActivity.LoadedPrice[] loadedPriceList) {
         this.loadedPriceList = loadedPriceList;
         // выводим разметку после получения
         if (root != null) outDataInContainersAndSetClickers(root);
@@ -79,9 +73,11 @@ public class SponsorFragment extends Fragment {
             } else {// с trial периодом
                 button = getLayoutInflater().inflate(R.layout.sponsor_activity_button_with_trial, null);
                 // выставляем trial текст
-                ((TextView) button.findViewById(R.id.sponsor_activity_screen_final_button_trial)).setText(
-                        getResources().getString(R.string.sponsor_activity_text_free, loadedPriceList[priceItemI].trialPeriodDays)
-                );
+                TextView trialText =  button.findViewById(R.id.sponsor_activity_screen_final_button_trial);
+                trialText.setText(getResources().getString(R.string.sponsor_activity_text_free,
+                        loadedPriceList[priceItemI].trialPeriodDays));
+                trialText.setTypeface(ResourcesCompat.getFont(requireActivity(), R.font.montserrat_bold));
+
                 buttonParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
@@ -92,13 +88,13 @@ public class SponsorFragment extends Fragment {
             // выставляем основной текст
             ((TextView) button.findViewById(R.id.sponsor_activity_screen_final_button_title)).setText(
 
-                    (loadedPriceList[priceItemI].subscriptionPeriodType == LoadedPrice.SUBSCRIPTION_PERIOD_MONTH) ?
+                    (loadedPriceList[priceItemI].subscriptionPeriodType == SponsorActivity.LoadedPrice.SUBSCRIPTION_PERIOD_MONTH) ?
                             (getResources().getString(
                                     R.string.sponsor_activity_button_sub_month,
                                     loadedPriceList[priceItemI].price
                             )) :
                             (getResources().getString(
-                                    R.string.sponsor_activity_button_sub_year,
+                                    R.string.sponsor_activity_button_sub_year_long,
                                     loadedPriceList[priceItemI].price,
                                     String.format(Locale.getDefault(), "%.2f", loadedPriceList[priceItemI].payValue / 12)
                             ))

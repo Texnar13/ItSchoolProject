@@ -4,20 +4,14 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,10 +26,14 @@ import java.util.Arrays;
 
 public class SubjectsDialogFragment extends DialogFragment {
 
-    public static final String ARGS_LEARNERS_NAMES_STRING_ARRAY = "learnersArray";
+    public static final String ARGS_STRING_ARRAY_SUBJECTS_NAMES = "subjectsArray";
+    public static final String ARGS_BOOLEAN_IS_DIALOG_FOR_PERIODS = "IS_DIALOG_FOR_PERIODS";// передавать необязательно
+
 
     // список предметов
     private ArrayList<String> subjectsNames;
+    // Поменять ли заголовки на диалог для статистики
+    private boolean isPeriods;
 
 
     // на каком окне сейчас находится диалог (для кнопки назад)
@@ -88,12 +86,16 @@ public class SubjectsDialogFragment extends DialogFragment {
 
 
         // получаем список предметов
-        String[] names = getArguments().getStringArray(ARGS_LEARNERS_NAMES_STRING_ARRAY);
+        String[] names = requireArguments().getStringArray(ARGS_STRING_ARRAY_SUBJECTS_NAMES);
         if (names == null)
             names = new String[0];
 
         subjectsNames = new ArrayList<>(names.length);
         subjectsNames.addAll(Arrays.asList(names));
+
+
+        // Поменять ли заголовки на диалог для статистики
+        isPeriods = requireArguments().getBoolean(ARGS_BOOLEAN_IS_DIALOG_FOR_PERIODS, false);
 
 
         // наконец создаем диалог и возвращаем его
@@ -106,6 +108,12 @@ public class SubjectsDialogFragment extends DialogFragment {
         return dialog;
     }
 
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        ((SubjectsDialogInterface) requireActivity()).onSubjectsDialogClosed();
+        super.onDismiss(dialog);
+    }
+
     // метод вывода главного меню
     void outMainMenu(LinearLayout rootContainer) {
         whatWindow = 0;
@@ -115,6 +123,12 @@ public class SubjectsDialogFragment extends DialogFragment {
         rootContainer.addView(root, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT
         ));
+
+        // заголовок
+        if (isPeriods) {
+            ((TextView) root.findViewById(R.id.base_subjects_dialog_select_title))
+                    .setText(R.string.learners_and_grades_statistics_activity_dialog_title_choose_period);
+        }
 
         // кнопка закрытия диалога
         root.findViewById(R.id.base_subjects_dialog_select_button_close).setOnClickListener(
@@ -177,6 +191,15 @@ public class SubjectsDialogFragment extends DialogFragment {
         rootContainer.addView(root, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT
         ));
+
+        // заголовок
+        if (isPeriods) {
+            ((TextView) root.findViewById(R.id.base_subjects_dialog_create_title))
+                    .setText(R.string.learners_and_grades_statistics_activity_dialog_title_add_statistic);
+            // подсказка
+            ((TextView) root.findViewById(R.id.base_subjects_dialog_create_field_name))
+                    .setHint(R.string.learners_and_grades_statistics_activity_dialog_hint_profile_name);
+        }
 
         // кнопка назад
         root.findViewById(R.id.base_subjects_dialog_create_button_back).setOnClickListener(
@@ -270,15 +293,9 @@ public class SubjectsDialogFragment extends DialogFragment {
                 // и иконки
                 deleteImage.setImageResource(
                         deleteList[finalSubjectI] ? // стоит ли на удаление ?
-                                R.drawable.learners_and_grades_activity_abs_checkbox_background_full :
-                                R.drawable.learners_and_grades_activity_abs_checkbox_background_empty
+                                R.drawable.base_checkbox_background_active :
+                                R.drawable.base_checkbox_background_not_active
                 );
-//                // состояние текста удаления
-//                deleteButton.setTextColor(getResources().getColor(
-//                        isActiveInDeleteList(deleteList) ?
-//                                R.color.text_color_inverse :
-//                                R.color.text_color_not_active
-//                ));
             });
 
 

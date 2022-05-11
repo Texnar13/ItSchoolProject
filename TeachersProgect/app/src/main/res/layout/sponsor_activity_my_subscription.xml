@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/premium_background"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".sponsor.SponsorMySubscriptionActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/sponsor_activity_my_subscription_close_button"
+                android:layout_width="@dimen/my_icon_size"
+                android:layout_height="@dimen/my_icon_size"
+                android:layout_marginStart="@dimen/double_margin"
+                android:layout_marginTop="@dimen/double_margin"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/base_button_close_white"
+                app:tint="@color/premium_text_color" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/forth_margin"
+                android:layout_marginEnd="@dimen/forth_margin"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewSemiBoldStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sponsor_activity_title_my_premium"
+                    android:textColor="@color/premium_text_color"
+                    android:textSize="@dimen/premium_activity_title_text_size" />
+
+                <TextView
+                    style="@style/TextViewBoldStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sponsor_activity_title_tag"
+                    android:textColor="@color/base_orange"
+                    android:textSize="@dimen/premium_activity_title_text_size" />
+
+                <ImageView
+                    android:layout_width="@dimen/settings_activity_sponsor_icon_size"
+                    android:layout_height="@dimen/settings_activity_sponsor_icon_size"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/settings_icon_premium"
+                    app:tint="@color/baseOrange" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            style="@style/TextViewSemiBoldStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/forth_margin"
+            android:layout_marginTop="@dimen/forth_margin"
+            android:text="@string/sponsor_activity_my_premium_my_rate"
+            android:textColor="@color/premium_text_color"
+            android:textSize="@dimen/premium_activity_messages_text_size" />
+
+        <TextView
+            android:id="@+id/sponsor_activity_my_subscription_subs_text"
+            style="@style/TextViewBoldStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/forth_margin"
+            android:text="@string/sponsor_activity_my_premium_my_sub_connection_error"
+            android:textColor="@color/base_orange"
+            android:textSize="@dimen/premium_activity_title_text_size" />
+
+        <TextView
+            style="@style/TextViewSemiBoldStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/forth_margin"
+            android:layout_marginTop="@dimen/forth_margin"
+            android:text="@string/sponsor_activity_my_premium_my_sub"
+            android:textColor="@color/premium_text_color"
+            android:textSize="@dimen/premium_activity_messages_text_size" />
+
+        <TextView
+            android:id="@+id/sponsor_activity_my_subscription_go_to_google"
+            style="@style/SettingsButtonSimpleStyle"
+            android:layout_marginStart="@dimen/forth_margin"
+            android:layout_marginTop="@dimen/double_margin"
+            android:layout_marginEnd="@dimen/forth_margin"
+            android:layout_marginBottom="@dimen/forth_margin"
+            android:background="@drawable/premium_activity_background_button_frame"
+            android:gravity="center_vertical"
+            android:text="@string/sponsor_activity_my_premium_my_sub_go_to_google"
+            android:textColor="@color/backgroundWhite"
+            android:textSize="@dimen/simple_buttons_text_size" />
+
+    </LinearLayout>
+</ScrollView>

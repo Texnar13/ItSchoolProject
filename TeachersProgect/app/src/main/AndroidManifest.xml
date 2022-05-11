@@ -21,12 +21,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <activity
+            android:name=".sponsor.SponsorMySubscriptionActivity"
+            android:exported="false" />
         <!-- Отключение учета контекстных данных для всего приложения -->
         <meta-data
             android:name="@string/yandex_ads_context"
             android:value="@string/yandex_ads_context_do_not_parse" />
-
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -37,7 +38,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider> <!-- content://com.texnar13.exel2 -->
-
         <activity
             android:name=".gradesPeriods.GradesPeriodsActivity"
             android:exported="true" />

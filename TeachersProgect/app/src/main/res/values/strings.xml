@@ -95,9 +95,9 @@
     <!-- заголовок активности -->
     <string name="title_activity_learners_and_grades_statistics">Statistics for the period:</string>
     <!-- тексты -->
-    <string name="learners_and_grades_statistics_activity_title_column_learner_name">Name</string>
-    <string name="learners_and_grades_statistics_activity_title_column_grade">AVG</string>
-    <string name="learners_and_grades_statistics_activity_title_column_absent">Abs</string>
+    <string name="learners_and_grades_statistics_activity_title_column_learner_name">##Name</string>
+    <string name="learners_and_grades_statistics_activity_title_column_grade">##AVG</string>
+    <string name="learners_and_grades_statistics_activity_title_column_absent">##Abs</string>
     <string name="learners_and_grades_statistics_activity_hint_date_day">DAY</string>
     <string name="learners_and_grades_statistics_activity_hint_date_month">MONTH</string>
     <string name="learners_and_grades_statistics_activity_hint_date_year">YEAR</string>
@@ -111,9 +111,9 @@
     <string name="learners_and_grades_statistics_activity_dialog_text_time_before">From:</string>
     <string name="learners_and_grades_statistics_activity_dialog_text_time_after">To:</string>
     <string name="learners_and_grades_statistics_activity_dialog_hint_profile_name">Period name</string>
-    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_year">YEAR</string>
-    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_month">MONTH</string>
-    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_day">DAY</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_year">0000</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_month">01</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_day">01</string>
     <!-- подсказка на экране -->
     <string name="learners_and_grades_statistics_activity_text_help">Here you can see the total average result by the answers and miss of your students for a certain period. This period you can enter in the field on the top.</string>
 
@@ -242,7 +242,8 @@
     <string name="settings_activity_button_rate_us">Rate our app!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">Language: %s</string>
     <string name="settings_activity_button_edit_dark_mode" formatted="true">##Тема: %s</string>
-    <string name="settings_activity_button_subscribe">Become a sponsor</string>
+    <string name="settings_activity_button_subscribe">##Become a sponsor</string>
+    <string name="settings_activity_button_my_premium">##Мой премиум</string>
     <string name="settings_activity_button_save_data_copy">Save a backup</string>
     <string name="settings_activity_button_load_data_copy">Upload a backup</string>
     <!-- уведомления -->
@@ -294,7 +295,12 @@
     <!-- активность рекламы спонсора -->
     <string name="sponsor_activity_button_go_to_last_screen">Try Premium</string>
     <string name="sponsor_activity_title_app_name">Teacher\'s Assistant</string>
+    <string name="sponsor_activity_title_my_premium">##Мой</string>
     <string name="sponsor_activity_title_tag">Premium</string>
+    <string name="sponsor_activity_my_premium_my_rate">##Мой тариф:</string>
+    <string name="sponsor_activity_my_premium_my_sub">##Управление подпиской:</string>
+    <string name="sponsor_activity_my_premium_my_sub_go_to_google">##Перейти в Google Play</string>
+    <string name="sponsor_activity_my_premium_my_sub_connection_error">##Ошибка подключения</string>
     <string name="sponsor_activity_title_screen_0">Unlimited number of lessons</string>
     <string name="sponsor_activity_title_screen_1">Comment (to the lesson and to the student) of any length</string>
     <string name="sponsor_activity_title_screen_2">No ads</string>
@@ -302,7 +308,8 @@
     <string name="sponsor_activity_title_screen_4">Import and export data</string>
     <string name="sponsor_activity_title_screen_last">Choose the tariff that suits you:</string>
     <string name="sponsor_activity_button_sub_month" formatted="true">Monthly: %s per month</string>
-    <string name="sponsor_activity_button_sub_year" formatted="true">then %s per year (%s per month)</string>
+    <string name="sponsor_activity_button_sub_year" formatted="true">##Ежегодно: %s/год</string>
+    <string name="sponsor_activity_button_sub_year_long" formatted="true">then %s per year (%s per month)</string>
     <string name="sponsor_activity_text_free" formatted="true">Free %d days</string>
     <string name="sponsor_activity_title_cancel_sub">You can cancel your subscription at any time</string>
     <string name="sponsor_activity_title_promocode"><u>Use a promo code</u></string>
@@ -310,6 +317,9 @@
     <string name="sponsor_activity_button_my_subs">View my subscriptions</string>
     <string name="sponsor_activity_text_test_dz">White textbook, p. 7 ; workbook p. 24 4–17; don\'t forget to ask Angela.</string>
     <string name="sponsor_activity_text_test_info">Mother: mrs Brown, phone +1123456890 Chemistry quarter will be 2, have her learn the table.</string>
+    <string name="sponsor_activity_text_congratulations_title">##Поздравляем!</string>
+    <string name="sponsor_activity_text_congratulations_text">##Вы получили статус Premium! Теперь вам доступны все функции приложения./nСпасибо вам за то, что поддерживаете нас.</string>
+    <string name="sponsor_activity_text_congratulations_button">##Начнем!</string>
 
     <string name="sponsor_activity_text_error_send_purchase_request" formatted="true">Error in sending request to server: %d</string>
     <string name="sponsor_activity_text_error_send_purchase_response" formatted="true">Server error purchase failed: %d</string>

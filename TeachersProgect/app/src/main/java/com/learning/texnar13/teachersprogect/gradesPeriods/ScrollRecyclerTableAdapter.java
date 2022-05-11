@@ -67,7 +67,7 @@ public class ScrollRecyclerTableAdapter extends
         text.setPadding(50, 50, 50, 50);
         text.setGravity(Gravity.CENTER);
         text.setBackgroundColor(context.getResources().getColor(
-                (viewType == ELEMENT_TYPE_CONTENT) ? (R.color.baseBlue) : (R.color.baseOrange)
+                (viewType == ELEMENT_TYPE_CONTENT) ? (R.color.base_blue) : (R.color.base_orange)
         ));
         LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,

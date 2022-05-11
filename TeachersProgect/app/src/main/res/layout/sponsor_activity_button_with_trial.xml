@@ -9,20 +9,22 @@
     android:padding="@dimen/double_margin">
 
     <TextView
+        style="@style/TextViewSemiBoldStyle"
         android:id="@+id/sponsor_activity_screen_final_button_trial"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="@string/sponsor_activity_text_free"
         android:textColor="@color/baseOrange"
-        android:textSize="@dimen/text_subtitle_size" />
+        android:textSize="@dimen/simple_buttons_text_size" />
 
     <TextView
+        style="@style/TextViewSemiBoldStyle"
         android:id="@+id/sponsor_activity_screen_final_button_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:text="@string/sponsor_activity_button_sub_year"
+        android:text="@string/sponsor_activity_button_sub_year_long"
         android:textColor="@color/backgroundWhite"
-        android:textSize="@dimen/text_subtitle_size" />
+        android:textSize="@dimen/simple_buttons_text_size" />
 </LinearLayout>

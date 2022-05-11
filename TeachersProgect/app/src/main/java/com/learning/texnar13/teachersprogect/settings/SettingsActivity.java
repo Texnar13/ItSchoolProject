@@ -7,8 +7,10 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +46,8 @@ import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import com.learning.texnar13.teachersprogect.settings.ImportModel.ImportDataBaseData;
 import com.learning.texnar13.teachersprogect.settings.ImportModel.SettingsImportHelper;
 import com.learning.texnar13.teachersprogect.sponsor.SponsorActivity;
+import com.learning.texnar13.teachersprogect.sponsor.SponsorActivityCongratulationDialog;
+import com.learning.texnar13.teachersprogect.sponsor.SponsorMySubscriptionActivity;
 import com.yandex.mobile.ads.common.AdRequest;
 import com.yandex.mobile.ads.interstitial.InterstitialAd;
 
@@ -50,15 +55,18 @@ import java.io.Serializable;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener, EditMaxAnswersDialogInterface, EditTimeDialogFragmentInterface, EditLocaleDialogFragmentInterface, EditDarkModeDialogFragmentInterface, EditGradesTypeDialogFragmentInterface, EditAbsentTypeDialogFragmentInterface, SettingsRemoveInterface {
 
-    TextView maxGradeText;
-    boolean isColoredGrades;
-    ImageView coloredGradesSwitch;
-    ImageView silentLessonSwitch;
+    private TextView maxGradeText;
+    private boolean isColoredGrades;
+    private ImageView coloredGradesSwitch;
+    private ImageView silentLessonSwitch;
     // межстраничный баннер открывающийся при выходе из настроек
-    InterstitialAd settingsBack;
+    private InterstitialAd settingsBack;
 
+    // кнопка подписки в разметке
+    private RelativeLayout buttonSubscribeBackground;
+    private TextView buttonSubscribeText;
     // статус подписки обновляемый в onStart
-    boolean isSubscribe;
+    private boolean isSubscribe;
 
 
     // -------------------------- помощники запуска с callBack-ами --------------------------
@@ -77,16 +85,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 public Integer parseResult(int resultCode, @Nullable Intent intent) {
                     return resultCode;
                 }
-            }, result -> {
-                if (result == SponsorActivity.RESULT_DEAL_DONE) {
-
-                    // todo показываем диалог, что все куплено
-                    AcceptDialog dialog = new AcceptDialog();
-                    Bundle args = new Bundle();
-                    args.putString(AcceptDialog.ARG_ACCEPT_MESSAGE, "Всё");
-                    args.putString(AcceptDialog.ARG_ACCEPT_BUTTON_TEXT, "Куплено");
-                    dialog.setArguments(args);
-                    dialog.show(getSupportFragmentManager(), "buyer");
+            }, resultCode -> {
+                if (resultCode == SponsorActivity.RESULT_DEAL_DONE) {
+                    // показываем диалог, что все куплено
+                    SponsorActivityCongratulationDialog dialog = new SponsorActivityCongratulationDialog();
+                    dialog.show(getSupportFragmentManager(), "CongratulationsDialog");
                 }
             });
 
@@ -211,8 +214,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         // изменение типов пропусков
         findViewById(R.id.activity_settings_button_edit_absent_type).setOnClickListener(this);
         // экспорт и импорт данных
-        findViewById(R.id.activity_settings_button_export_all_data).setOnClickListener(this);
-        findViewById(R.id.activity_settings_button_import_all_data).setOnClickListener(this);
+        //findViewById(R.id.activity_settings_button_export_all_data).setOnClickListener(this);
+        //findViewById(R.id.activity_settings_button_import_all_data).setOnClickListener(this);
         // беззвучный режим на уроке
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             findViewById(R.id.activity_settings_lesson_silent_mode_container).setOnClickListener(this);
@@ -221,7 +224,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         // удаление данных
         findViewById(R.id.activity_settings_button_remove_data).setOnClickListener(this);
         // подписка
-        findViewById(R.id.settings_activity_button_subscribe_background).setOnClickListener(this);
+        buttonSubscribeBackground = findViewById(R.id.settings_activity_button_subscribe_background);
+        buttonSubscribeBackground.setOnClickListener(this);
+        buttonSubscribeText = findViewById(R.id.settings_activity_button_subscribe_text);
+
         // оцените нас
         findViewById(R.id.settings_button_rate).setOnClickListener(this);
 
@@ -283,7 +289,18 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         // проверка статуса подписки
         isSubscribe = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false);
-        // todo менять кнопку подписки
+
+        if (isSubscribe) {
+            // меняем кнопку подписки
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                buttonSubscribeBackground.getBackground().setTint(
+                        getResources().getColor(R.color.base_blue));
+            else
+                buttonSubscribeBackground.getBackground().setColorFilter(
+                        getResources().getColor(R.color.base_blue), PorterDuff.Mode.SRC_ATOP);
+            buttonSubscribeText.setText(R.string.settings_activity_button_my_premium);
+        }
+
 
         // -- настройка тихого урока при переходе на эту активность
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -338,23 +355,23 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             // запускаем
             removeDialog.show(getSupportFragmentManager(), "removeSettingsDialog");
         }
-        // экспорт данных
-        else if (vId == R.id.activity_settings_button_export_all_data) {
-            SettingsExportHelper.exportDB(this);
-            //Toast.makeText(this, "ddd", Toast.LENGTH_SHORT).show();
-        }
-        // импорт данных
-        else if (vId == R.id.activity_settings_button_import_all_data) {
-            // необходимо получить доступ к памяти
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                // разрешение выдано, сразу запускаем выбор файла
-                selectFileLaunchHelper.launch(null);
-            } else {
-                // запрашиваем разрешение, а затем, возможно, запускаем выбор файла
-                requestPermissionHelper.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
-            }
-        }
+        // // экспорт данных
+        // else if (vId == R.id.activity_settings_button_export_all_data) {
+        //     SettingsExportHelper.exportDB(this);
+        //     //Toast.makeText(this, "ddd", Toast.LENGTH_SHORT).show();
+        // }
+        // // импорт данных
+        // else if (vId == R.id.activity_settings_button_import_all_data) {
+        //     // необходимо получить доступ к памяти
+        //     if (ContextCompat.checkSelfPermission(this,
+        //             Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        //         // разрешение выдано, сразу запускаем выбор файла
+        //         selectFileLaunchHelper.launch(null);
+        //     } else {
+        //         // запрашиваем разрешение, а затем, возможно, запускаем выбор файла
+        //         requestPermissionHelper.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+        //     }
+        // }
         // изменить время
         else if (vId == R.id.activity_settings_button_edit_time) {
             //диалог
@@ -501,7 +518,17 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }
         // подписка
         else if (vId == R.id.settings_activity_button_subscribe_background) {
-            showSponsorAndGetResultHelper.launch(0);
+
+
+            if (isSubscribe) {
+                // если подписка есть, показваем активити просмотра подписки
+                startActivity(new Intent(
+                        SettingsActivity.this,
+                        SponsorMySubscriptionActivity.class
+                ));
+            } else
+                // если подписки нет, показваем активити покупки
+                showSponsorAndGetResultHelper.launch(0);
         }
     }
 

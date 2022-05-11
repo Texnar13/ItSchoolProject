@@ -18,7 +18,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
@@ -146,7 +145,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 for (int subjectI = 0; subjectI < subjectsArray.length; subjectI++) {
                     subjectsArray[subjectI] = subjects[subjectI].getSubjectName();
                 }
-                args.putStringArray(SubjectsDialogFragment.ARGS_LEARNERS_NAMES_STRING_ARRAY, subjectsArray);
+                args.putStringArray(SubjectsDialogFragment.ARGS_STRING_ARRAY_SUBJECTS_NAMES, subjectsArray);
                 subjectsDialogFragment.setArguments(args);
 
                 // показываем диалог
@@ -336,7 +335,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                     for (int subjectI = 0; subjectI < subjectsArray.length; subjectI++) {
                         subjectsArray[subjectI] = subjects[subjectI].getSubjectName();
                     }
-                    args.putStringArray(SubjectsDialogFragment.ARGS_LEARNERS_NAMES_STRING_ARRAY, subjectsArray);
+                    args.putStringArray(SubjectsDialogFragment.ARGS_STRING_ARRAY_SUBJECTS_NAMES, subjectsArray);
                     subjectsDialogFragment.setArguments(args);
 
                     // показываем диалог
@@ -1027,7 +1026,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                                     for (int subjectI = 0; subjectI < subjectsArray.length; subjectI++) {
                                         subjectsArray[subjectI] = subjects[subjectI].getSubjectName();
                                     }
-                                    args.putStringArray(SubjectsDialogFragment.ARGS_LEARNERS_NAMES_STRING_ARRAY, subjectsArray);
+                                    args.putStringArray(SubjectsDialogFragment.ARGS_STRING_ARRAY_SUBJECTS_NAMES, subjectsArray);
                                     subjectsDialogFragment.setArguments(args);
 
                                     // показываем диалог
@@ -1134,7 +1133,7 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                             for (int subjectI = 0; subjectI < subjectsArray.length; subjectI++) {
                                 subjectsArray[subjectI] = subjects[subjectI].getSubjectName();
                             }
-                            args.putStringArray(SubjectsDialogFragment.ARGS_LEARNERS_NAMES_STRING_ARRAY, subjectsArray);
+                            args.putStringArray(SubjectsDialogFragment.ARGS_STRING_ARRAY_SUBJECTS_NAMES, subjectsArray);
                             subjectsDialogFragment.setArguments(args);
 
                             // показываем диалог
@@ -1597,6 +1596,11 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 subjectTextView.setText(getResources().getString(R.string.learners_and_grades_out_activity_text_create_subject));
             learnersAndGradesTableView.currentSubjectTitle = getResources().getString(R.string.learners_and_grades_out_activity_text_create_subject);
         }
+    }
+
+    // уведомить активность о закрытии диалога
+    @Override
+    public void onSubjectsDialogClosed() {
     }
 
 

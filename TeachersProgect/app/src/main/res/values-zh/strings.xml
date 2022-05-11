@@ -95,9 +95,9 @@
     <!-- заголовок активности -->
     <string name="title_activity_learners_and_grades_statistics">期间的统计数字</string>
     <!-- тексты -->
-    <string name="learners_and_grades_statistics_activity_title_column_learner_name">姓名</string>
-    <string name="learners_and_grades_statistics_activity_title_column_grade">分数</string>
-    <string name="learners_and_grades_statistics_activity_title_column_absent">缺席</string>
+    <string name="learners_and_grades_statistics_activity_title_column_learner_name">##姓名</string>
+    <string name="learners_and_grades_statistics_activity_title_column_grade">##分数</string>
+    <string name="learners_and_grades_statistics_activity_title_column_absent">##缺席</string>
     <string name="learners_and_grades_statistics_activity_hint_date_day">号</string>
     <string name="learners_and_grades_statistics_activity_hint_date_month">月</string>
     <string name="learners_and_grades_statistics_activity_hint_date_year">年</string>
@@ -111,9 +111,9 @@
     <string name="learners_and_grades_statistics_activity_dialog_text_time_before">从</string>
     <string name="learners_and_grades_statistics_activity_dialog_text_time_after">到</string>
     <string name="learners_and_grades_statistics_activity_dialog_hint_profile_name">名称学季</string>
-    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_year">年</string>
-    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_month">月</string>
-    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_day">号</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_year">0000</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_month">01</string>
+    <string name="learners_and_grades_statistics_activity_dialog_hint_profile_date_day">01</string>
     <!-- подсказка на экране -->
     <string name="learners_and_grades_statistics_activity_text_help">在这里，你可以看到最终的平均结果的答案和你的学生的缺勤人数为一段时间，你可以在上面的字段中输入。</string>
 
@@ -242,7 +242,8 @@
     <string name="settings_activity_button_rate_us">请评价我们的应用!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">语言: %s</string>
     <string name="settings_activity_button_edit_dark_mode" formatted="true">##Тема: %s</string>
-    <string name="settings_activity_button_subscribe">成为赞助商</string>
+    <string name="settings_activity_button_subscribe">##成为赞助商</string>
+    <string name="settings_activity_button_my_premium">##Мой премиум</string>
     <string name="settings_activity_button_save_data_copy">保存备份</string>
     <string name="settings_activity_button_load_data_copy">下载备份</string>
     <!-- уведомления -->
@@ -294,7 +295,12 @@
     <!-- активность рекламы спонсора -->
     <string name="sponsor_activity_button_go_to_last_screen">试用高级版</string>
     <string name="sponsor_activity_title_app_name">Teacher\'s Assistant</string>
+    <string name="sponsor_activity_title_my_premium">##Мой</string>
     <string name="sponsor_activity_title_tag">Premium</string>
+    <string name="sponsor_activity_my_premium_my_rate">##Мой тариф:</string>
+    <string name="sponsor_activity_my_premium_my_sub">##Управление подпиской:</string>
+    <string name="sponsor_activity_my_premium_my_sub_go_to_google">##Перейти в Google Play</string>
+    <string name="sponsor_activity_my_premium_my_sub_connection_error">##Ошибка подключения</string>
     <string name="sponsor_activity_title_screen_0">无限数量的课</string>
     <string name="sponsor_activity_title_screen_1">任何长度的评论（对课和学生）</string>
     <string name="sponsor_activity_title_screen_2">没有广告</string>
@@ -302,14 +308,18 @@
     <string name="sponsor_activity_title_screen_4">数据导入和导出</string>
     <string name="sponsor_activity_title_screen_last">选择适合您的资费:</string>
     <string name="sponsor_activity_button_sub_month" formatted="true">每月%s</string>
-    <string name="sponsor_activity_button_sub_year" formatted="true">然后每年%s(每月%s)</string>
+    <string name="sponsor_activity_button_sub_year" formatted="true">##Ежегодно: %s/год</string>
+    <string name="sponsor_activity_button_sub_year_long" formatted="true">然后每年%s(每月%s)</string>
     <string name="sponsor_activity_text_free" formatted="true">免费%d天</string>
     <string name="sponsor_activity_title_cancel_sub">你可以在任何时候取消你的订阅</string>
     <string name="sponsor_activity_title_promocode"><u>使用促销代码</u></string>
     <string name="sponsor_activity_title_subs"><u>恢复我的购买</u></string>
     <string name="sponsor_activity_button_my_subs">查看我的订阅</string>
-    <string name="sponsor_activity_text_test_dz">白色教科书，页 7; 工作簿 页24 4-17；别忘了问陈志强。</string>
+    <string name="sponsor_activity_text_test_dz">白色教科书，页 7; 工作簿 页24 4–17；别忘了问陈志强。</string>
     <string name="sponsor_activity_text_test_info">母亲：布朗夫人，电话 +86123456890</string>
+    <string name="sponsor_activity_text_congratulations_title">##Поздравляем!</string>
+    <string name="sponsor_activity_text_congratulations_text">##Вы получили статус Premium! Теперь вам доступны все функции приложения./nСпасибо вам за то, что поддерживаете нас.</string>
+    <string name="sponsor_activity_text_congratulations_button">##Начнем!</string>
 
     <string name="sponsor_activity_text_error_send_purchase_request" formatted="true">向服务器发送请求时出错。%d</string>
     <string name="sponsor_activity_text_error_send_purchase_response" formatted="true">服务器错误购买失败: %d</string>

@@ -14,5 +14,6 @@ public interface SubjectsDialogInterface {
     // переименовать предметы
     void renameSubjects(String[] newSubjectsNames);
 
-
+    // уведомить активность о закрытии диалога
+    void onSubjectsDialogClosed();
 }

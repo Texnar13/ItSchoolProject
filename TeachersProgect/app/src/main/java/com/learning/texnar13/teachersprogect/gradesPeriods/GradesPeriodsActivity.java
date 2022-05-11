@@ -2,17 +2,10 @@ package com.learning.texnar13.teachersprogect.gradesPeriods;
 
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.learning.texnar13.teachersprogect.R;
@@ -140,13 +133,12 @@ public class GradesPeriodsActivity extends AppCompatActivity {
     }
 
 
-
-    static class ItemOffsetDecoration extends RecyclerView.ItemDecoration{
+    static class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
         @Override
         public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
             super.getItemOffsets(outRect, view, parent, state);
 
-            if(parent.getChildAdapterPosition(view) <= 5) {
+            if (parent.getChildAdapterPosition(view) <= 5) {
                 outRect.right = 10;
                 outRect.left = 5;
                 outRect.top = 15;

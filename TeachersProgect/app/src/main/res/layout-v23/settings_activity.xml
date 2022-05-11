@@ -23,7 +23,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/simple_buttons_height"
                 android:layout_margin="@dimen/double_margin"
-                android:background="@drawable/base_background_button_round_orange">
+                android:background="@drawable/base_background_button_round_gray"
+                android:backgroundTint="@color/base_orange">
 
                 <ImageView
                     android:layout_width="@dimen/settings_activity_sponsor_icon_size"
@@ -91,14 +92,14 @@
                 android:text="@string/settings_activity_title_absent_type" />
 
             <RelativeLayout
-                tools:targetApi="M"
                 android:id="@+id/activity_settings_lesson_silent_mode_container"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/simple_buttons_height"
                 android:layout_marginStart="@dimen/double_margin"
                 android:layout_marginEnd="@dimen/double_margin"
                 android:layout_marginBottom="@dimen/double_margin"
-                android:background="@drawable/base_background_button_round_gray">
+                android:background="@drawable/base_background_button_round_gray"
+                tools:targetApi="M">
 
                 <TextView
                     style="@style/ButtonSimpleStyle"
@@ -154,7 +155,7 @@
                 style="@style/SettingsButtonSimpleStyle"
                 android:text="@string/settings_activity_button_remove_data" />
 
-            <TextView
+            <!--TextView
                 android:id="@+id/activity_settings_button_export_all_data"
                 style="@style/SettingsButtonSimpleStyle"
                 android:text="@string/settings_activity_button_save_data_copy" />
@@ -162,16 +163,17 @@
             <TextView
                 android:id="@+id/activity_settings_button_import_all_data"
                 style="@style/SettingsButtonSimpleStyle"
-                android:text="@string/settings_activity_button_load_data_copy" />
+                android:text="@string/settings_activity_button_load_data_copy" /-->
 
             <FrameLayout style="@style/SettingsDividerStyle" />
 
             <TextView
                 android:id="@+id/settings_button_rate"
                 style="@style/SettingsButtonSimpleStyle"
-                android:background="@drawable/base_background_button_round_orange"
-                android:text="@string/settings_activity_button_rate_us"
+                android:background="@drawable/base_background_button_round_gray"
+                android:backgroundTint="@color/base_orange"
                 android:gravity="center"
+                android:text="@string/settings_activity_button_rate_us"
                 android:textColor="@color/text_color_inverse" />
 
         </LinearLayout>

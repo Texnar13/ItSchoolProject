@@ -39,6 +39,7 @@ import com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
+import com.learning.texnar13.teachersprogect.gradesPeriods.GradesPeriodsActivity;
 import com.learning.texnar13.teachersprogect.learnersClassesOut.LearnersClassesOutActivity;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity;
@@ -106,11 +107,6 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
 
         if (savedInstanceState == null) {// при создании активности
 
-            // todo переходим со старого SharedPreferences на новое
-            // (тут имелось в виду, что можно перенести параметр is rate, однако раз он переделывается на наовое можно с этим повременить)
-            // //SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE); <- старая схема без указания имени файла, получала данные по названию активности (startScreen.StartScreenActivity.xml)
-            // ( это я уже переделал, осталось перенести)
-
 
             // проверяем статус подписки
             checkSubscriptionStatusAndSavePrefs();
@@ -118,16 +114,46 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             // ------ сохраненные параметры ------
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
+            {// переходим со старого SharedPreferences на новое
+
+                SharedPreferences oldPref = getPreferences(MODE_PRIVATE);
+                // а конкретно перенос счетчика оцените нас
+                int oldEntersCount = oldPref.getInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, -1);
+                if (oldEntersCount != -1) {
+
+                    // начинаем перенос в новые
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, oldEntersCount);
+
+                    // и правим старые
+                    SharedPreferences.Editor oldEditor = oldPref.edit();
+                    oldEditor.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, -1);
+                    oldEditor.apply();
+
+                    // заодно копируем и этот параметр из старых
+                    if (oldPref.contains(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE)) {
+                            // перенос в новые
+                            editor.putBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE,
+                                    oldPref.getBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE, false));
+                    }
+
+                    editor.commit();// специально взял такую версию метода
+                }
+            }
+
             //начинаем редактировать
             SharedPreferences.Editor editor = sharedPreferences.edit();
+
 
             // ---- счетчик "оцените нас" ----
             // через семь заходов в приложение открывает диалог 'оцените'
             if (!sharedPreferences.getBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE, false)) {
                 editor.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 0) + 1);
-                if (sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 0) == 20) {
-                    //на всякий случай обнуляем счетчик
+                if (sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 0) == 15) {
+
+                    // обнуляем счетчик
                     editor.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 1);
+
                     editor.putBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE, false);
                     //создать диалог
                     StartScreenRateUsDialog startScreenRateUsDialog = new StartScreenRateUsDialog();
@@ -176,8 +202,6 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
         }
 
 
-//        Intent intent = new Intent(this, GradesPeriodsActivity.class); для отладки новой активности статистики
-//        startActivity(intent);
     }
 
     // проверка состояния подписки, результат в SharedPrefs
@@ -198,7 +222,6 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
                 if (connectResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     // получаем данные о подписках
                     billingClient.queryPurchasesAsync(BillingClient.SkuType.SUBS, (queryCheckResult, purchasesList) -> {
-                        Log.e("tagTag", "Error billingResult.getResponseCode()=" + queryCheckResult.getResponseCode() + " purchasesList=" + purchasesList); //todo удалить
                         // данные получены
                         if (queryCheckResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
 
@@ -212,6 +235,7 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
                                         purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
                                     subsPurchasedFlag = true;
                                     // заодно, если что, подтверждаем их
+                                    //  (тк нужно обязательно отпарвить в google уведомление о том, что контент предоставлен пользователю)
                                     if (!purchase.isAcknowledged()) {
                                         AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams
                                                 .newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
@@ -551,5 +575,24 @@ this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowMana
 // подчеркивание текста
 subjectText.setPaintFlags(subjectText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
+// tint программно
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            shadeLayer.getBackground().setTint(getResources().getColor(
+                    (absCheckState) ?
+                            (R.color.grade_edit_bottom_shadow_color) :
+                            (R.color.transparent)
+            ));
+        } else {
+            shadeLayer.getBackground().setColorFilter(getResources().getColor(
+                    (absCheckState) ?
+                            (R.color.grade_edit_bottom_shadow_color) :
+                            (R.color.transparent)
+            ), PorterDuff.Mode.SRC_ATOP);
+        }
+
+
+todo на будущее, кстати, всем кнопкам закрыть и кнопкам подтверждения итд можно ставить стандартный id, чтобы каждый раз не придумывать его ведь в рамках одной разметки он не повторяется (да мне это даже при раздувании списков не мешало)
+
+todo во первых число записей в таблице вполне можно получить средствами sql, тянуть для этого все данные мягко говоря неэффективно и плохой тон
 * */
 

@@ -18,7 +18,7 @@
             android:layout_width="@dimen/my_icon_size"
             android:layout_height="@dimen/my_icon_size"
             android:adjustViewBounds="true"
-            app:srcCompat="@drawable/base_button_close_background_round" />
+            app:srcCompat="@drawable/base_button_close" />
 
         <TextView
             style="@style/ButtonSimpleStyle"

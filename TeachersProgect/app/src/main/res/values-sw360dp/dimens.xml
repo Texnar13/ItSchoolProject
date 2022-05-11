@@ -8,7 +8,7 @@
 
     <!-- для всего приложения -->
     <dimen name="base_toolbar_text_size">21sp</dimen>
-    <dimen name="simple_buttons_text_size">17sp</dimen>
+    <dimen name="simple_buttons_text_size">@dimen/text_simple_size</dimen>
     <dimen name="simple_buttons_height">62dp</dimen>
 
     <dimen name="base_buttons_arrow_size">18dp</dimen>
@@ -29,7 +29,7 @@
     <dimen name="shedule_month_month_text_size">19sp</dimen>
     <dimen name="shedule_month_month_buttons_heght">60dp</dimen>
     <dimen name="shedule_month_arrow_size">15dp</dimen>
-    <dimen name="shedule_month_days_text_size">17sp</dimen>
+    <dimen name="shedule_month_days_text_size">@dimen/text_simple_size</dimen>
     <dimen name="shedule_month_calendar_margin">10dp</dimen>
     <dimen name="shedule_month_days_cells_free_space">2dp</dimen>
 
@@ -41,7 +41,7 @@
     <dimen name="shedule_month_lesson_top_bottom_margin">6dp</dimen>
     <dimen name="shedule_month_lessons_number_size">15sp</dimen>
     <dimen name="shedule_month_lessons_time_size">15sp</dimen>
-    <dimen name="shedule_month_lessons_content_text_size">17sp</dimen>
+    <dimen name="shedule_month_lessons_content_text_size">@dimen/text_simple_size</dimen>
 
 
     <!-- активность учеников -->
@@ -66,7 +66,7 @@
     <dimen name="premium_activity_background_button_frame_thikness">3dp</dimen>
     <dimen name="premium_activity_background_button_frame_thikness_bold">4dp</dimen>
     <dimen name="premium_activity_messages_text_size">21sp</dimen>
-    <dimen name="premium_activity_messages_small_text_size">16sp</dimen>
+    <dimen name="premium_activity_messages_small_text_size">@dimen/learners_and_grades_activity_index_text_size</dimen>
 
     <!-- активность урока -->
     <dimen name="lesson_activity_learner_name_text_size">9sp</dimen>
@@ -81,6 +81,13 @@
     <!-- конец урока -->
     <dimen name="lesson_list_element_height">40sp</dimen>
 
+    <!-- премиум активность -->
+    <dimen name="premium_activity_content_image_no_add_width">230dp</dimen>
+    <dimen name="premium_activity_content_image_chest_width">230dp</dimen>
+
+
+
+    <!-- О, кстати, пробегись по всем размерам, посмотри используются ли они -->
 
     <!-- пиздец близко, беги друг -->
 
@@ -125,8 +132,8 @@
 
     <!--главный экран-->
     <dimen name="begin_lesson_start_screen_button_height_plus">46dp</dimen>
-    <dimen name="begin_lesson_start_screen_button_height">36dp</dimen>
-    <dimen name="begin_lesson_start_screen_button_height_half">18dp</dimen>
+    <dimen name="begin_lesson_start_screen_button_height">36dp</dimen> <!-- можно удалить -->
+    <dimen name="begin_lesson_start_screen_button_height_half">18dp</dimen> <!-- можно удалить -->
     <dimen name="start_screen_button_margins">8dp</dimen>
     <dimen name="start_screen_text_margins">7dp</dimen>
     <dimen name="start_screen_image_margins">14dp</dimen>

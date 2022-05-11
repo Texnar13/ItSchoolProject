@@ -10,14 +10,13 @@
         android:id="@+id/base_subjects_dialog_edit_list_element_circle"
         android:layout_width="@dimen/my_icon_small_size"
         android:layout_height="@dimen/my_icon_small_size"
-        android:background="@drawable/learners_and_grades_activity_abs_checkbox_background_empty" />
+        android:background="@drawable/base_checkbox_background_not_active" />
 
     <EditText
         android:id="@+id/base_subjects_dialog_edit_list_element_text"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/double_margin"
-        android:background="@color/transparent"
         android:hint="@string/learners_and_grades_out_activity_dialog_hint_subject_name"
         android:inputType="textCapWords"
         android:padding="0dp"

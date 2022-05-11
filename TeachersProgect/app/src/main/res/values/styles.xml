@@ -4,9 +4,9 @@
         <!-- todo не забывай также менять и LessonRedactorThemeLikeDialog (тк AppTheme на неё не распространяется) -->
 
         <!-- основной цвет и его доп оттенок -->
-        <item name="colorPrimary">@color/baseBlue</item>
-        <item name="colorPrimaryVariant">@color/baseBlue</item>
-        <item name="colorPrimaryDark">@color/baseBlue</item>
+        <item name="colorPrimary">@color/base_blue</item>
+        <item name="colorPrimaryVariant">@color/base_blue</item>
+        <item name="colorPrimaryDark">@color/base_blue</item>
 
         <!-- цвет подложек активности -->
         <item name="android:colorBackground">@color/base_background_color</item>

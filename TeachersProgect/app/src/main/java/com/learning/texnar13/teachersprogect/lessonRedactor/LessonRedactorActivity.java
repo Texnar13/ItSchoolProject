@@ -2,11 +2,9 @@ package com.learning.texnar13.teachersprogect.lessonRedactor;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -17,8 +15,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.FragmentActivity;
 
 import com.learning.texnar13.teachersprogect.MyApplication;
@@ -464,7 +460,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                 for (int subjectI = 0; subjectI < subjectsArray.length; subjectI++) {
                     subjectsArray[subjectI] = classUnits[lessonUnit.chosenClassPosition].subjects.get(subjectI).subjectName;
                 }
-                args.putStringArray(SubjectsDialogFragment.ARGS_LEARNERS_NAMES_STRING_ARRAY, subjectsArray);
+                args.putStringArray(SubjectsDialogFragment.ARGS_STRING_ARRAY_SUBJECTS_NAMES, subjectsArray);
                 subjectsDialogFragment.setArguments(args);
 
                 // показываем диалог
@@ -823,6 +819,11 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
         }
     }
 
+    // уведомить активность о закрытии диалога
+    @Override
+    public void onSubjectsDialogClosed() {
+
+    }
 
 }
 
