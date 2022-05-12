@@ -170,7 +170,7 @@
                 android:id="@+id/learners_and_grades_dialog_grade_edit_grades_shade"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/base_background_dialog_bottom_round_wite"
+                android:background="@drawable/base_background_dialog_bottom_round"
                 android:backgroundTint="@color/grade_edit_bottom_shadow_color"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintBottom_toBottomOf="parent"

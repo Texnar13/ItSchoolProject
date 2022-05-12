@@ -132,9 +132,9 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
 
                     // заодно копируем и этот параметр из старых
                     if (oldPref.contains(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE)) {
-                            // перенос в новые
-                            editor.putBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE,
-                                    oldPref.getBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE, false));
+                        // перенос в новые
+                        editor.putBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE,
+                                oldPref.getBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE, false));
                     }
 
                     editor.commit();// специально взял такую версию метода
@@ -162,23 +162,32 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
                 }
             }
 
+
+            {// todo убрать   показываем диалог что нового
+                WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
+                dialogFragment.show(getSupportFragmentManager(), SharedPrefsContract.PREFS_INT_WHATS_NEW);
+            }
+
             // ---- диалог что нового ----
-            //если уже создано
             if (sharedPreferences.contains(SharedPrefsContract.PREFS_INT_WHATS_NEW)) {
-                //если версия старая
+                // если в sharedPreferences уже есть параметр PREFS_INT_WHATS_NEW
+                //  (то есть либо это заход в приложение не в первый раз, либо произошло обновление)
+
+                // если произошло обновление
                 if (sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_WHATS_NEW, -1) < SharedPrefsContract.PREFS_INT_NOW_VERSION) {
-                    // меняем версию
+
+                    // меняем версию параметра PREFS_INT_WHATS_NEW на текущую
                     editor.putInt(SharedPrefsContract.PREFS_INT_WHATS_NEW, SharedPrefsContract.PREFS_INT_NOW_VERSION);
                     // показываем диалог что нового
                     WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
-                    dialogFragment.show(getFragmentManager(), SharedPrefsContract.PREFS_INT_WHATS_NEW);
+                    dialogFragment.show(getSupportFragmentManager(), SharedPrefsContract.PREFS_INT_WHATS_NEW);
                 }
             } else {
-                //если еще не созданно
-                //создаем переменную с версией
+                // если это первый заход в приложение
+                // создаем переменную с версией не вызывая диалог что нового
                 editor.putInt(SharedPrefsContract.PREFS_INT_WHATS_NEW, SharedPrefsContract.PREFS_INT_NOW_VERSION);
-                //начальный диалог...
             }
+
 
             //завершаем редактирование сохраненных параметров
             editor.apply();

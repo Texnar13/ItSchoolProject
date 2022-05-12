@@ -8,5 +8,5 @@
         android:topRightRadius="@dimen/radius_rounding_buttons" />
     <stroke
         android:width="@dimen/premium_activity_background_button_frame_thikness_bold"
-        android:color="@color/baseOrange"/>
+        android:color="@color/base_orange"/>
 </shape>

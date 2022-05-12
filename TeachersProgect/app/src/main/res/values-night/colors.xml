@@ -83,19 +83,7 @@
     <!-- цвета фона иконки -->
     <color name="app_icon_background_light">#80A9DB</color>
     <color name="app_icon_background_dark">#6A91D4</color>
-
-
-    <!-- ==================== gbpltw близко, беги друг ==================== -->
-    <!-- todo это цвеа под удаление -->
-
-    <!-- базовые цвета -->
-    <color name="baseOrange">#FFB000</color>
-
-    <color name="backgroundWhite">#ffffff</color>
-    <color name="backgroundDarkWhite">#F2F2F2</color>
-    <color name="backgroundLiteGray">#d1d1d1</color>
-    <color name="backgroundMediumGray">#C4C4C4</color>
-    <color name="backgroundGray">#A3A3A3</color>
-    <color name="backgroundDarkGray">#5D5D5D</color>
+    <!-- цвета иконки -->
+    <color name="app_icon_background_white">#ffffff</color>
 
 </resources>

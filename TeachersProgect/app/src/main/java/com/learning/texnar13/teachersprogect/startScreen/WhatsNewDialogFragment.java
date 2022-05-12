@@ -2,7 +2,6 @@ package com.learning.texnar13.teachersprogect.startScreen;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.learning.texnar13.teachersprogect.R;
 
@@ -85,7 +85,6 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
         //контейнер для нее
         RelativeLayout container = new RelativeLayout(getActivity());
-        container.setBackgroundResource(R.drawable.base_background_button_circle_orange);
         container.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,

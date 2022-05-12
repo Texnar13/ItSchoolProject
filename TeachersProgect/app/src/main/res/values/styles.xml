@@ -63,7 +63,7 @@
         <!-- цвет фона -->
         <item name="colorPrimary">@color/transparent</item>
         <!-- подсветка фона кнопок при нажатии -->
-        <item name="colorControlHighlight">@color/backgroundLiteGray</item>
+        <item name="colorControlHighlight">@color/base_light</item>
 
         <item name="android:singleLineTitle" tools:targetApi="o">true</item>
 
