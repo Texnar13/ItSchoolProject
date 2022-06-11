@@ -283,7 +283,7 @@
         android:paddingStart="@dimen/forth_margin"
         android:paddingEnd="@dimen/forth_margin"
         android:text="@string/start_screen_activity_title_current_start_lesson"
-        android:textColor="@color/backgroundWhite"
+        android:textColor="@color/text_color_inverse"
         android:textSize="@dimen/simple_buttons_text_size"
         app:layout_anchor="@+id/start_screen_top_container"
         app:layout_anchorGravity="bottom|center_horizontal" />

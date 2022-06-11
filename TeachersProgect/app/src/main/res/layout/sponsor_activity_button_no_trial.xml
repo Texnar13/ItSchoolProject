@@ -8,4 +8,4 @@
     android:gravity="center_vertical"
     android:text="@string/sponsor_activity_button_sub_year_long"
     android:textSize="@dimen/simple_buttons_text_size"
-    android:textColor="@color/backgroundWhite" />
+    android:textColor="@color/premium_text_color" />

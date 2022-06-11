@@ -1,13 +1,10 @@
 package com.learning.texnar13.teachersprogect.settings;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
@@ -15,7 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -32,22 +28,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.documentfile.provider.DocumentFile;
 
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
-import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialog;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import com.learning.texnar13.teachersprogect.settings.ImportModel.ImportDataBaseData;
 import com.learning.texnar13.teachersprogect.settings.ImportModel.SettingsImportHelper;
-import com.learning.texnar13.teachersprogect.sponsor.SponsorActivity;
-import com.learning.texnar13.teachersprogect.sponsor.SponsorActivityCongratulationDialog;
-import com.learning.texnar13.teachersprogect.sponsor.SponsorMySubscriptionActivity;
+import com.learning.texnar13.teachersprogect.premium.SponsorActivity;
+import com.learning.texnar13.teachersprogect.premium.SponsorActivityCongratulationDialog;
+import com.learning.texnar13.teachersprogect.premium.SponsorMySubscriptionActivity;
 import com.yandex.mobile.ads.common.AdRequest;
 import com.yandex.mobile.ads.interstitial.InterstitialAd;
 

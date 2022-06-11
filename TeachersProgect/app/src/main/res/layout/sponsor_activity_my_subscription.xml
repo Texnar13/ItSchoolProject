@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:context=".sponsor.SponsorMySubscriptionActivity">
+        tools:context=".premium.SponsorMySubscriptionActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,12 +19,12 @@
 
             <ImageView
                 android:id="@+id/sponsor_activity_my_subscription_close_button"
-                android:layout_width="@dimen/my_icon_size"
-                android:layout_height="@dimen/my_icon_size"
-                android:layout_marginStart="@dimen/double_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/my_icon_small_size"
+                android:layout_marginStart="@dimen/forth_margin"
                 android:layout_marginTop="@dimen/double_margin"
                 android:adjustViewBounds="true"
-                app:srcCompat="@drawable/base_button_close_white"
+                app:srcCompat="@drawable/premium_button_close_white"
                 app:tint="@color/premium_text_color" />
 
             <LinearLayout
@@ -56,7 +56,7 @@
                     android:layout_height="@dimen/settings_activity_sponsor_icon_size"
                     android:adjustViewBounds="true"
                     app:srcCompat="@drawable/settings_icon_premium"
-                    app:tint="@color/baseOrange" />
+                    app:tint="@color/base_orange" />
             </LinearLayout>
         </LinearLayout>
 
@@ -100,7 +100,7 @@
             android:background="@drawable/premium_activity_background_button_frame"
             android:gravity="center_vertical"
             android:text="@string/sponsor_activity_my_premium_my_sub_go_to_google"
-            android:textColor="@color/backgroundWhite"
+            android:textColor="@color/premium_text_color"
             android:textSize="@dimen/simple_buttons_text_size" />
 
     </LinearLayout>

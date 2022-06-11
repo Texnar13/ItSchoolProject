@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.sponsor;
+package com.learning.texnar13.teachersprogect.premium;
 
 import android.content.pm.ActivityInfo;
 import android.os.Build;
@@ -111,7 +111,7 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
                     buttonGoToFinal.setTextColor(getResources().getColor(R.color.transparent));
                     buttonGoToFinal.setBackgroundColor(getResources().getColor(R.color.transparent));
                 } else {
-                    buttonGoToFinal.setTextColor(getResources().getColor(R.color.backgroundWhite));
+                    buttonGoToFinal.setTextColor(getResources().getColor(R.color.premium_text_color));
                     buttonGoToFinal.setBackground(getResources().getDrawable(R.drawable.sponsor_activity_background_button_round_gold));
                 }
                 super.onPageSelected(position);

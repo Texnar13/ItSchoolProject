@@ -32,6 +32,7 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
+import com.learning.texnar13.teachersprogect.GDPRDialogFragment;
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.ScheduleMonthActivity;
@@ -166,6 +167,9 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             {// todo убрать   показываем диалог что нового
                 WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
                 dialogFragment.show(getSupportFragmentManager(), SharedPrefsContract.PREFS_INT_WHATS_NEW);
+
+                GDPRDialogFragment dialogFragment2 = new GDPRDialogFragment();
+                dialogFragment2.show(getSupportFragmentManager(), "GDPR");
             }
 
             // ---- диалог что нового ----

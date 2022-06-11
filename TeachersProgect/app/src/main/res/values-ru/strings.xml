@@ -305,14 +305,14 @@
     <string name="sponsor_activity_title_screen_0">Неограниченное количество уроков</string>
     <string name="sponsor_activity_title_screen_1">Комментарий (к уроку и к ученику) любой длины</string>
     <string name="sponsor_activity_title_screen_2">Нет рекламы</string>
-    <string name="sponsor_activity_title_screen_3">Сколько угодно типов пропусков и типов работы на уроке</string>
+    <string name="sponsor_activity_title_screen_3">##Сколько угодно типов работы на уроке</string>
     <string name="sponsor_activity_title_screen_4">Импорт и экспорт данных</string>
     <string name="sponsor_activity_title_screen_last">Выберите подходящий вам тариф:</string>
     <string name="sponsor_activity_button_sub_month" formatted="true">Ежемесячно: %s/месяц</string>
     <string name="sponsor_activity_button_sub_year" formatted="true">##Ежегодно: %s/год</string>
-    <string name="sponsor_activity_button_sub_year_long" formatted="true">затем %s в год (%s/месяц)</string>
+    <string name="sponsor_activity_button_sub_year_long" formatted="true">затем %s в год (%s в месяц)</string>
     <string name="sponsor_activity_text_free" formatted="true">Бесплатно %d дней</string>
-    <string name="sponsor_activity_title_cancel_sub">Вы можете отменить подписку в любое время</string>
+    <string name="sponsor_activity_title_cancel_sub">##Вы можете отменить подписку в любое время в GooglePlay!</string>
     <string name="sponsor_activity_title_promocode"><u>Использовать промокод</u></string>
     <string name="sponsor_activity_title_subs"><u>Восстановить покупки</u></string>
     <string name="sponsor_activity_button_my_subs">Посмотреть мои подписки</string>

@@ -1,4 +1,4 @@
-package com.learning.texnar13.teachersprogect.sponsor;
+package com.learning.texnar13.teachersprogect.premium;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

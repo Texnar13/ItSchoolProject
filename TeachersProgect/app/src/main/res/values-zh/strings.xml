@@ -304,14 +304,14 @@
     <string name="sponsor_activity_title_screen_0">无限数量的课</string>
     <string name="sponsor_activity_title_screen_1">任何长度的评论（对课和学生）</string>
     <string name="sponsor_activity_title_screen_2">没有广告</string>
-    <string name="sponsor_activity_title_screen_3">任何数量的缺勤类型和课的课的工作类</string>
+    <string name="sponsor_activity_title_screen_3">##Сколько угодно типов работы на уроке</string>
     <string name="sponsor_activity_title_screen_4">数据导入和导出</string>
     <string name="sponsor_activity_title_screen_last">选择适合您的资费:</string>
     <string name="sponsor_activity_button_sub_month" formatted="true">每月%s</string>
     <string name="sponsor_activity_button_sub_year" formatted="true">##Ежегодно: %s/год</string>
     <string name="sponsor_activity_button_sub_year_long" formatted="true">然后每年%s(每月%s)</string>
     <string name="sponsor_activity_text_free" formatted="true">免费%d天</string>
-    <string name="sponsor_activity_title_cancel_sub">你可以在任何时候取消你的订阅</string>
+    <string name="sponsor_activity_title_cancel_sub">##Вы можете отменить подписку в любое время в GooglePlay!</string>
     <string name="sponsor_activity_title_promocode"><u>使用促销代码</u></string>
     <string name="sponsor_activity_title_subs"><u>恢复我的购买</u></string>
     <string name="sponsor_activity_button_my_subs">查看我的订阅</string>

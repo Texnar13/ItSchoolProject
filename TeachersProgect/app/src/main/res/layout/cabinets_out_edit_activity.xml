@@ -85,6 +85,14 @@
                 android:padding="@dimen/one_and_half_margin"
                 android:text="@string/cabinets_out_activity_button_text_delete_cabinet"
                 android:textColor="@color/text_color_inverse" />
+
+
+            <LinearLayout
+                android:id="@+id/ad_banner_place"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:orientation="vertical"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

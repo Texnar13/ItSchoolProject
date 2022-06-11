@@ -26,6 +26,9 @@ import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
+import com.yandex.mobile.ads.banner.AdSize;
+import com.yandex.mobile.ads.banner.BannerAdView;
+import com.yandex.mobile.ads.common.AdRequest;
 
 public class CabinetEditActivity extends AppCompatActivity implements AcceptDialog.AcceptDialogInterface {
 
@@ -182,6 +185,20 @@ public class CabinetEditActivity extends AppCompatActivity implements AcceptDial
             accept.setArguments(args);
             accept.show(getSupportFragmentManager(), "delete accept");
         });
+
+
+        // вывод рекламы
+        LinearLayout adOut = findViewById(R.id.ad_banner_place);
+        BannerAdView mAdView = new BannerAdView(this);
+        adOut.removeAllViews();
+        adOut.addView(mAdView,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        // выбираем размер рекламы
+        mAdView.setBlockId(getResources().getString(R.string.banner_id_calendar_big));
+        mAdView.setAdSize(AdSize.BANNER_320x100);
+        // Создание объекта таргетирования рекламы и загрузка объявления.
+        mAdView.loadAd(new AdRequest.Builder().build());
     }
 
 

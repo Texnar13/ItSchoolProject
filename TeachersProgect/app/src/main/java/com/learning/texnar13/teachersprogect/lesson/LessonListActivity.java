@@ -327,7 +327,7 @@ public class LessonListActivity extends AppCompatActivity implements GradeEditDi
 
                 TextView helpText = new TextView(this);
                 helpText.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
-                helpText.setTextColor(getResources().getColor(R.color.backgroundLiteGray));
+                helpText.setTextColor(getResources().getColor(R.color.base_light));
                 helpText.setGravity(Gravity.CENTER);
                 helpText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_simple_size));
                 helpText.setText(R.string.lesson_list_activity_text_help);

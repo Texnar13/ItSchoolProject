@@ -22,7 +22,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".sponsor.SponsorMySubscriptionActivity"
+            android:name=".premium.SponsorMySubscriptionActivity"
             android:exported="false" />
         <!-- Отключение учета контекстных данных для всего приложения -->
         <meta-data
@@ -118,7 +118,7 @@
         <activity
             android:name=".learnersAndGradesOut.learnersAndGradesStatistics.LearnersGradesStatisticsActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".sponsor.SponsorActivity" />
+        <activity android:name=".premium.SponsorActivity" />
     </application>
 
 </manifest>

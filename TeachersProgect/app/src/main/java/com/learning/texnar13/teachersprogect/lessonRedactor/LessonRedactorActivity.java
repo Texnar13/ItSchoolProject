@@ -385,7 +385,8 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
             homeworkEdit.setText("");
         }
         // ставим ограничение в 3 строки (70 символов)
-        homeworkEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(70)});
+        homeworkEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(
+                SharedPrefsContract.PREMIUM_PARAM_LESSON_MAX_COMMENT_LENGTH)});
 
         // ---------------------------------- настраиваем кнопки -----------------------------------
 

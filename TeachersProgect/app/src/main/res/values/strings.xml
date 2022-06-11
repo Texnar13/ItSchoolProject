@@ -304,14 +304,14 @@
     <string name="sponsor_activity_title_screen_0">Unlimited number of lessons</string>
     <string name="sponsor_activity_title_screen_1">Comment (to the lesson and to the student) of any length</string>
     <string name="sponsor_activity_title_screen_2">No ads</string>
-    <string name="sponsor_activity_title_screen_3">Any number of types of absences and types of classwork</string>
+    <string name="sponsor_activity_title_screen_3">##Сколько угодно типов работы на уроке</string>
     <string name="sponsor_activity_title_screen_4">Import and export data</string>
     <string name="sponsor_activity_title_screen_last">Choose the tariff that suits you:</string>
     <string name="sponsor_activity_button_sub_month" formatted="true">Monthly: %s per month</string>
     <string name="sponsor_activity_button_sub_year" formatted="true">##Ежегодно: %s/год</string>
     <string name="sponsor_activity_button_sub_year_long" formatted="true">then %s per year (%s per month)</string>
     <string name="sponsor_activity_text_free" formatted="true">Free %d days</string>
-    <string name="sponsor_activity_title_cancel_sub">You can cancel your subscription at any time</string>
+    <string name="sponsor_activity_title_cancel_sub">##Вы можете отменить подписку в любое время в GooglePlay!</string>
     <string name="sponsor_activity_title_promocode"><u>Use a promo code</u></string>
     <string name="sponsor_activity_title_subs"><u>Restore the purchases</u></string>
     <string name="sponsor_activity_button_my_subs">View my subscriptions</string>

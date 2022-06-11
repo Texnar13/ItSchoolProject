@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.Menu;
@@ -35,6 +36,7 @@ import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SCursor;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import com.learning.texnar13.teachersprogect.learnersAndGradesOut.GradeEditDialogFragment;
 import com.learning.texnar13.teachersprogect.learnersAndGradesOut.LearnersAndGradesActivity;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
@@ -256,6 +258,8 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
             commentTitleText.setText(homeWork.title);// todo null pointer
             commentText.setText(homeWork.text);
+            commentText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(
+                SharedPrefsContract.PREMIUM_PARAM_LESSON_MAX_COMMENT_LENGTH)});
 
 
             // назначаем раскрытие и закрытие по нажатию заголовка
@@ -267,7 +271,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
                     )
             );
 
-            // события пролистывания
+            // todo события пролистывания
             bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
                 @Override
                 public void onStateChanged(@NonNull View bottomSheet, int newState) {

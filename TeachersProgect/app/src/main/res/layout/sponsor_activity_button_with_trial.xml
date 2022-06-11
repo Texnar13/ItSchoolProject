@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="@string/sponsor_activity_text_free"
-        android:textColor="@color/baseOrange"
+        android:textColor="@color/base_orange"
         android:textSize="@dimen/simple_buttons_text_size" />
 
     <TextView
@@ -25,6 +25,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="@string/sponsor_activity_button_sub_year_long"
-        android:textColor="@color/backgroundWhite"
+        android:textColor="@color/base_orange"
         android:textSize="@dimen/simple_buttons_text_size" />
 </LinearLayout>

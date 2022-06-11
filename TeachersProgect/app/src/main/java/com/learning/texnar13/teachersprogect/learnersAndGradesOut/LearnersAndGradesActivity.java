@@ -179,25 +179,25 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
             return true;
         });
 
-        // импорт учеников и оценок через excel
-        menu.findItem(R.id.learners_and_grades_menu_learners_import).setOnMenuItemClickListener(item -> {
-            // запускаем активность импрота
-            learnersAndGradesImportLauncher.launch(null);
-            return true;
-        });
-
-        // экспорт учеников и оценок в excel
-        menu.findItem(R.id.learners_and_grades_menu_learners_export).setOnMenuItemClickListener(item -> {
-
-            // приводим данные об учениках
-            ArrayList<String> names = new ArrayList<>();
-            for (NewLearnerAndHisGrades learner : dataLearnersAndGrades.learnersAndHisGrades) {
-                names.add(learner.surname + " " + learner.name);
-            }
-            // и экспортруем их
-            LearnersAndGradesExportHelper.shareLearners(this, names);
-            return true;
-        });
+//        // импорт учеников и оценок через excel
+//        menu.findItem(R.id.learners_and_grades_menu_learners_import).setOnMenuItemClickListener(item -> {
+//            // запускаем активность импрота
+//            learnersAndGradesImportLauncher.launch(null);
+//            return true;
+//        });
+//
+//        // экспорт учеников и оценок в excel
+//        menu.findItem(R.id.learners_and_grades_menu_learners_export).setOnMenuItemClickListener(item -> {
+//
+//            // приводим данные об учениках
+//            ArrayList<String> names = new ArrayList<>();
+//            for (NewLearnerAndHisGrades learner : dataLearnersAndGrades.learnersAndHisGrades) {
+//                names.add(learner.surname + " " + learner.name);
+//            }
+//            // и экспортруем их
+//            LearnersAndGradesExportHelper.shareLearners(this, names);
+//            return true;
+//        });
 
         return super.onPrepareOptionsMenu(menu);
     }

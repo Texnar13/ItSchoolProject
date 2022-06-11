@@ -1,96 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/premium_background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingStart="@dimen/forth_margin"
+    android:paddingEnd="@dimen/forth_margin">
 
     <TextView
+        android:gravity="center"
+        android:id="@+id/sponsor_activity_screen_0_title"
         style="@style/TextViewSemiBoldStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/sponsor_activity_screen_0_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="@dimen/forth_margin"
-        android:layout_marginEnd="@dimen/forth_margin"
-        android:layout_marginBottom="@dimen/simple_margin"
-        android:textSize="@dimen/premium_activity_messages_text_size"
         android:text="@string/sponsor_activity_title_screen_0"
-        android:textColor="@color/premium_text_color" />
+        android:textColor="@color/premium_text_color"
+        android:textSize="@dimen/premium_activity_messages_text_size" />
 
-    <LinearLayout
+
+    <ImageView
         android:id="@+id/sponsor_activity_screen_0_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/base_background_dialog_full_round_white"
-        android:backgroundTint="@color/premium_text_color"
-        android:orientation="vertical"
-        android:padding="@dimen/double_margin"
-        tools:targetApi="lollipop">
+        android:layout_marginTop="@dimen/forth_margin"
+        android:layout_marginBottom="@dimen/forth_margin"
+        android:adjustViewBounds="true"
+        android:src="@drawable/sponsor_activity_content_image_preview_0_lessons_count" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/simple_margin">
-
-            <ImageView
-                android:id="@+id/dialog_fragment_layout_settings_edit_time_button_close"
-                android:layout_width="@dimen/base_classic_arrow_immutable_size"
-                android:layout_height="@dimen/base_classic_arrow_immutable_size"
-                app:srcCompat="@drawable/base_button_close"
-                app:tint="#000000" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/simple_margin"
-                android:text="@string/settings_activity_dialog_edit_time_title"
-                android:textColor="#000000"
-                android:textSize="@dimen/text_subtitle_size" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/dialog_fragment_layout_settings_edit_time_time_out"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/simple_margin"
-            android:paddingRight="@dimen/simple_margin">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/simple_margin"
-                android:text="9. 15:35-16:15"
-                android:textColor="#000000"
-                android:textSize="@dimen/text_subtitle_size" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/simple_margin"
-                android:text="9. 15:35-16:15"
-                android:textColor="#000000"
-                android:textSize="@dimen/text_subtitle_size" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/dialog_fragment_layout_settings_edit_time_button_add"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/simple_margin"
-            android:background="@drawable/base_background_button_round_gray"
-            android:backgroundTint="@color/premium_text_color"
-            android:gravity="center"
-            android:padding="@dimen/simple_margin"
-            android:text="@string/settings_activity_dialog_edit_time_button_add_lesson"
-            android:textColor="#000000"
-            android:textSize="@dimen/text_subtitle_size"
-            tools:targetApi="lollipop" />
-    </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

@@ -183,13 +183,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         // выбираем размер рекламы
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {// countOfWeeks > 5
-            mAdView.setBlockId(getResources().getString(R.string.banner_id_calendar));
-            mAdView.setAdSize(AdSize.BANNER_320x50);
-        } else {
-            mAdView.setBlockId(getResources().getString(R.string.banner_id_calendar_big));
-            mAdView.setAdSize(AdSize.BANNER_320x100);
-        }
+        mAdView.setBlockId(getResources().getString(R.string.banner_id_calendar_big));
+        mAdView.setAdSize(AdSize.BANNER_320x100);
         // Создание объекта таргетирования рекламы и загрузка объявления.
         mAdView.loadAd(new AdRequest.Builder().build());
 
@@ -344,8 +339,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                     // выделяем текущую дату
                     if (isItCurrentDay)
                         day.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
-                                (getResources().getColor(R.color.baseOrange, getTheme())) :
-                                (getResources().getColor(R.color.baseOrange))
+                                (getResources().getColor(R.color.base_orange, getTheme())) :
+                                (getResources().getColor(R.color.base_orange))
                         );
 
                     // если этот день стоял как выбранный
@@ -376,8 +371,8 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                             pressedCell.setBackground(null);
                             if (isPressedCellCurrentDay) {
                                 pressedCell.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
-                                        (getResources().getColor(R.color.baseOrange, getTheme())) :
-                                        (getResources().getColor(R.color.baseOrange))
+                                        (getResources().getColor(R.color.base_orange, getTheme())) :
+                                        (getResources().getColor(R.color.base_orange))
                                 );
                             } else {
                                 pressedCell.setTextColor(getResources().getColor(R.color.text_color_simple));
@@ -516,7 +511,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                 // проставляем цвета
                 int textColor;
                 if (currentLesson == lessonI) {// если урок текущй
-                    rootElement.setBackgroundResource(R.color.baseOrange);
+                    rootElement.setBackgroundResource(R.color.base_orange);
                     textColor = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
                             (getResources().getColor(R.color.text_color_inverse, getTheme())) :
                             (getResources().getColor(R.color.text_color_inverse));

@@ -1,16 +1,14 @@
-package com.learning.texnar13.teachersprogect.sponsor;
+package com.learning.texnar13.teachersprogect.premium;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -25,8 +23,6 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -47,7 +47,7 @@
             android:background="#000000"
             android:paddingStart="@dimen/simple_margin"
             android:paddingEnd="@dimen/simple_margin"
-            android:textColor="@color/baseOrange"
+            android:textColor="@color/base_orange"
             android:textIsSelectable="true" />
     </ScrollView>
 

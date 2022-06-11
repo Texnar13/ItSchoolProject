@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/premium_background"
     android:orientation="vertical"
-    tools:context=".sponsor.SponsorActivity">
+    tools:context=".premium.SponsorActivity">
 
     <LinearLayout
         android:id="@+id/sponsor_activity_top_text_container"
@@ -17,12 +17,12 @@
 
         <ImageView
             android:id="@+id/sponsor_activity_close_button"
-            android:layout_width="@dimen/my_icon_size"
-            android:layout_height="@dimen/my_icon_size"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/my_icon_small_size"
             android:adjustViewBounds="true"
-            android:layout_marginStart="@dimen/double_margin"
+            android:layout_marginStart="@dimen/forth_margin"
             android:layout_marginTop="@dimen/double_margin"
-            app:srcCompat="@drawable/base_button_close_white"
+            app:srcCompat="@drawable/premium_button_close_white"
             app:tint="@color/premium_text_color" />
 
         <RelativeLayout
@@ -60,7 +60,7 @@
                 android:layout_toEndOf="@+id/sponsor_activity_main_title"
                 android:adjustViewBounds="true"
                 app:srcCompat="@drawable/settings_icon_premium"
-                app:tint="@color/baseOrange" />
+                app:tint="@color/base_orange" />
         </RelativeLayout>
 
     </LinearLayout>

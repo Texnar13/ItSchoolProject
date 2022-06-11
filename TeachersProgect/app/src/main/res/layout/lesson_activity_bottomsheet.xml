@@ -9,6 +9,7 @@
     app:behavior_hideable="false"
     app:behavior_peekHeight="@dimen/simple_buttons_height"
     app:behavior_saveFlags="all"
+
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <RelativeLayout

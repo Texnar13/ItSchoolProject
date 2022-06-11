@@ -3,29 +3,18 @@ package com.learning.texnar13.teachersprogect.learnersAndGradesOut;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.text.InputType;
+import android.text.InputFilter;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.learning.texnar13.teachersprogect.R;
+import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 
 public class LearnerEditDialogFragment extends DialogFragment {//входные данные предыдущее имя, фамилия, id
 
@@ -64,8 +53,10 @@ public class LearnerEditDialogFragment extends DialogFragment {//входные 
 
         // текстовое поле комментария
         final EditText editComment = dialogView.findViewById(R.id.learners_and_grades_dialog_learner_edit_edit_comment);
-        //входные данные предыдущее имя
+        // входные данные предыдущий комментарий
         editComment.setText(getArguments().getString(ARGS_LEARNER_COMMENT));
+        editComment.setFilters(new InputFilter[]{new InputFilter.LengthFilter(
+                SharedPrefsContract.PREMIUM_PARAM_LEARNER_MAX_COMMENT_LENGTH)});
 
 
         // кнопка сохранения

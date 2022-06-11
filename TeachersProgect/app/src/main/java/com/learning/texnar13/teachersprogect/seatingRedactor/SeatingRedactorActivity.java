@@ -141,7 +141,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             // если количество учеников не нулевое выводим картинку + на всех местах
             isPlus = (learners.length != 0);
 
-            // ткрываем бд
+            // открываем бд
             DataBaseOpenHelper db = new DataBaseOpenHelper(SeatingRedactorActivity.this);
 
             for (DeskUnit desk : desks)// по массиву с партами
@@ -164,14 +164,12 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                         // выводим картинку +
                         ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
                         LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                        lernerImageParams.setMargins(
-                                (int) getResources().getDimension(R.dimen.simple_margin),
-                                (int) getResources().getDimension(R.dimen.simple_margin),
-                                (int) getResources().getDimension(R.dimen.simple_margin),
-                                (int) getResources().getDimension(R.dimen.simple_margin)
-                        );
                         lernerImage.setImageResource(R.drawable.lesson_activity_learner_add);
                         desk.viewPlaceOut[placeI].addView(lernerImage, lernerImageParams);
+
+                        // если отображается кнопка плюс, то назначаем отступы контейнеру
+                        int padding = (int) pxFromDp(NO_ZOOMED_LEARNER_BORDER_SIZE * 1 * multiplier);
+                        desk.viewPlaceOut[placeI].setPadding(padding, padding, padding, padding);
                     }
                 }
             db.close();
@@ -467,10 +465,10 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                         multiplier = multiplier * scale / 100;
                         // пробегаемся по партам
                         for (int i = 0; i < desks.length; i++) {
-                            if (i == 12)
-                                Log.i(TAG, "onTouch: ------>answer =" + (nowMid.x - ((int) (scale * (nowMid.x - desks[i].pxX))) / 100) +
-                                        " nowMid.x=" + nowMid.x + " scale=" + scale + " desksList.get(i).pxX=" + desks[i].pxX
-                                );
+//                            if (i == 12)
+//                                Log.i(TAG, "onTouch: ------>answer =" + (nowMid.x - ((int) (scale * (nowMid.x - desks[i].pxX))) / 100) +
+//                                        " nowMid.x=" + nowMid.x + " scale=" + scale + " desksList.get(i).pxX=" + desks[i].pxX
+//                                );
 
                             // новые координаты и размеры
                             desks[i].setDeskParams(
@@ -481,14 +479,6 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                                     (int) pxFromDp(NO_ZOOMED_DESK_SIZE * desks[i].placesId.length * multiplier),
                                     (int) pxFromDp(NO_ZOOMED_DESK_SIZE * multiplier)
                             );
-                            // новые размеры элементам ученика
-                            for (int placeI = 0; placeI < desks[i].learnersIndexes.length; placeI++) {
-//                                if (desks[i].learnersIndexes[placeI] != -1)
-//                                    learnersAndTheirGrades[desksList.get(i).seatingLearnerNumber[placeI]].setSizes(
-//                                            multiplier, placeI
-//                                    );
-                            }
-
                         }
                     }
 
@@ -654,65 +644,61 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
                 // при нажатии на контейнер ученика
                 final int finalPlaceI = placeI;
-                this.viewPlaceOut[placeI].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                this.viewPlaceOut[placeI].setOnClickListener(v -> {
+                    // если на этом месте сидит ученик
+                    if (learnersIndexes[finalPlaceI] != -1) {
 
-                        // если на этом месте сидит ученик
-                        if (learnersIndexes[finalPlaceI] != -1) {
+                        viewPlaceOut[finalPlaceI].removeAllViews();
 
-                            viewPlaceOut[finalPlaceI].removeAllViews();
-
-                            // удаляем из базы данных
-                            DataBaseOpenHelper db = new DataBaseOpenHelper(SeatingRedactorActivity.this);
-                            db.deleteLearnerAndPlaceAttitudeById(attitudesId[finalPlaceI]);
-                            db.close();
+                        // удаляем из базы данных
+                        DataBaseOpenHelper db = new DataBaseOpenHelper(SeatingRedactorActivity.this);
+                        db.deleteLearnerAndPlaceAttitudeById(attitudesId[finalPlaceI]);
+                        db.close();
 
 
-                            // разрываем связи в списках
-                            learners[learnersIndexes[finalPlaceI]].deskNumber = -1;
-                            learners[learnersIndexes[finalPlaceI]].placeNumber = -1;
+                        // разрываем связи в списках
+                        learners[learnersIndexes[finalPlaceI]].deskNumber = -1;
+                        learners[learnersIndexes[finalPlaceI]].placeNumber = -1;
 
-                            learnersIndexes[finalPlaceI] = -1;
-                            attitudesId[finalPlaceI] = -1;
+                        learnersIndexes[finalPlaceI] = -1;
+                        attitudesId[finalPlaceI] = -1;
 
 
-                            // выводим картинку + на всех местах
+                        // выводим картинку + на всех местах
 
-                            isPlus = true;
-                            for (DeskUnit desk : desks) {
-                                desk.outEmpty();
-                            }
-
-                        } else if (isPlus) {
-                            // ставим номер парты и места как выбранные
-                            chosenDeskPosition = deskPoz;
-                            chosenPlacePosition = finalPlaceI;
-
-                            // вызываем диалог выбора ученика
-                            ChooseLearnerDialogFragment chooseDialogFragment = new ChooseLearnerDialogFragment();
-
-                            // передаем в параметры имена не посаженных учеников
-                            ArrayList<String> notPutLearnersNames = new ArrayList<>();
-                            // и их индексы
-                            ArrayList<Integer> learnersIndexes = new ArrayList<>();
-
-                            for (int learnerI = 0; learnerI < learners.length; learnerI++) {
-                                if (learners[learnerI].deskNumber == -1) {
-                                    notPutLearnersNames.add(learners[learnerI].lastName + " " + learners[learnerI].name);
-                                    learnersIndexes.add(learnerI);
-                                }
-                            }
-                            Bundle args = new Bundle();
-                            args.putStringArrayList(ChooseLearnerDialogFragment.ARGS_LEARNERS_NAMES_ARRAY, notPutLearnersNames);
-                            args.putIntegerArrayList(ChooseLearnerDialogFragment.ARGS_LEARNERS_INDEXES_ARRAY, learnersIndexes);
-                            chooseDialogFragment.setArguments(args);
-                            // показываем диалог
-                            chooseDialogFragment.show(getSupportFragmentManager(), "chooseDialogFragment - Hello");
-
+                        isPlus = true;
+                        for (DeskUnit desk : desks) {
+                            desk.outEmpty();
                         }
 
+                    } else if (isPlus) {
+                        // ставим номер парты и места как выбранные
+                        chosenDeskPosition = deskPoz;
+                        chosenPlacePosition = finalPlaceI;
+
+                        // вызываем диалог выбора ученика
+                        ChooseLearnerDialogFragment chooseDialogFragment = new ChooseLearnerDialogFragment();
+
+                        // передаем в параметры имена не посаженных учеников
+                        ArrayList<String> notPutLearnersNames = new ArrayList<>();
+                        // и их индексы
+                        ArrayList<Integer> learnersIndexes = new ArrayList<>();
+
+                        for (int learnerI = 0; learnerI < learners.length; learnerI++) {
+                            if (learners[learnerI].deskNumber == -1) {
+                                notPutLearnersNames.add(learners[learnerI].lastName + " " + learners[learnerI].name);
+                                learnersIndexes.add(learnerI);
+                            }
+                        }
+                        Bundle args = new Bundle();
+                        args.putStringArrayList(ChooseLearnerDialogFragment.ARGS_LEARNERS_NAMES_ARRAY, notPutLearnersNames);
+                        args.putIntegerArrayList(ChooseLearnerDialogFragment.ARGS_LEARNERS_INDEXES_ARRAY, learnersIndexes);
+                        chooseDialogFragment.setArguments(args);
+                        // показываем диалог
+                        chooseDialogFragment.show(getSupportFragmentManager(), "chooseDialogFragment - Hello");
+
                     }
+
                 });
 
 
@@ -778,7 +764,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             for (int placeI = 0; placeI < placesId.length; placeI++) {
 
                 // отступы и размеры места
-                 this.viewPlaceOut[placeI].getLayoutParams().width =
+                this.viewPlaceOut[placeI].getLayoutParams().width =
                         (int) pxFromDp((NO_ZOOMED_DESK_SIZE - NO_ZOOMED_LEARNER_BORDER_SIZE * 2) * multiplier);
                 this.viewPlaceOut[placeI].getLayoutParams().height =
                         (int) pxFromDp((NO_ZOOMED_DESK_SIZE - NO_ZOOMED_LEARNER_BORDER_SIZE * 2) * multiplier);
@@ -791,6 +777,10 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                 if (learnersTextViews[placeI] != null) {
                     // меняем размер текста ученика
                     learnersTextViews[placeI].setTextSize(7 * multiplier);
+                }else{
+                    // если отображается кнопка плюс, то назначаем отступы контейнеру
+                    int padding = (int) pxFromDp(NO_ZOOMED_LEARNER_BORDER_SIZE * 1 * multiplier);
+                    viewPlaceOut[placeI].setPadding(padding, padding, padding, padding);
                 }
             }
 
@@ -836,14 +826,13 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                         // выводим картинку +
                         ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
                         LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                        lernerImageParams.setMargins(
-                                (int) getResources().getDimension(R.dimen.simple_margin),
-                                (int) getResources().getDimension(R.dimen.simple_margin),
-                                (int) getResources().getDimension(R.dimen.simple_margin),
-                                (int) getResources().getDimension(R.dimen.simple_margin)
-                        );
                         lernerImage.setImageResource(R.drawable.lesson_activity_learner_add);
                         viewPlaceOut[placesI].addView(lernerImage, lernerImageParams);
+
+                        // если отображается кнопка плюс, то назначаем отступы контейнеру
+                        int padding = (int) pxFromDp(NO_ZOOMED_LEARNER_BORDER_SIZE * 1 * multiplier);
+                        viewPlaceOut[placesI].setPadding(padding, padding, padding, padding);
+
                     } else {
                         viewPlaceOut[placesI].removeAllViews();
                     }

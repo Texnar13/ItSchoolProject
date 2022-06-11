@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/premium_background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingStart="@dimen/forth_margin"
+    android:paddingEnd="@dimen/forth_margin">
 
     <TextView
+        android:gravity="center"
         style="@style/TextViewSemiBoldStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/sponsor_activity_screen_1_content_1"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="@dimen/forth_margin"
-        android:layout_marginEnd="@dimen/forth_margin"
         android:text="@string/sponsor_activity_title_screen_1"
         android:textColor="@color/premium_text_color"
         android:textSize="@dimen/premium_activity_messages_text_size" />
@@ -24,9 +22,7 @@
         android:id="@+id/sponsor_activity_screen_1_content_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/sponsor_activity_screen_1_content_2"
-        android:layout_marginStart="@dimen/forth_margin"
-        android:layout_marginEnd="@dimen/forth_margin"
+        android:layout_marginTop="@dimen/forth_margin"
         android:background="@drawable/base_background_dialog_full_round_white"
         android:backgroundTint="@color/premium_text_color"
         android:orientation="vertical"
@@ -47,11 +43,8 @@
         android:id="@+id/sponsor_activity_screen_1_content_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_margin="@dimen/forth_margin"
-        android:layout_marginStart="@dimen/forth_margin"
-        android:layout_marginEnd="@dimen/forth_margin"
+        android:layout_marginTop="@dimen/forth_margin"
+        android:layout_marginBottom="@dimen/forth_margin"
         android:background="@drawable/base_background_dialog_full_round_white"
         android:backgroundTint="@color/premium_text_color"
         android:orientation="vertical"
@@ -66,4 +59,4 @@
             android:textColor="#000000"
             android:textSize="@dimen/text_simple_size" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>
