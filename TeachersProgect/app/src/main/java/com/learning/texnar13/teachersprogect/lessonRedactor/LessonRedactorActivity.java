@@ -108,12 +108,17 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                 getResources().getDisplayMetrics().widthPixels -
                         getResources().getDimensionPixelOffset(R.dimen.forth_margin);
 
-        // --- загрузка рекламы яндекса ---
-        BannerAdView mAdView = findViewById(R.id.activity_lesson_redactor_banner);
-        mAdView.setBlockId(getResources().getString(R.string.banner_id_lesson_redactor));
-        mAdView.setAdSize(AdSize.BANNER_320x100);
-        // Создание объекта таргетирования рекламы и загрузка объявления.
-        mAdView.loadAd(new AdRequest.Builder().build());
+
+        // выводим рекламу если нет подписки
+        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
+            // реклама яндекса
+            BannerAdView mAdView = findViewById(R.id.activity_lesson_redactor_banner);
+            mAdView.setBlockId(getResources().getString(R.string.banner_id_lesson_redactor));
+            mAdView.setAdSize(AdSize.BANNER_320x100);
+            // Создание объекта таргетирования рекламы и загрузка объявления.
+            mAdView.loadAd(new AdRequest.Builder().build());
+        }
 
 
         // На случай если пользователь сразу закроет редактор,

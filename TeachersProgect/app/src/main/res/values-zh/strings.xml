@@ -69,7 +69,7 @@
     <string name="learners_and_grades_out_activity_dialog_title_edit_grade">编辑分数</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_name">名字</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_second_name">姓氏</string>
-    <string name="learners_and_grades_out_activity_dialog_title_learner_info">##信息:</string>
+    <string name="learners_and_grades_out_activity_dialog_title_learner_info">信息：</string>
     <string name="learners_and_grades_out_activity_dialog_button_add">+ 添加</string>
     <string name="learners_and_grades_out_activity_dialog_button_change">编辑</string>
     <string name="learners_and_grades_out_activity_dialog_button_create">创造</string>
@@ -95,9 +95,9 @@
     <!-- заголовок активности -->
     <string name="title_activity_learners_and_grades_statistics">期间的统计数字</string>
     <!-- тексты -->
-    <string name="learners_and_grades_statistics_activity_title_column_learner_name">##姓名</string>
-    <string name="learners_and_grades_statistics_activity_title_column_grade">##分数</string>
-    <string name="learners_and_grades_statistics_activity_title_column_absent">##缺席</string>
+    <string name="learners_and_grades_statistics_activity_title_column_learner_name">姓名</string>
+    <string name="learners_and_grades_statistics_activity_title_column_grade">平均分数</string>
+    <string name="learners_and_grades_statistics_activity_title_column_absent">缺勤次数</string>
     <string name="learners_and_grades_statistics_activity_hint_date_day">号</string>
     <string name="learners_and_grades_statistics_activity_hint_date_month">月</string>
     <string name="learners_and_grades_statistics_activity_hint_date_year">年</string>
@@ -186,7 +186,7 @@
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">让学生们坐下</string>
     <string name="lesson_redactor_activity_button_remove">删除课</string>
-    <string name="lesson_redactor_activity_button_remove_other">##Удалить этот урок и все последующие</string>
+    <string name="lesson_redactor_activity_button_remove_other">删除本课和所有后续课</string>
     <!-- диалоги -->
     <string name="lesson_redactor_activity_dialog_button_remove">删除</string>
     <string name="lesson_redactor_activity_dialog_button_add">添加</string>
@@ -213,7 +213,7 @@
     <string name="lesson_activity_learner_dialog_out_yes">退出（所有数据将被删除）</string>
     <string name="lesson_activity_learner_dialog_out_no">回到课程</string>
 
-    <string name="lesson_activity_bottom_sheet_date_text" formatted="true">##%d %s, %s, %d урок</string>
+    <string name="lesson_activity_bottom_sheet_date_text" formatted="true">%d %s, %s, %d 教训</string>
 
 
     <!-- активность окончания урока-->
@@ -233,17 +233,17 @@
     <string name="settings_activity_title_grades_type">课的工作类型</string>
     <string name="settings_activity_title_absent_type">缺席的类型</string>
     <string name="settings_activity_title_colored_grades">颜色分数</string>
-    <string name="settings_activity_title_silent_lesson">##Отключать звук пока открыт урок</string>
-    <string name="settings_activity_toast_silent_lesson">##Найдите в списке приложение "Помощник учителя"</string>
+    <string name="settings_activity_title_silent_lesson">上课时关闭声音</string>
+    <string name="settings_activity_toast_silent_lesson">在列表中找到“教师助理”应用</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">量分数/ 最高得分: %d</string>
     <string name="settings_activity_button_edit_time">上课时间</string>
     <string name="settings_activity_button_remove_data">删除所有数据</string>
     <string name="settings_activity_button_rate_us">请评价我们的应用!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">语言: %s</string>
-    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Тема: %s</string>
-    <string name="settings_activity_button_subscribe">##成为赞助商</string>
-    <string name="settings_activity_button_my_premium">##Мой премиум</string>
+    <string name="settings_activity_button_edit_dark_mode" formatted="true">主题: %s</string>
+    <string name="settings_activity_button_subscribe">获取高级</string>
+    <string name="settings_activity_button_my_premium">我的高级</string>
     <string name="settings_activity_button_save_data_copy">保存备份</string>
     <string name="settings_activity_button_load_data_copy">下载备份</string>
     <!-- уведомления -->
@@ -255,17 +255,17 @@
     <string name="settings_activity_toast_grade_too_min">输入的值太小（必须至少为1)</string>
     <string name="settings_activity_toast_time_successfully_saved">时间保存了。</string>
     <string name="settings_activity_toast_time_no_saved">错误，时间未保存。</string>
-    <string name="settings_activity_toast_time_subscribe" formatted="true">##Без подписки число уроков ограничено до %d</string>
+    <string name="settings_activity_toast_time_subscribe" formatted="true">如果没有高级订阅，课数量限制为%d</string>
     <string name="settings_activity_data_export_theme" formatted="true">%s起备份</string>
     <string name="settings_activity_data_export_title">发送到</string>
     <string name="settings_activity_data_import_title">选择文件：</string>
     <string name="settings_activity_data_import_message_incorrect_type">文件格式不正确。 .支持adb文件</string>
     <string name="settings_activity_data_import_message_unrtedable_file">文件无法读取。</string>
     <string name="settings_activity_data_import_message_error_tag">\n 错误:</string>
-    <string name="settings_activity_data_import_message_read_success">\n\n##Файл успешно прочтён!</string>
+    <string name="settings_activity_data_import_message_read_success">\n\n文件已成功读取!</string>
     <string name="settings_activity_data_import_message_read_error">\n\n读出未完成，文件有错误!</string>
     <!-- диалоги -->
-    <string name="settings_activity_dialog_delete_title" formatted="true">##Чтобы удалить все данные, введите число %d:</string>
+    <string name="settings_activity_dialog_delete_title" formatted="true">要删除所有数据，请输入数字%d:</string>
     <string name="settings_activity_dialog_add_type_title">+ 添加课的工作类型</string>
     <string name="settings_activity_dialog_new_type_title">新课的工作类型</string>
     <string name="settings_activity_dialog_add_absent_type_title">+ 添加缺席类型</string>
@@ -273,8 +273,8 @@
     <string name="settings_activity_dialog_new_absent_type_title_hint">代表符号</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty">输入名称</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">输入缩写</string>
-    <string name="settings_activity_dialog_new_absent_type_toast_subscribe" formatted="true">##Без подписки число типов ограничено до %d</string>
-    <string name="settings_activity_dialog_hint_number">##Введите число</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_subscribe" formatted="true">如果没有高级订阅，类型数量限制为%d</string>
+    <string name="settings_activity_dialog_hint_number">输入号码</string>
     <string name="settings_activity_dialog_button_remove_data">删除</string>
     <string name="settings_activity_dialog_button_remove">删除</string>
     <string name="settings_activity_dialog_edit_time_title">上课时间</string>
@@ -286,40 +286,43 @@
     <string name="settings_activity_dialog_text_time_colon"> : </string>
     <string name="settings_activity_dialog_text_time_dash"> - </string>
     <string name="settings_activity_dialog_edit_locale_title">选择语言</string>
-    <string name="settings_activity_dialog_edit_theme_title">##Выберите тему:</string>
+    <string name="settings_activity_dialog_edit_theme_title">选择主题:</string>
     <string name="settings_activity_dialog_data_import_accept_title">文件读取结果:</string>
     <string name="settings_activity_dialog_data_import_accept_button">上传数据</string>
-    <string name="settings_activity_dialog_max_answer_hint">##Ведите балл</string>
+    <string name="settings_activity_dialog_max_answer_hint">输入分数</string>
 
 
     <!-- активность рекламы спонсора -->
     <string name="sponsor_activity_button_go_to_last_screen">试用高级版</string>
     <string name="sponsor_activity_title_app_name">Teacher\'s Assistant</string>
-    <string name="sponsor_activity_title_my_premium">##Мой</string>
-    <string name="sponsor_activity_title_tag">Premium</string>
-    <string name="sponsor_activity_my_premium_my_rate">##Мой тариф:</string>
-    <string name="sponsor_activity_my_premium_my_sub">##Управление подпиской:</string>
-    <string name="sponsor_activity_my_premium_my_sub_go_to_google">##Перейти в Google Play</string>
-    <string name="sponsor_activity_my_premium_my_sub_connection_error">##Ошибка подключения</string>
+    <string name="sponsor_activity_title_my_premium">我的</string>
+    <string name="sponsor_activity_title_tag">高级</string>
+    <string name="sponsor_activity_my_premium_my_rate">我的套餐:</string>
+    <string name="sponsor_activity_my_premium_my_sub">订阅管理:</string>
+    <string name="sponsor_activity_my_premium_my_sub_go_to_google">转到Google Play</string>
+    <string name="sponsor_activity_my_premium_my_sub_connection_error">连接错误</string>
     <string name="sponsor_activity_title_screen_0">无限数量的课</string>
     <string name="sponsor_activity_title_screen_1">任何长度的评论（对课和学生）</string>
     <string name="sponsor_activity_title_screen_2">没有广告</string>
-    <string name="sponsor_activity_title_screen_3">##Сколько угодно типов работы на уроке</string>
+    <string name="sponsor_activity_title_screen_3">课程中有多种类型的作业</string>
     <string name="sponsor_activity_title_screen_4">数据导入和导出</string>
     <string name="sponsor_activity_title_screen_last">选择适合您的资费:</string>
     <string name="sponsor_activity_button_sub_month" formatted="true">每月%s</string>
-    <string name="sponsor_activity_button_sub_year" formatted="true">##Ежегодно: %s/год</string>
+    <string name="sponsor_activity_button_sub_year" formatted="true">每年%s</string>
     <string name="sponsor_activity_button_sub_year_long" formatted="true">然后每年%s(每月%s)</string>
     <string name="sponsor_activity_text_free" formatted="true">免费%d天</string>
-    <string name="sponsor_activity_title_cancel_sub">##Вы можете отменить подписку в любое время в GooglePlay!</string>
+    <string name="sponsor_activity_title_cancel_sub">您可以随时在Google Play上取消订阅！</string>
     <string name="sponsor_activity_title_promocode"><u>使用促销代码</u></string>
-    <string name="sponsor_activity_title_subs"><u>恢复我的购买</u></string>
+    <string name="sponsor_activity_title_billing_problem"><u>通过Google Play付款的问题</u></string>
+    <string name="sponsor_activity_title_dialog_billing_problem">亲爱的用户！ \n\n如果您在订阅时遇到问题，请写信给我们，我们会尽力提供帮助！</string>
+    <string name="sponsor_activity_title_dialog_billing_problem_accept">联系我们</string>
+    <string name="sponsor_activity_title_subs"><u>恢复购买</u></string>
     <string name="sponsor_activity_button_my_subs">查看我的订阅</string>
     <string name="sponsor_activity_text_test_dz">白色教科书，页 7; 工作簿 页24 4–17；别忘了问陈志强。</string>
-    <string name="sponsor_activity_text_test_info">母亲：布朗夫人，电话 +86123456890</string>
-    <string name="sponsor_activity_text_congratulations_title">##Поздравляем!</string>
-    <string name="sponsor_activity_text_congratulations_text">##Вы получили статус Premium! Теперь вам доступны все функции приложения./nСпасибо вам за то, что поддерживаете нас.</string>
-    <string name="sponsor_activity_text_congratulations_button">##Начнем!</string>
+    <string name="sponsor_activity_text_test_info">母亲：应女士，电话：+1123456890。 女孩没有做作业。她必须通过四个家庭作业。</string>
+    <string name="sponsor_activity_text_congratulations_title">祝贺你！</string>
+    <string name="sponsor_activity_text_congratulations_text">您已收到保费状态! 现在应用程序的所有功能都可供您使用。 感谢您对我们的支持！</string>
+    <string name="sponsor_activity_text_congratulations_button">让我们开始吧！</string>
 
     <string name="sponsor_activity_text_error_send_purchase_request" formatted="true">向服务器发送请求时出错。%d</string>
     <string name="sponsor_activity_text_error_send_purchase_response" formatted="true">服务器错误购买失败: %d</string>

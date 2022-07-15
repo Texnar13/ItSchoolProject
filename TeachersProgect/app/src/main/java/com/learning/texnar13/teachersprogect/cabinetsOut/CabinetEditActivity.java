@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
+import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 import com.yandex.mobile.ads.banner.AdSize;
 import com.yandex.mobile.ads.banner.BannerAdView;
@@ -187,18 +189,22 @@ public class CabinetEditActivity extends AppCompatActivity implements AcceptDial
         });
 
 
-        // вывод рекламы
-        LinearLayout adOut = findViewById(R.id.ad_banner_place);
-        BannerAdView mAdView = new BannerAdView(this);
-        adOut.removeAllViews();
-        adOut.addView(mAdView,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        // выбираем размер рекламы
-        mAdView.setBlockId(getResources().getString(R.string.banner_id_calendar_big));
-        mAdView.setAdSize(AdSize.BANNER_320x100);
-        // Создание объекта таргетирования рекламы и загрузка объявления.
-        mAdView.loadAd(new AdRequest.Builder().build());
+        // выводим рекламу если нет подписки
+        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
+            // вывод рекламы
+            LinearLayout adOut = findViewById(R.id.ad_banner_place);
+            BannerAdView mAdView = new BannerAdView(this);
+            adOut.removeAllViews();
+            adOut.addView(mAdView,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            // выбираем размер рекламы
+            mAdView.setBlockId(getResources().getString(R.string.banner_id_calendar_big));
+            mAdView.setAdSize(AdSize.BANNER_320x100);
+            // Создание объекта таргетирования рекламы и загрузка объявления.
+            mAdView.loadAd(new AdRequest.Builder().build());
+        }
     }
 
 

@@ -28,7 +28,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/shedule_month_month_buttons_heght">
+                    android:layout_height="@dimen/shedule_month_month_buttons_height">
 
                     <RelativeLayout
                         android:id="@+id/schedule_month_button_previous"

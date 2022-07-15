@@ -15,7 +15,7 @@
 
     <string name="banner_id_start_screen" translatable="false">R-M-DEMO-320x50</string>
     <string name="banner_id_calendar_big" translatable="false">R-M-DEMO-320x100</string>
-    <string name="banner_id_after_settings" translatable="false">R-M-DEMO-320x480</string>
+    <string name="banner_id_after_settings" translatable="false">R-M-DEMO-interstitial</string>
     <string name="banner_id_lesson_redactor" translatable="false">R-M-DEMO-320x100</string><!-- можно добавить -context если есть разрешение на сбор персональных данных -->
 
     <!-- id покупок в SponsorActivity -->

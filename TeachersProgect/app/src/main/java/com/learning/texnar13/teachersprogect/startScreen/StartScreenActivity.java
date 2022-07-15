@@ -214,7 +214,6 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             loadAdd();
         }
 
-
     }
 
     // проверка состояния подписки, результат в SharedPrefs
@@ -311,6 +310,13 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
 
         // выводим текущий урок
         outCurrentLesson();
+
+
+        // если пользователь только купил подписку, то необходимо удалить уже подгрузившийся баннер
+        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false))
+            ((ViewGroup) findViewById(R.id.start_screen_ad_banner_place)).removeView(findViewById(R.id.start_screen_ad_banner));
+
 
         super.onStart();
     }

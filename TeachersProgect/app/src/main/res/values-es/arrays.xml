@@ -11,9 +11,9 @@
     </string-array>
     <!-- названия darkMode -->
     <string-array name="day_night">
-        <item>##Как на устройстве</item>
-        <item>##Темная</item>
-        <item>##Светлая</item>
+        <item>Por defecto</item>
+        <item>Оscuro</item>
+        <item>Ligero</item>
     </string-array>
 
     <string-array name="months_names">

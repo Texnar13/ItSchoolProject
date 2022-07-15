@@ -173,6 +173,7 @@
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout-land/learners_and_grades_activity.xml" value="0.31851851851851853" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout-land/learners_and_grades_content.xml" value="0.264" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout-land/schedule_month_activity.xml" value="0.31805555555555554" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout-land/start_screen_activity.xml" value="0.15555555555555556" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout-v21/sponsor_activity_screen_1.xml" value="0.24427083333333333" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout-v23/settings_activity.xml" value="0.24427083333333333" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/______spinner_dropdown_element_subtitle_transparent_dark_gray.xml" value="0.21712962962962962" />
@@ -241,22 +242,24 @@
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/settings_dialog_edit_types_grades_active_container.xml" value="0.19814814814814816" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/settings_dialog_edit_types_simple_container.xml" value="0.18425925925925926" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/settings_dialog_remove_data.xml" value="0.264" />
-        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/sponsor_activity.xml" value="0.536" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/sponsor_activity.xml" value="0.3847980997624703" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/sponsor_activity_button_no_trial.xml" value="0.15833333333333333" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/sponsor_activity_button_with_trial.xml" value="0.536" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/sponsor_activity_dialog_congratulations.xml" value="0.15092592592592594" />
-        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/sponsor_activity_my_subscription.xml" value="0.4" />
-        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/sponsor_activity_screen_0.xml" value="0.264" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/sponsor_activity_my_subscription.xml" value="0.152" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/sponsor_activity_screen_0.xml" value="0.1" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/sponsor_activity_screen_1.xml" value="0.264" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/sponsor_activity_screen_2.xml" value="0.13858695652173914" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/sponsor_activity_screen_3.xml" value="0.13858695652173914" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/sponsor_activity_screen_4.xml" value="0.13858695652173914" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/sponsor_activity_screen_final.xml" value="0.2" />
-        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/start_screen_activity.xml" value="0.3621621621621622" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/start_screen_activity.xml" value="0.264" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/start_screen_activity2.xml" value="0.21388888888888888" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/start_screen_current_lesson_field.xml" value="0.21712962962962962" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/start_screen_current_lesson_pattern.xml" value="0.4" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/start_screen_dialog_rate_us.xml" value="0.15092592592592594" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/start_screen_help_activity.xml" value="0.21712962962962962" />
+        <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/layout/test_layout.xml" value="0.21712962962962962" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/menu/cabinet_redactor_menu.xml" value="0.21388888888888888" />
         <entry key="..\:/Users/Ivan/Projects/Android/ItSchoolProject/TeachersProgect/app/src/main/res/menu/learners_and_grades_menu.xml" value="0.2" />
       </map>

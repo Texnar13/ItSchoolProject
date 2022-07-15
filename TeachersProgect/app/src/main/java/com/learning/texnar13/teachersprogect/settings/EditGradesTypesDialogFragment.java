@@ -118,7 +118,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             // добавляем ссылку на контейнер элементу списка
             types.get(typeI).typeContainer = addNewContainerInList();
             // выводим в этот контейнер наполнение
-            outContentInTypeContainer(types.get(typeI), false, (maxTypesCount == -1) || (typeI + 1 > maxTypesCount));
+            outContentInTypeContainer(types.get(typeI), false, (maxTypesCount != -1) && (typeI + 1 > maxTypesCount));
         }
 
         // вывод кнопки добавить тип
@@ -185,10 +185,10 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     outAddTypeButton();
                 } else
                     // закрываем все остальные контейнеры
-                    outContentInTypeContainer(types.get(typeI), false, (maxTypesCount == -1) || (typeI + 1 > maxTypesCount));
+                    outContentInTypeContainer(types.get(typeI), false, (maxTypesCount != -1) && (typeI + 1 > maxTypesCount));
             } else if (activeRecord != null)
                 // выводим активный контейнер
-                outContentInTypeContainer(activeRecord, true, (maxTypesCount == -1) || (typeI + 1 > maxTypesCount));
+                outContentInTypeContainer(activeRecord, true, (maxTypesCount != -1) && (typeI + 1 > maxTypesCount));
         }
     }
 

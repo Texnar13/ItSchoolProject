@@ -15,6 +15,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.learning.texnar13.teachersprogect.R;
+import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialog;
 
 import java.util.Locale;
 
@@ -46,6 +47,19 @@ public class SponsorFragment extends Fragment {
                 // Play Store app is not installed
             }
         });
+
+        // проблема с оплатой
+        root.findViewById(R.id.sponsor_activity_screen_final_billing_problem).setOnClickListener(v -> {
+            AcceptDialog dialog = new AcceptDialog();
+            Bundle args = new Bundle();
+            args.putString(AcceptDialog.ARG_ACCEPT_MESSAGE,
+                    getResources().getString(R.string.sponsor_activity_title_dialog_billing_problem));
+            args.putString(AcceptDialog.ARG_ACCEPT_BUTTON_TEXT,
+                    getResources().getString(R.string.sponsor_activity_title_dialog_billing_problem_accept));
+            dialog.setArguments(args);
+            dialog.show(getParentFragmentManager(), "problem");
+        });
+
         return root;
     }
 

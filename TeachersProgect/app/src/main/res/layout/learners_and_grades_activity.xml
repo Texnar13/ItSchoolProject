@@ -12,7 +12,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/learners_and_grades_activity_date_title_heght"
+        android:layout_height="@dimen/learners_and_grades_activity_date_title_height"
         android:background="@color/base_blue"
         android:gravity="center_vertical"
         android:weightSum="2">

@@ -105,8 +105,9 @@
                     style="@style/ButtonSimpleStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/double_margin"
+                    android:layout_marginStart="20dp"
                     android:layout_toStartOf="@+id/activity_settings_lesson_silent_mode_switch"
                     android:text="@string/settings_activity_title_silent_lesson" />
 

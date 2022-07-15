@@ -4,10 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -57,7 +57,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
     boolean subscriptionState;
 
     // стандартное время уроков
-    int[][] standardLessonsPeriods ;
+    int[][] standardLessonsPeriods;
     int lessonsCount;
 
     // размер одной ячейки календаря
@@ -114,7 +114,6 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.base_blue_toolbar_title)).setText(R.string.title_activity_schedule_month);
 
 
-
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
         // получаем стандартное время уроков
         standardLessonsPeriods = db.getSettingsTime(1);
@@ -129,9 +128,16 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             cellSize = getResources().getDisplayMetrics().widthPixels / 14F;
         } else {
             // вертикальная ориентация
-            cellSize = getResources().getDisplayMetrics().widthPixels / 7F;
+            float screenWidth = getResources().getDisplayMetrics().widthPixels;
+            // проверяем больше ли размер ячеек чем максимальная ширина
+            float maxWidth = getResources().getDimension(R.dimen.tablet_max_content_width);
+            if (maxWidth < screenWidth) {
+                cellSize = maxWidth / 7F;
+            } else {
+                cellSize = screenWidth / 7F;
+            }
         }
-        cellSize -= (getResources().getDimensionPixelOffset(R.dimen.shedule_month_calendar_margin) * 1f);
+        cellSize -= getResources().getDimensionPixelOffset(R.dimen.shedule_month_calendar_margin);
         // получаем поле вывода заголовка
         dateText = findViewById(R.id.schedule_month_date_text);
         // получаем поле вывода дня
@@ -176,17 +182,22 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         });
 
 
-        // создаем рекламу яндекса внизу календаря
-        BannerAdView mAdView = new BannerAdView(this);
-        adOut.removeAllViews();
-        adOut.addView(mAdView,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        // выбираем размер рекламы
-        mAdView.setBlockId(getResources().getString(R.string.banner_id_calendar_big));
-        mAdView.setAdSize(AdSize.BANNER_320x100);
-        // Создание объекта таргетирования рекламы и загрузка объявления.
-        mAdView.loadAd(new AdRequest.Builder().build());
+
+        // выводим рекламу если нет подписки
+        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
+            // создаем рекламу яндекса внизу календаря
+            BannerAdView mAdView = new BannerAdView(this);
+            adOut.removeAllViews();
+            adOut.addView(mAdView,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            // выбираем размер рекламы
+            mAdView.setBlockId(getResources().getString(R.string.banner_id_calendar_big));
+            mAdView.setAdSize(AdSize.BANNER_320x100);
+            // Создание объекта таргетирования рекламы и загрузка объявления.
+            mAdView.loadAd(new AdRequest.Builder().build());
+        }
 
 
         // при старте выставляем в основной календарь текущую дату

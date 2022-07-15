@@ -2,6 +2,7 @@ package com.learning.texnar13.teachersprogect;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -79,11 +80,13 @@ public class MyApplication extends MultiDexApplication {//MultiDexApplication/Ap
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);
 
+
         // получаем текущую конфигурацию в контексте
         Configuration config = context.getResources().getConfiguration();
 
         // добавляем конфигурации новые параметры
         config.locale = locale;
+        config.fontScale = 2.0f;
         // config.fontScale todo почитать про динамическое изменение шрифта
 
         // ставим обратно получившуюся конфигурацию

@@ -174,11 +174,17 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                         | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
-        // начинаем загрузку межстраничного баннера конца урока
-        settingsBack = new InterstitialAd(this);
-        settingsBack.setBlockId(getResources().getString(R.string.banner_id_after_settings));
-        // Создание объекта таргетирования рекламы и загрузка объявления.
-        settingsBack.loadAd(new AdRequest.Builder().build());
+
+        // выводим рекламу если нет подписки
+        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
+            // реклама яндекса
+            // начинаем загрузку межстраничного баннера конца урока
+            settingsBack = new InterstitialAd(this);
+            settingsBack.setBlockId(getResources().getString(R.string.banner_id_after_settings));
+            // Создание объекта таргетирования рекламы и загрузка объявления.
+            settingsBack.loadAd(new AdRequest.Builder().build());
+        }
 
         // раздуваем layout
         setContentView(R.layout.settings_activity);
@@ -685,9 +691,16 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         super.onBackPressed();
 
         // выводим рекламу при закрытии активности настроек
-        if (settingsBack.isLoaded()) {
-            settingsBack.show(); //todo wtf? не работает, Only fullscreen activities can request orientation
-        }
+        if (settingsBack != null)
+            if (settingsBack.isLoaded()) {
+
+                // выводим рекламу если нет подписки
+                if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                        .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
+                    // реклама яндекса
+                    settingsBack.show();
+                }
+            }
     }
 }
 

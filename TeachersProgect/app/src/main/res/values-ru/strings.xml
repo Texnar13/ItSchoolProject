@@ -69,7 +69,7 @@
     <string name="learners_and_grades_out_activity_dialog_title_edit_grade">Редактирование ответов</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_name">Имя</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_second_name">Фамилия</string>
-    <string name="learners_and_grades_out_activity_dialog_title_learner_info">##Информация:</string>
+    <string name="learners_and_grades_out_activity_dialog_title_learner_info">Информация:</string>
     <string name="learners_and_grades_out_activity_dialog_button_add">+ Добавить</string>
     <string name="learners_and_grades_out_activity_dialog_button_change">Изменить</string>
     <string name="learners_and_grades_out_activity_dialog_button_create">Создать</string>
@@ -187,7 +187,7 @@
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">Рассадить учеников</string>
     <string name="lesson_redactor_activity_button_remove">Удалить урок</string>
-    <string name="lesson_redactor_activity_button_remove_other">##Удалить этот урок и все последующие</string>
+    <string name="lesson_redactor_activity_button_remove_other">Удалить этот урок и все последующие</string>
     <!-- диалоги -->
     <string name="lesson_redactor_activity_dialog_button_remove">удалить</string>
     <string name="lesson_redactor_activity_dialog_button_add">добавить</string>
@@ -214,7 +214,7 @@
     <string name="lesson_activity_learner_dialog_out_yes">Выйти! (все данные удалятся)</string>
     <string name="lesson_activity_learner_dialog_out_no">Вернуться к уроку!</string>
 
-    <string name="lesson_activity_bottom_sheet_date_text" formatted="true">##%d %s, %s, %d урок</string>
+    <string name="lesson_activity_bottom_sheet_date_text" formatted="true">%d %s, %s, %d урок</string>
 
 
     <!-- активность окончания урока-->
@@ -234,17 +234,17 @@
     <string name="settings_activity_title_grades_type">Типы работы на уроке</string>
     <string name="settings_activity_title_absent_type">Типы отсутствия</string>
     <string name="settings_activity_title_colored_grades">Цветные оценки</string>
-    <string name="settings_activity_title_silent_lesson">##Отключать звук пока открыт урок</string>
-    <string name="settings_activity_toast_silent_lesson">##Найдите в списке приложение "Помощник учителя"</string>
+    <string name="settings_activity_title_silent_lesson">Отключить звук пока открыт урок</string>
+    <string name="settings_activity_toast_silent_lesson">Найдите в списке приложение "Помощник учителя"</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">Макс. балл/ число ответов: %d</string>
     <string name="settings_activity_button_edit_time">Время уроков</string>
     <string name="settings_activity_button_remove_data">Удалить все данные</string>
     <string name="settings_activity_button_rate_us">Оцените наше приложение!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">Язык: %s</string>
-    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Тема: %s</string>
-    <string name="settings_activity_button_subscribe">##Стать спонсором</string>
-    <string name="settings_activity_button_my_premium">##Мой премиум</string>
+    <string name="settings_activity_button_edit_dark_mode" formatted="true">Тема: %s</string>
+    <string name="settings_activity_button_subscribe">Получить премиум</string>
+    <string name="settings_activity_button_my_premium">Мой премиум</string>
     <string name="settings_activity_button_save_data_copy">Сохранить резервную копию</string>
     <string name="settings_activity_button_load_data_copy">Загрузить резервную копию</string>
     <!-- уведомления -->
@@ -256,7 +256,7 @@
     <string name="settings_activity_toast_grade_too_min">Введено слишком маленькое значение (должно быть не менее 1)</string>
     <string name="settings_activity_toast_time_successfully_saved">Время сохранено</string>
     <string name="settings_activity_toast_time_no_saved">Ошибка, время не сохранено</string>
-    <string name="settings_activity_toast_time_subscribe" formatted="true">##Без подписки число уроков ограничено до %d</string>
+    <string name="settings_activity_toast_time_subscribe" formatted="true">Без подписки число уроков ограничено до %d</string>
     <string name="settings_activity_data_export_theme" formatted="true">Резервная копия от %s</string>
     <string name="settings_activity_data_export_title">Отправить через:</string>
     <string name="settings_activity_data_import_title">Выберите файл:</string>
@@ -266,7 +266,7 @@
     <string name="settings_activity_data_import_message_read_success">\n\nФайл успешно прочтён!</string>
     <string name="settings_activity_data_import_message_read_error">\n\nЧтение не завершено, в файле ошибки!</string>
     <!-- диалоги -->
-    <string name="settings_activity_dialog_delete_title" formatted="true">##Чтобы удалить все данные, введите число %d:</string>
+    <string name="settings_activity_dialog_delete_title" formatted="true">Чтобы удалить все данные, введите число %d:</string>
     <string name="settings_activity_dialog_add_type_title">+ Добавить тип оценок</string>
     <string name="settings_activity_dialog_new_type_title">Новый тип</string>
     <string name="settings_activity_dialog_add_absent_type_title">+ Добавить тип отсутствия</string>
@@ -274,8 +274,8 @@
     <string name="settings_activity_dialog_new_absent_type_title_hint">Сокращение</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty">Введите название</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">Введите сокращение</string>
-    <string name="settings_activity_dialog_new_absent_type_toast_subscribe" formatted="true">##Без подписки число типов ограничено до %d</string>
-    <string name="settings_activity_dialog_hint_number">##Введите число</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_subscribe" formatted="true">Без премиум-подписки число типов ограничено до %d</string>
+    <string name="settings_activity_dialog_hint_number">Введите число</string>
     <string name="settings_activity_dialog_button_remove_data">Удалить</string>
     <string name="settings_activity_dialog_button_remove">Удалить</string>
     <string name="settings_activity_dialog_edit_time_title">Время уроков</string>
@@ -287,40 +287,43 @@
     <string name="settings_activity_dialog_text_time_colon"> : </string>
     <string name="settings_activity_dialog_text_time_dash"> - </string>
     <string name="settings_activity_dialog_edit_locale_title">Выберите язык:</string>
-    <string name="settings_activity_dialog_edit_theme_title">##Выберите тему:</string>
+    <string name="settings_activity_dialog_edit_theme_title">Выберите тему:</string>
     <string name="settings_activity_dialog_data_import_accept_title">Результаты чтения файла:</string>
     <string name="settings_activity_dialog_data_import_accept_button">Загрузить данные</string>
-    <string name="settings_activity_dialog_max_answer_hint">##Ведите балл</string>
+    <string name="settings_activity_dialog_max_answer_hint">Введите балл</string>
 
 
     <!-- активность рекламы спонсора -->
     <string name="sponsor_activity_button_go_to_last_screen">Попробовать Premium</string>
     <string name="sponsor_activity_title_app_name">Teacher\'s Assistant</string>
-    <string name="sponsor_activity_title_my_premium">##Мой</string>
+    <string name="sponsor_activity_title_my_premium">Мой</string>
     <string name="sponsor_activity_title_tag">Premium</string>
-    <string name="sponsor_activity_my_premium_my_rate">##Мой тариф:</string>
-    <string name="sponsor_activity_my_premium_my_sub">##Управление подпиской:</string>
-    <string name="sponsor_activity_my_premium_my_sub_go_to_google">##Перейти в Google Play</string>
-    <string name="sponsor_activity_my_premium_my_sub_connection_error">##Ошибка подключения</string>
+    <string name="sponsor_activity_my_premium_my_rate">Мой тариф:</string>
+    <string name="sponsor_activity_my_premium_my_sub">Управление подпиской:</string>
+    <string name="sponsor_activity_my_premium_my_sub_go_to_google">Перейти в Google Play</string>
+    <string name="sponsor_activity_my_premium_my_sub_connection_error">Ошибка подключения</string>
     <string name="sponsor_activity_title_screen_0">Неограниченное количество уроков</string>
     <string name="sponsor_activity_title_screen_1">Комментарий (к уроку и к ученику) любой длины</string>
     <string name="sponsor_activity_title_screen_2">Нет рекламы</string>
-    <string name="sponsor_activity_title_screen_3">##Сколько угодно типов работы на уроке</string>
+    <string name="sponsor_activity_title_screen_3">Сколько угодно типов работы на уроке</string>
     <string name="sponsor_activity_title_screen_4">Импорт и экспорт данных</string>
     <string name="sponsor_activity_title_screen_last">Выберите подходящий вам тариф:</string>
-    <string name="sponsor_activity_button_sub_month" formatted="true">Ежемесячно: %s/месяц</string>
-    <string name="sponsor_activity_button_sub_year" formatted="true">##Ежегодно: %s/год</string>
+    <string name="sponsor_activity_button_sub_month" formatted="true">Ежемесячно: %s в месяц</string>
+    <string name="sponsor_activity_button_sub_year" formatted="true">Ежегодно: %s в год</string>
     <string name="sponsor_activity_button_sub_year_long" formatted="true">затем %s в год (%s в месяц)</string>
     <string name="sponsor_activity_text_free" formatted="true">Бесплатно %d дней</string>
-    <string name="sponsor_activity_title_cancel_sub">##Вы можете отменить подписку в любое время в GooglePlay!</string>
+    <string name="sponsor_activity_title_cancel_sub">Вы можете отменить подписку в любое время в GooglePlay!</string>
     <string name="sponsor_activity_title_promocode"><u>Использовать промокод</u></string>
+    <string name="sponsor_activity_title_billing_problem"><u>Проблема с оплатой через Google Play</u></string>
+    <string name="sponsor_activity_title_dialog_billing_problem">Уважаемый пользователь! \n\nЕсли у вас возникла проблема с оформлением подписки, напишите нам, мы постараемся помочь!</string>
+    <string name="sponsor_activity_title_dialog_billing_problem_accept">Написать нам</string>
     <string name="sponsor_activity_title_subs"><u>Восстановить покупки</u></string>
     <string name="sponsor_activity_button_my_subs">Посмотреть мои подписки</string>
-    <string name="sponsor_activity_text_test_dz">Белый учебник, стр. 7 упр. 10; раб. тетрадь стр. 24 упр. 4–17; не забудь спросить Иванова.</string>
-    <string name="sponsor_activity_text_test_info">Мать: Анна Сергеевна, тел +74951234568 Четвертная по химии будет 2, пусть выучит таблицу.</string>
-    <string name="sponsor_activity_text_congratulations_title">##Поздравляем!</string>
-    <string name="sponsor_activity_text_congratulations_text">##Вы получили статус Premium! Теперь вам доступны все функции приложения.\nСпасибо вам за то, что поддерживаете нас.</string>
-    <string name="sponsor_activity_text_congratulations_button">##Начнем!</string>
+    <string name="sponsor_activity_text_test_dz">Белый учебник, стр. 7 упр. 10; раб. тетрадь стр. 24 упр. 4–17; не забудь спросить Сидорова, Иванов должен принести домашнее задание.</string>
+    <string name="sponsor_activity_text_test_info">Мать: Анна Сергеевна, тел +74951234568. \nПо химии будет двойка в четверти, должен сдать таблицу Менделеева и три домашних задания.</string>
+    <string name="sponsor_activity_text_congratulations_title">Поздравляем!</string>
+    <string name="sponsor_activity_text_congratulations_text">Вы получили статус Premium! Теперь вам доступны все функции приложения. Спасибо вам за то, что поддерживаете нас!</string>
+    <string name="sponsor_activity_text_congratulations_button">Начнем!</string>
 
     <string name="sponsor_activity_text_error_send_purchase_request" formatted="true">Ошибка отправки запроса на сервер: %d</string>
     <string name="sponsor_activity_text_error_send_purchase_response" formatted="true">Ошибка сервера покупка не выполнена: %d</string>

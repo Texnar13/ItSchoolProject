@@ -69,7 +69,7 @@
     <string name="learners_and_grades_out_activity_dialog_title_edit_grade">Editar respuestas</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_name">Nombre</string>
     <string name="learners_and_grades_out_activity_dialog_hint_learner_second_name">Apellidos</string>
-    <string name="learners_and_grades_out_activity_dialog_title_learner_info">##Información:</string>
+    <string name="learners_and_grades_out_activity_dialog_title_learner_info">Información:</string>
     <string name="learners_and_grades_out_activity_dialog_button_add">+ Agregar</string>
     <string name="learners_and_grades_out_activity_dialog_button_change">Cambiar</string>
     <string name="learners_and_grades_out_activity_dialog_button_create">Crear</string>
@@ -95,9 +95,9 @@
     <!-- заголовок активности -->
     <string name="title_activity_learners_and_grades_statistics">Estadísticas por período:</string>
     <!-- тексты -->
-    <string name="learners_and_grades_statistics_activity_title_column_learner_name">##Nombre</string>
-    <string name="learners_and_grades_statistics_activity_title_column_grade">##PUNTO</string>
-    <string name="learners_and_grades_statistics_activity_title_column_absent">##AUS</string>
+    <string name="learners_and_grades_statistics_activity_title_column_learner_name">Nombre</string>
+    <string name="learners_and_grades_statistics_activity_title_column_grade">Puntuación media</string>
+    <string name="learners_and_grades_statistics_activity_title_column_absent">Número de ausencias</string>
     <string name="learners_and_grades_statistics_activity_hint_date_day">DÍA</string>
     <string name="learners_and_grades_statistics_activity_hint_date_month">MES</string>
     <string name="learners_and_grades_statistics_activity_hint_date_year">AÑO</string>
@@ -186,7 +186,7 @@
     <!-- кнопки -->
     <string name="lesson_redactor_activity_button_edit_seating">Debes sentar a los alumnos</string>
     <string name="lesson_redactor_activity_button_remove">Eliminar clase</string>
-    <string name="lesson_redactor_activity_button_remove_other">##Удалить этот урок и все последующие</string>
+    <string name="lesson_redactor_activity_button_remove_other">Eliminar esta lección y todas las siguientes</string>
     <!-- диалоги -->
     <string name="lesson_redactor_activity_dialog_button_remove">eliminar</string>
     <string name="lesson_redactor_activity_dialog_button_add">agregar</string>
@@ -213,7 +213,7 @@
     <string name="lesson_activity_learner_dialog_out_yes">Salir (se eliminarán todos los datos)</string>
     <string name="lesson_activity_learner_dialog_out_no">Volver a la lección</string>
 
-    <string name="lesson_activity_bottom_sheet_date_text" formatted="true">##%d %s, %s, %d урок</string>
+    <string name="lesson_activity_bottom_sheet_date_text" formatted="true">%d %s, %s, %d lección</string>
 
 
     <!-- активность окончания урока-->
@@ -233,17 +233,17 @@
     <string name="settings_activity_title_grades_type">Tipos de trabajo en la lección</string>
     <string name="settings_activity_title_absent_type">Tipos de ausencia</string>
     <string name="settings_activity_title_colored_grades">Calificaciónes de colores</string>
-    <string name="settings_activity_title_silent_lesson">##Отключать звук пока открыт урок</string>
-    <string name="settings_activity_toast_silent_lesson">##Найдите в списке приложение "Помощник учителя"</string>
+    <string name="settings_activity_title_silent_lesson">Silenciar el sonido mientras la lección está abierta</string>
+    <string name="settings_activity_toast_silent_lesson">Busque la aplicación"Ayudante del profesor" en la lista</string>
     <!-- кнопки -->
     <string name="settings_activity_button_edit_max_answer" formatted="true">Puntuación máxima/ número de respuestas: %d</string>
     <string name="settings_activity_button_edit_time">Tiempo de lecciones</string>
     <string name="settings_activity_button_remove_data">Eliminar todos los datos</string>
     <string name="settings_activity_button_rate_us">Califique nuestra aplicación!</string>
     <string name="settings_activity_button_edit_locale" formatted="true">Idioma: %s</string>
-    <string name="settings_activity_button_edit_dark_mode" formatted="true">##Тема: %s</string>
-    <string name="settings_activity_button_subscribe">##Conviértase en patrocinador</string>
-    <string name="settings_activity_button_my_premium">##Мой премиум</string>
+    <string name="settings_activity_button_edit_dark_mode" formatted="true">Tema: %s</string>
+    <string name="settings_activity_button_subscribe">Hazte premium</string>
+    <string name="settings_activity_button_my_premium">Mi Premium</string>
     <string name="settings_activity_button_save_data_copy">Guardar una copia de seguridad</string>
     <string name="settings_activity_button_load_data_copy">Subir una copia de seguridad</string>
     <!-- уведомления -->
@@ -255,17 +255,17 @@
     <string name="settings_activity_toast_grade_too_min">Se ha introducido un valor demasiado pequeño (debe haber al menos 1)</string>
     <string name="settings_activity_toast_time_successfully_saved">Tiempo guardado</string>
     <string name="settings_activity_toast_time_no_saved">Error, tiempo no guardado</string>
-    <string name="settings_activity_toast_time_subscribe" formatted="true">##Без подписки число уроков ограничено до %d</string>
+    <string name="settings_activity_toast_time_subscribe" formatted="true">Sin suscripción Premium, el número de lecciones está limitado a %d</string>
     <string name="settings_activity_data_export_theme" formatted="true">Copia de seguridad de %s</string>
     <string name="settings_activity_data_export_title">Enviar a:</string>
     <string name="settings_activity_data_import_title">Seleccione el file:</string>
     <string name="settings_activity_data_import_message_incorrect_type">Formato de archivo incorrecto . Archivos compatibles .tadb</string>
     <string name="settings_activity_data_import_message_unrtedable_file">No se puede leer el archivo.</string>
     <string name="settings_activity_data_import_message_error_tag">\n Error: </string>
-    <string name="settings_activity_data_import_message_read_success">\n\n##Файл успешно прочтён!</string>
+    <string name="settings_activity_data_import_message_read_success">\n\n¡El archivo ha sido leído con éxito!</string>
     <string name="settings_activity_data_import_message_read_error">\n\n¡Lectura no terminada, error en el archivo!</string>
     <!-- диалоги -->
-    <string name="settings_activity_dialog_delete_title" formatted="true">##Чтобы удалить все данные, введите число %d:</string>
+    <string name="settings_activity_dialog_delete_title" formatted="true">Para eliminar todos los datos, introduza el número %d:</string>
     <string name="settings_activity_dialog_add_type_title">+ Agregar nueva tipo de calificaciónes</string>
     <string name="settings_activity_dialog_new_type_title">Nueva clase</string>
     <string name="settings_activity_dialog_add_absent_type_title">+ Agregar tipo de ausencia</string>
@@ -273,8 +273,8 @@
     <string name="settings_activity_dialog_new_absent_type_title_hint">Abreviatura</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty">Introduzca el nombre</string>
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">Ingrese la abreviatura</string>
-    <string name="settings_activity_dialog_new_absent_type_toast_subscribe" formatted="true">##Без подписки число типов ограничено до %d</string>
-    <string name="settings_activity_dialog_hint_number">##Введите число</string>
+    <string name="settings_activity_dialog_new_absent_type_toast_subscribe" formatted="true">Sin suscripción Premium, el número de tipos está limitado a %d</string>
+    <string name="settings_activity_dialog_hint_number">Introduzca el número</string>
     <string name="settings_activity_dialog_button_remove_data">Eliminar</string>
     <string name="settings_activity_dialog_button_remove">Eliminar</string>
     <string name="settings_activity_dialog_edit_time_title">Tiempo de lecciones</string>
@@ -286,40 +286,43 @@
     <string name="settings_activity_dialog_text_time_colon"> : </string>
     <string name="settings_activity_dialog_text_time_dash"> - </string>
     <string name="settings_activity_dialog_edit_locale_title">Seleccione un idioma:</string>
-    <string name="settings_activity_dialog_edit_theme_title">##Выберите тему:</string>
+    <string name="settings_activity_dialog_edit_theme_title">Seleccione un tema:</string>
     <string name="settings_activity_dialog_data_import_accept_title">Resultados de lectura de archivos:</string>
     <string name="settings_activity_dialog_data_import_accept_button">Cargar datos</string>
-    <string name="settings_activity_dialog_max_answer_hint">##Ведите балл</string>
+    <string name="settings_activity_dialog_max_answer_hint">Introduzca una calificación</string>
 
 
     <!-- активность рекламы спонсора -->
     <string name="sponsor_activity_button_go_to_last_screen">Prueba Premium</string>
     <string name="sponsor_activity_title_app_name">Teacher\'s Assistant</string>
-    <string name="sponsor_activity_title_my_premium">##Мой</string>
+    <string name="sponsor_activity_title_my_premium">Mi</string>
     <string name="sponsor_activity_title_tag">Premium</string>
-    <string name="sponsor_activity_my_premium_my_rate">##Мой тариф:</string>
-    <string name="sponsor_activity_my_premium_my_sub">##Управление подпиской:</string>
-    <string name="sponsor_activity_my_premium_my_sub_go_to_google">##Перейти в Google Play</string>
-    <string name="sponsor_activity_my_premium_my_sub_connection_error">##Ошибка подключения</string>
+    <string name="sponsor_activity_my_premium_my_rate">Mi tarifa:</string>
+    <string name="sponsor_activity_my_premium_my_sub">Gestión de suscripciones:</string>
+    <string name="sponsor_activity_my_premium_my_sub_go_to_google">Ir a Google Play</string>
+    <string name="sponsor_activity_my_premium_my_sub_connection_error">Error de conexión</string>
     <string name="sponsor_activity_title_screen_0">Número ilimitado de lecciones</string>
     <string name="sponsor_activity_title_screen_1">Comentario (a la lección y al estudiante) de cualquier longitud.</string>
     <string name="sponsor_activity_title_screen_2">Sin anuncios</string>
-    <string name="sponsor_activity_title_screen_3">##Сколько угодно типов работы на уроке</string>
+    <string name="sponsor_activity_title_screen_3">Hay cualquier número de tipos de trabajo en la lección</string>
     <string name="sponsor_activity_title_screen_4">Importar y exportar datos</string>
     <string name="sponsor_activity_title_screen_last">Elige la tarifa que más te convenga.</string>
-    <string name="sponsor_activity_button_sub_month" formatted="true">Mensualmente: %s al mes</string>
-    <string name="sponsor_activity_button_sub_year" formatted="true">##Ежегодно: %s/год</string>
+    <string name="sponsor_activity_button_sub_month" formatted="true">Mensual: %s por mes</string>
+    <string name="sponsor_activity_button_sub_year" formatted="true">Anual: %s por año</string>
     <string name="sponsor_activity_button_sub_year_long" formatted="true">%s al año (%s al mes)</string>
     <string name="sponsor_activity_text_free" formatted="true">Gratis %d días</string>
-    <string name="sponsor_activity_title_cancel_sub">##Вы можете отменить подписку в любое время в GooglePlay!</string>
+    <string name="sponsor_activity_title_cancel_sub">¡Puede cancelar su suscripción en cualquier momento en Google Play!</string>
     <string name="sponsor_activity_title_promocode"><u>Usar un código de promocional</u></string>
+    <string name="sponsor_activity_title_billing_problem"><u>Problema con el pago a través de Google Play</u></string>
+    <string name="sponsor_activity_title_dialog_billing_problem">¡Estimado usuario! \n\nSi tiene algún problema con la suscripción, envíenos un correo electrónico. ¡Intentaremos ayudarlo!</string>
+    <string name="sponsor_activity_title_dialog_billing_problem_accept">Contáctenos</string>
     <string name="sponsor_activity_title_subs"><u>Restaurar las compras</u></string>
     <string name="sponsor_activity_button_my_subs">Ver mis suscripciones</string>
     <string name="sponsor_activity_text_test_dz">Libro de texto blanco, p. 7 ; cuaderno de trabajo p. 24 4–17; no olvides preguntar a Angela.</string>
-    <string name="sponsor_activity_text_test_info">Madre: García, teléfono +34123456890.</string>
-    <string name="sponsor_activity_text_congratulations_title">##Поздравляем!</string>
-    <string name="sponsor_activity_text_congratulations_text">##Вы получили статус Premium! Теперь вам доступны все функции приложения./nСпасибо вам за то, что поддерживаете нас.</string>
-    <string name="sponsor_activity_text_congratulations_button">##Начнем!</string>
+    <string name="sponsor_activity_text_test_info">Madre: García, teléfono +34123456890.La niña tendrá "dos". Ella tiene que traer cuatro tareas.</string>
+    <string name="sponsor_activity_text_congratulations_title">¡Felicidades!</string>
+    <string name="sponsor_activity_text_congratulations_text">¡Tienes un estatus Premium! Ahora todas las funciones de la aplicación están disponibles para usted. ¡Gracias por apoyarnos!</string>
+    <string name="sponsor_activity_text_congratulations_button">¡Comencemos!</string>
 
     <string name="sponsor_activity_text_error_send_purchase_request" formatted="true">Error al enviar la solicitud al servidor: %d</string>
     <string name="sponsor_activity_text_error_send_purchase_response" formatted="true">Error de servidor error de compra: %d</string>

@@ -21,7 +21,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/shedule_month_month_buttons_heght">
+                android:layout_height="@dimen/shedule_month_month_buttons_height">
 
                 <RelativeLayout
                     android:id="@+id/schedule_month_button_previous"
@@ -76,15 +76,14 @@
                 android:id="@+id/schedule_month_table"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                />
+                android:orientation="vertical" />
 
             <LinearLayout
                 android:id="@+id/shedule_month_ad_banner_place"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="bottom"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <LinearLayout
                 android:id="@+id/schedule_month_day_table"

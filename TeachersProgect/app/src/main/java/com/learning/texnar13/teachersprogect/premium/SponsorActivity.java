@@ -1,6 +1,8 @@
 package com.learning.texnar13.teachersprogect.premium;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,17 +32,18 @@ import com.android.billingclient.api.SkuDetailsParams;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
+import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialog;
 import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SponsorActivity extends AppCompatActivity implements SubsClickInterface {
+public class SponsorActivity extends AppCompatActivity implements SubsClickInterface, AcceptDialog.AcceptDialogInterface {
 
     // количество страниц в превью
     public static final int PAGES_COUNT = 5;
     // кнопка перехода на последний экран
-    TextView buttonGoToFinal;
+    View buttonGoToFinal;
 
     // текущая ссылка последнего фрагмента
     SponsorFragment currentLastFragment;
@@ -107,13 +110,7 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-                if (position == PAGES_COUNT - 1) {
-                    buttonGoToFinal.setTextColor(getResources().getColor(R.color.transparent));
-                    buttonGoToFinal.setBackgroundColor(getResources().getColor(R.color.transparent));
-                } else {
-                    buttonGoToFinal.setTextColor(getResources().getColor(R.color.premium_text_color));
-                    buttonGoToFinal.setBackground(getResources().getDrawable(R.drawable.sponsor_activity_background_button_round_gold));
-                }
+                buttonGoToFinal.setAlpha((position == PAGES_COUNT - 1) ? 0 : 1);
                 super.onPageSelected(position);
             }
         });
@@ -258,6 +255,20 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
                     getResources().getString(R.string.sponsor_activity_text_error_send_purchase_request, responseCode),
                     Toast.LENGTH_SHORT
             ).show();
+    }
+
+    // обратная связь диалога проблемы с подпиской
+    @Override
+    public void accept() {
+        // переход по ссылке
+        try {
+            startActivity(new Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://translate.yandex.ru")
+            ));
+        } catch (android.content.ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     // --------- вспомогательные методы ---------
