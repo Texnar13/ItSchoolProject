@@ -59,7 +59,7 @@
         android:layout_height="@dimen/simple_buttons_height"
         android:background="@drawable/base_background_dialog_bottom_round_blue"
         android:gravity="center"
-        android:text="@string/settings_activity_dialog_button_remove_data"
+        android:text="@string/button_remove"
         android:textColor="@color/text_color_inverse"
         android:textSize="@dimen/simple_buttons_text_size" />
 </LinearLayout>

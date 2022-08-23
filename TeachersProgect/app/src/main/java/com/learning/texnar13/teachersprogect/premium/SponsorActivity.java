@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,7 +25,9 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.QueryProductDetailsParams;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -38,6 +39,7 @@ import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import java.util.ArrayList;
 import java.util.List;
 
+// todo переписать бы тут всё, страшный класс, с устаревшими методами
 public class SponsorActivity extends AppCompatActivity implements SubsClickInterface, AcceptDialog.AcceptDialogInterface {
 
     // количество страниц в превью
@@ -51,6 +53,11 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
     LoadedPrice[] loadedPriceList;
 
     public static final int RESULT_DEAL_DONE = 5555;
+
+
+    // ссылка на помощь с оплатой передаваемая как комментарий рекламного блока
+    boolean isLinkKeeperLoaded = false;
+    String linkFromKeeper = "";
 
 
     @Override
@@ -135,13 +142,16 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
             }
         };
 
+        // создание клиента соединения с google play
+        //  который автоматически подтверждает неподтвержденные покупки
+
         // billingClient.queryPurchasesAsync();
         billingClient = BillingClient.newBuilder(this).setListener((billingResult, purchases) -> {
             // обратная связь диалога покупки google play
             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
                 // обрабатываем покупки, если они есть (предоставляем контент пользователю)
                 if (purchases.size() != 0) {
-                    // проверяем что произошло именно событие покупки (а не напримекр промежуточный этап с оплатой позже PENDING)
+                    // проверяем что произошло именно событие покупки (а не например промежуточный этап с оплатой позже PENDING)
                     if (purchases.get(0).getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
                         // сохраняем параметр в SharedPreferences
                         PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()
@@ -173,51 +183,19 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
         }).enablePendingPurchases().build();
 
         // пытаемся соединиться с сервером googlePlay
+        // и получить доступные товары
         billingClient.startConnection(new BillingClientStateListener() {
 
             @Override
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-
                 // BillingClient готов начинаем загрузку каталога
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
 
-                    // id товаров
-                    List<String> skuList = new ArrayList<>();
-                    skuList.add(getResources().getString(R.string.subscription_id_month_sponsor));
-                    skuList.add(getResources().getString(R.string.subscription_id_year_sponsor));
+                    // получение информации о подписках из подключенного к google play обьекта billingClient
+                    startLoadingSubs(billingClient, myHandler);
 
-                    // получаем информацию о доступных товарах
-                    SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-                    params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS);
-                    billingClient.querySkuDetailsAsync(params.build(), (billingResult1, skuDetailsList) -> {
-                        // не выдает лог ошибок, нужно ставить try catch
-
-                        try {// todo убрать try catch после разработки
-                            // сохарняем данные на случай если фрамент перезапустится или еще не создан
-                            LoadedPrice[] newList = new LoadedPrice[skuDetailsList.size()];
-                            for (int detailsI = 0; detailsI < skuDetailsList.size(); detailsI++) {
-                                // получаем данные из конкретного объекта
-                                SkuDetails skuDetails = skuDetailsList.get(detailsI);
-                                newList[detailsI] = new LoadedPrice(
-                                        skuDetails,
-                                        parseDaysCount(skuDetails.getFreeTrialPeriod()), // количество бесплатных дней
-                                        getSubsPeriodTypeByCode(skuDetails.getSubscriptionPeriod()),
-                                        skuDetails.getPrice(),
-                                        skuDetails.getDescription(),
-                                        skuDetails.getPriceAmountMicros() / 1000000F,
-                                        skuDetails.getPriceCurrencyCode()
-                                );
-                            }
-                            // применяем изменения
-                            loadedPriceList = newList;
-
-                            // также если фрагмент уже был создан, выводим внего данные через хендлер
-                            myHandler.sendEmptyMessage(123);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
+                    // получение информации о обычных товарах
+                    startLoadingProducts(billingClient);
                 }
             }
 
@@ -233,6 +211,134 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
             }
         });
     }
+
+
+    // получение информации о подписках из подключенного к google play обьекта billingClient
+    private void startLoadingSubs(BillingClient billingClient, Handler handlerForOut) {
+        // id товаров
+        List<String> skuList = new ArrayList<>();
+        skuList.add(getResources().getString(R.string.subscription_id_month_sponsor));
+        skuList.add(getResources().getString(R.string.subscription_id_year_sponsor));
+
+        // получаем информацию о доступных товарах
+        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+        params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS);
+        billingClient.querySkuDetailsAsync(params.build(), (billingResult1, skuDetailsList) -> {
+            // не выдает лог ошибок, нужно ставить try catch
+            try {// todo убрать try catch после разработки
+                // сохарняем данные на случай если фрамент перезапустится или еще не создан
+                LoadedPrice[] newList = new LoadedPrice[skuDetailsList.size()];
+                for (int detailsI = 0; detailsI < skuDetailsList.size(); detailsI++) {
+                    // получаем данные из конкретного объекта
+                    SkuDetails skuDetails = skuDetailsList.get(detailsI);
+                    newList[detailsI] = new LoadedPrice(
+                            skuDetails,
+                            parseDaysCount(skuDetails.getFreeTrialPeriod()), // количество бесплатных дней
+                            getSubsPeriodTypeByCode(skuDetails.getSubscriptionPeriod()),
+                            skuDetails.getPrice(),
+                            skuDetails.getDescription(),
+                            skuDetails.getPriceAmountMicros() / 1000000F,
+                            skuDetails.getPriceCurrencyCode()
+                    );
+                }
+                // применяем изменения
+                loadedPriceList = newList;
+
+                // также если фрагмент уже был создан, выводим внего данные через хендлер
+                handlerForOut.sendEmptyMessage(123);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+//        // подготавливаем запрос из products (включающие id товаров)
+//        List<QueryProductDetailsParams.Product> products = new ArrayList<>();
+//        products.add(QueryProductDetailsParams.Product.newBuilder()
+//                .setProductId(getResources().getString(R.string.subscription_id_month_sponsor))
+//                .setProductType(BillingClient.ProductType.SUBS)
+//                .build()
+//        );
+//        products.add(QueryProductDetailsParams.Product.newBuilder()
+//                .setProductId(getResources().getString(R.string.subscription_id_year_sponsor))
+//                .setProductType(BillingClient.ProductType.SUBS)
+//                .build()
+//        );
+//        QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder()
+//                .setProductList(products).build();
+//
+//        // todo тут одним запросом можно получить и подписки и товары, по этому вот если что проверка
+//        // BillingClient.ProductType.SUBS.equals(productDetails.getProductType())
+//
+//        // получаем информацию о доступных товарах
+//        billingClient.queryProductDetailsAsync(params,
+//                (BillingResult billingResult1, List<ProductDetails> productDetailsList) -> {
+//                    // не выдает лог ошибок, нужно ставить try catch
+//                    try {// todo убрать try catch после разработки
+//                        // сохарняем данные пока толлько во временный обьект
+//                        LoadedPrice[] newList = new LoadedPrice[productDetailsList.size()];
+//
+//
+//                        for (int detailsI = 0; detailsI < productDetailsList.size(); detailsI++) {
+//
+//
+//                            // получаем данные из конкретного объекта
+//                            ProductDetails productDetails = productDetailsList.get(detailsI);
+//
+//
+//
+//
+//                            newList[detailsI] = new LoadedPrice(
+//                                    productDetails,
+//                                    parseDaysCount(productDetails.getFreeTrialPeriod()), // количество бесплатных дней
+//                                    getSubsPeriodTypeByCode(productDetails.getSubscriptionPeriod()),
+//                                    productDetails.getPrice(),
+//                                    productDetails.getDescription(),
+//                                    productDetails.getPriceAmountMicros() / 1000000F,
+//                                    productDetails.getPriceCurrencyCode()
+//                            );
+//                        }
+//                        // применяем изменения
+//                        loadedPriceList = newList;
+//
+//                        // также если фрагмент уже был создан, выводим внего данные через хендлер
+//                        handlerForOut.sendEmptyMessage(123);
+//
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                });
+
+    }
+
+    // получение информации о обычных товарах
+    private void startLoadingProducts(BillingClient billingClient) {
+        // подготавливаем запрос из products (включающие id товаров)
+        List<QueryProductDetailsParams.Product> products = new ArrayList<>();
+        QueryProductDetailsParams.Product p = QueryProductDetailsParams.Product.newBuilder()
+                .setProductId(getResources().getString(R.string.premium_pay_link_keeper))
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build();
+        products.add(p);
+        QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder()
+                .setProductList(products).build();
+
+        billingClient.queryProductDetailsAsync(params,
+                (BillingResult billingResult1, List<ProductDetails> productDetailsList) -> {
+                    // не выдает лог ошибок, нужно ставить try catch
+//                    try {// todo убрать try catch после разработки
+
+                    if (productDetailsList.size() != 0) {
+                        ProductDetails pd = productDetailsList.get(0);
+                        SponsorActivity.this.linkFromKeeper = pd.getDescription();
+                        SponsorActivity.this.isLinkKeeperLoaded = true;
+                    }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+                });
+    }
+
 
     // клиентская часть платежного сервиса // todo при повороте не обновлять оба поля
     private BillingClient billingClient;
@@ -262,10 +368,34 @@ public class SponsorActivity extends AppCompatActivity implements SubsClickInter
     public void accept() {
         // переход по ссылке
         try {
-            startActivity(new Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://translate.yandex.ru")
-            ));
+            // если пользователь с русским языком
+            if (getResources().getInteger(R.integer.current_locale_code) == 2) {
+
+                // если какой-то текст был получен
+                if (isLinkKeeperLoaded) {
+                    String linkText = linkFromKeeper.trim();
+                    if (!linkText.equals("")) {
+                        // переходим по ссылке
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(linkText)));
+                    }
+                }
+            } else {
+                // если пользователь с другим языком
+
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                // The intent does not have a URI, so declare the "text/plain" MIME type
+                emailIntent.setType("text/plain");
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"teachersassistant@yandex.ru"}); // recipients
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Payment problem");
+                //emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://path/to/email/attachment"));
+                // You can also attach multiple items by passing an ArrayList of Uris
+                try {
+                    startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                }
+                //todo странно работает, показывает многие другие приложения а не только почту
+            }
         } catch (android.content.ActivityNotFoundException e) {
             e.printStackTrace();
         }

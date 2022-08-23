@@ -56,7 +56,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class StartScreenActivity extends AppCompatActivity implements RateInterface {
+public class StartScreenActivity extends AppCompatActivity implements RateInterface, GDPRDialogFragment.GDPRDialogBackInterface {
 
     // todo раз в сколько запусков показываются диалоги
 
@@ -146,6 +146,53 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
 
+            // ---- диалог GDPR ----
+            if (sharedPreferences.contains(SharedPrefsContract.PREFS_INT_GDPR_STATE)) {
+                // если в sharedPreferences уже есть параметр PREFS_INT_GDPR_STATE
+
+                // если выбор ещё не сделан
+                if(sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_GDPR_STATE,
+                        SharedPrefsContract.PREFS_INT_GDPR_STATE_NONE)
+                        == SharedPrefsContract.PREFS_INT_GDPR_STATE_NONE){
+                    // вызов диалога GDPR
+                    GDPRDialogFragment dialogFragment2 = new GDPRDialogFragment();
+                    dialogFragment2.show(getSupportFragmentManager(), "GDPR");
+                }
+
+            } else {
+                // если это первый заход в приложение
+                // создаем переменную с пустым значеним
+                editor.putInt(SharedPrefsContract.PREFS_INT_GDPR_STATE,
+                        SharedPrefsContract.PREFS_INT_GDPR_STATE_NONE);
+
+                // вызывая диалог GDPR
+                GDPRDialogFragment dialogFragment2 = new GDPRDialogFragment();
+                dialogFragment2.show(getSupportFragmentManager(), "GDPR");
+            }
+
+
+            // ---- диалог что нового ----
+            if (sharedPreferences.contains(SharedPrefsContract.PREFS_INT_WHATS_NEW)) {
+                // если в sharedPreferences уже есть параметр PREFS_INT_WHATS_NEW
+                //  (то есть либо это заход в приложение не в первый раз, либо произошло обновление)
+
+                // если произошло обновление
+                if (sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_WHATS_NEW, -1) < SharedPrefsContract.PREFS_INT_NOW_VERSION) {
+
+                    // меняем версию параметра PREFS_INT_WHATS_NEW на текущую
+                    editor.putInt(SharedPrefsContract.PREFS_INT_WHATS_NEW, SharedPrefsContract.PREFS_INT_NOW_VERSION);
+                    // показываем диалог что нового
+                    WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
+                    dialogFragment.show(getSupportFragmentManager(), SharedPrefsContract.PREFS_INT_WHATS_NEW);
+                }
+
+            } else {
+                // если это первый заход в приложение
+                // создаем переменную с версией не вызывая диалог что нового
+                editor.putInt(SharedPrefsContract.PREFS_INT_WHATS_NEW, SharedPrefsContract.PREFS_INT_NOW_VERSION);
+            }
+
+
             // ---- счетчик "оцените нас" ----
             // через семь заходов в приложение открывает диалог 'оцените'
             if (!sharedPreferences.getBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE, false)) {
@@ -162,36 +209,6 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
                     startScreenRateUsDialog.show(getSupportFragmentManager(), SharedPrefsContract.PREFS_BOOLEAN_IS_RATE);
                 }
             }
-
-
-            {// todo убрать   показываем диалог что нового
-                WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
-                dialogFragment.show(getSupportFragmentManager(), SharedPrefsContract.PREFS_INT_WHATS_NEW);
-
-                GDPRDialogFragment dialogFragment2 = new GDPRDialogFragment();
-                dialogFragment2.show(getSupportFragmentManager(), "GDPR");
-            }
-
-            // ---- диалог что нового ----
-            if (sharedPreferences.contains(SharedPrefsContract.PREFS_INT_WHATS_NEW)) {
-                // если в sharedPreferences уже есть параметр PREFS_INT_WHATS_NEW
-                //  (то есть либо это заход в приложение не в первый раз, либо произошло обновление)
-
-                // если произошло обновление
-                if (sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_WHATS_NEW, -1) < SharedPrefsContract.PREFS_INT_NOW_VERSION) {
-
-                    // меняем версию параметра PREFS_INT_WHATS_NEW на текущую
-                    editor.putInt(SharedPrefsContract.PREFS_INT_WHATS_NEW, SharedPrefsContract.PREFS_INT_NOW_VERSION);
-                    // показываем диалог что нового
-                    WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
-                    dialogFragment.show(getSupportFragmentManager(), SharedPrefsContract.PREFS_INT_WHATS_NEW);
-                }
-            } else {
-                // если это первый заход в приложение
-                // создаем переменную с версией не вызывая диалог что нового
-                editor.putInt(SharedPrefsContract.PREFS_INT_WHATS_NEW, SharedPrefsContract.PREFS_INT_NOW_VERSION);
-            }
-
 
             //завершаем редактирование сохраненных параметров
             editor.apply();
@@ -272,11 +289,11 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
 
     }
 
-    // показ раеламы
+    // показ рекламы
     void loadAdd() {
         // создаем рекламу яндекса внизу календаря
         BannerAdView mAdView = findViewById(R.id.start_screen_ad_banner);
-        mAdView.setBlockId(getResources().getString(R.string.banner_id_start_screen));
+        mAdView.setAdUnitId(getResources().getString(R.string.banner_id_start_screen));
         mAdView.setAdSize(AdSize.BANNER_320x50);
         // Создание объекта таргетирования рекламы и загрузка объявления.
         mAdView.loadAd(new AdRequest.Builder().build());
@@ -483,6 +500,23 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
         db.close();
     }
 
+
+    // обратная связь от диалога GDPR
+    @Override
+    public void dialogResultGDPR(boolean accepted) {
+        // начинаем редактировать
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (accepted) {
+            editor.putInt(SharedPrefsContract.PREFS_INT_GDPR_STATE,
+                    SharedPrefsContract.PREFS_INT_GDPR_STATE_ACCEPT);
+        } else {
+            editor.putInt(SharedPrefsContract.PREFS_INT_GDPR_STATE,
+                    SharedPrefsContract.PREFS_INT_GDPR_STATE_DECLINE);
+        }
+        // завершаем редактирование сохраненных параметров
+        editor.apply();
+    }
 
     // обратная связь от диалога оценить
     @Override

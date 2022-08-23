@@ -181,7 +181,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             // реклама яндекса
             // начинаем загрузку межстраничного баннера конца урока
             settingsBack = new InterstitialAd(this);
-            settingsBack.setBlockId(getResources().getString(R.string.banner_id_after_settings));
+            settingsBack.setAdUnitId(getResources().getString(R.string.banner_id_after_settings));
             // Создание объекта таргетирования рекламы и загрузка объявления.
             settingsBack.loadAd(new AdRequest.Builder().build());
         }

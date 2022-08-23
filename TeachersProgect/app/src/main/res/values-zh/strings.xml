@@ -1,4 +1,5 @@
 <resources>
+    <integer name="current_locale_code">4</integer>
 
     <!--\n gthtyjc-->
     <!-- название приложения -->
@@ -25,8 +26,15 @@
     <string name="start_screen_activity_dialog_button_later">稍后</string>
 
     <string name="start_screen_activity_dialog_whats_new_title">什么是新的:</string>
-    <string name="start_screen_activity_dialog_whats_new_text">We have made the design even more convenient and added new features to the functionality! ❤️</string>
+    <string name="start_screen_activity_dialog_whats_new_text">我们为您呈现期待已久的全球更新！\n万岁，我们成功了！!!\n\n我们改变了应用程序的设计，使其简单，方便，美观。 尝试新的教室，新的分数数表，新的统计数据……一切都是新的！ 现在有一个黑暗的主题，你可以在设置中尝试。\n\n你可以尝试新的方便功能:\n+您可以更改课程数量;\n+您可以创建不同类型的缺席（生病，跳过等。);\n+您可以写下对课程的评论或作业;\n+您可以写下对学生的评论，例如父母的电话号码;\n+您可以在课程打开时将声音静音。\n\n我们已经优化了应用程序：现在它的工作速度更快，使用它更方便，并且所有内容都自动保存！\n\n出现了付费订阅，其中没有广告，并且有一堆很酷的功能（请参阅设置-获取高级版）️</string>
     <string name="start_screen_activity_dialog_whats_new_button_ok">知道了</string>
+
+    <!-- GDPR dialog -->
+    <string name="start_screen_activity_dialog_GDPR_title">你想让你看到的广告对你来说很有趣吗？</string>
+    <string name="start_screen_activity_dialog_GDPR_text">教师助理不收集任何用户数据. 但您的Google帐户会存储有关您的首选项的信息。 如果您同意接收基于这些偏好的个性化广告，请单击"需要"按钮。 否则，将显示随机广告。</string>
+    <string name="start_screen_activity_dialog_GDPR_accept">需要</string>
+    <string name="start_screen_activity_dialog_GDPR_decline">我不想要</string>
+
 
     <string name="start_screen_activity_dialog_deprecated_device_text">注意!\n不支持该设备。\n某些界面元素可能无法正确显示。</string>
     <!-- уведомления -->
@@ -188,8 +196,6 @@
     <string name="lesson_redactor_activity_button_remove">删除课</string>
     <string name="lesson_redactor_activity_button_remove_other">删除本课和所有后续课</string>
     <!-- диалоги -->
-    <string name="lesson_redactor_activity_dialog_button_remove">删除</string>
-    <string name="lesson_redactor_activity_dialog_button_add">添加</string>
     <string name="lesson_redactor_activity_dialog_title_remove_subjects">选择要删除的项目</string>
     <string name="lesson_redactor_activity_dialog_title_add_subject">添加学科</string>
     <string name="lesson_redactor_activity_dialog_hint_subject_name">名称</string>
@@ -275,10 +281,8 @@
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">输入缩写</string>
     <string name="settings_activity_dialog_new_absent_type_toast_subscribe" formatted="true">如果没有高级订阅，类型数量限制为%d</string>
     <string name="settings_activity_dialog_hint_number">输入号码</string>
-    <string name="settings_activity_dialog_button_remove_data">删除</string>
-    <string name="settings_activity_dialog_button_remove">删除</string>
     <string name="settings_activity_dialog_edit_time_title">上课时间</string>
-    <string name="settings_activity_dialog_edit_time_button_add_lesson">+ 添加课程</string>
+    <string name="settings_activity_dialog_edit_time_button_add_lesson">+ 添加课</string>
     <string name="settings_activity_dialog_edit_time_toast_last_lesson_error">你不能在23:58之后创建课</string>
     <string name="settings_activity_dialog_hint_hour">点</string>
     <string name="settings_activity_dialog_hint_minute">分</string>

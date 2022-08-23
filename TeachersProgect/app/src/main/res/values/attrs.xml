@@ -22,6 +22,8 @@
     <string name="subscription_id_month_sponsor" translatable="false">com.anavana.teachersproject.month_sponsor</string>
     <string name="subscription_id_year_sponsor" translatable="false">com.anavana.teachersproject.year_sponsor</string>
 
+    <string name="premium_pay_link_keeper" translatable="false">com.anavana.teachersproject.payment_link_keeper</string>
+
 
 
     <!-- а также: -->

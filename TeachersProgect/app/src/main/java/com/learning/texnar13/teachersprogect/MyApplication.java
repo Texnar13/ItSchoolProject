@@ -48,10 +48,9 @@ public class MyApplication extends MultiDexApplication {//MultiDexApplication/Ap
         // создаем приложение
         super.onCreate();
 
-        // инициализируем бибилотеку рекламы
-        MobileAds.initialize(this, () -> Log.d("YANDEX_MOBILE_ADS_TAG", "SDK initialized"));
 
         /*
+         * GDPR
          * Устанавливает значение, которое определяет, разрешил ли пользователь из GDPR-региона
          * сбор персональных данных, используемых для аналитики и таргетирования рекламы.
          * Пользовательские данные не будут собираться до тех пор, пока сбор данных не будет разрешен.
@@ -59,7 +58,14 @@ public class MyApplication extends MultiDexApplication {//MultiDexApplication/Ap
          * при каждом запуске приложения.
          *
          * */
-        MobileAds.setUserConsent(false);// Есть диалог на главном экране GDPR Вот из него и надо брать информацию разрешил пользователь или нет
+
+        // инициализируем бибилотеку рекламы
+        MobileAds.initialize(this, () -> Log.d("YANDEX_MOBILE_ADS_TAG", "SDK initialized"));
+
+        int GDPRState = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getInt(SharedPrefsContract.PREFS_INT_WHATS_NEW,
+                        SharedPrefsContract.PREFS_INT_GDPR_STATE_NONE);
+        MobileAds.setUserConsent(GDPRState == SharedPrefsContract.PREFS_INT_GDPR_STATE_ACCEPT);
     }
 
     @Override
@@ -86,7 +92,7 @@ public class MyApplication extends MultiDexApplication {//MultiDexApplication/Ap
 
         // добавляем конфигурации новые параметры
         config.locale = locale;
-        config.fontScale = 2.0f;
+        config.fontScale = 1.0f;
         // config.fontScale todo почитать про динамическое изменение шрифта
 
         // ставим обратно получившуюся конфигурацию

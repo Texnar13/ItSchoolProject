@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentActivity;
 
 import com.learning.texnar13.teachersprogect.MyApplication;
@@ -100,6 +101,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         // получаем разметку
         setContentView(R.layout.lesson_redactor_activity);
 
@@ -114,7 +116,7 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                 .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
             // реклама яндекса
             BannerAdView mAdView = findViewById(R.id.activity_lesson_redactor_banner);
-            mAdView.setBlockId(getResources().getString(R.string.banner_id_lesson_redactor));
+            mAdView.setAdUnitId(getResources().getString(R.string.banner_id_lesson_redactor));
             mAdView.setAdSize(AdSize.BANNER_320x100);
             // Создание объекта таргетирования рекламы и загрузка объявления.
             mAdView.loadAd(new AdRequest.Builder().build());
@@ -479,10 +481,10 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
         editSeatingButton.setOnClickListener(view -> {
 
             if (lessonUnit.chosenClassPosition == -1) {
-                Toast toast = Toast.makeText(LessonRedactorActivity.this, R.string.lesson_redactor_activity_toast_text_class_not_chosen, Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(), R.string.lesson_redactor_activity_toast_text_class_not_chosen, Toast.LENGTH_LONG);
                 toast.show();
             } else if (lessonUnit.chosenCabinetPosition == -1) {
-                Toast toast = Toast.makeText(LessonRedactorActivity.this, R.string.lesson_redactor_activity_toast_text_cabinet_not_chosen, Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(), R.string.lesson_redactor_activity_toast_text_cabinet_not_chosen, Toast.LENGTH_LONG);
                 toast.show();
             } else {
                 Intent intent = new Intent(LessonRedactorActivity.this, SeatingRedactorActivity.class);

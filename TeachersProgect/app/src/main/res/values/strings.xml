@@ -1,11 +1,12 @@
 <resources>
+    <integer name="current_locale_code">0</integer>
 
     <!--\n перенос -->
     <!-- название приложения -->
     <string name="app_name">Teacher\'s assistant</string>
     <string name="button_save">Save</string>
     <string name="button_cancel">Cancel</string>
-    <string name="button_remove">Remove</string>
+    <string name="button_remove">Delete</string>
 
 
     <!-- активность главный экран -->
@@ -25,8 +26,15 @@
     <string name="start_screen_activity_dialog_button_later">Later</string>
 
     <string name="start_screen_activity_dialog_whats_new_title">What\'s new:</string>
-    <string name="start_screen_activity_dialog_whats_new_text">We have made the design even more convenient and added new features to the functionality! ❤️</string>
-    <string name="start_screen_activity_dialog_whats_new_button_ok">OK</string>
+    <string name="start_screen_activity_dialog_whats_new_text">We present you the long-awaited global update!\nHooray, we did it!!!\n\nWe have changed the design of the application, making it simple, convenient and beautiful. Try new classrooms, a new rating table, new statistics… Everything is new! And now there is a dark theme, you can try it in the settings.\n\nYou can try new convenient functions:\n+ you can change the number of lessons;\n+ you can create different types of absence (sick, skipped, etc.);\n+ you can mute the sound while the lesson is open;\n+ you can write down a comment to the lesson or homework;\n+ you can write down a comment to the student, for example, the phone number of parents.\n\nWe have optimized the application: now it works faster, it is much more convenient to use it, and everything is automatically saved!\n\nA paid subscription has appeared, in which there are no ads and there are a bunch of cool features (see Settings - Get premium)</string>
+    <string name="start_screen_activity_dialog_whats_new_button_ok">Hurray!️</string>
+
+    <!-- GDPR dialog -->
+    <string name="start_screen_activity_dialog_GDPR_title">Do you want the ads that are shown to you to be interesting to you?</string>
+    <string name="start_screen_activity_dialog_GDPR_text">Teacher\'s Assistant does not collect any user data. But your Google account stores information about your preferences. If you agree to receive personalized advertising based on these preferences, click the "Agree" button. Otherwise, random ads will be displayed.</string>
+    <string name="start_screen_activity_dialog_GDPR_accept">Agree</string>
+    <string name="start_screen_activity_dialog_GDPR_decline">Disagree</string>
+
 
     <string name="start_screen_activity_dialog_deprecated_device_text">Attention!\nThis device is not supported.\nSome interface elements may not display correctly.\n</string>
     <!-- уведомления -->
@@ -188,8 +196,6 @@
     <string name="lesson_redactor_activity_button_remove">Remove lesson</string>
     <string name="lesson_redactor_activity_button_remove_other">Delete this lesson and all the following</string>
     <!-- диалоги -->
-    <string name="lesson_redactor_activity_dialog_button_remove">Remove</string>
-    <string name="lesson_redactor_activity_dialog_button_add">Create</string>
     <string name="lesson_redactor_activity_dialog_title_remove_subjects">Select subjects to remove</string>
     <string name="lesson_redactor_activity_dialog_title_add_subject">Adding a subject</string>
     <string name="lesson_redactor_activity_dialog_hint_subject_name">Title</string>
@@ -275,8 +281,6 @@
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">Enter an abbreviation</string>
     <string name="settings_activity_dialog_new_absent_type_toast_subscribe" formatted="true">Without a premium subscription, the number of types is limited to %d</string>
     <string name="settings_activity_dialog_hint_number">Enter the number</string>
-    <string name="settings_activity_dialog_button_remove_data">Delete</string>
-    <string name="settings_activity_dialog_button_remove">Remove</string>
     <string name="settings_activity_dialog_edit_time_title">Change lessons time</string>
     <string name="settings_activity_dialog_edit_time_button_add_lesson">+ Add a lesson</string>
     <string name="settings_activity_dialog_edit_time_toast_last_lesson_error">You can\'t create a lesson after 23:58</string>

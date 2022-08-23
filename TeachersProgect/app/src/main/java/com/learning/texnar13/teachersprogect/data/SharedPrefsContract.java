@@ -18,9 +18,14 @@ public class SharedPrefsContract {// менять значение конста�
     public static final String PREFS_INT_ENTERS_COUNT = "entersCount";
     // оценено?
     public static final String PREFS_BOOLEAN_IS_RATE = "isRate";
-    // дляы новых версий
+    // для новых версий
     public static final String PREFS_INT_WHATS_NEW = "whatsNew";
     public static final int PREFS_INT_NOW_VERSION = BuildConfig.VERSION_CODE;
+    // GDPR
+    public static final String PREFS_INT_GDPR_STATE = "GDPRState";
+    public static final int PREFS_INT_GDPR_STATE_NONE = 0;
+    public static final int PREFS_INT_GDPR_STATE_ACCEPT = 1;
+    public static final int PREFS_INT_GDPR_STATE_DECLINE = 2;
 
 
     // настройки

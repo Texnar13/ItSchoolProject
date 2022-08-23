@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/settings_activity_dialog_button_remove"
+            android:text="@string/button_remove"
             android:textColor="@color/text_color_inverse" />
 
         <TextView

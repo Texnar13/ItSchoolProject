@@ -92,7 +92,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
     // неизменные данные об уроке
     private static LessonBaseData lessonBaseData;
     // текущий обьект дз
-    HomeWorkUnit homeWork;
+    private static  HomeWorkUnit homeWork;
 
     // массив учеников
     private static LessonLearnerAndHisGrades[] learnersAndTheirGrades;
@@ -256,7 +256,7 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
             commentTitleText = findViewById(R.id.activity_lesson_bottom_sheet_date_text);
             commentText = findViewById(R.id.activity_lesson_bottom_sheet_edit_text);
 
-            commentTitleText.setText(homeWork.title);// todo null pointer
+            commentTitleText.setText(homeWork.title);
             commentText.setText(homeWork.text);
             commentText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(
                 SharedPrefsContract.PREMIUM_PARAM_LESSON_MAX_COMMENT_LENGTH)});

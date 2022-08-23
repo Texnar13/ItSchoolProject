@@ -1,4 +1,5 @@
 <resources>
+    <integer name="current_locale_code">1</integer>
 
     <!--\n gthtyjc-->
     <!-- название приложения -->
@@ -25,8 +26,15 @@
     <string name="start_screen_activity_dialog_button_later">Más tarde.</string>
 
     <string name="start_screen_activity_dialog_whats_new_title">Qué hay de nuevo:</string>
-    <string name="start_screen_activity_dialog_whats_new_text">We have made the design even more convenient and added new features to the functionality! ❤️</string>
-    <string name="start_screen_activity_dialog_whats_new_button_ok">Muy bien.</string>
+    <string name="start_screen_activity_dialog_whats_new_text">¡Te presentamos la tan esperada actualización global!\n¡Hurra, lo logramos!!!\n\nHemos cambiado el diseño de la aplicación, por lo que es simple, conveniente y hermoso. Pruebe nuevos aulas, una nueva tabla de calificaciones, nuevas estadísticas… ¡Todo es nuevo! Y ahora hay un tema oscuro, puedes probarlo en la configuración.\n\nPuede probar nuevas funciones convenientes:\n+ puede cambiar el número de lecciones;\n+ puede crear diferentes tipos de ausencias ( enfermo, ausente, etc.);\n+ puede silenciar el sonido mientras la lección está abierta;\n+ puedes escribir un comentario a la lección o tarea;\n+ puede escribir un comentario al estudiante, por ejemplo, el número de teléfono de los padres.\n\nHemos optimizado la aplicación: ahora funciona más rápido, es mucho más fácil de usar y todo se guarda automáticamente!\n\nHay una suscripción paga que no tiene anuncios y tiene un montón de características geniales (ver Configuración-Obtener Premium)️</string>
+    <string name="start_screen_activity_dialog_whats_new_button_ok">¡Hurra!</string>
+
+    <!-- GDPR dialog -->
+    <string name="start_screen_activity_dialog_GDPR_title">¿Quieres que los anuncios que te muestran te interesen?</string>
+    <string name="start_screen_activity_dialog_GDPR_text">Teacher\'s Assistant no recopila ningún dato de usuario. Pero su cuenta de Google almacena información sobre sus preferencias. Si acepta recibir anuncios personalizados basados en estas preferencias, haga clic en el botón " Aceptar". De lo contrario, se mostrarán anuncios aleatorios.</string>
+    <string name="start_screen_activity_dialog_GDPR_accept">Aceptar</string>
+    <string name="start_screen_activity_dialog_GDPR_decline">Discrepar</string>
+
 
     <string name="start_screen_activity_dialog_deprecated_device_text">¡Atención!\nEste dispositivo no es compatible.\nAlgunos elementos de la interfaz pueden no mostrarse correctamente.</string>
     <!-- уведомления -->
@@ -188,8 +196,6 @@
     <string name="lesson_redactor_activity_button_remove">Eliminar clase</string>
     <string name="lesson_redactor_activity_button_remove_other">Eliminar esta lección y todas las siguientes</string>
     <!-- диалоги -->
-    <string name="lesson_redactor_activity_dialog_button_remove">eliminar</string>
-    <string name="lesson_redactor_activity_dialog_button_add">agregar</string>
     <string name="lesson_redactor_activity_dialog_title_remove_subjects">Seleccione las asignaturas que desea eliminar</string>
     <string name="lesson_redactor_activity_dialog_title_add_subject">Agregar una asignatura</string>
     <string name="lesson_redactor_activity_dialog_hint_subject_name">NOMBRE</string>
@@ -275,8 +281,6 @@
     <string name="settings_activity_dialog_new_absent_type_toast_empty_short">Ingrese la abreviatura</string>
     <string name="settings_activity_dialog_new_absent_type_toast_subscribe" formatted="true">Sin suscripción Premium, el número de tipos está limitado a %d</string>
     <string name="settings_activity_dialog_hint_number">Introduzca el número</string>
-    <string name="settings_activity_dialog_button_remove_data">Eliminar</string>
-    <string name="settings_activity_dialog_button_remove">Eliminar</string>
     <string name="settings_activity_dialog_edit_time_title">Tiempo de lecciones</string>
     <string name="settings_activity_dialog_edit_time_button_add_lesson">+ Añadir lección</string>
     <string name="settings_activity_dialog_edit_time_toast_last_lesson_error">No puedes crear una lección después de las 23: 58</string>
@@ -306,7 +310,7 @@
     <string name="sponsor_activity_title_screen_2">Sin anuncios</string>
     <string name="sponsor_activity_title_screen_3">Hay cualquier número de tipos de trabajo en la lección</string>
     <string name="sponsor_activity_title_screen_4">Importar y exportar datos</string>
-    <string name="sponsor_activity_title_screen_last">Elige la tarifa que más te convenga.</string>
+    <string name="sponsor_activity_title_screen_last">Elige la tarifa que más te convenga:</string>
     <string name="sponsor_activity_button_sub_month" formatted="true">Mensual: %s por mes</string>
     <string name="sponsor_activity_button_sub_year" formatted="true">Anual: %s por año</string>
     <string name="sponsor_activity_button_sub_year_long" formatted="true">%s al año (%s al mes)</string>

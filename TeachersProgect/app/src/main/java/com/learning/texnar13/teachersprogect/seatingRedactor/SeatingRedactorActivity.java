@@ -96,6 +96,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
     //- не отсортировано
 
+    float currentDensity;
 
     // размер одноместной парты
     static final int NO_ZOOMED_DESK_SIZE = 40;
@@ -163,7 +164,8 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     if (isPlus) {
                         // выводим картинку +
                         ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
-                        LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                        LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         lernerImage.setImageResource(R.drawable.lesson_activity_learner_add);
                         desk.viewPlaceOut[placeI].addView(lernerImage, lernerImageParams);
 
@@ -182,6 +184,10 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // получение плотности экрана сейчас, чтобы не получать его при вызове pxFromDP
+        currentDensity = SeatingRedactorActivity.this.getResources()
+                .getDisplayMetrics().density;
+
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
 
@@ -195,7 +201,6 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             bar.setDisplayHomeAsUpEnabled(true);
             bar.setTitle("");
         }
-
 
         // цвета статус бара
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -317,8 +322,8 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     if (attitudesCursor.moveToFirst()) {
 
                         // сохраняем id зависимоси в парту
-                        attitudesId[placePoz] =
-                                attitudesCursor.getLong(attitudesCursor.getColumnIndexOrThrow(SchoolContract.TableLearnersOnPlaces.KEY_ROW_ID));
+                        attitudesId[placePoz] = attitudesCursor.getLong(attitudesCursor.getColumnIndexOrThrow(
+                                SchoolContract.TableLearnersOnPlaces.KEY_ROW_ID));
                         // и номер ученика в парту
                         learnersIndexes[placePoz] = learnerI;
 
@@ -339,8 +344,10 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             // создаем парту
             desks[deskI] = new DeskUnit(
                     deskLayout,
-                    pxFromDp(desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_X)) * multiplier) + xAxisPXOffset,
-                    pxFromDp(desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_Y)) * multiplier) + yAxisPXOffset,
+                    pxFromDp(desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_X))
+                            * multiplier) + xAxisPXOffset,
+                    pxFromDp(desksCursor.getLong(desksCursor.getColumnIndexOrThrow(SchoolContract.TableDesks.COLUMN_Y))
+                            * multiplier) + yAxisPXOffset,
                     learnersIndexes,
                     deskId,
                     placesId,
@@ -698,13 +705,10 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                         chooseDialogFragment.show(getSupportFragmentManager(), "chooseDialogFragment - Hello");
 
                     }
-
                 });
-
 
                 // если на этом месте сидит ученик
                 if (learnersIndexes[placeI] != -1) {
-
 
                     // создаем картинку ученика
                     ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
@@ -715,7 +719,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     // создаем текст ученика
                     TextView learnerText = new TextView(SeatingRedactorActivity.this);
                     learnerText.setTypeface(ResourcesCompat.getFont(SeatingRedactorActivity.this, R.font.montserrat_semibold));
-                    learnerText.setTextSize(6 * multiplier);
+                    learnerText.setTextSize(3F * multiplier);
                     learnerText.setAllCaps(true);
                     learnerText.setGravity(Gravity.CENTER_HORIZONTAL);
                     learnerText.setTextColor(getResources().getColor(R.color.text_color_simple));
@@ -723,7 +727,8 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     if (learners[learnersIndexes[placeI]].name.length() == 0) {
                         learnerText.setText(learners[learnersIndexes[placeI]].lastName);
                     } else
-                        learnerText.setText(learners[learnersIndexes[placeI]].name.charAt(0) + " " + learners[learnersIndexes[placeI]].lastName);
+                        learnerText.setText(learners[learnersIndexes[placeI]].name.charAt(0) + " " +
+                                learners[learnersIndexes[placeI]].lastName);
                     LinearLayout.LayoutParams learnerTextParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 3F);
                     this.viewPlaceOut[placeI].addView(learnerText, learnerTextParams);
                     // сохраняем ссылку на textView чтобы потом при зуме  менять его
@@ -773,17 +778,20 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                 ((RelativeLayout.LayoutParams) this.viewPlaceOut[placeI].getLayoutParams()).topMargin =
                         (int) pxFromDp(NO_ZOOMED_LEARNER_BORDER_SIZE * multiplier);
 
-                // размеры текста если он есть
-                if (learnersTextViews[placeI] != null) {
-                    // меняем размер текста ученика
-                    learnersTextViews[placeI].setTextSize(7 * multiplier);
-                }else{
+                // размеры текста ученика если он есть
+                if (learnersTextViews[placeI] != null)
+                    learnersTextViews[placeI].setTextSize(3F * multiplier);
+
+                // если на месте сидит ученик
+                if (learnersIndexes[placeI] != -1) {
+                    // то убираем отступы
+                    viewPlaceOut[placeI].setPadding(0, 0, 0, 0);
+                } else if (isPlus) {
                     // если отображается кнопка плюс, то назначаем отступы контейнеру
                     int padding = (int) pxFromDp(NO_ZOOMED_LEARNER_BORDER_SIZE * 1 * multiplier);
                     viewPlaceOut[placeI].setPadding(padding, padding, padding, padding);
                 }
             }
-
         }
 
         void setDeskPosition(float pxX, float pxY) {
@@ -842,16 +850,20 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
         void outLearner(int place) {
             this.viewPlaceOut[place].removeAllViews();
 
+            // если не отображается кнопка плюс, то убираем отступы
+            viewPlaceOut[place].setPadding(0, 0, 0, 0);
+
             // создаем картинку ученика
             ImageView lernerImage = new ImageView(SeatingRedactorActivity.this);
-            LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F);
+            LinearLayout.LayoutParams lernerImageParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1F);
             lernerImage.setImageResource(R.drawable.lesson_activity_learner);
             this.viewPlaceOut[place].addView(lernerImage, lernerImageParams);
 
             // создаем текст ученика
             TextView learnerText = new TextView(SeatingRedactorActivity.this);
             learnerText.setTypeface(ResourcesCompat.getFont(SeatingRedactorActivity.this, R.font.montserrat_semibold));
-            learnerText.setTextSize(6 * multiplier);
+            learnerText.setTextSize(3F * multiplier);
             learnerText.setAllCaps(true);
             learnerText.setGravity(Gravity.CENTER_HORIZONTAL);
             learnerText.setTextColor(getResources().getColor(R.color.text_color_simple));
@@ -860,7 +872,8 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                 learnerText.setText(learners[learnersIndexes[place]].lastName);
             } else
                 learnerText.setText(learners[learnersIndexes[place]].name.charAt(0) + " " + learners[learnersIndexes[place]].lastName);
-            LinearLayout.LayoutParams learnerTextParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 3F);
+            LinearLayout.LayoutParams learnerTextParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 3F);
             this.viewPlaceOut[place].addView(learnerText, learnerTextParams);
             // сохраняем ссылку на textView чтобы потом при зуме  менять его
             this.learnersTextViews[place] = learnerText;
@@ -868,8 +881,9 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
     }
 
     private float pxFromDp(float dp) {
-        return dp * SeatingRedactorActivity.this.getResources().getDisplayMetrics().density;
+        return dp * currentDensity;
     }
+
 
     // нажатие кнопки назад
     @Override

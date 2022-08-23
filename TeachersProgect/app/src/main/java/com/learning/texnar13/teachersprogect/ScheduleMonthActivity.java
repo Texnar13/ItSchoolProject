@@ -193,7 +193,7 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
             // выбираем размер рекламы
-            mAdView.setBlockId(getResources().getString(R.string.banner_id_calendar_big));
+            mAdView.setAdUnitId(getResources().getString(R.string.banner_id_calendar_big));
             mAdView.setAdSize(AdSize.BANNER_320x100);
             // Создание объекта таргетирования рекламы и загрузка объявления.
             mAdView.loadAd(new AdRequest.Builder().build());

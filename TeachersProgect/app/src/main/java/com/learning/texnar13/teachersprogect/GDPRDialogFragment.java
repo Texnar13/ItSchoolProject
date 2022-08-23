@@ -3,12 +3,16 @@ package com.learning.texnar13.teachersprogect;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
+
+import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 
 /**
  * Весной 2018 года в силу вступил общий регламент по защите данных
@@ -39,24 +43,22 @@ public class GDPRDialogFragment extends DialogFragment {
                 onButtonClicked(requireActivity(), false));
 
         // заголовок
-        ((TextView) rootView.findViewById(R.id.title)).setText(
-                "Заголовок политики"
-        );
+        ((TextView) rootView.findViewById(R.id.title))
+                .setText(R.string.start_screen_activity_dialog_GDPR_title);
 
         // текст
-        ((TextView) rootView.findViewById(R.id.body_text)).setText(
-                "Текст политики...персонализированная реклама"
-        );
+        ((TextView) rootView.findViewById(R.id.body_text))
+                .setText(R.string.start_screen_activity_dialog_GDPR_text);
 
         // кнопка согласия
         TextView acceptButton = rootView.findViewById(R.id.accept_text_button);
-        acceptButton.setText("/Канеш");
+        acceptButton.setText(R.string.start_screen_activity_dialog_GDPR_accept);
         acceptButton.setOnClickListener(v ->
                 onButtonClicked(requireActivity(), true));
 
         // кнопка несогласия
         TextView discardButton = rootView.findViewById(R.id.accept_text_button_2);
-        discardButton.setText("Не хочу");
+        discardButton.setText(R.string.start_screen_activity_dialog_GDPR_decline);
         discardButton.setOnClickListener(v ->
                 onButtonClicked(requireActivity(), false));
 
@@ -69,23 +71,7 @@ public class GDPRDialogFragment extends DialogFragment {
 
     private void onButtonClicked(final Context context, final boolean userConsent) {
         dismiss();
-        //todo Это все одно большое todo
-//        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//        preferences.edit()
-//                .putBoolean(SettingsFragment.USER_CONSENT_KEY, userConsent)
-//                .putBoolean(SettingsFragment.DIALOG_SHOWN_KEY, true)
-//                .apply();
-// сохраняем инфу, о том, хочет пользователь персонализированную рекламу или нет
-//
-        /*
-         * Устанавливает значение, которое определяет, разрешил ли пользователь из GDPR-региона
-         * сбор персональных данных, используемых для аналитики и таргетирования рекламы.
-         * Пользовательские данные не будут собираться до тех пор, пока сбор данных не будет разрешен.
-         * Если пользователь однажды разрешил или запретил сбор данных, требуется передавать это значение
-         * при каждом запуске приложения.
-         *
-         * */
-//        mNoticeDialogListener.onDialogClick();
+        ((GDPRDialogBackInterface) context).dialogResultGDPR(userConsent);
     }
 
 
@@ -96,5 +82,9 @@ public class GDPRDialogFragment extends DialogFragment {
 //        startActivity(intent);
 //    }
 
+
+    public interface GDPRDialogBackInterface {
+        void dialogResultGDPR(boolean accepted);
+    }
 
 }

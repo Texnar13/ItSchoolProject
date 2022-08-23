@@ -8,6 +8,10 @@
         <item name="colorPrimaryVariant">@color/base_blue</item>
         <item name="colorPrimaryDark">@color/base_blue</item>
 
+
+        <!-- нужно для тостов в этой теме -->
+        <item name="android:textSize">@dimen/text_simple_size</item>
+
         <!-- цвет подложек активности -->
         <item name="android:colorBackground">@color/base_background_color</item>
 
@@ -91,6 +95,9 @@
         <item name="android:windowBackground">
             @drawable/lesson_redactor_dialog_background_no_insert
         </item>
+
+        <!-- для стандартных элементов (тостов, меню) -->
+        <item name="android:textSize">@dimen/text_simple_size</item>
 
         <!-- цвет подложек активности -->
         <item name="android:colorBackground">@color/base_background_color</item>

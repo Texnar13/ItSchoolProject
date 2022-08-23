@@ -48,7 +48,7 @@
 
 
     <!-- активность урока -->
-    <color name="desks_color">@color/base_light</color>
+    <color name="desks_color">#414448</color>
     <color name="lesson_text_color">@color/text_color_inverse</color>
     <!-- цвета оценок -->
     <color name="grade1">#FC7979</color>
@@ -56,7 +56,7 @@
     <color name="grade3">#EFE95B</color>
     <color name="grade4">#C7EE58</color>
     <color name="grade5">#72DD83</color>
-    <color name="absent_text_color">@color/text_color_not_active</color>
+    <color name="absent_text_color">#8A8D95</color>
 
 
     <!-- активность настроек -->

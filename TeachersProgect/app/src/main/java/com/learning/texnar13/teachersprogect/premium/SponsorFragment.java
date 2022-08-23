@@ -124,16 +124,3 @@ public class SponsorFragment extends Fragment {
 interface SubsClickInterface {
     void click(int buttonNumber);
 }
-
-//<string name="sponsor_activity_title_screen_0">##Неограниченное количество уроков</string>
-//<string name="sponsor_activity_title_screen_1">##Никаких ограничений по символам (комментарий к уроку и к ученику любой длинны)</string>
-//<string name="sponsor_activity_title_screen_2">##Нет рекламы</string>
-//<string name="sponsor_activity_title_screen_3">##Сколько угодно типов пропусков и типов работы на уроке</string>
-//<string name="sponsor_activity_title_screen_4">##Импорт и экспорт данных</string>
-//<string name="sponsor_activity_title_screen_last">##Выберите подходящую для вас подписку:</string>
-//<string name="sponsor_activity_button_sub_month" formatted="true">##1 раз в месяц = %s</string>
-//<string name="sponsor_activity_button_sub_year" formatted="true">##1 раз в год = %s</string>
-//<string name="sponsor_activity_title_cancel_sub">##Вы можете отменить подписку в любое время</string>
-//<string name="sponsor_activity_button_my_subs">##Посмотреть мои подписки</string>
-//<string name="sponsor_activity_text_test_dz">##Тестовое дз для надписи, напиши здесь что-нибудь:)</string>
-//<string name="sponsor_activity_text_test_info">##Тестовая информация об уроке, напиши здесь что-нибудь</string>
