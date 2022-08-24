@@ -2,7 +2,6 @@ package com.learning.texnar13.teachersprogect.seatingRedactor;
 
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
@@ -15,6 +14,7 @@ import androidx.core.content.res.ResourcesCompat;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -367,7 +367,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
         // заполняем все ячейки без учеников
         for (DeskUnit desk : desks) {
-            desk.outEmpty();
+            desk.outOrClearEmptyPlus();
         }
     }
 
@@ -405,7 +405,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
         // заполняем все ячейки без учеников
         for (DeskUnit desk : desks) {
-            desk.outEmpty();
+            desk.outOrClearEmptyPlus();
         }
     }
 
@@ -675,7 +675,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
                         isPlus = true;
                         for (DeskUnit desk : desks) {
-                            desk.outEmpty();
+                            desk.outOrClearEmptyPlus();
                         }
 
                     } else if (isPlus) {
@@ -719,7 +719,8 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                     // создаем текст ученика
                     TextView learnerText = new TextView(SeatingRedactorActivity.this);
                     learnerText.setTypeface(ResourcesCompat.getFont(SeatingRedactorActivity.this, R.font.montserrat_semibold));
-                    learnerText.setTextSize(3F * multiplier);
+                    learnerText.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                            getResources().getDimension(R.dimen.lesson_activity_learner_name_text_size) * 0.8F * multiplier);
                     learnerText.setAllCaps(true);
                     learnerText.setGravity(Gravity.CENTER_HORIZONTAL);
                     learnerText.setTextColor(getResources().getColor(R.color.text_color_simple));
@@ -780,7 +781,8 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
 
                 // размеры текста ученика если он есть
                 if (learnersTextViews[placeI] != null)
-                    learnersTextViews[placeI].setTextSize(3F * multiplier);
+                    learnersTextViews[placeI].setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                            getResources().getDimension(R.dimen.lesson_activity_learner_name_text_size) * 0.8F * multiplier);
 
                 // если на месте сидит ученик
                 if (learnersIndexes[placeI] != -1) {
@@ -823,7 +825,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             viewDesk.setBackground(rectDrawable);
         }
 
-        void outEmpty() {
+        void outOrClearEmptyPlus() {
             for (int placesI = 0; placesI < viewPlaceOut.length; placesI++) {
 
                 // если на месте нет ученика и можно выводить плюсы
@@ -863,7 +865,8 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
             // создаем текст ученика
             TextView learnerText = new TextView(SeatingRedactorActivity.this);
             learnerText.setTypeface(ResourcesCompat.getFont(SeatingRedactorActivity.this, R.font.montserrat_semibold));
-            learnerText.setTextSize(3F * multiplier);
+            learnerText.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                    getResources().getDimension(R.dimen.lesson_activity_learner_name_text_size) * 0.8F * multiplier);
             learnerText.setAllCaps(true);
             learnerText.setGravity(Gravity.CENTER_HORIZONTAL);
             learnerText.setTextColor(getResources().getColor(R.color.text_color_simple));

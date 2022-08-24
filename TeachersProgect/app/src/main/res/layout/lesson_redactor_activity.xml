@@ -27,7 +27,7 @@
                 android:layout_height="@dimen/base_classic_arrow_immutable_size"
                 android:layout_centerInParent="true"
                 android:adjustViewBounds="true"
-                app:srcCompat="@drawable/base_button_close" />
+                android:background="@drawable/base_button_close" />
         </RelativeLayout>
 
         <TextView

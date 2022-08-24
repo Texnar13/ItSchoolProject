@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -78,6 +77,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
     private TextView pressedCell;
 
 
+    // получаем информацию о текущем языке
+    int currentLanguageFileNumber;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +103,10 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         // проверяем подписку
         subscriptionState = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false);
+
+        // получаем информацию о текущем языке
+        currentLanguageFileNumber = getResources().getInteger(R.integer.current_locale_code);
+
 
         // выводим разметку
         setContentView(R.layout.schedule_month_activity);
@@ -180,7 +187,6 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             outDay();
             outCurrentData();
         });
-
 
 
         // выводим рекламу если нет подписки
@@ -271,7 +277,13 @@ public class ScheduleMonthActivity extends AppCompatActivity {
             //day.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium));
             day.setText(weekDaysNames[i]);
             day.setTypeface(ResourcesCompat.getFont(this, R.font.montserrat_semibold));
-            day.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.shedule_month_calendar_day_text_size));
+
+            // у китайцев текст не помещается
+            day.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                    getResources().getDimension(R.dimen.shedule_month_calendar_day_text_size)
+                            * ((currentLanguageFileNumber == 4) ? (0.8F) : (1.0F))
+            );
+
             day.setTextColor((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ?
                     (getResources().getColor(R.color.text_color_not_active, getTheme())) :
                     (getResources().getColor(R.color.text_color_not_active))

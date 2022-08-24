@@ -2,13 +2,11 @@ package com.learning.texnar13.teachersprogect;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.multidex.MultiDexApplication;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;

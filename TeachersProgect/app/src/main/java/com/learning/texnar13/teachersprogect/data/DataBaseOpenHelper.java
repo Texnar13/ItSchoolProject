@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
-    private static final boolean IS_DEBUG = true;
+    private static final boolean IS_DEBUG = false;
     private static final int DB_VERSION = 21; // googlePlay -> 18
     private final Context context;
 
@@ -395,22 +395,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
             // -------------------------------------------------------------------------------------
 
             if (oldVersion < 19) {
-                // типы оценок
-                db.execSQL(
-                        "CREATE TABLE " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES +
-                                " ( " + SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                                SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE + " TEXT);"
-                );
-                {// ---- вставляем одну запись "работа на уроке" ----  <-- эту запись нельзя удалить но можно переименовать
-                    String name = context.getResources().getString(R.string.db_table_grade_text_first_default_value);
-                    ContentValues values = new ContentValues();
-                    values.put(SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE, name);
-                    values.put(SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID, 1);
-                    db.insert(
-                            SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES,
-                            null,
-                            values);
-                }
 
                 // добавляем типы пропусков
                 db.execSQL(
@@ -1761,7 +1745,6 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 	    )
 	    */
     }
-
 
 
     public Cursor getSubjectAndTimeCabinetAttitudeByDateAndLessonNumber(String date, long lessonNumber) {//попадает ли переданное время в какой-либо из уроков

@@ -7,16 +7,16 @@
     <string name="share_internal_directory_authorities" translatable="false">com.learning.texnar13.teachersprogect.export_path</string>
 
     <!-- рекламные блоки -->
-    <!--string name="banner_id_start_screen" translatable="false">R-M-450642-2</string>
+    <string name="banner_id_start_screen" translatable="false">R-M-450642-2</string>
     <string name="banner_id_calendar_big" translatable="false">R-M-450642-6</string>
     <string name="banner_id_after_settings" translatable="false">R-M-450642-5</string>
-    <string name="banner_id_lesson_redactor" translatable="false">R-M-450642-8</string-->
+    <string name="banner_id_lesson_redactor" translatable="false">R-M-450642-8</string>
 
 
-    <string name="banner_id_start_screen" translatable="false">R-M-DEMO-320x50</string>
+    <!--string name="banner_id_start_screen" translatable="false">R-M-DEMO-320x50</string>
     <string name="banner_id_calendar_big" translatable="false">R-M-DEMO-320x100</string>
     <string name="banner_id_after_settings" translatable="false">R-M-DEMO-interstitial</string>
-    <string name="banner_id_lesson_redactor" translatable="false">R-M-DEMO-320x100</string><!-- можно добавить -context если есть разрешение на сбор персональных данных -->
+    <string name="banner_id_lesson_redactor" translatable="false">R-M-DEMO-320x100</string--><!-- можно добавить -context если есть разрешение на сбор персональных данных -->
 
     <!-- id покупок в SponsorActivity -->
     <string name="subscription_id_month_sponsor" translatable="false">com.anavana.teachersproject.month_sponsor</string>
