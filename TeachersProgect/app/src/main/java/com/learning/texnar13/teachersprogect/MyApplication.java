@@ -19,6 +19,9 @@ import java.util.Locale;
 public class MyApplication extends MultiDexApplication {//MultiDexApplication/Application // todo multiDex
 
 
+    // здесь ни в коем случае нельзя вызывать методы содержащие getWritableDataBase()
+    //  так как именно здесь происходит обновление базы данных
+
     @Override
     public void onCreate() {
 
@@ -79,6 +82,7 @@ public class MyApplication extends MultiDexApplication {//MultiDexApplication/Ap
         if (lang.equals(SchoolContract.TableSettingsData.COLUMN_LOCALE_DEFAULT_CODE)) {
             lang = context.getResources().getConfiguration().locale.getLanguage();
         }
+        db.close();
 
         // создаем нужный обьект локали
         Locale locale = new Locale(lang);

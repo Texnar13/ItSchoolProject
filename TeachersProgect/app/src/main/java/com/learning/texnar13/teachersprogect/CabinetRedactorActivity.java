@@ -551,6 +551,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
                         (int) xAxisPXOffset,
                         (int) yAxisPXOffset
                 );
+                db.close();
                 mode = NONE;
                 outLines();
                 Log.i(TAG, "MotionEvent.ACTION_POINTER_UP count:" + motionEvent.getPointerCount() + " mode:" + mode);
@@ -735,6 +736,7 @@ public class CabinetRedactorActivity extends AppCompatActivity implements View.O
         for (int i = 0; i < numberOfPlaces; i++) {
             db.createPlace(deskId, i + 1);
         }
+        db.close();
 
         // создаем layout парты
         RelativeLayout newDeskLayout = new RelativeLayout(this);

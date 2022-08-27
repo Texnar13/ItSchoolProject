@@ -637,19 +637,25 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public long createGradesType(String name) {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        return db.createGradeType(name);
+        long result = db.createGradeType(name);
+        db.close();
+        return result;
     }
 
     @Override
     public boolean editGradesType(long typeId, String newName) {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        return db.editGradesType(typeId, newName) >= 0;
+        boolean result = db.editGradesType(typeId, newName) >= 0;
+        db.close();
+        return result;
     }
 
     @Override
     public boolean removeGradesType(long typeId) {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        return db.removeGradesType(typeId) >= 0;
+        boolean result = db.removeGradesType(typeId) >= 0;
+        db.close();
+        return result;
     }
 
 
@@ -658,19 +664,25 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public long createAbsentType(String name, String longName) {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        return db.createAbsentType(name, longName);
+        long result = db.createAbsentType(name, longName);
+        db.close();
+        return result;
     }
 
     @Override
     public boolean editAbsentType(long typeId, String newName, String newLongName) {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        return db.editAbsentType(typeId, newName, newLongName) >= 0;
+        boolean result = db.editAbsentType(typeId, newName, newLongName) >= 0;
+        db.close();
+        return result;
     }
 
     @Override
     public boolean removeAbsentType(long typeId) {
         DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-        return db.removeAbsentType(typeId) > 0;
+        boolean result = db.removeAbsentType(typeId) > 0;
+        db.close();
+        return result;
     }
 
 

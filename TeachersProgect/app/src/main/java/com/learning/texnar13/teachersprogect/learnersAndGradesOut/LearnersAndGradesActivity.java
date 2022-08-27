@@ -1404,6 +1404,8 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
                 }
             }
 
+            db.close();
+
             // после работы копируем ссылку обратно
             dataLearnersAndGrades.learnersAndHisGrades[dataLearnersAndGrades.chosenLearnerPosition].
                     learnerGrades[dataLearnersAndGrades.chosenDayPosition][lessonPoz] = tempCell;

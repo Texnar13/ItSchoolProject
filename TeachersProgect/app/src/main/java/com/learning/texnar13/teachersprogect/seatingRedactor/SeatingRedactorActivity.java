@@ -517,6 +517,7 @@ public class SeatingRedactorActivity extends AppCompatActivity implements View.O
                         (int) xAxisPXOffset,
                         (int) yAxisPXOffset
                 );
+                db.close();
                 mode = NONE;
                 break;
             }

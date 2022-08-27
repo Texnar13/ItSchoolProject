@@ -686,7 +686,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     }
 
     public String getSettingsLocale(long profileId) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null,
                 SchoolContract.TableSettingsData.KEY_ROW_ID + " = " + profileId,
                 null, null, null, null);
@@ -714,7 +714,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     }
 
     public int getSettingsMaxGrade(long profileId) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(SchoolContract.TableSettingsData.NAME_TABLE_SETTINGS, null,
                 SchoolContract.TableSettingsData.KEY_ROW_ID + " = " + profileId,
                 null, null, null, null);
