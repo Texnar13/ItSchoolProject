@@ -32,10 +32,12 @@ android {
     lint {
         checkReleaseBuilds false
     }
+    namespace 'com.learning.texnar13.teachersprogect'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.core:core:1.7.0'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.4.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })

@@ -189,9 +189,10 @@ public class SchoolContract {
         public static final String NAME_TABLE_LEARNERS_GRADES_TITLES = "learnersGradesTitles";
         public static final String COLUMN_LEARNERS_GRADES_TITLE = "title";
 
-        public static final String CREATE_TABLE_STRING ="CREATE TABLE " + SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES +"( " + SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        public static final String CREATE_TABLE_STRING = "CREATE TABLE " +
+                SchoolContract.TableLearnersGradesTitles.NAME_TABLE_LEARNERS_GRADES_TITLES +
+                "( " + SchoolContract.TableLearnersGradesTitles.KEY_ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 SchoolContract.TableLearnersGradesTitles.COLUMN_LEARNERS_GRADES_TITLE + " TEXT);";
-
     }
 
     public static class TableLearnersAbsentTypes extends Table {

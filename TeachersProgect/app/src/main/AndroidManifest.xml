@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.learning.texnar13.teachersprogect"
     android:versionCode="55"
     android:versionName="exa4.01">
 
@@ -54,7 +53,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
 
                 <!--
-                action android:name="android.intent.action.VIEW" />todo
+                action android:name="android.intent.action.VIEW" /> todo
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" /
                 -->
