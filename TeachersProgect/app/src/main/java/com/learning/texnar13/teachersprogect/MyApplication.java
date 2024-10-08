@@ -64,7 +64,7 @@ public class MyApplication extends MultiDexApplication {//MultiDexApplication/Ap
         MobileAds.initialize(this, () -> Log.d("YANDEX_MOBILE_ADS_TAG", "SDK initialized"));
 
         int GDPRState = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getInt(SharedPrefsContract.PREFS_INT_WHATS_NEW,
+                .getInt(SharedPrefsContract.PREFS_INT_GDPR_STATE,
                         SharedPrefsContract.PREFS_INT_GDPR_STATE_NONE);
         MobileAds.setUserConsent(GDPRState == SharedPrefsContract.PREFS_INT_GDPR_STATE_ACCEPT);
     }

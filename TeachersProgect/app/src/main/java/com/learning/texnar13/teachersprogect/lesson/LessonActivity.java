@@ -258,8 +258,6 @@ public class LessonActivity extends AppCompatActivity implements View.OnTouchLis
 
             commentTitleText.setText(homeWork.title);
             commentText.setText(homeWork.text);
-            commentText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(
-                SharedPrefsContract.PREMIUM_PARAM_LESSON_MAX_COMMENT_LENGTH)});
 
 
             // назначаем раскрытие и закрытие по нажатию заголовка

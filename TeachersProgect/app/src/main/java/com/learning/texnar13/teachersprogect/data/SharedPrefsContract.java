@@ -4,15 +4,6 @@ import com.learning.texnar13.teachersprogect.BuildConfig;
 
 public class SharedPrefsContract {// менять значение констант запрещено!!!
 
-    // активность подписок и иже с ней
-    // статус подписки
-    public static final String PREFS_BOOLEAN_PREMIUM_STATE = "premiumState";
-    public static final int PREMIUM_PARAM_GRADES_TYPES_MAXIMUM = 2;
-    public static final int PREMIUM_PARAM_MAX_LESSONS_COUNT = 9;
-
-    public static final int PREMIUM_PARAM_LESSON_MAX_COMMENT_LENGTH = 70;
-    public static final int PREMIUM_PARAM_LEARNER_MAX_COMMENT_LENGTH = 50;
-
     // при старте приожения на главной активности
     // счетчик заходов в приложение
     public static final String PREFS_INT_ENTERS_COUNT = "entersCount";

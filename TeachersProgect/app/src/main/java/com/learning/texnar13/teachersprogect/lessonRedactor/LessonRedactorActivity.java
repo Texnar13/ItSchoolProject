@@ -3,8 +3,7 @@ package com.learning.texnar13.teachersprogect.lessonRedactor;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.text.InputFilter;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -15,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentActivity;
 
@@ -22,11 +22,10 @@ import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
-import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
 import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogFragment;
 import com.learning.texnar13.teachersprogect.subjectsDialog.SubjectsDialogInterface;
-import com.yandex.mobile.ads.banner.AdSize;
+import com.yandex.mobile.ads.banner.BannerAdSize;
 import com.yandex.mobile.ads.banner.BannerAdView;
 import com.yandex.mobile.ads.common.AdRequest;
 
@@ -111,16 +110,12 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
                         getResources().getDimensionPixelOffset(R.dimen.forth_margin);
 
 
-        // выводим рекламу если нет подписки
-        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
-            // реклама яндекса
-            BannerAdView mAdView = findViewById(R.id.activity_lesson_redactor_banner);
-            mAdView.setAdUnitId(getResources().getString(R.string.banner_id_lesson_redactor));
-            mAdView.setAdSize(AdSize.BANNER_320x100);
-            // Создание объекта таргетирования рекламы и загрузка объявления.
-            mAdView.loadAd(new AdRequest.Builder().build());
-        }
+        // выводим рекламу
+        BannerAdView mAdView = findViewById(R.id.activity_lesson_redactor_banner);
+        mAdView.setAdUnitId(getResources().getString(R.string.banner_id_lesson_redactor));
+        mAdView.setAdSize(getAdSize(mAdView));
+        // Создание объекта таргетирования рекламы и загрузка объявления.
+        mAdView.loadAd(new AdRequest.Builder().build());
 
 
         // На случай если пользователь сразу закроет редактор,
@@ -234,15 +229,9 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
         // время
         {
             int[][] time = db.getSettingsTime(1);
-
-            // проверяем подписку
             int lessonsCount = time.length;
-            if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                    .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false) &&
-                    lessonsCount > SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT)
-                lessonsCount = SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT;
 
-            // заодно проверка переданного в активность урока номера урока
+            // проверка переданного в активность урока номера урока
             if (lessonNumber > lessonsCount)
                 lessonNumber = lessonsCount - 1;
 
@@ -391,9 +380,6 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
         } else {
             homeworkEdit.setText("");
         }
-        // ставим ограничение в 3 строки (70 символов)
-        homeworkEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(
-                SharedPrefsContract.PREMIUM_PARAM_LESSON_MAX_COMMENT_LENGTH)});
 
         // ---------------------------------- настраиваем кнопки -----------------------------------
 
@@ -562,6 +548,23 @@ public class LessonRedactorActivity extends FragmentActivity implements Subjects
 
         // кнопка назад
         findViewById(R.id.activity_lesson_redactor_back_button).setOnClickListener(f -> finish());
+    }
+
+
+    @NonNull
+    private BannerAdSize getAdSize(BannerAdView mAdView) {
+        final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        final int screenHeight = Math.round(displayMetrics.heightPixels / displayMetrics.density);
+        // Calculate the width of the ad, taking into account the padding in the ad container.
+        int adWidthPixels = mAdView.getWidth();
+        if (adWidthPixels == 0) {
+            // If the ad hasn't been laid out, default to the full screen width
+            adWidthPixels = displayMetrics.widthPixels;
+        }
+
+        final int adWidth = Math.round(adWidthPixels / displayMetrics.density);
+        final int maxAdHeight = screenHeight / 7;
+        return BannerAdSize.inlineSize(this, adWidth, maxAdHeight);
     }
 
 

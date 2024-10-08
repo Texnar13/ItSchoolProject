@@ -50,34 +50,29 @@ public class LearnerCreateDialogFragment extends DialogFragment {
         final EditText editName = dialogView.findViewById(R.id.learners_and_grades_dialog_learner_create_edit_name);
         // текстовое поле комментария
         final EditText editComment = dialogView.findViewById(R.id.learners_and_grades_dialog_learner_create_edit_comment);
-        editComment.setFilters(new InputFilter[]{new InputFilter.LengthFilter(
-                SharedPrefsContract.PREMIUM_PARAM_LEARNER_MAX_COMMENT_LENGTH)});
 
         //при нажатии...
         //согласие
-        dialogView.findViewById(R.id.learners_and_grades_dialog_learner_create_button_save).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (editSurname.getText().toString().trim().length() == 0) {
-                    Toast.makeText(getActivity(), R.string.learners_and_grades_out_activity_dialog_toast_no_last_name, Toast.LENGTH_SHORT).show();
-                } else {
-                    try {
-                        //вызываем в активности метод по созданию ученика и передаем ей имя и фамилию
-                        ((CreateLearnerInterface) getActivity()).createLearner(
-                                editSurname.getText().toString().trim(),
-                                editName.getText().toString().trim(),
-                                editComment.getText().toString().trim()
-                        );
-                    } catch (java.lang.ClassCastException e) {
-                        //в вызвающей активности должен быть имплементирован класс CreateLearnerInterface
-                        e.printStackTrace();
-                        Log.i(
-                                "TeachersApp",
-                                "LearnerCreateDialogFragment: you must implements CreateLearnerInterface in your activity"
-                        );
-                    }
-                    dismiss();
+        dialogView.findViewById(R.id.learners_and_grades_dialog_learner_create_button_save).setOnClickListener(view -> {
+            if (editSurname.getText().toString().trim().isEmpty()) {
+                Toast.makeText(getActivity(), R.string.learners_and_grades_out_activity_dialog_toast_no_last_name, Toast.LENGTH_SHORT).show();
+            } else {
+                try {
+                    //вызываем в активности метод по созданию ученика и передаем ей имя и фамилию
+                    ((CreateLearnerInterface) getActivity()).createLearner(
+                            editSurname.getText().toString().trim(),
+                            editName.getText().toString().trim(),
+                            editComment.getText().toString().trim()
+                    );
+                } catch (ClassCastException e) {
+                    //в вызвающей активности должен быть имплементирован класс CreateLearnerInterface
+                    e.printStackTrace();
+                    Log.i(
+                            "TeachersApp",
+                            "LearnerCreateDialogFragment: you must implements CreateLearnerInterface in your activity"
+                    );
                 }
+                dismiss();
             }
         });
 

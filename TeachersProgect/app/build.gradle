@@ -1,51 +1,51 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 32
-    buildToolsVersion '30.0.3'
+    namespace 'com.learning.texnar13.teachersprogect'
+    compileSdk 35
 
+    defaultConfig {
+        applicationId "com.learning.texnar13.teachersprogect"
+        minSdk 24
+        targetSdk 35
+        multiDexEnabled true // todo включение multiDex, если понадобится
+        versionCode 56
+        versionName "exa4.02"
+        android.defaultConfig.vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+
+    buildTypes {
+        debug{
+            minifyEnabled true
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules-debug.pro'
+        }
+        release {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    defaultConfig {
-        applicationId "com.learning.texnar13.teachersprogect"
-        minSdkVersion 21
-        targetSdkVersion 32
-        multiDexEnabled true// todo включение multiDex, если понадобится
-        android.defaultConfig.vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-    buildTypes {
-        debug{
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules-debug.pro'
-        }
-        release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    lint {
-        checkReleaseBuilds false
-    }
-    namespace 'com.learning.texnar13.teachersprogect'
 }
+
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.core:core:1.7.0'
+    implementation 'androidx.core:core:1.13.1'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.4.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'com.yandex.android:mobileads:5.2.0'
-    implementation 'com.yandex.android:mobmetricalib:5.0.0'
-    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation 'com.yandex.android:mobileads:7.5.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.12.0'
     testImplementation 'junit:junit:4.13.2'
     implementation "com.github.SUPERCILEX.poi-android:poi:3.17"
     implementation "com.github.SUPERCILEX.poi-android:proguard:3.17"
@@ -53,6 +53,4 @@ dependencies {
 
     implementation "androidx.multidex:multidex:2.0.1"// todo multiDex, если надо
 
-    // play market billing api
-    implementation "com.android.billingclient:billing:5.0.0"
 }

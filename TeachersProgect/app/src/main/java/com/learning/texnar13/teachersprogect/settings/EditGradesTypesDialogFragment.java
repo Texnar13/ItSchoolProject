@@ -36,11 +36,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
     // передаваемые параметры
     public static String ARGS_TYPES_ID_ARRAY_TAG = "typesId";
     public static String ARGS_TYPES_NAMES_ARRAY_TAG = "typesNames";
-    // Платное огграничение на все типы
-    public static String ARGS_TYPES_MAX_COUNT = "maxCount";
 
-    // максимальное количество типов (для премиума) (-1 - без ограничений)
-    int maxTypesCount;
 
     // массив с текстами записей, id и view-компонентами
     ArrayList<GradesTypeRecord> types = new ArrayList<>();
@@ -58,7 +54,6 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
         // получаем список типов
         long[] typesId = Objects.requireNonNull(arguments.getLongArray(ARGS_TYPES_ID_ARRAY_TAG));
         String[] typesStrings = Objects.requireNonNull(arguments.getStringArray(ARGS_TYPES_NAMES_ARRAY_TAG));
-        maxTypesCount = arguments.getInt(ARGS_TYPES_MAX_COUNT);
         // массив с полями
         for (int i = 0; i < typesId.length; i++) {
             types.add(new GradesTypeRecord(typesId[i], typesStrings[i]
@@ -118,7 +113,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             // добавляем ссылку на контейнер элементу списка
             types.get(typeI).typeContainer = addNewContainerInList();
             // выводим в этот контейнер наполнение
-            outContentInTypeContainer(types.get(typeI), false, (maxTypesCount != -1) && (typeI + 1 > maxTypesCount));
+            outContentInTypeContainer(types.get(typeI), false);
         }
 
         // вывод кнопки добавить тип
@@ -144,30 +139,18 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
     // добавление типа (по кнопке)
     void addNewType(View button) {
 
-        // ограничение на количество типов
-        if (maxTypesCount != -1 && types.size() >= maxTypesCount) {
-            Toast.makeText(
-                    getActivity(),
-                    getResources().getString(
-                            R.string.settings_activity_dialog_new_absent_type_toast_subscribe,
-                            maxTypesCount),
-                    Toast.LENGTH_SHORT
-            ).show();
-        } else {
+        // удаляем кнопку добавить тип
+        listOut.removeView(button);
 
-            // удаляем кнопку добавить тип
-            listOut.removeView(button);
+        // вызываем в активности метод по созданию нового типа и
+        // добавляем ссылку на контейнер элементу списка
+        GradesTypeRecord newType = new GradesTypeRecord(-1, "", addNewContainerInList());
 
-            // вызываем в активности метод по созданию нового типа и
-            // добавляем ссылку на контейнер элементу списка
-            GradesTypeRecord newType = new GradesTypeRecord(-1, "", addNewContainerInList());
+        // добавляем тип в лист
+        types.add(newType);
 
-            // добавляем тип в лист
-            types.add(newType);
-
-            // выводим содержимое в открытый закрывая все остальные контейнеры
-            updateAllContainersContent(newType);
-        }
+        // выводим содержимое в открытый закрывая все остальные контейнеры
+        updateAllContainersContent(newType);
     }
 
     // обновить содержимое всех контейнеров списка (один активный может быть нулевым)
@@ -185,15 +168,15 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     outAddTypeButton();
                 } else
                     // закрываем все остальные контейнеры
-                    outContentInTypeContainer(types.get(typeI), false, (maxTypesCount != -1) && (typeI + 1 > maxTypesCount));
+                    outContentInTypeContainer(types.get(typeI), false);
             } else if (activeRecord != null)
                 // выводим активный контейнер
-                outContentInTypeContainer(activeRecord, true, (maxTypesCount != -1) && (typeI + 1 > maxTypesCount));
+                outContentInTypeContainer(activeRecord, true);
         }
     }
 
     // метод вывода содержимого одного элемента списка
-    void outContentInTypeContainer(GradesTypeRecord typeRecord, boolean isContainerActive, boolean isContainerBlocked) {
+    void outContentInTypeContainer(GradesTypeRecord typeRecord, boolean isContainerActive) {
         // удаляем все содержимое, если оно есть
         typeRecord.typeContainer.removeAllViews();
 
@@ -211,13 +194,13 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
                     getResources().getDimensionPixelSize(R.dimen.simple_buttons_height);
 
             // если контейнер не активен выводим просто текст
-            outContentNotActive(typeRecord, isContainerBlocked);
+            outContentNotActive(typeRecord);
         }
     }
 
 
     // если контейнер не активен выводим просто текст
-    void outContentNotActive(GradesTypeRecord typeRecord, boolean isContainerBlocked) {
+    void outContentNotActive(GradesTypeRecord typeRecord) {
         // -- удаляем предыдущее наполнение --
         typeRecord.typeContainer.removeAllViews();
 
@@ -228,25 +211,12 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
         TextView title = typeRecord.typeContainer.findViewById(R.id.settings_dialog_edit_types_simple_container_text);
         title.setText(typeRecord.typeName);
 
+        // при нажатии на контейнер
+        typeRecord.typeContainer.setOnClickListener(v -> {
+            // закрываем все остальные контейнеры
+            updateAllContainersContent(typeRecord);
+        });
 
-        // можно ли нажать на этот контейнер или он заблокировани подпиской
-        if (isContainerBlocked) {
-            title.setTextColor(getResources().getColor(R.color.text_color_not_active));
-            // при нажатии на контейнер
-            typeRecord.typeContainer.setOnClickListener(v -> Toast.makeText(
-                    getActivity(),
-                    getResources().getString(
-                            R.string.settings_activity_dialog_new_absent_type_toast_subscribe,
-                            maxTypesCount),
-                    Toast.LENGTH_SHORT
-            ).show());
-        } else {
-            // при нажатии на контейнер
-            typeRecord.typeContainer.setOnClickListener(v -> {
-                // закрываем все остальные контейнеры
-                updateAllContainersContent(typeRecord);
-            });
-        }
     }
 
 
@@ -357,7 +327,7 @@ public class EditGradesTypesDialogFragment extends DialogFragment {
             typeRecord.typeName = name;
 
             // выводим текущий контейнер как неактивный
-            outContentInTypeContainer(typeRecord, false, false);
+            outContentInTypeContainer(typeRecord, false);
 
             // прячем клавиатуру
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);

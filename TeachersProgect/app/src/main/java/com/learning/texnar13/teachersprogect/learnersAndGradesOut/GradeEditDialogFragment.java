@@ -124,9 +124,8 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
         chosenGradePosition = getArguments().getInt(ARGS_INT_CHOSEN_GRADE_POSITION, -1);
 
 
-        // если пропуска нет и если оценок нет, то проставляем типы по умолчанию (+ без подписки эта опция не нужна)
-        if (PreferenceManager.getDefaultSharedPreferences(requireActivity().getApplicationContext())
-                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false) && !absCheckState) {
+        // если пропуска нет и если оценок нет, то проставляем типы по умолчанию
+        if (!absCheckState) {
             // первая оценка остается с типом по умолчанию
             // вторая со вторым
             if (grades[1] == 0 && gradesTypesNames.length > 1)
@@ -459,33 +458,11 @@ public class GradeEditDialogFragment extends DialogFragment {//входные д
 
 
             // адаптер спиннера с типом ответа
-            ArrayAdapter<String> typeSpinnerAdapter;
-            // проверяем подписку
-            if (PreferenceManager.getDefaultSharedPreferences(requireActivity().getApplicationContext())
-                    .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
-                typeSpinnerAdapter = new ArrayAdapter<>(
-                        requireActivity(),
-                        R.layout.lesson_redactor_spinner_dropdown_element,
-                        gradesTypesNames
-                );
-            } else {
-                // если подписки нет
-                // то либо просто ограничиваем число типов, ли бо ставим максимумом то, которое есть
-                String[] arr = new String[
-                        Math.max(chosenTypes[gradeI] + 1,
-                                Math.min(gradesTypesNames.length,// ограничение может быть тупо больше длинны массива
-                                        SharedPrefsContract.PREMIUM_PARAM_GRADES_TYPES_MAXIMUM)
-                        )
-                ];
-                // копируем урезанный массив
-                System.arraycopy(gradesTypesNames, 0, arr, 0, arr.length);
-
-                typeSpinnerAdapter = new ArrayAdapter<>(
-                        requireActivity(),
-                        R.layout.lesson_redactor_spinner_dropdown_element,
-                        arr
-                );
-            }
+            ArrayAdapter<String> typeSpinnerAdapter = new ArrayAdapter<>(
+                    requireActivity(),
+                    R.layout.lesson_redactor_spinner_dropdown_element,
+                    gradesTypesNames
+            );
             typeSpinnerAdapter.setDropDownViewResource(R.layout.lesson_redactor_spinner_dropdown_element);
             typesSpinners[gradeI].setAdapter(typeSpinnerAdapter);
 

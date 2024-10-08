@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,11 +36,14 @@ import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import com.learning.texnar13.teachersprogect.settings.ImportModel.ImportDataBaseData;
 import com.learning.texnar13.teachersprogect.settings.ImportModel.SettingsImportHelper;
-import com.learning.texnar13.teachersprogect.premium.SponsorActivity;
-import com.learning.texnar13.teachersprogect.premium.SponsorActivityCongratulationDialog;
-import com.learning.texnar13.teachersprogect.premium.SponsorMySubscriptionActivity;
-import com.yandex.mobile.ads.common.AdRequest;
+import com.yandex.mobile.ads.common.AdError;
+import com.yandex.mobile.ads.common.AdRequestConfiguration;
+import com.yandex.mobile.ads.common.AdRequestError;
+import com.yandex.mobile.ads.common.ImpressionData;
 import com.yandex.mobile.ads.interstitial.InterstitialAd;
+import com.yandex.mobile.ads.interstitial.InterstitialAdEventListener;
+import com.yandex.mobile.ads.interstitial.InterstitialAdLoadListener;
+import com.yandex.mobile.ads.interstitial.InterstitialAdLoader;
 
 import java.io.Serializable;
 
@@ -53,38 +54,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     private ImageView coloredGradesSwitch;
     private ImageView silentLessonSwitch;
     // межстраничный баннер открывающийся при выходе из настроек
-    private InterstitialAd settingsBack;
-
-    // кнопка подписки в разметке
-    private RelativeLayout buttonSubscribeBackground;
-    private TextView buttonSubscribeText;
-    // статус подписки обновляемый в onStart
-    private boolean isSubscribe;
+    private InterstitialAd settingsBack = null;
 
 
     // -------------------------- помощники запуска с callBack-ами --------------------------
-
-
-    // помощник запуска активности SponsorActivity с результатом
-    private final ActivityResultLauncher<Integer> showSponsorAndGetResultHelper = registerForActivityResult(
-            new ActivityResultContract<Integer, Integer>() {
-                @NonNull
-                @Override
-                public Intent createIntent(@NonNull Context context, Integer input) {
-                    return new Intent(context, SponsorActivity.class);
-                }
-
-                @Override
-                public Integer parseResult(int resultCode, @Nullable Intent intent) {
-                    return resultCode;
-                }
-            }, resultCode -> {
-                if (resultCode == SponsorActivity.RESULT_DEAL_DONE) {
-                    // показываем диалог, что все куплено
-                    SponsorActivityCongratulationDialog dialog = new SponsorActivityCongratulationDialog();
-                    dialog.show(getSupportFragmentManager(), "CongratulationsDialog");
-                }
-            });
 
     // регистрируем callback для диалога выбора файла
     private final ActivityResultLauncher<Integer> selectFileLaunchHelper = registerForActivityResult(
@@ -175,16 +148,26 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }
 
 
-        // выводим рекламу если нет подписки
-        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
-            // реклама яндекса
-            // начинаем загрузку межстраничного баннера конца урока
-            settingsBack = new InterstitialAd(this);
-            settingsBack.setAdUnitId(getResources().getString(R.string.banner_id_after_settings));
-            // Создание объекта таргетирования рекламы и загрузка объявления.
-            settingsBack.loadAd(new AdRequest.Builder().build());
-        }
+        // выводим рекламу яндекса
+        // начинаем загрузку межстраничного баннера конца урока
+        InterstitialAdLoader mInterstitialAdLoader = new InterstitialAdLoader(this);
+        mInterstitialAdLoader.setAdLoadListener(new InterstitialAdLoadListener() {
+            @Override
+            public void onAdLoaded(@NonNull final InterstitialAd interstitialAd) {
+                settingsBack = interstitialAd;
+                // The ad was loaded successfully.
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull final AdRequestError adRequestError) {
+                // Ad failed to load with AdRequestError.
+                // Attempting to load a new ad from the onAdFailedToLoad() method is strongly discouraged.
+            }
+        });
+        mInterstitialAdLoader.loadAd(new AdRequestConfiguration.Builder(
+                getResources().getString(R.string.banner_id_after_settings)
+        ).build());
+
 
         // раздуваем layout
         setContentView(R.layout.settings_activity);
@@ -222,10 +205,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.activity_settings_are_grades_colored_container).setOnClickListener(this);
         // удаление данных
         findViewById(R.id.activity_settings_button_remove_data).setOnClickListener(this);
-        // подписка
-        buttonSubscribeBackground = findViewById(R.id.settings_activity_button_subscribe_background);
-        buttonSubscribeBackground.setOnClickListener(this);
-        buttonSubscribeText = findViewById(R.id.settings_activity_button_subscribe_text);
 
         // оцените нас
         findViewById(R.id.settings_button_rate).setOnClickListener(this);
@@ -285,22 +264,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     protected void onResume() {
         super.onResume();
 
-        // проверка статуса подписки
-        isSubscribe = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false);
-
-        if (isSubscribe) {
-            // меняем кнопку подписки
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                buttonSubscribeBackground.getBackground().setTint(
-                        getResources().getColor(R.color.base_blue));
-            else
-                buttonSubscribeBackground.getBackground().setColorFilter(
-                        getResources().getColor(R.color.base_blue), PorterDuff.Mode.SRC_ATOP);
-            buttonSubscribeText.setText(R.string.settings_activity_button_my_premium);
-        }
-
-
         // -- настройка тихого урока при переходе на эту активность
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // получаем информацию о разрешениях
@@ -322,16 +285,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         // кнопка оцените нас
         if (vId == R.id.settings_button_rate) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("market://details?id=com.learning.texnar13.teachersprogect"));
+            intent.setData(Uri.parse(getResources().getString(R.string.rate_app_link)));
             if (isActivityNotStarted(intent)) {
-                intent.setData(Uri
-                        .parse("https://play.google.com/store/apps/details?id=com.learning.texnar13.teachersprogect"));
-                if (isActivityNotStarted(intent)) {
-                    Toast.makeText(
-                            this,
-                            "Could not open Android market, please check if the market app installed or not. Try again later",
-                            Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(
+                        this,
+                        "Не открывается магазин приложений. Could not open market.",
+                        Toast.LENGTH_SHORT).show();
             }
         }
         // кнопка максимальной оценки
@@ -448,13 +407,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             Bundle args = new Bundle();
             args.putLongArray(EditGradesTypesDialogFragment.ARGS_TYPES_ID_ARRAY_TAG, typesId);
             args.putStringArray(EditGradesTypesDialogFragment.ARGS_TYPES_NAMES_ARRAY_TAG, typesNames);
-            // ограничеиваем число типов, если подписки нет
-            if (!isSubscribe)
-                args.putInt(EditGradesTypesDialogFragment.ARGS_TYPES_MAX_COUNT,
-                        SharedPrefsContract.PREMIUM_PARAM_GRADES_TYPES_MAXIMUM);
-            else
-                args.putInt(EditGradesTypesDialogFragment.ARGS_TYPES_MAX_COUNT, -1);
-
             typesDialogFragment.setArguments(args);
             // запуск
             typesDialogFragment.show(getSupportFragmentManager(), "editGradesTypesDialogFragment");
@@ -514,20 +466,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             localeDialog.setArguments(args);
             // запускаем
             localeDialog.show(getSupportFragmentManager(), "editDarkModeDialog");
-        }
-        // подписка
-        else if (vId == R.id.settings_activity_button_subscribe_background) {
-
-
-            if (isSubscribe) {
-                // если подписка есть, показваем активити просмотра подписки
-                startActivity(new Intent(
-                        SettingsActivity.this,
-                        SponsorMySubscriptionActivity.class
-                ));
-            } else
-                // если подписки нет, показваем активити покупки
-                showSponsorAndGetResultHelper.launch(0);
         }
     }
 
@@ -703,244 +641,43 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         super.onBackPressed();
 
         // выводим рекламу при закрытии активности настроек
-        if (settingsBack != null)
-            if (settingsBack.isLoaded()) {
-
-                // выводим рекламу если нет подписки
-                if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                        .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
-                    // реклама яндекса
-                    settingsBack.show();
+        if (settingsBack != null) {
+            settingsBack.setAdEventListener(new InterstitialAdEventListener() {
+                @Override
+                public void onAdShown() {
+                    // Called when ad is shown.
                 }
-            }
+
+                @Override
+                public void onAdFailedToShow(@NonNull final AdError adError) {
+                    // Called when an InterstitialAd failed to show.
+                }
+
+                @Override
+                public void onAdDismissed() {
+                    // Called when ad is dismissed.
+                    // Clean resources after Ad dismissed
+                    if (settingsBack != null) {
+                        settingsBack.setAdEventListener(null);
+                        settingsBack = null;
+                    }
+
+                    // Now you can preload the next interstitial ad.
+                    // loadInterstitialAd();
+                }
+
+                @Override
+                public void onAdClicked() {
+                    // Called when a click is recorded for an ad.
+                }
+
+                @Override
+                public void onAdImpression(@Nullable final ImpressionData impressionData) {
+                    // Called when an impression is recorded for an ad.
+                }
+            });
+
+            settingsBack.show(this);
+        }
     }
 }
-
-
-//
-//    void writeFile() {
-//        try {
-//            /*openFileOutput – открыть файл на запись
-//
-//openFileInput – открыть файл на чтение
-//
-//deleteFile – удалить файл
-//
-//И есть метод getFilesDir – возвращает объект File, соответствующий каталогу для файлов вашей программы. Используйте его, чтобы работать напрямую, без методов-оболочек.
-//*/
-//
-//            // отрываем поток для записи
-//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-//                    openFileOutput(FILENAME, MODE_PRIVATE)));
-//            // пишем данные
-//            bw.write("Содержимое файла");
-//            // закрываем поток
-//            bw.close();
-//            Toast.makeText(this, "Файл записан", Toast.LENGTH_LONG).show();
-//            Log.d(LOG_TAG, "Файл записан");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    void readFile() {
-//        try {
-//            // открываем поток для чтения
-//            BufferedReader br = new BufferedReader(new InputStreamReader(
-//                    openFileInput(FILENAME)));
-//            String str;
-//            // читаем содержимое
-//            while ((str = br.readLine()) != null) {
-//                Toast.makeText(this, str, Toast.LENGTH_LONG).show();
-//                Log.d(LOG_TAG, str);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
-//
-//
-//
-//    public void onclick(View v) {
-//        switch (v.getId()) {
-//            case R.id.btnWrite:
-//                writeFile();
-//                break;
-//            case R.id.btnRead:
-//                readFile();
-//                break;
-//            case R.id.btnWriteSD:
-//                writeFileSD();
-//                break;
-//            case R.id.btnReadSD:
-//                readFileSD();
-//                break;
-//        }
-//    }
-//
-//
-//    void writeFile() {
-//        try {
-//            // отрываем поток для записи
-//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-//                    openFileOutput(FILENAME, MODE_PRIVATE)));
-//            // пишем данные
-//            bw.write("Содержимое файла");
-//            // закрываем поток
-//            bw.close();
-//            Toast.makeText(this, "Файл записан", Toast.LENGTH_LONG).show();
-//            Log.d(LOG_TAG, "Файл записан");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    void readFile() {
-//        try {
-//            // открываем поток для чтения
-//            BufferedReader br = new BufferedReader(new InputStreamReader(
-//                    openFileInput(FILENAME)));
-//            String str;
-//            // читаем содержимое
-//            while ((str = br.readLine()) != null) {
-//                Toast.makeText(this, str, Toast.LENGTH_LONG).show();
-//                Log.d(LOG_TAG, str);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-
-
-//<ScrollView
-//        android:layout_weight="1"
-//        android:layout_margin="10dp"
-//        android:layout_width="match_parent"
-//        android:layout_height="match_parent">
-//        <RelativeLayout
-//            android:id="@+id/activity_main_container"
-//            android:layout_width="match_parent"
-//            android:layout_height="wrap_content"/>
-//    </ScrollView>
-//
-//    <ScrollView
-//        android:layout_weight="1"
-//        android:layout_margin="10dp"
-//        android:layout_width="match_parent"
-//        android:layout_height="match_parent">
-//        <com.texnar13.writer_assistant.LongEditText
-//            android:id="@+id/activity_main_text_2"
-//            android:layout_width="match_parent"
-//            android:layout_height="wrap_content"/>
-//    </ScrollView>
-
-
-//        myEdit2 = findViewById(R.id.activity_main_text_2);
-//        myEdit2.setText(testText);
-//        myEdit2.setEditable(false);
-//        isEdit2 = false;
-//        myEdit2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(!isEdit2){
-//                    isEdit2 = true;
-//                    myEdit2.setEditable(true);
-//                }
-//            }
-//        });
-//
-//        scrollContainer = findViewById(R.id.activity_main_container);
-//
-//        // создаем изначальный textView
-//        isEdit = false;
-//        setTextEditable(false, null);
-
-//    RelativeLayout scrollContainer;
-//    boolean isEdit;
-//    boolean isEdit2;
-//
-//    LongEditText myEdit2;
-//
-//    @Override
-//    public void onBackPressed() {
-//        if (isEdit) {
-//            isEdit = false;
-//            // возвращаем обратно textView
-//            setTextEditable(false, null);
-//        } else
-//            super.onBackPressed();
-//    }
-//
-//
-//    PointF startTouch = new PointF();
-//
-//    void setTextEditable(boolean editable, MotionEvent clickEvent) {
-//        scrollContainer.removeAllViews();
-//
-//        if (editable) {
-//            scrollContainer.setBackgroundColor(Color.GRAY);
-//
-//            EditText edit = new EditText(MainActivity.this);
-//            edit.setText(testText);
-//            edit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-//            edit.setTextColor(Color.BLACK);
-//            edit.setPadding(0, 0, 0, 0);
-////            if (clickEvent != null) {
-////                // программно вызванное прикосновение
-////                edit.dispatchTouchEvent(
-////                        MotionEvent.obtain(0, 0, MotionEvent.ACTION_DOWN, clickEvent.getX(), clickEvent.getY(), 0.5f, 5, 0, 1, 1, 0, 0)
-////                );
-////                edit.dispatchTouchEvent(
-////                        MotionEvent.obtain(10, 10, MotionEvent.ACTION_UP, clickEvent.getX(), clickEvent.getY(), 0.5f, 5, 0, 1, 1, 0, 0)
-////                );
-////            }
-//            RelativeLayout.LayoutParams editParams = new RelativeLayout.LayoutParams(
-//                    RelativeLayout.LayoutParams.MATCH_PARENT,
-//                    RelativeLayout.LayoutParams.MATCH_PARENT
-//            );
-//            scrollContainer.addView(edit, editParams);
-//        } else {
-//            scrollContainer.setBackgroundColor(Color.LTGRAY);
-//
-//            TextView viewText = new TextView(this);
-//            viewText.setText(testText);
-//            viewText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-//            viewText.setTextColor(Color.BLACK);
-//            // считываем нажатие на view
-//            viewText.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//
-//                    Log.e("WriterApp", "onTouch: getX()=" + event.getX() + " getY()=" + event.getY());
-//                    // если пользователь отрывает палец от экрана и он не перемещал его далеко, то
-//                    if ((event.getAction() == MotionEvent.ACTION_UP ||
-//                            event.getAction() == MotionEvent.ACTION_CANCEL) &&
-//                            Math.abs(startTouch.x - event.getX()) < 10.0F &&
-//                            Math.abs(startTouch.y - event.getY()) < 10.0F &&
-//                            !isEdit
-//                    ) {
-//                        // передаем нажатие текстовому полю, которое создадим
-//                        isEdit = true;
-//                        setTextEditable(true, event);
-//
-//                    } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//                        // точка начала касания
-//                        startTouch.x = event.getX();
-//                        startTouch.y = event.getY();
-//                    }
-//
-//                    return true;
-//                }
-//            });
-//
-//            RelativeLayout.LayoutParams viewTextParams = new RelativeLayout.LayoutParams(
-//                    RelativeLayout.LayoutParams.MATCH_PARENT,
-//                    RelativeLayout.LayoutParams.MATCH_PARENT
-//            );
-//            scrollContainer.addView(viewText, viewTextParams);
-//        }
-//    }
-//

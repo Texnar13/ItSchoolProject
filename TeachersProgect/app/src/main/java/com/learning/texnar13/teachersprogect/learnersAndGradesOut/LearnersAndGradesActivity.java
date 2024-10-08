@@ -265,11 +265,6 @@ public class LearnersAndGradesActivity extends AppCompatActivity implements Crea
 
         // и максимальное количество уроков
         maxLessonsCount = db.getSettingsTime(1).length;// todo оптимизировать...
-        // проверяем подписку
-        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false) &&
-                maxLessonsCount > SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT)
-            maxLessonsCount = SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT;
 
         // названия типов ответов
         Cursor typesCursor = db.getGradesTypes();

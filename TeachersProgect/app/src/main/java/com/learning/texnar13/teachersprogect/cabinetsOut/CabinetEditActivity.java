@@ -5,7 +5,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,18 +17,18 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialog;
 import com.learning.texnar13.teachersprogect.CabinetRedactorActivity;
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
+import com.learning.texnar13.teachersprogect.acceptDialog.AcceptDialog;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
-import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import com.learning.texnar13.teachersprogect.seatingRedactor.SeatingRedactorActivity;
-import com.yandex.mobile.ads.banner.AdSize;
+import com.yandex.mobile.ads.banner.BannerAdSize;
 import com.yandex.mobile.ads.banner.BannerAdView;
 import com.yandex.mobile.ads.common.AdRequest;
 
@@ -189,22 +189,36 @@ public class CabinetEditActivity extends AppCompatActivity implements AcceptDial
         });
 
 
-        // выводим рекламу если нет подписки
-        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
-            // вывод рекламы
-            LinearLayout adOut = findViewById(R.id.ad_banner_place);
-            BannerAdView mAdView = new BannerAdView(this);
-            adOut.removeAllViews();
-            adOut.addView(mAdView,
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            // выбираем размер рекламы
-            mAdView.setAdUnitId(getResources().getString(R.string.banner_id_calendar_big));
-            mAdView.setAdSize(AdSize.BANNER_320x100);
-            // Создание объекта таргетирования рекламы и загрузка объявления.
-            mAdView.loadAd(new AdRequest.Builder().build());
+        // выводим рекламу
+        LinearLayout adOut = findViewById(R.id.ad_banner_place);
+        BannerAdView mAdView = new BannerAdView(this);
+        adOut.removeAllViews();
+        adOut.addView(mAdView,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        // выбираем размер рекламы
+        mAdView.setAdUnitId(getResources().getString(R.string.banner_id_calendar_and_lesson_redactor_big));
+        mAdView.setAdSize(getAdSize(mAdView));
+        // Создание объекта таргетирования рекламы и загрузка объявления.
+        mAdView.loadAd(new AdRequest.Builder().build());
+
+    }
+
+
+    @NonNull
+    private BannerAdSize getAdSize(BannerAdView mAdView) {
+        final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        final int screenHeight = Math.round(displayMetrics.heightPixels / displayMetrics.density);
+        // Calculate the width of the ad, taking into account the padding in the ad container.
+        int adWidthPixels = mAdView.getWidth();
+        if (adWidthPixels == 0) {
+            // If the ad hasn't been laid out, default to the full screen width
+            adWidthPixels = displayMetrics.widthPixels;
         }
+
+        final int adWidth = Math.round(adWidthPixels / displayMetrics.density);
+        final int maxAdHeight = screenHeight / 7;
+        return BannerAdSize.inlineSize(this, adWidth, maxAdHeight);
     }
 
 

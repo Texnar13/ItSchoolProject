@@ -27,9 +27,6 @@ import java.util.Objects;
 
 public class EditTimeDialogFragment extends DialogFragment {
 
-    // статус подписки
-    boolean isSubscribe;
-
     // массив с полями
     ArrayList<TimeViewLine> lines;
 
@@ -56,12 +53,6 @@ public class EditTimeDialogFragment extends DialogFragment {
         // распаковываем время
         int[][] rawDataArray = dataTransfer.lessonPeriods;
 
-
-        // статус подписки
-        isSubscribe = PreferenceManager.getDefaultSharedPreferences(requireActivity().getApplicationContext())
-                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false);
-
-
         // выводим данные в поля
 
         // контейнер полей
@@ -79,16 +70,7 @@ public class EditTimeDialogFragment extends DialogFragment {
 
         // кнопка добавить урок
         scrollLayout.findViewById(R.id.dialog_fragment_layout_settings_edit_time_button_add)
-                .setOnClickListener(v -> {
-                    if (isSubscribe || lines.size() < SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT) {
-                        addNewLesson();
-                    } else {
-                        Toast.makeText(getActivity(),
-                                getResources().getString(R.string.settings_activity_toast_time_subscribe,
-                                        SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .setOnClickListener(v -> addNewLesson());
 
 
         // при нажатии на кнопку закрыть
@@ -200,18 +182,6 @@ public class EditTimeDialogFragment extends DialogFragment {
         line.timeFields[3] = rootOfElement.findViewById(R.id.settings_dialog_edit_time_template_single_time_line_end_minute);
         line.deleteImage = rootOfElement.findViewById(R.id.settings_dialog_edit_time_template_single_time_line_delete_button);
 
-        // если нет подписки и урок больше чем PREMIUM_PARAM_MAX_LESSONS_COUNT, перекрашиваем его в серый
-        if(!isSubscribe && lessonPos > SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT){
-            int textColor = getResources().getColor(R.color.text_color_not_active);
-            line.timeFields[0].setTextColor(textColor);
-            line.timeFields[1].setTextColor(textColor);
-            line.timeFields[2].setTextColor(textColor);
-            line.timeFields[3].setTextColor(textColor);
-            ((TextView)rootOfElement.findViewById(R.id.settings_dialog_edit_time_template_single_time_line_divider_start_dots)).setTextColor(textColor);
-            ((TextView)rootOfElement.findViewById(R.id.settings_dialog_edit_time_template_single_time_line_divider_separator)).setTextColor(textColor);
-            ((TextView)rootOfElement.findViewById(R.id.settings_dialog_edit_time_template_single_time_line_divider_end_dots)).setTextColor(textColor);
-        }
-
         // проставляем значение в номер урока
         ((TextView) rootOfElement.findViewById(R.id.settings_dialog_edit_time_template_single_time_line_lesson_number))
                 .setText(lessonPos + ".");
@@ -281,13 +251,7 @@ public class EditTimeDialogFragment extends DialogFragment {
 
                 // соответствующе закрашиваем ячейку
                 if (currentCorrectFlag) {
-                    // получаем основной цвет текста в соответствии с подпиской
-                    int textColor = getResources().getColor(
-                            (isSubscribe || linesI < SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT)?
-                                    R.color.text_color_simple:
-                                    R.color.text_color_not_active
-                    );
-                    lines.get(linesI).timeFields[fieldI].setTextColor(textColor);
+                    lines.get(linesI).timeFields[fieldI].setTextColor(getResources().getColor(R.color.text_color_simple));
                 } else {
                     lines.get(linesI).timeFields[fieldI].setTextColor(getResources().getColor(R.color.signalRed));
                     correctFlag = false;

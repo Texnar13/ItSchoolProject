@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -27,11 +27,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.android.billingclient.api.AcknowledgePurchaseParams;
-import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.Purchase;
 import com.learning.texnar13.teachersprogect.GDPRDialogFragment;
 import com.learning.texnar13.teachersprogect.MyApplication;
 import com.learning.texnar13.teachersprogect.R;
@@ -40,17 +35,15 @@ import com.learning.texnar13.teachersprogect.cabinetsOut.CabinetsOutActivity;
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
 import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
-import com.learning.texnar13.teachersprogect.gradesPeriods.GradesPeriodsActivity;
 import com.learning.texnar13.teachersprogect.learnersClassesOut.LearnersClassesOutActivity;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity;
 import com.learning.texnar13.teachersprogect.settings.SettingsActivity;
-import com.yandex.mobile.ads.banner.AdSize;
+import com.yandex.mobile.ads.banner.BannerAdSize;
 import com.yandex.mobile.ads.banner.BannerAdView;
 import com.yandex.mobile.ads.common.AdRequest;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -75,11 +68,9 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
         setContentView(R.layout.start_screen_activity);
 
         // ставим цвет статус бара
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.start_screen_top_sheet_color, getTheme()));
-        }
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(getResources().getColor(R.color.start_screen_top_sheet_color, getTheme()));
 
 
         // работаем с view
@@ -109,8 +100,8 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
         if (savedInstanceState == null) {// при создании активности
 
 
-            // проверяем статус подписки
-            checkSubscriptionStatusAndSavePrefs();
+//            // проверяем статус подписки
+//            checkSubscriptionStatusAndSavePrefs();
 
             // ------ сохраненные параметры ------
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -151,9 +142,9 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
                 // если в sharedPreferences уже есть параметр PREFS_INT_GDPR_STATE
 
                 // если выбор ещё не сделан
-                if(sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_GDPR_STATE,
+                if (sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_GDPR_STATE,
                         SharedPrefsContract.PREFS_INT_GDPR_STATE_NONE)
-                        == SharedPrefsContract.PREFS_INT_GDPR_STATE_NONE){
+                        == SharedPrefsContract.PREFS_INT_GDPR_STATE_NONE) {
                     // вызов диалога GDPR
                     GDPRDialogFragment dialogFragment2 = new GDPRDialogFragment();
                     dialogFragment2.show(getSupportFragmentManager(), "GDPR");
@@ -197,7 +188,7 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             // через семь заходов в приложение открывает диалог 'оцените'
             if (!sharedPreferences.getBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE, false)) {
                 editor.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 0) + 1);
-                if (sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 0) == 15) {
+                if (sharedPreferences.getInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 0) == 7) {
 
                     // обнуляем счетчик
                     editor.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 1);
@@ -224,68 +215,9 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
             db.close();
         }
 
-        // выводим рекламу если нет подписки
-        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
-            // реклама яндекса
-            loadAdd();
-        }
+        // выводим рекламу яндекса
+        loadAdd();
 
-    }
-
-    // проверка состояния подписки, результат в SharedPrefs
-    void checkSubscriptionStatusAndSavePrefs() {
-        final BillingClient billingClient = BillingClient.newBuilder(this)
-                .setListener((billingResult, purchases) -> {
-                }).enablePendingPurchases().build();
-        // пытаемся подключиться
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingServiceDisconnected() {
-                billingClient.endConnection();
-            }
-
-            @Override
-            public void onBillingSetupFinished(@NonNull BillingResult connectResult) {
-                // связь установлена
-                if (connectResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    // получаем данные о подписках
-                    billingClient.queryPurchasesAsync(BillingClient.SkuType.SUBS, (queryCheckResult, purchasesList) -> {
-                        // данные получены
-                        if (queryCheckResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-
-                            // проверяем есть ли среди подписок подписка на премиум
-                            boolean subsPurchasedFlag = false;
-                            for (Purchase purchase : purchasesList) {
-                                // получаем sku покупок для анализа
-                                ArrayList<String> tempSkus = purchase.getSkus();
-                                if (tempSkus.contains(getResources().getString(R.string.subscription_id_month_sponsor)) ||
-                                        tempSkus.contains(getResources().getString(R.string.subscription_id_year_sponsor)) ||
-                                        purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-                                    subsPurchasedFlag = true;
-                                    // заодно, если что, подтверждаем их
-                                    //  (тк нужно обязательно отпарвить в google уведомление о том, что контент предоставлен пользователю)
-                                    if (!purchase.isAcknowledged()) {
-                                        AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams
-                                                .newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
-                                        // подтверждение на подтверждение
-                                        billingClient.acknowledgePurchase(acknowledgePurchaseParams, billingResult12 -> {
-                                        });
-                                    }
-                                }
-                            }
-
-                            // сохраняем параметр в SharedPreferences
-                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()
-                                    .putBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, subsPurchasedFlag).apply();
-                        }
-                        billingClient.endConnection();
-                    });
-                } else {
-                    billingClient.endConnection();
-                }
-            }
-        });
 
     }
 
@@ -294,9 +226,26 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
         // создаем рекламу яндекса внизу календаря
         BannerAdView mAdView = findViewById(R.id.start_screen_ad_banner);
         mAdView.setAdUnitId(getResources().getString(R.string.banner_id_start_screen));
-        mAdView.setAdSize(AdSize.BANNER_320x50);
+        mAdView.setAdSize(getAdSize(mAdView));
         // Создание объекта таргетирования рекламы и загрузка объявления.
         mAdView.loadAd(new AdRequest.Builder().build());
+    }
+
+    @NonNull
+    private BannerAdSize getAdSize(BannerAdView mAdView) {
+        final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        final int screenHeight = Math.round(displayMetrics.heightPixels / displayMetrics.density);
+        // Calculate the width of the ad, taking into account the padding in the ad container.
+        int adWidthPixels = mAdView.getWidth();
+        if (adWidthPixels == 0) {
+            // If the ad hasn't been laid out, default to the full screen width
+            adWidthPixels = displayMetrics.widthPixels;
+        }
+        final int adWidth = Math.round(adWidthPixels / displayMetrics.density);
+        // Determine the maximum allowable ad height. The current value is given as an example.
+        final int maxAdHeight = screenHeight / 9;
+
+        return BannerAdSize.inlineSize(this, adWidth, maxAdHeight);
     }
 
 
@@ -327,13 +276,6 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
 
         // выводим текущий урок
         outCurrentLesson();
-
-
-        // если пользователь только купил подписку, то необходимо удалить уже подгрузившийся баннер
-        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false))
-            ((ViewGroup) findViewById(R.id.start_screen_ad_banner_place)).removeView(findViewById(R.id.start_screen_ad_banner));
-
 
         super.onStart();
     }
@@ -531,30 +473,16 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
                 ed.putBoolean(SharedPrefsContract.PREFS_BOOLEAN_IS_RATE, true);
                 ed.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 0);
 
+                // переход к плеймаркету
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                boolean isActivityNotStarted = true;
+                intent.setData(Uri.parse(getResources().getString(R.string.rate_app_link)));
+                if (isActivityNotStarted(intent)) {
+                    Toast.makeText(
+                            this,
+                            "Не открывается магазин приложений. Could not open market.",
+                            Toast.LENGTH_SHORT).show();
+                }
 
-                intent.setData(Uri.parse("market://details?id=com.learning.texnar13.teachersprogect"));
-                try {
-                    startActivity(intent);
-                    isActivityNotStarted = false;
-                } catch (ActivityNotFoundException e) {
-                    e.printStackTrace();
-                }
-                if (isActivityNotStarted) {
-                    intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.learning.texnar13.teachersprogect"));
-                    try {
-                        startActivity(intent);
-                        isActivityNotStarted = false;
-                    } catch (ActivityNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    if (isActivityNotStarted)
-                        Toast.makeText(this,
-                                "Could not open Android market, please check if the market app installed or not. Try again later",
-                                Toast.LENGTH_SHORT
-                        ).show();
-                }
                 break;
             case 1://перенести на потом
                 ed.putInt(SharedPrefsContract.PREFS_INT_ENTERS_COUNT, 1);
@@ -566,6 +494,17 @@ public class StartScreenActivity extends AppCompatActivity implements RateInterf
         // завершаем редактирование сохраненных параметров
         ed.apply();
     }
+
+    // для кнопки оцените нас
+    private boolean isActivityNotStarted(Intent aIntent) {
+        try {
+            startActivity(aIntent);
+            return false;
+        } catch (ActivityNotFoundException e) {
+            return true;
+        }
+    }
+
 
     // обратная связь от активности LessonRedactorActivity
     @Override

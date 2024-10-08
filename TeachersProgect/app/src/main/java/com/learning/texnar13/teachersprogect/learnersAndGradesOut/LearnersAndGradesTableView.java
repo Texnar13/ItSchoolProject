@@ -332,15 +332,7 @@ public class LearnersAndGradesTableView extends View {
                 currentDate = currentCalendar.get(Calendar.DAY_OF_MONTH) - 1;
                 // текущий урок
                 int[][] times = (new DataBaseOpenHelper(getContext())).getSettingsTime(1);// стандартное время уроков
-                int lessonsCount;
-                // проверяем подписку
-                if (PreferenceManager.getDefaultSharedPreferences(getContext())
-                        .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
-                    lessonsCount = times.length;
-                } else {
-                    lessonsCount = Math.min(SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT, times.length);
-                }
-
+                int lessonsCount = times.length;
 
                 int lessonNumber = 0;// текущий урок
                 for (int lessonI = 0; lessonI < lessonsCount; lessonI++) {

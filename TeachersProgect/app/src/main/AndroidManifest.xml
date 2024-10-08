@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:versionCode="55"
-    android:versionName="exa4.01">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"
         tools:node="replace" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission
@@ -20,13 +19,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity
-            android:name=".premium.SponsorMySubscriptionActivity"
-            android:exported="false" />
-        <!-- Отключение учета контекстных данных для всего приложения -->
-        <meta-data
-            android:name="@string/yandex_ads_context"
-            android:value="@string/yandex_ads_context_do_not_parse" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -114,7 +106,6 @@
         <activity
             android:name=".learnersAndGradesOut.learnersAndGradesStatistics.LearnersGradesStatisticsActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".premium.SponsorActivity" />
     </application>
 
 </manifest>

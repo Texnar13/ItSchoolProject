@@ -6,7 +6,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,10 +25,9 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.learning.texnar13.teachersprogect.data.DataBaseOpenHelper;
 import com.learning.texnar13.teachersprogect.data.SchoolContract;
-import com.learning.texnar13.teachersprogect.data.SharedPrefsContract;
 import com.learning.texnar13.teachersprogect.lesson.LessonActivity;
 import com.learning.texnar13.teachersprogect.lessonRedactor.LessonRedactorActivity;
-import com.yandex.mobile.ads.banner.AdSize;
+import com.yandex.mobile.ads.banner.BannerAdSize;
 import com.yandex.mobile.ads.banner.BannerAdView;
 import com.yandex.mobile.ads.common.AdRequest;
 
@@ -52,8 +52,6 @@ public class ScheduleMonthActivity extends AppCompatActivity {
     // поле для отображаемого дня
     private LinearLayout dayOut;
 
-    // статус подписки проверяемый в onCreate
-    boolean subscriptionState;
 
     // стандартное время уроков
     int[][] standardLessonsPeriods;
@@ -87,22 +85,16 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         // обновляем значение локали
         MyApplication.updateLangForContext(this);
         // цвет статус бара
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.base_background_color, getTheme()));
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(getResources().getColor(R.color.base_background_color, getTheme()));
 
-            // включен ли ночной режим
-            int currentNightMode = getResources().getConfiguration().uiMode
-                    & Configuration.UI_MODE_NIGHT_MASK;
-            if (Configuration.UI_MODE_NIGHT_YES != currentNightMode)
-                window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
-                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        }
-
-        // проверяем подписку
-        subscriptionState = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false);
+        // включен ли ночной режим
+        int currentNightMode = getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
+        if (Configuration.UI_MODE_NIGHT_YES != currentNightMode)
+            window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
+                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         // получаем информацию о текущем языке
         currentLanguageFileNumber = getResources().getInteger(R.integer.current_locale_code);
@@ -189,21 +181,18 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         });
 
 
-        // выводим рекламу если нет подписки
-        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getBoolean(SharedPrefsContract.PREFS_BOOLEAN_PREMIUM_STATE, false)) {
-            // создаем рекламу яндекса внизу календаря
-            BannerAdView mAdView = new BannerAdView(this);
-            adOut.removeAllViews();
-            adOut.addView(mAdView,
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            // выбираем размер рекламы
-            mAdView.setAdUnitId(getResources().getString(R.string.banner_id_calendar_big));
-            mAdView.setAdSize(AdSize.BANNER_320x100);
-            // Создание объекта таргетирования рекламы и загрузка объявления.
-            mAdView.loadAd(new AdRequest.Builder().build());
-        }
+        // выводим рекламу
+        // создаем рекламу яндекса внизу календаря
+        BannerAdView mAdView = new BannerAdView(this);
+        adOut.removeAllViews();
+        adOut.addView(mAdView,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        // выбираем размер рекламы
+        mAdView.setAdUnitId(getResources().getString(R.string.banner_id_calendar_and_lesson_redactor_big));
+        mAdView.setAdSize(getAdSize(mAdView));
+        // Создание объекта таргетирования рекламы и загрузка объявления.
+        mAdView.loadAd(new AdRequest.Builder().build());
 
 
         // при старте выставляем в основной календарь текущую дату
@@ -218,6 +207,22 @@ public class ScheduleMonthActivity extends AppCompatActivity {
         // по выбранной дате выводим месяц и заголовок
         outMonth();
         outCurrentData();
+    }
+
+    @NonNull
+    private BannerAdSize getAdSize(BannerAdView mAdView) {
+        final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        final int screenHeight = Math.round(displayMetrics.heightPixels / displayMetrics.density);
+        // Calculate the width of the ad, taking into account the padding in the ad container.
+        int adWidthPixels = mAdView.getWidth();
+        if (adWidthPixels == 0) {
+            // If the ad hasn't been laid out, default to the full screen width
+            adWidthPixels = displayMetrics.widthPixels;
+        }
+
+        final int adWidth = Math.round(adWidthPixels / displayMetrics.density);
+        final int maxAdHeight = screenHeight / 7;
+        return BannerAdSize.inlineSize(this, adWidth, maxAdHeight);
     }
 
 
@@ -334,17 +339,9 @@ public class ScheduleMonthActivity extends AppCompatActivity {
                     // получаем уроки в дне
                     viewCalendar.set(Calendar.DAY_OF_MONTH, monthDay + 1);
 
-                    Cursor lessonsAttitudes;
-                    if (subscriptionState) {
-                        lessonsAttitudes = db.getSubjectAndTimeCabinetAttitudesByDate(
-                                dateFormat.format(viewCalendar.getTime())
-                        );
-                    } else {
-                        lessonsAttitudes = db.getSubjectAndTimeCabinetAttitudesByDateAndLessonNumbersPeriod(
-                                dateFormat.format(viewCalendar.getTime()), 0,
-                                Math.min(SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT, lessonsCount)
-                        );
-                    }
+                    Cursor lessonsAttitudes = db.getSubjectAndTimeCabinetAttitudesByDate(
+                            dateFormat.format(viewCalendar.getTime())
+                    );
 
                     // если в дне есть уроки, помечаем его
                     if (lessonsAttitudes.getCount() != 0) {
@@ -467,11 +464,6 @@ public class ScheduleMonthActivity extends AppCompatActivity {
 
 
             DataBaseOpenHelper db = new DataBaseOpenHelper(this);
-
-            // обрезаем количество уроков если нет подписки
-            if (!subscriptionState && lessonsCount > SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT) {
-                lessonsCount = SharedPrefsContract.PREMIUM_PARAM_MAX_LESSONS_COUNT;
-            }
 
             // получаем текущий номер урока (-1 - не сегодня)
             int currentLesson = -1;
